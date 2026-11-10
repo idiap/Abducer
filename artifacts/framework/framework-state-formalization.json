@@ -1,0 +1,242 @@
+{
+  "metadata": {
+    "generated_from_repo": "/Users/user/files/abducer/abducer",
+    "sources": [
+      "README.md",
+      "docs/architecture/architecture.md",
+      "docs/architecture/orchestration.md",
+      "docs/reference/skills.md"
+    ],
+    "skill_count": 20,
+    "core_operator_count": 13,
+    "output_tex": "docs/publications/framework-state-formalization.tex"
+  },
+  "framework_signature": {
+    "kb_state": [
+      "S",
+      "C",
+      "M",
+      "B",
+      "R",
+      "H",
+      "O"
+    ],
+    "artifact_state": [
+      "A^conn",
+      "A^coh",
+      "A^ent",
+      "A^path",
+      "A^hard",
+      "A^bridge",
+      "A^conj",
+      "A^strat",
+      "A^sketch",
+      "A^eval",
+      "A^loop",
+      "A^paper"
+    ],
+    "log_state": "Lambda"
+  },
+  "inference_modes": {
+    "primary": [
+      "cohere",
+      "explain",
+      "deduce",
+      "abduce",
+      "conjecture",
+      "proof-sketch",
+      "expert-paper"
+    ],
+    "prompt": [
+      "kb-explain",
+      "kb-deduce",
+      "kb-abduce",
+      "kb-induce"
+    ],
+    "orchestrator_intents": [
+      "cohere",
+      "connect",
+      "coherence-eval",
+      "interpretation-reports",
+      "process-graph",
+      "reasoning-dynamics",
+      "entrypoints",
+      "hardness",
+      "bridge-plan",
+      "conjecture",
+      "strategies",
+      "proof-sketch",
+      "expert-paper",
+      "hypothesis-eval",
+      "hypothesis-loop",
+      "revision-loop",
+      "abductive-loop",
+      "pipeline"
+    ]
+  },
+  "operators": [
+    {
+      "skill": "kb-proof-connector",
+      "operator": "\\mathsf{Connect}",
+      "signature": "\\mathcal{K} \\rightarrow (A^{\\mathrm{conn}}, H_0)",
+      "role": "Builds the relational proof graph, ranks intervention points, and seeds the initial proof-hypothesis set.",
+      "outputs": "connection-analysis.json/.md, phyp/*.proof-hypotheses.yaml"
+    },
+    {
+      "skill": "kb-coherence-evaluator",
+      "operator": "\\mathsf{Coherence}",
+      "signature": "(\\mathcal{K}, A^{\\mathrm{conn}}, H_0) \\rightarrow A^{\\mathrm{coh}}",
+      "role": "Computes typed coherence, explanatory-power, and global-theory-fit signals over the current web of claims.",
+      "outputs": "coherence-report.json/.md"
+    },
+    {
+      "skill": "kb-entrypoint-finder",
+      "operator": "\\mathsf{Entry}",
+      "signature": "(\\mathcal{K}, A^{\\mathrm{conn}}, A^{\\mathrm{coh}}, H_0) \\rightarrow A^{\\mathrm{ent}}",
+      "role": "Ranks the best conceptual entry points into the current problem state.",
+      "outputs": "entrypoints.json/.md"
+    },
+    {
+      "skill": "kb-entrypoint-pathfinder",
+      "operator": "\\mathsf{Path}",
+      "signature": "(A^{\\mathrm{ent}}, A^{\\mathrm{conn}}, H_0) \\rightarrow A^{\\mathrm{path}}",
+      "role": "Turns entry points into ordered proof-pathway agendas.",
+      "outputs": "entrypoint-pathways.json/.md"
+    },
+    {
+      "skill": "kb-epistemic-hardness",
+      "operator": "\\mathsf{Hardness}",
+      "signature": "(\\mathcal{K}, A^{\\mathrm{conn}}, A^{\\mathrm{ent}}, A^{\\mathrm{path}}, H_0) \\rightarrow A^{\\mathrm{hard}}",
+      "role": "Diagnoses why the target problem remains hard in the current conceptual regime.",
+      "outputs": "epistemic-hardness.json/.md"
+    },
+    {
+      "skill": "kb-concept-bridge-planner",
+      "operator": "\\mathsf{Bridge}",
+      "signature": "(A^{\\mathrm{conn}}, A^{\\mathrm{ent}}, A^{\\mathrm{path}}, A^{\\mathrm{coh}}, H_0) \\rightarrow A^{\\mathrm{bridge}}",
+      "role": "Prioritizes bridge programs between the most consequential concepts and statements.",
+      "outputs": "bridge-plan.json/.md"
+    },
+    {
+      "skill": "kb-gap-abstraction-conjecturer",
+      "operator": "\\mathsf{Conjecture}",
+      "signature": "(A^{\\mathrm{conn}}, A^{\\mathrm{path}}, A^{\\mathrm{bridge}}, A^{\\mathrm{hard}}, H_0) \\rightarrow A^{\\mathrm{conj}}",
+      "role": "Conjectures the bridge objects or abstraction families that could close the strongest concept gaps.",
+      "outputs": "concept-gap-abstractions.json/.md"
+    },
+    {
+      "skill": "kb-novel-proof-strategist",
+      "operator": "\\mathsf{Strategize}",
+      "signature": "(A^{\\mathrm{ent}}, A^{\\mathrm{path}}, A^{\\mathrm{bridge}}, A^{\\mathrm{conj}}, A^{\\mathrm{coh}}, H_0) \\rightarrow A^{\\mathrm{strat}}",
+      "role": "Designs proof strategies that trade off leverage, novelty, and barrier awareness.",
+      "outputs": "proof-strategies.json/.md, novelty prompt"
+    },
+    {
+      "skill": "kb-proof-sketcher",
+      "operator": "\\mathsf{Sketch}",
+      "signature": "(A^{\\mathrm{conj}}, A^{\\mathrm{strat}}, A^{\\mathrm{bridge}}, H_0) \\rightarrow A^{\\mathrm{sketch}}",
+      "role": "Turns conjectured bridge objects into structured proof-outline programs with obligations and abort conditions.",
+      "outputs": "proof-sketches.json/.md, paper-style-argument.md"
+    },
+    {
+      "skill": "kb-hypothesis-evaluator",
+      "operator": "\\mathsf{HypEval}",
+      "signature": "(\\mathcal{K}, H_0, A^{\\mathrm{conn}}, A^{\\mathrm{coh}}) \\rightarrow A^{\\mathrm{eval}}",
+      "role": "Scores each hypothesis as supported, refuted, or inconclusive using structural and coherence evidence.",
+      "outputs": "hypothesis-evaluation.json/.md, optional phyp/*.hypotheses-evaluated.md, optional updated phyp"
+    },
+    {
+      "skill": "kb-hypothesis-refutation-loop",
+      "operator": "\\mathsf{HypLoop}",
+      "signature": "(\\mathcal{K}, H_0, A^{\\mathrm{eval}}, A^{\\mathrm{coh}}) \\rightarrow A^{\\mathrm{loop}}",
+      "role": "Iterates unresolved hypotheses and performs round-level belief revision.",
+      "outputs": "hypothesis-refutation-loop.json/.md, phyp/*.hypotheses-reviewed.md, reviewed phyp"
+    },
+    {
+      "skill": "kb-revision-loop",
+      "operator": "\\mathsf{Revise}",
+      "signature": "(\\mathcal{K}, H_0, A^{\\mathrm{loop}}, A^{\\mathrm{coh}}) \\rightarrow (\\mathcal{K}', H')",
+      "role": "Repairs the ontology or representation when iterative testing stagnates or damages global coherence.",
+      "outputs": "revision-loop.json/.md"
+    },
+    {
+      "skill": "kb-expert-paper-generator",
+      "operator": "\\mathsf{Paper}",
+      "signature": "(\\mathcal{K}, A^{\\mathrm{coh}}, A^{\\mathrm{path}}, A^{\\mathrm{bridge}}, A^{\\mathrm{conj}}, A^{\\mathrm{strat}}, A^{\\mathrm{sketch}}, A^{\\mathrm{eval}}, A^{\\mathrm{loop}}) \\rightarrow A^{\\mathrm{paper}}",
+      "role": "Produces a paper-style synthesis and an explicit expert-facing prioritization over the strongest hypotheses.",
+      "outputs": "expert-hypothesis-paper.json/.md/.tex"
+    }
+  ],
+  "worked_example": {
+    "title": "Markov Kakutani Fixed Point Theorem",
+    "kb": "KB/markov-kakutani-fixed-point-theorem.kb.md",
+    "working_kb": "/Users/user/files/abducer/abducer/artifacts/markov-kakutani-fixed-point-theorem/discovery-simulation/working-kb/markov-kakutani-fixed-point-theorem.kb.md",
+    "target_statement": "st.thm.markov-kakutani",
+    "knockout_profile": "bridge-concept",
+    "iterations_executed": "8",
+    "best_replication_score": "0.909892",
+    "best_iteration": "8",
+    "hidden_bridge_concepts": [
+      "cnc.invariant-fixed-point-subset"
+    ],
+    "hidden_bridge_terms": [
+      "fixed-point subset"
+    ],
+    "removed_statements": [
+      "st.def.commuting-affine-family",
+      "st.def.fixed-point-subset"
+    ],
+    "sequence": [
+      "st.def.compact-convex-set",
+      "st.def.commuting-affine-family",
+      "st.def.fixed-point-subset",
+      "st.lem.cesaro-averages",
+      "st.lem.single-map-fixed-point",
+      "st.prop.fixed-point-subset-structure",
+      "st.lem.commuting-preserves-fixed-point-subset",
+      "st.lem.finite-family-common-fixed-point",
+      "st.thm.markov-kakutani"
+    ],
+    "artifact_root": [
+      "/Users/user/files/abducer/abducer/artifacts/markov-kakutani-fixed-point-theorem/discovery-simulation/iter-008"
+    ],
+    "report_path": "artifacts/markov-kakutani-fixed-point-theorem/discovery-simulation/simulation-report.md",
+    "concept_evolution_path": "artifacts/markov-kakutani-fixed-point-theorem/discovery-simulation/iter-008/concept-evolution.md",
+    "phases": [
+      {
+        "title": "Foundational Definitions",
+        "summary": "st.def.compact-convex-set (definition): The theorem lives on a nonempty compact convex subset because averaging and compactness both need this ambient geometry."
+      },
+      {
+        "title": "Affine Averaging",
+        "summary": "st.lem.cesaro-averages (lemma): Cesaro averages of a single affine orbit stay inside K and provide the averaging mechanism behind single-map fixed-point extraction."
+      },
+      {
+        "title": "Single-Map Fixed-Point Extraction",
+        "summary": "st.lem.single-map-fixed-point (lemma): A single continuous affine self-map of a nonempty compact convex set has at least one fixed point."
+      },
+      {
+        "title": "Invariant Fixed-Point Subset",
+        "summary": "st.prop.fixed-point-subset-structure (proposition): The [hidden bridge concept] of a single map is itself a nonempty compact convex set."
+      },
+      {
+        "title": "Commuting Invariance",
+        "summary": "st.lem.commuting-preserves-fixed-point-subset (lemma): If two affine maps commute, then one preserves the [hidden bridge concept] of the other."
+      },
+      {
+        "title": "Finite-Family Lift",
+        "summary": "st.lem.finite-family-common-fixed-point (lemma): One can build a common fixed point for any finite commuting subfamily by iteratively restricting to invariant [hidden bridge concept]s."
+      },
+      {
+        "title": "Common Fixed-Point Theorem",
+        "summary": "st.thm.markov-kakutani (theorem): A commuting family of continuous affine self-maps on a nonempty compact convex set has a common fixed point."
+      },
+      {
+        "title": "Examples and Interpretation",
+        "summary": "st.ex.interval-commuting-projections (example): On a compact interval, commuting affine self-maps illustrate the theorem in the simplest convex setting."
+      }
+    ]
+  },
+  "latex_path": "docs/publications/framework-state-formalization.tex",
+  "latex_source": "\\documentclass[11pt]{article}\n\\usepackage[margin=1in]{geometry}\n\\usepackage[T1]{fontenc}\n\\usepackage[utf8]{inputenc}\n\\usepackage{lmodern}\n\\usepackage{amsmath,amssymb,amsthm}\n\\usepackage{enumitem}\n\\usepackage{hyperref}\n\\usepackage{xcolor}\n\\hypersetup{colorlinks=true,linkcolor=blue!50!black,urlcolor=blue!50!black,pdftitle={Current Abducer Framework State}}\n\\title{A Succinct Formalization of the Current Abducer Reasoning Framework}\n\\author{Neuro-symbolic AI Group\\\\Idiap Research Institute}\n\\date{March 12, 2026}\n\\newtheorem{definition}{Definition}\n\\begin{document}\n\\maketitle\n\\begin{abstract}\nThis note formalizes the current implementation state of the Abducer framework as a typed inferential system over mathematical knowledge bases, stage artifacts, and reasoning logs. The formalization is intentionally brief: it records the KB state, the implemented pipeline, the current scoring semantics, and the observability contract, then exemplifies them through one end-to-end theorem-discovery run.\n\\end{abstract}\n\\section{Framework Signature}\nWe model the current framework state by the tuple\n\\[\n\\mathfrak{F} = (\\mathcal{K}, \\mathcal{A}, \\mathcal{M}, \\mathcal{T}, \\Lambda),\n\\]\nwhere $\\mathcal{K}$ is the current problem KB, $\\mathcal{A}$ is the structured artifact state, $\\mathcal{M}$ is the set of inference modes, $\\mathcal{T}$ is the set of deterministic stage operators, and $\\Lambda$ is the reasoning-log trace family.\n\\begin{definition}[KB state]\nThe current KB state is represented as\n\\[\n\\mathcal{K} = (S, C, M, B, R, H, O),\n\\]\nwhere $S$ is the statement set, $C$ the concept set, $M$ the method/proof-regime set, $B$ the barrier set, $R$ the typed relation set, $H$ the proof-hypothesis set, and $O$ the current open obligations.\n\\end{definition}\nThe derived artifact state is represented as\n\\[\n\\begin{aligned}\n\\mathcal{A} &= (A^{\\mathrm{conn}}, A^{\\mathrm{coh}}, A^{\\mathrm{ent}}, A^{\\mathrm{path}}, A^{\\mathrm{hard}}, A^{\\mathrm{bridge}},\\\\\n&\\quad A^{\\mathrm{conj}}, A^{\\mathrm{strat}}, A^{\\mathrm{sketch}}, A^{\\mathrm{eval}}, A^{\\mathrm{loop}}, A^{\\mathrm{paper}})\n\\end{aligned}\n\\]\n\\section{Current Mode Sets}\nThe current user-facing primary inference modes are\n\\[\n\\begin{aligned}\n\\mathcal{M}_{\\mathrm{primary}} &= \\{\\texttt{cohere}, \\texttt{explain}, \\texttt{deduce}, \\texttt{abduce},\\\\\n&\\quad \\texttt{conjecture}, \\texttt{proof-sketch}, \\texttt{expert-paper}\\}\n\\end{aligned}\n\\]\nThe current prompt-driven auxiliary modes are\n\\[\n\\begin{aligned}\n\\mathcal{M}_{\\mathrm{prompt}} &= \\{\\texttt{kb-explain}, \\texttt{kb-deduce}, \\texttt{kb-abduce}, \\texttt{kb-induce}\\}\n\\end{aligned}\n\\]\nThe current orchestrator intents are\n\\[\n\\begin{aligned}\n\\mathcal{M}_{\\mathrm{orch}} &= \\{\\texttt{cohere}, \\texttt{connect}, \\texttt{coherence-eval}, \\texttt{interpretation-reports},\\\\\n&\\quad \\texttt{process-graph}, \\texttt{reasoning-dynamics}, \\texttt{entrypoints}, \\texttt{hardness},\\\\\n&\\quad \\texttt{bridge-plan}, \\texttt{conjecture}, \\texttt{strategies}, \\texttt{proof-sketch},\\\\\n&\\quad \\texttt{expert-paper}, \\texttt{hypothesis-eval}, \\texttt{hypothesis-loop}, \\texttt{revision-loop},\\\\\n&\\quad \\texttt{abductive-loop}, \\texttt{pipeline}\\}\n\\end{aligned}\n\\]\nThe composite relation \\(\\mathsf{Cohere} = \\mathsf{Coherence} \\circ \\mathsf{Connect}\\) remains the preferred entry operator for relational plus coherentist formation.\n\\section{Pipeline Semantics}\nThe implemented end-to-end pipeline can be written as\n\\[\n\\begin{aligned}\\mathsf{Pipeline} &= \\mathsf{Paper} \\circ \\mathsf{Revise} \\circ \\mathsf{HypLoop} \\circ \\mathsf{HypEval} \\\\&\\circ \\mathsf{Sketch} \\circ \\mathsf{Strategize} \\circ \\mathsf{Conjecture} \\circ \\mathsf{Bridge} \\\\&\\circ \\mathsf{Hardness} \\circ \\mathsf{Path} \\circ \\mathsf{Entry} \\circ \\mathsf{Coherence} \\circ \\mathsf{Connect}\\end{aligned}\n\\]\nwith the revision operator closing the loop by returning a revised KB and revised hypothesis state whenever the hypothesis loop stalls or damages global coherence.\nThe current run state at step $t$ can therefore be written as\n\\[\n\\mathcal{X}_t = (\\mathcal{K}_t, \\mathcal{A}_t, \\Lambda_t), \\qquad \\mathcal{X}_{t+1} = \\mathsf{Revise}(\\mathcal{X}_t) \\ \\text{when revision is triggered}.\n\\]\nThe core operator family is grouped below by function rather than by stage table, since the framework is best understood through its end-to-end execution rather than a flat catalogue of scripts.\n\\begin{itemize}[leftmargin=*,itemsep=0.25em]\n\\item \\textbf{Formation layer}: $\\mathsf{Connect}$, $\\mathsf{Coherence}$, $\\mathsf{Entry}$, and $\\mathsf{Path}$ transform a raw KB into a connected, scored, and ordered inferential frontier.\n\\item \\textbf{Discovery layer}: $\\mathsf{Hardness}$, $\\mathsf{Bridge}$, and $\\mathsf{Conjecture}$ identify the blocking gap and propose the bridge object or abstraction family that would resolve it.\n\\item \\textbf{Program layer}: $\\mathsf{Strategize}$ and $\\mathsf{Sketch}$ turn bridge objects into candidate proof programs with obligations, invariants, and abort conditions.\n\\item \\textbf{Revision layer}: $\\mathsf{HypEval}$, $\\mathsf{HypLoop}$, $\\mathsf{Revise}$, and $\\mathsf{Paper}$ evaluate the current bridge set, revise the KB when necessary, and emit the expert-facing synthesis.\n\\end{itemize}\n\\section{Worked End-to-End Example}\nAs a concrete witness of the current framework behavior, we use the masked-bridge discovery simulation for the \\textit{Markov Kakutani Fixed Point Theorem}. In this run the working KB hides the central bridge concept while the pipeline attempts to recover a proof-relevant route to the target theorem.\n\\[\n\\mathcal{K}^{\\mathrm{work}}_{\\mathrm{ex}} = \\mathcal{K}_{\\mathrm{ex}} \\setminus \\{\\text{explicit bridge-concept annotations}\\},\n\\qquad\n\\mathsf{Pipeline}(\\mathcal{K}^{\\mathrm{work}}_{\\mathrm{ex}}) \\rightsquigarrow (\\mathcal{A}^{\\star}, H^{\\star}, \\Lambda^{\\star}).\n\\]\nThe selected example uses target statement \\texttt{st.thm.markov-kakutani}, knockout profile \\texttt{bridge-concept}, executes 8 iterations, and reaches best replication score 0.909892.\nIf the bridge concept is denoted by $b^{\\star}$, the hidden bridge family in the current run is\n\\[\nb^{\\star} \\in \\{\\texttt{cnc.invariant-fixed-point-subset}\\},\n\\]\nwith hidden bridge terms \\texttt{fixed-point subset}.\nThe recovered discovery chain for the best iteration is:\n\\begin{enumerate}[leftmargin=*,itemsep=0.2em]\n\\item \\texttt{st.def.compact-convex-set}\n\\item \\texttt{st.def.commuting-affine-family}\n\\item \\texttt{st.def.fixed-point-subset}\n\\item \\texttt{st.lem.cesaro-averages}\n\\item \\texttt{st.lem.single-map-fixed-point}\n\\item \\texttt{st.prop.fixed-point-subset-structure}\n\\item \\texttt{st.lem.commuting-preserves-fixed-point-subset}\n\\item \\texttt{st.lem.finite-family-common-fixed-point}\n\\item \\texttt{st.thm.markov-kakutani}\n\\end{enumerate}\nThe theorem-local conceptual phases recovered by the framework are:\n\\begin{itemize}[leftmargin=*,itemsep=0.2em]\n\\item \\textbf{Foundational Definitions}: st.def.compact-convex-set (definition): The theorem lives on a nonempty compact convex subset because averaging and compactness both need this ambient geometry.\n\\item \\textbf{Affine Averaging}: st.lem.cesaro-averages (lemma): Cesaro averages of a single affine orbit stay inside K and provide the averaging mechanism behind single-map fixed-point extraction.\n\\item \\textbf{Single-Map Fixed-Point Extraction}: st.lem.single-map-fixed-point (lemma): A single continuous affine self-map of a nonempty compact convex set has at least one fixed point.\n\\item \\textbf{Invariant Fixed-Point Subset}: st.prop.fixed-point-subset-structure (proposition): The [hidden bridge concept] of a single map is itself a nonempty compact convex set.\n\\item \\textbf{Commuting Invariance}: st.lem.commuting-preserves-fixed-point-subset (lemma): If two affine maps commute, then one preserves the [hidden bridge concept] of the other.\n\\item \\textbf{Finite-Family Lift}: st.lem.finite-family-common-fixed-point (lemma): One can build a common fixed point for any finite commuting subfamily by iteratively restricting to invariant [hidden bridge concept]s.\n\\item \\textbf{Common Fixed-Point Theorem}: st.thm.markov-kakutani (theorem): A commuting family of continuous affine self-maps on a nonempty compact convex set has a common fixed point.\n\\item \\textbf{Examples and Interpretation}: st.ex.interval-commuting-projections (example): On a compact interval, commuting affine self-maps illustrate the theorem in the simplest convex setting.\n\\end{itemize}\nThe example operationally illustrates the full pipeline in four grouped moves:\n\\begin{enumerate}[leftmargin=*,itemsep=0.25em]\n\\item $\\mathsf{Connect}$, $\\mathsf{Coherence}$, $\\mathsf{Entry}$, and $\\mathsf{Path}$ isolate the highest-leverage statements and expose the missing bridge region rather than treating the theorem as a flat statement-retrieval task.\n\\item $\\mathsf{Hardness}$ and $\\mathsf{Bridge}$ localize the inferential bottleneck as the absent bridge object that connects single-map fixed-point extraction to the finite-family lift.\n\\item $\\mathsf{Conjecture}$, $\\mathsf{Strategize}$, and $\\mathsf{Sketch}$ turn that missing bridge into explicit bridge-object proposals, strategy families, and proof obligations.\n\\item $\\mathsf{HypEval}$, $\\mathsf{HypLoop}$, and $\\mathsf{Revise}$ test whether the proposed bridge improves coherence and reconstructs the target route without reintroducing hidden annotations by hand.\n\\end{enumerate}\nThis witness is the intended meaning of the framework signature: the system is not merely scoring isolated hypotheses, but reconstructing a concept-mediated route through a KB whose proof-relevant center has been partially removed.\n\\section{Selection and Scoring Semantics}\nThe framework currently uses stage-specific weighted heuristics rather than a single universal scalar objective. A concise common form is\n\\[\n\\operatorname{score}(h) = \\alpha s(h) + \\beta c(h) + \\gamma e(h) + \\delta \\ell(h) + \\epsilon n(h) - \\rho r(h) - \\sigma b(h),\n\\]\nwhere $s(h)$ denotes support, $c(h)$ coherence contribution, $e(h)$ explanatory value, $\\ell(h)$ structural leverage, $n(h)$ novelty or fertility, $r(h)$ refutation pressure, and $b(h)$ barrier pressure. The expert-paper stage instantiates an explicit transparent variant of this weighted policy.\n\\section{Observability Contract}\nEach scripted operator emits a reasoning-log record of the form\n\\[\n\\lambda_i = (\\mathrm{agent}_i, \\mathrm{inputs}_i, \\mathrm{outputs}_i, \\mathrm{summary}_i), \\qquad \\Lambda = \\{\\lambda_1, \\ldots, \\lambda_n\\}.\n\\]\nThis logging contract makes the reasoning process replayable at both the stage level and the run level.\n\\begin{itemize}[leftmargin=*,itemsep=0.2em]\n\\item $\\mathsf{Connect}$ produces connection-analysis.json/.md, phyp/*.proof-hypotheses.yaml.\n\\item $\\mathsf{Coherence}$ produces coherence-report.json/.md.\n\\item $\\mathsf{Entry}$ produces entrypoints.json/.md.\n\\item $\\mathsf{Path}$ produces entrypoint-pathways.json/.md.\n\\item $\\mathsf{Hardness}$ produces epistemic-hardness.json/.md.\n\\item $\\mathsf{Bridge}$ produces bridge-plan.json/.md.\n\\item $\\mathsf{Conjecture}$ produces concept-gap-abstractions.json/.md.\n\\item $\\mathsf{Strategize}$ produces proof-strategies.json/.md, novelty prompt.\n\\item $\\mathsf{Sketch}$ produces proof-sketches.json/.md, paper-style-argument.md.\n\\item $\\mathsf{HypEval}$ produces hypothesis-evaluation.json/.md, optional phyp/*.hypotheses-evaluated.md, optional updated phyp.\n\\item $\\mathsf{HypLoop}$ produces hypothesis-refutation-loop.json/.md, phyp/*.hypotheses-reviewed.md, reviewed phyp.\n\\item $\\mathsf{Revise}$ produces revision-loop.json/.md.\n\\item $\\mathsf{Paper}$ produces expert-hypothesis-paper.json/.md/.tex.\n\\item $\\mathsf{Interpret}$ supports the generation of generates human-readable interpretation and discovery-process reports.\n\\item $\\mathsf{ProcessGraph}$ supports the generation of builds the typed dynamic process graph from run-scoped reasoning logs.\n\\item $\\mathsf{Dynamics}$ supports the generation of summarizes reasoning dynamics, operator counts, and graph-evolution metrics over a run.\n\\end{itemize}\n\\section{Source Basis}\nThis formalization was generated from the current repository documentation sources:\n\\begin{itemize}[leftmargin=*,itemsep=0.2em]\n\\item \\url{README.md}\n\\item \\url{docs/architecture/architecture.md}\n\\item \\url{docs/architecture/orchestration.md}\n\\item \\url{docs/reference/skills.md}\n\\item \\url{artifacts/markov-kakutani-fixed-point-theorem/discovery-simulation/simulation-report.md}\n\\item \\url{artifacts/markov-kakutani-fixed-point-theorem/discovery-simulation/iter-008/concept-evolution.md}\n\\end{itemize}\n\\end{document}\n"
+}

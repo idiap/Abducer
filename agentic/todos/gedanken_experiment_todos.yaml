@@ -1,0 +1,596 @@
+[
+  {
+    "id": "GEX-001",
+    "type": "planning_todo",
+    "phase": "gedanken-use-criteria",
+    "owner": "agentic/spec",
+    "priority": "critical",
+    "risk_class": "thought-experiments-used-as-decoration",
+    "title": "Formalize criteria for when a Gedanken experiment is warranted",
+    "intent": "Make the workflow decide when to spend discovery budget on an imagined concrete situation and when to defer, compute directly, or quarantine as analogy.",
+    "conceptual_model": "A Gedanken experiment should be invoked only when it can isolate a mechanism that ordinary deduction, qualitative graph reasoning, or a direct concrete probe has not yet localized. It must name a controlled contrast, varied variables, held-fixed assumptions, expected observations, transfer scope, and follow-up value. It should not be used as rhetorical color or as a replacement for proof.",
+    "use_skills": [
+      "gedanken-need-assessor",
+      "gedanken-transfer-guard",
+      "abducer-obligation-gatekeeper"
+    ],
+    "implementation_steps": [
+      "Extend `agentic/spec/gedanken_experiment_packet.schema.json` with a compact `need_assessment` object containing criteria_met, criteria_missing, decision, and rejected_alternatives.",
+      "Make `gedanken-need-assessor` require a comparison among `design_now`, `run_concrete_probe_first`, `defer_until_variable_typed`, `defer_until_regime_typed`, `quarantine_as_analogy`, and `not_needed`.",
+      "Add a validator check that `design_now` packets cite at least two positive trigger criteria and one rejected alternative.",
+      "Document the decision boundary in the skill output contract and report text."
+    ],
+    "validation_commands": [
+      "python agentic/scripts/validate_gedanken_experiment_packets.py",
+      "python agentic/scripts/validate_skill_depth.py",
+      "python agentic/scripts/validate_todos.py"
+    ],
+    "required_artifact": [
+      "agentic/spec/gedanken_experiment_packet.schema.json",
+      "skills/evaluation/gedanken-need-assessor/SKILL.md",
+      "agentic/scripts/validate_gedanken_experiment_packets.py"
+    ],
+    "acceptance_criteria": [
+      "Every generated Gedanken packet states why a thought experiment is needed rather than a direct derivation or concrete probe.",
+      "Packets rejected as analogy-only remain visible with a quarantine reason instead of disappearing.",
+      "The validator rejects `design_now` packets that lack positive criteria or rejected alternatives.",
+      "The decision boundary is target-agnostic but supports examples such as spectral leakage, noncommuting limits, and finite-family positivity."
+    ],
+    "blocked_by": [],
+    "evidence": [
+      "file:agentic/spec/gedanken_experiment_packet.schema.json",
+      "file:skills/evaluation/gedanken-need-assessor/SKILL.md",
+      "file:agentic/scripts/validate_gedanken_experiment_packets.py",
+      "cmd:python agentic/scripts/validate_gedanken_experiment_packets.py",
+      "cmd:python agentic/scripts/validate_skill_depth.py"
+    ],
+    "review_date": "2026-08-09",
+    "failure_modes": [
+      "The assessor licenses every interesting idea as a Gedanken experiment.",
+      "The workflow uses thought experiments where a concrete calculation is already available.",
+      "Analogy-only packets are promoted instead of quarantined."
+    ],
+    "exit_criteria": [
+      "The discovery loop can justify why a Gedanken experiment is the right next epistemic move."
+    ],
+    "status": "resolved"
+  },
+  {
+    "id": "GEX-002",
+    "type": "workflow_todo",
+    "phase": "live-cycle-generation",
+    "owner": "agentic/scripts",
+    "priority": "critical",
+    "risk_class": "static-packets-instead-of-generative-design",
+    "title": "Generate Gedanken packets from live branch context",
+    "intent": "Move beyond static seed packets by making each relevant marathon cycle generate target-specific Gedanken experiment candidates from the current branch, qualitative graph, and blocking gap.",
+    "conceptual_model": "The current builder provides seed examples. The next step is generative use: given a branch with a typed blocking gap, the loop should ask whether an imagined situation would expose the missing mechanism. If yes, it should generate a packet whose variables, interventions, observations, and follow-up tasks refer to the active branch and cycle.",
+    "use_skills": [
+      "gedanken-need-assessor",
+      "gedanken-situation-designer",
+      "gedanken-counterfactual-variant-builder",
+      "gedanken-transfer-guard"
+    ],
+    "implementation_steps": [
+      "Extend `agentic/scripts/run_branch_exploration_cycle.py` or the marathon runner prompt assembly to include the `gedanken_experiment_design` phase output contract.",
+      "Pass active branch title, blocking gap, qualitative graph edges, falsifiers, and next-experiment queue context to the Gedanken skill cluster.",
+      "Persist generated packet fragments inside the cycle packet or a cycle-local artifact under `agentic/runs/discovery_marathons/<run>/gedanken/`.",
+      "Teach `build_gedanken_experiment_packets.py` to aggregate live cycle-local packets before falling back to static seed packets.",
+      "Mark packets with originating cycle IDs and branch IDs."
+    ],
+    "validation_commands": [
+      "python agentic/scripts/run_discovery_marathon.py --help",
+      "python agentic/scripts/build_gedanken_experiment_packets.py --target yang-mills-existence-and-mass-gap-target",
+      "python agentic/scripts/validate_gedanken_experiment_packets.py",
+      "python agentic/scripts/validate_discovery_marathon_cycle.py"
+    ],
+    "required_artifact": [
+      "agentic/scripts/run_branch_exploration_cycle.py",
+      "agentic/scripts/build_gedanken_experiment_packets.py",
+      "agentic/runs/discovery_marathons/<run>/gedanken/"
+    ],
+    "acceptance_criteria": [
+      "At least one live cycle can emit a branch-specific Gedanken packet without manual editing.",
+      "Generated packets cite originating cycle IDs and branch IDs.",
+      "The aggregator preserves live packets and does not overwrite them with static examples.",
+      "The cycle validator accepts live packets or explicit skip reasons for the Gedanken phase."
+    ],
+    "blocked_by": [
+      "GEX-001"
+    ],
+    "evidence": [
+      "file:agentic/scripts/run_branch_exploration_cycle.py",
+      "file:agentic/scripts/build_gedanken_experiment_packets.py",
+      "file:agentic/reports/gedanken_experiments/latest.json",
+      "cmd:python agentic/scripts/build_gedanken_experiment_packets.py --target yang-mills-existence-and-mass-gap-target",
+      "cmd:python agentic/scripts/validate_gedanken_experiment_packets.py"
+    ],
+    "review_date": "2026-08-09",
+    "failure_modes": [
+      "The builder keeps producing generic seed packets unrelated to the active branch.",
+      "Cycle packets mention thought experiments but do not persist structured packet data.",
+      "Generated situations omit the branch blocking gap or qualitative graph edge they are meant to clarify."
+    ],
+    "exit_criteria": [
+      "Gedanken experiment generation becomes part of live cycle production, not a static report artifact."
+    ],
+    "status": "resolved"
+  },
+  {
+    "id": "GEX-003",
+    "type": "workflow_todo",
+    "phase": "followup-queue-integration",
+    "owner": "agentic/scripts",
+    "priority": "critical",
+    "risk_class": "insight-not-used-by-next-cycle",
+    "title": "Insert accepted Gedanken follow-up tasks into the ranked next-experiment queue",
+    "intent": "Ensure validated thought-experiment insights become actionable queue items with payoff, demotion, and anti-drift criteria.",
+    "conceptual_model": "A thought experiment matters only if it changes what the loop does next. Accepted packets should produce ranked follow-up tasks such as derive a support condition, compute a determinant probe, falsify a limit-order claim, update a graph edge, or quarantine an analogy. These should enter the same queue as other next experiments and be subject to the same branch-control discipline.",
+    "use_skills": [
+      "gedanken-followup-planner",
+      "next-experiment-queue-ranker",
+      "long-horizon-route-portfolio-manager"
+    ],
+    "implementation_steps": [
+      "Extend `build_ranked_next_experiment_queue` in `agentic/scripts/generate_discovery_marathon_html.py` or a dedicated queue builder to ingest `followup_cycle_tasks` from Gedanken packets.",
+      "Add queue fields for packet_id, situation_title, transfer_verdict, and required_skills.",
+      "Raise priority only when the follow-up task has a concrete decision value and transfer guard is not quarantine.",
+      "Add validator checks that Gedanken-derived queue items include success criteria, demotion criteria, required skills, and packet provenance.",
+      "Render Gedanken-derived queue items distinctly in the ranked queue tab."
+    ],
+    "validation_commands": [
+      "python agentic/scripts/build_gedanken_experiment_packets.py --target yang-mills-existence-and-mass-gap-target",
+      "python agentic/scripts/generate_discovery_marathon_html.py",
+      "python agentic/scripts/validate_discovery_marathon_report.py"
+    ],
+    "required_artifact": [
+      "agentic/scripts/generate_discovery_marathon_html.py",
+      "agentic/reports/discovery_marathon/full_timeline.html",
+      "agentic/reports/gedanken_experiments/latest.json"
+    ],
+    "acceptance_criteria": [
+      "Gedanken follow-up tasks appear in the ranked next-experiment queue with packet provenance.",
+      "The queue distinguishes conceptual-probe follow-ups from proof obligations and concrete computations.",
+      "Quarantined analogy-only packets do not receive active-run priority.",
+      "The report validator fails if a Gedanken-derived queue item lacks success or demotion criteria."
+    ],
+    "blocked_by": [
+      "GEX-002"
+    ],
+    "evidence": [
+      "file:agentic/scripts/generate_discovery_marathon_html.py",
+      "file:agentic/reports/discovery_marathon/full_timeline.html",
+      "file:agentic/reports/gedanken_experiments/latest.json",
+      "cmd:python agentic/scripts/generate_discovery_marathon_html.py",
+      "cmd:python agentic/scripts/validate_discovery_marathon_report.py"
+    ],
+    "review_date": "2026-08-09",
+    "failure_modes": [
+      "Packets are visible in a tab but never influence scheduling.",
+      "Thought-experiment tasks outrank sharper mathematical work without decision value.",
+      "Follow-up tasks are inserted without transfer guard provenance."
+    ],
+    "exit_criteria": [
+      "An accepted thought experiment can drive the next cycle through the same ranked queue used by other experiments."
+    ],
+    "status": "resolved"
+  },
+  {
+    "id": "GEX-004",
+    "type": "workflow_todo",
+    "phase": "qualitative-graph-linkage",
+    "owner": "agentic/scripts",
+    "priority": "high",
+    "risk_class": "gedanken-insight-not-accumulating",
+    "title": "Link Gedanken packets to qualitative mechanistic graph edges",
+    "intent": "Make thought experiments update, challenge, or annotate the qualitative mechanistic graph instead of living as separate stories.",
+    "conceptual_model": "Gedanken experiments often clarify why one variable might control another, where a relation fails, or which transfer certificate is missing. That information belongs on the mechanistic graph as an edge annotation, challenge, probe, or follow-up pointer. The graph should show which relations were inspired, falsified, or sharpened by imagined situations.",
+    "use_skills": [
+      "gedanken-transfer-guard",
+      "qualitative-physics-falsifier",
+      "monotonicity-sensitivity-prober"
+    ],
+    "implementation_steps": [
+      "Add optional fields to Gedanken packets for affected_node_ids, affected_edge_ids, proposed_graph_updates, and graph_update_action.",
+      "Extend `build_qualitative_mechanistic_graph.py` to read accepted Gedanken packet updates when transfer guard allows conceptual transfer.",
+      "Represent thought-experiment effects as `needs_probe`, `challenge_edge`, `revise_edge`, or `annotate_edge`, never as established proof by default.",
+      "Update `validate_qualitative_mechanistic_graph.py` to ensure Gedanken-linked updates preserve packet provenance and epistemic status.",
+      "Render Gedanken provenance in the qualitative graph tab."
+    ],
+    "validation_commands": [
+      "python agentic/scripts/build_qualitative_mechanistic_graph.py --target yang-mills-existence-and-mass-gap-target",
+      "python agentic/scripts/validate_qualitative_mechanistic_graph.py",
+      "python agentic/scripts/validate_gedanken_experiment_packets.py"
+    ],
+    "required_artifact": [
+      "agentic/scripts/build_qualitative_mechanistic_graph.py",
+      "agentic/spec/gedanken_experiment_packet.schema.json",
+      "agentic/state/qualitative_mechanistic_graphs/yang-mills-existence-and-mass-gap-target.json"
+    ],
+    "acceptance_criteria": [
+      "Gedanken packets can identify which graph edge they clarify or challenge.",
+      "The qualitative graph preserves thought-experiment provenance and does not promote conceptual probes to established edges.",
+      "Graph updates from thought experiments include transfer scope and follow-up validation handoff.",
+      "The graph validator rejects packet-linked updates without epistemic status."
+    ],
+    "blocked_by": [
+      "GEX-002"
+    ],
+    "evidence": [
+      "file:agentic/scripts/build_qualitative_mechanistic_graph.py",
+      "file:agentic/scripts/validate_qualitative_mechanistic_graph.py",
+      "file:agentic/state/qualitative_mechanistic_graphs/yang-mills-existence-and-mass-gap-target.json",
+      "cmd:python agentic/scripts/build_qualitative_mechanistic_graph.py --target yang-mills-existence-and-mass-gap-target",
+      "cmd:python agentic/scripts/validate_qualitative_mechanistic_graph.py"
+    ],
+    "review_date": "2026-08-09",
+    "failure_modes": [
+      "Thought experiments remain isolated report cards.",
+      "Graph edges get annotated without packet provenance.",
+      "Conceptual-probe status is silently upgraded to validated relation."
+    ],
+    "exit_criteria": [
+      "The mechanistic graph visibly accumulates what Gedanken experiments taught and what remains only conceptual."
+    ],
+    "status": "resolved"
+  },
+  {
+    "id": "GEX-005",
+    "type": "test_todo",
+    "phase": "adversarial-validation",
+    "owner": "tests",
+    "priority": "high",
+    "risk_class": "seductive-overclaiming-thought-experiments",
+    "title": "Add adversarial Gedanken experiment fixtures",
+    "intent": "Test that validators and skills reject thought experiments that are vivid but ungrounded, analogy-only, proof-overclaiming, or non-actionable.",
+    "conceptual_model": "Thought experiments are powerful partly because they are persuasive. That makes them dangerous in a theorem-discovery loop. The framework needs adversarial fixtures that look fluent but lack transfer scope, omit held-fixed variables, change multiple conditions at once, produce no follow-up task, or claim proof progress.",
+    "use_skills": [
+      "gedanken-transfer-guard",
+      "review-reasoner-epistemologist",
+      "qualitative-physics-falsifier"
+    ],
+    "implementation_steps": [
+      "Add fixtures for missing held-fixed controls, missing transfer certificate, no disconfirming observation, analogy-only carrier, overclaiming proof language, and variant with no diagnostic difference.",
+      "Extend `validate_gedanken_experiment_packets.py` to assert these invalid fixtures fail.",
+      "Add one valid fixture from a non-Yang-Mills domain to ensure target-agnostic behavior.",
+      "Record fixture purpose in file names and validator error messages."
+    ],
+    "validation_commands": [
+      "python agentic/scripts/validate_gedanken_experiment_packets.py",
+      "python agentic/scripts/validate_todos.py"
+    ],
+    "required_artifact": [
+      "tests/fixtures/gedanken_experiments/",
+      "agentic/scripts/validate_gedanken_experiment_packets.py"
+    ],
+    "acceptance_criteria": [
+      "The validator rejects at least five distinct invalid Gedanken packet classes.",
+      "The validator still accepts at least two valid packets from different domains.",
+      "Invalid fixtures fail for the intended reason rather than incidental JSON shape errors.",
+      "Proof-overclaiming language is caught even when the packet is otherwise well formed."
+    ],
+    "blocked_by": [
+      "GEX-001"
+    ],
+    "evidence": [
+      "file:tests/fixtures/gedanken_experiments/valid_packet.json",
+      "file:tests/fixtures/gedanken_experiments/valid_traffic_packet.json",
+      "file:tests/fixtures/gedanken_experiments/invalid_overclaim_packet.json",
+      "file:tests/fixtures/gedanken_experiments/invalid_missing_held_fixed.json",
+      "file:tests/fixtures/gedanken_experiments/invalid_missing_transfer_certificate.json",
+      "file:tests/fixtures/gedanken_experiments/invalid_no_disconfirming_observation.json",
+      "file:tests/fixtures/gedanken_experiments/invalid_analogy_wrong_verdict.json",
+      "file:tests/fixtures/gedanken_experiments/invalid_nondiagnostic_variant.json",
+      "cmd:python agentic/scripts/validate_gedanken_experiment_packets.py"
+    ],
+    "review_date": "2026-08-09",
+    "failure_modes": [
+      "Fixtures test only JSON shape and not epistemic risk.",
+      "Validators reject valid conceptual probes because they are not concrete computations.",
+      "Overclaim language slips through in follow-up task text."
+    ],
+    "exit_criteria": [
+      "The Gedanken layer has adversarial coverage against persuasive but low-value thought experiments."
+    ],
+    "status": "resolved"
+  },
+  {
+    "id": "GEX-006",
+    "type": "report_todo",
+    "phase": "report-usability",
+    "owner": "agentic/scripts",
+    "priority": "medium",
+    "risk_class": "thought-experiment-report-not-actionable",
+    "title": "Improve the Gedanken report tab for workflow decisions",
+    "intent": "Make the report show not only thought-experiment narratives but also decision criteria, transfer verdicts, follow-up tasks, and branch-control consequences.",
+    "conceptual_model": "The report should help a researcher decide what to do next. A good Gedanken tab should answer: why was this needed, what is varied, what is held fixed, what should be observed, what would disconfirm it, what transfers, what does not, and what exact next-cycle task follows.",
+    "use_skills": [
+      "show-reasoning",
+      "gedanken-followup-planner",
+      "kb-explain"
+    ],
+    "implementation_steps": [
+      "Add filters or visual chips for need decision, epistemic status, transfer verdict, affected branch, and follow-up action.",
+      "Render interventions and observations in compact structured cards rather than dense prose.",
+      "Show follow-up tasks with success and demotion criteria beside required skills.",
+      "Link packet IDs to ranked queue items and qualitative graph edges when available.",
+      "Update the report validator to check that the tab renders transfer and follow-up sections."
+    ],
+    "validation_commands": [
+      "python agentic/scripts/build_gedanken_experiment_packets.py --target yang-mills-existence-and-mass-gap-target",
+      "python agentic/scripts/generate_discovery_marathon_html.py",
+      "python agentic/scripts/validate_discovery_marathon_report.py"
+    ],
+    "required_artifact": [
+      "agentic/scripts/generate_discovery_marathon_html.py",
+      "agentic/reports/discovery_marathon/full_timeline.html"
+    ],
+    "acceptance_criteria": [
+      "The report makes need decision, transfer limits, expected observations, and follow-up actions visible without opening raw JSON.",
+      "Users can tell which packets are conceptual-only versus ready for follow-up.",
+      "Gedanken report content remains MathJax-safe and does not break existing timeline tabs.",
+      "The validator fails if the tab hides follow-up tasks or transfer scope."
+    ],
+    "blocked_by": [
+      "GEX-003",
+      "GEX-004"
+    ],
+    "evidence": [
+      "file:agentic/scripts/generate_discovery_marathon_html.py",
+      "file:agentic/reports/discovery_marathon/full_timeline.html",
+      "cmd:python agentic/scripts/generate_discovery_marathon_html.py",
+      "cmd:python agentic/scripts/validate_discovery_marathon_report.py"
+    ],
+    "review_date": "2026-08-09",
+    "failure_modes": [
+      "The tab becomes an attractive narrative archive with no control consequences.",
+      "Follow-up tasks are buried under prose.",
+      "Transfer warnings are visually weaker than the imagined situation."
+    ],
+    "exit_criteria": [
+      "The report lets the user inspect how each thought experiment should affect the next discovery cycle."
+    ],
+    "status": "resolved"
+  },
+  {
+    "id": "GEX-007",
+    "type": "workflow_todo",
+    "phase": "branch-control",
+    "owner": "agentic/scripts",
+    "priority": "high",
+    "risk_class": "premature-stop-before-conceptual-clarification",
+    "title": "Use Gedanken availability in branch continue, backtrack, quarantine, and stop decisions",
+    "intent": "Prevent premature branch stopping when a well-formed thought experiment could still isolate a hidden assumption, while preventing continuation based only on elegant stories.",
+    "conceptual_model": "The same evaluation point that ranks next experiments should decide whether a branch deserves another attempt. A branch should not be stopped if a Gedanken experiment can concretely localize a variable, regime, counterfactual contrast, or transfer boundary. But a branch should not continue merely because an imagined case is interesting; the thought experiment must produce a follow-up decision.",
+    "use_skills": [
+      "gedanken-need-assessor",
+      "gedanken-followup-planner",
+      "long-horizon-route-portfolio-manager",
+      "next-experiment-queue-ranker"
+    ],
+    "implementation_steps": [
+      "Extend branch continuation logic to consider whether the branch has an accepted or pending Gedanken packet.",
+      "Add stop criteria requiring failure of a Gedanken sharpening attempt when conceptual opacity is the blocker.",
+      "Add quarantine criteria when `gedanken-transfer-guard` marks all available situations analogy-only.",
+      "Record the resulting branch-control reason in report queue items and cycle packets.",
+      "Validate that stop candidates include repeat evidence and no remaining high-value Gedanken design opportunity."
+    ],
+    "validation_commands": [
+      "python agentic/scripts/generate_discovery_marathon_html.py",
+      "python agentic/scripts/validate_discovery_marathon_report.py",
+      "python agentic/scripts/validate_discovery_marathon_cycle.py"
+    ],
+    "required_artifact": [
+      "agentic/scripts/generate_discovery_marathon_html.py",
+      "agentic/runs/discovery_marathons/<run>/cycles/<cycle>.json"
+    ],
+    "acceptance_criteria": [
+      "Branch-control decisions mention Gedanken availability when conceptual opacity is a blocker.",
+      "A branch cannot be stopped solely because direct proof failed if a target-linked thought experiment remains untried.",
+      "Analogy-only thought experiments support quarantine rather than active continuation.",
+      "The report explains the rescue condition for any stop candidate."
+    ],
+    "blocked_by": [
+      "GEX-003"
+    ],
+    "evidence": [
+      "file:agentic/scripts/generate_discovery_marathon_html.py",
+      "file:agentic/scripts/run_branch_exploration_cycle.py",
+      "file:agentic/reports/discovery_marathon/latest.json",
+      "cmd:python agentic/scripts/validate_discovery_marathon_report.py",
+      "cmd:python agentic/scripts/validate_discovery_marathon_cycle.py"
+    ],
+    "review_date": "2026-08-09",
+    "failure_modes": [
+      "Thought experiments become excuses to keep low-value branches alive indefinitely.",
+      "Branches are stopped before a cheap conceptual contrast is tried.",
+      "Quarantine and backtrack are not distinguished."
+    ],
+    "exit_criteria": [
+      "Gedanken reasoning participates in branch-control decisions with anti-drift safeguards."
+    ],
+    "status": "resolved"
+  },
+  {
+    "id": "GEX-008",
+    "type": "documentation_todo",
+    "phase": "operations-guide",
+    "owner": "docs",
+    "priority": "medium",
+    "risk_class": "operators-misuse-gedanken-layer",
+    "title": "Document the operational role of Gedanken experiments in discovery",
+    "intent": "Give future operators a concise guide for when to invoke, defer, quarantine, and follow up on thought experiments.",
+    "conceptual_model": "The framework needs an explicit operating doctrine: thought experiments are conceptual probes that design situations to reveal a mechanism, not proof artifacts. The guide should explain how they fit after qualitative reasoning, before falsifier generation, and into queue ranking and branch control.",
+    "use_skills": [
+      "gedanken-need-assessor",
+      "gedanken-transfer-guard",
+      "show-reasoning"
+    ],
+    "implementation_steps": [
+      "Create or extend a docs page such as `docs/research-methods/gedanken-experiment-workflow.md`.",
+      "Define the workflow slot: after qualitative physics reasoning, before contradiction/falsifier generation, with follow-up tasks feeding the ranked queue.",
+      "Include examples of design-now, defer, concrete-probe-first, and quarantine-as-analogy decisions.",
+      "State anti-overclaim rules and transfer certificate expectations.",
+      "Link to packet schema, skill names, report tab, validators, and operations commands."
+    ],
+    "validation_commands": [
+      "python agentic/scripts/validate_todos.py",
+      "python agentic/scripts/agentic_check.py"
+    ],
+    "required_artifact": [
+      "docs/research-methods/gedanken-experiment-workflow.md",
+      "agentic/spec/gedanken_experiment_packet.schema.json"
+    ],
+    "acceptance_criteria": [
+      "The guide makes the workflow slot and invocation criteria explicit.",
+      "The guide warns that thought experiments are not proof progress without follow-up validation.",
+      "The guide maps each skill to its role in the pipeline.",
+      "The guide includes exact commands for building and validating packets."
+    ],
+    "blocked_by": [
+      "GEX-001",
+      "GEX-003"
+    ],
+    "evidence": [
+      "file:docs/research-methods/gedanken-experiment-workflow.md",
+      "file:agentic/spec/gedanken_experiment_packet.schema.json",
+      "cmd:python agentic/scripts/validate_task_skill_registry.py"
+    ],
+    "review_date": "2026-08-09",
+    "failure_modes": [
+      "Operators treat Gedanken experiments as generic brainstorming.",
+      "The guide omits where packets enter queue ranking.",
+      "The guide hides transfer and anti-overclaim requirements."
+    ],
+    "exit_criteria": [
+      "A future operator can use the Gedanken layer without rereading implementation code."
+    ],
+    "status": "resolved"
+  },
+  {
+    "id": "GEX-009",
+    "type": "test_todo",
+    "phase": "generative-forward-test",
+    "owner": "tests/generative",
+    "priority": "high",
+    "risk_class": "skills-pass-static-depth-but-fail-real-design",
+    "title": "Forward-test the Gedanken skill cluster on realistic branch blockers",
+    "intent": "Verify that the five-skill cluster can design useful thought experiments from real branch blockers rather than only satisfying static skill-depth and packet validators.",
+    "conceptual_model": "Skill depth validation proves structural discipline, not generative quality. The cluster should be tested on realistic blockers: an apparent spectral decay route, a fixed-regulator transfer claim, a pairwise positivity route, and a non-domain example. The expected output should be a need decision, situation, variants, transfer guard, and follow-up plan.",
+    "use_skills": [
+      "gedanken-situation-designer",
+      "gedanken-counterfactual-variant-builder",
+      "gedanken-transfer-guard",
+      "prism-generative-validation-runner"
+    ],
+    "implementation_steps": [
+      "Create `tests/generative/test_gedanken_experiment_design_quality.md` with several prompt cases.",
+      "Include at least one case where the correct decision is `run_concrete_probe_first`, one `quarantine_as_analogy`, and one `design_now`.",
+      "Define qualitative oracles for controlled contrast, held-fixed assumptions, disconfirming observation, transfer scope, and follow-up actionability.",
+      "Add manual or scripted validation notes to the generated report if the repository has a generative validation harness.",
+      "Ensure tests are target-agnostic enough to reuse beyond Yang-Mills."
+    ],
+    "validation_commands": [
+      "python agentic/scripts/validate_skill_depth.py",
+      "python agentic/scripts/validate_gedanken_experiment_packets.py",
+      "python agentic/scripts/validate_todos.py"
+    ],
+    "required_artifact": [
+      "tests/generative/test_gedanken_experiment_design_quality.md",
+      "skills/evaluation/gedanken-need-assessor/SKILL.md",
+      "skills/reasoning/gedanken-situation-designer/SKILL.md",
+      "skills/evaluation/gedanken-transfer-guard/SKILL.md"
+    ],
+    "acceptance_criteria": [
+      "Forward tests cover design, defer, concrete-probe-first, and quarantine decisions.",
+      "The skill cluster produces follow-up tasks that could enter the ranked queue.",
+      "The generated designs include disconfirming observations and transfer limits.",
+      "At least one non-Yang-Mills case passes the same quality criteria."
+    ],
+    "blocked_by": [
+      "GEX-001",
+      "GEX-005"
+    ],
+    "evidence": [
+      "file:tests/generative/test_gedanken_experiment_design_quality.md",
+      "file:skills/evaluation/gedanken-need-assessor/SKILL.md",
+      "file:skills/reasoning/gedanken-situation-designer/SKILL.md",
+      "file:skills/evaluation/gedanken-transfer-guard/SKILL.md",
+      "cmd:python agentic/scripts/validate_skill_depth.py"
+    ],
+    "review_date": "2026-08-09",
+    "failure_modes": [
+      "The skills generate fluent but non-actionable imagined situations.",
+      "The transfer guard always says needs more work without classifying decisions.",
+      "Forward tests are too close to the seed packet examples."
+    ],
+    "exit_criteria": [
+      "The skill cluster is shown to perform genuine thought-experiment design on realistic blockers."
+    ],
+    "status": "resolved"
+  },
+  {
+    "id": "GEX-010",
+    "type": "release_todo",
+    "phase": "proof-gate-integration",
+    "owner": "agentic/scripts",
+    "priority": "critical",
+    "risk_class": "gedanken-layer-regresses-silently",
+    "title": "Promote Gedanken validation into the full proof gate and release report",
+    "intent": "Ensure future changes cannot break Gedanken packet generation, validation, dispatch, report rendering, or queue integration without failing the repository gate.",
+    "conceptual_model": "Once the layer influences branch control, it must be guarded by the same release discipline as target navigation, qualitative graph reasoning, and discovery marathon reports. The full check should build packets, validate them, verify dispatch phase coverage, render the report tab, and ensure generated skills remain deep.",
+    "use_skills": [
+      "gedanken-followup-planner",
+      "looper-release-promoter",
+      "looper-workflow-contract-governor"
+    ],
+    "implementation_steps": [
+      "Keep `build_gedanken_experiment_packets.py` and `validate_gedanken_experiment_packets.py` in `agentic/scripts/agentic_check.py` in the correct order.",
+      "Extend release/promotion reporting to mention Gedanken packet count, invalid packet count, queue handoff count, and quarantine count.",
+      "Add validator assertions that the discovery marathon HTML embeds the Gedanken payload.",
+      "Add a small release report section explaining whether thought-experiment insights affected active branch control.",
+      "Run the full gate after implementation."
+    ],
+    "validation_commands": [
+      "python agentic/scripts/validate_gedanken_experiment_packets.py",
+      "python agentic/scripts/validate_discovery_marathon_report.py",
+      "python agentic/scripts/validate_task_skill_registry.py",
+      "python agentic/scripts/agentic_check.py"
+    ],
+    "required_artifact": [
+      "agentic/scripts/agentic_check.py",
+      "agentic/reports/discovery_marathon/full_timeline.html",
+      "agentic/reports/gedanken_experiments/latest.json",
+      "agentic/reports/big_deal_goal_archive/latest.md"
+    ],
+    "acceptance_criteria": [
+      "The full proof gate fails if Gedanken packet validation fails.",
+      "The marathon report validator fails if the Gedanken tab or embedded payload is missing.",
+      "The task registry lists the packet schema, builder, validator, and five skills.",
+      "Release reporting distinguishes conceptual probes from proof progress."
+    ],
+    "blocked_by": [
+      "GEX-003",
+      "GEX-006",
+      "GEX-007"
+    ],
+    "evidence": [
+      "file:agentic/scripts/agentic_check.py",
+      "file:agentic/scripts/build_big_deal_goal_archive.py",
+      "file:agentic/scripts/validate_big_deal_goal_archive.py",
+      "file:agentic/reports/big_deal_goal_archive/latest.md",
+      "cmd:python agentic/scripts/validate_big_deal_goal_archive.py",
+      "cmd:python agentic/scripts/validate_task_skill_registry.py"
+    ],
+    "review_date": "2026-08-09",
+    "failure_modes": [
+      "The layer works in manual runs but is skipped by the proof gate.",
+      "The report shows packets but release artifacts do not distinguish conceptual probes from proof progress.",
+      "Task registry drift hides the skills from workflow-level inspection."
+    ],
+    "exit_criteria": [
+      "Gedanken experiment support is protected by the standard Abducer validation and release surface."
+    ],
+    "status": "resolved"
+  }
+]

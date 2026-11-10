@@ -1,0 +1,123 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,booktabs,microtype}
+\usepackage[hidelinks]{hyperref}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{remark}[theorem]{Remark}
+\newcommand{\dd}{\,\mathrm d}
+\title{Normalized Nonlinear Density Comparison on a Gauge Chart\\
+\large Separating action oscillation from high-dimensional coverage}
+\author{}
+\date{20 July 2026}
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We prove an exact event comparison between a reference Gaussian measure and a
+nonlinear perturbation on the same retained chart.  The logarithmic loss
+separates into remainder oscillation and negative log chart mass.  A centered
+Hessian bound $H$ on a radius-$r$ convex ball contributes at most $Hr^2$.
+For the side-two four-dimensional block certificate, this local action cost is
+only $6.35\times10^{-6}$ at the frozen time.  By contrast, the directly
+certified 408-dimensional inner Gaussian ball has log mass $-803.25$, giving a
+loss $3.7188$ per plaquette after division over 216 plaquettes.  Thus local
+nonlinear geometry is quantitatively adequate, while normalization and chart
+coverage remain the unresolved bridge.
+\end{abstract}
+
+\section{Normalized comparison theorem}
+
+Let $\nu$ be a probability measure, let $D$ be measurable with $\nu(D)>0$,
+and let $\nu_D$ be $\nu$ conditioned on $D$.  Define
+\[
+ \frac{\dd\mu_D}{\dd\nu_D}(x)=\frac{e^{-R(x)}}{Z_D},
+ \qquad Z_D=\int_D e^{-R}\dd\nu_D.
+\]
+
+\begin{theorem}[Oscillation and coverage]
+If $\operatorname{osc}_D R\leq\kappa$, then for every event $A$,
+\begin{equation}
+ \mu_D(A)\leq e^\kappa\nu_D(A)
+ \leq \exp\!\bigl(\kappa-\log\nu(D)\bigr)\nu(A).
+ \label{eq:comparison}
+\end{equation}
+The analogous lower comparison on events contained in $D$ is
+$\mu_D(A)\geq e^{-\kappa}\nu_D(A)$.
+\end{theorem}
+\begin{proof}
+Let $m=\inf_D R$ and $M=\sup_D R$.  Then
+$e^{-M}\leq Z_D\leq e^{-m}$, so the normalized density ratio lies between
+$e^{-(M-m)}$ and $e^{M-m}$.  This proves the same-chart comparison.  Finally,
+$\nu_D(A)=\nu(A\cap D)/\nu(D)\leq\nu(A)/\nu(D)$.
+\end{proof}
+
+\begin{corollary}[Centered Hessian certificate]
+Suppose $D$ is contained in a convex radius-$r$ ball centered at zero,
+$R(0)=0$, $\dd R(0)=0$, and $\|\dd^2R\|\leq H$ on that ball.  Then
+\[
+ |R(x)|\leq\frac{H}{2}\|x\|^2,
+ \qquad \operatorname{osc}_D R\leq Hr^2.
+\]
+Hence the total log comparison loss in \eqref{eq:comparison} is at most
+$Hr^2-\log\nu(D)$.
+\end{corollary}
+\begin{proof}
+Apply Taylor's formula with integral remainder on the segment from zero to
+$x$.  The absolute range lies inside $[-Hr^2/2,Hr^2/2]$.
+\end{proof}
+
+This formula prevents a common normalization mistake: a pointwise-small
+remainder does not compare normalized measures unless the reference mass of
+the retained domain is also controlled.
+
+\section{Gaussian chart mass}
+
+For $X\sim N(0,tI_n)$,
+\[
+ \mathbb P(\|X\|\leq r)=
+ P\!\left(\frac n2,\frac{r^2}{2t}\right),
+\]
+where $P$ is the regularized lower incomplete gamma function.  The executable
+certificate evaluates its logarithm by a positive series in the deep lower
+tail, avoiding floating-point underflow.
+
+The Stage 08 finite-block input has $136$ scalar physical curvature
+directions and three colors, hence $n=408$.  The certified local radius is
+$r=0.003$.  Re-evaluating the action certificate at $t=3\times10^{-6}$ gives
+$H=0.7051332859$.
+
+\begin{center}
+\begin{tabular}{@{}lr@{}}
+\toprule
+quantity & value\\
+\midrule
+dimension $n$ & $408$\\
+plaquettes & $216$\\
+inner radius $r$ & $0.003$\\
+action oscillation $Hr^2$ & $6.34620\times10^{-6}$\\
+inner-ball log mass & $-803.2526600$\\
+total loss per plaquette & $3.71876234$\\
+declared target per plaquette & $0.2$\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The inner Euclidean ball is a certified subset of the local coordinate
+domain, so its mass is a valid but potentially very pessimistic coverage lower
+bound.  Solving the abstract Gaussian problem gives radius $0.02463$ to meet
+the loss target and radius $0.03657$ for log mass $-0.1$.  These numbers are
+diagnostics: the nonlinear chart is not certified at those radii.
+
+\section{Frontier consequence}
+
+The action remainder is not the dominant obstruction in this certificate.
+One needs a gauge-covariant atlas or enlarged block chart with adequate total
+reference mass, controlled overlap multiplicity, transition Jacobians, and no
+unjustified global gauge slice.  Only after those data are supplied can
+\eqref{eq:comparison} feed a volume-uniform adaptive block estimate.
+
+The theorem is exact on its stated domain but supplies neither full-measure
+control nor RG, continuum, or spectral conclusions.  Its claim level is C2.
+
+\end{document}

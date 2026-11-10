@@ -1,0 +1,326 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://abducer.local/schemas/source_routing_precommit_certificate.schema.json",
+  "title": "Legacy source-routing post-assimilation compatibility certificate",
+  "description": "Compatibility-only object produced after assimilation. It cannot serve as pre-map authority; new consumers require source_routing_pre_map_policy plus source_routing_realization.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "certificate_id",
+    "target_id",
+    "run_id",
+    "state_version",
+    "precommitted_at",
+    "acquisition_authority",
+    "acquisition_authority_digest",
+    "snapshot_binding",
+    "assimilation_binding",
+    "stage_precommitments",
+    "downstream_consumption_contract",
+    "compatibility",
+    "authority_boundary",
+    "certificate_digest"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "certificate_id": {"$ref": "#/$defs/identifier"},
+    "target_id": {"$ref": "#/$defs/identifier"},
+    "run_id": {"$ref": "#/$defs/identifier"},
+    "state_version": {"type": "integer", "minimum": 0},
+    "precommitted_at": {"type": "string", "format": "date-time"},
+    "acquisition_authority": {"$ref": "#/$defs/acquisitionAuthority"},
+    "acquisition_authority_digest": {"$ref": "#/$defs/digest"},
+    "snapshot_binding": {"$ref": "#/$defs/snapshotBinding"},
+    "assimilation_binding": {"$ref": "#/$defs/assimilationBinding"},
+    "stage_precommitments": {
+      "type": "array",
+      "minItems": 7,
+      "maxItems": 7,
+      "items": {"$ref": "#/$defs/stagePrecommitment"}
+    },
+    "downstream_consumption_contract": {"$ref": "#/$defs/downstreamContract"},
+    "compatibility": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "pre_map_authority_authorized",
+        "replacement_envelope_fields",
+        "boundary"
+      ],
+      "properties": {
+        "status": {"const": "post_assimilation_compatibility_only"},
+        "pre_map_authority_authorized": {"const": false},
+        "replacement_envelope_fields": {
+          "const": ["source_routing_pre_map_policy", "source_routing_realization"]
+        },
+        "boundary": {
+          "const": "post-assimilation compatibility artifact only; pre-map policy authority is false and consumers must migrate to source_routing_pre_map_policy plus source_routing_realization"
+        }
+      }
+    },
+    "authority_boundary": {
+      "const": "post-assimilation routing realization compatibility only; no pre-map authority, source truth, positive semantic support, peer review, novelty, exhaustiveness, creativity efficacy, physics value, or investment authority"
+    },
+    "certificate_digest": {"$ref": "#/$defs/digest"}
+  },
+  "$defs": {
+    "identifier": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$"
+    },
+    "digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "eligibility": {
+      "enum": [
+        "blocked_positive_support",
+        "negative_evidence_only",
+        "unverified_audit_only"
+      ]
+    },
+    "acquisitionAuthority": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "capture_content_digest",
+        "acquisition_content_digest",
+        "tool_response_content_digests",
+        "version_graph_content_digests",
+        "source_ids",
+        "source_routing_eligibility",
+        "authority_boundary"
+      ],
+      "properties": {
+        "capture_content_digest": {"$ref": "#/$defs/digest"},
+        "acquisition_content_digest": {"$ref": "#/$defs/digest"},
+        "tool_response_content_digests": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/digest"}
+        },
+        "version_graph_content_digests": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/digest"}
+        },
+        "source_ids": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/identifier"}
+        },
+        "source_routing_eligibility": {
+          "type": "object",
+          "minProperties": 1,
+          "propertyNames": {"$ref": "#/$defs/identifier"},
+          "additionalProperties": {"$ref": "#/$defs/eligibility"}
+        },
+        "authority_boundary": {"type": "string", "minLength": 1}
+      }
+    },
+    "snapshotBinding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "snapshot_id",
+        "snapshot_digest",
+        "target_id",
+        "theory_state_digest",
+        "source_ids",
+        "source_set_digest"
+      ],
+      "properties": {
+        "snapshot_id": {"$ref": "#/$defs/identifier"},
+        "snapshot_digest": {"$ref": "#/$defs/digest"},
+        "target_id": {"$ref": "#/$defs/identifier"},
+        "theory_state_digest": {"$ref": "#/$defs/digest"},
+        "source_ids": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/identifier"}
+        },
+        "source_set_digest": {"$ref": "#/$defs/digest"}
+      }
+    },
+    "assimilationBinding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "packet_id",
+        "packet_digest",
+        "producer_receipt_id",
+        "producer_completed_at",
+        "selected_snapshot_id",
+        "selected_snapshot_digest",
+        "theory_mappings_digest",
+        "semantic_warrants_digest"
+      ],
+      "properties": {
+        "packet_id": {"$ref": "#/$defs/identifier"},
+        "packet_digest": {"$ref": "#/$defs/digest"},
+        "producer_receipt_id": {"$ref": "#/$defs/identifier"},
+        "producer_completed_at": {"type": "string", "format": "date-time"},
+        "selected_snapshot_id": {"$ref": "#/$defs/identifier"},
+        "selected_snapshot_digest": {"$ref": "#/$defs/digest"},
+        "theory_mappings_digest": {"$ref": "#/$defs/digest"},
+        "semantic_warrants_digest": {"$ref": "#/$defs/digest"}
+      }
+    },
+    "checkedRow": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "row_kind",
+        "source_id",
+        "eligibility",
+        "relation",
+        "row_digest"
+      ],
+      "properties": {
+        "row_kind": {"enum": ["theory_mapping", "semantic_warrant"]},
+        "source_id": {"$ref": "#/$defs/identifier"},
+        "eligibility": {"$ref": "#/$defs/eligibility"},
+        "relation": {"type": "string", "minLength": 1},
+        "event_type": {"type": "string", "minLength": 1},
+        "semantic_relation": {
+          "oneOf": [
+            {"enum": ["entails", "contradicts", "leaves_open", "unresolved"]},
+            {"type": "null"}
+          ]
+        },
+        "row_digest": {"$ref": "#/$defs/digest"}
+      },
+      "allOf": [
+        {
+          "if": {"properties": {"row_kind": {"const": "theory_mapping"}}, "required": ["row_kind"]},
+          "then": {"required": ["event_type", "semantic_relation"]}
+        },
+        {
+          "if": {"properties": {"row_kind": {"const": "semantic_warrant"}}, "required": ["row_kind"]},
+          "then": {"not": {"anyOf": [{"required": ["event_type"]}, {"required": ["semantic_relation"]}]}}
+        }
+      ]
+    },
+    "routingCertificate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "certificate_version",
+        "stage",
+        "source_routing_eligibility",
+        "source_ids",
+        "mapping_source_ids",
+        "require_complete_mapping",
+        "checked_rows",
+        "policy_digest",
+        "authority_boundary",
+        "content_digest"
+      ],
+      "properties": {
+        "certificate_version": {"const": "1.0"},
+        "stage": {"type": "string", "minLength": 1},
+        "source_routing_eligibility": {
+          "type": "object",
+          "minProperties": 1,
+          "propertyNames": {"$ref": "#/$defs/identifier"},
+          "additionalProperties": {"$ref": "#/$defs/eligibility"}
+        },
+        "source_ids": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/identifier"}
+        },
+        "mapping_source_ids": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/identifier"}
+        },
+        "require_complete_mapping": {"const": true},
+        "checked_rows": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"$ref": "#/$defs/checkedRow"}
+        },
+        "policy_digest": {"$ref": "#/$defs/digest"},
+        "authority_boundary": {"type": "string", "minLength": 1},
+        "content_digest": {"$ref": "#/$defs/digest"}
+      }
+    },
+    "stagePrecommitment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "stage",
+        "stage_decision_id",
+        "required_consumer",
+        "routing_certificate",
+        "binding_digest"
+      ],
+      "properties": {
+        "stage": {
+          "enum": [
+            "claim_mapping",
+            "warrant_validation",
+            "assimilation",
+            "high_risk_investment",
+            "parallel_scheduling",
+            "canonical_commit",
+            "theory_gate_acceptance"
+          ]
+        },
+        "stage_decision_id": {"$ref": "#/$defs/identifier"},
+        "required_consumer": {
+          "enum": [
+            "frontier-literature-assimilator",
+            "high-risk-hypothesis-forger",
+            "parallel-hypothesis-portfolio",
+            "canonical-discovery-cycle",
+            "canonical-theory-gate"
+          ]
+        },
+        "routing_certificate": {"$ref": "#/$defs/routingCertificate"},
+        "binding_digest": {"$ref": "#/$defs/digest"}
+      }
+    },
+    "downstreamContract": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "required_envelope_field",
+        "required_operator_ids",
+        "required_internal_consumers",
+        "omission_policy",
+        "substitution_policy",
+        "late_certificate_policy",
+        "content_digest"
+      ],
+      "properties": {
+        "required_envelope_field": {"const": "source_routing_precommit"},
+        "required_operator_ids": {
+          "const": [
+            "high-risk-hypothesis-forger",
+            "parallel-hypothesis-portfolio",
+            "reflective-conceptual-discovery",
+            "reflective-theory-synthesizer",
+            "blind-conceptual-preference-adjudicator",
+            "dynamic-symbolic-simulation-experimenter"
+          ]
+        },
+        "required_internal_consumers": {
+          "const": ["canonical-discovery-cycle", "canonical-theory-gate"]
+        },
+        "omission_policy": {"const": "fail_closed"},
+        "substitution_policy": {"const": "exact_object_and_digest_only"},
+        "late_certificate_policy": {"const": "reject_after_first_downstream_dispatch"},
+        "content_digest": {"$ref": "#/$defs/digest"}
+      }
+    }
+  }
+}

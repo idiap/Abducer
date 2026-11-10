@@ -1,0 +1,133 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://abducer.local/schemas/literature_semantic_claim_layer.schema.json",
+  "title": "Source-level semantic literature claim layer",
+  "description": "Exact source claims, version/correction state, bounded relation warrants, coverage audit, and explicit epistemic nulls. Relations are routing inputs, never source-truth or semantic-entailment authority.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "layer_id", "target_id", "theory_state_digest", "snapshot_id", "snapshot_digest", "theory_catalog_id", "theory_catalog_digest", "claim_records", "coverage_audit", "authority", "epistemic_nulls", "content_digest"],
+  "$defs": {
+    "id": {"type": "string", "minLength": 1, "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$"},
+    "digest": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
+    "text": {"type": "string", "minLength": 1},
+    "relation": {"enum": ["entails", "contradicts", "leaves_open", "unresolved"]},
+    "warrant": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["warrant_id", "relation", "theory_object_ids", "matched_terms", "basis_mode", "basis_evidence", "authority", "nulls", "warrant_digest"],
+      "properties": {
+        "warrant_id": {"$ref": "#/$defs/id"},
+        "relation": {"$ref": "#/$defs/relation"},
+        "theory_object_ids": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"$ref": "#/$defs/id"}},
+        "matched_terms": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/text"}},
+        "basis_mode": {"enum": ["source_level_explicit", "bounded_lexical_fallback"]},
+        "basis_evidence": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/text"}},
+        "claim_origin": {"enum": ["verbatim_source_excerpt", "author_paraphrase", "model_extraction", "internal_target_audit"]},
+        "authority": {
+          "type": "object", "additionalProperties": false,
+          "required": ["authority_id", "authority_class", "external_authentication_status"],
+          "properties": {
+            "authority_id": {"$ref": "#/$defs/id"},
+            "authority_class": {"enum": ["source_supplied_interpretive_warrant", "source_bound_semantic_annotation", "author_paraphrase_interpretation", "model_extraction_interpretation", "internal_target_semantic_audit", "deterministic_internal_lexical_fallback"]},
+            "external_authentication_status": {"const": "unavailable"}
+          }
+        },
+        "nulls": {
+          "type": "object", "additionalProperties": false,
+          "required": ["source_truth_authorized", "semantic_entailment_authorized", "novelty_authorized"],
+          "properties": {
+            "source_truth_authorized": {"const": false},
+            "semantic_entailment_authorized": {"const": false},
+            "novelty_authorized": {"const": false}
+          }
+        },
+        "warrant_digest": {"$ref": "#/$defs/digest"}
+      }
+    }
+  },
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "layer_id": {"$ref": "#/$defs/id"},
+    "target_id": {"$ref": "#/$defs/id"},
+    "theory_state_digest": {"$ref": "#/$defs/digest"},
+    "snapshot_id": {"$ref": "#/$defs/id"},
+    "snapshot_digest": {"$ref": "#/$defs/digest"},
+    "theory_catalog_id": {"$ref": "#/$defs/id"},
+    "theory_catalog_digest": {"$ref": "#/$defs/digest"},
+    "claim_records": {
+      "type": "array",
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["claim_id", "source_id", "work_identity", "source_content_digest", "source_state", "exact_claim", "claim_digest", "extraction_provenance", "effective_relation", "effective_theory_object_ids", "basis_mode", "relation_warrants", "record_digest"],
+        "properties": {
+          "claim_id": {"$ref": "#/$defs/id"}, "source_id": {"$ref": "#/$defs/id"},
+          "work_identity": {"$ref": "#/$defs/text"}, "source_content_digest": {"$ref": "#/$defs/digest"},
+          "source_state": {
+            "type": "object", "additionalProperties": false,
+            "required": ["source_version", "correction_status", "state_authority"],
+            "properties": {
+              "source_version": {"$ref": "#/$defs/text"},
+              "correction_status": {"enum": ["none_known", "corrected", "superseded", "retracted", "unknown"]},
+              "state_authority": {"const": "frozen_snapshot_source_record"}
+            }
+          },
+          "exact_claim": {"$ref": "#/$defs/text"}, "claim_digest": {"$ref": "#/$defs/digest"},
+          "extraction_provenance": {
+            "type": "object", "additionalProperties": false,
+            "required": ["mode", "claim_index", "lane_ids", "snapshot_id"],
+            "properties": {
+              "mode": {"enum": ["snapshot_exact_claim", "missing_claim_null"]},
+              "claim_index": {"type": ["integer", "null"], "minimum": 0},
+              "lane_ids": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"$ref": "#/$defs/id"}},
+              "snapshot_id": {"$ref": "#/$defs/id"}
+              ,"claim_origin": {"enum": ["verbatim_source_excerpt", "author_paraphrase", "model_extraction", "internal_target_audit"]}, "evidence_locator": {"$ref": "#/$defs/text"}, "extractor_receipt_id": {"type": ["string", "null"]}, "authority_id": {"$ref": "#/$defs/id"}
+              ,"authority_class": {"enum": ["locator_bound_source_excerpt", "author_supplied_paraphrase", "receipt_bound_model_extraction", "unverified_provider_claim_extraction", "internal_target_claim_audit", "missing_claim_null"]}, "external_authentication_status": {"const": "unavailable"}
+            }
+          },
+          "effective_relation": {"$ref": "#/$defs/relation"},
+          "effective_theory_object_ids": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"$ref": "#/$defs/id"}},
+          "basis_mode": {"enum": ["source_level_explicit", "bounded_lexical_fallback"]},
+          "relation_warrants": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/warrant"}},
+          "record_digest": {"$ref": "#/$defs/digest"}
+        }
+      }
+    },
+    "coverage_audit": {
+      "type": "object", "additionalProperties": false,
+      "required": ["decision_relevant_source_ids", "source_count", "claim_record_count", "explicit_warrant_claim_count", "lexical_fallback_claim_count", "unresolved_claim_ids", "claimless_source_ids", "corrected_or_superseded_source_ids", "retracted_source_ids", "coverage_status", "coverage_limits", "snapshot_claim_enumeration_complete", "semantic_resolution_complete", "truth_authorized", "exhaustiveness_authorized", "novelty_authorized"],
+      "properties": {
+        "decision_relevant_source_ids": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/id"}},
+        "source_count": {"type": "integer", "minimum": 0}, "claim_record_count": {"type": "integer", "minimum": 0},
+        "explicit_warrant_claim_count": {"type": "integer", "minimum": 0}, "lexical_fallback_claim_count": {"type": "integer", "minimum": 0},
+        "unresolved_claim_ids": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/id"}},
+        "claimless_source_ids": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/id"}},
+        "corrected_or_superseded_source_ids": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/id"}},
+        "retracted_source_ids": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/id"}},
+        "coverage_status": {"enum": ["empty_snapshot", "source_warrant_complete", "source_warrant_complete_with_unresolved", "bounded_mixed", "lexical_fallback_only"]},
+        "coverage_limits": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/text"}},
+        "snapshot_claim_enumeration_complete": {"const": true}, "semantic_resolution_complete": {"type": "boolean"},
+        "truth_authorized": {"const": false}, "exhaustiveness_authorized": {"const": false}, "novelty_authorized": {"const": false}
+        ,"claim_origin_counts": {"type": "object", "additionalProperties": {"type": "integer", "minimum": 0}}, "claim_provenance_gap_ids": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/id"}}
+      }
+    },
+    "authority": {
+      "type": "object", "additionalProperties": false,
+      "required": ["authority_id", "algorithm_id", "authority_class"],
+      "properties": {
+        "authority_id": {"const": "source-semantic-claim-layer.v2"},
+        "algorithm_id": {"const": "typed-origin-warrant-then-conservative-lexical.v2"},
+        "authority_class": {"const": "deterministic_internal_semantic_routing"}
+      }
+    },
+    "epistemic_nulls": {
+      "type": "object", "additionalProperties": false,
+      "required": ["source_truth_authorized", "semantic_entailment_authorized", "exhaustive_coverage_authorized", "novelty_authorized", "external_validation_status"],
+      "properties": {
+        "source_truth_authorized": {"const": false}, "semantic_entailment_authorized": {"const": false},
+        "exhaustive_coverage_authorized": {"const": false}, "novelty_authorized": {"const": false},
+        "external_validation_status": {"const": "unavailable"}
+      }
+    },
+    "content_digest": {"$ref": "#/$defs/digest"}
+  }
+}

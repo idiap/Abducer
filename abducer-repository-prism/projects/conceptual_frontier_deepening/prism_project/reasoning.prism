@@ -1,0 +1,59 @@
+# Function: turn a bounded conceptual search into a formalization-readiness decision.
+# Input: FrozenConceptualContext fixes the evidence and search boundary.
+# Types: frontier, hypothesis, refutation, and selection narrow the search; bridge and claim types formalize it.
+# Output: FormalizationReadinessAssessment selects formal proof, further exploration, or refutation with a basis.
+# Routing: formal-ready continues to theorem proof; non-dominated work returns to conceptual exploration.
+# Layer: high-level epistemic topology only.
+# Metadata: workflows/manifest.json (`conceptual_frontier_deepening`).
+
+from types import (
+    FormalizationReadinessAssessment,
+    FormalizationDisposition,
+    BridgeDerivedFormalClaim,
+    BoundedConceptualFrontier,
+    DiscriminatingConceptualHypothesis,
+    ConceptualHypothesisSelection,
+    FrozenConceptualContext,
+    ConceptualHypothesisRefutationAssessment,
+    RevisedConceptualBridge,
+)
+
+from occurrences import (
+    AbductiveConceptualHypothesisFormation,
+    AnalogicalConceptualBridgeRevision,
+    DeductiveFormalClaimDerivation,
+    EvidentialFormalizationReadinessAssessment,
+    EvidentialConceptualFrontierGrounding,
+    EvidentialConceptualHypothesisSelection,
+    RefutationalConceptualHypothesisAssessment,
+    ConceptualHypothesisSelectionInput,
+)
+
+from relations import (
+    TreatsBridgeAsFormalClaimPremise,
+    CalibratesConceptualFrontierProgress,
+    BoundsConceptualFrontierSearch,
+    RevisesConceptualBridge,
+    TestsConceptualHypothesis,
+)
+
+reasoning ConceptualFrontierDeepening(
+    context: FrozenConceptualContext,
+) -> Generated[FormalizationReadinessAssessment]:
+    sequence:
+        # Grounding bounds the search before abductive formation begins.
+        [conceptual_frontier: EvidentialConceptualFrontierGrounding(context)]
+        [conceptual_hypothesis: AbductiveConceptualHypothesisFormation(conceptual_frontier.value)] by BoundsConceptualFrontierSearch
+        # Refutation and selection prevent an attractive hypothesis from advancing alone.
+        [refutation_assessment: RefutationalConceptualHypothesisAssessment(conceptual_hypothesis.value)] by TestsConceptualHypothesis
+        [hypothesis_selection: EvidentialConceptualHypothesisSelection(ConceptualHypothesisSelectionInput(
+            conceptual_hypothesis = conceptual_hypothesis.value,
+            refutation_assessment = refutation_assessment.value,
+        ))] by CalibratesConceptualFrontierProgress
+        # Transfer creates a bridge; deduction makes its formal consequence explicit.
+        [conceptual_bridge: AnalogicalConceptualBridgeRevision(hypothesis_selection.value)] by RevisesConceptualBridge
+        [formal_claim: DeductiveFormalClaimDerivation(conceptual_bridge.value)] by TreatsBridgeAsFormalClaimPremise
+        # The final assessment routes the claim; it does not itself prove it.
+        [calibrated_candidate: EvidentialFormalizationReadinessAssessment(formal_claim.value)] by CalibratesConceptualFrontierProgress
+
+    return calibrated_candidate

@@ -1,0 +1,29 @@
+# Relation layer for manuscript_result_elaboration.
+# Owns edge/certificate contracts only; builders belong to future materialization.
+
+type ManuscriptScopeConstraint[SourceValue, TargetValue]:
+    source: SourceValue
+    target: Generated[TargetValue]
+
+type ManuscriptExtensionTest[SourceValue, TargetValue]:
+    source: SourceValue
+    target: Generated[TargetValue]
+
+type ManuscriptReadinessCalibration[SourceValue, TargetValue]:
+    source: SourceValue
+    target: Generated[TargetValue]
+
+relation ConstrainsManuscriptExtension[SourceValue, TargetValue](
+    source: SourceValue,
+    target: Generated[TargetValue],
+) -> ManuscriptScopeConstraint[SourceValue, TargetValue]
+
+relation TestsManuscriptExtension[SourceValue, TargetValue](
+    source: SourceValue,
+    target: Generated[TargetValue],
+) -> ManuscriptExtensionTest[SourceValue, TargetValue]
+
+relation CalibratesManuscriptReadiness[SourceValue, TargetValue](
+    source: SourceValue,
+    target: Generated[TargetValue],
+) -> ManuscriptReadinessCalibration[SourceValue, TargetValue]

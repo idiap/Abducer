@@ -1,0 +1,37 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://abducer.local/schemas/theory_object_catalog.schema.json",
+  "title": "Digest-bound theory object catalog",
+  "description": "The theory-side vocabulary used by deterministic literature claim mapping. It names objects and match terms, never caller-authored mapping outcomes.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "catalog_id", "target_id", "theory_state_digest", "theory_objects", "content_digest"],
+  "$defs": {
+    "id": {"type": "string", "minLength": 1, "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$"},
+    "digest": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
+    "text": {"type": "string", "minLength": 1}
+  },
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "catalog_id": {"$ref": "#/$defs/id"},
+    "target_id": {"$ref": "#/$defs/id"},
+    "theory_state_digest": {"$ref": "#/$defs/digest"},
+    "theory_objects": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["theory_object_id", "object_kind", "label", "match_terms", "scope_anchor"],
+        "properties": {
+          "theory_object_id": {"$ref": "#/$defs/id"},
+          "object_kind": {"enum": ["concept", "assumption", "mechanism", "barrier", "comparator", "hypothesis", "genealogy", "proof_obligation", "schedule"]},
+          "label": {"$ref": "#/$defs/text"},
+          "match_terms": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"$ref": "#/$defs/text"}},
+          "scope_anchor": {"type": "boolean"}
+        }
+      }
+    },
+    "content_digest": {"$ref": "#/$defs/digest"}
+  }
+}

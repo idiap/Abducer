@@ -1,0 +1,91 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://abducer.local/schemas/discovery_epistemic_state.schema.json",
+  "title": "Reduced discovery epistemic state",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "reducer_version",
+    "target_id",
+    "run_id",
+    "generation",
+    "event_count",
+    "last_event_hash",
+    "conceptual_systems",
+    "concepts",
+    "hypotheses",
+    "evidence",
+    "literature_snapshots",
+    "branch_attempts",
+    "branches",
+    "transformations",
+    "syntheses",
+    "understanding_deltas",
+    "relations",
+    "retired_routes",
+    "active_theory_constellation",
+    "current_literature_snapshot_id",
+    "stale_branches",
+    "rebase_history",
+    "deduplication_keys"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "reducer_version": {"const": "1.0.0"},
+    "target_id": {"$ref": "#/$defs/identifier"},
+    "run_id": {"$ref": "#/$defs/identifier"},
+    "generation": {"type": "integer", "minimum": 0},
+    "event_count": {"type": "integer", "minimum": 0},
+    "last_event_hash": {"$ref": "#/$defs/digest"},
+    "conceptual_systems": {"$ref": "#/$defs/entityMap"},
+    "concepts": {"$ref": "#/$defs/entityMap"},
+    "hypotheses": {"$ref": "#/$defs/entityMap"},
+    "evidence": {"$ref": "#/$defs/entityMap"},
+    "literature_snapshots": {"$ref": "#/$defs/entityMap"},
+    "branch_attempts": {"$ref": "#/$defs/entityMap"},
+    "branches": {"$ref": "#/$defs/entityMap"},
+    "transformations": {"$ref": "#/$defs/entityMap"},
+    "syntheses": {"$ref": "#/$defs/entityMap"},
+    "understanding_deltas": {"$ref": "#/$defs/entityMap"},
+    "relations": {"$ref": "#/$defs/entityMap"},
+    "retired_routes": {"$ref": "#/$defs/entityMap"},
+    "predictions": {"$ref": "#/$defs/entityMap"},
+    "proof_obligations": {"$ref": "#/$defs/entityMap"},
+    "reflections": {"$ref": "#/$defs/entityMap"},
+    "active_theory_constellation": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {"$ref": "#/$defs/identifier"}
+    },
+    "current_literature_snapshot_id": {
+      "oneOf": [{"$ref": "#/$defs/identifier"}, {"type": "null"}]
+    },
+    "stale_branches": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {"$ref": "#/$defs/identifier"}
+    },
+    "rebase_history": {"type": "array", "items": {"type": "object"}},
+    "deduplication_keys": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {"$ref": "#/$defs/digest"}
+    }
+  },
+  "$defs": {
+    "identifier": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]*$",
+      "not": {"enum": ["latest", "current", "global"]}
+    },
+    "digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "entityMap": {
+      "type": "object",
+      "propertyNames": {"$ref": "#/$defs/identifier"},
+      "additionalProperties": {"type": "object"}
+    }
+  }
+}

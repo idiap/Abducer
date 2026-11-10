@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://abducer.local/spec/ym_registered_publication_binding.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "binding_id", "status", "target_id", "run_id", "cycle_id", "commit_id", "profile_id", "profile_version", "profile_authority_digest", "publication_root", "immutable_index_snapshot_path", "immutable_index_snapshot_sha256", "bundle_id", "bundle_path", "bundle_manifest_digest", "evidence_id", "evidence_path", "evidence_manifest_digest", "locators", "legacy_archives", "source_provenance", "validation_status", "authority_boundary", "content_digest"],
+  "properties": {
+    "schema_version": {"const": "2.0.0"},
+    "binding_id": {"type": "string", "pattern": "^ym-current-publication\\.[0-9a-f]{24}$"},
+    "status": {"const": "current_publication"},
+    "target_id": {"const": "yang-mills-existence-and-mass-gap-target"},
+    "run_id": {"const": "ym21-canonical-parent-20260721"},
+    "cycle_id": {"type": "string", "minLength": 1},
+    "commit_id": {"type": "string", "minLength": 1},
+    "profile_id": {"const": "ym-representational-dynamics-20260721"},
+    "profile_version": {"const": "1.0.0"},
+    "profile_authority_digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "publication_root": {"type": "string", "minLength": 1},
+    "immutable_index_snapshot_path": {"type": "string", "minLength": 1},
+    "immutable_index_snapshot_sha256": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "bundle_id": {"type": "string", "pattern": "^ym-[0-9a-f]{64}$"},
+    "bundle_path": {"type": "string", "minLength": 1},
+    "bundle_manifest_digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "evidence_id": {"type": "string", "pattern": "^evidence-[0-9a-f]{64}$"},
+    "evidence_path": {"type": "string", "minLength": 1},
+    "evidence_manifest_digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "locators": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["cycle_path", "cycle_request_path", "state_root", "workspace", "receipt_root"],
+      "properties": {
+        "cycle_path": {"type": "string", "minLength": 1},
+        "cycle_request_path": {"type": "string", "minLength": 1},
+        "state_root": {"type": "string", "minLength": 1},
+        "workspace": {"type": "string", "minLength": 1},
+        "receipt_root": {"type": "string", "minLength": 1}
+      }
+    },
+    "legacy_archives": {"type": "array", "minItems": 1, "items": {"type": "object"}},
+    "source_provenance": {"$ref": "ym_source_provenance_binding.schema.json"},
+    "validation_status": {"const": "passed"},
+    "authority_boundary": {"type": "string", "minLength": 1},
+    "content_digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"}
+  }
+}

@@ -1,0 +1,3 @@
+- Incorrect state transition
+- Missing authorization check
+- Unhandled failure

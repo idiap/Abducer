@@ -1,0 +1,43 @@
+\section{Proof certificates and independent verification}\label{sec:certificate}
+
+The supplement contains two executable proof kernels.  Both reconstruct the
+block from the definitions in Section~\ref{sec:block}; neither reads a stored
+matrix.  The primary verifier uses arbitrary-precision integers and rational
+numbers.  It checks $d_1d_0=0$, performs exact elimination over $\mathbb Q$,
+computes the lexicographic tree and cotree, proves the $1/25$ floor by rational
+$LDL^{\mathsf T}$, and propagates all analytic constants as fractions.
+
+The independent verifier uses different arithmetic mechanisms.  It computes
+ranks modulo $2$, $101$, and $1000003$, and applies fraction-free Bareiss
+elimination to the integer matrix $25H-\Id$.  Positivity of every leading
+principal minor supplies an independent Sylvester certificate.  The two
+verifiers share the declarative cubical constructor but do not share a rank or
+spectral algorithm.
+
+\begin{center}
+\begin{tabular}{@{}lll@{}}
+\toprule
+Claim & Primary kernel & Independent kernel\\
+\midrule
+Cell counts and $d_1d_0=0$ & integer construction & reconstructed input\\
+Ranks $80,136,17$ & rational elimination & three modular fields\\
+Floor $H\succeq1/25$ & rational $LDL^{\mathsf T}$ & Bareiss/Sylvester\\
+Nonlinear budgets & exact fractions & analytic formulas audited separately\\
+Tree sensitivity & lexicographic and reverse trees & lexicographic tree\\
+Orientation sensitivity & sign congruence test & invariant input convention\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The primary spectral pivot digest is
+\begin{center}
+\texttt{5f0d0c8d81799f4ec07de98f97719fef2aa73e954b7265e408022df22ebb501a}.
+\end{center}
+The verifier records Python version, exact parameters, selected rows, tree
+edges, pivot hashes, and a binary pass/fail field.  Its largest rational pivot
+uses $653$ bits.  Binary floating point is not used in a theorem decision.
+
+Eleven tests cover the positive path and hostile inputs: excessive radius,
+excessive heat time, an alternate spanning tree, link-orientation sign changes,
+and independent arithmetic.  Appendix~\ref{app:certificate} specifies the
+trusted kernel and Appendix~\ref{app:reproducibility} gives exact commands.

@@ -1,0 +1,123 @@
+\section{The exact nonlinear heat-kernel action}\label{sec:nonlinear}
+
+Identify $\SUtwo$ with the unit quaternions and $\suTwo$ with pure imaginary
+quaternions.  On $\norm a<\pi$,
+\[
+ \exp a=\left(\cos\norm a,
+   \frac{\sin\norm a}{\norm a}a\right).
+\]
+For a plaquette with oriented link-log inputs $a_1,\ldots,a_4$, define
+\begin{equation}\label{eq:X-def}
+ X_p(A)=\log\bigl(\exp a_1\exp a_2\exp(-a_3)\exp(-a_4)\bigr).
+\end{equation}
+Its derivative at the origin is the corresponding row of $d_1\otimes\Id_3$.
+
+Let $p_t$ be the $\SUtwo$ heat kernel for generator $\frac12\Delta$ on the
+unit three-sphere.  The rooted-tree-gauge density in logarithmic coordinates
+has action, up to an additive constant,
+\begin{equation}\label{eq:exact-action}
+ S_t(A)=-\sum_{p\in B_2}\log p_t(\exp X_p(A))
+        -\sum_{e\notin T}\log j(A_e),
+\end{equation}
+where $j$ is \eqref{eq:haar-log-density}.  Thus both the non-Abelian plaquette
+geometry and the quotient Haar density are included.
+
+Define the convex chart
+\begin{equation}\label{eq:chart}
+ \cC_r=\left\{A:\norm{E_pA}\le r\text{ for every }p\in B_2\right\},
+ \qquad r=10^{-5},
+\end{equation}
+where $E_p$ extracts the four link variables around $p$ with the direct-sum
+Euclidean norm.
+
+\begin{lemma}[Product--log bounds]\label{lem:product-log}
+For $2r<1$, put
+\begin{align*}
+ M_1(r)&=\frac2{1-2r},\\
+ M_2(r)&=\frac4{(1-2r)^2}+\frac4{1-2r},\\
+ M_3(r)&=\frac{16}{(1-2r)^3}
+       +\frac{24}{(1-2r)^2}+\frac8{1-2r}.
+\end{align*}
+On $\norm{E_pA}\le r$,
+\[
+ \norm{DX_p}\le M_1,\quad \norm{D^2X_p}\le M_2,\quad
+ \norm{D^3X_p}\le M_3,\quad
+ \norm{DX_p-d_1|_p}\le M_2r,\quad \norm{X_p}\le2r.
+\]
+At $r=10^{-5}$ the exact rational majorants satisfy
+\[
+ M_1<2.001,\qquad M_2<8.01,\qquad M_3<48.1.
+\]
+\end{lemma}
+
+The proof is in Appendix~\ref{app:heat-kernel}.  Since each link occurs in at
+most six plaquettes,
+\begin{equation}\label{eq:extraction}
+ \sum_p\norm{E_ph}^2\le6\norm h^2.
+\end{equation}
+It follows that
+\begin{equation}\label{eq:kappa}
+ \norm{DX(A)-D\otimes\Id_3}\le\kappa,\qquad
+ \kappa=\sqrt6M_2r<\frac1{1000}.
+\end{equation}
+
+\begin{corollary}[Nonlinear curvature injectivity]\label{cor:injectivity}
+For $A,A'\in\cC_r$ in tree gauge,
+\[
+ \norm{X(A)-X(A')}\ge\frac{199}{1000}\norm{A-A'}.
+\]
+Thus the nonlinear curvature map is injective on $\cC_r$.
+\end{corollary}
+
+\begin{proof}
+Theorem~\ref{thm:cotree-coercivity} gives
+$\norm{D(A-A')}\ge\frac15\norm{A-A'}$.  Integrate
+$DX-D$ along the segment from $A'$ to $A$ and use \eqref{eq:kappa}.
+\end{proof}
+
+The heat-kernel image formula and the elementary Haar density give the
+following uniform initializer.
+
+\begin{lemma}[Local heat-kernel and Haar initializer]\label{lem:heat-init}
+If $0<t\le10^{-18}$ and $\norm x\le2\cdot10^{-5}$, write
+\[
+ -t\log p_t(\exp x)=\tfrac12\norm x^2+c_t+q_t(x).
+\]
+Then
+\[
+ \norm{Dq_t}\le 2t\norm x,\qquad
+ \norm{D^2q_t}\le2t,\qquad \norm{D^3q_t}\le10t.
+\]
+Moreover, for $\norm A_e\le10^{-5}$,
+\[
+ \norm{D^2[-t\log j(A_e)]}\le t,\qquad
+ \norm{D^3[-t\log j(A_e)]}\le2t.
+\]
+\end{lemma}
+
+Appendix~\ref{app:heat-kernel} derives the estimates from the paired Poisson
+images; the exponential tail is bounded by a rational majorant rather than a
+floating underflow.
+
+\begin{proposition}[Certified nonlinear action norm]\label{prop:action-norm}
+On $\cC_r$, for all $0<t\le10^{-18}$,
+\begin{align}
+ \norm{tD^2S_t(A)-H\otimes\Id_3}&<\eta<\frac1{400},\label{eq:eta-bound}\\
+ \norm{tD^3S_t(A)}&<\tau<300.\label{eq:tau-bound}
+\end{align}
+\end{proposition}
+
+\begin{proof}
+The chain rule, \eqref{eq:extraction}, and Lemmas
+\ref{lem:product-log}--\ref{lem:heat-init} give
+\begin{align*}
+\eta={}&\kappa(2\sqrt{12}+\kappa)
+ +2t(\sqrt{12}+\kappa)^2
+ +6(2r+4rt)M_2+t,\\
+\tau={}&6\left[10tM_1^3+3(1+2t)M_1M_2+(2r+4rt)M_3\right]+2t.
+\end{align*}
+The exact verifier substitutes $r=1/100000$, $t\le1/10^{18}$,
+$\sqrt6<5/2$, and $\sqrt{12}<7/2$.  Fraction comparison gives
+$\eta<1/400$ and $\tau<300$.  Appendix~\ref{app:heat-kernel} supplies the
+full tensor calculation.
+\end{proof}

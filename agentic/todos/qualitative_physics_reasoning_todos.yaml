@@ -1,0 +1,1019 @@
+[
+  {
+    "id": "QPR-001",
+    "type": "planning_todo",
+    "phase": "qualitative-representation-contract",
+    "owner": "agentic/spec",
+    "priority": "critical",
+    "risk_class": "qualitative-prose-without-typed-relations",
+    "title": "Define the qualitative physics relation packet schema",
+    "intent": "Give Abducer a typed representation for qualitative physics reasoning over variables, regimes, relations, assumptions, and behavioral claims.",
+    "conceptual_model": "Qualitative physics reasoning should not be loose prose. It should identify variables, control knobs, observables, hidden dependent scales, constraints, regimes, and relation types such as increases, decreases, saturates, diverges, converges, changes sign, becomes non-monotone, or depends on order of limits. Each relation must state when it is valid and what would falsify it.",
+    "use_skills": [
+      "skill-creator",
+      "long-horizon-route-portfolio-manager",
+      "abducer-conceptual-pressure-formalizer",
+      "epistemic-status-ledger"
+    ],
+    "implementation_steps": [
+      "Create `agentic/spec/qualitative_physics_relation_packet.schema.json`.",
+      "Represent variables with id, name, physical_role, quantity_type, units_or_dimension, domain, independent_or_dependent, control_status, and source_artifacts.",
+      "Represent relations with source_variable, target_variable, relation_kind, direction, qualitative_rate, monotonicity, convexity_or_curvature, convergence_behavior, valid_regime_ids, assumptions, failure_modes, confidence, and evidence_paths.",
+      "Represent regimes with scale_range, limit_order, boundary_conditions, perturbative_status, finite_or_continuum_status, and transition_conditions.",
+      "Require every qualitative claim to cite at least one assumption, regime, or explicit unknown."
+    ],
+    "validation_commands": [
+      "python -m json.tool agentic/spec/qualitative_physics_relation_packet.schema.json",
+      "python agentic/scripts/validate_todos.py"
+    ],
+    "required_artifact": [
+      "agentic/spec/qualitative_physics_relation_packet.schema.json",
+      "agentic/todos/qualitative_physics_reasoning_todos.yaml"
+    ],
+    "acceptance_criteria": [
+      "The schema can represent variables, regimes, directional relations, convergence behavior, and falsifiers.",
+      "The schema distinguishes independent controls from dependent quantities.",
+      "Relations cannot be stated without validity conditions or explicit unknowns.",
+      "The representation is target-agnostic but can encode Yang-Mills examples such as cutoff, volume, coupling, correlation length, Wilson observables, and spectral gap."
+    ],
+    "blocked_by": [],
+    "evidence": [
+      "file:agentic/todos/qualitative_physics_reasoning_todos.yaml",
+      "cmd:python agentic/scripts/validate_todos.py",
+      "file:agentic/spec/qualitative_physics_relation_packet.schema.json",
+      "cmd:python agentic/scripts/build_qualitative_mechanistic_graph.py --target yang-mills-existence-and-mass-gap-target",
+      "cmd:python agentic/scripts/validate_qualitative_relation_packets.py",
+      "cmd:python agentic/scripts/validate_qualitative_mechanistic_graph.py",
+      "cmd:python agentic/scripts/validate_skill_depth.py",
+      "cmd:python agentic/scripts/validate_discovery_marathon_skill_dispatch.py",
+      "cmd:python agentic/scripts/validate_discovery_marathon_cycle.py",
+      "cmd:python agentic/scripts/validate_reasoning_monitor.py",
+      "cmd:python agentic/scripts/validate_discovery_marathon_report.py",
+      "cmd:python agentic/scripts/validate_task_skill_registry.py"
+    ],
+    "review_date": "2026-08-09",
+    "failure_modes": [
+      "The packet becomes a narrative summary rather than a typed relation object.",
+      "Variables are listed without dependencies or regimes.",
+      "Qualitative claims omit assumptions and become generic physics-sounding statements."
+    ],
+    "exit_criteria": [
+      "Every later qualitative skill can emit the same packet format."
+    ],
+    "status": "resolved"
+  },
+  {
+    "id": "QPR-002",
+    "type": "planning_todo",
+    "phase": "mechanistic-graph-contract",
+    "owner": "agentic/spec",
+    "priority": "critical",
+    "risk_class": "local-insight-without-global-causal-picture",
+    "title": "Define the qualitative mechanistic graph schema",
+    "intent": "Create an integrative graph-like representation that accumulates qualitative variable relations into a global causal and mechanistic picture.",
+    "conceptual_model": "The framework needs more than isolated relation packets. It needs a durable graph where nodes are variables, observables, regimes, mechanisms, constraints, and proof obligations; edges are qualitative influences, constraints, transfer links, limit relations, and falsifier links. The graph should accumulate across cycles while preserving epistemic status and preventing uncertain hypotheses from looking established.",
+    "use_skills": [
+      "long-horizon-route-portfolio-manager",
+      "show-reasoning",
+      "epistemic-status-ledger",
+      "abducer-obligation-gatekeeper"
+    ],
+    "implementation_steps": [
+      "Create `agentic/spec/qualitative_mechanistic_graph.schema.json`.",
+      "Define node types: variable, observable, parameter, scale, regime, mechanism, constraint, limit, equation, falsifier, proof_obligation, concrete_probe, and target_commitment.",
+      "Define edge types: increases, decreases, constrains, enables, blocks, converges_to, diverges_under, saturates_under, changes_sign_under, dominates, transfers_to, falsifies, depends_on_limit_order, and explains.",
+      "Add edge metadata for direction, sign, strength, linearity, validity_regime, assumptions, evidence_paths, epistemic_status, originating_cycle_ids, and last_validated_utc.",
+      "Require graph updates to distinguish established relation, conjectural relation, heuristic analogy, concrete-probe result, and invalidated relation."
+    ],
+    "validation_commands": [
+      "python -m json.tool agentic/spec/qualitative_mechanistic_graph.schema.json",
+      "python agentic/scripts/validate_todos.py"
+    ],
+    "required_artifact": [
+      "agentic/spec/qualitative_mechanistic_graph.schema.json"
+    ],
+    "acceptance_criteria": [
+      "The graph schema can represent causal, constraint, limit, and falsifier relations.",
+      "Every edge has epistemic status and evidence paths or explicit unknowns.",
+      "The graph can accumulate multiple cycles without overwriting contradictory claims.",
+      "The graph can support report views such as variable influence map, regime map, and unresolved mechanism map."
+    ],
+    "blocked_by": [
+      "QPR-001"
+    ],
+    "evidence": [
+      "file:agentic/todos/qualitative_physics_reasoning_todos.yaml",
+      "cmd:python agentic/scripts/validate_todos.py",
+      "file:agentic/spec/qualitative_mechanistic_graph.schema.json",
+      "cmd:python agentic/scripts/build_qualitative_mechanistic_graph.py --target yang-mills-existence-and-mass-gap-target",
+      "cmd:python agentic/scripts/validate_qualitative_relation_packets.py",
+      "cmd:python agentic/scripts/validate_qualitative_mechanistic_graph.py",
+      "cmd:python agentic/scripts/validate_skill_depth.py",
+      "cmd:python agentic/scripts/validate_discovery_marathon_skill_dispatch.py",
+      "cmd:python agentic/scripts/validate_discovery_marathon_cycle.py",
+      "cmd:python agentic/scripts/validate_reasoning_monitor.py",
+      "cmd:python agentic/scripts/validate_discovery_marathon_report.py",
+      "cmd:python agentic/scripts/validate_task_skill_registry.py"
+    ],
+    "review_date": "2026-08-09",
+    "failure_modes": [
+      "The graph becomes a generic dependency graph and loses qualitative physics semantics.",
+      "Edges do not encode direction, sign, regime, or confidence.",
+      "Contradictory relation claims are collapsed rather than preserved for analysis."
+    ],
+    "exit_criteria": [
+      "The framework can store a global qualitative causal picture as data, not only as prose."
+    ],
+    "status": "resolved"
+  },
+  {
+    "id": "QPR-003",
+    "type": "workflow_todo",
+    "phase": "variable-isolation-skill",
+    "owner": "skills/reasoning",
+    "priority": "critical",
+    "risk_class": "hidden-variable-confounding",
+    "title": "Create the qualitative-variable-isolator skill",
+    "intent": "Build a skill that extracts variables, observables, parameters, hidden scales, and control knobs before any qualitative relation is asserted.",
+    "conceptual_model": "Qualitative reasoning fails when the system treats dependent quantities as independent knobs. The isolator should separate controls, observables, hidden state variables, derived quantities, constraints, and target commitments. It should say which variables can be varied independently and which move together because of equations, dimensions, symmetries, boundary conditions, or limit procedures.",
+    "use_skills": [
+      "skill-creator",
+      "kb-explain",
+      "abducer-conceptual-pressure-formalizer",
+      "premise-completeness-prober"
+    ],
+    "implementation_steps": [
+      "Create `skills/reasoning/qualitative-variable-isolator/SKILL.md` and `agents/openai.yaml`.",
+      "Define output sections for variables, quantity type, units or dimensions, control status, dependencies, hidden couplings, and unresolved unknowns.",
+      "Require the skill to reject qualitative claims until variables and regimes are typed.",
+      "Add examples for field amplitude, coupling, cutoff, volume, correlation length, spectral mass scale, Wilson observable, and Euclidean time separation."
+    ],
+    "validation_commands": [
+      "python agentic/scripts/validate_skill_depth.py",
+      "python agentic/scripts/validate_todos.py"
+    ],
+    "required_artifact": [
+      "skills/reasoning/qualitative-variable-isolator/SKILL.md",
+      "skills/reasoning/qualitative-variable-isolator/agents/openai.yaml"
+    ],
+    "acceptance_criteria": [
+      "The skill emits variables with independent/dependent/control status.",
+      "The skill identifies hidden variables and confounders before relation claims.",
+      "The skill states what cannot be varied independently.",
+      "The skill passes the repo skill-depth validator."
+    ],
+    "blocked_by": [
+      "QPR-001"
+    ],
+    "evidence": [
+      "file:agentic/todos/qualitative_physics_reasoning_todos.yaml",
+      "cmd:python agentic/scripts/validate_todos.py",
+      "file:skills/reasoning/qualitative-variable-isolator/SKILL.md",
+      "cmd:python agentic/scripts/build_qualitative_mechanistic_graph.py --target yang-mills-existence-and-mass-gap-target",
+      "cmd:python agentic/scripts/validate_qualitative_relation_packets.py",
+      "cmd:python agentic/scripts/validate_qualitative_mechanistic_graph.py",
+      "cmd:python agentic/scripts/validate_skill_depth.py",
+      "cmd:python agentic/scripts/validate_discovery_marathon_skill_dispatch.py",
+      "cmd:python agentic/scripts/validate_discovery_marathon_cycle.py",
+      "cmd:python agentic/scripts/validate_reasoning_monitor.py",
+      "cmd:python agentic/scripts/validate_discovery_marathon_report.py",
+      "cmd:python agentic/scripts/validate_task_skill_registry.py"
+    ],
+    "review_date": "2026-08-09",
+    "failure_modes": [
+      "The skill merely lists symbols from equations.",
+      "The skill misses hidden scales or constraints.",
+      "The skill allows relation claims before variables are typed."
+    ],
+    "exit_criteria": [
+      "Every qualitative reasoning run starts from a typed variable table."
+    ],
+    "status": "resolved"
+  },
+  {
+    "id": "QPR-004",
+    "type": "workflow_todo",
+    "phase": "regime-map-skill",
+    "owner": "skills/reasoning",
+    "priority": "critical",
+    "risk_class": "relation-claim-outside-valid-regime",
+    "title": "Create the physics-regime-map-builder skill",
+    "intent": "Build a skill that maps the regimes in which qualitative relations are valid or invalid.",
+    "conceptual_model": "The same relation can change direction or meaning across regimes. A quantity may increase linearly in a perturbative regime, saturate near a boundary, diverge in a singular limit, or become meaningless when the cutoff is removed without uniform control. Regime maps prevent qualitative claims from being universalized beyond their domain.",
+    "use_skills": [
+      "skill-creator",
+      "regime-shift-auditor",
+      "long-horizon-route-portfolio-manager",
+      "entailment-gap-auditor"
+    ],
+    "implementation_steps": [
+      "Create `skills/reasoning/physics-regime-map-builder/SKILL.md` and `agents/openai.yaml`.",
+      "Define regime dimensions: scale, cutoff, volume, coupling, field strength, time separation, perturbative status, boundary conditions, and limit order.",
+      "Require every relation to cite one or more valid regimes and one or more invalid or unknown regimes.",
+      "Add regime transition questions: where does linearity fail, where does convergence become nonuniform, where do limits fail to commute, and where do qualitative signs become ambiguous."
+    ],
+    "validation_commands": [
+      "python agentic/scripts/validate_skill_depth.py",
+      "python agentic/scripts/validate_todos.py"
+    ],
+    "required_artifact": [
+      "skills/reasoning/physics-regime-map-builder/SKILL.md",
+      "skills/reasoning/physics-regime-map-builder/agents/openai.yaml"
+    ],
+    "acceptance_criteria": [
+      "The skill emits regime IDs that relation packets and graph edges can reference.",
+      "The skill names invalid, unknown, and transition regimes.",
+      "The skill distinguishes fixed-regulator, continuum, finite-volume, and infinite-volume regimes.",
+      "The skill passes the repo skill-depth validator."
+    ],
+    "blocked_by": [
+      "QPR-001"
+    ],
+    "evidence": [
+      "file:agentic/todos/qualitative_physics_reasoning_todos.yaml",
+      "cmd:python agentic/scripts/validate_todos.py",
+      "file:skills/reasoning/physics-regime-map-builder/SKILL.md",
+      "cmd:python agentic/scripts/build_qualitative_mechanistic_graph.py --target yang-mills-existence-and-mass-gap-target",
+      "cmd:python agentic/scripts/validate_qualitative_relation_packets.py",
+      "cmd:python agentic/scripts/validate_qualitative_mechanistic_graph.py",
+      "cmd:python agentic/scripts/validate_skill_depth.py",
+      "cmd:python agentic/scripts/validate_discovery_marathon_skill_dispatch.py",
+      "cmd:python agentic/scripts/validate_discovery_marathon_cycle.py",
+      "cmd:python agentic/scripts/validate_reasoning_monitor.py",
+      "cmd:python agentic/scripts/validate_discovery_marathon_report.py",
+      "cmd:python agentic/scripts/validate_task_skill_registry.py"
+    ],
+    "review_date": "2026-08-09",
+    "failure_modes": [
+      "The skill makes regime labels without connecting them to relation validity.",
+      "The skill treats perturbative intuition as globally valid.",
+      "The skill ignores order of limits."
+    ],
+    "exit_criteria": [
+      "Every qualitative relation can be read against a named validity regime."
+    ],
+    "status": "resolved"
+  },
+  {
+    "id": "QPR-005",
+    "type": "workflow_todo",
+    "phase": "constraint-checking-skill",
+    "owner": "skills/evaluation",
+    "priority": "high",
+    "risk_class": "physically-impossible-qualitative-claim",
+    "title": "Create the dimensional-symmetry-constraint-checker skill",
+    "intent": "Build a skill that uses dimensions, scaling, symmetry, conservation, positivity, convexity, and invariance to reject impossible qualitative relations.",
+    "conceptual_model": "Before asking whether a relation is useful, the framework should ask whether it is physically and mathematically allowed. Dimensional mismatch, symmetry violation, positivity violation, or forbidden sign behavior can disqualify a qualitative story early.",
+    "use_skills": [
+      "skill-creator",
+      "review-reasoner-mathematician",
+      "entailment-gap-auditor",
+      "abducer-obligation-gatekeeper"
+    ],
+    "implementation_steps": [
+      "Create `skills/evaluation/dimensional-symmetry-constraint-checker/SKILL.md` and `agents/openai.yaml`.",
+      "Require checks for units, scaling dimension, invariance, conservation law compatibility, positivity or boundedness, and allowed sign.",
+      "Emit constraint violations as graph edges from constraint nodes to invalidated relation edges.",
+      "Add examples where a monotonicity claim is disqualified by units, a sign claim by positivity, or a transfer claim by symmetry mismatch."
+    ],
+    "validation_commands": [
+      "python agentic/scripts/validate_skill_depth.py",
+      "python agentic/scripts/validate_todos.py"
+    ],
+    "required_artifact": [
+      "skills/evaluation/dimensional-symmetry-constraint-checker/SKILL.md",
+      "skills/evaluation/dimensional-symmetry-constraint-checker/agents/openai.yaml"
+    ],
+    "acceptance_criteria": [
+      "The skill can reject a qualitative relation before deeper exploration.",
+      "The skill emits which constraint failed and what relation edge is affected.",
+      "The skill distinguishes impossible claims from merely unproven claims.",
+      "The skill passes the repo skill-depth validator."
+    ],
+    "blocked_by": [
+      "QPR-001",
+      "QPR-003"
+    ],
+    "evidence": [
+      "file:agentic/todos/qualitative_physics_reasoning_todos.yaml",
+      "cmd:python agentic/scripts/validate_todos.py",
+      "file:skills/evaluation/dimensional-symmetry-constraint-checker/SKILL.md",
+      "cmd:python agentic/scripts/build_qualitative_mechanistic_graph.py --target yang-mills-existence-and-mass-gap-target",
+      "cmd:python agentic/scripts/validate_qualitative_relation_packets.py",
+      "cmd:python agentic/scripts/validate_qualitative_mechanistic_graph.py",
+      "cmd:python agentic/scripts/validate_skill_depth.py",
+      "cmd:python agentic/scripts/validate_discovery_marathon_skill_dispatch.py",
+      "cmd:python agentic/scripts/validate_discovery_marathon_cycle.py",
+      "cmd:python agentic/scripts/validate_reasoning_monitor.py",
+      "cmd:python agentic/scripts/validate_discovery_marathon_report.py",
+      "cmd:python agentic/scripts/validate_task_skill_registry.py"
+    ],
+    "review_date": "2026-08-09",
+    "failure_modes": [
+      "The skill gives generic caution without checking actual constraints.",
+      "The skill overrejects conjectural relations that are allowed but unproven.",
+      "The skill fails to record invalidated relations in the graph."
+    ],
+    "exit_criteria": [
+      "Physically impossible qualitative relation claims can be rejected early and visibly."
+    ],
+    "status": "resolved"
+  },
+  {
+    "id": "QPR-006",
+    "type": "workflow_todo",
+    "phase": "monotonicity-sensitivity-skill",
+    "owner": "skills/reasoning",
+    "priority": "critical",
+    "risk_class": "direction-of-change-ambiguity",
+    "title": "Create the monotonicity-sensitivity-prober skill",
+    "intent": "Build a skill that reasons about how one quantity changes when another is varied under explicit regime and constraint assumptions.",
+    "conceptual_model": "A core part of physical understanding is directional feel: if this increases, what happens to that, and under what conditions? The skill should identify increasing, decreasing, approximately linear, sublinear, superlinear, saturating, threshold, non-monotone, oscillatory, or ambiguous behavior. It should separate local sensitivity from global monotonicity.",
+    "use_skills": [
+      "skill-creator",
+      "qualitative-variable-isolator",
+      "physics-regime-map-builder",
+      "kb-deduce"
+    ],
+    "implementation_steps": [
+      "Create `skills/reasoning/monotonicity-sensitivity-prober/SKILL.md` and `agents/openai.yaml`.",
+      "Define relation kinds for increases, decreases, saturates, diverges, converges, changes sign, and non-monotone behavior.",
+      "Require each sensitivity claim to include varied variable, held-fixed variables, dependent variables, regime, local/global scope, and falsifier.",
+      "Emit relation edges that can be inserted into the qualitative mechanistic graph."
+    ],
+    "validation_commands": [
+      "python agentic/scripts/validate_skill_depth.py",
+      "python agentic/scripts/validate_todos.py"
+    ],
+    "required_artifact": [
+      "skills/reasoning/monotonicity-sensitivity-prober/SKILL.md",
+      "skills/reasoning/monotonicity-sensitivity-prober/agents/openai.yaml"
+    ],
+    "acceptance_criteria": [
+      "The skill states what is varied and what is held fixed.",
+      "The skill distinguishes local sensitivity from global monotonicity.",
+      "The skill emits relation edges with regime and falsifier fields.",
+      "The skill passes the repo skill-depth validator."
+    ],
+    "blocked_by": [
+      "QPR-003",
+      "QPR-004"
+    ],
+    "evidence": [
+      "file:agentic/todos/qualitative_physics_reasoning_todos.yaml",
+      "cmd:python agentic/scripts/validate_todos.py",
+      "file:skills/reasoning/monotonicity-sensitivity-prober/SKILL.md",
+      "cmd:python agentic/scripts/build_qualitative_mechanistic_graph.py --target yang-mills-existence-and-mass-gap-target",
+      "cmd:python agentic/scripts/validate_qualitative_relation_packets.py",
+      "cmd:python agentic/scripts/validate_qualitative_mechanistic_graph.py",
+      "cmd:python agentic/scripts/validate_skill_depth.py",
+      "cmd:python agentic/scripts/validate_discovery_marathon_skill_dispatch.py",
+      "cmd:python agentic/scripts/validate_discovery_marathon_cycle.py",
+      "cmd:python agentic/scripts/validate_reasoning_monitor.py",
+      "cmd:python agentic/scripts/validate_discovery_marathon_report.py",
+      "cmd:python agentic/scripts/validate_task_skill_registry.py"
+    ],
+    "review_date": "2026-08-09",
+    "failure_modes": [
+      "The skill says a variable increases without naming held-fixed assumptions.",
+      "The skill confuses finite-range trend with asymptotic behavior.",
+      "The skill fails to name where the direction may reverse or become ambiguous."
+    ],
+    "exit_criteria": [
+      "The framework can ask and answer direction-of-change questions with explicit conditions."
+    ],
+    "status": "resolved"
+  },
+  {
+    "id": "QPR-007",
+    "type": "workflow_todo",
+    "phase": "limit-convergence-skill",
+    "owner": "skills/evaluation",
+    "priority": "critical",
+    "risk_class": "noncommuting-limit-overclaim",
+    "title": "Create the limit-convergence-behavior-auditor skill",
+    "intent": "Build a skill that audits convergence, divergence, saturation, and order-of-limit claims.",
+    "conceptual_model": "Many physics arguments fail because a relation holds at fixed cutoff, finite volume, or finite time but does not survive the relevant limit. The auditor should ask what converges, in what topology or observable sense, whether convergence is uniform enough, and whether changing the order of limits changes the qualitative conclusion.",
+    "use_skills": [
+      "skill-creator",
+      "regime-shift-auditor",
+      "entailment-gap-auditor",
+      "abducer-obligation-gatekeeper"
+    ],
+    "implementation_steps": [
+      "Create `skills/evaluation/limit-convergence-behavior-auditor/SKILL.md` and `agents/openai.yaml`.",
+      "Require limit claims to specify variable, limit direction, topology or observable sense, uniformity requirement, order of limits, and possible singular behavior.",
+      "Add graph edge types for converges_to, diverges_under, saturates_under, and depends_on_limit_order.",
+      "Add examples for cutoff removal, infinite-volume limit, long-time decay, weak-coupling limit, and large-distance correlation behavior."
+    ],
+    "validation_commands": [
+      "python agentic/scripts/validate_skill_depth.py",
+      "python agentic/scripts/validate_todos.py"
+    ],
+    "required_artifact": [
+      "skills/evaluation/limit-convergence-behavior-auditor/SKILL.md",
+      "skills/evaluation/limit-convergence-behavior-auditor/agents/openai.yaml"
+    ],
+    "acceptance_criteria": [
+      "The skill distinguishes pointwise, uniform, distributional, spectral, and observable-level convergence when relevant.",
+      "The skill flags noncommuting limits as explicit failure modes.",
+      "The skill emits graph edges for limit behavior.",
+      "The skill passes the repo skill-depth validator."
+    ],
+    "blocked_by": [
+      "QPR-004"
+    ],
+    "evidence": [
+      "file:agentic/todos/qualitative_physics_reasoning_todos.yaml",
+      "cmd:python agentic/scripts/validate_todos.py",
+      "file:skills/evaluation/limit-convergence-behavior-auditor/SKILL.md",
+      "cmd:python agentic/scripts/build_qualitative_mechanistic_graph.py --target yang-mills-existence-and-mass-gap-target",
+      "cmd:python agentic/scripts/validate_qualitative_relation_packets.py",
+      "cmd:python agentic/scripts/validate_qualitative_mechanistic_graph.py",
+      "cmd:python agentic/scripts/validate_skill_depth.py",
+      "cmd:python agentic/scripts/validate_discovery_marathon_skill_dispatch.py",
+      "cmd:python agentic/scripts/validate_discovery_marathon_cycle.py",
+      "cmd:python agentic/scripts/validate_reasoning_monitor.py",
+      "cmd:python agentic/scripts/validate_discovery_marathon_report.py",
+      "cmd:python agentic/scripts/validate_task_skill_registry.py"
+    ],
+    "review_date": "2026-08-09",
+    "failure_modes": [
+      "The skill accepts finite-regime behavior as continuum behavior.",
+      "The skill omits uniformity requirements.",
+      "The skill fails to test order-of-limits sensitivity."
+    ],
+    "exit_criteria": [
+      "Qualitative convergence claims become explicit, falsifiable, and regime-aware."
+    ],
+    "status": "resolved"
+  },
+  {
+    "id": "QPR-008",
+    "type": "workflow_todo",
+    "phase": "asymptotic-scaling-skill",
+    "owner": "skills/reasoning",
+    "priority": "high",
+    "risk_class": "scale-behavior-vagueness",
+    "title": "Create the scale-asymptotic-reasoner skill",
+    "intent": "Build a skill that infers dominant balance, scaling behavior, and asymptotic qualitative regimes.",
+    "conceptual_model": "A physicist's qualitative sense often comes from recognizing which terms dominate and how behavior changes with scale. The skill should compare linear, polynomial, logarithmic, exponential, stretched-exponential, threshold, and saturation behavior, while stating the scale regime and assumptions.",
+    "use_skills": [
+      "skill-creator",
+      "physics-regime-map-builder",
+      "dimensional-symmetry-constraint-checker",
+      "kb-induce"
+    ],
+    "implementation_steps": [
+      "Create `skills/reasoning/scale-asymptotic-reasoner/SKILL.md` and `agents/openai.yaml`.",
+      "Define an output contract for dominant terms, neglected terms, scale hierarchy, asymptotic class, transition scales, and breakdown conditions.",
+      "Require a distinction between heuristic scaling, proven bound, and concrete-probe result.",
+      "Emit relation edges linking scale variables to observable behavior and mechanism nodes."
+    ],
+    "validation_commands": [
+      "python agentic/scripts/validate_skill_depth.py",
+      "python agentic/scripts/validate_todos.py"
+    ],
+    "required_artifact": [
+      "skills/reasoning/scale-asymptotic-reasoner/SKILL.md",
+      "skills/reasoning/scale-asymptotic-reasoner/agents/openai.yaml"
+    ],
+    "acceptance_criteria": [
+      "The skill identifies dominant and neglected effects with regime labels.",
+      "The skill distinguishes heuristic scaling from proof-backed estimates.",
+      "The skill records breakdown conditions and transition scales.",
+      "The skill passes the repo skill-depth validator."
+    ],
+    "blocked_by": [
+      "QPR-004",
+      "QPR-005"
+    ],
+    "evidence": [
+      "file:agentic/todos/qualitative_physics_reasoning_todos.yaml",
+      "cmd:python agentic/scripts/validate_todos.py",
+      "file:skills/reasoning/scale-asymptotic-reasoner/SKILL.md",
+      "cmd:python agentic/scripts/build_qualitative_mechanistic_graph.py --target yang-mills-existence-and-mass-gap-target",
+      "cmd:python agentic/scripts/validate_qualitative_relation_packets.py",
+      "cmd:python agentic/scripts/validate_qualitative_mechanistic_graph.py",
+      "cmd:python agentic/scripts/validate_skill_depth.py",
+      "cmd:python agentic/scripts/validate_discovery_marathon_skill_dispatch.py",
+      "cmd:python agentic/scripts/validate_discovery_marathon_cycle.py",
+      "cmd:python agentic/scripts/validate_reasoning_monitor.py",
+      "cmd:python agentic/scripts/validate_discovery_marathon_report.py",
+      "cmd:python agentic/scripts/validate_task_skill_registry.py"
+    ],
+    "review_date": "2026-08-09",
+    "failure_modes": [
+      "The skill gives scaling slogans without identifying dominant balance.",
+      "The skill confuses heuristic scaling with proof authority.",
+      "The skill omits transition and breakdown regimes."
+    ],
+    "exit_criteria": [
+      "The framework can reason qualitatively about which effects dominate at which scales."
+    ],
+    "status": "resolved"
+  },
+  {
+    "id": "QPR-009",
+    "type": "workflow_todo",
+    "phase": "concrete-probe-skill",
+    "owner": "skills/reasoning",
+    "priority": "critical",
+    "risk_class": "qualitative-intuition-without-calibration",
+    "title": "Create the qualitative-toy-model-builder skill",
+    "intent": "Build a skill that chooses and solves small concrete settings when qualitative intuition is underdetermined.",
+    "conceptual_model": "Some qualitative relations cannot be responsibly asserted by intuition alone. The framework should build small calibration chambers: finite matrices, ODEs, Gaussian fields, spectral measures, simple RG maps, finite-volume toy systems, or symbolic asymptotic examples. These concrete probes should clarify direction, convergence, sign, threshold, or failure behavior, then state exactly what transfers and what does not.",
+    "use_skills": [
+      "skill-creator",
+      "monotonicity-sensitivity-prober",
+      "limit-convergence-behavior-auditor",
+      "kb-abduce",
+      "kb-deduce"
+    ],
+    "implementation_steps": [
+      "Create `skills/reasoning/qualitative-toy-model-builder/SKILL.md` and `agents/openai.yaml`.",
+      "Define a concrete-probe selection policy: choose the smallest model that tests the disputed relation without changing the target question.",
+      "Require each probe to state source variables, simplified assumptions, solved behavior, transfer scope, non-transfer warnings, and graph update.",
+      "Support examples such as two-by-two positive matrices, simple spectral measures, heat-kernel decay, one-dimensional RG recurrences, and finite-volume correlation toy systems."
+    ],
+    "validation_commands": [
+      "python agentic/scripts/validate_skill_depth.py",
+      "python agentic/scripts/validate_todos.py"
+    ],
+    "required_artifact": [
+      "skills/reasoning/qualitative-toy-model-builder/SKILL.md",
+      "skills/reasoning/qualitative-toy-model-builder/agents/openai.yaml"
+    ],
+    "acceptance_criteria": [
+      "The skill explains when a concrete probe is required.",
+      "The skill solves or outlines a small concrete setting rather than only proposing it.",
+      "The skill clearly separates transferable qualitative insight from non-transferable toy-model artifact.",
+      "The skill passes the repo skill-depth validator."
+    ],
+    "blocked_by": [
+      "QPR-003",
+      "QPR-004",
+      "QPR-006",
+      "QPR-007"
+    ],
+    "evidence": [
+      "file:agentic/todos/qualitative_physics_reasoning_todos.yaml",
+      "cmd:python agentic/scripts/validate_todos.py",
+      "file:skills/reasoning/qualitative-toy-model-builder/SKILL.md",
+      "cmd:python agentic/scripts/build_qualitative_mechanistic_graph.py --target yang-mills-existence-and-mass-gap-target",
+      "cmd:python agentic/scripts/validate_qualitative_relation_packets.py",
+      "cmd:python agentic/scripts/validate_qualitative_mechanistic_graph.py",
+      "cmd:python agentic/scripts/validate_skill_depth.py",
+      "cmd:python agentic/scripts/validate_discovery_marathon_skill_dispatch.py",
+      "cmd:python agentic/scripts/validate_discovery_marathon_cycle.py",
+      "cmd:python agentic/scripts/validate_reasoning_monitor.py",
+      "cmd:python agentic/scripts/validate_discovery_marathon_report.py",
+      "cmd:python agentic/scripts/validate_task_skill_registry.py"
+    ],
+    "review_date": "2026-08-09",
+    "failure_modes": [
+      "Toy models become substitutes for target proof obligations.",
+      "The skill proposes examples but does not solve or interpret them.",
+      "Transferred insight is overstated beyond the simplified setting."
+    ],
+    "exit_criteria": [
+      "Underdetermined qualitative claims can be calibrated by small concrete probes."
+    ],
+    "status": "resolved"
+  },
+  {
+    "id": "QPR-010",
+    "type": "workflow_todo",
+    "phase": "qualitative-falsification-skill",
+    "owner": "skills/evaluation",
+    "priority": "high",
+    "risk_class": "unfalsifiable-qualitative-story",
+    "title": "Create the qualitative-physics-falsifier skill",
+    "intent": "Build a skill that generates edge cases, counter-regimes, and qualitative failure tests for relation claims.",
+    "conceptual_model": "A qualitative story becomes useful when it can fail. The falsifier should ask what would reverse the sign, break monotonicity, make convergence nonuniform, change the dominant scale, invalidate a transfer, or expose a hidden variable. Falsifiers should become graph nodes linked to the relation edges they challenge.",
+    "use_skills": [
+      "skill-creator",
+      "counterexample-hunter",
+      "contradiction-route-auditor",
+      "limit-convergence-behavior-auditor"
+    ],
+    "implementation_steps": [
+      "Create `skills/evaluation/qualitative-physics-falsifier/SKILL.md` and `agents/openai.yaml`.",
+      "Define falsifier types: sign reversal, nonmonotonicity, noncommuting limit, singular perturbation, hidden variable, symmetry violation, positivity violation, and proxy drift.",
+      "Require every falsifier to cite the relation edge, regime, and observation or calculation that would trigger invalidation.",
+      "Emit graph updates that mark relation edges as challenged, invalidated, or needing concrete probe."
+    ],
+    "validation_commands": [
+      "python agentic/scripts/validate_skill_depth.py",
+      "python agentic/scripts/validate_todos.py"
+    ],
+    "required_artifact": [
+      "skills/evaluation/qualitative-physics-falsifier/SKILL.md",
+      "skills/evaluation/qualitative-physics-falsifier/agents/openai.yaml"
+    ],
+    "acceptance_criteria": [
+      "The skill produces falsifiers tied to specific relation edges.",
+      "The skill distinguishes challenged, invalidated, and untested relations.",
+      "The skill identifies at least one boundary regime or edge case when evaluating a relation.",
+      "The skill passes the repo skill-depth validator."
+    ],
+    "blocked_by": [
+      "QPR-001",
+      "QPR-002",
+      "QPR-006",
+      "QPR-007"
+    ],
+    "evidence": [
+      "file:agentic/todos/qualitative_physics_reasoning_todos.yaml",
+      "cmd:python agentic/scripts/validate_todos.py",
+      "file:skills/evaluation/qualitative-physics-falsifier/SKILL.md",
+      "cmd:python agentic/scripts/build_qualitative_mechanistic_graph.py --target yang-mills-existence-and-mass-gap-target",
+      "cmd:python agentic/scripts/validate_qualitative_relation_packets.py",
+      "cmd:python agentic/scripts/validate_qualitative_mechanistic_graph.py",
+      "cmd:python agentic/scripts/validate_skill_depth.py",
+      "cmd:python agentic/scripts/validate_discovery_marathon_skill_dispatch.py",
+      "cmd:python agentic/scripts/validate_discovery_marathon_cycle.py",
+      "cmd:python agentic/scripts/validate_reasoning_monitor.py",
+      "cmd:python agentic/scripts/validate_discovery_marathon_report.py",
+      "cmd:python agentic/scripts/validate_task_skill_registry.py"
+    ],
+    "review_date": "2026-08-09",
+    "failure_modes": [
+      "Falsifiers are generic warnings rather than relation-specific tests.",
+      "The skill invalidates useful conjectures without distinguishing epistemic status.",
+      "The graph does not preserve challenged relation history."
+    ],
+    "exit_criteria": [
+      "Every important qualitative relation has at least one visible way it could fail."
+    ],
+    "status": "resolved"
+  },
+  {
+    "id": "QPR-011",
+    "type": "workflow_todo",
+    "phase": "mechanistic-graph-builder",
+    "owner": "agentic/scripts",
+    "priority": "critical",
+    "risk_class": "mechanistic-understanding-not-accumulating",
+    "title": "Build the qualitative mechanistic graph accumulator",
+    "intent": "Implement a deterministic builder that accumulates relation packets into a persistent global qualitative physics graph.",
+    "conceptual_model": "The discovery loop should accumulate mechanistic understanding, not only cycle outputs. Each run should add, revise, challenge, or validate variable-relation edges. Over time the graph should show which quantities control which observables, which regimes are understood, which mechanisms are conjectural, and which edges are blocked by proof obligations.",
+    "use_skills": [
+      "show-reasoning",
+      "long-horizon-route-portfolio-manager",
+      "qualitative-variable-isolator",
+      "monotonicity-sensitivity-prober",
+      "qualitative-physics-falsifier"
+    ],
+    "implementation_steps": [
+      "Create `agentic/scripts/build_qualitative_mechanistic_graph.py`.",
+      "Read relation packets from cycle outputs, qualitative skill outputs, branch memory, and concrete probe reports.",
+      "Merge nodes by stable variable identity while preserving multiple epistemic statuses for conflicting edges.",
+      "Write `agentic/state/qualitative_mechanistic_graphs/<target>.json` and `agentic/reports/qualitative_mechanistic_graph/latest.md`.",
+      "Record graph updates as add_edge, revise_edge, challenge_edge, invalidate_edge, promote_edge, or needs_probe."
+    ],
+    "validation_commands": [
+      "python agentic/scripts/build_qualitative_mechanistic_graph.py --target yang-mills-existence-and-mass-gap-target",
+      "python agentic/scripts/validate_qualitative_mechanistic_graph.py",
+      "python agentic/scripts/validate_todos.py"
+    ],
+    "required_artifact": [
+      "agentic/scripts/build_qualitative_mechanistic_graph.py",
+      "agentic/state/qualitative_mechanistic_graphs/<target>.json",
+      "agentic/reports/qualitative_mechanistic_graph/latest.md"
+    ],
+    "acceptance_criteria": [
+      "The builder creates a graph with typed nodes and typed qualitative edges.",
+      "The graph preserves conflicting or uncertain relation claims rather than overwriting them.",
+      "Each edge cites originating cycle IDs, skills, assumptions, and evidence paths.",
+      "The graph distinguishes conjectural mechanism, concrete-probe result, validated relation, challenged relation, and invalidated relation."
+    ],
+    "blocked_by": [
+      "QPR-001",
+      "QPR-002",
+      "QPR-003",
+      "QPR-006",
+      "QPR-010"
+    ],
+    "evidence": [
+      "file:agentic/todos/qualitative_physics_reasoning_todos.yaml",
+      "cmd:python agentic/scripts/validate_todos.py",
+      "file:agentic/scripts/build_qualitative_mechanistic_graph.py",
+      "file:agentic/state/qualitative_mechanistic_graphs/yang-mills-existence-and-mass-gap-target.json",
+      "file:agentic/reports/qualitative_mechanistic_graph/latest.md",
+      "cmd:python agentic/scripts/build_qualitative_mechanistic_graph.py --target yang-mills-existence-and-mass-gap-target",
+      "cmd:python agentic/scripts/validate_qualitative_relation_packets.py",
+      "cmd:python agentic/scripts/validate_qualitative_mechanistic_graph.py",
+      "cmd:python agentic/scripts/validate_skill_depth.py",
+      "cmd:python agentic/scripts/validate_discovery_marathon_skill_dispatch.py",
+      "cmd:python agentic/scripts/validate_discovery_marathon_cycle.py",
+      "cmd:python agentic/scripts/validate_reasoning_monitor.py",
+      "cmd:python agentic/scripts/validate_discovery_marathon_report.py",
+      "cmd:python agentic/scripts/validate_task_skill_registry.py"
+    ],
+    "review_date": "2026-08-09",
+    "failure_modes": [
+      "The graph is rebuilt from scratch and loses accumulated interpretation.",
+      "Conflicting relation claims are silently collapsed.",
+      "Graph edges lack evidence paths or epistemic status."
+    ],
+    "exit_criteria": [
+      "A user can inspect a persistent graph and see Abducer's accumulated qualitative causal picture."
+    ],
+    "status": "resolved"
+  },
+  {
+    "id": "QPR-012",
+    "type": "test_todo",
+    "phase": "graph-validation",
+    "owner": "agentic/scripts",
+    "priority": "critical",
+    "risk_class": "invalid-graph-presented-as-understanding",
+    "title": "Implement qualitative packet and mechanistic graph validators",
+    "intent": "Ensure qualitative packets and graphs are structurally valid, epistemically disciplined, and useful for downstream reasoning.",
+    "conceptual_model": "A graph can create false confidence if it looks coherent but lacks assumptions, regimes, or evidence. Validators should enforce that every relation edge has direction, sign or relation kind, validity regime, assumptions, evidence or unknowns, and falsifiers. Graph validation should also detect isolated variables, relation edges without source or target nodes, and proof-status overclaiming.",
+    "use_skills": [
+      "review-reasoner-epistemologist",
+      "review-reasoner-mathematician",
+      "qualitative-physics-falsifier",
+      "epistemic-status-ledger"
+    ],
+    "implementation_steps": [
+      "Create `agentic/scripts/validate_qualitative_relation_packets.py`.",
+      "Create `agentic/scripts/validate_qualitative_mechanistic_graph.py`.",
+      "Add fixtures under `tests/fixtures/qualitative_physics/` for valid packet, invalid missing regime, invalid missing evidence, valid graph, and invalid graph edge.",
+      "Add validators to `agentic/scripts/agentic_check.py` after qualitative graph implementation.",
+      "Ensure validators reject claims that promote heuristic qualitative relation to proof progress without proof evidence."
+    ],
+    "validation_commands": [
+      "python agentic/scripts/validate_qualitative_relation_packets.py tests/fixtures/qualitative_physics/valid_packet.json",
+      "python agentic/scripts/validate_qualitative_mechanistic_graph.py tests/fixtures/qualitative_physics/valid_graph.json",
+      "python agentic/scripts/agentic_check.py"
+    ],
+    "required_artifact": [
+      "agentic/scripts/validate_qualitative_relation_packets.py",
+      "agentic/scripts/validate_qualitative_mechanistic_graph.py",
+      "tests/fixtures/qualitative_physics/"
+    ],
+    "acceptance_criteria": [
+      "Validators reject relation claims without regimes, assumptions, or evidence paths.",
+      "Validators reject graph edges with missing nodes or invalid epistemic status.",
+      "Validators detect proof-overclaim language in qualitative graph artifacts.",
+      "The full Abducer check includes qualitative validation once implementation exists."
+    ],
+    "blocked_by": [
+      "QPR-001",
+      "QPR-002",
+      "QPR-011"
+    ],
+    "evidence": [
+      "file:agentic/todos/qualitative_physics_reasoning_todos.yaml",
+      "cmd:python agentic/scripts/validate_todos.py",
+      "file:agentic/scripts/validate_qualitative_relation_packets.py",
+      "file:agentic/scripts/validate_qualitative_mechanistic_graph.py",
+      "file:tests/fixtures/qualitative_physics/valid_packet.json",
+      "file:tests/fixtures/qualitative_physics/valid_graph.json",
+      "cmd:python agentic/scripts/build_qualitative_mechanistic_graph.py --target yang-mills-existence-and-mass-gap-target",
+      "cmd:python agentic/scripts/validate_qualitative_relation_packets.py",
+      "cmd:python agentic/scripts/validate_qualitative_mechanistic_graph.py",
+      "cmd:python agentic/scripts/validate_skill_depth.py",
+      "cmd:python agentic/scripts/validate_discovery_marathon_skill_dispatch.py",
+      "cmd:python agentic/scripts/validate_discovery_marathon_cycle.py",
+      "cmd:python agentic/scripts/validate_reasoning_monitor.py",
+      "cmd:python agentic/scripts/validate_discovery_marathon_report.py",
+      "cmd:python agentic/scripts/validate_task_skill_registry.py"
+    ],
+    "review_date": "2026-08-09",
+    "failure_modes": [
+      "Validators check only JSON shape and not epistemic discipline.",
+      "Validators allow graph edges with no assumptions or regimes.",
+      "Qualitative insight is presented as theorem progress."
+    ],
+    "exit_criteria": [
+      "Qualitative relation packets and mechanistic graphs have executable quality gates."
+    ],
+    "status": "resolved"
+  },
+  {
+    "id": "QPR-013",
+    "type": "report_todo",
+    "phase": "report-integration",
+    "owner": "agentic/scripts",
+    "priority": "high",
+    "risk_class": "mechanistic-picture-hidden-from-user",
+    "title": "Add a qualitative mechanistic graph tab to the reasoning reports",
+    "intent": "Expose the accumulated qualitative causal picture in the HTML reports so users can inspect how variables and mechanisms relate.",
+    "conceptual_model": "Mechanistic understanding should become a visible surface. The report should show variable nodes, regime bands, relation edges, uncertain or challenged edges, concrete probes, and proof obligations. It should help the user see the global causal picture: which quantities control which phenomena, where the picture is stable, and where the reasoning is still fragile.",
+    "use_skills": [
+      "show-reasoning",
+      "kb-explain",
+      "reasoning-report-renderer",
+      "qualitative-physics-falsifier"
+    ],
+    "implementation_steps": [
+      "Extend `agentic/scripts/generate_reasoning_monitor_html.py` with a Qualitative Mechanism tab.",
+      "Extend `agentic/scripts/generate_discovery_marathon_html.py` or a companion report with a qualitative graph tab for marathon outputs.",
+      "Render node types, edge types, epistemic status, validity regimes, and originating cycles.",
+      "Add filters for variable, regime, relation kind, status, and proof obligation.",
+      "Render edge details with assumptions, falsifiers, concrete probes, and next experiment links."
+    ],
+    "validation_commands": [
+      "python agentic/scripts/generate_reasoning_monitor_html.py",
+      "python agentic/scripts/validate_reasoning_monitor.py",
+      "python agentic/scripts/validate_discovery_marathon_report.py"
+    ],
+    "required_artifact": [
+      "agentic/reports/reasoning_monitor/latest.html",
+      "agentic/reports/discovery_marathon/full_timeline.html"
+    ],
+    "acceptance_criteria": [
+      "The report contains a visible qualitative mechanism or relational graph tab.",
+      "The tab shows variables, regimes, relations, statuses, and falsifiers.",
+      "Users can trace each edge to source cycles or explicit unknowns.",
+      "The report visually distinguishes validated, conjectural, challenged, and invalidated relations."
+    ],
+    "blocked_by": [
+      "QPR-011",
+      "QPR-012"
+    ],
+    "evidence": [
+      "file:agentic/todos/qualitative_physics_reasoning_todos.yaml",
+      "cmd:python agentic/scripts/validate_todos.py",
+      "file:agentic/scripts/generate_reasoning_monitor_html.py",
+      "file:agentic/scripts/generate_discovery_marathon_html.py",
+      "file:agentic/reports/reasoning_monitor/latest.html",
+      "file:agentic/reports/discovery_marathon/full_timeline.html",
+      "cmd:python agentic/scripts/build_qualitative_mechanistic_graph.py --target yang-mills-existence-and-mass-gap-target",
+      "cmd:python agentic/scripts/validate_qualitative_relation_packets.py",
+      "cmd:python agentic/scripts/validate_qualitative_mechanistic_graph.py",
+      "cmd:python agentic/scripts/validate_skill_depth.py",
+      "cmd:python agentic/scripts/validate_discovery_marathon_skill_dispatch.py",
+      "cmd:python agentic/scripts/validate_discovery_marathon_cycle.py",
+      "cmd:python agentic/scripts/validate_reasoning_monitor.py",
+      "cmd:python agentic/scripts/validate_discovery_marathon_report.py",
+      "cmd:python agentic/scripts/validate_task_skill_registry.py"
+    ],
+    "review_date": "2026-08-09",
+    "failure_modes": [
+      "The graph tab becomes decorative and does not expose assumptions.",
+      "The report hides uncertainty or invalidated edges.",
+      "The UI cannot show how concrete probes affect the global mechanism."
+    ],
+    "exit_criteria": [
+      "The accumulated qualitative causal picture is visible and inspectable in the main reports."
+    ],
+    "status": "resolved"
+  },
+  {
+    "id": "QPR-014",
+    "type": "workflow_todo",
+    "phase": "marathon-workflow-integration",
+    "owner": "agentic/registries",
+    "priority": "critical",
+    "risk_class": "qualitative-skills-not-used-by-loop",
+    "title": "Integrate qualitative physics skills into the discovery marathon workflow",
+    "intent": "Ensure qualitative reasoning skills are invoked by branch exploration, ranked queue control, stopping decisions, and report generation.",
+    "conceptual_model": "The qualitative layer should affect the loop's behavior. A branch should be adapted when its variables are untyped, backtracked when relation claims lack regimes, prioritized when a concrete qualitative probe can decide a branch, and protected from premature stopping when failures sharpen the mechanistic graph.",
+    "use_skills": [
+      "long-horizon-route-portfolio-manager",
+      "next-experiment-queue-ranker",
+      "qualitative-variable-isolator",
+      "physics-regime-map-builder",
+      "monotonicity-sensitivity-prober",
+      "limit-convergence-behavior-auditor",
+      "qualitative-toy-model-builder",
+      "qualitative-physics-falsifier"
+    ],
+    "implementation_steps": [
+      "Update `agentic/registries/discovery_marathon_skill_dispatch.yaml` to add a qualitative_physics_reasoning phase after branch exploration and before obligation gating.",
+      "Require each relevant cycle to emit qualitative relation packets or an explicit skip reason.",
+      "Update ranked queue scoring so concrete qualitative probes and high-value relation uncertainties can raise priority.",
+      "Update branch continuation logic so branches are not stopped if they keep sharpening variables, regimes, relation edges, or falsifiers.",
+      "Update cycle validators to ensure qualitative outputs are attached when the phase is invoked."
+    ],
+    "validation_commands": [
+      "python agentic/scripts/validate_discovery_marathon_skill_dispatch.py",
+      "python agentic/scripts/validate_discovery_marathon_cycle.py",
+      "python agentic/scripts/validate_discovery_marathon_report.py",
+      "python agentic/scripts/agentic_check.py"
+    ],
+    "required_artifact": [
+      "agentic/registries/discovery_marathon_skill_dispatch.yaml",
+      "agentic/scripts/validate_discovery_marathon_cycle.py",
+      "agentic/scripts/generate_discovery_marathon_html.py"
+    ],
+    "acceptance_criteria": [
+      "Discovery marathon cycles visibly invoke or explicitly skip qualitative physics reasoning.",
+      "Ranked queue entries cite qualitative uncertainty or mechanistic payoff when relevant.",
+      "Stopping decisions include whether the branch still adds mechanistic graph knowledge.",
+      "The full Abducer check validates the qualitative phase."
+    ],
+    "blocked_by": [
+      "QPR-003",
+      "QPR-004",
+      "QPR-006",
+      "QPR-007",
+      "QPR-009",
+      "QPR-010",
+      "QPR-011",
+      "QPR-012"
+    ],
+    "evidence": [
+      "file:agentic/todos/qualitative_physics_reasoning_todos.yaml",
+      "cmd:python agentic/scripts/validate_todos.py",
+      "file:agentic/registries/discovery_marathon_skill_dispatch.yaml",
+      "file:registry/tasks/discovery-marathon/task_registry.json",
+      "file:agentic/scripts/agentic_check.py",
+      "cmd:python agentic/scripts/build_qualitative_mechanistic_graph.py --target yang-mills-existence-and-mass-gap-target",
+      "cmd:python agentic/scripts/validate_qualitative_relation_packets.py",
+      "cmd:python agentic/scripts/validate_qualitative_mechanistic_graph.py",
+      "cmd:python agentic/scripts/validate_skill_depth.py",
+      "cmd:python agentic/scripts/validate_discovery_marathon_skill_dispatch.py",
+      "cmd:python agentic/scripts/validate_discovery_marathon_cycle.py",
+      "cmd:python agentic/scripts/validate_reasoning_monitor.py",
+      "cmd:python agentic/scripts/validate_discovery_marathon_report.py",
+      "cmd:python agentic/scripts/validate_task_skill_registry.py"
+    ],
+    "review_date": "2026-08-09",
+    "failure_modes": [
+      "Qualitative skills exist but are never used by the loop.",
+      "The qualitative phase becomes a prose add-on with no queue or branch-control effect.",
+      "Stopping decisions ignore mechanistic learning."
+    ],
+    "exit_criteria": [
+      "Qualitative physics reasoning changes branch exploration, queue ranking, stopping decisions, and report surfaces."
+    ],
+    "status": "resolved"
+  },
+  {
+    "id": "QPR-015",
+    "type": "test_todo",
+    "phase": "concrete-probe-fixtures",
+    "owner": "tests",
+    "priority": "high",
+    "risk_class": "qualitative-skills-not-calibrated",
+    "title": "Create concrete qualitative physics probe fixtures",
+    "intent": "Validate the qualitative skills on small solved settings before using them in long-horizon discovery.",
+    "conceptual_model": "The skills should learn physics feel from controlled examples: finite matrices for positivity, spectral measures for decay, heat kernels for smoothing, simple RG maps for flow, and noncommuting limits for cutoff discipline. These fixtures prevent the skills from sounding plausible while missing basic qualitative behavior.",
+    "use_skills": [
+      "qualitative-toy-model-builder",
+      "monotonicity-sensitivity-prober",
+      "limit-convergence-behavior-auditor",
+      "dimensional-symmetry-constraint-checker"
+    ],
+    "implementation_steps": [
+      "Create `tests/fixtures/qualitative_physics/finite_positive_matrix_probe.json`.",
+      "Create `tests/fixtures/qualitative_physics/spectral_decay_measure_probe.json`.",
+      "Create `tests/fixtures/qualitative_physics/noncommuting_limits_probe.json`.",
+      "Create `tests/fixtures/qualitative_physics/simple_rg_flow_probe.json`.",
+      "For each fixture, include expected variables, regimes, relation edges, falsifiers, and transferable/non-transferable lessons."
+    ],
+    "validation_commands": [
+      "python agentic/scripts/validate_qualitative_relation_packets.py tests/fixtures/qualitative_physics/*.json",
+      "python agentic/scripts/validate_todos.py"
+    ],
+    "required_artifact": [
+      "tests/fixtures/qualitative_physics/finite_positive_matrix_probe.json",
+      "tests/fixtures/qualitative_physics/spectral_decay_measure_probe.json",
+      "tests/fixtures/qualitative_physics/noncommuting_limits_probe.json",
+      "tests/fixtures/qualitative_physics/simple_rg_flow_probe.json"
+    ],
+    "acceptance_criteria": [
+      "Each fixture has a small concrete setting and a solved qualitative behavior.",
+      "Each fixture states what transfers and what does not transfer.",
+      "The fixtures cover monotonicity, convergence, positivity, and scale-flow behavior.",
+      "The fixtures are reusable by skill forward tests."
+    ],
+    "blocked_by": [
+      "QPR-009",
+      "QPR-012"
+    ],
+    "evidence": [
+      "file:agentic/todos/qualitative_physics_reasoning_todos.yaml",
+      "cmd:python agentic/scripts/validate_todos.py",
+      "file:tests/fixtures/qualitative_physics/finite_positive_matrix_probe.json",
+      "file:tests/fixtures/qualitative_physics/spectral_decay_measure_probe.json",
+      "file:tests/fixtures/qualitative_physics/noncommuting_limits_probe.json",
+      "file:tests/fixtures/qualitative_physics/simple_rg_flow_probe.json",
+      "cmd:python agentic/scripts/build_qualitative_mechanistic_graph.py --target yang-mills-existence-and-mass-gap-target",
+      "cmd:python agentic/scripts/validate_qualitative_relation_packets.py",
+      "cmd:python agentic/scripts/validate_qualitative_mechanistic_graph.py",
+      "cmd:python agentic/scripts/validate_skill_depth.py",
+      "cmd:python agentic/scripts/validate_discovery_marathon_skill_dispatch.py",
+      "cmd:python agentic/scripts/validate_discovery_marathon_cycle.py",
+      "cmd:python agentic/scripts/validate_reasoning_monitor.py",
+      "cmd:python agentic/scripts/validate_discovery_marathon_report.py",
+      "cmd:python agentic/scripts/validate_task_skill_registry.py"
+    ],
+    "review_date": "2026-08-09",
+    "failure_modes": [
+      "Fixtures are too domain-specific and do not test reusable qualitative reasoning.",
+      "Fixtures provide expected prose but not typed relation packets.",
+      "The solved behavior is not concrete enough to catch bad qualitative claims."
+    ],
+    "exit_criteria": [
+      "The qualitative skill cluster can be tested on concrete solved probes before deployment."
+    ],
+    "status": "resolved"
+  }
+]

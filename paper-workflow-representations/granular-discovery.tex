@@ -1,0 +1,408 @@
+% SPDX-FileCopyrightText: © 2026 Idiap Research Institute <contact@idiap.ch>
+%
+% SPDX-FileContributor: Andre Freitas <andre.freitas@idiap.ch>
+% Neuro-symbolic AI Group
+%
+% SPDX-FileContributor: Danilo Gusicuma <danilo.gusicuma@idiap.ch>
+% Neuro-symbolic AI Group
+%
+% SPDX-License-Identifier: MIT
+\subsection{Abductive proof work: making a proposed route answerable}
+\label{app:granular-abducer-work-loop}
+An active proof gap is an obligation, not yet a route for meeting it. The four
+occurrences make four different commitments. Route formation ($a$) proposes a
+hypothesis that could close the gap. Claim derivation ($d$) takes that hypothesis
+as a premise and exposes a consequence. Refutation ($r$) challenges that exact
+consequence. Routing ($e$) retains both the consequence and its assessment to
+choose what work is justified next. This retained join matters: an adverse test
+without the claim cannot say which part of the proposed route failed.
+
+\paragraph{How the search is constrained.}
+The linked abductive skill first attempts deduction to locate the exact missing
+support, then constructs competing small sets of additional premises. It compares
+explanatory coverage, compatibility with accepted knowledge, simplicity, and
+novelty risk, and attaches a falsifier to each set. Thus the search space is not
+``any plausible explanation'': it is alternative repairs of a named entailment
+gap. The linked outer work procedure alternates discovery and proof attempts,
+reassesses end-to-end plausibility, and permits persistence only when failure
+sharpens a premise, object, regime, or bridge. Repeating the same blocker instead
+requires backtracking or a pivot. Its machinery assessment asks which method
+actually controls the bottleneck, excluding a prestigious analogy with no
+transfer obligation. These are prescribed skill procedures; the four native
+occurrences do not implement that persistent controller.
+
+Here $G,H,C,R,S$ alias the native gap, route hypothesis, derived claim,
+refutation assessment, and routing assessment types, respectively. Write
+$\mathsf{Gen}[X]=\mathtt{Generated}[X]$; $z.\mathtt{value}$ is the declared
+projection, not an inferred proof of $X$.
+\[
+\begin{aligned}
+ a &:G\to\mathsf{Gen}[H],&d &:H\to\mathsf{Gen}[C],\\
+ r &:C\to\mathsf{Gen}[R],&e &:J\to\mathsf{Gen}[S],\\
+ h&=a(g),\quad c=d(h.\mathtt{value}),&v&=r(c.\mathtt{value}),\\
+ J&=\{\mathtt{derived\_claim}:C,\ \mathtt{refutation\_assessment}:R\},\\
+ s&=e\{\mathtt{derived\_claim}=c.\mathtt{value},\
+       \mathtt{refutation\_assessment}=v.\mathtt{value}\}.
+\end{aligned}
+\]
+The relation contracts record assumption, test, and calibration links. In
+particular, \emph{Treats\allowbreak Proof\allowbreak Route\allowbreak As\allowbreak Claim\allowbreak Premise} licenses the description
+``conditional on this route''; it does not certify that the route holds. The
+other two relations attach the challenge and the resulting work assessment to
+that commitment. Their source/target records do not supply logical soundness
+proofs.
+
+\paragraph{Constructed example.}
+To establish a graph-family mixing bound, $a$ proposes a uniform spectral gap.
+Under this premise, $d$ derives exponential decay. Testing cycle graphs at $r$
+shows their gaps approach zero with size. This refutes the strengthening that
+connected graphs have a size-independent gap, not the conditional decay theorem.
+The final join supports reframing the
+graph family or retargeting the bound, rather than declaring all decay reasoning
+false. This is a mathematical illustration, not an observed workflow run.
+
+The native sequence returns a routing assessment with release, reframe,
+retarget, or refuted alternatives. The original ERFL additionally switches to
+release promotion, conceptual exploration, or target navigation, and stops when
+$r$ is refuted. Those transitions, including the early stop before calibration,
+are not executable branches in this native sequence.
+
+\input{paper-workflow-representations/steps/abducer_work_loop.tex}
+
+\subsection{Discovery marathon: separating a pattern from its explanation}
+\label{app:granular-discovery-marathon-loop}
+Discovery here is a bounded comparison of commitments. Scope grounding ($e_0$)
+fixes what the run may use. Abduction ($a$) proposes an explanation; induction
+($i$) extracts a provisional pattern from that same scope. They are parallel
+occurrences because a pattern and an explanatory hypothesis are independently
+consumed results. Neither becomes confirmation merely because both were formed.
+Model probing ($m$) asks what their combination implies under a model;
+contrastive probing ($c$) asks what a discriminating comparison reveals.
+Refutation ($r$) combines these different challenges. Calibration ($e_1$)
+rejoins the original hypothesis and pattern with the refutation assessment.
+
+\paragraph{What makes a discovery cycle informative.}
+The portfolio procedure treats target commitments as fixed constraints and
+hypotheses as replaceable. A candidate earns further work by identifying the
+commitments it advances and the evidence its next step could change; a novel but
+irrelevant branch remains visible without entering the proof queue. The linked
+probe procedure asks rivals to predict the same observable under the same
+controls before any run. A minimal perturbation of an assumption or carrier then
+reveals which dependency the proposed mechanism needs. If rivals cannot be
+distinguished, the correct output is non-identifiability, not preference for the
+more elaborate model. Negative and boundary outcomes feed branch revision;
+repeated failure without new learning forces a change of route. These prescribed
+procedures explain the two probe roles, but their current entry gates are richer
+than the native hypothesis--pattern join and are not established by its types.
+
+With $X,B,H,P,M,C,R,S$ denoting context, bounded scope, hypothesis, pattern,
+model implications, contrast assessment, refutation, and routing:
+\[
+\begin{aligned}
+ e_0 &:X\to\mathsf{Gen}[B],\qquad
+ a:B\to\mathsf{Gen}[H],\quad i:B\to\mathsf{Gen}[P],\\
+ m &:J_{HP}\to\mathsf{Gen}[M],\qquad
+ c:J_{HP}\to\mathsf{Gen}[C],\\
+ r &:J_{MC}\to\mathsf{Gen}[R],\qquad
+ e_1:J_{HPR}\to\mathsf{Gen}[S],\\
+ J_{HP}&=\{\mathtt{discovery\_hypothesis}:H,\ \mathtt{discovery\_pattern}:P\},\\
+ J_{MC}&=\{\mathtt{model\_implications}:M,\ \mathtt{contrast\_assessment}:C\},\\
+ J_{HPR}&=\{\mathtt{discovery\_hypothesis}:H,\ \mathtt{discovery\_pattern}:P,
+          \ \mathtt{refutation\_assessment}:R\}.
+\end{aligned}
+\]
+Both formation calls consume $e_0(x).\mathtt{value}$. Both probes consume the
+same named join of $a$'s and $i$'s projected values; $r$ receives the projected
+probe outputs; $e_1$ retains the formation outputs alongside $r$'s value.
+\emph{Scopes\allowbreak Discovery\allowbreak Formation}, \emph{Grounds\allowbreak Discovery\allowbreak Probe},
+\emph{Grounds\allowbreak Discovery\allowbreak Refutation}, and \emph{Calibrates\allowbreak Discovery\allowbreak Routing}
+respectively identify these four evidential dependencies, without establishing
+that the model or comparison is adequate.
+
+\paragraph{Constructed example.}
+Within a fixed sensor dataset, induction finds a drifting offset and abduction
+proposes either thermal sensitivity or clock drift. A model predicts offset
+changes under temperature variation; the contrast holds temperature fixed while
+varying elapsed time. If both hypotheses make the same prediction under available
+controls, no run selects between them: the next task is a discriminating control.
+If the offset changes only with elapsed time, thermal sensitivity is weakened
+within that setup. The portfolio preserves the calibration target and records
+which observation could reverse the decision.
+
+The native graph has two parallel stages and returns Promotable, Reorient,
+TargetReset, or Stalled. The original routes the first three to release,
+conceptual exploration, or navigation, and stops on a stalled reasoning run.
+It supplies the cross-cycle control policy; native output alternatives alone do
+not execute a marathon or establish termination.
+
+\input{paper-workflow-representations/steps/discovery_marathon_loop.tex}
+
+\subsection{Conceptual repair: turning an obstruction into a testable bridge}
+\label{app:granular-conceptual-hypothesis-exploration-loop}
+This workflow changes the representation used to attack a problem. Obstruction
+assessment ($e_0$) identifies the structural pressure behind a failure. Mediation
+formation ($a$) proposes what kind of concept could resolve it. Analogical
+transfer ($t$) builds a correspondence rather than merely naming a similar
+subject. Deduction ($d$) exposes a consequence of that bridge. Refutation ($r$)
+tests the consequence, and routing ($e_1$) evaluates the bridge in light of that
+test. The distinction between mediation and bridge prevents a promising analogy
+from being treated as an already specified transport of reasoning.
+
+\paragraph{What is revised, and why.}
+The linked bridge-forging procedure searches for a missing carrier, invariant,
+representation, interface, or transfer law where two structures nearly meet.
+It must state why existing objects fail, how the new object would be constructed,
+which invariants survive, and its first failure regime. Defining the desired
+conclusion into the bridge is explicitly disallowed. The route ranker then
+compares target contribution, validation strength, risk, and tractability; a
+beautiful bridge without proof-form obligations stays outside the proof queue.
+Its feedback decision distinguishes informative adaptation from backtracking,
+pivoting, and quarantine, and requires the selected machinery to control the
+actual bottleneck. The workflow contract retains failure cartography, mediation
+candidates, and validation packets for this decision. This describes prescribed
+conceptual work around the native ports, not a recovered implementation of their
+string-bearing values.
+
+Let $F,P,H,B,C,R,S$ name failure state, obstruction pressure, mediation
+hypothesis, bridge, consequence, refutation, and refinement status.
+\[
+\begin{aligned}
+ e_0 &:F\to\mathsf{Gen}[P],&a &:P\to\mathsf{Gen}[H],\\
+ t &:H\to\mathsf{Gen}[B],&d &:B\to\mathsf{Gen}[C],\\
+ r &:C\to\mathsf{Gen}[R],&e_1 &:J_{BR}\to\mathsf{Gen}[S],\\
+ p&=e_0(f),\ h=a(p.\mathtt{value}),\ b=t(h.\mathtt{value}),\\
+ q&=d(b.\mathtt{value}),\ v=r(q.\mathtt{value}),\\
+ J_{BR}&=\{\mathtt{conceptual\_bridge}:B,\ \mathtt{refutation\_assessment}:R\},\\
+ s&=e_1\bigl\{\mathtt{conceptual\_bridge}=b.\mathtt{value},\\
+  &\hspace{3em}\mathtt{refutation\_assessment}=v.\mathtt{value}\bigr\}.
+\end{aligned}
+\]
+The relation sequence bounds obstruction pressure, transfers mediation into a
+bridge, treats the bridge as a consequence premise, tests that consequence,
+and calibrates routing. In particular, the transfer relation records the proposed
+correspondence; the assumption relation keeps its consequences conditional.
+Neither declaration asserts that analogy preserves all relevant structure.
+
+\paragraph{Constructed example.}
+A convergence argument for a physical state fails because a norm counts changes
+of gauge as changes of observable state. Obstruction assessment identifies that
+identity mismatch. Mediation proposes a quotient by gauge equivalence; the bridge
+must construct the projection and show that dynamics descend to the quotient.
+Deduction can then formulate convergence of equivalence classes. If two equivalent
+representatives evolve into inequivalent classes, refutation exposes failure of
+well-defined dynamics. The next task is to repair that compatibility law, not to
+rename the quotient as a solution. This constructed case illustrates how a
+representation change generates a new, exact proof burden.
+
+Native output distinguishes WorkReady, ReadyForReleasePromotion, and Refuted.
+Original ERFL sends work-ready repairs back to abductive proof work, release
+candidates to promotion, and stops on refutation. The native straight sequence
+contains neither these switches nor the original early-stop guard. Its final
+join retains the bridge and assessment; it has no separately typed retained port
+for the derived consequence or original failure state.
+
+\input{paper-workflow-representations/steps/conceptual_hypothesis_exploration_loop.tex}
+
+\subsection{Frontier deepening: selecting before formalizing}
+\label{app:granular-conceptual-frontier-deepening}
+A concept should become a formal claim only after its discriminating content has
+survived an explicit selection step. Frontier grounding ($e_0$) fixes a bounded
+search from frozen context. Hypothesis formation ($a$) proposes a candidate
+within it. Refutation ($r$) challenges that candidate before selection ($e_1$)
+compares its promise with the challenge. Bridge revision ($t$) turns the selected
+content into a correspondence usable for formal work; deduction ($d$) expresses
+a formal consequence. Readiness calibration ($e_2$) decides whether that claim
+is ready for theorem work, not whether it is proved.
+
+\paragraph{The conceptual work hidden by a single hypothesis port.}
+The linked frontier procedure opens invention before assigning family labels:
+authors work without sibling candidates, then a separate assessor reconstructs
+families from primitive changes, mechanism, intervention, prediction, and first
+falsifier. Semantic paraphrases collapse; incompatible mechanisms remain live.
+Reflection changes identity conditions, exposes internal contradictions and
+inherited commitments, separates necessary from regime-relative structure, and
+seeks unification that preserves decisive differences. Blind judgment compares
+complete candidates on non-compensatory dimensions such as relevance,
+protected-success preservation, explanatory depth, correction, and falsifiability;
+a plural non-dominated frontier is an admissible outcome. Category or HoTT
+representations earn a role only by exposing an actual mediator or transport
+obstruction. This prescribed process is much richer than the linear native
+projection. There is also a source difference: the skill makes formal routes
+conditional, while the named contract lists central-route derivation and formal
+claim production as required steps. Neither should be silently read as proof
+that every candidate becomes formal-ready.
+
+The local aliases are $X$ (frozen context), $F$ (frontier), $H$ (hypothesis),
+$R$ (refutation), $S$ (selection), $B$ (revised bridge), $C$ (formal claim), and
+$Q$ (readiness).
+\[
+\begin{aligned}
+ e_0 &:X\to\mathsf{Gen}[F],&a &:F\to\mathsf{Gen}[H],\\
+ r &:H\to\mathsf{Gen}[R],&e_1 &:J_{HR}\to\mathsf{Gen}[S],\\
+ t &:S\to\mathsf{Gen}[B],&d &:B\to\mathsf{Gen}[C],\\
+ e_2 &:C\to\mathsf{Gen}[Q],\\
+ J_{HR}&=\{\mathtt{conceptual\_hypothesis}:H,
+           \ \mathtt{refutation\_assessment}:R\}.
+\end{aligned}
+\]
+Every sequential call uses the predecessor's $\mathtt{.value}$; selection instead
+joins the retained hypothesis value with its refutation value. The search-bound
+relation attaches formation to the grounded frontier. The test relation attaches
+criticism to the candidate, and the calibration relation is used twice: first
+for selection, then for readiness. Bridge revision and premise relations mark
+the remaining changes of commitment. Reusing a relation name does not equate
+these two calibration judgments.
+
+\paragraph{Constructed example.}
+For two effective descriptions with different state variables but matching
+measured predictions in a bounded regime, invention may propose a common latent
+carrier or a direct translation between observables. Reflection asks which
+identity distinctions each proposal erases. A candidate transport must specify
+maps, the regime in which they apply, and a test where predictions diverge.
+Agreement on existing observations does not establish equivalence, and a latent
+carrier without a discriminating consequence receives no automatic preference.
+Both candidates can remain on the frontier until a correction or new observable
+distinguishes them. The formalization task, when justified, is the specific
+transport or compatibility obligation.
+
+The native output offers FormalReady, NotFormalReadyOrNonDominated, or Refuted,
+but the native sequence has no switch. Original ERFL routes readiness to theorem
+proof, returns a non-ready or non-dominated candidate to exploration, and stops
+at a refuted $r$. Moreover, selection, bridge, and claim are nominal string-bearing
+types: their signatures do not enforce preservation of the original evidence or
+hypothesis identity. Such stronger indexed obligations must be proposed
+explicitly rather than attributed to this native declaration.
+
+\input{paper-workflow-representations/steps/conceptual_frontier_deepening.tex}
+
+\subsection{Evidence-to-proof onramp: finding the obligation worth proving}
+\label{app:granular-evidence-to-proof-route-onramp}
+The onramp separates proposing a useful route from selecting an exact entrypoint.
+Grounding ($e_0$) anchors a source bundle in evidence. Route abduction ($a_0$)
+proposes how that evidence could support proof work. Deduction ($d_0$) makes a
+consequence inspectable, and calibration ($e_1$) assesses it. A second abductive
+occurrence ($a_1$) then revises the proof-obligation entrypoint: assessment may
+show that a different lemma, rather than the original ambitious target, is the
+tractable next step. Refutation ($r_0$) challenges that entrypoint; final
+calibration ($e_2$) preserves it with its falsification record.
+
+\paragraph{How an entrypoint is found.}
+The named contract orders ingestion and theorem normalization before conjecture
+grounding and connection search. The connector distinguishes established
+statement dependencies from proposed cross-component links, using symbol roles,
+method overlap, and candidate reductions to expose missing bridges. The hub audit
+asks whether a highly connected definition is being mistaken for mathematical
+progress. Pathfinding then anchors each agenda on one statement, attaches its
+supporting hypotheses and links, and gives it a stop or pruning condition. A
+regime-crossing route additionally needs an audit of the transfer; the final
+handoff retains the route together with its falsification evidence. Consequently,
+route selection concerns the missing implication that would advance the target,
+not simply the most connected node. These are ordered contract and prescribed
+skill procedures; the seven native occurrences are their coarse conceptual
+projection, not an execution trace of all those steps.
+
+For source $X$, ground $G$, route $H$, consequence $C$, assessment $A$, entrypoint
+$P$, falsification $R$, and readiness $S$:
+\[
+\begin{aligned}
+ e_0 &:X\to\mathsf{Gen}[G],&a_0 &:G\to\mathsf{Gen}[H],\\
+ d_0 &:H\to\mathsf{Gen}[C],&e_1 &:C\to\mathsf{Gen}[A],\\
+ a_1 &:A\to\mathsf{Gen}[P],&r_0 &:P\to\mathsf{Gen}[R],\\
+ e_2 &:J_{PR}\to\mathsf{Gen}[S],\\
+ J_{PR}&=\{\mathtt{proof\_entrypoint}:P,
+           \ \mathtt{falsification\_assessment}:R\}.
+\end{aligned}
+\]
+After grounding, successive unary calls pass explicit $\mathtt{.value}$
+projections along the sequence; $e_2$ joins the projected output of $a_1$ with
+the projected output of $r_0$ in the named fields.
+Relations identify grounding, conditional consequence, calibration,
+entrypoint revision, and testing; calibration is reused at both assessments.
+The readiness record contains a disposition, expert dossier, falsification
+assessment, and hub-bias audit. The audit is an output field, not an additional
+declared reasoning occurrence.
+
+\paragraph{Constructed example.}
+A knowledge base connects a circuit lower-bound target to a highly central
+complexity-class definition and to a less connected lemma translating proofs into
+circuits. The hub audit prevents the definition's degree from deciding the route.
+Pathfinding instead anchors on the transfer lemma and asks whether it preserves
+uniformity. A counterexample search tests whether the translation relies on
+nonuniform advice; if it does, that route cannot support the uniform target
+without a new lemma. The dossier therefore carries an explicit uniformity
+obligation or a stopped route, rather than a graph-centrality score presented as
+proof progress. This is a constructed route diagnosis, not a lower-bound result.
+
+Original ERFL switches a ready route to theorem delivery, sends conceptual gaps
+to exploration, and stops on refutation. Native comments describe these
+handoffs, including an adapter to \texttt{ProofQueueItem}, as non-executable.
+The native sequence itself returns the assessment; it neither implements that
+adapter nor enforces the early stop. The nominal ID-bearing intermediate records
+also leave evidence-preservation obligations outside their signatures.
+
+\input{paper-workflow-representations/steps/evidence_to_proof_route_onramp.tex}
+
+\subsection{Theorem delivery: preserving the exact claim through challenge}
+\label{app:granular-theorem-proof-delivery}
+The theorem workflow begins after a proof obligation has been chosen. Deduction
+($d_0$) constructs an exact theorem claim from explicit premises. Refutation
+($r_0$) tests that claim rather than a weaker paraphrase. Calibration ($e_0$)
+combines the retained claim and refutation assessment into a disposition with a
+formal-proof gate and, where applicable, a failure certificate. This is a
+three-occurrence closure attempt: choosing a new hypothesis is deliberately not
+a local occurrence. A failed attempt can instead supply conceptual work with an
+exact statement and its unresolved obligations.
+
+\paragraph{What happens inside a proof attempt.}
+The linked builder orders lemmas without circular dependencies and records where
+each premise enters. A parameter ledger propagates constants, exponents,
+quantifiers, norms, and validity regimes so that a locally plausible step cannot
+silently change the theorem. When a lemma blocks, the conditional gap-splitting
+procedure identifies whether the cause is a missing estimate, transfer, wrong
+quantifier, model mismatch, or false statement. It actively searches small,
+degenerate, proxy, and adversarial cases before classifying the problem as missing
+technique, then permits one explicit repair before choosing a new disposition.
+The gate distinguishes an unconditional proof from an explicitly conditional
+theorem and rejects silent gap closure. The contract therefore retains obligations
+even when exit is allowed. These prescribed proof procedures supply substance to
+``derive, test, calibrate'' without asserting that the three native operations
+execute them or that a status value constitutes a formal proof certificate.
+
+Write $P,C,R,S$ for explicit premises, exact claim, refutation, and disposition.
+The input $q$ has native type \texttt{ProofQueueItem}.
+\[
+\begin{aligned}
+ d_0 &:P\to\mathsf{Gen}[C],\qquad
+ r_0:C\to\mathsf{Gen}[R],\qquad e_0:J_{CR}\to\mathsf{Gen}[S],\\
+ c&=d_0(q.\mathtt{premises}),\qquad v=r_0(c.\mathtt{value}),\\
+ J_{CR}&=\{\mathtt{theorem\_claim}:C,
+           \ \mathtt{refutation\_assessment}:R\},\\
+ s&=e_0\{\mathtt{theorem\_claim}=c.\mathtt{value},\
+         \mathtt{refutation\_assessment}=v.\mathtt{value}\}.
+\end{aligned}
+\]
+\emph{Tests\allowbreak Exact\allowbreak Theorem\allowbreak Claim} connects the challenge to the generated claim;
+\emph{Calibrates\allowbreak Theorem\allowbreak Proof\allowbreak Disposition} connects the joint evidence to status.
+The claim record explicitly retains premises and formal obligations. The output
+retains claim, refutation, gate, and an optional failure certificate. These are
+useful dependencies, but their nominal types do not prove that the gate is sound,
+that obligations are discharged, or that the returned statement equals the
+requested statement. A dependent specification could index those obligations by
+$q$; this diagram reports the existing signature.
+
+\paragraph{Constructed example.}
+The queue requests exponential decay for a finite connected undirected graph's symmetric Laplacian on
+the mean-zero subspace for $\dot u=-Lu$, assuming a gap
+$\lambda_1\geq c>0$. Deduction retains these premises in the Euclidean-norm
+claim $\|u(t)\|_2\leq e^{-ct}\|u(0)\|_2$ for $t\geq0$.
+Refutation checks the excluded constant mode and the gap assumption. A missing
+spectral argument remains an open obligation; favorable testing cannot close it.
+The gate must distinguish an accepted proof from a certificate explaining that
+gap or quarantine.
+
+Original ERFL routes accepted proof status to contribution cultivation, failure
+certificates to conceptual exploration, and quarantine to stop. Native comments
+preserve that policy as non-executable handoffs, including adaptation to a result
+atlas. The native sequence supplies no local terminal acceptance transition.
+
+\input{paper-workflow-representations/steps/theorem_proof_delivery.tex}

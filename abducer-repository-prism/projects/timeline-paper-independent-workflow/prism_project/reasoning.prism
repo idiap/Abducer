@@ -1,0 +1,32 @@
+# Function: turn accumulated reasoning outputs into a claim-bounded paper decision.
+# Input: TimelineReasoningOutputs identifies the reasoning record.
+# Types: BoundedManuscriptClaimSet links the source record to its claim ledger without adding evidence.
+# Output: TimelinePaperDisposition is PaperReady, ClaimBoundaryFailure, or Stalled.
+# Layer: high-level epistemic topology only.
+# Metadata: workflows/manifest.json (`timeline-paper-independent-workflow`).
+
+from types import (
+    BoundedManuscriptClaimSet,
+    TimelinePaperDisposition,
+    TimelineReasoningOutputs,
+)
+
+from occurrences import (
+    EvidentialTimelinePaperDispositionAssessment,
+    UnresolvedManuscriptClaimSetProjection,
+)
+
+from relations import (
+    ClaimSetEnablesPaperDisposition,
+)
+
+reasoning TimelinePaperIndependentWorkflow(
+    timeline_outputs: TimelineReasoningOutputs,
+) -> Generated[TimelinePaperDisposition]:
+    sequence:
+        # Projection creates presentation input but no new claim or evidence.
+        [bounded_claim_set: UnresolvedManuscriptClaimSetProjection(timeline_outputs)]
+        # The paper gate evaluates whether the bounded set supports assembly.
+        [paper_disposition: EvidentialTimelinePaperDispositionAssessment(bounded_claim_set.value)] by ClaimSetEnablesPaperDisposition
+
+    return paper_disposition

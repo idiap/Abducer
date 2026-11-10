@@ -1,0 +1,86 @@
+# lunar-runtime: {"declaration":"MaterializedTheoremProofDelivery","entry_argument":"item","execute_hook":"abducer-workflow-execute","id":"theorem_proof_delivery","input_schema":{"additionalProperties":false,"default":{"premises":{"exact_statement":"A finite commuting family of continuous affine self-maps of a nonempty compact convex subset of a locally convex space has a common fixed point.","premise_set_id":"mk-standard-premises"},"queue_item_id":"mk-finite-family-induction"},"properties":{"premises":{"additionalProperties":false,"default":{"exact_statement":"A finite commuting family of continuous affine self-maps of a nonempty compact convex subset of a locally convex space has a common fixed point.","premise_set_id":"mk-standard-premises"},"properties":{"exact_statement":{"default":"A finite commuting family of continuous affine self-maps of a nonempty compact convex subset of a locally convex space has a common fixed point.","maxLength":16000,"minLength":1,"type":"string"},"premise_set_id":{"default":"mk-standard-premises","maxLength":16000,"minLength":1,"type":"string"}},"required":["premise_set_id","exact_statement"],"type":"object"},"queue_item_id":{"default":"mk-finite-family-induction","maxLength":16000,"minLength":1,"type":"string"}},"required":["queue_item_id","premises"],"type":"object"},"metadata":{"completion_contract":{"allowed_final_statuses":["passed","completed"],"forbid_blockers":true,"reasoning_complete":true,"reasoning_events_min":6,"terminal_state":"completed"},"description":"derive, refute, and calibrate an exact theorem under explicit premises","model_required":true,"network_required":false,"provenance_contract":{"agent_invocations":[{"activated_skill_ids":["kb-deduce"],"agent_name":"d0_material_agent","workflow_occurrence":"d0"},{"activated_skill_ids":["counterexample-hunter"],"agent_name":"r0_material_agent","workflow_occurrence":"r0"},{"activated_skill_ids":["epistemic-status-ledger"],"agent_name":"e0_material_agent","workflow_occurrence":"e0"}],"required_source_reads":[]},"reasoning_contract":{"steps":["d0","r0","e0"],"workflow":"TheoremProofDelivery"},"reasoning_required":true,"required_host_capabilities":["model","prism-engine","reasoning-events"],"scientific_truth_verified":false,"semantic_mode":"operational-model-generated","source_materialization_status":"linked_fake_handler_smoke","timeout_seconds":1800},"output_schema":{"additionalProperties":false,"properties":{"analysis_results":{"type":"object"},"compact_prism_input":{"type":"object"},"markdown":{"minLength":1,"type":"string"},"narrative_slots":{"type":"array"},"report_verification":{"properties":{"reasoning_complete":{"const":true},"status":{"const":"passed"}},"required":["status","reasoning_complete"],"type":"object"},"structured_value":{"properties":{"execution_provenance":{"type":"object"},"final_disposition":{"properties":{"blockers":{"maxItems":0,"type":"array"},"reasoning_complete":{"const":true},"status":{"const":"passed"}},"required":["status","reasoning_complete","blockers"],"type":"object"},"reasoning_result":{"type":"object"}},"required":["final_disposition","reasoning_result","execution_provenance"],"type":"object"}},"required":["markdown","structured_value","analysis_results","compact_prism_input","narrative_slots","report_verification"],"type":"object"},"prepare_hook":"abducer-workflow-prepare","verify_hook":"abducer-workflow-verify"}
+
+# Host-executed material graph for the complete reviewed reasoning path.
+# Generated values retain the source epistemic boundary and are not native proof or experiment receipts.
+
+from types import (
+    ExactClaimRefutationAssessment,
+    ExactTheoremClaim,
+    ExplicitPremises,
+    FormalProofGateDecision,
+    FormalProofObligations,
+    ProofFailureCertificate,
+    ProofQueueItem,
+    TheoremProofDisposition,
+    TheoremProofDispositionAssessment,
+)
+from occurrences import (
+    TheoremProofDispositionInput,
+)
+
+from generated.material_types import (
+    MaterialTheoremProofDispositionAssessment,
+)
+
+from generated.d0_skill_1 import d0_skill_1
+from generated.e0_skill_1 import e0_skill_1
+from generated.r0_skill_1 import r0_skill_1
+
+# Real model capability for source occurrence d0:DeductiveExactTheoremClaimDerivation.
+agent d0_material_agent(
+    task: ExplicitPremises,
+) -> Result[Generated[ExactTheoremClaim], ModelFailure]
+    ! {AI.Generate, Context.Disclose}:
+    skills: Skills[ExplicitPremises] = [d0_skill_1]
+
+# Real model capability for source occurrence r0:RefutationalExactTheoremClaimAssessment.
+agent r0_material_agent(
+    task: ExactTheoremClaim,
+) -> Result[Generated[ExactClaimRefutationAssessment], ModelFailure]
+    ! {AI.Generate, Context.Disclose}:
+    skills: Skills[ExactTheoremClaim] = [r0_skill_1]
+
+# Real model capability for source occurrence e0:EvidentialTheoremProofDispositionAssessment.
+agent e0_material_agent(
+    task: TheoremProofDispositionInput,
+) -> Result[Generated[MaterialTheoremProofDispositionAssessment], ModelFailure]
+    ! {AI.Generate, Context.Disclose}:
+    skills: Skills[TheoremProofDispositionInput] = [e0_skill_1]
+
+workflow MaterializedTheoremProofDelivery(
+    item: ProofQueueItem,
+) -> Generated[MaterialTheoremProofDispositionAssessment]
+    fails ModelFailure
+    ! {AI.Generate, Context.Disclose}:
+    sequence:
+        # Deduction constructs the exact claim from explicit premises and obligations.
+        [d0: d0_material_agent(item.premises)]
+        # Refutation tests exactly that claim rather than a weakened paraphrase.
+        [r0: r0_material_agent(d0.value)]
+        # Calibration joins claim and refutation to produce the gate and any certificate.
+        [e0: e0_material_agent(TheoremProofDispositionInput(
+            theorem_claim = d0.value,
+            refutation_assessment = r0.value,
+        ))]
+
+    return e0
+
+# HANDOFF (non-executable): a proof-accepted e0 is adapted to ResultAtlasSlice
+# and offered to scientific_contribution_cultivation. A failure certificate is
+# offered to conceptual_hypothesis_exploration_loop. Handoff preserves source,
+# target, exact statement, provenance, taints, and open obligations and adds no
+# proof or truth warrant.
+# ACCEPT (non-executable): proof_accepted is a calibrated handoff condition,
+# not a local terminal accept that can bypass contribution assessment.
+# STOP (non-executable): a quarantined e0 stops. Step failures stop or
+# quarantine according to the named contract. Exit validation consumes
+# FormalProofGateDecision and requires both the gate and FormalProofObligations;
+# open obligations remain explicit and no exact-statement claim is enlarged.
+
+
+def main(
+    item: ProofQueueItem,
+    model_access: ModelGenerate,
+    disclosure: ContextDisclose,
+) -> Result[Generated[MaterialTheoremProofDispositionAssessment], ModelFailure] ! {AI.Generate, Context.Disclose}:
+    return solve MaterializedTheoremProofDelivery(item)

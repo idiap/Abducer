@@ -1,0 +1,413 @@
+[
+  {
+    "id": "RMR-001",
+    "type": "workflow_todo",
+    "phase": "reasoning-log-substrate",
+    "owner": "agentic/scripts",
+    "priority": "critical",
+    "risk_class": "observability",
+    "title": "Implement visible reasoning-event logs for mathematical monitoring",
+    "intent": "Create a structured event stream that communicates conceptual and mathematical reasoning progress without storing hidden chain-of-thought.",
+    "conceptual_model": "The monitor needs curated public reasoning events: target spine, dependency frontier, conceptual pressure, candidate route, validation gate, drift guard, and proof debt. Each event must name mathematical objects, target commitments, evidence, uncertainty, and next obligations.",
+    "use_skills": [
+      "long-horizon-route-portfolio-manager",
+      "looper-workflow-contract-governor",
+      "review-reasoner-epistemologist"
+    ],
+    "implementation_steps": [
+      "Create `agentic/spec/reasoning_event_log_schema.json`.",
+      "Create `agentic/scripts/build_reasoning_event_log.py` that reads active target state, dependency graph, Hegelian hypothesis map, target ledger, and stale-workflow preflight.",
+      "Emit `agentic/traces/reasoning_events/ITER-0001.jsonl` and `agentic/reports/reasoning_progress/latest.{json,md}`.",
+      "Ensure events include visual encoding hints for lane, salience, color token, glyph, and detail level.",
+      "Keep the event stream public and artifact-grounded; do not log hidden reasoning traces."
+    ],
+    "required_artifact": [
+      "agentic/spec/reasoning_event_log_schema.json",
+      "agentic/scripts/build_reasoning_event_log.py",
+      "agentic/traces/reasoning_events/ITER-0001.jsonl",
+      "agentic/reports/reasoning_progress/latest.json",
+      "agentic/reports/reasoning_progress/latest.md"
+    ],
+    "acceptance_criteria": [
+      "Reasoning events cover target spine, dependency frontier, conceptual pressure, route ranking, validation, and drift guard.",
+      "Each event names mathematical objects, target commitments, evidence paths, epistemic status, uncertainty, and proof obligations.",
+      "The log communicates what is happening in the reasoning loop without recording hidden chain-of-thought."
+    ],
+    "blocked_by": [],
+    "evidence": [
+      "file:agentic/state/current_target.json",
+      "file:artifacts/hegelian/hypothesis_exploration_map.json",
+      "file:agentic/spec/reasoning_event_log_schema.json",
+      "file:agentic/scripts/build_reasoning_event_log.py",
+      "file:agentic/traces/reasoning_events/ITER-0001.jsonl",
+      "file:agentic/reports/reasoning_progress/latest.json",
+      "file:agentic/reports/reasoning_progress/latest.md",
+      "cmd:python agentic/scripts/build_reasoning_event_log.py",
+      "cmd:python agentic/scripts/validate_reasoning_event_logs.py"
+    ],
+    "review_date": "2026-08-08",
+    "failure_modes": [
+      "The log is only a skill execution transcript and fails to explain mathematical reasoning.",
+      "The log stores private chain-of-thought rather than public reasoning summaries.",
+      "The log cannot drive visualization because it lacks lanes, salience, or artifact references."
+    ],
+    "status": "resolved",
+    "completed_utc": "2026-07-08T00:00:00Z",
+    "resolution_summary": "Implemented a visible, artifact-grounded Yang-Mills reasoning-event log with mathematical objects, target commitments, epistemic status, proof obligations, uncertainty, and visualization hints."
+  },
+  {
+    "id": "RMR-002",
+    "type": "test_todo",
+    "phase": "reasoning-log-validation",
+    "owner": "agentic/scripts",
+    "priority": "critical",
+    "risk_class": "validation",
+    "title": "Validate reasoning-event logs and include them in the Looper gate",
+    "intent": "Prevent the future dynamic report from rendering stale, empty, or ungrounded reasoning events.",
+    "conceptual_model": "The HTML dashboard can only be trusted if the event log is schema-valid, target-matched, evidence-backed, and complete enough to communicate reasoning progress.",
+    "use_skills": [
+      "looper-workflow-contract-governor"
+    ],
+    "implementation_steps": [
+      "Create `agentic/scripts/validate_reasoning_event_logs.py`.",
+      "Require key communication event types: target spine, dependency frontier, conceptual pressure, route ranking, and drift guard.",
+      "Reject missing mathematical objects, target commitments, visual encodings, or nonexistent evidence paths.",
+      "Add build and validation scripts to `agentic/scripts/agentic_check.py` after target navigation."
+    ],
+    "required_artifact": [
+      "agentic/scripts/validate_reasoning_event_logs.py",
+      "agentic/scripts/agentic_check.py"
+    ],
+    "acceptance_criteria": [
+      "The validator fails on empty logs, missing evidence, missing visual lanes, or absent reasoning event types.",
+      "The full `agentic_check.py` path builds and validates the latest reasoning event log.",
+      "The validator enforces communication quality fields, not only JSON shape."
+    ],
+    "blocked_by": [
+      "RMR-001"
+    ],
+    "evidence": [
+      "file:agentic/spec/reasoning_event_log_schema.json",
+      "file:agentic/scripts/validate_reasoning_event_logs.py",
+      "file:agentic/scripts/agentic_check.py",
+      "file:agentic/reports/reasoning_progress/latest.json",
+      "cmd:python agentic/scripts/validate_reasoning_event_logs.py",
+      "cmd:python agentic/scripts/validate_todos.py"
+    ],
+    "review_date": "2026-08-08",
+    "failure_modes": [
+      "The report renders stale or target-mismatched logs.",
+      "A fluent but ungrounded event enters the monitoring surface.",
+      "Visualization fields drift from the event schema."
+    ],
+    "status": "resolved",
+    "completed_utc": "2026-07-08T00:00:00Z",
+    "resolution_summary": "Implemented reasoning-event validation and wired reasoning log build plus validation into the full Looper gate."
+  },
+  {
+    "id": "RMR-003",
+    "type": "report_todo",
+    "phase": "html-data-packet",
+    "owner": "agentic/scripts",
+    "priority": "critical",
+    "risk_class": "report-data-contract",
+    "title": "Define the HTML monitor data packet",
+    "intent": "Create a single embedded JSON payload for the dark dynamic report that combines reasoning events with target, graph, candidate, validation, and evidence summaries.",
+    "conceptual_model": "The dashboard should not scrape Markdown. It should render from a stable packet that separates active Yang-Mills reasoning from historical artifacts and keeps every visual claim traceable.",
+    "use_skills": [
+      "long-horizon-route-portfolio-manager",
+      "kb-orchestrator"
+    ],
+    "implementation_steps": [
+      "Create `agentic/spec/reasoning_monitor_packet.schema.json`.",
+      "Create a packet builder that merges `reasoning_progress/latest.json`, current target, dependency graph summary, target ledger, candidate rankings, validation packets, stale-workflow preflight, and skill-depth status.",
+      "Include sections for target spine, live frontier, conceptual pressure, candidate routes, proof obligations, evidence ledger, historical artifact isolation, and report metadata.",
+      "Make the packet deterministic enough that visual tests can compare structural counts."
+    ],
+    "required_artifact": [
+      "agentic/spec/reasoning_monitor_packet.schema.json",
+      "agentic/scripts/build_reasoning_monitor_packet.py",
+      "agentic/reports/reasoning_monitor/latest.json"
+    ],
+    "acceptance_criteria": [
+      "The packet is self-contained and contains no stale active target mismatch.",
+      "Every rendered claim has evidence paths or explicit unknowns.",
+      "The packet distinguishes active reasoning events from historical artifacts."
+    ],
+    "blocked_by": [
+      "RMR-001",
+      "RMR-002"
+    ],
+    "evidence": [
+      "file:agentic/spec/reasoning_monitor_packet.schema.json",
+      "file:agentic/scripts/build_reasoning_monitor_packet.py",
+      "file:agentic/reports/reasoning_monitor/latest.json",
+      "file:agentic/reports/reasoning_progress/latest.json",
+      "file:agentic/reports/stale_workflows/latest.json",
+      "cmd:python agentic/scripts/build_reasoning_monitor_packet.py",
+      "cmd:python agentic/scripts/validate_reasoning_monitor.py"
+    ],
+    "review_date": "2026-08-08",
+    "failure_modes": [
+      "The HTML report directly scrapes arbitrary Markdown and becomes fragile.",
+      "Historical P vs NP or Hille-Yosida artifacts appear as active Yang-Mills state.",
+      "Visualization counts cannot be traced back to source artifacts."
+    ],
+    "status": "resolved",
+    "completed_utc": "2026-07-08T00:00:00Z",
+    "resolution_summary": "Implemented a stable monitor packet schema and builder that merges active target, reasoning events, dependency frontier, Hegelian routes, stale-workflow state, skill-depth status, proof obligations, and evidence cards."
+  },
+  {
+    "id": "RMR-004",
+    "type": "report_todo",
+    "phase": "visual-design",
+    "owner": "agentic/reports",
+    "priority": "critical",
+    "risk_class": "communication-quality",
+    "title": "Design the dark visual grammar for conceptual and mathematical reasoning",
+    "intent": "Make the report attractive and legible while communicating the reasoning going on behind the scenes.",
+    "conceptual_model": "Dark theme should support cognitive layering: target commitments as the fixed spine, frontier pressure as luminous tension, candidates as route cards, validation gates as hard edges, and proof debt as unresolved energy.",
+    "use_skills": [
+      "review-reasoner-radical-designer",
+      "review-reasoner-epistemologist"
+    ],
+    "implementation_steps": [
+      "Define a restrained dark palette with separate colors for target, dependency, conceptual pressure, route, validation, drift, and reflection lanes.",
+      "Use compact dashboard typography and avoid marketing hero treatment.",
+      "Create visual tokens for epistemic status, drift risk, proof obligations, target relevance, and validation gate outcomes.",
+      "Ensure the report is dense enough for repeated monitoring but still beautiful at first glance."
+    ],
+    "required_artifact": [
+      "docs/reference/reasoning-monitor-visual-grammar.md"
+    ],
+    "acceptance_criteria": [
+      "The visual grammar maps every event lane and epistemic status to explicit tokens.",
+      "The design preserves uncertainty and proof debt rather than making everything look successful.",
+      "The dark theme is not one-note purple/blue and remains readable on mobile and desktop."
+    ],
+    "blocked_by": [
+      "RMR-003"
+    ],
+    "evidence": [
+      "file:docs/reference/reasoning-monitor-visual-grammar.md",
+      "file:agentic/scripts/generate_reasoning_monitor_html.py",
+      "file:agentic/reports/reasoning_monitor/latest.html",
+      "file:tests/generative/test_reasoning_monitor_visual_quality.md",
+      "cmd:python agentic/scripts/validate_reasoning_monitor.py"
+    ],
+    "review_date": "2026-08-08",
+    "failure_modes": [
+      "The dashboard looks attractive but hides mathematical uncertainty.",
+      "The palette makes all event types feel equivalent.",
+      "Dense mathematical text becomes unreadable in the dark theme."
+    ],
+    "status": "resolved",
+    "completed_utc": "2026-07-08T00:00:00Z",
+    "resolution_summary": "Defined the dark monitor visual grammar with explicit lane colors, status semantics, proof-debt treatment, mobile layout rules, and rejection criteria for hidden uncertainty."
+  },
+  {
+    "id": "RMR-005",
+    "type": "report_todo",
+    "phase": "html-renderer",
+    "owner": "agentic/scripts",
+    "priority": "critical",
+    "risk_class": "report-generation",
+    "title": "Build the self-contained dynamic dark HTML reasoning monitor",
+    "intent": "Generate an attractive single-file HTML report for monitoring Yang-Mills reasoning progression.",
+    "conceptual_model": "The report should behave like an observability console for mathematical reasoning: timeline, target spine, frontier, conceptual pressure, candidates, validation gates, proof debt, and evidence must be inspectable without server dependencies.",
+    "use_skills": [
+      "long-horizon-route-portfolio-manager",
+      "kb-orchestrator",
+      "expert-handoff"
+    ],
+    "implementation_steps": [
+      "Create `agentic/scripts/generate_reasoning_monitor_html.py`.",
+      "Embed the monitor packet JSON directly in the HTML.",
+      "Implement interactive tabs or segmented controls for Overview, Timeline, Frontier, Candidates, Proof Debt, Evidence, and Drift.",
+      "Implement client-side filtering by lane, status, salience, commitment, and evidence source.",
+      "Use inline CSS and JS only; no external assets."
+    ],
+    "required_artifact": [
+      "agentic/reports/reasoning_monitor/latest.html",
+      "agentic/scripts/generate_reasoning_monitor_html.py"
+    ],
+    "acceptance_criteria": [
+      "The HTML is self-contained and opens from the filesystem.",
+      "The first viewport shows the active Yang-Mills target, core commitments, live frontier count, and route/proof-debt state.",
+      "Users can inspect event details, evidence paths, proof obligations, and candidate rankings interactively.",
+      "The report does not use static screenshots or external JavaScript."
+    ],
+    "blocked_by": [
+      "RMR-003",
+      "RMR-004"
+    ],
+    "evidence": [
+      "file:agentic/scripts/generate_reasoning_monitor_html.py",
+      "file:agentic/reports/reasoning_monitor/latest.html",
+      "file:agentic/reports/reasoning_monitor/latest.json",
+      "cmd:python agentic/scripts/generate_reasoning_monitor_html.py",
+      "cmd:python agentic/scripts/validate_reasoning_monitor.py"
+    ],
+    "review_date": "2026-08-08",
+    "failure_modes": [
+      "The HTML is visually attractive but not useful for monitoring progression.",
+      "The report depends on external libraries or network access.",
+      "Text overlaps, overflows, or becomes unreadable on mobile."
+    ],
+    "status": "resolved",
+    "completed_utc": "2026-07-08T00:00:00Z",
+    "resolution_summary": "Built a self-contained dark HTML monitor with embedded JSON, tabs, filters, route cards, proof-debt inspection, evidence ledger, and stale-workflow drift guard."
+  },
+  {
+    "id": "RMR-006",
+    "type": "test_todo",
+    "phase": "html-validation",
+    "owner": "tests",
+    "priority": "high",
+    "risk_class": "visual-regression",
+    "title": "Validate monitor HTML structure, portability, and visual communication",
+    "intent": "Make sure the dynamic report is not just generated but inspectable, portable, and faithful to the reasoning data.",
+    "conceptual_model": "A reasoning monitor fails if it is blank, externally dependent, target-mismatched, visually incoherent, or unable to explain why a route is active or blocked.",
+    "use_skills": [
+      "review-reasoner-epistemologist",
+      "review-reasoner-fields-medalist"
+    ],
+    "implementation_steps": [
+      "Add deterministic tests that parse the HTML and verify embedded JSON, target ID, section anchors, and no external assets.",
+      "Add a DOM-level smoke test for key controls and rendered counts.",
+      "If Playwright is available, add screenshot checks for desktop and mobile layouts; otherwise add a documented manual visual QA checklist.",
+      "Validate that displayed counts match the monitor packet."
+    ],
+    "required_artifact": [
+      "tests/reporting/test_reasoning_monitor_html.py",
+      "tests/generative/test_reasoning_monitor_visual_quality.md"
+    ],
+    "acceptance_criteria": [
+      "Tests fail on external CSS/JS, blank report body, missing active target, or missing evidence details.",
+      "The generated report passes layout-oriented checks for text overflow risk.",
+      "Generative visual QA criteria reject reports that hide uncertainty or proof debt."
+    ],
+    "blocked_by": [
+      "RMR-005"
+    ],
+    "evidence": [
+      "file:agentic/scripts/validate_reasoning_monitor.py",
+      "file:tests/reporting/test_reasoning_monitor_html.py",
+      "file:tests/generative/test_reasoning_monitor_visual_quality.md",
+      "cmd:python agentic/scripts/validate_reasoning_monitor.py",
+      "cmd:python -m unittest tests.reporting.test_reasoning_monitor_html -q"
+    ],
+    "review_date": "2026-08-08",
+    "failure_modes": [
+      "The report works on the developer machine but not as a portable artifact.",
+      "A future generator change silently removes essential reasoning sections.",
+      "Visual polish masks target drift or proof debt."
+    ],
+    "status": "resolved",
+    "completed_utc": "2026-07-08T00:00:00Z",
+    "resolution_summary": "Added deterministic HTML/packet validation, self-contained asset checks, active-target checks, section/control assertions, and a generative visual QA checklist."
+  },
+  {
+    "id": "RMR-007",
+    "type": "workflow_todo",
+    "phase": "control-plane-integration",
+    "owner": "agentic/scripts",
+    "priority": "high",
+    "risk_class": "workflow-drift",
+    "title": "Integrate the reasoning monitor into the active Yang-Mills control loop",
+    "intent": "Ensure the monitor updates whenever the Yang-Mills reasoning loop progresses and cannot display stale active state.",
+    "conceptual_model": "The monitor should be the visible window into the work loop. It must sit after target navigation, reasoning-event generation, stale-workflow preflight, and candidate validation, then fail closed if data is inconsistent.",
+    "use_skills": [
+      "looper-workflow-contract-governor",
+      "looper-hook-policy-maintainer"
+    ],
+    "implementation_steps": [
+      "Add monitor packet and HTML generation to `agentic/scripts/agentic_check.py` after reasoning-event validation.",
+      "Add monitor artifacts to workflow contracts and the generic target-navigation task manifest.",
+      "Add a stale monitor check that rejects reports whose embedded target differs from `agentic/state/current_target.json`.",
+      "Record monitor generation in skill application or reasoning event logs."
+    ],
+    "required_artifact": [
+      "agentic/scripts/agentic_check.py",
+      "agentic/registries/workflow_contracts.yaml",
+      "registry/tasks/target-navigation/task_registry.json"
+    ],
+    "acceptance_criteria": [
+      "The full agentic gate regenerates and validates the monitor.",
+      "The monitor names Yang-Mills as active after the preflight run.",
+      "A stale P vs NP monitor is blocked rather than rendered as current."
+    ],
+    "blocked_by": [
+      "RMR-005",
+      "RMR-006"
+    ],
+    "evidence": [
+      "file:agentic/scripts/agentic_check.py",
+      "file:agentic/scripts/validate_active_target_workspace.py",
+      "file:agentic/scripts/build_reasoning_event_log.py",
+      "file:agentic/registries/workflow_contracts.yaml",
+      "file:registry/tasks/target-navigation/task_registry.json",
+      "file:agentic/reports/reasoning_monitor/latest.json",
+      "file:agentic/reports/reasoning_monitor/latest.html",
+      "cmd:python agentic/scripts/validate_active_target_workspace.py",
+      "cmd:python agentic/scripts/validate_task_skill_registry.py",
+      "cmd:python agentic/scripts/validate_workflow_contracts.py",
+      "cmd:python agentic/scripts/validate_reasoning_monitor.py"
+    ],
+    "review_date": "2026-08-08",
+    "failure_modes": [
+      "The monitor is manually generated and drifts from the active loop.",
+      "Workflow contracts omit the monitor, so release promotion ignores it.",
+      "The dashboard silently renders old run data."
+    ],
+    "status": "resolved",
+    "completed_utc": "2026-07-08T00:00:00Z",
+    "resolution_summary": "Integrated monitor generation and validation into the active Yang-Mills control loop, added stale embedded-target checks, registered monitor artifacts, and recorded the monitor gate in public reasoning events."
+  },
+  {
+    "id": "RMR-008",
+    "type": "documentation_todo",
+    "phase": "operator-use",
+    "owner": "docs",
+    "priority": "medium",
+    "risk_class": "usability",
+    "title": "Document how to read and use the reasoning monitor during Yang-Mills analysis",
+    "intent": "Give future users a compact runbook for interpreting the dark monitor without mistaking exploratory progress for theorem progress.",
+    "conceptual_model": "The dashboard is a navigation instrument. Its purpose is to show target relevance, proof debt, and conceptual movement, not to declare a solution.",
+    "use_skills": [
+      "expert-handoff"
+    ],
+    "implementation_steps": [
+      "Create `docs/operations/reasoning-monitor-runbook.md`.",
+      "Explain each lane, status token, salience level, and route disposition.",
+      "Clarify the difference between proof queue, discovery branch, revision loop, watch/archive, and proof completion.",
+      "Add the exact command sequence for refreshing the monitor before analysis sessions."
+    ],
+    "required_artifact": [
+      "docs/operations/reasoning-monitor-runbook.md"
+    ],
+    "acceptance_criteria": [
+      "The runbook tells users where the HTML artifact is and how to refresh it.",
+      "The runbook explains how to interpret uncertainty and proof obligations.",
+      "The runbook warns that visual progress is not theorem proof."
+    ],
+    "blocked_by": [
+      "RMR-005"
+    ],
+    "evidence": [
+      "file:docs/operations/reasoning-monitor-runbook.md",
+      "file:agentic/reports/reasoning_monitor/latest.html",
+      "file:docs/reference/reasoning-monitor-visual-grammar.md",
+      "cmd:python agentic/scripts/validate_todos.py"
+    ],
+    "review_date": "2026-08-08",
+    "failure_modes": [
+      "Users overread visual progress as mathematical proof.",
+      "Users do not know which command refreshes the monitor.",
+      "The report vocabulary remains opaque."
+    ],
+    "status": "resolved",
+    "completed_utc": "2026-07-08T00:00:00Z",
+    "resolution_summary": "Documented the monitor artifact, refresh commands, lane semantics, status semantics, route dispositions, target-drift guard, and proof-progress caveat for Yang-Mills analysis."
+  }
+]

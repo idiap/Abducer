@@ -1,0 +1,92 @@
+% SPDX-FileCopyrightText: © 2026 Idiap Research Institute <contact@idiap.ch>
+%
+% SPDX-FileContributor: Andre Freitas <andre.freitas@idiap.ch>
+% Neuro-symbolic AI Group
+%
+% SPDX-FileContributor: Danilo Gusicuma <danilo.gusicuma@idiap.ch>
+% Neuro-symbolic AI Group
+%
+% SPDX-License-Identifier: MIT
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\newtheorem{theorem}{Theorem}
+\newtheorem{definition}{Definition}
+\title{Transparent Row Support for FormulaEval: A Parser/Falsifier Boundary}
+\author{ABducer P vs NP Result Elaboration}
+\date{2026-07-12T21:21:19+00:00}
+\begin{document}
+\maketitle
+\begin{abstract}
+This note consolidates the recent P vs NP discovery cycles into a scoped theorem pair. Transparent FormulaEval row support extends the Gamma parser ledger and yields an upper-bound falsifier; hidden semantic support is blocked by a private-row or unread-enable-bit countermodel.
+\end{abstract}
+
+\section{Non-Claims}
+\begin{itemize}
+\item This does not prove P != NP.
+\item This does not prove SAT outside P/poly.
+\item This is a proof-system transfer obstruction and parser/falsifier boundary.
+\end{itemize}
+
+\section{Definition}
+\begin{definition}[TransparentRowSupport\_N]
+A FormulaEval mechanism satisfies TransparentRowSupport\_N when it satisfies the following interface conditions.
+\begin{itemize}
+\item influence\_closure: every row whose SAT value can change a FormulaEval line is included in the charged support
+\item no\_hidden\_advice: row support cannot be supplied by nonuniform tables, semantic oracles, or private enable bits unless charged
+\item row\_enumeration\_or\_scan\_charge: either RowSetEnumerator\_N outputs selected rows with certified cost U\_N or the parser pays the full scan charge F\_FE N\textasciicircum{}\{1+q+o(1)\}
+\item row\_expansion\_charge: each distinct selected row contributes the complete occurrence/SAT expansion term, typically N times the row count or T\_N M\_N in projected formulations
+\item same\_theory\_parser: all support, selector, extension, and SAT occurrence conventions are read by the same proof verifier and circuit model
+\item visible\_selector\_code: the proof displays the row predicate, extension rule, or enumerator certificate used to select rows
+\end{itemize}
+\end{definition}
+
+\section{Transparent-Support Theorem}
+\begin{theorem}[Transparent support gives a Gamma falsifier]
+If a Psys\_sym FormulaEval mechanism satisfies TransparentRowSupport\_N with discovery charge U\_N, row-support size T\_N, and FormulaEval expansion charge X\_N, then the existing bEF parser extends to Gamma\_trans(pi)=Gamma\_bEF(pi)+U\_N+X\_N. If N\textasciicircum{}\{rho+o(1)\}+Gamma\_trans(pi)<N\textasciicircum{}\{1+epsilon-o(1)\}, the alleged LB\_N(1+epsilon) certificate is falsified in the same nonuniform SIZE model.
+\end{theorem}
+\paragraph{Proof spine.}
+\begin{itemize}
+\item Parse all bEF, SATeq, bounded-SR\_h, and extension dependencies into Gamma\_bEF.
+\item Use visible selector or enumerator fields to compute the complete FormulaEval row support or pay full scan.
+\item Apply influence closure so every SAT row that can alter a FormulaEval line enters the charged support.
+\item Expand each charged row into the same occurrence/SAT representation used by the carrier H\_N\textasciicircum{}SAT.
+\item Compose the public generator, parsed transcript, and residual patches into a nonuniform circuit for H\_N\textasciicircum{}SAT.
+\item Contradict LB\_N(1+epsilon) exactly when the total size is subthreshold.
+\end{itemize}
+
+\section{Hidden-Support Countermodel}
+\begin{theorem}[Hidden support gives a private-row countermodel]
+If a FormulaEval mechanism lacks visible row support, selector extensionality, influence closure, or a charged semantic-realizer, then a private-row or unread-enable-bit construction gives two proof surfaces with the same parsed transcript but different FormulaEval dependence or carrier parity. Occurrence completion is therefore invalid.
+\end{theorem}
+\paragraph{Countermodel spine.}
+\begin{itemize}
+\item Choose a row r* not present in the parsed support Q\_pi.
+\item Let a hidden enable bit or semantic selector decide whether r* participates in FormulaEval.
+\item Keep all displayed proof bits and charged occurrence neighborhoods fixed.
+\item Flip the uncharged SAT/FormulaEval value at r*.
+\item The parser outputs the same transcript while the selected support or H\_N\textasciicircum{}SAT parity changes.
+\end{itemize}
+
+\section{Examples Subsumed}
+\begin{itemize}
+\item interval-union FormulaEval
+\item proof-visible selector scan
+\item ROBDD selector
+\item guarded deterministic decomposable NNF selector
+\item projected guarded-dDNNF with witness or projected-enumerator charge
+\end{itemize}
+
+\section{Open Problems}
+\begin{itemize}
+\item RealSATInfluenceRealizer\_N: force semantic FormulaEval influence into visible charged support.
+\item AC0PrefixNonemptiness\_N or an equivalent output-sensitive enumeration theorem for AC0 selectors.
+\item Prior-art comparison against hardness magnification, MCSP/MKtP, natural proofs, relativization, and algebrization.
+\end{itemize}
+
+\section{Stop Rule And Next Action}
+Do not add more selector classes unless they either instantiate TransparentRowSupport\_N as a nontrivial example needed by the paper or disprove one of its definition fields. The next cycle must draft/prove the generic theorem pair.
+
+\medskip
+\noindent\textbf{Next paper action.} Write the TransparentRowSupport\_N theorem/countermodel pair as the paper core before running more exploratory cycles.
+\end{document}

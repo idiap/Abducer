@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://abducer.local/spec/ym_canonical_publication_request.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "request_kind", "target_id", "run_id", "cycle_id", "commit_id", "operator_requests", "operator_receipts", "artifact_roles", "derivation", "authority_boundary", "content_digest"],
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "request_kind": {"const": "ym_committed_operator_projection"},
+    "target_id": {"const": "yang-mills-existence-and-mass-gap-target"},
+    "run_id": {"const": "ym21-canonical-parent-20260721"},
+    "cycle_id": {"type": "string", "minLength": 1},
+    "commit_id": {"type": "string", "minLength": 1},
+    "operator_requests": {"type": "array", "minItems": 6, "maxItems": 6, "items": {"type": "object"}},
+    "operator_receipts": {"type": "array", "minItems": 6, "maxItems": 6, "items": {"type": "object"}},
+    "artifact_roles": {"type": "object", "minProperties": 1},
+    "derivation": {"const": "exactly_reconstructed_from_committed_operator_evidence"},
+    "authority_boundary": {"type": "string", "minLength": 1},
+    "content_digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"}
+  }
+}

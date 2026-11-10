@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://abducer.local/spec/named_workflow_artifacts.schema.json",
+  "title": "Named-workflow artifact envelope",
+  "$defs": {
+    "artifactReference": {
+      "type": "object",
+      "required": ["type", "schema"],
+      "properties": {"type": {"type": "string", "minLength": 1}, "schema": {"type": "string", "minLength": 1}},
+      "additionalProperties": false
+    }
+  },
+  "type": "object",
+  "required": ["artifact_type", "workflow_id", "workflow_version", "target", "epistemic_status", "payload"],
+  "properties": {
+    "artifact_type": {"type": "string", "minLength": 1},
+    "workflow_id": {"type": "string", "pattern": "^[a-z][a-z0-9_]*$"},
+    "workflow_version": {"type": "string"},
+    "target": {"type": "string", "minLength": 1},
+    "epistemic_status": {"enum": ["candidate", "validated", "quarantined", "rejected", "archived"]},
+    "provenance": {"type": "array", "items": {"type": "string"}},
+    "payload": {"type": "object"}
+  },
+  "additionalProperties": false
+}

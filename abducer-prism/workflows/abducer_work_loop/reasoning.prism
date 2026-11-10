@@ -1,0 +1,54 @@
+# SPDX-FileCopyrightText: © 2026 Idiap Research Institute <contact@idiap.ch>
+#
+# SPDX-FileContributor: Andre Freitas <andre.freitas@idiap.ch>
+# Neuro-symbolic AI Group
+#
+# SPDX-FileContributor: Danilo Gusicuma <danilo.gusicuma@idiap.ch>
+# Neuro-symbolic AI Group
+#
+# SPDX-License-Identifier: MIT
+# Function: turn an active proof gap into a testable route and choose the next work state.
+# Input: ActiveProofGap names the outstanding obligation.
+# Types: ProofRouteHypothesis becomes a ProofRouteDerivedClaim; ProofRouteRefutationAssessment tests it.
+# Output: ProofWorkRoutingAssessment selects release, reframing, retargeting, or refutation with a basis.
+# Layer: high-level epistemic topology only.
+# Metadata: workflows/manifest.json (`abducer_work_loop`).
+
+from workflows.abducer_work_loop.types import (
+    ActiveProofGap,
+    ProofRouteHypothesis,
+    ProofRouteRefutationAssessment,
+    ProofRouteDerivedClaim,
+    ProofWorkDisposition,
+    ProofWorkRoutingAssessment,
+)
+
+from workflows.abducer_work_loop.occurrences import (
+    AbductiveProofRouteHypothesisFormation,
+    DeductiveProofRouteClaimDerivation,
+    EvidentialProofWorkRoutingAssessment,
+    RefutationalProofRouteClaimAssessment,
+    ProofWorkRoutingInput,
+)
+
+from workflows.abducer_work_loop.relations import (
+    TreatsProofRouteAsClaimPremise,
+    CalibratesProofWorkRouting,
+    TestsProofRouteDerivedClaim,
+)
+
+reasoning AbducerWorkLoop(
+    proof_gap: ActiveProofGap,
+) -> Generated[ProofWorkRoutingAssessment]:
+    sequence:
+        # Formation and deduction turn the gap into a concrete claim that can fail.
+        [route_hypothesis: AbductiveProofRouteHypothesisFormation(proof_gap)]
+        [derived_claim: DeductiveProofRouteClaimDerivation(route_hypothesis.value)] by TreatsProofRouteAsClaimPremise
+        # Refutation tests the claim; calibration uses claim and test, not either alone.
+        [refutation_assessment: RefutationalProofRouteClaimAssessment(derived_claim.value)] by TestsProofRouteDerivedClaim
+        [work_routing: EvidentialProofWorkRoutingAssessment(ProofWorkRoutingInput(
+            derived_claim = derived_claim.value,
+            refutation_assessment = refutation_assessment.value,
+        ))] by CalibratesProofWorkRouting
+
+    return work_routing

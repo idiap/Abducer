@@ -1,0 +1,2143 @@
+{
+  "declared_route": [
+    {
+      "condition": null,
+      "consumes": [
+        "SourceBundle"
+      ],
+      "control_event_ids": [
+        "evidence_to_proof_route_onramp.base.ingest.control"
+      ],
+      "inference_event_ids": [
+        "evidence_to_proof_route_onramp.base.ingest.inference"
+      ],
+      "mode": "required",
+      "observability_gap": "",
+      "order": 10,
+      "produces": [
+        "IngestedKnowledgeBase"
+      ],
+      "semantic_complete_event_ids": [
+        "evidence_to_proof_route_onramp.base.ingest.inference"
+      ],
+      "skill": "latex-kb-ingest",
+      "status": "observed",
+      "step_id": "ingest",
+      "trace_requirement": {
+        "authority_boundary": "May recommend an evidence-bound route; may not assert a theorem or erase provenance and assertion-license limits.",
+        "consumes": [
+          "SourceBundle"
+        ],
+        "disposition": "semantic_event_required",
+        "event_family": "transformation",
+        "evidence_roles": [
+          "supports",
+          "constrains",
+          "refutes"
+        ],
+        "inference_operator": "normalize_with_provenance",
+        "mode": "required",
+        "produces": [
+          "IngestedKnowledgeBase"
+        ],
+        "required_contrast": "Expose the promoted route beside a demoted alternative and the evidence, bias correction, regime issue, or falsifier that separates them.",
+        "required_fields": [
+          "public_inference.question",
+          "public_inference.premises",
+          "public_inference.warrant",
+          "public_inference.conclusion",
+          "public_inference.scope",
+          "evidence",
+          "authority"
+        ],
+        "skill": "latex-kb-ingest",
+        "step_id": "ingest",
+        "when": null
+      }
+    },
+    {
+      "condition": "target == 'p-vs-np' and source_format == 'latex'",
+      "consumes": [
+        "IngestedKnowledgeBase"
+      ],
+      "control_event_ids": [
+        "evidence_to_proof_route_onramp.base.parse_pvsnp.control"
+      ],
+      "inference_event_ids": [
+        "evidence_to_proof_route_onramp.base.parse_pvsnp.inference"
+      ],
+      "mode": "conditional",
+      "observability_gap": "",
+      "order": 20,
+      "produces": [
+        "ParsedKnowledgeBase"
+      ],
+      "semantic_complete_event_ids": [
+        "evidence_to_proof_route_onramp.base.parse_pvsnp.inference"
+      ],
+      "skill": "pvsnp-kb-parser",
+      "status": "observed",
+      "step_id": "parse_pvsnp",
+      "trace_requirement": {
+        "authority_boundary": "May recommend an evidence-bound route; may not assert a theorem or erase provenance and assertion-license limits.",
+        "consumes": [
+          "IngestedKnowledgeBase"
+        ],
+        "disposition": "conditional_event_or_justified_na",
+        "event_family": "transformation",
+        "evidence_roles": [
+          "supports",
+          "constrains",
+          "refutes"
+        ],
+        "inference_operator": "normalize_with_provenance",
+        "mode": "conditional",
+        "produces": [
+          "ParsedKnowledgeBase"
+        ],
+        "required_contrast": "Expose the promoted route beside a demoted alternative and the evidence, bias correction, regime issue, or falsifier that separates them.",
+        "required_fields": [
+          "public_inference.question",
+          "public_inference.premises",
+          "public_inference.warrant",
+          "public_inference.conclusion",
+          "public_inference.scope",
+          "evidence",
+          "authority"
+        ],
+        "skill": "pvsnp-kb-parser",
+        "step_id": "parse_pvsnp",
+        "when": "target == 'p-vs-np' and source_format == 'latex'"
+      }
+    },
+    {
+      "condition": null,
+      "consumes": [
+        "IngestedKnowledgeBase",
+        "ParsedKnowledgeBase"
+      ],
+      "control_event_ids": [
+        "evidence_to_proof_route_onramp.base.normalize_theorems.control"
+      ],
+      "inference_event_ids": [
+        "evidence_to_proof_route_onramp.base.normalize_theorems.inference"
+      ],
+      "mode": "required",
+      "observability_gap": "",
+      "order": 30,
+      "produces": [
+        "NormalizedTheoremCorpus"
+      ],
+      "semantic_complete_event_ids": [
+        "evidence_to_proof_route_onramp.base.normalize_theorems.inference"
+      ],
+      "skill": "theorem-body-normalizer",
+      "status": "observed",
+      "step_id": "normalize_theorems",
+      "trace_requirement": {
+        "authority_boundary": "May recommend an evidence-bound route; may not assert a theorem or erase provenance and assertion-license limits.",
+        "consumes": [
+          "IngestedKnowledgeBase",
+          "ParsedKnowledgeBase"
+        ],
+        "disposition": "semantic_event_required",
+        "event_family": "transformation",
+        "evidence_roles": [
+          "supports",
+          "constrains",
+          "refutes"
+        ],
+        "inference_operator": "normalize_with_provenance",
+        "mode": "required",
+        "produces": [
+          "NormalizedTheoremCorpus"
+        ],
+        "required_contrast": "Expose the promoted route beside a demoted alternative and the evidence, bias correction, regime issue, or falsifier that separates them.",
+        "required_fields": [
+          "public_inference.question",
+          "public_inference.premises",
+          "public_inference.warrant",
+          "public_inference.conclusion",
+          "public_inference.scope",
+          "evidence",
+          "authority"
+        ],
+        "skill": "theorem-body-normalizer",
+        "step_id": "normalize_theorems",
+        "when": null
+      }
+    },
+    {
+      "condition": null,
+      "consumes": [
+        "NormalizedTheoremCorpus"
+      ],
+      "control_event_ids": [
+        "evidence_to_proof_route_onramp.base.ground_conjecture.control"
+      ],
+      "inference_event_ids": [
+        "evidence_to_proof_route_onramp.base.ground_conjecture.inference"
+      ],
+      "mode": "required",
+      "observability_gap": "",
+      "order": 40,
+      "produces": [
+        "GroundedConjecture"
+      ],
+      "semantic_complete_event_ids": [
+        "evidence_to_proof_route_onramp.base.ground_conjecture.inference"
+      ],
+      "skill": "kb-main-conjecture-grounder",
+      "status": "observed",
+      "step_id": "ground_conjecture",
+      "trace_requirement": {
+        "authority_boundary": "May recommend an evidence-bound route; may not assert a theorem or erase provenance and assertion-license limits.",
+        "consumes": [
+          "NormalizedTheoremCorpus"
+        ],
+        "disposition": "semantic_event_required",
+        "event_family": "transformation",
+        "evidence_roles": [
+          "supports",
+          "constrains",
+          "refutes"
+        ],
+        "inference_operator": "ground_claim_to_target",
+        "mode": "required",
+        "produces": [
+          "GroundedConjecture"
+        ],
+        "required_contrast": "Expose the promoted route beside a demoted alternative and the evidence, bias correction, regime issue, or falsifier that separates them.",
+        "required_fields": [
+          "public_inference.question",
+          "public_inference.premises",
+          "public_inference.warrant",
+          "public_inference.conclusion",
+          "public_inference.scope",
+          "evidence",
+          "authority"
+        ],
+        "skill": "kb-main-conjecture-grounder",
+        "step_id": "ground_conjecture",
+        "when": null
+      }
+    },
+    {
+      "condition": "source_bundle_contains_literature_history",
+      "consumes": [
+        "GroundedConjecture",
+        "SourceBundle"
+      ],
+      "control_event_ids": [
+        "evidence_to_proof_route_onramp.base.narrate_literature_evolution.control"
+      ],
+      "inference_event_ids": [
+        "evidence_to_proof_route_onramp.base.narrate_literature_evolution.inference"
+      ],
+      "mode": "conditional",
+      "observability_gap": "",
+      "order": 45,
+      "produces": [
+        "TargetLiteratureNarrative"
+      ],
+      "semantic_complete_event_ids": [
+        "evidence_to_proof_route_onramp.base.narrate_literature_evolution.inference"
+      ],
+      "skill": "target-literature-evolution-narrator",
+      "status": "observed",
+      "step_id": "narrate_literature_evolution",
+      "trace_requirement": {
+        "authority_boundary": "May recommend an evidence-bound route; may not assert a theorem or erase provenance and assertion-license limits.",
+        "consumes": [
+          "GroundedConjecture",
+          "SourceBundle"
+        ],
+        "disposition": "conditional_event_or_justified_na",
+        "event_family": "transformation",
+        "evidence_roles": [
+          "supports",
+          "constrains",
+          "refutes"
+        ],
+        "inference_operator": "assimilate_prior_evidence",
+        "mode": "conditional",
+        "produces": [
+          "TargetLiteratureNarrative"
+        ],
+        "required_contrast": "Expose the promoted route beside a demoted alternative and the evidence, bias correction, regime issue, or falsifier that separates them.",
+        "required_fields": [
+          "public_inference.question",
+          "public_inference.premises",
+          "public_inference.warrant",
+          "public_inference.conclusion",
+          "public_inference.scope",
+          "evidence",
+          "authority"
+        ],
+        "skill": "target-literature-evolution-narrator",
+        "step_id": "narrate_literature_evolution",
+        "when": "source_bundle_contains_literature_history"
+      }
+    },
+    {
+      "condition": null,
+      "consumes": [
+        "GroundedConjecture"
+      ],
+      "control_event_ids": [
+        "evidence_to_proof_route_onramp.base.connect_proof.control"
+      ],
+      "inference_event_ids": [
+        "evidence_to_proof_route_onramp.base.connect_proof.inference"
+      ],
+      "mode": "required",
+      "observability_gap": "",
+      "order": 50,
+      "produces": [
+        "ProofConnectionGraph"
+      ],
+      "semantic_complete_event_ids": [
+        "evidence_to_proof_route_onramp.base.connect_proof.inference"
+      ],
+      "skill": "kb-proof-connector",
+      "status": "observed",
+      "step_id": "connect_proof",
+      "trace_requirement": {
+        "authority_boundary": "May recommend an evidence-bound route; may not assert a theorem or erase provenance and assertion-license limits.",
+        "consumes": [
+          "GroundedConjecture"
+        ],
+        "disposition": "semantic_event_required",
+        "event_family": "transformation",
+        "evidence_roles": [
+          "supports",
+          "constrains",
+          "refutes"
+        ],
+        "inference_operator": "construct_and_rank_route",
+        "mode": "required",
+        "produces": [
+          "ProofConnectionGraph"
+        ],
+        "required_contrast": "Expose the promoted route beside a demoted alternative and the evidence, bias correction, regime issue, or falsifier that separates them.",
+        "required_fields": [
+          "public_inference.question",
+          "public_inference.premises",
+          "public_inference.warrant",
+          "public_inference.conclusion",
+          "public_inference.scope",
+          "evidence",
+          "authority"
+        ],
+        "skill": "kb-proof-connector",
+        "step_id": "connect_proof",
+        "when": null
+      }
+    },
+    {
+      "condition": "hypotheses_present",
+      "consumes": [
+        "ProofConnectionGraph"
+      ],
+      "control_event_ids": [
+        "evidence_to_proof_route_onramp.base.evaluate_hypotheses.control",
+        "evidence_to_proof_route_onramp.base.evaluate_hypotheses.inference"
+      ],
+      "inference_event_ids": [
+        "evidence_to_proof_route_onramp.base.evaluate_hypotheses.inference"
+      ],
+      "mode": "conditional",
+      "observability_gap": "",
+      "order": 60,
+      "produces": [
+        "HypothesisAssessment"
+      ],
+      "semantic_complete_event_ids": [
+        "evidence_to_proof_route_onramp.base.evaluate_hypotheses.inference"
+      ],
+      "skill": "kb-hypothesis-evaluator",
+      "status": "observed",
+      "step_id": "evaluate_hypotheses",
+      "trace_requirement": {
+        "authority_boundary": "May recommend an evidence-bound route; may not assert a theorem or erase provenance and assertion-license limits.",
+        "consumes": [
+          "ProofConnectionGraph"
+        ],
+        "disposition": "conditional_event_or_justified_na",
+        "event_family": "transformation",
+        "evidence_roles": [
+          "supports",
+          "constrains",
+          "refutes"
+        ],
+        "inference_operator": "artifact_grounded_transformation",
+        "mode": "conditional",
+        "produces": [
+          "HypothesisAssessment"
+        ],
+        "required_contrast": "Expose the promoted route beside a demoted alternative and the evidence, bias correction, regime issue, or falsifier that separates them.",
+        "required_fields": [
+          "public_inference.question",
+          "public_inference.premises",
+          "public_inference.warrant",
+          "public_inference.conclusion",
+          "public_inference.scope",
+          "evidence",
+          "authority"
+        ],
+        "skill": "kb-hypothesis-evaluator",
+        "step_id": "evaluate_hypotheses",
+        "when": "hypotheses_present"
+      }
+    },
+    {
+      "condition": null,
+      "consumes": [
+        "ProofConnectionGraph"
+      ],
+      "control_event_ids": [
+        "evidence_to_proof_route_onramp.base.audit_hubs.control"
+      ],
+      "inference_event_ids": [
+        "evidence_to_proof_route_onramp.base.audit_hubs.inference"
+      ],
+      "mode": "required",
+      "observability_gap": "",
+      "order": 70,
+      "produces": [
+        "HubBiasAudit"
+      ],
+      "semantic_complete_event_ids": [
+        "evidence_to_proof_route_onramp.base.audit_hubs.inference"
+      ],
+      "skill": "hub-bias-auditor",
+      "status": "observed",
+      "step_id": "audit_hubs",
+      "trace_requirement": {
+        "authority_boundary": "May recommend an evidence-bound route; may not assert a theorem or erase provenance and assertion-license limits.",
+        "consumes": [
+          "ProofConnectionGraph"
+        ],
+        "disposition": "semantic_event_required",
+        "event_family": "validation",
+        "evidence_roles": [
+          "supports",
+          "constrains",
+          "refutes"
+        ],
+        "inference_operator": "compare_pre_post_bias_correction",
+        "mode": "required",
+        "produces": [
+          "HubBiasAudit"
+        ],
+        "required_contrast": "Expose the promoted route beside a demoted alternative and the evidence, bias correction, regime issue, or falsifier that separates them.",
+        "required_fields": [
+          "public_inference.question",
+          "public_inference.premises",
+          "public_inference.warrant",
+          "public_inference.conclusion",
+          "public_inference.scope",
+          "evidence",
+          "authority"
+        ],
+        "skill": "hub-bias-auditor",
+        "step_id": "audit_hubs",
+        "when": null
+      }
+    },
+    {
+      "condition": null,
+      "consumes": [
+        "ProofConnectionGraph",
+        "HubBiasAudit"
+      ],
+      "control_event_ids": [
+        "evidence_to_proof_route_onramp.base.find_entrypoint.control"
+      ],
+      "inference_event_ids": [
+        "evidence_to_proof_route_onramp.base.find_entrypoint.inference"
+      ],
+      "mode": "required",
+      "observability_gap": "",
+      "order": 80,
+      "produces": [
+        "EntrypointCandidates"
+      ],
+      "semantic_complete_event_ids": [
+        "evidence_to_proof_route_onramp.base.find_entrypoint.inference"
+      ],
+      "skill": "kb-entrypoint-finder",
+      "status": "observed",
+      "step_id": "find_entrypoint",
+      "trace_requirement": {
+        "authority_boundary": "May recommend an evidence-bound route; may not assert a theorem or erase provenance and assertion-license limits.",
+        "consumes": [
+          "ProofConnectionGraph",
+          "HubBiasAudit"
+        ],
+        "disposition": "semantic_event_required",
+        "event_family": "transformation",
+        "evidence_roles": [
+          "supports",
+          "constrains",
+          "refutes"
+        ],
+        "inference_operator": "construct_and_rank_route",
+        "mode": "required",
+        "produces": [
+          "EntrypointCandidates"
+        ],
+        "required_contrast": "Expose the promoted route beside a demoted alternative and the evidence, bias correction, regime issue, or falsifier that separates them.",
+        "required_fields": [
+          "public_inference.question",
+          "public_inference.premises",
+          "public_inference.warrant",
+          "public_inference.conclusion",
+          "public_inference.scope",
+          "evidence",
+          "authority"
+        ],
+        "skill": "kb-entrypoint-finder",
+        "step_id": "find_entrypoint",
+        "when": null
+      }
+    },
+    {
+      "condition": null,
+      "consumes": [
+        "EntrypointCandidates"
+      ],
+      "control_event_ids": [
+        "evidence_to_proof_route_onramp.base.pathfind.control"
+      ],
+      "inference_event_ids": [
+        "evidence_to_proof_route_onramp.base.pathfind.inference"
+      ],
+      "mode": "required",
+      "observability_gap": "",
+      "order": 90,
+      "produces": [
+        "ProofRouteCandidates"
+      ],
+      "semantic_complete_event_ids": [
+        "evidence_to_proof_route_onramp.base.pathfind.inference"
+      ],
+      "skill": "kb-entrypoint-pathfinder",
+      "status": "observed",
+      "step_id": "pathfind",
+      "trace_requirement": {
+        "authority_boundary": "May recommend an evidence-bound route; may not assert a theorem or erase provenance and assertion-license limits.",
+        "consumes": [
+          "EntrypointCandidates"
+        ],
+        "disposition": "semantic_event_required",
+        "event_family": "transformation",
+        "evidence_roles": [
+          "supports",
+          "constrains",
+          "refutes"
+        ],
+        "inference_operator": "construct_and_rank_route",
+        "mode": "required",
+        "produces": [
+          "ProofRouteCandidates"
+        ],
+        "required_contrast": "Expose the promoted route beside a demoted alternative and the evidence, bias correction, regime issue, or falsifier that separates them.",
+        "required_fields": [
+          "public_inference.question",
+          "public_inference.premises",
+          "public_inference.warrant",
+          "public_inference.conclusion",
+          "public_inference.scope",
+          "evidence",
+          "authority"
+        ],
+        "skill": "kb-entrypoint-pathfinder",
+        "step_id": "pathfind",
+        "when": null
+      }
+    },
+    {
+      "condition": "route_crosses_regime_or_model",
+      "consumes": [
+        "ProofRouteCandidates"
+      ],
+      "control_event_ids": [
+        "evidence_to_proof_route_onramp.base.audit_regime_shift.control"
+      ],
+      "inference_event_ids": [
+        "evidence_to_proof_route_onramp.base.audit_regime_shift.inference"
+      ],
+      "mode": "conditional",
+      "observability_gap": "",
+      "order": 100,
+      "produces": [
+        "RegimeShiftAudit"
+      ],
+      "semantic_complete_event_ids": [
+        "evidence_to_proof_route_onramp.base.audit_regime_shift.inference"
+      ],
+      "skill": "regime-shift-auditor",
+      "status": "observed",
+      "step_id": "audit_regime_shift",
+      "trace_requirement": {
+        "authority_boundary": "May recommend an evidence-bound route; may not assert a theorem or erase provenance and assertion-license limits.",
+        "consumes": [
+          "ProofRouteCandidates"
+        ],
+        "disposition": "conditional_event_or_justified_na",
+        "event_family": "validation",
+        "evidence_roles": [
+          "supports",
+          "constrains",
+          "refutes"
+        ],
+        "inference_operator": "artifact_grounded_transformation",
+        "mode": "conditional",
+        "produces": [
+          "RegimeShiftAudit"
+        ],
+        "required_contrast": "Expose the promoted route beside a demoted alternative and the evidence, bias correction, regime issue, or falsifier that separates them.",
+        "required_fields": [
+          "public_inference.question",
+          "public_inference.premises",
+          "public_inference.warrant",
+          "public_inference.conclusion",
+          "public_inference.scope",
+          "evidence",
+          "authority"
+        ],
+        "skill": "regime-shift-auditor",
+        "step_id": "audit_regime_shift",
+        "when": "route_crosses_regime_or_model"
+      }
+    },
+    {
+      "condition": null,
+      "consumes": [
+        "ProofRouteCandidates"
+      ],
+      "control_event_ids": [
+        "evidence_to_proof_route_onramp.base.hunt_counterexamples.control"
+      ],
+      "inference_event_ids": [
+        "evidence_to_proof_route_onramp.base.hunt_counterexamples.inference"
+      ],
+      "mode": "required",
+      "observability_gap": "",
+      "order": 110,
+      "produces": [
+        "FalsificationPacket"
+      ],
+      "semantic_complete_event_ids": [
+        "evidence_to_proof_route_onramp.base.hunt_counterexamples.inference"
+      ],
+      "skill": "counterexample-hunter",
+      "status": "observed",
+      "step_id": "hunt_counterexamples",
+      "trace_requirement": {
+        "authority_boundary": "May recommend an evidence-bound route; may not assert a theorem or erase provenance and assertion-license limits.",
+        "consumes": [
+          "ProofRouteCandidates"
+        ],
+        "disposition": "semantic_event_required",
+        "event_family": "falsification",
+        "evidence_roles": [
+          "supports",
+          "constrains",
+          "refutes"
+        ],
+        "inference_operator": "adversarially_test_or_split",
+        "mode": "required",
+        "produces": [
+          "FalsificationPacket"
+        ],
+        "required_contrast": "Expose the promoted route beside a demoted alternative and the evidence, bias correction, regime issue, or falsifier that separates them.",
+        "required_fields": [
+          "public_inference.question",
+          "public_inference.premises",
+          "public_inference.warrant",
+          "public_inference.conclusion",
+          "public_inference.scope",
+          "evidence",
+          "authority"
+        ],
+        "skill": "counterexample-hunter",
+        "step_id": "hunt_counterexamples",
+        "when": null
+      }
+    },
+    {
+      "condition": null,
+      "consumes": [
+        "ProofRouteCandidates",
+        "FalsificationPacket"
+      ],
+      "control_event_ids": [
+        "evidence_to_proof_route_onramp.base.expert_handoff.control"
+      ],
+      "inference_event_ids": [
+        "evidence_to_proof_route_onramp.base.expert_handoff.inference"
+      ],
+      "mode": "required",
+      "observability_gap": "",
+      "order": 120,
+      "produces": [
+        "ExpertRouteDossier"
+      ],
+      "semantic_complete_event_ids": [
+        "evidence_to_proof_route_onramp.base.expert_handoff.inference"
+      ],
+      "skill": "expert-handoff",
+      "status": "observed",
+      "step_id": "expert_handoff",
+      "trace_requirement": {
+        "authority_boundary": "May recommend an evidence-bound route; may not assert a theorem or erase provenance and assertion-license limits.",
+        "consumes": [
+          "ProofRouteCandidates",
+          "FalsificationPacket"
+        ],
+        "disposition": "semantic_event_required",
+        "event_family": "handoff",
+        "evidence_roles": [
+          "supports",
+          "constrains",
+          "refutes"
+        ],
+        "inference_operator": "artifact_grounded_transformation",
+        "mode": "required",
+        "produces": [
+          "ExpertRouteDossier"
+        ],
+        "required_contrast": "Expose the promoted route beside a demoted alternative and the evidence, bias correction, regime issue, or falsifier that separates them.",
+        "required_fields": [
+          "public_inference.question",
+          "public_inference.premises",
+          "public_inference.warrant",
+          "public_inference.conclusion",
+          "public_inference.scope",
+          "evidence",
+          "authority"
+        ],
+        "skill": "expert-handoff",
+        "step_id": "expert_handoff",
+        "when": null
+      }
+    }
+  ],
+  "diagnostics": [],
+  "events": [
+    {
+      "alternatives": [],
+      "artifact_validation_status": "unknown",
+      "artifacts": [],
+      "assumptions": [],
+      "attempt": 1,
+      "authority": {},
+      "claim_epistemic_status": "unknown",
+      "conclusion": "",
+      "event_family": "authorization",
+      "event_id": "evidence_to_proof_route_onramp.base.ingest.control",
+      "evidence": [],
+      "falsifiers": [],
+      "handoff": {},
+      "obligations": [],
+      "operator": "",
+      "parent_artifact_ids": [],
+      "parent_event_ids": [],
+      "phase": "",
+      "premises": [],
+      "question": "",
+      "run_id": "fixture.evidence_to_proof_route_onramp.base",
+      "scope": {},
+      "sequence": 1,
+      "skill": "latex-kb-ingest",
+      "step_id": "ingest",
+      "timestamp": "",
+      "trace_incomplete": false,
+      "uncertainty": "unknown",
+      "warrant": "",
+      "workflow_disposition": "authorized"
+    },
+    {
+      "alternatives": [
+        {
+          "candidate": "Do not emit IngestedKnowledgeBase: Demote the unrestricted reduction route because its assertion license does not cross the model boundary.",
+          "disposition": "rejected",
+          "reason": "Expose the promoted route beside a demoted alternative and the evidence, bias correction, regime issue, or falsifier that separates them. Negative evidence controls promotion."
+        }
+      ],
+      "artifact_validation_status": "integrity_valid",
+      "artifacts": [],
+      "assumptions": [],
+      "attempt": 1,
+      "authority": {
+        "absent": [
+          "unscoped-epistemic-upgrade"
+        ],
+        "exercised": [
+          "ingest-assessment"
+        ],
+        "prohibitions_checked": [
+          "no hidden scope promotion"
+        ]
+      },
+      "claim_epistemic_status": "evidence_backed",
+      "conclusion": "ingest produces IngestedKnowledgeBase: Retain the local-reduction route only in the declared finite regime.",
+      "event_family": "inference",
+      "event_id": "evidence_to_proof_route_onramp.base.ingest.inference",
+      "evidence": [
+        {
+          "artifact_type": "SourceBundle",
+          "digest": "61c8ddbab2b6d4dded3cbe6cf9348c5fd6c658796985c80675774399043f4a90",
+          "path": "tests/fixtures/reasoning_trace/evidence/workflow-evidence.json",
+          "relation": "supports"
+        }
+      ],
+      "falsifiers": [
+        "A counterexample to the gadget preservation lemma closes the route."
+      ],
+      "handoff": {},
+      "obligations": [],
+      "operator": "normalize_with_provenance",
+      "parent_artifact_ids": [],
+      "parent_event_ids": [
+        "evidence_to_proof_route_onramp.base.ingest.control"
+      ],
+      "phase": "",
+      "premises": [
+        {
+          "statement": "SourceBundle: The source bundle licenses a finite MCSP reduction claim.",
+          "type": "artifact"
+        }
+      ],
+      "question": "At ingest, how does SourceBundle bear on IngestedKnowledgeBase? Which source-grounded route survives bias, regime, and counterexample audits?",
+      "run_id": "fixture.evidence_to_proof_route_onramp.base",
+      "scope": {
+        "after": "licensed proof route",
+        "before": "source claim",
+        "model": "local reductions",
+        "regime": "finite"
+      },
+      "sequence": 2,
+      "skill": "latex-kb-ingest",
+      "step_id": "ingest",
+      "timestamp": "",
+      "trace_incomplete": false,
+      "uncertainty": "bounded by the declared artifact and open obligations",
+      "warrant": "At ingest, normalize_with_provenance checks SourceBundle before emitting IngestedKnowledgeBase. Authority boundary: May recommend an evidence-bound route; may not assert a theorem or erase provenance and assertion-license limits.",
+      "workflow_disposition": "accepted"
+    },
+    {
+      "alternatives": [],
+      "artifact_validation_status": "unknown",
+      "artifacts": [],
+      "assumptions": [],
+      "attempt": 1,
+      "authority": {},
+      "claim_epistemic_status": "unknown",
+      "conclusion": "",
+      "event_family": "authorization",
+      "event_id": "evidence_to_proof_route_onramp.base.parse_pvsnp.control",
+      "evidence": [],
+      "falsifiers": [],
+      "handoff": {},
+      "obligations": [],
+      "operator": "",
+      "parent_artifact_ids": [],
+      "parent_event_ids": [
+        "evidence_to_proof_route_onramp.base.ingest.inference"
+      ],
+      "phase": "",
+      "premises": [],
+      "question": "",
+      "run_id": "fixture.evidence_to_proof_route_onramp.base",
+      "scope": {},
+      "sequence": 3,
+      "skill": "pvsnp-kb-parser",
+      "step_id": "parse_pvsnp",
+      "timestamp": "",
+      "trace_incomplete": false,
+      "uncertainty": "unknown",
+      "warrant": "",
+      "workflow_disposition": "authorized"
+    },
+    {
+      "alternatives": [
+        {
+          "candidate": "Do not emit ParsedKnowledgeBase: Demote the unrestricted reduction route because its assertion license does not cross the model boundary.",
+          "disposition": "rejected",
+          "reason": "Expose the promoted route beside a demoted alternative and the evidence, bias correction, regime issue, or falsifier that separates them. Negative evidence controls promotion."
+        }
+      ],
+      "artifact_validation_status": "integrity_valid",
+      "artifacts": [],
+      "assumptions": [],
+      "attempt": 1,
+      "authority": {
+        "absent": [
+          "unscoped-epistemic-upgrade"
+        ],
+        "exercised": [
+          "parse_pvsnp-assessment"
+        ],
+        "prohibitions_checked": [
+          "no hidden scope promotion"
+        ]
+      },
+      "claim_epistemic_status": "evidence_backed",
+      "conclusion": "parse_pvsnp produces ParsedKnowledgeBase: Retain the local-reduction route only in the declared finite regime.",
+      "event_family": "inference",
+      "event_id": "evidence_to_proof_route_onramp.base.parse_pvsnp.inference",
+      "evidence": [
+        {
+          "artifact_type": "IngestedKnowledgeBase",
+          "digest": "61c8ddbab2b6d4dded3cbe6cf9348c5fd6c658796985c80675774399043f4a90",
+          "path": "tests/fixtures/reasoning_trace/evidence/workflow-evidence.json",
+          "relation": "supports"
+        }
+      ],
+      "falsifiers": [
+        "A counterexample to the gadget preservation lemma closes the route."
+      ],
+      "handoff": {},
+      "obligations": [],
+      "operator": "normalize_with_provenance",
+      "parent_artifact_ids": [],
+      "parent_event_ids": [
+        "evidence_to_proof_route_onramp.base.parse_pvsnp.control"
+      ],
+      "phase": "",
+      "premises": [
+        {
+          "statement": "IngestedKnowledgeBase: The source bundle licenses a finite MCSP reduction claim.",
+          "type": "artifact"
+        }
+      ],
+      "question": "At parse_pvsnp, how does IngestedKnowledgeBase bear on ParsedKnowledgeBase? Which source-grounded route survives bias, regime, and counterexample audits?",
+      "run_id": "fixture.evidence_to_proof_route_onramp.base",
+      "scope": {
+        "after": "licensed proof route",
+        "before": "source claim",
+        "model": "local reductions",
+        "regime": "finite"
+      },
+      "sequence": 4,
+      "skill": "pvsnp-kb-parser",
+      "step_id": "parse_pvsnp",
+      "timestamp": "",
+      "trace_incomplete": false,
+      "uncertainty": "bounded by the declared artifact and open obligations",
+      "warrant": "At parse_pvsnp, normalize_with_provenance checks IngestedKnowledgeBase before emitting ParsedKnowledgeBase. Authority boundary: May recommend an evidence-bound route; may not assert a theorem or erase provenance and assertion-license limits.",
+      "workflow_disposition": "accepted"
+    },
+    {
+      "alternatives": [],
+      "artifact_validation_status": "unknown",
+      "artifacts": [],
+      "assumptions": [],
+      "attempt": 1,
+      "authority": {},
+      "claim_epistemic_status": "unknown",
+      "conclusion": "",
+      "event_family": "authorization",
+      "event_id": "evidence_to_proof_route_onramp.base.normalize_theorems.control",
+      "evidence": [],
+      "falsifiers": [],
+      "handoff": {},
+      "obligations": [],
+      "operator": "",
+      "parent_artifact_ids": [],
+      "parent_event_ids": [
+        "evidence_to_proof_route_onramp.base.parse_pvsnp.inference"
+      ],
+      "phase": "",
+      "premises": [],
+      "question": "",
+      "run_id": "fixture.evidence_to_proof_route_onramp.base",
+      "scope": {},
+      "sequence": 5,
+      "skill": "theorem-body-normalizer",
+      "step_id": "normalize_theorems",
+      "timestamp": "",
+      "trace_incomplete": false,
+      "uncertainty": "unknown",
+      "warrant": "",
+      "workflow_disposition": "authorized"
+    },
+    {
+      "alternatives": [
+        {
+          "candidate": "Do not emit NormalizedTheoremCorpus: Demote the unrestricted reduction route because its assertion license does not cross the model boundary.",
+          "disposition": "rejected",
+          "reason": "Expose the promoted route beside a demoted alternative and the evidence, bias correction, regime issue, or falsifier that separates them. Negative evidence controls promotion."
+        }
+      ],
+      "artifact_validation_status": "integrity_valid",
+      "artifacts": [],
+      "assumptions": [],
+      "attempt": 1,
+      "authority": {
+        "absent": [
+          "unscoped-epistemic-upgrade"
+        ],
+        "exercised": [
+          "normalize_theorems-assessment"
+        ],
+        "prohibitions_checked": [
+          "no hidden scope promotion"
+        ]
+      },
+      "claim_epistemic_status": "evidence_backed",
+      "conclusion": "normalize_theorems produces NormalizedTheoremCorpus: Retain the local-reduction route only in the declared finite regime.",
+      "event_family": "inference",
+      "event_id": "evidence_to_proof_route_onramp.base.normalize_theorems.inference",
+      "evidence": [
+        {
+          "artifact_type": "IngestedKnowledgeBase",
+          "digest": "61c8ddbab2b6d4dded3cbe6cf9348c5fd6c658796985c80675774399043f4a90",
+          "path": "tests/fixtures/reasoning_trace/evidence/workflow-evidence.json",
+          "relation": "supports"
+        }
+      ],
+      "falsifiers": [
+        "A counterexample to the gadget preservation lemma closes the route."
+      ],
+      "handoff": {},
+      "obligations": [],
+      "operator": "normalize_with_provenance",
+      "parent_artifact_ids": [],
+      "parent_event_ids": [
+        "evidence_to_proof_route_onramp.base.normalize_theorems.control"
+      ],
+      "phase": "",
+      "premises": [
+        {
+          "statement": "IngestedKnowledgeBase: The source bundle licenses a finite MCSP reduction claim.",
+          "type": "artifact"
+        }
+      ],
+      "question": "At normalize_theorems, how does IngestedKnowledgeBase bear on NormalizedTheoremCorpus? Which source-grounded route survives bias, regime, and counterexample audits?",
+      "run_id": "fixture.evidence_to_proof_route_onramp.base",
+      "scope": {
+        "after": "licensed proof route",
+        "before": "source claim",
+        "model": "local reductions",
+        "regime": "finite"
+      },
+      "sequence": 6,
+      "skill": "theorem-body-normalizer",
+      "step_id": "normalize_theorems",
+      "timestamp": "",
+      "trace_incomplete": false,
+      "uncertainty": "bounded by the declared artifact and open obligations",
+      "warrant": "At normalize_theorems, normalize_with_provenance checks IngestedKnowledgeBase before emitting NormalizedTheoremCorpus. Authority boundary: May recommend an evidence-bound route; may not assert a theorem or erase provenance and assertion-license limits.",
+      "workflow_disposition": "accepted"
+    },
+    {
+      "alternatives": [],
+      "artifact_validation_status": "unknown",
+      "artifacts": [],
+      "assumptions": [],
+      "attempt": 1,
+      "authority": {},
+      "claim_epistemic_status": "unknown",
+      "conclusion": "",
+      "event_family": "authorization",
+      "event_id": "evidence_to_proof_route_onramp.base.ground_conjecture.control",
+      "evidence": [],
+      "falsifiers": [],
+      "handoff": {},
+      "obligations": [],
+      "operator": "",
+      "parent_artifact_ids": [],
+      "parent_event_ids": [
+        "evidence_to_proof_route_onramp.base.normalize_theorems.inference"
+      ],
+      "phase": "",
+      "premises": [],
+      "question": "",
+      "run_id": "fixture.evidence_to_proof_route_onramp.base",
+      "scope": {},
+      "sequence": 7,
+      "skill": "kb-main-conjecture-grounder",
+      "step_id": "ground_conjecture",
+      "timestamp": "",
+      "trace_incomplete": false,
+      "uncertainty": "unknown",
+      "warrant": "",
+      "workflow_disposition": "authorized"
+    },
+    {
+      "alternatives": [
+        {
+          "candidate": "Do not emit GroundedConjecture: Demote the unrestricted reduction route because its assertion license does not cross the model boundary.",
+          "disposition": "rejected",
+          "reason": "Expose the promoted route beside a demoted alternative and the evidence, bias correction, regime issue, or falsifier that separates them. Negative evidence controls promotion."
+        }
+      ],
+      "artifact_validation_status": "integrity_valid",
+      "artifacts": [],
+      "assumptions": [],
+      "attempt": 1,
+      "authority": {
+        "absent": [
+          "unscoped-epistemic-upgrade"
+        ],
+        "exercised": [
+          "ground_conjecture-assessment"
+        ],
+        "prohibitions_checked": [
+          "no hidden scope promotion"
+        ]
+      },
+      "claim_epistemic_status": "evidence_backed",
+      "conclusion": "ground_conjecture produces GroundedConjecture: Retain the local-reduction route only in the declared finite regime.",
+      "event_family": "inference",
+      "event_id": "evidence_to_proof_route_onramp.base.ground_conjecture.inference",
+      "evidence": [
+        {
+          "artifact_type": "NormalizedTheoremCorpus",
+          "digest": "61c8ddbab2b6d4dded3cbe6cf9348c5fd6c658796985c80675774399043f4a90",
+          "path": "tests/fixtures/reasoning_trace/evidence/workflow-evidence.json",
+          "relation": "supports"
+        }
+      ],
+      "falsifiers": [
+        "A counterexample to the gadget preservation lemma closes the route."
+      ],
+      "handoff": {},
+      "obligations": [],
+      "operator": "ground_claim_to_target",
+      "parent_artifact_ids": [],
+      "parent_event_ids": [
+        "evidence_to_proof_route_onramp.base.ground_conjecture.control"
+      ],
+      "phase": "",
+      "premises": [
+        {
+          "statement": "NormalizedTheoremCorpus: The source bundle licenses a finite MCSP reduction claim.",
+          "type": "artifact"
+        }
+      ],
+      "question": "At ground_conjecture, how does NormalizedTheoremCorpus bear on GroundedConjecture? Which source-grounded route survives bias, regime, and counterexample audits?",
+      "run_id": "fixture.evidence_to_proof_route_onramp.base",
+      "scope": {
+        "after": "licensed proof route",
+        "before": "source claim",
+        "model": "local reductions",
+        "regime": "finite"
+      },
+      "sequence": 8,
+      "skill": "kb-main-conjecture-grounder",
+      "step_id": "ground_conjecture",
+      "timestamp": "",
+      "trace_incomplete": false,
+      "uncertainty": "bounded by the declared artifact and open obligations",
+      "warrant": "At ground_conjecture, ground_claim_to_target checks NormalizedTheoremCorpus before emitting GroundedConjecture. Authority boundary: May recommend an evidence-bound route; may not assert a theorem or erase provenance and assertion-license limits.",
+      "workflow_disposition": "accepted"
+    },
+    {
+      "alternatives": [],
+      "artifact_validation_status": "unknown",
+      "artifacts": [],
+      "assumptions": [],
+      "attempt": 1,
+      "authority": {},
+      "claim_epistemic_status": "unknown",
+      "conclusion": "",
+      "event_family": "authorization",
+      "event_id": "evidence_to_proof_route_onramp.base.narrate_literature_evolution.control",
+      "evidence": [],
+      "falsifiers": [],
+      "handoff": {},
+      "obligations": [],
+      "operator": "",
+      "parent_artifact_ids": [],
+      "parent_event_ids": [
+        "evidence_to_proof_route_onramp.base.ground_conjecture.inference"
+      ],
+      "phase": "",
+      "premises": [],
+      "question": "",
+      "run_id": "fixture.evidence_to_proof_route_onramp.base",
+      "scope": {},
+      "sequence": 9,
+      "skill": "target-literature-evolution-narrator",
+      "step_id": "narrate_literature_evolution",
+      "timestamp": "",
+      "trace_incomplete": false,
+      "uncertainty": "unknown",
+      "warrant": "",
+      "workflow_disposition": "authorized"
+    },
+    {
+      "alternatives": [
+        {
+          "candidate": "Do not emit TargetLiteratureNarrative: Demote the unrestricted reduction route because its assertion license does not cross the model boundary.",
+          "disposition": "rejected",
+          "reason": "Expose the promoted route beside a demoted alternative and the evidence, bias correction, regime issue, or falsifier that separates them. Negative evidence controls promotion."
+        }
+      ],
+      "artifact_validation_status": "integrity_valid",
+      "artifacts": [],
+      "assumptions": [],
+      "attempt": 1,
+      "authority": {
+        "absent": [
+          "unscoped-epistemic-upgrade"
+        ],
+        "exercised": [
+          "narrate_literature_evolution-assessment"
+        ],
+        "prohibitions_checked": [
+          "no hidden scope promotion"
+        ]
+      },
+      "claim_epistemic_status": "evidence_backed",
+      "conclusion": "narrate_literature_evolution produces TargetLiteratureNarrative: Retain the local-reduction route only in the declared finite regime.",
+      "event_family": "inference",
+      "event_id": "evidence_to_proof_route_onramp.base.narrate_literature_evolution.inference",
+      "evidence": [
+        {
+          "artifact_type": "GroundedConjecture",
+          "digest": "61c8ddbab2b6d4dded3cbe6cf9348c5fd6c658796985c80675774399043f4a90",
+          "path": "tests/fixtures/reasoning_trace/evidence/workflow-evidence.json",
+          "relation": "supports"
+        }
+      ],
+      "falsifiers": [
+        "A counterexample to the gadget preservation lemma closes the route."
+      ],
+      "handoff": {},
+      "obligations": [],
+      "operator": "assimilate_prior_evidence",
+      "parent_artifact_ids": [],
+      "parent_event_ids": [
+        "evidence_to_proof_route_onramp.base.narrate_literature_evolution.control"
+      ],
+      "phase": "",
+      "premises": [
+        {
+          "statement": "GroundedConjecture: The source bundle licenses a finite MCSP reduction claim.",
+          "type": "artifact"
+        }
+      ],
+      "question": "At narrate_literature_evolution, how does GroundedConjecture bear on TargetLiteratureNarrative? Which source-grounded route survives bias, regime, and counterexample audits?",
+      "run_id": "fixture.evidence_to_proof_route_onramp.base",
+      "scope": {
+        "after": "licensed proof route",
+        "before": "source claim",
+        "model": "local reductions",
+        "regime": "finite"
+      },
+      "sequence": 10,
+      "skill": "target-literature-evolution-narrator",
+      "step_id": "narrate_literature_evolution",
+      "timestamp": "",
+      "trace_incomplete": false,
+      "uncertainty": "bounded by the declared artifact and open obligations",
+      "warrant": "At narrate_literature_evolution, assimilate_prior_evidence checks GroundedConjecture before emitting TargetLiteratureNarrative. Authority boundary: May recommend an evidence-bound route; may not assert a theorem or erase provenance and assertion-license limits.",
+      "workflow_disposition": "accepted"
+    },
+    {
+      "alternatives": [],
+      "artifact_validation_status": "unknown",
+      "artifacts": [],
+      "assumptions": [],
+      "attempt": 1,
+      "authority": {},
+      "claim_epistemic_status": "unknown",
+      "conclusion": "",
+      "event_family": "authorization",
+      "event_id": "evidence_to_proof_route_onramp.base.connect_proof.control",
+      "evidence": [],
+      "falsifiers": [],
+      "handoff": {},
+      "obligations": [],
+      "operator": "",
+      "parent_artifact_ids": [],
+      "parent_event_ids": [
+        "evidence_to_proof_route_onramp.base.narrate_literature_evolution.inference"
+      ],
+      "phase": "",
+      "premises": [],
+      "question": "",
+      "run_id": "fixture.evidence_to_proof_route_onramp.base",
+      "scope": {},
+      "sequence": 11,
+      "skill": "kb-proof-connector",
+      "step_id": "connect_proof",
+      "timestamp": "",
+      "trace_incomplete": false,
+      "uncertainty": "unknown",
+      "warrant": "",
+      "workflow_disposition": "authorized"
+    },
+    {
+      "alternatives": [
+        {
+          "candidate": "Do not emit ProofConnectionGraph: Demote the unrestricted reduction route because its assertion license does not cross the model boundary.",
+          "disposition": "rejected",
+          "reason": "Expose the promoted route beside a demoted alternative and the evidence, bias correction, regime issue, or falsifier that separates them. Negative evidence controls promotion."
+        }
+      ],
+      "artifact_validation_status": "integrity_valid",
+      "artifacts": [],
+      "assumptions": [],
+      "attempt": 1,
+      "authority": {
+        "absent": [
+          "unscoped-epistemic-upgrade"
+        ],
+        "exercised": [
+          "connect_proof-assessment"
+        ],
+        "prohibitions_checked": [
+          "no hidden scope promotion"
+        ]
+      },
+      "claim_epistemic_status": "evidence_backed",
+      "conclusion": "connect_proof produces ProofConnectionGraph: Retain the local-reduction route only in the declared finite regime.",
+      "event_family": "inference",
+      "event_id": "evidence_to_proof_route_onramp.base.connect_proof.inference",
+      "evidence": [
+        {
+          "artifact_type": "GroundedConjecture",
+          "digest": "61c8ddbab2b6d4dded3cbe6cf9348c5fd6c658796985c80675774399043f4a90",
+          "path": "tests/fixtures/reasoning_trace/evidence/workflow-evidence.json",
+          "relation": "supports"
+        }
+      ],
+      "falsifiers": [
+        "A counterexample to the gadget preservation lemma closes the route."
+      ],
+      "handoff": {},
+      "obligations": [],
+      "operator": "construct_and_rank_route",
+      "parent_artifact_ids": [],
+      "parent_event_ids": [
+        "evidence_to_proof_route_onramp.base.connect_proof.control"
+      ],
+      "phase": "",
+      "premises": [
+        {
+          "statement": "GroundedConjecture: The source bundle licenses a finite MCSP reduction claim.",
+          "type": "artifact"
+        }
+      ],
+      "question": "At connect_proof, how does GroundedConjecture bear on ProofConnectionGraph? Which source-grounded route survives bias, regime, and counterexample audits?",
+      "run_id": "fixture.evidence_to_proof_route_onramp.base",
+      "scope": {
+        "after": "licensed proof route",
+        "before": "source claim",
+        "model": "local reductions",
+        "regime": "finite"
+      },
+      "sequence": 12,
+      "skill": "kb-proof-connector",
+      "step_id": "connect_proof",
+      "timestamp": "",
+      "trace_incomplete": false,
+      "uncertainty": "bounded by the declared artifact and open obligations",
+      "warrant": "At connect_proof, construct_and_rank_route checks GroundedConjecture before emitting ProofConnectionGraph. Authority boundary: May recommend an evidence-bound route; may not assert a theorem or erase provenance and assertion-license limits.",
+      "workflow_disposition": "accepted"
+    },
+    {
+      "alternatives": [],
+      "artifact_validation_status": "unknown",
+      "artifacts": [],
+      "assumptions": [],
+      "attempt": 1,
+      "authority": {},
+      "claim_epistemic_status": "unknown",
+      "conclusion": "",
+      "event_family": "authorization",
+      "event_id": "evidence_to_proof_route_onramp.base.evaluate_hypotheses.control",
+      "evidence": [],
+      "falsifiers": [],
+      "handoff": {},
+      "obligations": [],
+      "operator": "",
+      "parent_artifact_ids": [],
+      "parent_event_ids": [
+        "evidence_to_proof_route_onramp.base.connect_proof.inference"
+      ],
+      "phase": "",
+      "premises": [],
+      "question": "",
+      "run_id": "fixture.evidence_to_proof_route_onramp.base",
+      "scope": {},
+      "sequence": 13,
+      "skill": "kb-hypothesis-evaluator",
+      "step_id": "evaluate_hypotheses",
+      "timestamp": "",
+      "trace_incomplete": false,
+      "uncertainty": "unknown",
+      "warrant": "",
+      "workflow_disposition": "authorized"
+    },
+    {
+      "alternatives": [
+        {
+          "candidate": "Do not emit HypothesisAssessment: Demote the unrestricted reduction route because its assertion license does not cross the model boundary.",
+          "disposition": "accepted",
+          "reason": "Expose the promoted route beside a demoted alternative and the evidence, bias correction, regime issue, or falsifier that separates them. Negative evidence controls promotion."
+        }
+      ],
+      "artifact_validation_status": "integrity_valid",
+      "artifacts": [],
+      "assumptions": [],
+      "attempt": 1,
+      "authority": {
+        "absent": [
+          "unscoped-epistemic-upgrade"
+        ],
+        "exercised": [
+          "evaluate_hypotheses-assessment"
+        ],
+        "prohibitions_checked": [
+          "no hidden scope promotion"
+        ]
+      },
+      "claim_epistemic_status": "quarantined",
+      "conclusion": "evaluate_hypotheses rejects HypothesisAssessment: Demote the unrestricted reduction route because its assertion license does not cross the model boundary.",
+      "event_family": "failure",
+      "event_id": "evidence_to_proof_route_onramp.base.evaluate_hypotheses.inference",
+      "evidence": [
+        {
+          "artifact_type": "ProofConnectionGraph",
+          "digest": "61c8ddbab2b6d4dded3cbe6cf9348c5fd6c658796985c80675774399043f4a90",
+          "path": "tests/fixtures/reasoning_trace/evidence/workflow-evidence.json",
+          "relation": "refutes"
+        }
+      ],
+      "falsifiers": [
+        "A counterexample to the gadget preservation lemma closes the route."
+      ],
+      "handoff": {},
+      "obligations": [
+        {
+          "requirement": "A counterexample to the gadget preservation lemma closes the route.",
+          "status": "open"
+        }
+      ],
+      "operator": "artifact_grounded_transformation",
+      "parent_artifact_ids": [],
+      "parent_event_ids": [
+        "evidence_to_proof_route_onramp.base.evaluate_hypotheses.control"
+      ],
+      "phase": "",
+      "premises": [
+        {
+          "statement": "ProofConnectionGraph: The source bundle licenses a finite MCSP reduction claim.",
+          "type": "artifact"
+        }
+      ],
+      "question": "At evaluate_hypotheses, how does ProofConnectionGraph bear on HypothesisAssessment? Which source-grounded route survives bias, regime, and counterexample audits?",
+      "run_id": "fixture.evidence_to_proof_route_onramp.base",
+      "scope": {
+        "after": "licensed proof route",
+        "before": "source claim",
+        "model": "local reductions",
+        "regime": "finite"
+      },
+      "sequence": 14,
+      "skill": "kb-hypothesis-evaluator",
+      "step_id": "evaluate_hypotheses",
+      "timestamp": "",
+      "trace_incomplete": false,
+      "uncertainty": "bounded by the declared artifact and open obligations",
+      "warrant": "At evaluate_hypotheses, artifact_grounded_transformation checks ProofConnectionGraph before emitting HypothesisAssessment. Authority boundary: May recommend an evidence-bound route; may not assert a theorem or erase provenance and assertion-license limits.",
+      "workflow_disposition": "failed"
+    },
+    {
+      "alternatives": [],
+      "artifact_validation_status": "unknown",
+      "artifacts": [],
+      "assumptions": [],
+      "attempt": 1,
+      "authority": {},
+      "claim_epistemic_status": "unknown",
+      "conclusion": "",
+      "event_family": "authorization",
+      "event_id": "evidence_to_proof_route_onramp.base.audit_hubs.control",
+      "evidence": [],
+      "falsifiers": [],
+      "handoff": {},
+      "obligations": [],
+      "operator": "",
+      "parent_artifact_ids": [],
+      "parent_event_ids": [
+        "evidence_to_proof_route_onramp.base.evaluate_hypotheses.inference"
+      ],
+      "phase": "",
+      "premises": [],
+      "question": "",
+      "run_id": "fixture.evidence_to_proof_route_onramp.base",
+      "scope": {},
+      "sequence": 15,
+      "skill": "hub-bias-auditor",
+      "step_id": "audit_hubs",
+      "timestamp": "",
+      "trace_incomplete": false,
+      "uncertainty": "unknown",
+      "warrant": "",
+      "workflow_disposition": "authorized"
+    },
+    {
+      "alternatives": [
+        {
+          "candidate": "Do not emit HubBiasAudit: Demote the unrestricted reduction route because its assertion license does not cross the model boundary.",
+          "disposition": "rejected",
+          "reason": "Expose the promoted route beside a demoted alternative and the evidence, bias correction, regime issue, or falsifier that separates them. Negative evidence controls promotion."
+        }
+      ],
+      "artifact_validation_status": "integrity_valid",
+      "artifacts": [],
+      "assumptions": [],
+      "attempt": 1,
+      "authority": {
+        "absent": [
+          "unscoped-epistemic-upgrade"
+        ],
+        "exercised": [
+          "audit_hubs-assessment"
+        ],
+        "prohibitions_checked": [
+          "no hidden scope promotion"
+        ]
+      },
+      "claim_epistemic_status": "evidence_backed",
+      "conclusion": "audit_hubs produces HubBiasAudit: Retain the local-reduction route only in the declared finite regime.",
+      "event_family": "inference",
+      "event_id": "evidence_to_proof_route_onramp.base.audit_hubs.inference",
+      "evidence": [
+        {
+          "artifact_type": "ProofConnectionGraph",
+          "digest": "61c8ddbab2b6d4dded3cbe6cf9348c5fd6c658796985c80675774399043f4a90",
+          "path": "tests/fixtures/reasoning_trace/evidence/workflow-evidence.json",
+          "relation": "supports"
+        }
+      ],
+      "falsifiers": [
+        "A counterexample to the gadget preservation lemma closes the route."
+      ],
+      "handoff": {},
+      "obligations": [],
+      "operator": "compare_pre_post_bias_correction",
+      "parent_artifact_ids": [],
+      "parent_event_ids": [
+        "evidence_to_proof_route_onramp.base.audit_hubs.control"
+      ],
+      "phase": "",
+      "premises": [
+        {
+          "statement": "ProofConnectionGraph: The source bundle licenses a finite MCSP reduction claim.",
+          "type": "artifact"
+        }
+      ],
+      "question": "At audit_hubs, how does ProofConnectionGraph bear on HubBiasAudit? Which source-grounded route survives bias, regime, and counterexample audits?",
+      "run_id": "fixture.evidence_to_proof_route_onramp.base",
+      "scope": {
+        "after": "licensed proof route",
+        "before": "source claim",
+        "model": "local reductions",
+        "regime": "finite"
+      },
+      "sequence": 16,
+      "skill": "hub-bias-auditor",
+      "step_id": "audit_hubs",
+      "timestamp": "",
+      "trace_incomplete": false,
+      "uncertainty": "bounded by the declared artifact and open obligations",
+      "warrant": "At audit_hubs, compare_pre_post_bias_correction checks ProofConnectionGraph before emitting HubBiasAudit. Authority boundary: May recommend an evidence-bound route; may not assert a theorem or erase provenance and assertion-license limits.",
+      "workflow_disposition": "accepted"
+    },
+    {
+      "alternatives": [],
+      "artifact_validation_status": "unknown",
+      "artifacts": [],
+      "assumptions": [],
+      "attempt": 1,
+      "authority": {},
+      "claim_epistemic_status": "unknown",
+      "conclusion": "",
+      "event_family": "authorization",
+      "event_id": "evidence_to_proof_route_onramp.base.find_entrypoint.control",
+      "evidence": [],
+      "falsifiers": [],
+      "handoff": {},
+      "obligations": [],
+      "operator": "",
+      "parent_artifact_ids": [],
+      "parent_event_ids": [
+        "evidence_to_proof_route_onramp.base.audit_hubs.inference"
+      ],
+      "phase": "",
+      "premises": [],
+      "question": "",
+      "run_id": "fixture.evidence_to_proof_route_onramp.base",
+      "scope": {},
+      "sequence": 17,
+      "skill": "kb-entrypoint-finder",
+      "step_id": "find_entrypoint",
+      "timestamp": "",
+      "trace_incomplete": false,
+      "uncertainty": "unknown",
+      "warrant": "",
+      "workflow_disposition": "authorized"
+    },
+    {
+      "alternatives": [
+        {
+          "candidate": "Do not emit EntrypointCandidates: Demote the unrestricted reduction route because its assertion license does not cross the model boundary.",
+          "disposition": "rejected",
+          "reason": "Expose the promoted route beside a demoted alternative and the evidence, bias correction, regime issue, or falsifier that separates them. Negative evidence controls promotion."
+        }
+      ],
+      "artifact_validation_status": "integrity_valid",
+      "artifacts": [],
+      "assumptions": [],
+      "attempt": 1,
+      "authority": {
+        "absent": [
+          "unscoped-epistemic-upgrade"
+        ],
+        "exercised": [
+          "find_entrypoint-assessment"
+        ],
+        "prohibitions_checked": [
+          "no hidden scope promotion"
+        ]
+      },
+      "claim_epistemic_status": "evidence_backed",
+      "conclusion": "find_entrypoint produces EntrypointCandidates: Retain the local-reduction route only in the declared finite regime.",
+      "event_family": "inference",
+      "event_id": "evidence_to_proof_route_onramp.base.find_entrypoint.inference",
+      "evidence": [
+        {
+          "artifact_type": "ProofConnectionGraph",
+          "digest": "61c8ddbab2b6d4dded3cbe6cf9348c5fd6c658796985c80675774399043f4a90",
+          "path": "tests/fixtures/reasoning_trace/evidence/workflow-evidence.json",
+          "relation": "supports"
+        }
+      ],
+      "falsifiers": [
+        "A counterexample to the gadget preservation lemma closes the route."
+      ],
+      "handoff": {},
+      "obligations": [],
+      "operator": "construct_and_rank_route",
+      "parent_artifact_ids": [],
+      "parent_event_ids": [
+        "evidence_to_proof_route_onramp.base.find_entrypoint.control"
+      ],
+      "phase": "",
+      "premises": [
+        {
+          "statement": "ProofConnectionGraph: The source bundle licenses a finite MCSP reduction claim.",
+          "type": "artifact"
+        }
+      ],
+      "question": "At find_entrypoint, how does ProofConnectionGraph bear on EntrypointCandidates? Which source-grounded route survives bias, regime, and counterexample audits?",
+      "run_id": "fixture.evidence_to_proof_route_onramp.base",
+      "scope": {
+        "after": "licensed proof route",
+        "before": "source claim",
+        "model": "local reductions",
+        "regime": "finite"
+      },
+      "sequence": 18,
+      "skill": "kb-entrypoint-finder",
+      "step_id": "find_entrypoint",
+      "timestamp": "",
+      "trace_incomplete": false,
+      "uncertainty": "bounded by the declared artifact and open obligations",
+      "warrant": "At find_entrypoint, construct_and_rank_route checks ProofConnectionGraph before emitting EntrypointCandidates. Authority boundary: May recommend an evidence-bound route; may not assert a theorem or erase provenance and assertion-license limits.",
+      "workflow_disposition": "accepted"
+    },
+    {
+      "alternatives": [],
+      "artifact_validation_status": "unknown",
+      "artifacts": [],
+      "assumptions": [],
+      "attempt": 1,
+      "authority": {},
+      "claim_epistemic_status": "unknown",
+      "conclusion": "",
+      "event_family": "authorization",
+      "event_id": "evidence_to_proof_route_onramp.base.pathfind.control",
+      "evidence": [],
+      "falsifiers": [],
+      "handoff": {},
+      "obligations": [],
+      "operator": "",
+      "parent_artifact_ids": [],
+      "parent_event_ids": [
+        "evidence_to_proof_route_onramp.base.find_entrypoint.inference"
+      ],
+      "phase": "",
+      "premises": [],
+      "question": "",
+      "run_id": "fixture.evidence_to_proof_route_onramp.base",
+      "scope": {},
+      "sequence": 19,
+      "skill": "kb-entrypoint-pathfinder",
+      "step_id": "pathfind",
+      "timestamp": "",
+      "trace_incomplete": false,
+      "uncertainty": "unknown",
+      "warrant": "",
+      "workflow_disposition": "authorized"
+    },
+    {
+      "alternatives": [
+        {
+          "candidate": "Do not emit ProofRouteCandidates: Demote the unrestricted reduction route because its assertion license does not cross the model boundary.",
+          "disposition": "rejected",
+          "reason": "Expose the promoted route beside a demoted alternative and the evidence, bias correction, regime issue, or falsifier that separates them. Negative evidence controls promotion."
+        }
+      ],
+      "artifact_validation_status": "integrity_valid",
+      "artifacts": [],
+      "assumptions": [],
+      "attempt": 1,
+      "authority": {
+        "absent": [
+          "unscoped-epistemic-upgrade"
+        ],
+        "exercised": [
+          "pathfind-assessment"
+        ],
+        "prohibitions_checked": [
+          "no hidden scope promotion"
+        ]
+      },
+      "claim_epistemic_status": "evidence_backed",
+      "conclusion": "pathfind produces ProofRouteCandidates: Retain the local-reduction route only in the declared finite regime.",
+      "event_family": "inference",
+      "event_id": "evidence_to_proof_route_onramp.base.pathfind.inference",
+      "evidence": [
+        {
+          "artifact_type": "EntrypointCandidates",
+          "digest": "61c8ddbab2b6d4dded3cbe6cf9348c5fd6c658796985c80675774399043f4a90",
+          "path": "tests/fixtures/reasoning_trace/evidence/workflow-evidence.json",
+          "relation": "supports"
+        }
+      ],
+      "falsifiers": [
+        "A counterexample to the gadget preservation lemma closes the route."
+      ],
+      "handoff": {},
+      "obligations": [],
+      "operator": "construct_and_rank_route",
+      "parent_artifact_ids": [],
+      "parent_event_ids": [
+        "evidence_to_proof_route_onramp.base.pathfind.control"
+      ],
+      "phase": "",
+      "premises": [
+        {
+          "statement": "EntrypointCandidates: The source bundle licenses a finite MCSP reduction claim.",
+          "type": "artifact"
+        }
+      ],
+      "question": "At pathfind, how does EntrypointCandidates bear on ProofRouteCandidates? Which source-grounded route survives bias, regime, and counterexample audits?",
+      "run_id": "fixture.evidence_to_proof_route_onramp.base",
+      "scope": {
+        "after": "licensed proof route",
+        "before": "source claim",
+        "model": "local reductions",
+        "regime": "finite"
+      },
+      "sequence": 20,
+      "skill": "kb-entrypoint-pathfinder",
+      "step_id": "pathfind",
+      "timestamp": "",
+      "trace_incomplete": false,
+      "uncertainty": "bounded by the declared artifact and open obligations",
+      "warrant": "At pathfind, construct_and_rank_route checks EntrypointCandidates before emitting ProofRouteCandidates. Authority boundary: May recommend an evidence-bound route; may not assert a theorem or erase provenance and assertion-license limits.",
+      "workflow_disposition": "accepted"
+    },
+    {
+      "alternatives": [],
+      "artifact_validation_status": "unknown",
+      "artifacts": [],
+      "assumptions": [],
+      "attempt": 1,
+      "authority": {},
+      "claim_epistemic_status": "unknown",
+      "conclusion": "",
+      "event_family": "authorization",
+      "event_id": "evidence_to_proof_route_onramp.base.audit_regime_shift.control",
+      "evidence": [],
+      "falsifiers": [],
+      "handoff": {},
+      "obligations": [],
+      "operator": "",
+      "parent_artifact_ids": [],
+      "parent_event_ids": [
+        "evidence_to_proof_route_onramp.base.pathfind.inference"
+      ],
+      "phase": "",
+      "premises": [],
+      "question": "",
+      "run_id": "fixture.evidence_to_proof_route_onramp.base",
+      "scope": {},
+      "sequence": 21,
+      "skill": "regime-shift-auditor",
+      "step_id": "audit_regime_shift",
+      "timestamp": "",
+      "trace_incomplete": false,
+      "uncertainty": "unknown",
+      "warrant": "",
+      "workflow_disposition": "authorized"
+    },
+    {
+      "alternatives": [
+        {
+          "candidate": "Do not emit RegimeShiftAudit: Demote the unrestricted reduction route because its assertion license does not cross the model boundary.",
+          "disposition": "rejected",
+          "reason": "Expose the promoted route beside a demoted alternative and the evidence, bias correction, regime issue, or falsifier that separates them. Negative evidence controls promotion."
+        }
+      ],
+      "artifact_validation_status": "integrity_valid",
+      "artifacts": [],
+      "assumptions": [],
+      "attempt": 1,
+      "authority": {
+        "absent": [
+          "unscoped-epistemic-upgrade"
+        ],
+        "exercised": [
+          "audit_regime_shift-assessment"
+        ],
+        "prohibitions_checked": [
+          "no hidden scope promotion"
+        ]
+      },
+      "claim_epistemic_status": "evidence_backed",
+      "conclusion": "audit_regime_shift produces RegimeShiftAudit: Retain the local-reduction route only in the declared finite regime.",
+      "event_family": "inference",
+      "event_id": "evidence_to_proof_route_onramp.base.audit_regime_shift.inference",
+      "evidence": [
+        {
+          "artifact_type": "ProofRouteCandidates",
+          "digest": "61c8ddbab2b6d4dded3cbe6cf9348c5fd6c658796985c80675774399043f4a90",
+          "path": "tests/fixtures/reasoning_trace/evidence/workflow-evidence.json",
+          "relation": "supports"
+        }
+      ],
+      "falsifiers": [
+        "A counterexample to the gadget preservation lemma closes the route."
+      ],
+      "handoff": {},
+      "obligations": [],
+      "operator": "artifact_grounded_transformation",
+      "parent_artifact_ids": [],
+      "parent_event_ids": [
+        "evidence_to_proof_route_onramp.base.audit_regime_shift.control"
+      ],
+      "phase": "",
+      "premises": [
+        {
+          "statement": "ProofRouteCandidates: The source bundle licenses a finite MCSP reduction claim.",
+          "type": "artifact"
+        }
+      ],
+      "question": "At audit_regime_shift, how does ProofRouteCandidates bear on RegimeShiftAudit? Which source-grounded route survives bias, regime, and counterexample audits?",
+      "run_id": "fixture.evidence_to_proof_route_onramp.base",
+      "scope": {
+        "after": "licensed proof route",
+        "before": "source claim",
+        "model": "local reductions",
+        "regime": "finite"
+      },
+      "sequence": 22,
+      "skill": "regime-shift-auditor",
+      "step_id": "audit_regime_shift",
+      "timestamp": "",
+      "trace_incomplete": false,
+      "uncertainty": "bounded by the declared artifact and open obligations",
+      "warrant": "At audit_regime_shift, artifact_grounded_transformation checks ProofRouteCandidates before emitting RegimeShiftAudit. Authority boundary: May recommend an evidence-bound route; may not assert a theorem or erase provenance and assertion-license limits.",
+      "workflow_disposition": "accepted"
+    },
+    {
+      "alternatives": [],
+      "artifact_validation_status": "unknown",
+      "artifacts": [],
+      "assumptions": [],
+      "attempt": 1,
+      "authority": {},
+      "claim_epistemic_status": "unknown",
+      "conclusion": "",
+      "event_family": "authorization",
+      "event_id": "evidence_to_proof_route_onramp.base.hunt_counterexamples.control",
+      "evidence": [],
+      "falsifiers": [],
+      "handoff": {},
+      "obligations": [],
+      "operator": "",
+      "parent_artifact_ids": [],
+      "parent_event_ids": [
+        "evidence_to_proof_route_onramp.base.audit_regime_shift.inference"
+      ],
+      "phase": "",
+      "premises": [],
+      "question": "",
+      "run_id": "fixture.evidence_to_proof_route_onramp.base",
+      "scope": {},
+      "sequence": 23,
+      "skill": "counterexample-hunter",
+      "step_id": "hunt_counterexamples",
+      "timestamp": "",
+      "trace_incomplete": false,
+      "uncertainty": "unknown",
+      "warrant": "",
+      "workflow_disposition": "authorized"
+    },
+    {
+      "alternatives": [
+        {
+          "candidate": "Do not emit FalsificationPacket: Demote the unrestricted reduction route because its assertion license does not cross the model boundary.",
+          "disposition": "rejected",
+          "reason": "Expose the promoted route beside a demoted alternative and the evidence, bias correction, regime issue, or falsifier that separates them. Negative evidence controls promotion."
+        }
+      ],
+      "artifact_validation_status": "integrity_valid",
+      "artifacts": [],
+      "assumptions": [],
+      "attempt": 1,
+      "authority": {
+        "absent": [
+          "unscoped-epistemic-upgrade"
+        ],
+        "exercised": [
+          "hunt_counterexamples-assessment"
+        ],
+        "prohibitions_checked": [
+          "no hidden scope promotion"
+        ]
+      },
+      "claim_epistemic_status": "evidence_backed",
+      "conclusion": "hunt_counterexamples produces FalsificationPacket: Retain the local-reduction route only in the declared finite regime.",
+      "event_family": "inference",
+      "event_id": "evidence_to_proof_route_onramp.base.hunt_counterexamples.inference",
+      "evidence": [
+        {
+          "artifact_type": "ProofRouteCandidates",
+          "digest": "61c8ddbab2b6d4dded3cbe6cf9348c5fd6c658796985c80675774399043f4a90",
+          "path": "tests/fixtures/reasoning_trace/evidence/workflow-evidence.json",
+          "relation": "supports"
+        }
+      ],
+      "falsifiers": [
+        "A counterexample to the gadget preservation lemma closes the route."
+      ],
+      "handoff": {},
+      "obligations": [],
+      "operator": "adversarially_test_or_split",
+      "parent_artifact_ids": [],
+      "parent_event_ids": [
+        "evidence_to_proof_route_onramp.base.hunt_counterexamples.control"
+      ],
+      "phase": "",
+      "premises": [
+        {
+          "statement": "ProofRouteCandidates: The source bundle licenses a finite MCSP reduction claim.",
+          "type": "artifact"
+        }
+      ],
+      "question": "At hunt_counterexamples, how does ProofRouteCandidates bear on FalsificationPacket? Which source-grounded route survives bias, regime, and counterexample audits?",
+      "run_id": "fixture.evidence_to_proof_route_onramp.base",
+      "scope": {
+        "after": "licensed proof route",
+        "before": "source claim",
+        "model": "local reductions",
+        "regime": "finite"
+      },
+      "sequence": 24,
+      "skill": "counterexample-hunter",
+      "step_id": "hunt_counterexamples",
+      "timestamp": "",
+      "trace_incomplete": false,
+      "uncertainty": "bounded by the declared artifact and open obligations",
+      "warrant": "At hunt_counterexamples, adversarially_test_or_split checks ProofRouteCandidates before emitting FalsificationPacket. Authority boundary: May recommend an evidence-bound route; may not assert a theorem or erase provenance and assertion-license limits.",
+      "workflow_disposition": "accepted"
+    },
+    {
+      "alternatives": [],
+      "artifact_validation_status": "unknown",
+      "artifacts": [],
+      "assumptions": [],
+      "attempt": 1,
+      "authority": {},
+      "claim_epistemic_status": "unknown",
+      "conclusion": "",
+      "event_family": "authorization",
+      "event_id": "evidence_to_proof_route_onramp.base.expert_handoff.control",
+      "evidence": [],
+      "falsifiers": [],
+      "handoff": {},
+      "obligations": [],
+      "operator": "",
+      "parent_artifact_ids": [],
+      "parent_event_ids": [
+        "evidence_to_proof_route_onramp.base.hunt_counterexamples.inference"
+      ],
+      "phase": "",
+      "premises": [],
+      "question": "",
+      "run_id": "fixture.evidence_to_proof_route_onramp.base",
+      "scope": {},
+      "sequence": 25,
+      "skill": "expert-handoff",
+      "step_id": "expert_handoff",
+      "timestamp": "",
+      "trace_incomplete": false,
+      "uncertainty": "unknown",
+      "warrant": "",
+      "workflow_disposition": "authorized"
+    },
+    {
+      "alternatives": [
+        {
+          "candidate": "Do not emit ExpertRouteDossier: Demote the unrestricted reduction route because its assertion license does not cross the model boundary.",
+          "disposition": "rejected",
+          "reason": "Expose the promoted route beside a demoted alternative and the evidence, bias correction, regime issue, or falsifier that separates them. Negative evidence controls promotion."
+        }
+      ],
+      "artifact_validation_status": "integrity_valid",
+      "artifacts": [],
+      "assumptions": [],
+      "attempt": 1,
+      "authority": {
+        "absent": [
+          "unscoped-epistemic-upgrade"
+        ],
+        "exercised": [
+          "expert_handoff-assessment"
+        ],
+        "prohibitions_checked": [
+          "no hidden scope promotion"
+        ]
+      },
+      "claim_epistemic_status": "evidence_backed",
+      "conclusion": "expert_handoff produces ExpertRouteDossier: Retain the local-reduction route only in the declared finite regime.",
+      "event_family": "inference",
+      "event_id": "evidence_to_proof_route_onramp.base.expert_handoff.inference",
+      "evidence": [
+        {
+          "artifact_type": "ProofRouteCandidates",
+          "digest": "61c8ddbab2b6d4dded3cbe6cf9348c5fd6c658796985c80675774399043f4a90",
+          "path": "tests/fixtures/reasoning_trace/evidence/workflow-evidence.json",
+          "relation": "supports"
+        }
+      ],
+      "falsifiers": [
+        "A counterexample to the gadget preservation lemma closes the route."
+      ],
+      "handoff": {},
+      "obligations": [],
+      "operator": "artifact_grounded_transformation",
+      "parent_artifact_ids": [],
+      "parent_event_ids": [
+        "evidence_to_proof_route_onramp.base.expert_handoff.control"
+      ],
+      "phase": "",
+      "premises": [
+        {
+          "statement": "ProofRouteCandidates: The source bundle licenses a finite MCSP reduction claim.",
+          "type": "artifact"
+        }
+      ],
+      "question": "At expert_handoff, how does ProofRouteCandidates bear on ExpertRouteDossier? Which source-grounded route survives bias, regime, and counterexample audits?",
+      "run_id": "fixture.evidence_to_proof_route_onramp.base",
+      "scope": {
+        "after": "licensed proof route",
+        "before": "source claim",
+        "model": "local reductions",
+        "regime": "finite"
+      },
+      "sequence": 26,
+      "skill": "expert-handoff",
+      "step_id": "expert_handoff",
+      "timestamp": "",
+      "trace_incomplete": false,
+      "uncertainty": "bounded by the declared artifact and open obligations",
+      "warrant": "At expert_handoff, artifact_grounded_transformation checks ProofRouteCandidates before emitting ExpertRouteDossier. Authority boundary: May recommend an evidence-bound route; may not assert a theorem or erase provenance and assertion-license limits.",
+      "workflow_disposition": "accepted"
+    },
+    {
+      "alternatives": [],
+      "artifact_validation_status": "unknown",
+      "artifacts": [],
+      "assumptions": [],
+      "attempt": 1,
+      "authority": {},
+      "claim_epistemic_status": "unknown",
+      "conclusion": "Typed handoff to theorem_proof_delivery",
+      "event_family": "handoff",
+      "event_id": "evidence_to_proof_route_onramp.handoff",
+      "evidence": [],
+      "falsifiers": [],
+      "handoff": {
+        "accepted": true,
+        "destination_workflow_id": "theorem_proof_delivery"
+      },
+      "obligations": [],
+      "operator": "",
+      "parent_artifact_ids": [],
+      "parent_event_ids": [
+        "evidence_to_proof_route_onramp.base.expert_handoff.inference"
+      ],
+      "phase": "",
+      "premises": [],
+      "question": "",
+      "run_id": "fixture.evidence_to_proof_route_onramp.base",
+      "scope": {},
+      "sequence": 27,
+      "skill": "",
+      "step_id": "",
+      "timestamp": "",
+      "trace_incomplete": false,
+      "uncertainty": "unknown",
+      "warrant": "The exit disposition and open obligations are explicit.",
+      "workflow_disposition": "handed_off"
+    }
+  ],
+  "handoff_contracts": [
+    {
+      "adapter": "expert_dossier_to_proof_queue",
+      "artifact_type": "ProofQueueItem",
+      "when": "output_is_theorem_shaped",
+      "workflow": "theorem_proof_delivery"
+    },
+    {
+      "adapter": "expert_dossier_to_legacy_conceptual_input",
+      "artifact_type": "ExpertRouteDossier",
+      "when": "output_requires_conceptual_refinement",
+      "workflow": "conceptual_hypothesis_exploration_loop"
+    }
+  ],
+  "identity": {
+    "profile_id": "",
+    "profile_name": "",
+    "run_id": "fixture.evidence_to_proof_route_onramp.base",
+    "target": "p-vs-np",
+    "trace_id": "trace.c723abc8ccf1edcc",
+    "workflow_id": "evidence_to_proof_route_onramp",
+    "workflow_name": "Evidence to Proof Route Onramp",
+    "workflow_version": "1.0.0"
+  },
+  "observability_gaps": [],
+  "profile_topology": {},
+  "prohibitions": [
+    "No assertion without provenance and assertion license",
+    "No route promotion without a falsifier or stop condition"
+  ],
+  "schema_version": "2.0",
+  "specialist_skills": [],
+  "validation_tail_start": ""
+}

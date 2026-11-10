@@ -1,0 +1,248 @@
+schema_version: '1.0'
+workflow_id: cohere_fast
+domain_id: ym
+activation: explicit-only
+claim_ceiling: candidate
+closure_gate: audit_frontier
+manuscript_gate: independently-audited-inputs-only
+nodes:
+  - id: freeze_target
+    skill: ym-freeze-clay-target
+    subworkflow: scope_and_ground
+    disposition: used
+    input_type: DomainEvidencePacket
+    output_type: DomainEvidencePacket
+    depends_on: []
+    on_failure: quarantine
+  - id: ground_literature
+    skill: ym-ground-paper-literature
+    subworkflow: scope_and_ground
+    disposition: used
+    input_type: DomainEvidencePacket
+    output_type: DomainEvidencePacket
+    depends_on: [freeze_target]
+    on_failure: quarantine
+  - id: regulator_atlas
+    skill: ym-design-regulator-atlas
+    subworkflow: adaptive_frontier
+    disposition: used
+    input_type: DomainEvidencePacket
+    output_type: DomainEvidencePacket
+    depends_on: [ground_literature]
+    on_failure: quarantine
+  - id: observable_core
+    skill: ym-build-observable-core
+    subworkflow: adaptive_frontier
+    disposition: used
+    input_type: DomainEvidencePacket
+    output_type: DomainEvidencePacket
+    depends_on: [regulator_atlas]
+    on_failure: quarantine
+  - id: representation_calculus
+    skill: ym-build-representation-calculus
+    subworkflow: adaptive_frontier
+    disposition: used
+    input_type: DomainEvidencePacket
+    output_type: DomainEvidencePacket
+    depends_on: [observable_core]
+    on_failure: quarantine
+  - id: restricted_models
+    skill: ym-calibrate-restricted-models
+    subworkflow: adaptive_frontier
+    disposition: used
+    input_type: DomainEvidencePacket
+    output_type: DomainEvidencePacket
+    depends_on: [representation_calculus]
+    on_failure: quarantine
+  - id: finite_block
+    skill: ym-draft-finite-block-certificate
+    subworkflow: derivation_and_proof
+    disposition: used
+    input_type: DomainEvidencePacket
+    output_type: DomainEvidencePacket
+    depends_on: [restricted_models]
+    on_failure: quarantine
+  - id: heat_kernel
+    skill: ym-draft-heat-kernel-enclosures
+    subworkflow: derivation_and_proof
+    disposition: used
+    input_type: DomainEvidencePacket
+    output_type: DomainEvidencePacket
+    depends_on: [finite_block]
+    on_failure: quarantine
+  - id: frustration
+    skill: ym-draft-frustration-obstruction
+    subworkflow: derivation_and_proof
+    disposition: used
+    input_type: DomainEvidencePacket
+    output_type: DomainEvidencePacket
+    depends_on: [finite_block]
+    on_failure: quarantine
+  - id: staple_dispersion
+    skill: ym-draft-staple-dispersion
+    subworkflow: derivation_and_proof
+    disposition: used
+    input_type: DomainEvidencePacket
+    output_type: DomainEvidencePacket
+    depends_on: [finite_block]
+    on_failure: quarantine
+  - id: representational_dynamics
+    skill: ym-draft-representational-dynamics
+    subworkflow: derivation_and_proof
+    disposition: used
+    input_type: DomainEvidencePacket
+    output_type: DomainEvidencePacket
+    depends_on: [representation_calculus]
+    on_failure: quarantine
+  - id: adaptive_domination
+    skill: ym-prove-adaptive-block-domination
+    subworkflow: derivation_and_proof
+    disposition: used
+    input_type: DomainEvidencePacket
+    output_type: DomainEvidencePacket
+    depends_on: [heat_kernel, frustration, staple_dispersion]
+    on_failure: quarantine
+  - id: defect_transfer
+    skill: ym-prove-state-weighted-defect-transfer
+    subworkflow: derivation_and_proof
+    disposition: used
+    input_type: DomainEvidencePacket
+    output_type: DomainEvidencePacket
+    depends_on: [adaptive_domination]
+    on_failure: quarantine
+  - id: large_fields
+    skill: ym-control-large-fields-and-topology
+    subworkflow: derivation_and_proof
+    disposition: used
+    input_type: DomainEvidencePacket
+    output_type: DomainEvidencePacket
+    depends_on: [defect_transfer]
+    on_failure: quarantine
+  - id: conditional_ratio
+    skill: ym-prove-conditional-partition-ratio
+    subworkflow: derivation_and_proof
+    disposition: used
+    input_type: DomainEvidencePacket
+    output_type: DomainEvidencePacket
+    depends_on: [large_fields]
+    on_failure: quarantine
+  - id: gauge_rg
+    skill: ym-build-gauge-covariant-rg
+    subworkflow: derivation_and_proof
+    disposition: used
+    input_type: DomainEvidencePacket
+    output_type: DomainEvidencePacket
+    depends_on: [conditional_ratio, representational_dynamics]
+    on_failure: quarantine
+  - id: infrared_basin
+    skill: ym-design-infrared-basin
+    subworkflow: derivation_and_proof
+    disposition: used
+    input_type: DomainEvidencePacket
+    output_type: DomainEvidencePacket
+    depends_on: [gauge_rg]
+    on_failure: quarantine
+  - id: basin_entry
+    skill: ym-prove-basin-entry
+    subworkflow: derivation_and_proof
+    disposition: used
+    input_type: DomainEvidencePacket
+    output_type: DomainEvidencePacket
+    depends_on: [infrared_basin]
+    on_failure: quarantine
+  - id: relational_rigidity
+    skill: ym-define-relational-rigidity
+    subworkflow: derivation_and_proof
+    disposition: used
+    input_type: DomainEvidencePacket
+    output_type: DomainEvidencePacket
+    depends_on: [basin_entry]
+    on_failure: quarantine
+  - id: rg_to_rigidity
+    skill: ym-prove-rg-to-rigidity
+    subworkflow: derivation_and_proof
+    disposition: used
+    input_type: DomainEvidencePacket
+    output_type: DomainEvidencePacket
+    depends_on: [relational_rigidity]
+    on_failure: quarantine
+  - id: rigidity_transfer
+    skill: ym-prove-rigidity-transfer
+    subworkflow: derivation_and_proof
+    disposition: used
+    input_type: DomainEvidencePacket
+    output_type: DomainEvidencePacket
+    depends_on: [rg_to_rigidity]
+    on_failure: quarantine
+  - id: continuum_coherence
+    skill: ym-prove-continuum-coherence
+    subworkflow: derivation_and_proof
+    disposition: used
+    input_type: DomainEvidencePacket
+    output_type: DomainEvidencePacket
+    depends_on: [rigidity_transfer, regulator_atlas]
+    on_failure: quarantine
+  - id: os_gap
+    skill: ym-reconstruct-os-gap
+    subworkflow: derivation_and_proof
+    disposition: used
+    input_type: DomainEvidencePacket
+    output_type: DomainEvidencePacket
+    depends_on: [continuum_coherence]
+    on_failure: quarantine
+  - id: develop_proofs
+    skill: ym-develop-paper-proofs
+    subworkflow: derivation_and_proof
+    disposition: used
+    input_type: DomainEvidencePacket
+    output_type: DomainEvidencePacket
+    depends_on: [os_gap]
+    on_failure: quarantine
+  - id: mechanize_core
+    skill: ym-mechanize-proof-core
+    subworkflow: derivation_and_proof
+    disposition: used
+    input_type: DomainEvidencePacket
+    output_type: DomainEvidencePacket
+    depends_on: [develop_proofs]
+    on_failure: quarantine
+  - id: audit_frontier
+    skill: ym-audit-frontier
+    subworkflow: independent_audit
+    disposition: used
+    input_type: DomainEvidencePacket
+    output_type: DomainEvidencePacket
+    depends_on: [mechanize_core]
+    on_failure: quarantine
+  - id: frame_narrative
+    skill: ym-frame-paper-narrative
+    subworkflow: manuscript_release
+    disposition: used
+    input_type: DomainEvidencePacket
+    output_type: DomainEvidencePacket
+    depends_on: [audit_frontier]
+    on_failure: stop
+  - id: proof_appendix
+    skill: ym-build-proof-appendix
+    subworkflow: manuscript_release
+    disposition: used
+    input_type: DomainEvidencePacket
+    output_type: DomainEvidencePacket
+    depends_on: [audit_frontier]
+    on_failure: stop
+  - id: latex_paper
+    skill: ym-build-latex-paper
+    subworkflow: manuscript_release
+    disposition: used
+    input_type: DomainEvidencePacket
+    output_type: DomainEvidencePacket
+    depends_on: [frame_narrative, proof_appendix]
+    on_failure: stop
+  - id: program_coordinator
+    skill: ym-run-clay-program
+    subworkflow: parent
+    disposition: auxiliary
+    input_type: DomainEvidencePacket
+    output_type: DomainEvidencePacket
+    depends_on: [latex_paper]
+    on_failure: quarantine

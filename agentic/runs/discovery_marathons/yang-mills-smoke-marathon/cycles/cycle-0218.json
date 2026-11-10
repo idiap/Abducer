@@ -1,0 +1,501 @@
+{
+  "branch_execution_records": [
+    {
+      "api_attempt": "primary",
+      "api_key_config": {
+        "active_provider": "azure_openai",
+        "configured_keys": [
+          "AZURE_OPENAI_API_KEY",
+          "AZURE_OPENAI_ENDPOINT",
+          "AZURE_OPENAI_MODEL",
+          "AZURE_OPENAI_REASONING_EFFORT",
+          "AZURE_OPENAI_RESPONSES_ENDPOINT",
+          "OPENAI_BASE_URL",
+          "OPENAI_MODEL",
+          "OPENAI_REASONING_EFFORT"
+        ],
+        "has_openai_api_key": true,
+        "source": "config/api_keys.json"
+      },
+      "api_timeout_seconds": 1440,
+      "branch_id": "marathon.branch.2943978bc7b2",
+      "elapsed_seconds": 111.599,
+      "engine": "azure_responses_api",
+      "http_status": 200,
+      "max_output_tokens": 12000,
+      "model": "gpt-5.5",
+      "output_schema": "agentic/spec/discovery_marathon_codex_branch_output.schema.json",
+      "prior_attempt_errors": [],
+      "reasoning_effort": "high",
+      "response_id": "resp_07d20623b130cfba006a4f9a94497c81978a3a0aa2ae5bfae1",
+      "status": "complete"
+    }
+  ],
+  "branch_outputs": [
+    {
+      "attempted_derivation": {
+        "blocking_gap": "The derivation is finite-dimensional and valid, but Yang-Mills input is missing: no current estimate computes the Wilson hairpin boundary OPE coefficients H,K with enough control to prove the two tangent gates on the locked Wilson core.",
+        "derivation_id": "cycle-0218-schur-complement-derivation",
+        "steps": [
+          "Start from fixed-collar reflection positivity: N_\\delta\\ge0 is preserved by the closed-cone argument in the OS topology for reflected probes.",
+          "Separate same-theory boundary effects by writing the intended uncollared normalized matrix as q_\\delta=\\widehat N_\\delta\\oslash\\widehat B_\\delta.",
+          "Assume the boundary OPE is close to the rank-one no-defect case: q_\\delta=J+\\lambda H+\\lambda^2K+o(\\lambda^2).",
+          "Decompose \\mathbb C^n=\\mathbb C u\\oplus1^\\perp. The u-block is n+O(\\lambda), hence positive for small collar.",
+          "Take the Schur complement of the u-block. On 1^\\perp it is \\lambda PHP+\\lambda^2P(K-n^{-1}Hu u^*H)P+o(\\lambda^2).",
+          "Therefore a negative direction of PHP kills OS positivity at first order. If PHP has null directions, the Schur-corrected second-order form decides the next obstruction on that null space."
+        ],
+        "why_not_yet_a_proof": "It proves only a bridge criterion. It does not prove that the actual continuum Yang-Mills Wilson quotient has the required expansion, nor that its coefficients satisfy the PSD tangent-cone inequalities."
+      },
+      "branch_id": "marathon.branch.2943978bc7b2",
+      "branch_title": "Reflection-Positivity Closed-Cone Topology: Wilson quotient tangent cone",
+      "candidate_lemmas": [
+        {
+          "assumptions": [
+            "N_\\delta is the collar-limit OS matrix obtained from regulated reflection-positive forms, hence N_\\delta\\ge0 for each fixed collar.",
+            "Diagonal trace continuity has removed additive positive contacts, and all diagonal normalizations are nonzero.",
+            "The reflected Wilson boundary OPE gives a Hermitian expansion q_\\delta=J+\\lambda_\\delta H+\\lambda_\\delta^2K+o(\\lambda_\\delta^2), uniformly on the finite block.",
+            "The same-theory boundary multiplier B is the one determined by the locked Wilson renormalization, not chosen after seeing N."
+          ],
+          "definitions": [
+            "source object: regulated reflection-positive Schwinger forms for collar-separated gauge-invariant Wilson observables W_i(\\delta), with finite collar OS matrices N_\\delta\\ge0.",
+            "target object: OS-positive continuum Schwinger functions on the uncollared locked Wilson algebra, represented by intended finite matrices M after removing only same-theory boundary factors.",
+            "controlled interface: regulated reflection-positive Schwinger forms -> OS-positive continuum Schwinger functions through the normalized Schur quotient q=\\widehat N\\oslash\\widehat B, after fixed-collar closed-cone passage.",
+            "same-theory condition: the observable embeddings are fixed before and after cutoff removal; any boundary factor B may be divided out only if q remains PSD for every realized finite Wilson block, with no added boundary counterterm or algebra change.",
+            "J is the all-ones matrix, u=n^{-1/2}(1,\\ldots,1), and P=I-uu^* projects onto 1^\\perp."
+          ],
+          "equations": [
+            {
+              "label": "same-theory quotient criterion",
+              "latex": "\\widehat N_{ij}=\\frac{N_{ij}}{(N_{ii}N_{jj})^{1/2}},\\quad \\widehat B_{ij}=\\frac{B_{ij}}{(B_{ii}B_{jj})^{1/2}},\\quad q=\\widehat N\\oslash\\widehat B,\\quad M\\ge0\\Longleftrightarrow q\\ge0",
+              "valid_when": "The diagonal entries are positive, additive contacts vanish, and the only remaining boundary effect is a multiplicative Wilson factor on the same locked algebra."
+            },
+            {
+              "label": "rank-one boundary expansion",
+              "latex": "q_\\delta=J+\\lambda_\\delta H+\\lambda_\\delta^2K+o(\\lambda_\\delta^2),\\qquad J_{ij}=1,\\quad H=H^*,\\ K=K^*",
+              "valid_when": "The coincident-footprint reflected Wilson OPE has a two-term finite-matrix asymptotic after normalization."
+            },
+            {
+              "label": "first tangent gate",
+              "latex": "v^*Hv\\ge0\\quad\\text{for all }v\\in 1^\\perp\\quad\\text{equivalently}\\quad PHP\\ge0",
+              "valid_when": "q_\\delta\\ge0 for all sufficiently small positive collars; a negative value is an immediate falsifier."
+            },
+            {
+              "label": "second tangent gate",
+              "latex": "\\left. P\\left(K-\\frac1nHu u^*H\\right)P\\right|_{\\ker(PHP)}\\ge0",
+              "valid_when": "PHP\\ge0 and the first-order form has null directions; this is the Schur-complement obstruction after eliminating the large positive J direction."
+            }
+          ],
+          "failure_test": "Compute H and K for a reflected Wilson hairpin block. A vector v\\in1^\\perp with v^*Hv<0, or v\\in\\ker(PHP) with v^*(K-n^{-1}Hu u^*H)v<0, is a valid same-theory falsifier.",
+          "lemma_id": "cycle-0218-tangent-cone-quotient-lemma",
+          "proof_role": "This lemma turns the post-collar Wilson boundary problem into a computable finite-dimensional PSD tangent-cone test, refining the earlier q\\ge0 criterion without invoking unproved log-CND or Hadamard semigroup structure.",
+          "statement": "For a finite locked Wilson OS block whose collar quotient satisfies q_\\delta=J+\\lambda_\\delta H+\\lambda_\\delta^2K+o(\\lambda_\\delta^2), same-theory OS positivity near the reflection plane is governed by the PSD tangent cone at the rank-one matrix J. The first necessary condition is PHP\\ge0 on 1^\\perp; if L=\\ker(PHP), the next valid obstruction is the Schur-corrected form P(K-n^{-1}Hu u^*H)P\\ge0 on L. A negative vector in either test is a finite Wilson falsifier."
+        }
+      ],
+      "control_decision": {
+        "decision": "persist_adapt",
+        "pivot_test": "Pivot if no locked Wilson observables can realize finite blocks probing ker(PHP), or if RG estimates cannot produce boundary OPE coefficients beyond first order.",
+        "promotion_test": "Promote if one proves the expansion q_\\delta=J+\\lambda H+\\lambda^2K+o(\\lambda^2) and verifies PHP\\ge0 plus the Schur-corrected null-space inequality on a dense Wilson core.",
+        "reason": "The branch is still learning: it converted the previous tangent-cone slogan into an explicit second-order matrix formula with a correction term that can be checked on Wilson hairpin OPE data."
+      },
+      "dependency_updates": [
+        {
+          "dependency_id": "RG-to-OS Continuum Passage Bridge Lemma",
+          "description": "The fixed-collar closed-cone part remains formal; the uncollared Wilson passage is now reduced to finite Schur-quotient PSD and its tangent-cone tests near J.",
+          "kind": "refined",
+          "status": "valid modulo Wilson boundary OPE estimates"
+        },
+        {
+          "dependency_id": "choice of gauge-invariant test algebra",
+          "description": "The locked Wilson algebra must realize the finite blocks used in the tangent tests; otherwise a negative formal quotient is not a physical falsifier.",
+          "kind": "tightened",
+          "status": "needs density/richness certificate"
+        },
+        {
+          "dependency_id": "cutoff-removal topology",
+          "description": "The topology must control reflected collar matrices N and also provide asymptotics for boundary factors B; controlling only finite collar forms is insufficient.",
+          "kind": "split",
+          "status": "partially specified"
+        }
+      ],
+      "falsifiers": [
+        "A boundary OPE calculation producing v\\in1^\\perp with v^*Hv<0 is a first-order falsifier of same-theory OS passage.",
+        "If PHP\\ge0 but a null vector v has v^*(K-n^{-1}Hu u^*H)v<0, the second-order Schur-complement term is a valid falsifier.",
+        "A collar-removal topology that controls N but not the boundary multiplier B cannot validate q=\\widehat N\\oslash\\widehat B.",
+        "If Wilson renormalization at the reflection plane requires a new boundary counterterm, positivity may hold for a modified theory but not for the target same theory."
+      ],
+      "generated_by": "azure_responses_api",
+      "mathematical_learning": "Cycle 218 learned that the next obstruction is not just PKP on the null space of the first-order kernel. The large rank-one OS direction contributes a necessary negative Schur correction -n^{-1}PHu u^*HP. Thus the valid second-order Wilson falsifier is a Schur-complement boundary OPE form, making the bridge sharper and more computable.",
+      "next_experiment": "Compute the reflected two- and three-hairpin Wilson boundary OPE to extract H and K, then test the zero-sum and null-space Schur-complement inequalities on the smallest nontrivial finite block."
+    }
+  ],
+  "completed_utc": "2026-07-09T13:06:51+00:00",
+  "created_utc": "2026-07-09T12:56:51+00:00",
+  "cycle_id": "cycle-0218",
+  "cycle_index": 218,
+  "cycle_learning": "This research cycle converted active route pressure into typed branch lemmas. The main mathematical change is that each branch now names a source object, target object, equation, validity condition, falsifier, and next experiment. Only research-mode cycles with elapsed-time and branch-engine evidence count as genuine long-horizon research progress.",
+  "execution_mode": "research",
+  "next_cycle_queue": [
+    "Compute the reflected two- and three-hairpin Wilson boundary OPE to extract H and K, then test the zero-sum and null-space Schur-complement inequalities on the smallest nontrivial finite block."
+  ],
+  "research_seconds_elapsed": 600.005,
+  "research_seconds_target": 600,
+  "run_id": "yang-mills-smoke-marathon",
+  "scheduler_decisions": [
+    {
+      "branch_id": "marathon.branch.2943978bc7b2",
+      "branch_title": "Reflection-Positivity Closed-Cone Topology",
+      "controlled_interface": "regulated reflection-positive Schwinger forms -> OS-positive continuum Schwinger functions",
+      "reason": "The branch remains target-linked and has not exhausted its certification tests.",
+      "recommended_move": "persist_adapt"
+    }
+  ],
+  "selected_branch_ids": [
+    "marathon.branch.2943978bc7b2"
+  ],
+  "skill_dispatch_trace": [
+    {
+      "cycle_id": "cycle-0218",
+      "input_artifacts": [
+        "agentic/state/current_target.json",
+        "agentic/reports/discovery_stretch/latest.json",
+        "agentic/registries/discovery_marathon_skill_dispatch.yaml"
+      ],
+      "invoked_skills": [
+        "looper-target-goal-enricher",
+        "looper-target-dependency-cartographer",
+        "looper-workflow-contract-governor",
+        "looper-hook-policy-maintainer"
+      ],
+      "missing_required_skills": [],
+      "output_artifacts": [
+        "cycle:cycle-0218",
+        "branch:marathon.branch.2943978bc7b2"
+      ],
+      "phase": "preflight_target_navigation",
+      "queued_conditional_skills": [
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "kb-orchestrator"
+        }
+      ],
+      "skipped_skills_with_reason": [],
+      "validation_handoff": "preflight_target_navigation used 4 required skills while exploring Reflection-Positivity Closed-Cone Topology."
+    },
+    {
+      "cycle_id": "cycle-0218",
+      "input_artifacts": [
+        "agentic/state/current_target.json",
+        "agentic/reports/discovery_stretch/latest.json",
+        "agentic/registries/discovery_marathon_skill_dispatch.yaml"
+      ],
+      "invoked_skills": [
+        "long-horizon-route-portfolio-manager",
+        "abducer-refinement-route-ranker",
+        "next-experiment-queue-ranker",
+        "kb-discovery-governor"
+      ],
+      "missing_required_skills": [],
+      "output_artifacts": [
+        "cycle:cycle-0218",
+        "branch:marathon.branch.2943978bc7b2"
+      ],
+      "phase": "branch_selection",
+      "queued_conditional_skills": [
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "kb-promising-direction-assessor"
+        }
+      ],
+      "skipped_skills_with_reason": [],
+      "validation_handoff": "branch_selection used 4 required skills while exploring Reflection-Positivity Closed-Cone Topology."
+    },
+    {
+      "cycle_id": "cycle-0218",
+      "input_artifacts": [
+        "agentic/state/current_target.json",
+        "agentic/reports/discovery_stretch/latest.json",
+        "agentic/registries/discovery_marathon_skill_dispatch.yaml"
+      ],
+      "invoked_skills": [
+        "kb-abduce",
+        "kb-deduce",
+        "kb-induce",
+        "kb-concept-bridge-planner",
+        "kb-gap-abstraction-conjecturer"
+      ],
+      "missing_required_skills": [],
+      "output_artifacts": [
+        "cycle:cycle-0218",
+        "branch:marathon.branch.2943978bc7b2"
+      ],
+      "phase": "branch_exploration",
+      "queued_conditional_skills": [
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "kb-proof-sketcher"
+        },
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "kb-proof-connector"
+        }
+      ],
+      "skipped_skills_with_reason": [],
+      "validation_handoff": "branch_exploration used 5 required skills while exploring Reflection-Positivity Closed-Cone Topology."
+    },
+    {
+      "cycle_id": "cycle-0218",
+      "input_artifacts": [
+        "agentic/state/current_target.json",
+        "agentic/reports/discovery_stretch/latest.json",
+        "agentic/registries/discovery_marathon_skill_dispatch.yaml"
+      ],
+      "invoked_skills": [
+        "qualitative-variable-isolator",
+        "physics-regime-map-builder",
+        "monotonicity-sensitivity-prober",
+        "limit-convergence-behavior-auditor",
+        "qualitative-toy-model-builder",
+        "qualitative-physics-falsifier"
+      ],
+      "missing_required_skills": [],
+      "output_artifacts": [
+        "cycle:cycle-0218",
+        "branch:marathon.branch.2943978bc7b2"
+      ],
+      "phase": "qualitative_physics_reasoning",
+      "queued_conditional_skills": [
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "dimensional-symmetry-constraint-checker"
+        },
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "scale-asymptotic-reasoner"
+        }
+      ],
+      "skipped_skills_with_reason": [],
+      "validation_handoff": "qualitative_physics_reasoning used 6 required skills while exploring Reflection-Positivity Closed-Cone Topology."
+    },
+    {
+      "cycle_id": "cycle-0218",
+      "input_artifacts": [
+        "agentic/state/current_target.json",
+        "agentic/reports/discovery_stretch/latest.json",
+        "agentic/registries/discovery_marathon_skill_dispatch.yaml"
+      ],
+      "invoked_skills": [
+        "gedanken-need-assessor"
+      ],
+      "missing_required_skills": [],
+      "output_artifacts": [
+        "cycle:cycle-0218",
+        "branch:marathon.branch.2943978bc7b2"
+      ],
+      "phase": "gedanken_experiment_design",
+      "queued_conditional_skills": [
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "gedanken-situation-designer"
+        },
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "gedanken-counterfactual-variant-builder"
+        },
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "gedanken-transfer-guard"
+        },
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "gedanken-followup-planner"
+        },
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "qualitative-toy-model-builder"
+        }
+      ],
+      "skipped_skills_with_reason": [],
+      "validation_handoff": "gedanken_experiment_design used 1 required skills while exploring Reflection-Positivity Closed-Cone Topology."
+    },
+    {
+      "cycle_id": "cycle-0218",
+      "input_artifacts": [
+        "agentic/state/current_target.json",
+        "agentic/reports/discovery_stretch/latest.json",
+        "agentic/registries/discovery_marathon_skill_dispatch.yaml"
+      ],
+      "invoked_skills": [
+        "kb-contradiction-strategist",
+        "contradiction-route-auditor",
+        "kb-hypothesis-refutation-loop"
+      ],
+      "missing_required_skills": [],
+      "output_artifacts": [
+        "cycle:cycle-0218",
+        "branch:marathon.branch.2943978bc7b2"
+      ],
+      "phase": "contradiction_and_falsifier_generation",
+      "queued_conditional_skills": [
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "kb-novel-proof-strategist"
+        }
+      ],
+      "skipped_skills_with_reason": [],
+      "validation_handoff": "contradiction_and_falsifier_generation used 3 required skills while exploring Reflection-Positivity Closed-Cone Topology."
+    },
+    {
+      "cycle_id": "cycle-0218",
+      "input_artifacts": [
+        "agentic/state/current_target.json",
+        "agentic/reports/discovery_stretch/latest.json",
+        "agentic/registries/discovery_marathon_skill_dispatch.yaml"
+      ],
+      "invoked_skills": [
+        "evidence-acquisition-planner",
+        "prior-art-importer",
+        "kb-prior-art-pass"
+      ],
+      "missing_required_skills": [],
+      "output_artifacts": [
+        "cycle:cycle-0218",
+        "branch:marathon.branch.2943978bc7b2"
+      ],
+      "phase": "evidence_acquisition",
+      "queued_conditional_skills": [
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "kb-epistemic-hardness"
+        }
+      ],
+      "skipped_skills_with_reason": [],
+      "validation_handoff": "evidence_acquisition used 3 required skills while exploring Reflection-Positivity Closed-Cone Topology."
+    },
+    {
+      "cycle_id": "cycle-0218",
+      "input_artifacts": [
+        "agentic/state/current_target.json",
+        "agentic/reports/discovery_stretch/latest.json",
+        "agentic/registries/discovery_marathon_skill_dispatch.yaml"
+      ],
+      "invoked_skills": [
+        "abducer-obligation-gatekeeper",
+        "entailment-gap-auditor",
+        "kb-end-to-end-proof-critic"
+      ],
+      "missing_required_skills": [],
+      "output_artifacts": [
+        "cycle:cycle-0218",
+        "branch:marathon.branch.2943978bc7b2"
+      ],
+      "phase": "obligation_gating",
+      "queued_conditional_skills": [
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "kb-coherence-evaluator"
+        }
+      ],
+      "skipped_skills_with_reason": [],
+      "validation_handoff": "obligation_gating used 3 required skills while exploring Reflection-Positivity Closed-Cone Topology."
+    },
+    {
+      "cycle_id": "cycle-0218",
+      "input_artifacts": [
+        "agentic/state/current_target.json",
+        "agentic/reports/discovery_stretch/latest.json",
+        "agentic/registries/discovery_marathon_skill_dispatch.yaml"
+      ],
+      "invoked_skills": [
+        "review-reasoner",
+        "review-reasoner-epistemologist",
+        "review-reasoner-discovery-scientist",
+        "kb-discovery-breakthrough-profiler"
+      ],
+      "missing_required_skills": [],
+      "output_artifacts": [
+        "cycle:cycle-0218",
+        "branch:marathon.branch.2943978bc7b2"
+      ],
+      "phase": "review_and_synthesis",
+      "queued_conditional_skills": [
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "review-reasoner-fields-medalist"
+        },
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "review-reasoner-concept-logician"
+        }
+      ],
+      "skipped_skills_with_reason": [],
+      "validation_handoff": "review_and_synthesis used 4 required skills while exploring Reflection-Positivity Closed-Cone Topology."
+    },
+    {
+      "cycle_id": "cycle-0218",
+      "input_artifacts": [
+        "agentic/state/current_target.json",
+        "agentic/reports/discovery_stretch/latest.json",
+        "agentic/registries/discovery_marathon_skill_dispatch.yaml"
+      ],
+      "invoked_skills": [
+        "show-reasoning",
+        "kb-explain"
+      ],
+      "missing_required_skills": [],
+      "output_artifacts": [
+        "cycle:cycle-0218",
+        "branch:marathon.branch.2943978bc7b2"
+      ],
+      "phase": "report_rendering",
+      "queued_conditional_skills": [
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "kb-expert-paper-generator"
+        },
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "kb-macro-proof-paper-writer"
+        }
+      ],
+      "skipped_skills_with_reason": [],
+      "validation_handoff": "report_rendering used 2 required skills while exploring Reflection-Positivity Closed-Cone Topology."
+    },
+    {
+      "cycle_id": "cycle-0218",
+      "input_artifacts": [
+        "agentic/state/current_target.json",
+        "agentic/reports/discovery_stretch/latest.json",
+        "agentic/registries/discovery_marathon_skill_dispatch.yaml"
+      ],
+      "invoked_skills": [
+        "looper-release-promoter",
+        "looper-workflow-contract-governor"
+      ],
+      "missing_required_skills": [],
+      "output_artifacts": [
+        "cycle:cycle-0218",
+        "branch:marathon.branch.2943978bc7b2"
+      ],
+      "phase": "release_promotion",
+      "queued_conditional_skills": [
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "looper-hook-policy-maintainer"
+        }
+      ],
+      "skipped_skills_with_reason": [],
+      "validation_handoff": "release_promotion used 2 required skills while exploring Reflection-Positivity Closed-Cone Topology."
+    }
+  ],
+  "target_id": "yang-mills-existence-and-mass-gap-target",
+  "timing_validation": {
+    "reason": "Elapsed 600.005 seconds against target 600 seconds.",
+    "status": "research"
+  },
+  "valid_as_research_cycle": true,
+  "validation_handoff": [
+    "agentic/scripts/validate_discovery_marathon_cycle.py",
+    "agentic/scripts/validate_discovery_marathon_skill_dispatch.py"
+  ],
+  "version": 1
+}

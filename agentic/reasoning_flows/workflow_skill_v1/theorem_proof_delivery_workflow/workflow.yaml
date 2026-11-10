@@ -1,0 +1,419 @@
+# SPDX-FileCopyrightText: © 2026 Idiap Research Institute <contact@idiap.ch>
+#
+# SPDX-FileContributor: Danilo Gusicuma <danilo.gusicuma@idiap.ch>
+# Neuro-symbolic AI Group
+#
+# SPDX-License-Identifier: MIT
+# REUSE-IgnoreStart
+schema_version: workflow-skill/v1
+namespace: abducer
+id: theorem_proof_delivery_workflow
+version: 1.0.0
+kind: workflow
+description: Draft interface projection of theorem_proof_delivery; native execution and authority remain
+  unchanged.
+aliases:
+- theorem_proof_delivery
+- theorem-proof-delivery
+- proof-delivery
+lifecycle: draft
+activation:
+  mode: explicit
+  prerequisites: []
+types:
+  FormalProofObligations:
+    schema: ../../../../agentic/spec/named_workflow_artifacts.schema.json
+    representation: value
+  InferenceQualityDecision:
+    schema: ../../../../agentic/spec/named_workflow_artifacts.schema.json
+    representation: value
+  LemmaChain:
+    schema: ../../../../agentic/spec/named_workflow_artifacts.schema.json
+    representation: value
+  ProofDeliveryPlan:
+    schema: ../../../../agentic/spec/named_workflow_artifacts.schema.json
+    representation: value
+  ProofGapDecision:
+    schema: ../../../../agentic/spec/named_workflow_artifacts.schema.json
+    representation: value
+  ProofGateDecision:
+    schema: ../../../../agentic/spec/named_workflow_artifacts.schema.json
+    representation: value
+  ProofQueueItem:
+    schema: ../../../../agentic/spec/named_workflow_artifacts.schema.json
+    representation: value
+inputs:
+  request:
+    type: ProofQueueItem
+outputs:
+  result:
+    type: ProofGateDecision
+    value:
+      ref: steps.native.outputs.result
+operations:
+  native_workflow:
+    inputs:
+      request:
+        type: ProofQueueItem
+    outputs:
+      result:
+        type: ProofGateDecision
+    execution:
+      mode: specification_only
+      reason: No workflow-skill/v1 host adapter is supplied. Native skill/hook/CLI interfaces exist, but
+        payload materialization, guard evidence, execution effects and receipt translation are not qualified
+        for this format.
+  step_orchestrate_delivery:
+    inputs:
+      ProofQueueItem:
+        type: ProofQueueItem
+    outputs:
+      ProofDeliveryPlan:
+        type: ProofDeliveryPlan
+    execution:
+      mode: specification_only
+      reason: Native skill exists at skills/proof_delivery/proof-delivery-workflow-orchestrator/SKILL.md;
+        no typed v1 adapter. Source guards, role and failure remain in native_contract.
+  step_formalize_obligations:
+    inputs:
+      ProofDeliveryPlan:
+        type: ProofDeliveryPlan
+    outputs:
+      FormalProofObligations:
+        type: FormalProofObligations
+    execution:
+      mode: specification_only
+      reason: Native skill exists at skills/proof_delivery/proof-obligation-formalizer/SKILL.md; no typed
+        v1 adapter. Source guards, role and failure remain in native_contract.
+  step_build_lemma_chain:
+    inputs:
+      FormalProofObligations:
+        type: FormalProofObligations
+    outputs:
+      LemmaChain:
+        type: LemmaChain
+    execution:
+      mode: specification_only
+      reason: Native skill exists at skills/proof_delivery/lemma-chain-proof-builder/SKILL.md; no typed
+        v1 adapter. Source guards, role and failure remain in native_contract.
+  step_split_gap_or_countermodel:
+    inputs:
+      LemmaChain:
+        type: LemmaChain
+    outputs:
+      ProofGapDecision:
+        type: ProofGapDecision
+    execution:
+      mode: specification_only
+      reason: Native skill exists at skills/proof_delivery/proof-gap-countermodel-splitter/SKILL.md; no
+        typed v1 adapter. Source guards, role and failure remain in native_contract.
+  step_control_pvsnp_inference:
+    inputs:
+      LemmaChain:
+        type: LemmaChain
+    outputs:
+      InferenceQualityDecision:
+        type: InferenceQualityDecision
+    execution:
+      mode: specification_only
+      reason: Native skill exists at skills/orchestration/pvsnp-inference-quality-controller/SKILL.md;
+        no typed v1 adapter. Source guards, role and failure remain in native_contract.
+  step_gate_proof:
+    inputs:
+      LemmaChain:
+        type: LemmaChain
+    outputs:
+      ProofGateDecision:
+        type: ProofGateDecision
+    execution:
+      mode: specification_only
+      reason: Native skill exists at skills/proof_delivery/proof-quality-gatekeeper/SKILL.md; no typed
+        v1 adapter. Source guards, role and failure remain in native_contract.
+flow:
+  kind: sequence
+  steps:
+  - id: native
+    kind: call
+    operation: native_workflow
+    description: Opaque native workflow boundary; internal ordering, guards and handoffs are retained
+      in abducer.native_contract.
+    arguments:
+      request:
+        ref: inputs.request
+    on_failure: blocked
+policy:
+  effects:
+    filesystem:
+      read:
+      - native_sources
+      - inputs
+      write: []
+    network: []
+    external_write: []
+  authority:
+    allowed:
+    - describe_native_interface
+    forbidden:
+    - execute_scientific_workflow
+    - approve
+    - prove
+    - publish
+    - promote
+  limits:
+    wall_time_seconds: 1800
+    max_operation_calls: 1
+  failure:
+    default: blocked
+    retry:
+      max_attempts: 1
+      retryable_codes: []
+  resume:
+    mode: none
+    require_matching_definition_and_inputs: true
+  claim_ceiling: Interface description only; no proof, scientific validity, runtime qualification, promotion
+    or approval.
+observability:
+  receipts: required
+  artifact_digests: sha256
+  provenance: required
+  events:
+  - workflow_started
+  - step_failed
+  - workflow_completed
+provenance:
+  coverage: interface_only
+  sources:
+  - path: agentic/registries/named_workflow_contracts.yaml
+    digest: sha256:a467750a969715f742cc330f21fef37f4004b76924650fd9a027c47af9447d77
+  - path: skills/proof_delivery/proof-delivery-workflow-orchestrator/SKILL.md
+    digest: sha256:c526961209fbff8bda27bbfc548853267a739f60246f986bd55b9161f90b63bd
+  - path: hooks/workflow_local/hook_utils.py
+    digest: sha256:65cb3615d064ab6307b1117d493af57331cfd6ef0157ef7b8e733d96d748578c
+  - path: hooks/workflow_local/user_prompt_submit_intake.py
+    digest: sha256:14f6c15eac450b918ce56b290a5a30052ec4c08052b73663aeab5230338ccb11
+  - path: hooks/workflow_local/pre_skill_use_policy.py
+    digest: sha256:2140beff9c300564dedf1b0b8b00bc59cf78ef066f184bc8cbc992670ee0f489
+  - path: hooks/workflow_local/post_skill_use_review.py
+    digest: sha256:0187d1cc3e942aebf6aa4c6874cd23f5661ce6a6dd9f6de9f74703a26a83e296
+  - path: hooks/workflow_local/pre_tool_use_policy.py
+    digest: sha256:916b7acb61078b55f56b13b922ce2b9123fa06184e61fc275a8e80b3f7f30e60
+  - path: hooks/workflow_local/stop_artifact_check.py
+    digest: sha256:d9e526e86cec17c4d74a5a67a9cbeb08766aabe7f1c844ffc71cfef6384145af
+  - path: skills/proof_delivery/proof-obligation-formalizer/SKILL.md
+    digest: sha256:3123bce4f4db1e86b23744edca4729dd7c37cba4a293e78de36f066396919db5
+  - path: skills/proof_delivery/lemma-chain-proof-builder/SKILL.md
+    digest: sha256:7748bf28122214d526a86add93cd144eb78d7353393b338cfb748e18d1fc4535
+  - path: skills/proof_delivery/proof-gap-countermodel-splitter/SKILL.md
+    digest: sha256:75f8a9d66c0e291969f86ef78648ba6a9943f3097870e11012d418868856cfc8
+  - path: skills/orchestration/pvsnp-inference-quality-controller/SKILL.md
+    digest: sha256:490184fe3e0ca48dd4b7b7e6be6403c125da91f2ca63215d64c31099c98a7353
+  - path: skills/proof_delivery/proof-quality-gatekeeper/SKILL.md
+    digest: sha256:a61be07678e0017bf551b9016482443632bc0eaa39af1dd4416b3dd403bbe67e
+  - path: agentic/registries/skill_registry.yaml
+    digest: sha256:15076ed8d1bd4c10895060ab485353fe520421c44e1fc6f506508d2d566eacf0
+  - path: pyproject.toml
+    digest: sha256:69325c4805f66033ce7f7e0e68f4a0996913728c6041bb3cee656571693b2f1e
+  - path: uv.lock
+    digest: sha256:a6c77e5d86a93915eeb0f129f80bc8c45d572be387872e3ace7460a3d6ada9ae
+  - path: prism_me/shared/references/codex-control-stack.md
+    digest: sha256:4e8e7a5cdbc0572cf9b0d4ffc4a41c8f4f9c9a304fae3bcee99d8af3553be30e
+  gaps:
+  - No workflow-skill/v1 host adapter is supplied. Native skill/hook/CLI interfaces exist, but payload
+    materialization, guard evidence, execution effects and receipt translation are not qualified for this
+    format.
+  - Native control flow remains opaque; coverage is interface_only, not source-equivalence certification.
+  - Named payload schemas validate the common envelope only; nominal artifact payloads and artifact_type
+    discriminators are not refined by that schema.
+  - Conditional/advisory skips, repeated ReviewFindingSet aggregation, exit obligations and handoff adapters
+    are preserved verbatim, not executable v1 dataflow.
+extensions:
+  abducer.owner:
+    path: skills/proof_delivery/proof-delivery-workflow-orchestrator/SKILL.md
+  abducer.native_identity:
+    id: theorem_proof_delivery
+  abducer.native_contract:
+    id: theorem_proof_delivery
+    version: 1.0.0
+    visible_name: Theorem Proof Delivery
+    aliases:
+    - theorem-proof-delivery
+    - proof-delivery
+    activation: conditional
+    owner_skill: proof-delivery-workflow-orchestrator
+    target_scope:
+    - mathematical
+    - p-vs-np
+    trigger:
+      all_of:
+      - source_bound
+      - target_bound
+      - exact_theorem_statement
+      any_of:
+      - proof_queue_item_ready
+      none_of:
+      - ambiguous_quantifiers
+      - unresolved_definition
+    input_artifact:
+      type: ProofQueueItem
+      schema: agentic/spec/named_workflow_artifacts.schema.json
+    steps:
+    - id: orchestrate_delivery
+      order: 10
+      skill: proof-delivery-workflow-orchestrator
+      mode: required
+      when: null
+      consumes:
+      - ProofQueueItem
+      produces:
+      - ProofDeliveryPlan
+      on_failure: stop
+    - id: formalize_obligations
+      order: 20
+      skill: proof-obligation-formalizer
+      mode: required
+      when: null
+      consumes:
+      - ProofDeliveryPlan
+      produces:
+      - FormalProofObligations
+      on_failure: stop
+    - id: build_lemma_chain
+      order: 30
+      skill: lemma-chain-proof-builder
+      mode: required
+      when: null
+      consumes:
+      - FormalProofObligations
+      produces:
+      - LemmaChain
+      on_failure: quarantine
+    - id: split_gap_or_countermodel
+      order: 40
+      skill: proof-gap-countermodel-splitter
+      mode: conditional
+      when: lemma_blocked_or_false
+      consumes:
+      - LemmaChain
+      produces:
+      - ProofGapDecision
+      on_failure: stop
+    - id: control_pvsnp_inference
+      order: 50
+      skill: pvsnp-inference-quality-controller
+      mode: conditional
+      when: target == 'p-vs-np'
+      consumes:
+      - LemmaChain
+      produces:
+      - InferenceQualityDecision
+      on_failure: stop
+    - id: gate_proof
+      order: 60
+      skill: proof-quality-gatekeeper
+      mode: validator_only
+      when: null
+      consumes:
+      - LemmaChain
+      produces:
+      - ProofGateDecision
+      on_failure: stop
+    hooks:
+    - hook_id: named-workflow-router
+      event: UserPromptSubmit
+      phase: activation
+      condition: exact theorem trigger matches
+      required_inputs:
+      - prompt
+      - target
+      decision: recommend
+      emitted_artifact: WorkflowRecommendation
+    - hook_id: workflow-membership-policy
+      event: PreSkillUse
+      phase: steps
+      condition: active workflow and step membership validate
+      required_inputs:
+      - workflow_id
+      - workflow_version
+      - target
+      - step_id
+      - skill
+      - conditional_evidence
+      decision: block
+      emitted_artifact: SkillAuthorization
+    - hook_id: typed-output-policy
+      event: PostSkillUse
+      phase: steps
+      condition: declared output and receipt validate
+      required_inputs:
+      - workflow_id
+      - step_id
+      - artifact_type
+      - epistemic_status
+      - receipt
+      decision: block
+      emitted_artifact: SkillReceipt
+    - hook_id: workflow-tool-policy
+      event: PreToolUse
+      phase: steps
+      condition: path safety mutation and budget validate
+      required_inputs:
+      - workflow_id
+      - step_id
+      - tool
+      - target_path
+      - mutation_class
+      decision: block
+      emitted_artifact: ToolAuthorization
+    - hook_id: workflow-exit-policy
+      event: Stop
+      phase: exit
+      condition: proof gate and obligations validate
+      required_inputs:
+      - workflow_id
+      - exit_artifacts
+      - open_obligations
+      decision: block
+      emitted_artifact: WorkflowExitReceipt
+    exit_gate:
+      validator: agentic/scripts/validate_workflow_contracts.py
+      consumes: ProofGateDecision
+      allowed:
+      - validated
+      - quarantined
+      - rejected
+      required_artifacts:
+      - ProofGateDecision
+      - FormalProofObligations
+      open_obligations_policy: allow_declared
+    handoffs:
+    - when: proof_accepted
+      workflow: scientific_contribution_cultivation
+      artifact_type: ResultAtlasSlice
+      adapter: proof_gate_to_result_atlas_slice
+    - when: failure_certificate_issued
+      workflow: conceptual_hypothesis_exploration_loop
+      artifact_type: ProofFailureCertificate
+      adapter: proof_gap_to_failure_certificate
+    prohibitions:
+    - No circular lemma chains
+    - No silent gap closure
+    - No proof claim beyond the exact statement
+    cost_profile: bounded
+  abducer.environment:
+    python: pyproject.toml
+    lock: uv.lock
+    native_controls: .codex/config.toml
+    native_controls_optional: true
+    control_policy: prism_me/shared/references/codex-control-stack.md
+  abducer.execution_boundary:
+    status: specification_only
+    notes: Source inspection only. Effects above deny native execution until a separately reviewed adapter
+      exists.
+  abducer.step_interfaces:
+    orchestrate_delivery: step_orchestrate_delivery
+    formalize_obligations: step_formalize_obligations
+    build_lemma_chain: step_build_lemma_chain
+    split_gap_or_countermodel: step_split_gap_or_countermodel
+    control_pvsnp_inference: step_control_pvsnp_inference
+    gate_proof: step_gate_proof
+# REUSE-IgnoreEnd

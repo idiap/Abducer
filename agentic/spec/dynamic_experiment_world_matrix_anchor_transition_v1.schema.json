@@ -1,0 +1,97 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://abducer.local/spec/dynamic_experiment_world_matrix_anchor_transition_v1.schema.json",
+  "title": "Canonical world-matrix theory and commission anchor transition",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "transition_kind", "programme_id", "target_id", "run_id",
+    "prior_generation", "prior_commit_identity", "expected_commit_generation", "cycle_id",
+    "authority_projection_id", "authority_projection_digest", "authority_projection",
+    "commission_id", "commission_digest", "commission", "commission_producer_binding",
+    "world_request_batch",
+    "world_order", "observed_world_ids", "missing_world_ids", "observation_count",
+    "new_observation_count", "status", "certificate",
+    "prior_state_semantic_digest", "next_state_semantic_digest",
+    "changed_state_paths", "theory_state_changed",
+    "frozen_theory_state_projection_digest", "commit_local_evidence_manifest",
+    "authority_boundary", "transition_digest"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "transition_kind": {"const": "theory_and_commission_anchor"},
+    "programme_id": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/identifier"},
+    "target_id": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/identifier"},
+    "run_id": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/identifier"},
+    "prior_generation": {"type": "integer", "minimum": 0},
+    "prior_commit_identity": {"$ref": "./discovery_verified_commit_identity.schema.json"},
+    "expected_commit_generation": {"type": "integer", "minimum": 1},
+    "cycle_id": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/identifier"},
+    "authority_projection_id": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/identifier"},
+    "authority_projection_digest": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/digest"},
+    "authority_projection": {"type": "object"},
+    "commission_id": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/identifier"},
+    "commission_digest": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/digest"},
+    "commission": {"$ref": "./dynamic_experiment_world_matrix_commission_v2.schema.json"},
+    "commission_producer_binding": {"$ref": "./dynamic_experiment_causal_producer_binding_v2.schema.json"},
+    "world_request_batch": {"$ref": "./dynamic_experiment_world_request_batch_v1.schema.json"},
+    "world_order": {"const": ["no_probe", "neutral_inconclusive", "misleading_toy_positive", "registered_premise_falsifier", "operational_failure"]},
+    "observed_world_ids": {"const": []},
+    "missing_world_ids": {"const": ["no_probe", "neutral_inconclusive", "misleading_toy_positive", "registered_premise_falsifier", "operational_failure"]},
+    "observation_count": {"const": 0},
+    "new_observation_count": {"const": 0},
+    "status": {"const": "commissioned"},
+    "certificate": {"type": "null"},
+    "prior_state_semantic_digest": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/digest"},
+    "next_state_semantic_digest": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/digest"},
+    "changed_state_paths": {"const": ["/generation"]},
+    "theory_state_changed": {"const": false},
+    "frozen_theory_state_projection_digest": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/digest"},
+    "commit_local_evidence_manifest": {"$ref": "#/$defs/evidenceManifest"},
+    "authority_boundary": {"$ref": "#/$defs/authorityBoundary"},
+    "transition_digest": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/digest"}
+  },
+  "$defs": {
+    "fileDescriptor": {
+      "type": "object", "additionalProperties": false,
+      "required": ["path", "sha256", "size_bytes"],
+      "properties": {
+        "path": {"type": "string", "minLength": 1},
+        "sha256": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/digest"},
+        "size_bytes": {"type": "integer", "minimum": 1}
+      }
+    },
+    "evidenceEntry": {
+      "type": "object", "additionalProperties": false,
+      "required": ["evidence_authority_id", "files"],
+      "properties": {
+        "evidence_authority_id": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/identifier"},
+        "files": {
+          "type": "object", "additionalProperties": false,
+          "required": ["producer_request", "producer_receipt", "artifact", "immutable_history", "governed_clock"],
+          "properties": {
+            "producer_request": {"$ref": "#/$defs/fileDescriptor"},
+            "producer_receipt": {"$ref": "#/$defs/fileDescriptor"},
+            "artifact": {"$ref": "#/$defs/fileDescriptor"},
+            "immutable_history": {"$ref": "#/$defs/fileDescriptor"},
+            "governed_clock": {"$ref": "#/$defs/fileDescriptor"}
+          }
+        }
+      }
+    },
+    "evidenceManifest": {
+      "type": "array", "minItems": 1,
+      "items": {"$ref": "#/$defs/evidenceEntry"}
+    },
+    "authorityBoundary": {
+      "type": "object", "additionalProperties": false,
+      "required": ["theory_first", "experiment_role", "theory_mutation_authorized", "certificate_authority_before_aggregation"],
+      "properties": {
+        "theory_first": {"const": true},
+        "experiment_role": {"const": "secondary_theory_support_only"},
+        "theory_mutation_authorized": {"const": false},
+        "certificate_authority_before_aggregation": {"const": false}
+      }
+    }
+  }
+}

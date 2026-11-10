@@ -1,0 +1,83 @@
+{
+  "artifact": "project-semantic-taxonomy",
+  "schema_version": "1.0",
+  "source_fingerprint": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "review_status": "proposed",
+  "objects": [
+    {
+      "id": "incident_witness_statements",
+      "nominal_type": "IncidentWitnessStatements",
+      "epistemic_role": "statement",
+      "description": "Attributed witness reports about one identified operational incident.",
+      "fields": [
+        {"name": "incident_reference", "type": "String", "description": "Stable identifier for the investigated operational incident."},
+        {"name": "statements", "type": "List[String]", "description": "Attributed first-person reports made by incident witnesses."}
+      ],
+      "source_anchors": ["skills/incident-intake/SKILL.md#required-witness-inputs"],
+      "provenance": "raw",
+      "assurance_justification": "The reports retain source attribution but have not been corroborated.",
+      "unresolved": []
+    },
+    {
+      "id": "corroborated_incident_evidence",
+      "nominal_type": "CorroboratedIncidentEvidence",
+      "epistemic_role": "evidence",
+      "description": "Incident claims assessed for independence, agreement, and relevance.",
+      "fields": [
+        {"name": "supported_claims", "type": "List[String]", "description": "Incident claims supported by mutually independent witness sources."},
+        {"name": "contested_claims", "type": "List[String]", "description": "Material claims for which available witness sources conflict."}
+      ],
+      "source_anchors": ["skills/testimony-corroborator/SKILL.md#independence-policy"],
+      "provenance": "supported",
+      "assurance_justification": "Support records the stated corroboration policy and preserves disagreement.",
+      "unresolved": []
+    },
+    {
+      "id": "candidate_failure_hypothesis",
+      "nominal_type": "CandidateFailureHypothesis",
+      "epistemic_role": "hypothesis",
+      "description": "One defeasible causal mechanism proposed for the operational incident.",
+      "fields": [
+        {"name": "causal_mechanism", "type": "String", "description": "Proposed mechanism connecting observed conditions to the incident failure."},
+        {"name": "discriminating_prediction", "type": "String", "description": "Observable prediction that can distinguish this explanation from alternatives."}
+      ],
+      "source_anchors": ["skills/root-cause-ranker/SKILL.md#candidate-generation"],
+      "provenance": "generated",
+      "assurance_justification": "Generation establishes candidacy only, not evidential rank or causal truth.",
+      "unresolved": []
+    },
+    {
+      "id": "ranked_failure_hypotheses",
+      "nominal_type": "RankedFailureHypotheses",
+      "epistemic_role": "ranked_hypotheses",
+      "description": "Causal incident hypotheses ordered by an explicit evidential criterion.",
+      "fields": [
+        {"name": "ordered_hypotheses", "type": "List[CandidateFailureHypothesis]", "description": "Candidate causal explanations ordered from strongest to weakest support."},
+        {"name": "ranking_basis", "type": "String", "description": "Evidence aggregation and tie policy used to establish the order."}
+      ],
+      "source_anchors": ["skills/root-cause-ranker/SKILL.md#ranking-contract"],
+      "provenance": "generated",
+      "assurance_justification": "The rank is a defeasible model assessment under the named criterion.",
+      "unresolved": []
+    }
+  ],
+  "operations": [
+    {
+      "id": "rank_incident_causes",
+      "granularity_rationale": "Corroboration and ranking form one occurrence here because the source exposes only their joint ranked diagnosis.",
+      "kind": "abduct",
+      "inference_class": "material_defeasible",
+      "input_types": ["IncidentWitnessStatements", "CorroboratedIncidentEvidence"],
+      "output_type": "RankedFailureHypotheses",
+      "semantic_role": "epistemic",
+      "result_provenance": "generated",
+      "skill_composition": [
+        {"path": "skills/testimony-corroborator", "role": "Source independence assessment", "contribution": "Distinguishes independent support from repeated or contested testimony."},
+        {"path": "skills/root-cause-ranker", "role": "Abductive cause ranking analysis", "contribution": "Compares causal mechanisms under the documented evidence criterion."}
+      ],
+      "rationale": "The occurrence compares causal explanations rather than proving a single cause.",
+      "source_anchors": ["workflows/incident-analysis.md#corroborate-and-rank"]
+    }
+  ],
+  "unresolved": []
+}

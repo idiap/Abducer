@@ -1,0 +1,466 @@
+# SPDX-FileCopyrightText: © 2026 Idiap Research Institute <contact@idiap.ch>
+#
+# SPDX-FileContributor: Danilo Gusicuma <danilo.gusicuma@idiap.ch>
+# Neuro-symbolic AI Group
+#
+# SPDX-License-Identifier: MIT
+# REUSE-IgnoreStart
+schema_version: workflow-skill/v1
+namespace: abducer
+id: deep_review_and_reorientation_workflow
+version: 1.0.0
+kind: workflow
+description: Draft interface projection of deep_review_and_reorientation; native execution and authority
+  remain unchanged.
+aliases:
+- deep_review_and_reorientation
+- deep-review-and-reorientation
+- deep-review
+lifecycle: draft
+activation:
+  mode: explicit
+  prerequisites: []
+types:
+  FrameworkState:
+    schema: ../../../../agentic/spec/named_workflow_artifacts.schema.json
+    representation: value
+  GovernedRepairQueue:
+    schema: ../../../../agentic/spec/named_workflow_artifacts.schema.json
+    representation: value
+  MetaReview:
+    schema: ../../../../agentic/spec/named_workflow_artifacts.schema.json
+    representation: value
+  ReviewFindingSet:
+    schema: ../../../../agentic/spec/named_workflow_artifacts.schema.json
+    representation: value
+  RunEvidenceBundle:
+    schema: ../../../../agentic/spec/named_workflow_artifacts.schema.json
+    representation: value
+inputs:
+  request:
+    type: RunEvidenceBundle
+outputs:
+  result:
+    type: GovernedRepairQueue
+    value:
+      ref: steps.native.outputs.result
+operations:
+  native_workflow:
+    inputs:
+      request:
+        type: RunEvidenceBundle
+    outputs:
+      result:
+        type: GovernedRepairQueue
+    execution:
+      mode: specification_only
+      reason: No workflow-skill/v1 host adapter is supplied. Native skill/hook/CLI interfaces exist, but
+        payload materialization, guard evidence, execution effects and receipt translation are not qualified
+        for this format.
+  step_formalize_framework_state:
+    inputs:
+      RunEvidenceBundle:
+        type: RunEvidenceBundle
+    outputs:
+      FrameworkState:
+        type: FrameworkState
+    execution:
+      mode: specification_only
+      reason: Native skill exists at skills/discovery/kb-framework-state-formalizer/SKILL.md; no typed
+        v1 adapter. Source guards, role and failure remain in native_contract.
+  step_review_discovery_science:
+    inputs:
+      FrameworkState:
+        type: FrameworkState
+    outputs:
+      ReviewFindingSet:
+        type: ReviewFindingSet
+    execution:
+      mode: specification_only
+      reason: Native skill exists at skills/review/review-reasoner-discovery-scientist/SKILL.md; no typed
+        v1 adapter. Source guards, role and failure remain in native_contract.
+  step_review_concept_logic:
+    inputs:
+      FrameworkState:
+        type: FrameworkState
+    outputs:
+      ReviewFindingSet:
+        type: ReviewFindingSet
+    execution:
+      mode: specification_only
+      reason: Native skill exists at skills/review/review-reasoner-concept-logician/SKILL.md; no typed
+        v1 adapter. Source guards, role and failure remain in native_contract.
+  step_review_epistemology:
+    inputs:
+      FrameworkState:
+        type: FrameworkState
+    outputs:
+      ReviewFindingSet:
+        type: ReviewFindingSet
+    execution:
+      mode: specification_only
+      reason: Native skill exists at skills/review/review-reasoner-epistemologist/SKILL.md; no typed v1
+        adapter. Source guards, role and failure remain in native_contract.
+  step_review_fields:
+    inputs:
+      FrameworkState:
+        type: FrameworkState
+    outputs:
+      ReviewFindingSet:
+        type: ReviewFindingSet
+    execution:
+      mode: specification_only
+      reason: Native skill exists at skills/review/review-reasoner-fields-medalist/SKILL.md; no typed
+        v1 adapter. Source guards, role and failure remain in native_contract.
+  step_review_radical_design:
+    inputs:
+      FrameworkState:
+        type: FrameworkState
+    outputs:
+      ReviewFindingSet:
+        type: ReviewFindingSet
+    execution:
+      mode: specification_only
+      reason: Native skill exists at skills/review/review-reasoner-radical-designer/SKILL.md; no typed
+        v1 adapter. Source guards, role and failure remain in native_contract.
+  step_synthesize_meta_review:
+    inputs:
+      ReviewFindingSet:
+        type: ReviewFindingSet
+    outputs:
+      MetaReview:
+        type: MetaReview
+    execution:
+      mode: specification_only
+      reason: Native skill exists at skills/control-plane/meta/SKILL.md; no typed v1 adapter. Source guards,
+        role and failure remain in native_contract.
+  step_govern_repairs:
+    inputs:
+      MetaReview:
+        type: MetaReview
+    outputs:
+      GovernedRepairQueue:
+        type: GovernedRepairQueue
+    execution:
+      mode: specification_only
+      reason: Native skill exists at skills/control-plane/looper-workflow-contract-governor/SKILL.md;
+        no typed v1 adapter. Source guards, role and failure remain in native_contract.
+flow:
+  kind: sequence
+  steps:
+  - id: native
+    kind: call
+    operation: native_workflow
+    description: Opaque native workflow boundary; internal ordering, guards and handoffs are retained
+      in abducer.native_contract.
+    arguments:
+      request:
+        ref: inputs.request
+    on_failure: blocked
+policy:
+  effects:
+    filesystem:
+      read:
+      - native_sources
+      - inputs
+      write: []
+    network: []
+    external_write: []
+  authority:
+    allowed:
+    - describe_native_interface
+    forbidden:
+    - execute_scientific_workflow
+    - approve
+    - prove
+    - publish
+    - promote
+  limits:
+    wall_time_seconds: 1800
+    max_operation_calls: 1
+  failure:
+    default: blocked
+    retry:
+      max_attempts: 1
+      retryable_codes: []
+  resume:
+    mode: none
+    require_matching_definition_and_inputs: true
+  claim_ceiling: Interface description only; no proof, scientific validity, runtime qualification, promotion
+    or approval.
+observability:
+  receipts: required
+  artifact_digests: sha256
+  provenance: required
+  events:
+  - workflow_started
+  - step_failed
+  - workflow_completed
+provenance:
+  coverage: interface_only
+  sources:
+  - path: agentic/registries/named_workflow_contracts.yaml
+    digest: sha256:a467750a969715f742cc330f21fef37f4004b76924650fd9a027c47af9447d77
+  - path: skills/review/review-reasoner/SKILL.md
+    digest: sha256:f217430637e2b8d0d1a4824463d4a5d7bb1b987f44fb8d593716c313963a4857
+  - path: hooks/workflow_local/hook_utils.py
+    digest: sha256:65cb3615d064ab6307b1117d493af57331cfd6ef0157ef7b8e733d96d748578c
+  - path: hooks/workflow_local/user_prompt_submit_intake.py
+    digest: sha256:14f6c15eac450b918ce56b290a5a30052ec4c08052b73663aeab5230338ccb11
+  - path: hooks/workflow_local/pre_skill_use_policy.py
+    digest: sha256:2140beff9c300564dedf1b0b8b00bc59cf78ef066f184bc8cbc992670ee0f489
+  - path: hooks/workflow_local/post_skill_use_review.py
+    digest: sha256:0187d1cc3e942aebf6aa4c6874cd23f5661ce6a6dd9f6de9f74703a26a83e296
+  - path: hooks/workflow_local/pre_tool_use_policy.py
+    digest: sha256:916b7acb61078b55f56b13b922ce2b9123fa06184e61fc275a8e80b3f7f30e60
+  - path: hooks/workflow_local/stop_artifact_check.py
+    digest: sha256:d9e526e86cec17c4d74a5a67a9cbeb08766aabe7f1c844ffc71cfef6384145af
+  - path: skills/discovery/kb-framework-state-formalizer/SKILL.md
+    digest: sha256:9c0e135235b893e6ea8638ea37c67a06837b1eb07a258c62d5b1144a89c470b2
+  - path: skills/review/review-reasoner-discovery-scientist/SKILL.md
+    digest: sha256:af50297f04e6a9d0806cadc6805473d5ad6167a5a5f211c6a0a3f20a1c74de39
+  - path: skills/review/review-reasoner-concept-logician/SKILL.md
+    digest: sha256:4c6f0d060cc941ce96b9d58b53fde86d398f635a9d39889c5125e3f43fe0de14
+  - path: skills/review/review-reasoner-epistemologist/SKILL.md
+    digest: sha256:ee784712062facb5f117264fa7e29cf57b4ae972cb235bace2b6e8299fff134f
+  - path: skills/review/review-reasoner-fields-medalist/SKILL.md
+    digest: sha256:d4098846cd15040395f728d086dba60b8e6d82a13486099955f0b38314c1ba6c
+  - path: skills/review/review-reasoner-radical-designer/SKILL.md
+    digest: sha256:0d766d1a1ff85a3cf99257c21272a609e29937ef94f57305a0f37dd3cf2053e7
+  - path: skills/control-plane/meta/SKILL.md
+    digest: sha256:abd4deccd6da329dbbba65a0810608d60f77e69b13fd33e9993b6acc028e005d
+  - path: skills/control-plane/looper-workflow-contract-governor/SKILL.md
+    digest: sha256:1ae487a7214f13fca79195a30ac3a7aae6b3d1badd39acc8a2b3e4405c2f4667
+  - path: agentic/registries/skill_registry.yaml
+    digest: sha256:15076ed8d1bd4c10895060ab485353fe520421c44e1fc6f506508d2d566eacf0
+  - path: pyproject.toml
+    digest: sha256:69325c4805f66033ce7f7e0e68f4a0996913728c6041bb3cee656571693b2f1e
+  - path: uv.lock
+    digest: sha256:a6c77e5d86a93915eeb0f129f80bc8c45d572be387872e3ace7460a3d6ada9ae
+  - path: prism_me/shared/references/codex-control-stack.md
+    digest: sha256:4e8e7a5cdbc0572cf9b0d4ffc4a41c8f4f9c9a304fae3bcee99d8af3553be30e
+  gaps:
+  - No workflow-skill/v1 host adapter is supplied. Native skill/hook/CLI interfaces exist, but payload
+    materialization, guard evidence, execution effects and receipt translation are not qualified for this
+    format.
+  - Native control flow remains opaque; coverage is interface_only, not source-equivalence certification.
+  - Named payload schemas validate the common envelope only; nominal artifact payloads and artifact_type
+    discriminators are not refined by that schema.
+  - Conditional/advisory skips, repeated ReviewFindingSet aggregation, exit obligations and handoff adapters
+    are preserved verbatim, not executable v1 dataflow.
+extensions:
+  abducer.owner:
+    path: skills/review/review-reasoner/SKILL.md
+  abducer.native_identity:
+    id: deep_review_and_reorientation
+  abducer.native_contract:
+    id: deep_review_and_reorientation
+    version: 1.0.0
+    visible_name: Deep Review and Reorientation
+    aliases:
+    - deep-review-and-reorientation
+    - deep-review
+    activation: conditional
+    owner_skill: review-reasoner
+    target_scope:
+    - mathematical
+    - scientific
+    - workflow
+    - release
+    trigger:
+      all_of:
+      - run_evidence_bundle_present
+      any_of:
+      - repeated_blockage
+      - contradictory_evidence
+      - low_explanatory_power
+      - major_release_gate
+      - deep_review_requested
+      none_of:
+      - proof_acceptance_requested
+    input_artifact:
+      type: RunEvidenceBundle
+      schema: agentic/spec/named_workflow_artifacts.schema.json
+    steps:
+    - id: formalize_framework_state
+      order: 10
+      skill: kb-framework-state-formalizer
+      mode: required
+      when: null
+      consumes:
+      - RunEvidenceBundle
+      produces:
+      - FrameworkState
+      on_failure: stop
+    - id: review_discovery_science
+      order: 20
+      skill: review-reasoner-discovery-scientist
+      mode: advisory
+      when: null
+      consumes:
+      - FrameworkState
+      produces:
+      - ReviewFindingSet
+      on_failure: quarantine
+    - id: review_concept_logic
+      order: 30
+      skill: review-reasoner-concept-logician
+      mode: advisory
+      when: null
+      consumes:
+      - FrameworkState
+      produces:
+      - ReviewFindingSet
+      on_failure: quarantine
+    - id: review_epistemology
+      order: 40
+      skill: review-reasoner-epistemologist
+      mode: advisory
+      when: null
+      consumes:
+      - FrameworkState
+      produces:
+      - ReviewFindingSet
+      on_failure: quarantine
+    - id: review_fields
+      order: 50
+      skill: review-reasoner-fields-medalist
+      mode: advisory
+      when: null
+      consumes:
+      - FrameworkState
+      produces:
+      - ReviewFindingSet
+      on_failure: quarantine
+    - id: review_radical_design
+      order: 60
+      skill: review-reasoner-radical-designer
+      mode: advisory
+      when: null
+      consumes:
+      - FrameworkState
+      produces:
+      - ReviewFindingSet
+      on_failure: quarantine
+    - id: synthesize_meta_review
+      order: 70
+      skill: meta
+      mode: required
+      when: null
+      consumes:
+      - ReviewFindingSet
+      produces:
+      - MetaReview
+      on_failure: stop
+    - id: govern_repairs
+      order: 80
+      skill: looper-workflow-contract-governor
+      mode: validator_only
+      when: null
+      consumes:
+      - MetaReview
+      produces:
+      - GovernedRepairQueue
+      on_failure: stop
+    hooks:
+    - hook_id: named-workflow-router
+      event: UserPromptSubmit
+      phase: activation
+      condition: deep-review trigger matches
+      required_inputs:
+      - prompt
+      - target
+      decision: recommend
+      emitted_artifact: WorkflowRecommendation
+    - hook_id: workflow-membership-policy
+      event: PreSkillUse
+      phase: steps
+      condition: active workflow and step membership validate
+      required_inputs:
+      - workflow_id
+      - workflow_version
+      - target
+      - step_id
+      - skill
+      - conditional_evidence
+      decision: block
+      emitted_artifact: SkillAuthorization
+    - hook_id: typed-output-policy
+      event: PostSkillUse
+      phase: steps
+      condition: declared output and receipt validate
+      required_inputs:
+      - workflow_id
+      - step_id
+      - artifact_type
+      - epistemic_status
+      - receipt
+      decision: block
+      emitted_artifact: SkillReceipt
+    - hook_id: workflow-tool-policy
+      event: PreToolUse
+      phase: steps
+      condition: path safety mutation and budget validate
+      required_inputs:
+      - workflow_id
+      - step_id
+      - tool
+      - target_path
+      - mutation_class
+      decision: block
+      emitted_artifact: ToolAuthorization
+    - hook_id: workflow-exit-policy
+      event: Stop
+      phase: exit
+      condition: repair queue and review evidence validate
+      required_inputs:
+      - workflow_id
+      - exit_artifacts
+      - open_obligations
+      decision: block
+      emitted_artifact: WorkflowExitReceipt
+    exit_gate:
+      validator: agentic/scripts/validate_workflow_contracts.py
+      consumes: GovernedRepairQueue
+      allowed:
+      - validated
+      - archived
+      required_artifacts:
+      - FrameworkState
+      - MetaReview
+      - GovernedRepairQueue
+      open_obligations_policy: allow_declared
+    handoffs:
+    - when: repair_workflow_assigned
+      workflow: target_navigation_loop
+      artifact_type: GovernedRepairQueue
+      adapter: governed_repair_queue_to_legacy_control_input
+    - when: conceptual_reorientation_required
+      workflow: conceptual_hypothesis_exploration_loop
+      artifact_type: GovernedRepairQueue
+      adapter: governed_repair_queue_to_legacy_control_input
+    prohibitions:
+    - No proof acceptance authority
+    - No epistemic upgrade authority
+    - No release authority
+    cost_profile: bounded
+  abducer.environment:
+    python: pyproject.toml
+    lock: uv.lock
+    native_controls: .codex/config.toml
+    native_controls_optional: true
+    control_policy: prism_me/shared/references/codex-control-stack.md
+  abducer.execution_boundary:
+    status: specification_only
+    notes: Source inspection only. Effects above deny native execution until a separately reviewed adapter
+      exists.
+  abducer.step_interfaces:
+    formalize_framework_state: step_formalize_framework_state
+    review_discovery_science: step_review_discovery_science
+    review_concept_logic: step_review_concept_logic
+    review_epistemology: step_review_epistemology
+    review_fields: step_review_fields
+    review_radical_design: step_review_radical_design
+    synthesize_meta_review: step_synthesize_meta_review
+    govern_repairs: step_govern_repairs
+# REUSE-IgnoreEnd

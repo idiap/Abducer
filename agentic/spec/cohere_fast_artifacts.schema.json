@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://abducer.local/spec/cohere-fast-artifacts.schema.json",
+  "oneOf": [
+    {"$ref": "#/$defs/DomainRunRequest"}, {"$ref": "#/$defs/CohereFastStagePacket"},
+    {"$ref": "#/$defs/SubworkflowHandoff"}, {"$ref": "#/$defs/DomainEvidencePacket"},
+    {"$ref": "#/$defs/DomainClosureDecision"}
+  ],
+  "$defs": {
+    "digest": {"pattern": "^sha256:[0-9a-f]{64}$"},
+    "provenance": {"type": "object", "additionalProperties": false, "required": ["archive_sha256", "member_path", "member_sha256"], "properties": {"archive_sha256": {"$ref": "#/$defs/digest"}, "member_path": {"type": "string", "minLength": 1}, "member_sha256": {"$ref": "#/$defs/digest"}}},
+    "binding": {"type": "object", "required": ["workflow_id", "domain_id", "run_id", "schema_version"], "properties": {"workflow_id": {"const": "cohere_fast"}, "domain_id": {"const": "ym"}, "run_id": {"pattern": "^cf-[a-f0-9]{24}$"}, "schema_version": {"const": "1.0"}}},
+    "claims": {"type": "array", "items": {"type": "object", "required": ["claim", "status", "ceiling"], "properties": {"claim": {"type": "string"}, "status": {"enum": ["exploratory", "candidate", "sourced", "independently_supported", "falsified", "retracted", "superseded"]}, "ceiling": {"enum": ["exploratory", "candidate", "independently_supported"]}}}},
+    "DomainRunRequest": {"allOf": [{"$ref": "#/$defs/binding"}, {"type": "object", "required": ["artifact_type", "target", "activation_receipt_digest"], "properties": {"artifact_type": {"const": "DomainRunRequest"}, "target": {"type": "string", "minLength": 1}, "activation_receipt_digest": {"$ref": "#/$defs/digest"}}}]},
+    "CohereFastStagePacket": {"allOf": [{"$ref": "#/$defs/binding"}, {"type": "object", "required": ["artifact_type", "stage_id", "input_digests", "output_digest", "disposition"], "properties": {"artifact_type": {"const": "CohereFastStagePacket"}, "stage_id": {"type": "string"}, "input_digests": {"type": "array", "items": {"$ref": "#/$defs/digest"}}, "output_digest": {"$ref": "#/$defs/digest"}, "disposition": {"enum": ["accepted", "rejected", "quarantined", "blocked"]}}}]},
+    "SubworkflowHandoff": {"allOf": [{"$ref": "#/$defs/binding"}, {"type": "object", "required": ["artifact_type", "parent_run_id", "parent_event_id", "source", "destination", "packet_digest", "claim_ceiling"], "properties": {"artifact_type": {"const": "SubworkflowHandoff"}, "parent_run_id": {"type": "string"}, "parent_event_id": {"type": "string"}, "source": {"type": "string"}, "destination": {"type": "string"}, "packet_digest": {"$ref": "#/$defs/digest"}, "claim_ceiling": {"enum": ["exploratory", "candidate", "independently_supported"]}}}]},
+    "DomainEvidencePacket": {"allOf": [{"$ref": "#/$defs/binding"}, {"type": "object", "required": ["artifact_type", "claims", "provenance", "integrity_status", "proof_status", "publication_status", "open_obligations"], "properties": {"artifact_type": {"const": "DomainEvidencePacket"}, "claims": {"$ref": "#/$defs/claims"}, "provenance": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/provenance"}}, "integrity_status": {"enum": ["unchecked", "digest_verified", "invalid"]}, "proof_status": {"enum": ["not_attempted", "candidate", "independently_checked", "failed"]}, "publication_status": {"enum": ["not_ready", "draft", "review_ready", "released"]}, "open_obligations": {"type": "array", "items": {"type": "string"}}}}]},
+    "DomainClosureDecision": {"allOf": [{"$ref": "#/$defs/binding"}, {"type": "object", "required": ["artifact_type", "audit_digest", "decision", "proof_status", "open_obligations"], "properties": {"artifact_type": {"const": "DomainClosureDecision"}, "audit_digest": {"$ref": "#/$defs/digest"}, "decision": {"enum": ["close", "revise", "quarantine", "reject"]}, "proof_status": {"enum": ["candidate", "independently_checked", "failed"]}, "open_obligations": {"type": "array", "items": {"type": "string"}}}}]}
+  }
+}

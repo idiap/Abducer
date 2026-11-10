@@ -1,0 +1,213 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://abducer.local/schemas/canonical_support_lane.schema.json",
+  "title": "Canonical theory-subordinate support lane artifacts",
+  "oneOf": [
+    { "$ref": "#/$defs/localProductionReceipt" },
+    { "$ref": "#/$defs/parallelProductionReceipt" },
+    { "$ref": "#/$defs/supportReference" }
+  ],
+  "$defs": {
+    "identifier": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]*$"
+    },
+    "digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "worldId": {
+      "enum": [
+        "no_probe",
+        "neutral_inconclusive",
+        "misleading_toy_positive",
+        "registered_premise_falsifier",
+        "operational_failure"
+      ]
+    },
+    "commitReference": {
+      "type": "object",
+      "minProperties": 1
+    },
+    "localProductionReceipt": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "receipt_kind",
+        "producer_id",
+        "invocation_id",
+        "request_digest",
+        "output_digest",
+        "status",
+        "producer_authority",
+        "external_independence_authority",
+        "receipt_id",
+        "receipt_digest"
+      ],
+      "properties": {
+        "schema_version": { "const": "1.0.0" },
+        "receipt_kind": { "const": "canonical_support_local_production" },
+        "producer_id": { "$ref": "#/$defs/identifier" },
+        "invocation_id": { "$ref": "#/$defs/identifier" },
+        "request_digest": { "$ref": "#/$defs/digest" },
+        "output_digest": { "$ref": "#/$defs/digest" },
+        "status": { "const": "succeeded" },
+        "producer_authority": {
+          "const": "local_transcript_only_not_external_or_independent_authority"
+        },
+        "external_independence_authority": { "type": "null" },
+        "receipt_id": { "$ref": "#/$defs/identifier" },
+        "receipt_digest": { "$ref": "#/$defs/digest" }
+      }
+    },
+    "parallelProductionReceipt": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "execution_mode",
+        "submitted_world_ids",
+        "completion_order",
+        "canonical_commit_order",
+        "max_workers",
+        "wave_timeout_seconds",
+        "production_receipt_digests",
+        "producer_failures",
+        "authority_boundary",
+        "parallel_receipt_digest"
+      ],
+      "properties": {
+        "schema_version": { "const": "1.0.0" },
+        "execution_mode": { "const": "parallel_production_serial_commit" },
+        "submitted_world_ids": {
+          "type": "array",
+          "uniqueItems": true,
+          "maxItems": 5,
+          "items": { "$ref": "#/$defs/worldId" }
+        },
+        "completion_order": {
+          "type": "array",
+          "uniqueItems": true,
+          "maxItems": 5,
+          "items": { "$ref": "#/$defs/worldId" }
+        },
+        "canonical_commit_order": {
+          "const": [
+            "no_probe",
+            "neutral_inconclusive",
+            "misleading_toy_positive",
+            "registered_premise_falsifier",
+            "operational_failure"
+          ]
+        },
+        "max_workers": { "type": "integer", "minimum": 0, "maximum": 5 },
+        "wave_timeout_seconds": { "type": "number", "exclusiveMinimum": 0 },
+        "production_receipt_digests": {
+          "type": "array",
+          "maxItems": 5,
+          "items": { "$ref": "#/$defs/digest" }
+        },
+        "producer_failures": { "const": [] },
+        "authority_boundary": { "type": "string", "minLength": 1 },
+        "parallel_receipt_digest": { "$ref": "#/$defs/digest" }
+      }
+    },
+    "productionManifest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "manifest_kind",
+        "canonical_commit_order",
+        "anchor_reference",
+        "observation_references",
+        "aggregation_reference",
+        "certificate_id",
+        "certificate_digest",
+        "production_manifest_digest"
+      ],
+      "properties": {
+        "schema_version": { "const": "1.0.0" },
+        "manifest_kind": { "const": "canonical_support_committed_full_wave" },
+        "canonical_commit_order": {
+          "const": [
+            "no_probe",
+            "neutral_inconclusive",
+            "misleading_toy_positive",
+            "registered_premise_falsifier",
+            "operational_failure"
+          ]
+        },
+        "anchor_reference": { "$ref": "#/$defs/commitReference" },
+        "observation_references": {
+          "type": "array",
+          "minItems": 5,
+          "maxItems": 5,
+          "items": { "$ref": "#/$defs/commitReference" }
+        },
+        "aggregation_reference": { "$ref": "#/$defs/commitReference" },
+        "certificate_id": { "$ref": "#/$defs/identifier" },
+        "certificate_digest": { "$ref": "#/$defs/digest" },
+        "production_manifest_digest": { "$ref": "#/$defs/digest" }
+      }
+    },
+    "supportReference": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "reference_kind",
+        "programme_id",
+        "target_id",
+        "run_id",
+        "theory_generation",
+        "anchor_reference",
+        "observation_references",
+        "aggregation_reference",
+        "certificate_id",
+        "certificate_digest",
+        "pending_next_cycle_reflection",
+        "derived_denials",
+        "production_manifest",
+        "production_manifest_digest",
+        "theory_mutation_authorized",
+        "theory_selection_authorized",
+        "proof_authorized",
+        "physical_target_support_authorized",
+        "authority_boundary",
+        "support_reference_digest"
+      ],
+      "properties": {
+        "schema_version": { "const": "1.0.0" },
+        "reference_kind": { "const": "canonical_theory_subordinate_support" },
+        "programme_id": { "$ref": "#/$defs/identifier" },
+        "target_id": { "$ref": "#/$defs/identifier" },
+        "run_id": { "$ref": "#/$defs/identifier" },
+        "theory_generation": { "type": "integer", "minimum": 1 },
+        "anchor_reference": { "$ref": "#/$defs/commitReference" },
+        "observation_references": {
+          "type": "array",
+          "minItems": 5,
+          "maxItems": 5,
+          "items": { "$ref": "#/$defs/commitReference" }
+        },
+        "aggregation_reference": { "$ref": "#/$defs/commitReference" },
+        "certificate_id": { "$ref": "#/$defs/identifier" },
+        "certificate_digest": { "$ref": "#/$defs/digest" },
+        "pending_next_cycle_reflection": { "type": "object" },
+        "derived_denials": { "type": "object" },
+        "production_manifest": { "$ref": "#/$defs/productionManifest" },
+        "production_manifest_digest": { "$ref": "#/$defs/digest" },
+        "theory_mutation_authorized": { "const": false },
+        "theory_selection_authorized": { "const": false },
+        "proof_authorized": { "const": false },
+        "physical_target_support_authorized": { "const": false },
+        "authority_boundary": { "type": "string", "minLength": 1 },
+        "support_reference_digest": { "$ref": "#/$defs/digest" }
+      }
+    }
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://abducer.local/spec/dynamic_experiment_world_observation_envelope_v2.schema.json",
+  "title": "Separately produced world observation envelope v2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "contract_version", "envelope_id", "world_id", "commission_id", "commission_digest", "observation", "observation_producer_binding", "envelope_digest"],
+  "properties": {
+    "schema_version": {"const": "2.0.0"},
+    "contract_version": {"const": "experiment-world-observation-envelope/2.0.0"},
+    "envelope_id": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/identifier"},
+    "world_id": {"enum": ["no_probe", "neutral_inconclusive", "misleading_toy_positive", "registered_premise_falsifier", "operational_failure"]},
+    "commission_id": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/identifier"},
+    "commission_digest": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/digest"},
+    "observation": {"$ref": "./dynamic_experiment_world_matrix_observation_v2.schema.json"},
+    "observation_producer_binding": {"$ref": "./dynamic_experiment_causal_producer_binding_v2.schema.json"},
+    "envelope_digest": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/digest"}
+  }
+}

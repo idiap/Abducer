@@ -1,0 +1,41 @@
+// SPDX-FileCopyrightText: © 2026 Idiap Research Institute <contact@idiap.ch>
+//
+// SPDX-FileContributor: Andre Freitas <andre.freitas@idiap.ch>
+// Neuro-symbolic AI Group
+//
+// SPDX-FileContributor: Danilo Gusicuma <danilo.gusicuma@idiap.ch>
+// Neuro-symbolic AI Group
+//
+// SPDX-License-Identifier: MIT
+digraph ecosystem {
+ graph [rankdir=TB, bgcolor="transparent", nodesep=.28, ranksep=.38, pad=.1, compound=true];
+ node [shape=box, style="rounded,filled", fillcolor="#eef4f8", color="#35566b", fontname="Helvetica", fontsize=16, margin=".15,.12"];
+ edge [color="#35566b", fontname="Helvetica", fontsize=12, arrowsize=.7];
+ orient [label="Target navigation\nSelect frontier (W1)"];
+ explore [label="Explore and repair\nWork, discovery,\nconcepts (W2–W4)"];
+ release [label="Release scope (W5)"];
+ develop [label="Prepare an obligation\nOnramp / deepening\n(W6–W7)"];
+ proof [label="Prove and challenge (W8)"];
+ contribution [label="Assess contribution (W9)"];
+ writing [label="Elaborate the result (W10)"];
+ review [label="Reconsider the state (W11)"];
+ boundary [label="Separate boundary roles\nTimeline (W12)\nYM overlay (W13)",fillcolor="#f4f4f4"];
+ cohere [label="Cohere family\nParent (W14)\n↓\nScope and ground (W15)\n↓\nAdaptive frontier (W16)\n↓\nDerivation and proof (W17)\n↓\nIndependent audit (W18)\n↓\nManuscript release (W19)",fillcolor="#f4f4f4"];
+ {rank=same; orient; develop; cohere;}
+ {rank=same; explore; proof;}
+ {rank=same; release; contribution;}
+ orient -> explore [label="work-ready"];
+ explore -> orient [label="retarget"];
+ explore -> release [label="candidate"];
+ release -> explore [label="conceptual\nrepair"];
+ develop -> proof [label="route /\nformal ready"];
+ develop -> explore [label="needs concepts"];
+ proof -> explore [label="failure\ncertificate"];
+ proof -> contribution [label="accepted proof"];
+ contribution -> writing [label="paper-ready"];
+ writing -> proof [label="new obligation"];
+ review -> orient [label="assigned repair"];
+ review -> explore [label="reorientation"];
+ writing -> boundary [style=dashed,label="possible reporting / audit\n(scope-dependent)"];
+ cohere -> boundary [style=invis];
+}

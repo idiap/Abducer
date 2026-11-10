@@ -1,0 +1,409 @@
+# SPDX-FileCopyrightText: © 2026 Idiap Research Institute <contact@idiap.ch>
+#
+# SPDX-FileContributor: Andre Freitas <andre.freitas@idiap.ch>
+# Neuro-symbolic AI Group
+#
+# SPDX-FileContributor: Danilo Gusicuma <danilo.gusicuma@idiap.ch>
+# Neuro-symbolic AI Group
+#
+# SPDX-License-Identifier: MIT
+schema: abducer.routea_remaining_open_points_skill_design_todos.v1
+created_at: "2026-07-10"
+scope: >
+  Skill-design plan for Route A open points that remain after the implemented
+  paper-attack pass and the second-wave mathematical open-module skills. These
+  TODOs stay inside the independent `skills/results_ellaboration` workflow and
+  must not hook into the long-horizon discovery-marathon workflows.
+source_artifacts:
+  current_paper_tex: agentic/reports/results_ellaboration/a-finite-schur-feshbach-test-for-reflected-wilson-blocks-an-explicit-four-dimens/finite_wilson_os_routeA_SU2_attack_integrated.tex
+  current_paper_pdf: agentic/reports/results_ellaboration/a-finite-schur-feshbach-test-for-reflected-wilson-blocks-an-explicit-four-dimens/attack_integrated_compile/finite_wilson_os_routeA_SU2_attack_integrated.pdf
+  implemented_second_wave_todos: agentic/todos/routea_open_points_skill_design_todos.yaml
+  finite_margin_certificate: agentic/reports/results_ellaboration/a-finite-schur-feshbach-test-for-reflected-wilson-blocks-an-explicit-four-dimens/routea_finite_margin_certificate.json
+diagnosis:
+  answer: "yes"
+  summary: >
+    More skills should be designed, but they should not duplicate the already
+    implemented collar, same-theory, endpoint, and manuscript-integration
+    skills. The remaining open points are now mostly publication-critical and
+    evidence-critical: certified same-regulator finite estimates, character or
+    quadrature tail control, publication-quality diagrams, novelty/reference
+    positioning, reproducibility packaging, and referee-readiness auditing.
+  core_boundary: >
+    The current paper claim is a finite source-collision Schur-Feshbach Wilson
+    block theorem. New skills may strengthen finite evidence or prepare a
+    future collar theorem, but they must not present endpoint algebra, continuum
+    reconstruction, or mass-gap claims as established unless the required
+    same-regulator estimates and transfer hypotheses are actually proved.
+coverage_audit:
+  already_covered_by_existing_skills:
+    - open-point orchestration and dependency gating
+    - generative collar redesign and deterministic edge-list validation
+    - same-theory factorization search for admissible normalization
+    - finite-margin certificate format once sigma/tau intervals are supplied
+    - endpoint incidence calculation and two-sided endpoint error logic
+    - second-wave manuscript integration with no-claim-change manifests
+    - continuum/mass-gap overclaim blocking
+  still_missing_skill_surfaces:
+    - same-regulator Wilson expectation estimator capable of producing sigma/tau intervals
+    - SU(2) character-expansion and truncation-tail certificate helper
+    - publication-quality Route A figure/caption packager grounded in validator artifacts
+    - reference and novelty positioning auditor for the finite theorem boundary
+    - reproducibility appendix and artifact-manifest packager
+    - referee-readiness auditor for claim clarity, assumptions, limitations, and submission hygiene
+    - candidate-packet materializer that turns generative collar prose into schema-valid JSON plus diagrams
+  intentionally_deferred:
+    - positive continuum-transfer builder
+    - mass-gap proof workflow
+    - endpoint obstruction theorem beyond two-sided finite certificate logic
+    - automatic journal submission preparation
+design_principles:
+  - Keep every new skill under `skills/results_ellaboration/`.
+  - Each skill must declare deterministic and generative regimes separately.
+  - Every numerical or symbolic output must include assumptions, regulator, observable provenance, uncertainty source, and paper insertion target.
+  - Every narrative output must be paper-native prose; no pipeline jargon, TODO labels, scores, or workflow status should leak into manuscript text.
+  - Every possible promotion must have a corresponding demotion/quarantine condition.
+  - Prefer deterministic scripts for algebra, validation, diagrams, manifests, and interval propagation; reserve generative reasoning for mathematical design, interpretation, and prose integration.
+todos:
+  - id: ROUTEA-REMAINING-SKILL-001
+    title: Build a same-regulator Wilson expectation estimator skill
+    priority: critical
+    owner: skills/results_ellaboration
+    proposed_skill: routea-wilson-expectation-estimator
+    why_needed: >
+      The finite margin evaluator currently reports
+      `needs_same_regulator_wilson_estimator`. The paper explicitly asks for a
+      numerical finite lattice `(T,L,kappa,r,s,h)` and certified intervals for
+      sigma and tau. Without an estimator, the strict-margin protocol remains a
+      reproducibility promise rather than a result.
+    target_open_point:
+      - P2 in the manuscript checklist
+      - equations for sigma and tau in the finite evaluation protocol
+      - routea_finite_margin_certificate.json status
+    deterministic_regime:
+      - Parse a finite lattice/observable input packet.
+      - Run one admissible estimator backend: exact tiny-lattice integration, finite character expansion, or reflection-symmetric Monte Carlo with interval output.
+      - Emit sigma_interval, tau_interval, estimator provenance, random seed if stochastic, and uncertainty decomposition.
+      - Reject estimates not computed in the same heat-kernel plaquette regulator and reflected Wilson observable family.
+    generative_regime:
+      - Choose the cheapest scientifically legitimate estimator for the requested finite lattice.
+      - Explain whether the estimate quantifies a strict finite margin, only confirms nonnegative consistency, or is too noisy to use.
+      - Recommend whether the paper should include the numerical result, demote it to supplementary evidence, or keep only the protocol.
+    required_artifacts:
+      - skills/results_ellaboration/routea-wilson-expectation-estimator/SKILL.md
+      - skills/results_ellaboration/routea-wilson-expectation-estimator/agents/openai.yaml
+      - skills/results_ellaboration/results-elaboration-workflow-orchestrator/scripts/estimate_routea_wilson_expectations.py
+      - agentic/spec/routea_wilson_estimator_input.schema.json
+      - agentic/spec/routea_wilson_estimator_output.schema.json
+    acceptance_criteria:
+      - Produces schema-valid intervals for sigma and tau or an explicit no-estimate certificate.
+      - Identifies the exact regulator, observables, normalization, and reflected pairing used.
+      - Refuses to feed finite-margin promotion from proxy models, different regulators, or unpaired observables.
+      - Can be consumed directly by `routea-finite-margin-evaluator`.
+    validation:
+      - Run the estimator on a toy exactly integrable block and confirm interval containment.
+      - Run with an intentionally mismatched regulator and confirm rejection.
+      - Run `evaluate_routea_finite_margins.py` on estimator output and confirm promotion/demotion is coherent.
+    failure_modes:
+      - Treating symbolic sigma/tau placeholders as measured intervals.
+      - Reporting Monte Carlo standard errors without confidence or tail control.
+      - Mixing source-collision observables with future collar observables without provenance.
+    status: open
+
+  - id: ROUTEA-REMAINING-SKILL-002
+    title: Build an SU(2) character-expansion and tail-bound helper
+    priority: high
+    owner: skills/results_ellaboration
+    proposed_skill: routea-character-expansion-tail-certifier
+    why_needed: >
+      The paper names finite character expansion as one legitimate route to
+      sigma/tau and endpoint estimates. That route needs a specialized helper
+      that knows the SU(2) heat-kernel representation sum, truncation logic,
+      convolution constraints, and how to state rigorous tail bounds.
+    target_open_point:
+      - finite evaluation protocol
+      - endpoint cumulant estimator status
+      - uniform remainder and tail-control requirements
+    deterministic_regime:
+      - Compute finite SU(2) character sums up to a declared spin cutoff.
+      - Bound omitted spin tails using heat-kernel decay and stated lattice combinatorics.
+      - Return intervals rather than point estimates when truncation is nonzero.
+      - Cross-check small cases against Haar orthogonality identities.
+    generative_regime:
+      - Decide when character expansion is simpler than quadrature or Monte Carlo.
+      - Interpret whether tail bounds are tight enough for a strict-margin claim.
+      - State why a failed truncation bound is a limitation of the estimate, not evidence against the theorem.
+    required_artifacts:
+      - skills/results_ellaboration/routea-character-expansion-tail-certifier/SKILL.md
+      - skills/results_ellaboration/routea-character-expansion-tail-certifier/agents/openai.yaml
+      - skills/results_ellaboration/results-elaboration-workflow-orchestrator/scripts/certify_su2_character_tail.py
+      - skills/results_ellaboration/routea-character-expansion-tail-certifier/references/su2-heat-kernel-character-expansion.md
+    acceptance_criteria:
+      - Documents the exact SU(2) heat-kernel convention used.
+      - Produces finite-sum values with rigorous truncation intervals or a clear refusal.
+      - States how its output can support sigma/tau estimates or endpoint cumulant bounds.
+    validation:
+      - Verify normalization identities for simple plaquette-free and single-plaquette examples.
+      - Compare increasing cutoffs for monotone interval tightening where applicable.
+      - Confirm invalid heat-kernel parameters are rejected before computation.
+    failure_modes:
+      - Using U(1) or Lie-algebra Gaussian intuition in place of SU(2) character sums.
+      - Presenting asymptotic decay as a certified finite tail bound.
+      - Hiding representation cutoff dependence in prose.
+    status: open
+
+  - id: ROUTEA-REMAINING-SKILL-003
+    title: Build a Route A candidate-packet materializer
+    priority: high
+    owner: skills/results_ellaboration
+    proposed_skill: routea-candidate-packet-materializer
+    why_needed: >
+      The collar-redesign forger can generate candidate geometry, and the
+      path validator can test edge lists, but there is still a handoff gap:
+      generative prose must become a concrete candidate packet with paths,
+      reflection maps, footprints, scaling regimes, diagrams, and validation
+      results.
+    target_open_point:
+      - P3 and P4 in the manuscript checklist
+      - geometric collar obstruction and future-collar coefficient gate
+    deterministic_regime:
+      - Convert candidate path descriptions into schema-valid JSON.
+      - Run edge-list validation and diagram generation.
+      - Store a candidate manifest with validation status, rejection reasons, and paper insertion options.
+    generative_regime:
+      - Resolve ambiguous candidate prose into explicit lattice-path choices while preserving the stated physics intent.
+      - Explain whether a candidate is a collar theorem candidate, an obstruction example, or only a diagrammatic intuition.
+      - Suggest the minimal revision needed when validation fails.
+    required_artifacts:
+      - skills/results_ellaboration/routea-candidate-packet-materializer/SKILL.md
+      - skills/results_ellaboration/routea-candidate-packet-materializer/agents/openai.yaml
+      - skills/results_ellaboration/results-elaboration-workflow-orchestrator/scripts/materialize_routea_candidate_packet.py
+      - agentic/spec/routea_candidate_packet.schema.json
+    acceptance_criteria:
+      - Every accepted packet can be re-run through `validate_routea_edge_paths.py`.
+      - Every generated diagram corresponds to the exact validated edge list.
+      - Failed candidates preserve useful obstruction information rather than disappearing.
+    validation:
+      - Materialize one known-failing three-hairpin candidate and confirm the temporal-channel obstruction is recovered.
+      - Materialize one toy reflection-symmetric candidate and confirm path/diagram reproducibility.
+    failure_modes:
+      - Letting natural-language path descriptions bypass deterministic validation.
+      - Producing attractive diagrams that do not correspond to the candidate data.
+      - Treating a candidate packet as a proven collar theorem.
+    status: open
+
+  - id: ROUTEA-REMAINING-SKILL-004
+    title: Build a publication-figure and caption packager
+    priority: medium
+    owner: skills/results_ellaboration
+    proposed_skill: routea-publication-figure-packager
+    why_needed: >
+      The manuscript needs path diagrams and possibly Schur-Feshbach block
+      schematics that communicate the mathematical mechanism. These figures
+      should be generated from validated artifacts, not drawn independently, and
+      their captions must state exactly what is proved, checked, or only
+      schematic.
+    target_open_point:
+      - P4 in the manuscript checklist
+      - existing figure environment and Route A geometry sections
+    deterministic_regime:
+      - Render SVG/PDF diagrams from candidate packets or certificate JSON.
+      - Check that labels used in captions match labels in the TeX.
+      - Produce figure manifests with source artifact hashes and compilation paths.
+    generative_regime:
+      - Write physics/mathematics captions that distinguish source collision, geometric collar candidate, finite block algebra, and open transfer modules.
+      - Decide whether a figure belongs in the main text, appendix, or supplementary material.
+    required_artifacts:
+      - skills/results_ellaboration/routea-publication-figure-packager/SKILL.md
+      - skills/results_ellaboration/routea-publication-figure-packager/agents/openai.yaml
+      - skills/results_ellaboration/results-elaboration-workflow-orchestrator/scripts/package_routea_publication_figures.py
+    acceptance_criteria:
+      - Emits publication-ready figure files plus TeX include snippets.
+      - Captions contain no unsupported continuum or mass-gap implications.
+      - Figure source manifests allow another reader to regenerate the figure.
+    validation:
+      - Compile the paper with the packaged figures.
+      - Compare rendered labels against candidate/certificate data.
+      - Run a caption audit for words such as "proves", "establishes", and "implies".
+    failure_modes:
+      - Decorative figures detached from the validated geometry.
+      - Captions that hide whether the object is source-collision or collar-collision.
+      - Figure generation that depends on local absolute paths.
+    status: open
+
+  - id: ROUTEA-REMAINING-SKILL-005
+    title: Build a reference and novelty positioning auditor
+    priority: high
+    owner: skills/results_ellaboration
+    proposed_skill: routea-reference-novelty-positioner
+    why_needed: >
+      The paper already states that the Schur-complement curvature is not new
+      matrix analysis. The scientific contribution depends on accurately
+      positioning the finite same-theory Wilson realization against reflection
+      positivity, OS reconstruction, lattice gauge theory, semidefinite cone
+      geometry, and Feshbach/Schur complement literature.
+    target_open_point:
+      - scope, novelty, and claim-boundary section
+      - bibliography and introduction
+      - referee-readiness of contribution claim
+    deterministic_regime:
+      - Extract citations used in the TeX and check that every key claim boundary has a citation or explicit theorem proof.
+      - Detect uncited uses of reflection positivity, OS reconstruction, lattice heat-kernel actions, Schur complements, and PSD tangent cones.
+      - Produce a bibliography gap report without modifying claims.
+    generative_regime:
+      - Rewrite novelty statements so the contribution is neither inflated nor undersold.
+      - Explain which part is standard machinery and which part is the paper's finite Wilson-block realization.
+      - Suggest missing reference classes without fabricating specific citations.
+    required_artifacts:
+      - skills/results_ellaboration/routea-reference-novelty-positioner/SKILL.md
+      - skills/results_ellaboration/routea-reference-novelty-positioner/agents/openai.yaml
+      - skills/results_ellaboration/results-elaboration-workflow-orchestrator/scripts/audit_routea_references.py
+    acceptance_criteria:
+      - Produces a claim-to-reference matrix for the introduction, novelty section, and open modules.
+      - Flags unsupported novelty language and unsupported literature generalizations.
+      - Generates paper-native replacement prose when a claim boundary is too vague.
+    validation:
+      - Run against the current TeX and verify it identifies the existing semidefinite-cone caveat.
+      - Run with a deliberately uncited OS-reconstruction paragraph and confirm it is flagged.
+    failure_modes:
+      - Fabricating bibliography entries.
+      - Treating citation presence as proof adequacy.
+      - Weakening the contribution into a purely pedagogical note when a finite theorem is actually present.
+    status: open
+
+  - id: ROUTEA-REMAINING-SKILL-006
+    title: Build a reproducibility appendix and artifact-manifest packager
+    priority: medium
+    owner: skills/results_ellaboration
+    proposed_skill: routea-reproducibility-packager
+    why_needed: >
+      The manuscript checklist asks for a data/code statement, and the paper
+      now relies on verification scripts, certificates, diagrams, and possibly
+      estimator outputs. A reader should be able to reproduce the finite block
+      algebra and any finite numerical margin without reading pipeline logs or
+      local workspace assumptions.
+    target_open_point:
+      - P1 in the manuscript checklist
+      - finite evaluation and reproducibility protocol
+      - supplementary script and certificate references
+    deterministic_regime:
+      - Build an artifact manifest listing scripts, inputs, outputs, commands, hashes, and expected files.
+      - Generate a paper-safe data/code statement that excludes private config and API keys.
+      - Check that referenced scripts exist and run without absolute paths where possible.
+    generative_regime:
+      - Decide which artifacts belong in the main appendix, supplement, or repository README.
+      - Write concise reproducibility prose for a physics/mathematics reader.
+      - Explain limitations of computational evidence without pipeline jargon.
+    required_artifacts:
+      - skills/results_ellaboration/routea-reproducibility-packager/SKILL.md
+      - skills/results_ellaboration/routea-reproducibility-packager/agents/openai.yaml
+      - skills/results_ellaboration/results-elaboration-workflow-orchestrator/scripts/package_routea_reproducibility.py
+    acceptance_criteria:
+      - Emits a manifest JSON and a TeX-ready reproducibility appendix snippet.
+      - Excludes `config/api_keys.json`, local absolute paths, and operational logs.
+      - Includes exact commands for algebra verification, certificate generation, figure generation, and TeX compilation.
+    validation:
+      - Run the packager in a clean checkout-like mode and confirm no private files are referenced.
+      - Run `rg -n "api_keys|/Users/|azure|marathon|pipeline"` on the generated TeX snippet and confirm no leaks.
+    failure_modes:
+      - Exposing private paths, keys, or workflow internals.
+      - Listing artifacts without commands that reproduce them.
+      - Turning reproducibility prose into process narrative rather than paper support.
+    status: open
+
+  - id: ROUTEA-REMAINING-SKILL-007
+    title: Build a referee-readiness and submission-hygiene auditor
+    priority: high
+    owner: skills/results_ellaboration
+    proposed_skill: routea-referee-readiness-auditor
+    why_needed: >
+      The paper is close enough to need a reader/referee-facing audit distinct
+      from discovery and result generation. This skill should ask whether the
+      finite theorem is stated at the right strength, whether assumptions are
+      visible, whether limitations are quarantined cleanly, and whether the
+      manuscript has the minimal submission metadata and narrative coherence.
+    target_open_point:
+      - P1-P6 in the manuscript checklist
+      - abstract, introduction, conclusion, and open modules
+    deterministic_regime:
+      - Check for author metadata placeholders, acknowledgements, data/code statement, unresolved markers, broken refs, and compile status.
+      - Extract theorem/remark/corollary claims and classify them as proved, conditional, open, or deferred.
+      - Verify that every "mass gap", "continuum", and "endpoint obstruction" phrase is in a bounded claim context.
+    generative_regime:
+      - Produce a severity-ranked referee-readiness report.
+      - Recommend whether the manuscript is ready as a finite-theorem paper, needs numerical margin evidence, or should wait for a collar theorem.
+      - Draft paper-native edits for claim-boundary and limitation paragraphs.
+    required_artifacts:
+      - skills/results_ellaboration/routea-referee-readiness-auditor/SKILL.md
+      - skills/results_ellaboration/routea-referee-readiness-auditor/agents/openai.yaml
+      - skills/results_ellaboration/results-elaboration-workflow-orchestrator/scripts/audit_routea_referee_readiness.py
+    acceptance_criteria:
+      - Separates blocking submission issues from optional strengthening issues.
+      - Does not demand solving continuum Yang-Mills before a finite-theorem paper can be submitted.
+      - Gives exact TeX locations for high-severity issues.
+    validation:
+      - Run on the current paper and confirm it flags missing metadata/data-code statement and finite sigma/tau evidence.
+      - Run after a no-op second-wave manuscript integration and confirm it does not invent new mathematical obligations.
+    failure_modes:
+      - Collapsing all future open modules into submission blockers.
+      - Treating paper polish as proof progress.
+      - Recommending overclaiming to make the paper sound stronger.
+    status: open
+
+  - id: ROUTEA-REMAINING-SKILL-008
+    title: Build a paper-native result-integration guard for non-discovery tasks
+    priority: medium
+    owner: skills/results_ellaboration
+    proposed_skill: routea-paper-native-integration-guard
+    why_needed: >
+      Several remaining skills produce auxiliary material: estimates, diagrams,
+      reference audits, and reproducibility manifests. Their outputs should be
+      integrated as theorem support, appendix material, figure captions, or
+      limitations, not as workflow discourse.
+    target_open_point:
+      - all future Route A result-elaboration outputs
+      - user requirement that results integrate back into the paper narrative
+    deterministic_regime:
+      - Scan proposed TeX insertions for pipeline terms, TODO IDs, local paths, score language, and unsupported claim verbs.
+      - Check that each insertion has a target section, label policy, and citation/assumption status.
+    generative_regime:
+      - Rewrite raw skill outputs into paper-native prose.
+      - Choose whether to integrate an output into the main result, appendix, discussion, or not at all.
+      - Preserve the finite theorem boundary while making the narrative coherent.
+    required_artifacts:
+      - skills/results_ellaboration/routea-paper-native-integration-guard/SKILL.md
+      - skills/results_ellaboration/routea-paper-native-integration-guard/agents/openai.yaml
+      - skills/results_ellaboration/results-elaboration-workflow-orchestrator/scripts/audit_paper_native_insertions.py
+    acceptance_criteria:
+      - Rejects manuscript insertions containing workflow jargon.
+      - Requires each insertion to identify whether it proves, illustrates, estimates, or defers.
+      - Produces clean replacement prose for accepted scientific content.
+    validation:
+      - Feed it a manifest-style paragraph and confirm it rewrites or rejects it.
+      - Feed it a theorem-support paragraph and confirm assumptions and boundaries are preserved.
+    failure_modes:
+      - Over-sanitizing until mathematical provenance is lost.
+      - Allowing "the pipeline found" or "the skill reports" language into the paper.
+      - Removing limitation language needed for honest claim boundaries.
+    status: open
+implementation_order:
+  - ROUTEA-REMAINING-SKILL-008
+  - ROUTEA-REMAINING-SKILL-007
+  - ROUTEA-REMAINING-SKILL-006
+  - ROUTEA-REMAINING-SKILL-003
+  - ROUTEA-REMAINING-SKILL-004
+  - ROUTEA-REMAINING-SKILL-002
+  - ROUTEA-REMAINING-SKILL-001
+  - ROUTEA-REMAINING-SKILL-005
+why_this_order: >
+  First install the narrative guard and referee audit so future outputs do not
+  leak workflow discourse or inflate claims. Then package reproducibility and
+  candidate materialization/figures, because those are deterministic handoffs.
+  Finally add the heavier estimator and character-tail skills, then use the
+  novelty auditor to recalibrate the introduction and bibliography around the
+  strengthened evidence surface.
+non_goals:
+  - Do not implement a new discovery loop.
+  - Do not claim a geometric collar theorem from a validated candidate packet alone.
+  - Do not claim continuum reconstruction or a mass gap from finite reflection positivity.
+  - Do not require Lean/theorem-prover integration in this pass.
+  - Do not include API keys, local paths, marathon logs, or operational traces in paper artifacts.

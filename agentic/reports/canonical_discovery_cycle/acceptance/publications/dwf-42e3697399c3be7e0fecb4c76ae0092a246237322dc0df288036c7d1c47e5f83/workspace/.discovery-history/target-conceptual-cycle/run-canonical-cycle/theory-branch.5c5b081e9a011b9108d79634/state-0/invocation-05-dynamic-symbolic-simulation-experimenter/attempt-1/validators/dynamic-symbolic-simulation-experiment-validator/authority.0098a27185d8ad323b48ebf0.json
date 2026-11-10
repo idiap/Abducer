@@ -1,0 +1,135 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://abducer.local/schemas/literature_assimilation_packet.schema.json",
+  "title": "Literature assimilation packet",
+  "description": "Claim-level causal mapping from one frozen target-scoped search snapshot into theory, hypotheses, genealogy, and scheduling.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "packet_id", "target_id", "theory_state_digest", "prior_snapshot_id", "selected_snapshot", "resolution", "source_delta", "theory_mappings", "hypothesis_rebase_status", "hypothesis_rebase", "opportunity_frontier", "ledger_events", "stale_branch_ids", "explicit_unknowns", "next_theory_actions", "content_digest"],
+  "allOf": [
+    {
+      "if": {"properties": {"schema_version": {"const": "2.0"}}},
+      "then": {"required": ["mapping_provenance"]}
+    },
+    {
+      "if": {"properties": {"schema_version": {"const": "1.0"}}},
+      "then": {"properties": {"mapping_provenance": false}}
+    }
+  ],
+  "$defs": {
+    "id": {"type": "string", "minLength": 1, "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$"},
+    "digest": {"type": "string", "pattern": "^(sha256:)?[a-f0-9]{64}$"},
+    "text": {"type": "string", "minLength": 1}
+  },
+  "properties": {
+    "schema_version": {"enum": ["1.0", "2.0"]},
+    "packet_id": {"$ref": "#/$defs/id"},
+    "target_id": {"$ref": "#/$defs/id"},
+    "theory_state_digest": {"$ref": "#/$defs/digest"},
+    "prior_snapshot_id": {"type": ["string", "null"]},
+    "selected_snapshot": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["snapshot_id", "content_digest", "search_completed_at", "coverage_cutoff", "provenance_mode", "coverage_limits", "validator_receipt_ids"],
+      "properties": {
+        "snapshot_id": {"$ref": "#/$defs/id"},
+        "content_digest": {"$ref": "#/$defs/digest"},
+        "search_completed_at": {"type": "string", "format": "date-time"},
+        "coverage_cutoff": {"$ref": "#/$defs/text"},
+        "provenance_mode": {"enum": ["live", "local_only"]},
+        "coverage_limits": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/text"}},
+        "validator_receipt_ids": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/id"}}
+      }
+    },
+    "resolution": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["freshness_status", "candidate_snapshot_ids", "selection_reason", "target_match", "active_investment_gate"],
+      "properties": {
+        "freshness_status": {"enum": ["current", "stale", "local_only", "refresh_required"]},
+        "candidate_snapshot_ids": {"type": "array", "items": {"$ref": "#/$defs/id"}},
+        "selection_reason": {"$ref": "#/$defs/text"},
+        "target_match": {"enum": ["pass", "fail"]},
+        "active_investment_gate": {"enum": ["pass", "blocked_local_only", "blocked_stale", "blocked_invalid"]}
+      }
+    },
+    "source_delta": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["added", "removed_or_retracted", "corrected_or_superseded", "newly_relevant_old_sources", "unchanged_decisive_sources"],
+      "properties": {
+        "added": {"type": "array", "items": {"$ref": "#/$defs/id"}},
+        "removed_or_retracted": {"type": "array", "items": {"$ref": "#/$defs/id"}},
+        "corrected_or_superseded": {"type": "array", "items": {"$ref": "#/$defs/id"}},
+        "newly_relevant_old_sources": {"type": "array", "items": {"$ref": "#/$defs/id"}},
+        "unchanged_decisive_sources": {"type": "array", "items": {"$ref": "#/$defs/id"}}
+      }
+    },
+    "mapping_provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["mode", "derivation_id", "derivation_digest", "authority_id"],
+      "properties": {
+        "mode": {"enum": ["operator_supplied_interpretive_mapping", "deterministic_claim_derivation"]},
+        "derivation_id": {"type": ["string", "null"]},
+        "derivation_digest": {"oneOf": [{"$ref": "#/$defs/digest"}, {"type": "null"}]},
+        "authority_id": {"$ref": "#/$defs/id"}
+      }
+    },
+    "theory_mappings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["mapping_id", "source_id", "theory_object_ids", "object_kinds", "relation", "exact_claim", "source_limitation", "conceptual_change", "event_type", "coverage_limits", "confidence"],
+        "properties": {
+          "mapping_id": {"$ref": "#/$defs/id"},
+          "source_id": {"$ref": "#/$defs/id"},
+          "theory_object_ids": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"$ref": "#/$defs/id"}},
+          "object_kinds": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"enum": ["concept", "assumption", "mechanism", "barrier", "comparator", "hypothesis", "genealogy", "proof_obligation", "schedule"]}},
+          "relation": {"enum": ["supports", "contradicts", "absorbs", "sharpens", "reframes", "transfers", "leaves_open"]},
+          "exact_claim": {"$ref": "#/$defs/text"},
+          "source_limitation": {"$ref": "#/$defs/text"},
+          "conceptual_change": {"$ref": "#/$defs/text"},
+          "event_type": {"enum": ["spawn", "merge", "split", "reframe", "demote", "retire", "reprioritize", "new_question", "justified_no_change"]},
+          "coverage_limits": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/text"}},
+          "confidence": {"enum": ["low", "medium", "high"]}
+        }
+      }
+    },
+    "hypothesis_rebase_status": {"enum": ["current", "provisional_local_only", "not_performed"]},
+    "hypothesis_rebase": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["hypothesis_id", "pre_search_genealogy", "literature_relation", "source_ids", "required_revision", "routing_effect", "rebased_snapshot_digest"],
+        "properties": {
+          "hypothesis_id": {"$ref": "#/$defs/id"},
+          "pre_search_genealogy": {"type": "array", "items": {"$ref": "#/$defs/id"}},
+          "literature_relation": {"enum": ["apparently_open", "partly_anticipated", "known_special_case", "absorbed", "contradicted", "independent", "cross_field_bridge", "coverage_unknown"]},
+          "source_ids": {"type": "array", "items": {"$ref": "#/$defs/id"}},
+          "required_revision": {"$ref": "#/$defs/text"},
+          "routing_effect": {"enum": ["continue", "sharpen", "hybridize", "targeted_reading", "demote", "retire", "incubate"]},
+          "rebased_snapshot_digest": {"$ref": "#/$defs/digest"}
+        }
+      }
+    },
+    "opportunity_frontier": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["neglected_conceptual_corners", "cross_field_connections", "unresolved_source_tensions", "newly_available_mechanisms"],
+      "properties": {
+        "neglected_conceptual_corners": {"type": "array", "items": {"$ref": "#/$defs/text"}},
+        "cross_field_connections": {"type": "array", "items": {"$ref": "#/$defs/text"}},
+        "unresolved_source_tensions": {"type": "array", "items": {"$ref": "#/$defs/text"}},
+        "newly_available_mechanisms": {"type": "array", "items": {"$ref": "#/$defs/text"}}
+      }
+    },
+    "ledger_events": {"type": "array", "items": {"type": "object", "required": ["event_id", "event_type", "source_mapping_ids", "affected_object_ids", "payload"]}},
+    "stale_branch_ids": {"type": "array", "items": {"$ref": "#/$defs/id"}},
+    "explicit_unknowns": {"type": "array", "items": {"$ref": "#/$defs/text"}},
+    "next_theory_actions": {"type": "array", "items": {"type": "object", "required": ["action_id", "action", "source_mapping_ids", "target_object_ids"]}},
+    "content_digest": {"$ref": "#/$defs/digest"}
+  }
+}

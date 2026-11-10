@@ -1,0 +1,376 @@
+\documentclass[11pt]{article}
+\usepackage[letterpaper,margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{booktabs,array,longtable}
+\usepackage{xcolor}
+\usepackage{microtype}
+\usepackage[hidelinks]{hyperref}
+\hypersetup{
+  pdftitle={A frustrated-conditioning obstruction for local Yang--Mills defect domination},
+  pdfsubject={Center staples, conditional heat-kernel measures, and dependent polymer strategy}
+}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+
+\newcommand{\SU}{\mathrm{SU}(2)}
+\newcommand{\Ztwo}{\mathbb Z_2}
+\newcommand{\norm}[1]{\left\lVert #1\right\rVert}
+\newcommand{\dd}{\,\mathrm{d}}
+\newcommand{\proved}{\textcolor{green!45!black}{\textsf{proved}}}
+\newcommand{\restricted}{\textcolor{blue!65!black}{\textsf{restricted}}}
+\newcommand{\openstatus}{\textcolor{red!70!black}{\textsf{open}}}
+
+\title{A Frustrated-Conditioning Obstruction for Local Yang--Mills Defect Domination\\
+\large Why dependent ultraviolet control must charge the boundary to a contour}
+\author{Mathematical research dossier}
+\date{20 July 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+An ultraviolet one-plaquette heat-kernel tail can be small while a
+worst-case conditional tail in the interacting link measure is large.  We
+prove this separation exactly on the side-two four-dimensional $\SU$ block.
+An interior link belongs to six plaquettes.  The center-staple map from the
+remaining links onto those six plaquettes has $\Ztwo$-rank six, so an
+admissible center-valued conditioning can give five identity staples and one
+negative-identity staple.  The selected link then has conditional density
+\[
+ \gamma_t(\dd U)\propto p_t(U)^5p_t(-U)\dd U.
+\]
+Its weak-coupling class-angle rate function is
+\[
+ I_6(\theta)=5\theta^2+(\pi-\theta)^2.
+\]
+The unique minimizer is $\theta_*=\pi/6$, leaving the designated frustrated
+plaquette at angle $5\pi/6$.  If its good-curvature radius is
+$0<\rho<5\pi/6$, then
+\[
+ \lim_{t\downarrow0}2t\log
+ \gamma_t\{\theta_{\mathrm{target}}<\rho\}
+ =-6\left(\frac{5\pi}{6}-\rho\right)^2.
+\]
+Thus the conditional bad probability tends to one.  In particular, no
+rare-defect estimate uniform over arbitrary microscopic boundary
+conditionings can initialize the Stage 09 independent-polymer benchmark.
+
+This obstruction eliminates a proof mechanism, not the constructive
+programme.  A viable dependent estimate must retain the cost of the
+frustrating boundary: condition on a good collar, integrate a multi-link
+block, or charge the entire connected frustration to a labeled contour that
+also records center and topological data.
+\end{abstract}
+
+\tableofcontents
+
+\section{The dependence question}
+
+Let $B$ be the cubical complex with vertices $\{0,1,2\}^4$.  It has 216 links
+and 216 plaquettes.  With heat generator $\tfrac12\Delta_{\SU}$, the regulated
+pure plaquette weight is
+\[
+ \prod_{p\in B_2}p_t(U_p)\prod_{e\in B_1}\dd U_e.
+\]
+Stage 09 proved that at $t=3\cdot10^{-6}$ a local nonlinear action chart and a
+standalone one-plaquette tail can satisfy the desired inequalities at the same
+scale.  The missing step was dependence: could the standalone tail be
+replaced by a bound valid under the link interactions?
+
+A tempting sufficient condition would be
+\begin{equation}\label{eq:uniform}
+ \sup_{\omega}
+ \Pr_t\{U_p\text{ leaves the radius-}\rho\text{ chart}\mid\omega\}
+ \le\varepsilon(t),\qquad \varepsilon(t)\longrightarrow0,
+\end{equation}
+where $\omega$ ranges over all surrounding microscopic link conditionings.
+Such a bound could feed a Dobrushin or stochastic-domination argument without
+tracking the probability of $\omega$.  The central result shows that
+\eqref{eq:uniform} has the wrong quantifier.
+
+\begin{theorem}[Frustrated-conditioning obstruction]\label{thm:main}
+On the open side-two four-dimensional $\SU$ block, there is an interior link
+$e$ and a center-valued assignment of every other link such that five
+plaquette staples incident to $e$ equal $I$ and one equals $-I$.  Conditioned
+on those other links, $U_e$ has density
+\begin{equation}\label{eq:density}
+ \gamma_t(\dd U)=Z_t^{-1}p_t(U)^5p_t(-U)\dd U.
+\end{equation}
+If the plaquette with staple $-I$ is declared good when its class angle is
+less than $\rho$, then for every $0<\rho<5\pi/6$,
+\begin{equation}\label{eq:limit}
+ \lim_{t\downarrow0}2t\log
+ \gamma_t\{\theta_{\mathrm{target}}<\rho\}
+ =-6\left(\frac{5\pi}{6}-\rho\right)^2<0.
+\end{equation}
+Consequently
+\[
+ \lim_{t\downarrow0}
+ \sup_{\omega}\Pr_t\{U_p\text{ is bad}\mid\omega\}=1.
+\]
+\end{theorem}
+
+At the Stage 09 curvature radius $\rho=0.0082$, the rate gap in
+\eqref{eq:limit} is $40.8661445$.  The obstruction is therefore separated by
+a large action-scale margin, not a borderline numerical constant.
+
+\section{Exact center-staple realization}\label{sec:center}
+
+Choose a link of maximum plaquette degree.  The exact incidence matrix of the
+block has six nonzero entries in its column.  Hold the selected link variable
+and assign every other link a center sign $(-I)^{x_e}$,
+$x_e\in\Ztwo$.  Orientation disappears because $(-I)^{-1}=-I$.  The six
+staple signs are therefore a linear map
+\[
+ C:\Ztwo^{215}\longrightarrow\Ztwo^6
+\]
+obtained by deleting the selected incidence column and reducing the remaining
+six rows modulo two.
+
+\begin{proposition}[Staple surjectivity]\label{prop:rank}
+The map $C$ has rank six.  In particular, every prescribed pattern of center
+staples on the six incident plaquettes is realized by an assignment of the
+remaining links.
+\end{proposition}
+
+\begin{proof}
+For each incident plaquette, take the link opposite and parallel to the
+selected link.  These six opposite links are distinct.  The opposite link for
+a given plaquette belongs to that incident plaquette and to none of the other
+five incident plaquettes.  The six corresponding columns of $C$ therefore
+form the $6\times6$ identity matrix after row ordering.  Hence
+$\operatorname{rank}_{\Ztwo}C=6$.
+\end{proof}
+
+The executable certificate independently constructs the full $6\times215$
+matrix, performs Gaussian elimination over $\Ztwo$, and solves for a vector
+with exactly one requested negative staple.  It selects link
+\[
+ e=((0,1,1,1),0),
+\]
+whose six incident plaquettes have global indices
+$21,44,54,58,59,60$.  A solution uses one negative-center link and verifies
+the requested staple vector exactly.
+
+\begin{remark}[Positive-measure stability]
+The exact center assignment is a legitimate value of the regular conditional
+density.  Moreover, the six staples and the conditional density depend
+continuously on the surrounding links.  The displaced conditional minimum and
+the bad-probability conclusion persist for a neighborhood of the center
+assignment.  The obstruction is therefore not an artifact of selecting a
+single measure-zero boundary value.
+\end{remark}
+
+\section{The exact one-link conditional law}\label{sec:law}
+
+All plaquette factors not incident to $e$ are constant under conditioning.
+For an incident identity staple, conjugation invariance and inversion symmetry
+give the factor $p_t(U_e)$.  For the one negative-center staple the factor is
+$p_t(-U_e)$.  This proves \eqref{eq:density}.
+
+Write $\theta\in[0,\pi]$ for the class angle of $U_e$.  The class angle of
+$-U_e$ is $\pi-\theta$.  Radial Haar integration therefore gives
+\begin{equation}\label{eq:radial}
+ \gamma_t(\dd\theta)\propto
+ \sin^2\theta\,p_t(\theta)^5p_t(\pi-\theta)\dd\theta.
+\end{equation}
+The target plaquette is good precisely when
+\[
+ \pi-\theta<\rho,
+ \qquad\text{or equivalently}\qquad
+ \theta>\pi-\rho.
+\]
+
+This conditional law exposes why a one-plaquette marginal is insufficient.
+The five aligned plaquettes collectively compete with the designated one.
+Weak coupling does not force every factor independently to its own identity;
+it minimizes their total action.
+
+\section{Small-time rate theorem}\label{sec:rate}
+
+The $\SU$ heat kernel in the declared normalization has the class-angle
+small-time rate
+\begin{equation}\label{eq:hk-rate}
+ \lim_{t\downarrow0}-2t\log p_t(\theta)=\theta^2,
+ \qquad 0\le\theta\le\pi.
+\end{equation}
+The exact Poisson-image representation proves this directly: the shortest
+geodesic image supplies the exponential rate, while all prefactors and the
+cut-locus multiplicity contribute only subexponential powers of $t$.
+
+\begin{proposition}[Conditional large-deviation rate]\label{prop:rate}
+The probability measures \eqref{eq:radial} obey the class-angle rate function
+\begin{equation}\label{eq:I}
+ I_6(\theta)=5\theta^2+(\pi-\theta)^2,
+\end{equation}
+up to subtraction of its minimum.  The unique minimizer is
+\[
+ \theta_*=\frac\pi6,
+ \qquad
+ I_6(\theta_*)=\frac{5\pi^2}{6}.
+\]
+The target plaquette angle at the minimizer is $5\pi/6$.
+\end{proposition}
+
+\begin{proof}
+Apply \eqref{eq:hk-rate} to the six heat-kernel factors in
+\eqref{eq:radial}.  The Haar factor $\sin^2\theta$ is subexponential and does
+not alter the rate.  Completing the square gives
+\[
+ I_6(\theta)
+ =6\left(\theta-\frac\pi6\right)^2+\frac{5\pi^2}{6},
+\]
+which proves every assertion.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:main}]
+Proposition~\ref{prop:rank} gives the boundary assignment and
+Section~\ref{sec:law} gives the conditional law.  If $\rho<5\pi/6$, the good
+region $[\pi-\rho,\pi]$ lies strictly to the right of $\theta_*$.  Its rate
+infimum is attained at $\pi-\rho$.  The Laplace principle and
+Proposition~\ref{prop:rate} give
+\begin{align*}
+ &I_6(\pi-\rho)-I_6(\theta_*)\\
+ &\qquad=6\left(\pi-\rho-\frac\pi6\right)^2
+ =6\left(\frac{5\pi}{6}-\rho\right)^2.
+\end{align*}
+This proves \eqref{eq:limit}.  The good probability tends to zero, so the bad
+probability tends to one.  Taking the supremum over boundary conditionings
+can only increase it.
+\end{proof}
+
+\section{Executable calibration}
+
+The implementation has two logically distinct parts.  Exact finite algebra
+constructs the incidence restriction, computes its $\Ztwo$ rank, solves the
+staple equation, and evaluates the closed rate formulas.  Numerical
+calibration uses a signed-log Poisson-image sum and logarithmic
+Gauss--Legendre quadrature.  It never exponentiates the ultraviolet
+probability and therefore remains stable when its logarithm is of order
+millions.
+
+\begin{table}[ht]
+\centering
+\caption{Convergence of the conditional good-event logarithmic rate for
+$\rho=0.0082$.}\label{tab:rates}
+\begin{tabular}{@{}rrrr@{}}
+\toprule
+$t$ & mode $\theta$ & $-2t\log P(\mathrm{good})$ & relative error \\
+\midrule
+$0.05$ & $0.541692$ & $39.578307$ & $3.151\cdot10^{-2}$ \\
+$0.02$ & $0.530832$ & $40.274290$ & $1.448\cdot10^{-2}$ \\
+$0.01$ & $0.527454$ & $40.570358$ & $7.238\cdot10^{-3}$ \\
+$3\cdot10^{-6}$ & $0.523599$ & $40.866026$ & $2.908\cdot10^{-6}$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The exact limiting value is $40.866145$.  At the Stage 09 heat time the
+computed log good probability is approximately $-6.811004\cdot10^6$.
+Floating-point representation consequently rounds the bad probability to
+one, while the log-domain certificate preserves the quantitative separation.
+The numerical values calibrate the analytic theorem; they are not used to
+prove it.
+
+\section{What proof route has been eliminated?}
+
+The theorem rules out any dependent-defect argument whose decisive input is a
+uniform estimate over arbitrary microscopic exterior links, such as
+\[
+ \sup_{\omega}\Pr(B_p\mid\omega)\le p(t),
+ \qquad p(t)\longrightarrow0,
+\]
+for $B_p=\{\theta_p\ge\rho\}$ with fixed
+$\rho<5\pi/6$.  It also rules out inserting the Stage 09 standalone tail into
+such an estimate: the standalone law and the frustrated conditional law have
+different rate minimizers.
+
+The result does \emph{not} show that bad blocks are frequent under the full
+unconditioned measure.  The frustrating boundary may itself have a large
+action cost.  Taking a supremum makes that cost disappear, which is precisely
+why the method fails.  Nor does the result rule out a conditional theorem
+restricted to a good boundary collar.
+
+\section{Replacement: charged and typed contours}\label{sec:replacement}
+
+A viable activity expansion must include the cause of the frustration in the
+same connected object whose weight is being estimated.  The minimal typed
+defect alphabet should distinguish
+\[
+ \begin{split}
+ \mathsf{Defect}={}&\mathsf{CurvatureExit}(\rho)
+ \mid\mathsf{OrbitAtlasFailure}(c)
+ \mid\mathsf{CenterFlux}(z)\\
+ &\mid\mathsf{BoundaryHolonomy}(h)
+ \mid\mathsf{TopologicalCharge}(q)
+ \mid\mathsf{InteractionNormFailure}(n).
+ \end{split}
+\]
+The labels cannot be collapsed to a single bad-block bit before their action
+and blocking rules have been charged.
+
+The next theorem should combine two estimates with identical parameter
+registries.  First, for a gauge-invariant good-collar event $G(A)$ surrounding
+a block $B$, prove
+\begin{equation}\label{eq:collar}
+ \sup_{\omega\text{ compatible with }G(A)}
+ \Pr\{B\text{ exits the chart}\mid\omega\}
+ \le p_{\mathrm{good}}(t,\rho,A).
+\end{equation}
+Second, control failure of the collar by labeled activities:
+\begin{equation}\label{eq:activity}
+ \sup_L\sup_o\sum_{X\ni o}
+ e^{\alpha|X|}|z_{\mathrm{collar},L}(X)|<\delta.
+\end{equation}
+Alternatives that preserve the same information are full multi-link block
+integration and reflection-positive chessboard estimates.  In each case the
+center-valued frustration must be paid for, not treated as free boundary data.
+
+\section{Frontier audit}
+
+\begin{longtable}{@{}p{0.45\textwidth}p{0.16\textwidth}p{0.29\textwidth}@{}}
+\toprule
+Claim & Status & Scope \\
+\midrule
+\endhead
+Degree-six interior-link incidence & \proved & finite $2^4$ block \\
+$\Ztwo$ center-staple surjectivity & \proved & exact finite algebra \\
+Conditional law \eqref{eq:density} & \proved & one admissible conditioning \\
+Rate minimizer and gap & \proved & $t\downarrow0$ conditional law \\
+Worst-case uniform-tail obstruction & \restricted & microscopic conditionings \\
+Good-collar theorem \eqref{eq:collar} & \openstatus & interacting link measure \\
+Charged activity sum \eqref{eq:activity} & \openstatus & uniform in volume \\
+Repeated RG and basin entry & \openstatus & cutoff and scale uniformity \\
+Continuum construction and Hamiltonian gap & \openstatus & Clay endpoint \\
+\bottomrule
+\end{longtable}
+
+The strongest defensible level is \textbf{C2, restricted obstruction
+theorem}.  The result makes the dependent-measure target more precise by
+eliminating an over-strong quantifier.  It does not supply the replacement
+activity expansion, construct continuum Yang--Mills theory, or prove a mass
+gap.
+
+\begin{thebibliography}{9}
+\bibitem{MenottiOnofri1981}
+P.~Menotti and E.~Onofri,
+``The action of $SU(N)$ lattice gauge theory in terms of the heat kernel on the
+group manifold,''
+\emph{Nuclear Physics B} \textbf{190} (1981), 288--300.
+
+\bibitem{Balaban1987}
+T.~Balaban,
+``Renormalization group approach to lattice gauge field theories. I.
+Generation of effective actions in a small field approximation and a coupling
+constant renormalization in four dimensions,''
+\emph{Communications in Mathematical Physics} \textbf{109} (1987), 249--301.
+\end{thebibliography}
+
+\end{document}
+

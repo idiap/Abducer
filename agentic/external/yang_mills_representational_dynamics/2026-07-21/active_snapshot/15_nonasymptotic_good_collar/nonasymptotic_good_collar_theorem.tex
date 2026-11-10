@@ -1,0 +1,148 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,booktabs,microtype}
+\usepackage[hidelinks]{hyperref}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{remark}[theorem]{Remark}
+\newcommand{\SU}{\mathrm{SU}(2)}
+\newcommand{\dd}{\,\mathrm d}
+\title{A Nonasymptotic Good-Collar Bound on $\SU$\\
+\large Finite-time prefactors and the one-link ultraviolet threshold}
+\author{}
+\date{20 July 2026}
+\begin{document}
+\maketitle
+
+\begin{abstract}
+For the one-link heat-kernel conditional law with $m$ coherent staples, we
+derive an explicit finite-time bad-curvature bound.  The estimate combines
+radial monotonicity of the central $\SU$ heat kernel, exact Haar ball volume,
+and a controlled Poisson-image ratio.  It upgrades a small-time rate theorem
+by retaining every prefactor.  At $\rho=0.0082$, $\eta=0.001$, and $m=6$, the
+bound crosses the degree-$18$ connected-set weight at
+$t\simeq8.9942\times10^{-7}$; at $t=3\times10^{-6}$ its prefactor makes it
+trivial.  The result assumes a coherent staple collar and does not estimate
+the probability of collar failure.
+\end{abstract}
+
+\section{Heat-kernel input}
+
+Identify $\SU$ with the unit three-sphere and write $\theta=d(I,g)\in[0,\pi]$.
+The heat kernel for generator $\tfrac12\Delta$ is central, so it is denoted
+$p_t(\theta)$.
+
+\begin{lemma}[Radial monotonicity]
+For every $t>0$, $p_t(\theta)$ is nonincreasing on $[0,\pi]$.
+\end{lemma}
+\begin{proof}
+For smooth radially decreasing approximations to the point mass, the radial
+heat equation on $S^3$ is
+\[
+ \partial_t u=\tfrac12(u_{\theta\theta}+2\cot\theta\,u_\theta).
+\]
+Differentiate on compact subintervals of $(0,\pi)$ and apply the parabolic
+maximum principle to the positive part of $u_\theta$, using the symmetry
+boundary values at $0$ and $\pi$.  Radial decrease is preserved.  Passing to
+the heat-kernel limit gives the assertion.
+\end{proof}
+
+For $0\leq\theta\leq R<\pi/2$, the paired Poisson-image representation gives
+\begin{equation}
+ p_t(\theta)=C_t\,\frac{\theta}{\sin\theta}
+ e^{-\theta^2/(2t)}(1+r_t(\theta)),\qquad |r_t(\theta)|\leq q_t(R)<1.
+ \label{eq:image}
+\end{equation}
+The executable certificate bounds $q_t(R)$ by a convergent image tail.  Put
+\[
+ c_t(R)=\frac{1+q_t(R)}{1-q_t(R)}.
+\]
+Equation \eqref{eq:image} implies
+\begin{align}
+ \frac{p_t(\rho)}{p_t(0)}
+ &\leq \frac{\rho}{\sin\rho}c_t(R)e^{-\rho^2/(2t)},\label{eq:r1}\\
+ \frac{p_t(0)}{p_t(r_0)}
+ &\leq c_t(R)e^{r_0^2/(2t)}.\label{eq:r2}
+\end{align}
+
+\section{Finite-time theorem}
+
+Let staples $S_i$ lie in a common $\eta$-ball centered at $C$.  After setting
+$V=UC$ and $Q_i=C^{-1}S_i$, the conditional law is proportional to
+$\prod_{i=1}^m p_t(VQ_i)\dd V$, with $d(I,Q_i)\leq\eta$.  For target $j$ let
+$B_j(\rho)=\{V:d(I,VQ_j)\geq\rho\}$.
+
+The normalized Haar volume of the ball $d(I,V)\leq\delta$ is
+\begin{equation}
+ v(\delta)=\frac{\delta-\tfrac12\sin(2\delta)}{\pi}.
+ \label{eq:volume}
+\end{equation}
+
+\begin{theorem}[Nonasymptotic coherent-collar bound]
+Assume
+\[
+ R=\max\{\rho,\eta+\delta\}<\pi/2,
+ \qquad \rho^2>m(\eta+\delta)^2.
+\]
+Then, uniformly over all coherent staple families,
+\begin{equation}
+ \gamma_{t,S}(B_j(\rho))\leq
+ \frac1{v(\delta)}\frac{\rho}{\sin\rho}c_t(R)^{m+1}
+ \exp\!\left[-\frac{\rho^2-m(\eta+\delta)^2}{2t}\right].
+ \label{eq:main}
+\end{equation}
+The right side may always be replaced by its minimum with one.
+\end{theorem}
+\begin{proof}
+On $B_j(\rho)$, radial monotonicity bounds the target factor by $p_t(\rho)$
+and every other factor by $p_t(0)$.  Thus the numerator is at most
+$p_t(\rho)p_t(0)^{m-1}$ because normalized Haar volume is one.  In the ball
+$d(I,V)\leq\delta$, the triangle inequality gives
+$d(I,VQ_i)\leq\eta+\delta$, so the normalization is at least
+$v(\delta)p_t(\eta+\delta)^m$.  Divide, insert
+\eqref{eq:r1}--\eqref{eq:r2}, and simplify.
+\end{proof}
+
+\begin{remark}
+The auxiliary $\delta$ is a proof parameter.  The reported golden-section
+search returns an admissible value and makes no theorem of global numerical
+optimality.  Every returned probability remains rigorous for its selected
+$\delta$.
+\end{remark}
+
+\section{Calibration and decision}
+
+For $m=6$, $\rho=0.0082$, $\eta=0.001$, $\alpha=0.1$, and $\Delta=18$, the
+critical connected-set weight is
+\[
+ q_{\rm crit}=e^{-\alpha}\Delta^{-2}=0.00279270808036.
+\]
+\begin{center}
+\begin{tabular}{@{}lr@{}}
+\toprule
+quantity & value\\
+\midrule
+frozen time & $3.0\times10^{-6}$\\
+selected frozen $\delta$ & $8.22875586\times10^{-4}$\\
+frozen raw log bound & $14.97453169$\\
+finite-time probability upper bound & $1$\\
+crossing time for $q_{\rm crit}$ & $8.99420304\times10^{-7}$\\
+crossing $\delta$ & $3.36486781\times10^{-4}$\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The favorable exponential rate at the frozen witness is insufficient after
+the denominator-volume prefactor is restored.  The theorem nevertheless
+gives a concrete smaller-time regime where the one-link conditional estimate
+meets the desired counting weight.
+
+\section{Frontier boundary}
+
+The theorem is finite-volume, nonasymptotic, noncommutative, and gauge
+covariant through the common-ball condition.  It does not show that coherent
+collars occur under arbitrary adaptive histories.  It also does not control
+multi-link integration, repeated RG, continuum limits, or a Hamiltonian gap.
+The result is therefore a C2 restricted theorem.
+
+\end{document}

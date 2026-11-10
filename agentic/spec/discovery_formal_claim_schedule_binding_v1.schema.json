@@ -1,0 +1,52 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://abducer.local/spec/discovery_formal_claim_schedule_binding_v1.schema.json",
+  "title": "Registered formal-claim prove-action schedule binding v1",
+  "description": "The exact committed producer request, receipt, input, semantic event, and ready output joined into one downstream prove action. This is provenance and scheduling identity, not proof, theorem, truth, or physics authority.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "binding_kind",
+    "producer_operator_id",
+    "producer_request_id",
+    "producer_request_digest",
+    "producer_receipt_id",
+    "producer_receipt_digest",
+    "producer_input_digest",
+    "consumer_event_id",
+    "consumer_event_hash",
+    "semantic_row_id",
+    "semantic_row_digest",
+    "output_id",
+    "output_digest",
+    "source_theory_generation",
+    "conjecture_id",
+    "formal_claim_digest",
+    "execution_plan_digest"
+  ],
+  "properties": {
+    "schema_version": {"const": 1},
+    "binding_kind": {"const": "registered_formal_claim_prove_action"},
+    "producer_operator_id": {"const": "formal-claim-producer"},
+    "producer_request_id": {"$ref": "#/$defs/identifier"},
+    "producer_request_digest": {"$ref": "#/$defs/digest"},
+    "producer_receipt_id": {"$ref": "#/$defs/identifier"},
+    "producer_receipt_digest": {"$ref": "#/$defs/digest"},
+    "producer_input_digest": {"$ref": "#/$defs/digest"},
+    "consumer_event_id": {"$ref": "#/$defs/identifier"},
+    "consumer_event_hash": {"$ref": "#/$defs/digest"},
+    "semantic_row_id": {"$ref": "#/$defs/identifier"},
+    "semantic_row_digest": {"$ref": "#/$defs/digest"},
+    "output_id": {"$ref": "#/$defs/identifier"},
+    "output_digest": {"$ref": "#/$defs/digest"},
+    "source_theory_generation": {"type": "integer", "minimum": 1},
+    "conjecture_id": {"$ref": "#/$defs/identifier"},
+    "formal_claim_digest": {"$ref": "#/$defs/digest"},
+    "execution_plan_digest": {"$ref": "#/$defs/digest"}
+  },
+  "$defs": {
+    "identifier": {"type": "string", "minLength": 1},
+    "digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"}
+  }
+}

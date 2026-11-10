@@ -1,0 +1,57 @@
+% SPDX-FileCopyrightText: © 2026 Idiap Research Institute <contact@idiap.ch>
+%
+% SPDX-FileContributor: Andre Freitas <andre.freitas@idiap.ch>
+% Neuro-symbolic AI Group
+%
+% SPDX-FileContributor: Danilo Gusicuma <danilo.gusicuma@idiap.ch>
+% Neuro-symbolic AI Group
+%
+% SPDX-License-Identifier: MIT
+% Generated from step-explanations.json
+\paragraph{Step-by-step reconstruction.}
+Follow a proposed uniform diffusion bound for du/dt=-Lu over finite connected undirected graphs, using the symmetric combinatorial Laplacian L and mean-zero initial data.
+The following is a source-guided illustrative reconstruction. Internal procedures are prescriptions; the native declarations do not establish their execution.
+\begin{enumerate}[leftmargin=*,label=\arabic*.]
+\item \textbf{Repair the missing premise} (\texttt{route\_\allowbreak{}hypothesis}).
+\begin{description}[style=standard,labelindent=0pt,leftmargin=5.5em,labelwidth=5em,labelsep=0.5em,align=left,font=\normalfont\bfseries,itemsep=0.15em,parsep=0pt,topsep=0.3em]
+\item[Purpose] Identify a premise sufficient for uniform decay.
+\item[Input] Active obligation: decay uniform in graph size
+\item[Method] First attempt deduction; locate the absent support, propose small competing premise sets, and attach a falsifier to each.
+\item[Check] Compare explanatory coverage and compatibility without treating simplicity as proof.
+\item[Output] Route hypothesis: positive common spectral gap
+\item[Next] Send this conjectural premise to derivation; incompatible premise sets require revision.
+\item[Example] The gap becomes the proposal that every graph in the selected family has first positive eigenvalue at least a common c greater than zero.
+\end{description}
+\item \textbf{Expose the conditional consequence} (\texttt{derived\_\allowbreak{}claim}).
+\begin{description}[style=standard,labelindent=0pt,leftmargin=5.5em,labelwidth=5em,labelsep=0.5em,align=left,font=\normalfont\bfseries,itemsep=0.15em,parsep=0pt,topsep=0.3em]
+\item[Purpose] Derive the proposed premise’s conditional payoff.
+\item[Input] Proposed common gap; graph-family quantifier
+\item[Method] Derive what the added premise would imply while tracking where it is used; do not discharge that premise by using it.
+\item[Check] A valid conditional derivation must retain the norm, subspace and common constant.
+\item[Output] Exponential-decay claim, conditional on the gap
+\item[Next] Refutation receives this claim; a missing spectral lemma remains an obligation.
+\item[Example] The proposed gap yields mean-zero norm decay bounded by the initial norm times exp(-ct), conditional on the symmetric Laplacian assumptions.
+\end{description}
+\item \textbf{Attack the exact strengthening} (\texttt{refutation\_\allowbreak{}assessment}).
+\begin{description}[style=standard,labelindent=0pt,leftmargin=5.5em,labelwidth=5em,labelsep=0.5em,align=left,font=\normalfont\bfseries,itemsep=0.15em,parsep=0pt,topsep=0.3em]
+\item[Purpose] Test the strengthening without conflating premise and consequence.
+\item[Input] Derived decay claim; retained uniform-gap premise
+\item[Method] Probe boundary families and seek a counterexample to the implication actually being asserted; distinguish a false premise from an invalid derivation.
+\item[Check] A counterexample must satisfy the stated domain and attack the same quantifier.
+\item[Output] Refutation finding: connectedness insufficient for a common gap
+\item[Next] Pass the targeted finding to calibration; bounded non-refutation supplies no missing proof.
+\item[Example] For cycle graphs the first positive eigenvalue is 2-2 cos(2 pi/n), which tends to zero. This defeats a size-independent gap for all connected graphs.
+\end{description}
+\item \textbf{Choose the next proof task} (\texttt{work\_\allowbreak{}routing}).
+\begin{description}[style=standard,labelindent=0pt,leftmargin=5.5em,labelwidth=5em,labelsep=0.5em,align=left,font=\normalfont\bfseries,itemsep=0.15em,parsep=0pt,topsep=0.3em]
+\item[Purpose] Choose a sharper task from the localized failure.
+\item[Input] Original derived claim + its refutation assessment
+\item[Method] Compare the route with the target and identify whether a premise, graph family or bound must change.
+\item[Check] Continuation must sharpen the obligation; repeating the same failed premise is not progress.
+\item[Output] Routing assessment: bounded reframing or retargeting rationale
+\item[Next] Original policy can route onward or stop; the native sequence returns an assessment only.
+\item[Example] Retain the conditional decay theorem and replace the unrestricted family claim by the task of finding structural assumptions that imply a uniform gap.
+\end{description}
+\end{enumerate}
+\paragraph{Changed-input contrast.}
+If the input instead supplies a proved common spectral-gap bound for a restricted family, the cycle objection no longer defeats that premise. The conditional decay implication can then support work on that family; connectedness alone cannot.

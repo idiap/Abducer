@@ -1,0 +1,340 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://abducer.local/spec/dynamic_experiment_world_matrix_commission_v2.schema.json",
+  "title": "Authoritative complete-projection pre-execution five-world commission v2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "contract_version",
+    "commission_id",
+    "local_protocol_valid",
+    "authority_status",
+    "canonical_execution_authorized",
+    "matrix_scope",
+    "target_id",
+    "run_id",
+    "prior_state_version",
+    "authority_projection",
+    "registered_claim_binding",
+    "spec_family",
+    "world_plan_order",
+    "world_plans",
+    "base_producer_bindings",
+    "claim_invariant_across_all_worlds",
+    "no_probe_binds_unexecuted_commission",
+    "authority_boundary",
+    "commission_digest"
+  ],
+  "properties": {
+    "schema_version": {"const": "2.0.0"},
+    "contract_version": {"const": "dynamic-experiment-world-matrix-commission/2.0.0"},
+    "commission_id": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/identifier"},
+    "local_protocol_valid": {"const": true},
+    "authority_status": {
+      "enum": [
+        "local_protocol_valid_trusted_evidence_unresolved",
+        "authoritative_pre_execution_complete_projection"
+      ]
+    },
+    "canonical_execution_authorized": {"type": "boolean"},
+    "matrix_scope": {"const": "declared_five_world_consistency_matrix_not_an_exhaustive_experiment_universe"},
+    "target_id": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/identifier"},
+    "run_id": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/identifier"},
+    "prior_state_version": {"type": "integer", "minimum": 0},
+    "authority_projection": {"$ref": "#/$defs/authorityProjection"},
+    "registered_claim_binding": {"$ref": "#/$defs/registeredClaimBinding"},
+    "spec_family": {"$ref": "#/$defs/specFamily"},
+    "world_plan_order": {
+      "const": [
+        "no_probe",
+        "neutral_inconclusive",
+        "misleading_toy_positive",
+        "registered_premise_falsifier",
+        "operational_failure"
+      ]
+    },
+    "world_plans": {
+      "type": "array",
+      "minItems": 5,
+      "maxItems": 5,
+      "items": {"$ref": "#/$defs/worldPlan"}
+    },
+    "base_producer_bindings": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 2,
+      "items": {"$ref": "./dynamic_experiment_causal_producer_binding_v2.schema.json"}
+    },
+    "claim_invariant_across_all_worlds": {"const": true},
+    "no_probe_binds_unexecuted_commission": {"const": true},
+    "authority_boundary": {"$ref": "#/$defs/authorityBoundary"},
+    "commission_digest": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/digest"}
+  },
+  "oneOf": [
+    {
+      "properties": {
+        "authority_status": {"const": "local_protocol_valid_trusted_evidence_unresolved"},
+        "canonical_execution_authorized": {"const": false},
+        "authority_boundary": {
+          "properties": {
+            "canonical_experiment_execution_authorized": {"const": false}
+          }
+        }
+      }
+    },
+    {
+      "properties": {
+        "authority_status": {"const": "authoritative_pre_execution_complete_projection"},
+        "canonical_execution_authorized": {"const": true},
+        "authority_boundary": {
+          "properties": {
+            "canonical_experiment_execution_authorized": {"const": true}
+          }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "authorityProjection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "contract_version",
+        "projection_id",
+        "target_id",
+        "run_id",
+        "prior_state_version",
+        "projection_schema_authority",
+        "projector_authority",
+        "coverage_contract",
+        "component_order",
+        "components",
+        "projection_digest"
+      ],
+      "properties": {
+        "schema_version": {"const": "2.0.0"},
+        "contract_version": {"const": "experiment-authority-projection/2.0.0"},
+        "projection_id": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/identifier"},
+        "target_id": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/identifier"},
+        "run_id": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/identifier"},
+        "prior_state_version": {"type": "integer", "minimum": 0},
+        "projection_schema_authority": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["schema_id", "schema_version", "schema_semantics_digest"],
+          "properties": {
+            "schema_id": {"const": "https://abducer.local/spec/dynamic_experiment_world_matrix_commission_v2.schema.json#/$defs/authorityProjection"},
+            "schema_version": {"const": "2.0.0"},
+            "schema_semantics_digest": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/digest"}
+          }
+        },
+        "projector_authority": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["projector_id", "projector_version", "projector_semantics_digest"],
+          "properties": {
+            "projector_id": {"const": "complete-experiment-authority-projector"},
+            "projector_version": {"const": "2.0.0"},
+            "projector_semantics_digest": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/digest"}
+          }
+        },
+        "coverage_contract": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["coverage_scope", "declared_component_order", "future_or_unlisted_fields_authorized", "coverage_digest"],
+          "properties": {
+            "coverage_scope": {"const": "complete_over_declared_projection_v2_only"},
+            "declared_component_order": {
+              "const": ["committed_ancestor", "theory_programme", "reflection_packet", "conceptual_systems", "genealogy", "source_authority", "registered_claim", "generator_authority", "adjudication_authority", "schedule"]
+            },
+            "future_or_unlisted_fields_authorized": {"const": false},
+            "coverage_digest": {"const": "sha256:1517e524c3fc6c664d3b678b2decec2c26577fdbcdc3709bd1a67746631c9733"}
+          }
+        },
+        "component_order": {
+          "const": [
+            "committed_ancestor",
+            "theory_programme",
+            "reflection_packet",
+            "conceptual_systems",
+            "genealogy",
+            "source_authority",
+            "registered_claim",
+            "generator_authority",
+            "adjudication_authority",
+            "schedule"
+          ]
+        },
+        "components": {
+          "type": "array",
+          "minItems": 10,
+          "maxItems": 10,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["component_kind", "value", "value_digest"],
+            "properties": {
+              "component_kind": {
+                "enum": [
+                  "committed_ancestor",
+                  "theory_programme",
+                  "reflection_packet",
+                  "conceptual_systems",
+                  "genealogy",
+                  "source_authority",
+                  "registered_claim",
+                  "generator_authority",
+                  "adjudication_authority",
+                  "schedule"
+                ]
+              },
+              "value": {"type": "object", "minProperties": 1},
+              "value_digest": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/digest"}
+            }
+          }
+        },
+        "projection_digest": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/digest"}
+      }
+    },
+    "registeredClaimBinding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "claim_id",
+        "claim_digest",
+        "claim_kind",
+        "theory_programme_id",
+        "source_theory_programme_digest",
+        "source_reflection_packet_digest",
+        "conceptual_system_ids"
+      ],
+      "properties": {
+        "claim_id": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/identifier"},
+        "claim_digest": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/digest"},
+        "claim_kind": {"const": "theory_premise"},
+        "theory_programme_id": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/identifier"},
+        "source_theory_programme_digest": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/digest"},
+        "source_reflection_packet_digest": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/digest"},
+        "conceptual_system_ids": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/stringArray"}
+      }
+    },
+    "interventionProjection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["adapter", "model", "resource_budget"],
+      "properties": {
+        "adapter": {"enum": ["exact", "sympy", "finite_model", "numeric", "sweep", "lean", "hybrid"]},
+        "model": {"type": "object"},
+        "resource_budget": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/resourceBudget"}
+      }
+    },
+    "specFamily": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "family_id",
+        "reference_world_id",
+        "fixed_spec_fields",
+        "fixed_spec_semantics",
+        "fixed_semantic_core_digest",
+        "baseline_intervention",
+        "permitted_intervention_paths",
+        "derived_execution_fields",
+        "family_digest"
+      ],
+      "properties": {
+        "family_id": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/identifier"},
+        "reference_world_id": {"const": "misleading_toy_positive"},
+        "fixed_spec_fields": {
+          "const": ["target_id", "run_id", "branch_id", "state_version", "theory_programme_id", "source_theory_programme_digest", "source_reflection_packet_digest", "conceptual_system_ids", "theoretical_question_id", "tested_theory_claim", "probe_role", "expected_conceptual_change", "triage_digest", "preregistration", "controls", "seed_policy", "transfer_boundary", "theory_effect_contract", "code_version"]
+        },
+        "fixed_spec_semantics": {"$ref": "./dynamic_experiment_world_matrix_commission_v1.schema.json#/$defs/fixedSpecSemantics"},
+        "fixed_semantic_core_digest": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/digest"},
+        "baseline_intervention": {"$ref": "#/$defs/interventionProjection"},
+        "permitted_intervention_paths": {
+          "const": ["/experiment_spec/adapter", "/experiment_spec/model", "/experiment_spec/resource_budget"]
+        },
+        "derived_execution_fields": {
+          "const": ["schema_version", "contract_version", "spec_id", "execution_id", "precommitted_receipt_id", "experiment_id", "execution_authority", "authority_digest", "code_digest", "observed_environment", "environment_digest", "created_at", "spec_digest"]
+        },
+        "family_digest": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/digest"}
+      }
+    },
+    "worldPlan": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "world_id",
+        "execution_disposition",
+        "intervention_kind",
+        "expected_statuses",
+        "expected_epistemic_outcomes",
+        "expected_effect_kinds",
+        "pending_review_authorized",
+        "experiment_spec",
+        "spec_digest",
+        "intervention_projection",
+        "intervention_changed_paths",
+        "plan_digest"
+      ],
+      "properties": {
+        "world_id": {"enum": ["no_probe", "neutral_inconclusive", "misleading_toy_positive", "registered_premise_falsifier", "operational_failure"]},
+        "execution_disposition": {"enum": ["not_executed", "executed"]},
+        "intervention_kind": {"enum": ["suppress_execution", "bounded_resource_cutoff", "scoped_positive_fixture", "scoped_counterexample_fixture", "adapter_operational_failure"]},
+        "expected_statuses": {"type": "array", "uniqueItems": true, "items": {"type": "string"}},
+        "expected_epistemic_outcomes": {"type": "array", "uniqueItems": true, "items": {"type": "string"}},
+        "expected_effect_kinds": {"type": "array", "uniqueItems": true, "items": {"type": "string"}},
+        "pending_review_authorized": {"type": "boolean"},
+        "experiment_spec": {"oneOf": [{"type": "null"}, {"$ref": "./dynamic_experiment_spec_v3.schema.json"}]},
+        "spec_digest": {"oneOf": [{"type": "null"}, {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/digest"}]},
+        "intervention_projection": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/interventionProjection"}]},
+        "intervention_changed_paths": {"type": "array", "uniqueItems": true, "items": {"type": "string", "pattern": "^/"}},
+        "plan_digest": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/digest"}
+      }
+    },
+    "causalOrderContract": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "event_order",
+        "commission_sealed_after_final_adjudication",
+        "commission_sealed_after_pre_experiment_schedule",
+        "commission_sealed_before_every_world_request",
+        "full_commission_required_as_request_input",
+        "full_commission_required_as_observation_input",
+        "no_probe_requires_the_same_pre_execution_commission",
+        "pending_review_is_next_cycle_sidecar_only"
+      ],
+      "properties": {
+        "event_order": {"const": ["authority_projection_sealed", "commission_sealed", "world_request_consumes_full_commission", "execution_or_no_probe_decision", "post_result_observation_consumes_full_commission", "matrix_certificate_derived"]},
+        "commission_sealed_after_final_adjudication": {"const": true},
+        "commission_sealed_after_pre_experiment_schedule": {"const": true},
+        "commission_sealed_before_every_world_request": {"const": true},
+        "full_commission_required_as_request_input": {"const": true},
+        "full_commission_required_as_observation_input": {"const": true},
+        "no_probe_requires_the_same_pre_execution_commission": {"const": true},
+        "pending_review_is_next_cycle_sidecar_only": {"const": true}
+      }
+    },
+    "authorityBoundary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["experiment_subordinate_to_theory", "theory_identity_changed", "ontology_mutation_authorized", "theory_selected", "proof_authorized", "physical_target_support_authorized", "automatic_evidence_relation_authorized", "schedule_mutation_authorized", "canonical_experiment_execution_authorized", "current_cycle_theory_mutation_authorized", "pending_review_deferred_to_next_cycle"],
+      "properties": {
+        "experiment_subordinate_to_theory": {"const": true},
+        "theory_identity_changed": {"const": false},
+        "ontology_mutation_authorized": {"const": false},
+        "theory_selected": {"const": false},
+        "proof_authorized": {"const": false},
+        "physical_target_support_authorized": {"const": false},
+        "automatic_evidence_relation_authorized": {"const": false},
+        "schedule_mutation_authorized": {"const": false},
+        "canonical_experiment_execution_authorized": {"type": "boolean"},
+        "current_cycle_theory_mutation_authorized": {"const": false},
+        "pending_review_deferred_to_next_cycle": {"const": true}
+      }
+    }
+  }
+}

@@ -1,0 +1,1165 @@
+# SPDX-FileCopyrightText: Copyright © 2026 Idiap Research Institute <contact@idiap.ch>
+#
+# SPDX-FileContributor: Andre Freitas <andre.freitas@idiap.ch>
+# Neuro-symbolic AI Group
+#
+# SPDX-FileContributor: Danilo Gusicuma <danilo.gusicuma@idiap.ch>
+# Neuro-symbolic AI Group
+#
+# SPDX-License-Identifier: MIT
+mechanism_examples:
+  - id: mechanism_clinical_transport_calibrated_evidence
+    source_tension_ref: tension_clinical_ai_population_vs_individual
+    field: clinical_ai
+    mechanism_name: Transport-Calibrated Evidence Mediation
+    scenario_summary: >
+      The crisis is not that population evidence is useless or that individual judgment is enough.
+      It is that deployed clinical recommendations need a mediated relation between population-level
+      causal support and patient-state actionability. The hypothesized mechanism is an evidence layer
+      that proves, calibrates, audits, and gates when population evidence can be transported to a
+      concrete patient state.
+    mechanism_abduction_packet:
+      crisis_ref: tension_clinical_ai_population_vs_individual
+      crisis_restated: >
+        A recommendation must be publicly justified by population evidence and fit the patient state,
+        but population evidence does not by itself license patient-specific action under multimorbidity,
+        missing biomarkers, local access constraints, or site shift.
+      required_mediation_shape:
+        commitments_to_preserve:
+          - externally validated causal evidence
+          - patient-specific contraindication, preference, and feasibility constraints
+          - auditability and uncertainty disclosure
+        incompatibility_to_mediate: >
+          SupportedBy(E_population, t) and Fit(t, State(p)) diverge unless a transport relation
+          establishes when the population effect is applicable to the patient state.
+        missing_relation_or_process:
+          - patient-state representation rich enough to expose material effect modifiers
+          - transport map from evidence population to target patient state
+          - calibration and local outcome audit loop
+          - uncertainty gate that can withhold or downgrade recommendations
+          - accountable clinician and patient handoff
+        inference_commitments:
+          - role: necessary_mediator
+            claim: A transport or applicability relation is required before population evidence can license patient-specific action.
+            warrant: Without it, the formal support predicate and fit predicate remain disconnected.
+          - role: enabling_condition
+            claim: Local calibration data and outcome audit are needed when the target site differs from the evidence population.
+            warrant: Site shift changes whether the transport relation is materially adequate.
+          - role: defeater
+            claim: If the system is calibrated only for an average risk score while treatment effects remain uncalibrated, the mechanism is proxy capture.
+            warrant: It preserves a measurable proxy while failing the causal-actionability obligation.
+      mechanism_hypotheses:
+        - id: h_clinical_transport_layer
+          label: Transport-calibrated recommendation layer
+          hypothesis_type: hybrid
+          abductive_claim: >
+            If recommendations are gated by a patient-state transport map, calibrated local uncertainty,
+            and auditable evidence provenance, then population support and individualized fit can be
+            mediated without erasing either pole.
+          if_this_existed_then: >
+            The solver could represent recommendation permission as a relation among evidence source,
+            target patient state, uncertainty interval, and clinical handoff rather than as either a
+            guideline-only rule or an opaque individual model.
+          formal_mediation:
+            new_predicates:
+              - TransportValid(evidence, patient_state, regime)
+              - CalibratedFor(model, site_population, time_window)
+              - UncertaintyBelow(recommendation, threshold)
+              - RecommendationAllowed(treatment, patient)
+            new_maps:
+              - "tau: EvidencePopulation x PatientState -> ApplicabilityInterval"
+              - "rho: Recommendation x EvidenceTrace -> AuditRecord"
+            constraints:
+              - "RecommendationAllowed(t,p) requires SupportedBy(e,t)"
+              - "RecommendationAllowed(t,p) requires TransportValid(e, State(p), regime)"
+              - "RecommendationAllowed(t,p) requires UncertaintyBelow(t,p, threshold) or ExplicitUncertaintyHandoff(t,p)"
+            preserved_obligations:
+              - guideline provenance
+              - patient-state fit
+              - local calibration
+              - explainable uncertainty
+          material_mediation:
+            actors:
+              - clinician
+              - patient
+              - hospital model governance board
+              - data steward
+            practices_or_infrastructure:
+              - structured patient-state capture
+              - local calibration monitoring
+              - recommendation provenance display
+              - clinical override documentation
+            resources_needed:
+              - target-site outcome data
+              - subgroup and contraindication metadata
+              - model monitoring pipeline
+              - clinical review time
+            incentive_or_governance_changes:
+              - reward calibrated uncertainty rather than recommendation volume
+              - require governance review for new patient strata
+              - document overrides as evidence rather than as mere noncompliance
+          explanatory_gain:
+            - explains why guideline evidence is preserved but no longer sufficient alone
+            - turns individualization into an inspectable transport and calibration problem
+            - makes uncertainty a gate rather than a disclaimer
+          new_risks:
+            - false precision in sparse patient strata
+            - local overfitting hidden as personalization
+            - workflow burden that shifts risk back to clinicians
+          disconfirming_observations:
+            - prospective audit shows no calibration improvement in target strata
+            - recommendations remain insensitive to contraindications or access constraints
+            - clinicians cannot inspect the evidence trace enough to contest the recommendation
+          evidence_needed:
+            - retrospective transport audit against local outcomes
+            - prospective calibration by clinically meaningful strata
+            - clinician usability and override audit
+        - id: h_guideline_exception_table
+          label: Guideline exception table
+          hypothesis_type: conservative
+          abductive_claim: >
+            A richer guideline exception table might mediate the crisis if all material patient states
+            could be enumerated and maintained.
+          if_this_existed_then: Guidelines could remain the primary decision surface with explicit exceptions.
+          formal_mediation:
+            new_predicates: [ListedException(patient_state)]
+            new_maps: ["epsilon: PatientState -> GuidelineException"]
+            constraints: ["RecommendationAllowed(t,p) requires GuidelineRule(t,p) or ListedException(State(p))"]
+            preserved_obligations: [guideline provenance]
+          material_mediation:
+            actors: [guideline committee, clinician]
+            practices_or_infrastructure: [exception maintenance workflow]
+            resources_needed: [continuous literature and case review]
+            incentive_or_governance_changes: [rapid guideline update process]
+          explanatory_gain:
+            - keeps decision authority close to public guidelines
+          new_risks:
+            - combinatorial explosion of patient states
+            - stale exceptions under fast evidence change
+          disconfirming_observations:
+            - important patient states remain unlisted or contradictory
+          evidence_needed:
+            - coverage audit of exception categories against local patient records
+      rejected_hypotheses:
+        - id: r_ignore_individual_fit
+          label: Pure guideline rule
+          reason: It preserves public evidence by collapsing patient-specific fit, so it fails non-collapse.
+        - id: r_black_box_personalization
+          label: Opaque individualized predictor
+          reason: It may fit local outcomes while losing public causal support and auditability.
+      assumptions:
+        - Patient-state features relevant to treatment effect can be represented without turning all clinical judgment into a closed form.
+        - Local outcome data are sufficient to test calibration for at least some target strata.
+      unknowns:
+        - Which patient-state dimensions are causally decisive for each treatment class.
+        - Whether the target organization can maintain the governance workflow at clinical speed.
+    mechanism_requirements_packet:
+      crisis_ref: tension_clinical_ai_population_vs_individual
+      selected_hypothesis_refs: [h_clinical_transport_layer]
+      mechanism_name: Transport-Calibrated Evidence Mediation
+      mechanism_role: >
+        Mediate population-level evidence and patient-specific actionability through transport,
+        calibration, uncertainty gating, and accountable clinical handoff.
+      requirements:
+        - id: req_clinical_state_ontology
+          kind: formal_capacity
+          necessity_status: necessary
+          statement: Patient state must represent effect modifiers, contraindications, preferences, and local feasibility constraints.
+          formalization: "State(p) = ClinicalFeatures(p) + Contraindications(p) + Preferences(p) + LocalFeasibility(p)"
+          material_anchor: structured EHR fields plus clinician-entered constraints
+          verifies_commitments: [patient-specific fit, contraindication handling]
+          validation_method: audit
+          evidence_needed:
+            - coverage audit against clinician notes
+            - missingness analysis by patient group
+          failure_mode_if_missing: The transport map cannot see the distinctions that make the patient unlike the evidence population.
+        - id: req_clinical_transport_map
+          kind: formal_capacity
+          necessity_status: necessary
+          statement: The mechanism must define a transport relation from evidence population to patient state with uncertainty intervals.
+          formalization: "TransportValid(e, State(p), r) -> ApplicabilityInterval(e,p,r)"
+          material_anchor: trial eligibility, subgroup evidence, observational support, and mechanistic clinical judgment
+          verifies_commitments: [externally validated causal evidence, patient-specific fit]
+          validation_method: experiment
+          evidence_needed:
+            - retrospective target-stratum outcome comparison
+            - documented assumptions for unmeasured confounding and missing biomarkers
+          failure_mode_if_missing: Population support is asserted as patient fit without mediation.
+        - id: req_clinical_uncertainty_gate
+          kind: epistemic_capacity
+          necessity_status: jointly_sufficient
+          statement: Recommendation strength must be gated by uncertainty, with downgrade or abstention when transport support is weak.
+          formalization: "RecommendationAllowed(t,p) -> UncertaintyBelow(t,p,theta) or HandoffRequired(t,p)"
+          material_anchor: visible recommendation confidence and required clinician signoff
+          verifies_commitments: [uncertainty disclosure, non-maleficence]
+          validation_method: audit
+          evidence_needed:
+            - rate of downgraded or withheld recommendations by stratum
+            - review of high-uncertainty cases
+          failure_mode_if_missing: The system converts uncertainty into false precision.
+        - id: req_clinical_provenance_trace
+          kind: interface_capacity
+          necessity_status: jointly_sufficient
+          statement: Every recommendation must expose evidence provenance, transport assumptions, patient-state features used, and override path.
+          formalization: "Recommendation(t,p) -> exists trace rho(t,p,e,State(p),assumptions)"
+          material_anchor: clinical decision support UI and governance logs
+          verifies_commitments: [auditability, guideline accountability]
+          validation_method: human_review
+          evidence_needed:
+            - clinician trace comprehension review
+            - governance audit sample
+          failure_mode_if_missing: The system becomes personalized but not publicly accountable.
+        - id: req_clinical_local_monitoring
+          kind: material_capacity
+          necessity_status: regime_specific
+          statement: The organization must maintain local calibration and outcome monitoring for the deployed population.
+          formalization: null
+          material_anchor: model governance board, data pipeline, outcome adjudication process
+          verifies_commitments: [site calibration, residual-limit detection]
+          validation_method: field_study
+          evidence_needed:
+            - calibration reports over time
+            - incident review for recommendation-related harms
+          failure_mode_if_missing: Deployment drift silently invalidates the transport relation.
+        - id: req_clinical_noncollapse
+          kind: safety_or_noncollapse_capacity
+          necessity_status: necessary
+          statement: The mechanism must neither enforce guideline averages against material contraindications nor permit opaque personalization against public evidence.
+          formalization: "not(GuidelineOnlyCollapse) and not(OpaquePersonalizationCollapse)"
+          material_anchor: governance review of both over-standardization and unsupported customization
+          verifies_commitments: [population evidence hierarchy, patient-specific fit]
+          validation_method: policy_review
+          evidence_needed:
+            - paired audits of guideline adherence and patient-state exceptions
+          failure_mode_if_missing: The apparent repair is only victory for one pole.
+      mediation_maps:
+        - id: map_population_to_patient
+          source_commitment: externally validated causal evidence
+          target_commitment: patient-specific fit
+          map_type: transport
+          statement: Evidence applies to the patient only through an explicit transport relation with declared assumptions and uncertainty.
+          required_properties:
+            - preserves source evidence provenance
+            - exposes patient-state mismatch
+            - degrades gracefully under uncertainty
+        - id: map_recommendation_to_accountability
+          source_commitment: patient-specific recommendation
+          target_commitment: public clinical accountability
+          map_type: accountability
+          statement: Every recommendation must be traceable to evidence, patient-state inputs, assumptions, and clinical handoff.
+          required_properties:
+            - inspectable trace
+            - override record
+            - governance reviewability
+      material_preconditions:
+        - target-site data access and privacy approval
+        - clinician workflow integration
+        - governance capacity to review drift and incidents
+      implementation_surfaces:
+        - patient-state schema
+        - recommendation gate
+        - evidence trace UI
+        - calibration dashboard
+      validation_obligations:
+        - demonstrate calibration in declared target strata
+        - show that high-uncertainty cases are downgraded or handed off
+        - audit that overrides improve rather than merely bypass the mechanism
+      residual_limits:
+        - rare patient states may remain outside the transportable regime
+        - patient preferences may be under-specified or change after recommendation
+        - causal uncertainty may remain irreducible for new treatments
+      open_todos:
+        - Define the minimal patient-state ontology for one treatment domain.
+        - Establish retrospective calibration baselines before live use.
+      assumptions:
+        - Clinicians can act on uncertainty displays without severe alert fatigue.
+      unknowns:
+        - Whether prospective outcomes improve after transport gating.
+    mechanism_counterfactual_critique:
+      requirements_ref: reqs_clinical_transport_calibrated_evidence
+      overall_status: underdetermined
+      counterfactual_tests:
+        - id: cf_clinical_remove_transport
+          test_type: remove_requirement
+          scenario: The system keeps provenance and calibration dashboards but removes explicit transport assumptions.
+          expected_if_mechanism_valid: Recommendations should no longer be treated as patient-actionable when evidence population and patient state diverge.
+          failure_signal: Recommendations remain strong for underrepresented or contraindicated strata.
+          affected_requirements: [req_clinical_transport_map, req_clinical_uncertainty_gate]
+          result: fail
+        - id: cf_clinical_proxy_capture
+          test_type: proxy_capture
+          scenario: The model is calibrated for general mortality risk but not for treatment effect or contraindication-sensitive benefit.
+          expected_if_mechanism_valid: The system should reject risk calibration as insufficient for treatment recommendation.
+          failure_signal: High risk score drives treatment recommendation without causal applicability.
+          affected_requirements: [req_clinical_transport_map, req_clinical_noncollapse]
+          result: needs_evidence
+        - id: cf_clinical_shift_regime
+          test_type: shift_regime
+          scenario: A new biomarker-defined subgroup appears with no local outcomes and thin trial representation.
+          expected_if_mechanism_valid: Recommendation should be downgraded, routed to specialist review, or marked outside regime.
+          failure_signal: System presents ordinary confidence despite absent transport support.
+          affected_requirements: [req_clinical_uncertainty_gate, req_clinical_local_monitoring]
+          result: unknown
+        - id: cf_clinical_material_bottleneck
+          test_type: material_bottleneck
+          scenario: The hospital cannot staff outcome adjudication or governance review.
+          expected_if_mechanism_valid: The mechanism should be scoped as unavailable for live deployment.
+          failure_signal: Live recommendations continue while calibration debt grows.
+          affected_requirements: [req_clinical_local_monitoring]
+          result: needs_evidence
+      hidden_assumptions:
+        - Patient-state variables in the record approximate the clinically decisive state.
+        - Clinicians will review rather than rubber-stamp high-uncertainty handoffs.
+      collapse_risks:
+        - Guideline-only collapse when uncertainty gates always defer to population averages.
+        - Personalization collapse when local calibration is treated as causal support.
+      alternative_mechanisms_still_live:
+        - narrow-regime guideline automation plus mandatory specialist review outside regime
+        - randomized local learning protocol for eligible treatment classes
+      required_revisions:
+        - Add explicit rejection of risk-only calibration as sufficient for treatment-effect transport.
+        - Define deployment stop rules when governance capacity is absent.
+      evidence_or_experiment_priorities:
+        - retrospective target-stratum audit
+        - prospective high-uncertainty handoff review
+        - workflow study on clinician comprehension of evidence traces
+    mechanism_todo_packet:
+      requirements_ref: reqs_clinical_transport_calibrated_evidence
+      critique_ref: critique_clinical_transport_calibrated_evidence
+      todo_groups:
+        - group_id: clinical_formal_model
+          purpose: Define the formal bridge between population support and patient-state fit.
+          todos:
+            - id: todo_clinical_define_transport
+              class: formal_work
+              task: Define TransportValid and ApplicabilityInterval for one treatment family.
+              why_needed: This is the necessary mediator between public evidence and patient-specific fit.
+              depends_on: []
+              artifact_expected: transport relation specification
+              acceptance_criterion: Each recommendation can be classified as transport-valid, transport-invalid, or outside-regime with stated assumptions.
+              priority: critical
+              blocks_candidate_acceptance: true
+            - id: todo_clinical_noncollapse_proof_plan
+              class: validation
+              task: Write non-collapse checks for guideline-only and opaque-personalization failure modes.
+              why_needed: The mechanism must preserve both protected poles.
+              depends_on: [todo_clinical_define_transport]
+              artifact_expected: non-collapse validation checklist
+              acceptance_criterion: The checklist detects both unsupported customization and contraindication-blind standardization in fixture cases.
+              priority: high
+              blocks_candidate_acceptance: true
+        - group_id: clinical_evidence_and_deployment
+          purpose: Test whether the formal relation has material support in a target site.
+          todos:
+            - id: todo_clinical_retrospective_audit
+              class: evidence_work
+              task: Run a retrospective calibration and transport audit on local patients.
+              why_needed: The abduction is only plausible if the target population supports the declared transport relation.
+              depends_on: [todo_clinical_define_transport]
+              artifact_expected: calibration and transport audit report
+              acceptance_criterion: Report identifies calibrated strata, failed strata, and outside-regime cases with uncertainty intervals.
+              priority: critical
+              blocks_candidate_acceptance: true
+            - id: todo_clinical_trace_ui_review
+              class: material_design
+              task: Test whether clinicians can inspect evidence traces and uncertainty gates during realistic workflow.
+              why_needed: Auditability is material only if the accountable actor can actually use the trace.
+              depends_on: [todo_clinical_retrospective_audit]
+              artifact_expected: clinician review study summary
+              acceptance_criterion: Clinicians can identify the source evidence, patient-state mismatch, and override path in representative cases.
+              priority: high
+              blocks_candidate_acceptance: false
+            - id: todo_clinical_stop_condition
+              class: decision
+              task: Stop the branch if local audit shows no reliable transport relation for target strata.
+              why_needed: Failed validation should terminate the mechanism rather than become implementation momentum.
+              depends_on: [todo_clinical_retrospective_audit]
+              artifact_expected: branch decision record
+              acceptance_criterion: The branch is rejected or narrowed when calibration and transport criteria fail.
+              priority: critical
+              blocks_candidate_acceptance: true
+      immediate_next_actions:
+        - Select one treatment family and declare its patient-state ontology.
+        - Build a retrospective audit fixture before any live recommendation workflow.
+      deferred_questions:
+        - How should patient preferences be represented when they change over time?
+        - Which causal assumptions are acceptable when randomized subgroup evidence is absent?
+      stop_conditions:
+        - No inspectable transport relation can be defined for the target treatment family.
+        - Governance cannot maintain local calibration and incident review.
+
+  - id: mechanism_llm_typed_authority_reversible_action
+    source_tension_ref: tension_llm_autonomy_control
+    field: ai_systems
+    mechanism_name: Typed Authority and Reversible Action Envelope
+    scenario_summary: >
+      The crisis is generated by the same property that makes agentic systems valuable:
+      the agent adapts and acts across a task trajectory. The hypothesized mechanism is
+      an envelope that types authority, classifies side effects, records provenance, and
+      requires reversible checkpoints or escalation before consequential actions.
+    mechanism_abduction_packet:
+      crisis_ref: tension_llm_autonomy_control
+      crisis_restated: >
+        Agents need planning freedom and tool use to complete delegated work, but side-effecting
+        autonomy exceeds accountable control when authorization, reversibility, provenance, and
+        policy boundaries are not represented at the action level.
+      required_mediation_shape:
+        commitments_to_preserve:
+          - long-horizon delegated task completion
+          - auditable and policy-constrained action
+          - human or institutional accountability for side effects
+        incompatibility_to_mediate: >
+          Adaptive tool choice is valuable only when the action space is bounded by typed authority,
+          side-effect severity, provenance, and reversible control points.
+        missing_relation_or_process:
+          - authority lattice over users, agents, tools, resources, and action classes
+          - side-effect type system for tool calls
+          - policy gate binding authority to action and context
+          - durable action ledger with observations and reasons
+          - checkpoint, rollback, or escalation protocol for irreversible effects
+        inference_commitments:
+          - role: necessary_mediator
+            claim: Side-effecting actions require typed authorization at action time, not only broad task consent.
+            warrant: General delegation does not specify which material side effects are legitimate.
+          - role: jointly_sufficient_set
+            claim: Authority types, side-effect classes, provenance ledger, and rollback boundaries jointly explain accountable autonomy.
+            warrant: "Each part covers a different failure route: permission, consequence, inspectability, and repair."
+          - role: impossibility_boundary
+            claim: Fully irreversible high-stakes actions without prior authorization must be outside the autonomous regime.
+            warrant: No later audit can restore control after unrecoverable unauthorized harm.
+      mechanism_hypotheses:
+        - id: h_llm_authority_envelope
+          label: Typed authority and reversible action envelope
+          hypothesis_type: hybrid
+          abductive_claim: >
+            If every agent action is typed by authority, side-effect severity, policy context,
+            and reversibility, then autonomy can be scoped without reducing the agent to a
+            brittle macro.
+          if_this_existed_then: >
+            The solver could treat agent autonomy as a governed action trajectory where each
+            step carries permission, provenance, and rollback semantics.
+          formal_mediation:
+            new_predicates:
+              - Authorized(actor, agent, action, resource, context)
+              - SideEffectClass(action)
+              - Reversible(action, horizon)
+              - EscalationRequired(action, context)
+              - Ledgered(action, observation, rationale)
+            new_maps:
+              - "alpha: Delegation x Context -> AuthorityScope"
+              - "sigma: ToolCall -> SideEffectClass"
+              - "pi: Action x Policy x AuthorityScope -> Permit | Deny | Escalate"
+            constraints:
+              - "Execute(a) requires pi(a, policy, scope) = Permit"
+              - "IrreversibleHighImpact(a) requires prior explicit authorization or escalation"
+              - "Every executed action must be ledgered with inputs, observations, and tool result"
+            preserved_obligations:
+              - task completion under bounded autonomy
+              - policy compliance
+              - auditability
+              - reversibility where possible
+          material_mediation:
+            actors:
+              - user
+              - agent runtime
+              - policy owner
+              - security reviewer
+              - operations owner
+            practices_or_infrastructure:
+              - tool schema registry
+              - permission grants with expiry
+              - action ledger
+              - approval queue for high-impact actions
+              - rollback tests
+            resources_needed:
+              - policy definitions
+              - tool side-effect metadata
+              - runtime enforcement hooks
+              - incident review process
+            incentive_or_governance_changes:
+              - treat broad user intent as insufficient for high-impact tool calls
+              - require teams to classify tool consequences before enabling autonomy
+              - evaluate agents by completed safe trajectories, not only task success
+          explanatory_gain:
+            - explains how autonomy can vary by action class instead of being on or off
+            - makes accountability a property of the trajectory, not a post-hoc narrative
+            - clarifies when human review is a regime boundary rather than a failure
+          new_risks:
+            - approval fatigue for medium-risk actions
+            - stale policy scopes
+            - agents optimizing around the approval interface
+            - incomplete tool metadata
+          disconfirming_observations:
+            - incidents caused by permitted actions outside user intent
+            - ledger entries too thin to reconstruct why an action occurred
+            - rollback cannot restore common side effects
+          evidence_needed:
+            - trace replay on side-effecting workflows
+            - red-team attempts to escalate authority through prompt injection or tool misuse
+            - audit of approval burden and bypass behavior
+        - id: h_llm_human_every_step
+          label: Human approval for every tool call
+          hypothesis_type: conservative
+          abductive_claim: >
+            Human approval for every action might preserve control if the resulting workflow still
+            supports meaningful long-horizon task completion.
+          if_this_existed_then: Autonomy would be replaced by a supervised action queue.
+          formal_mediation:
+            new_predicates: [ApprovedByHuman(action)]
+            new_maps: ["mu: ToolCall -> HumanApprovalRequest"]
+            constraints: ["Execute(a) requires ApprovedByHuman(a)"]
+            preserved_obligations: [accountability]
+          material_mediation:
+            actors: [user, reviewer]
+            practices_or_infrastructure: [approval queue]
+            resources_needed: [human review time]
+            incentive_or_governance_changes: [reviewer accountability]
+          explanatory_gain:
+            - makes authority explicit
+          new_risks:
+            - collapses autonomy into manual coordination
+            - produces rubber-stamp approval under volume
+          disconfirming_observations:
+            - reviewers approve without context
+            - task completion benefit disappears
+          evidence_needed:
+            - approval quality and latency audit
+      rejected_hypotheses:
+        - id: r_prompt_policy_only
+          label: Prompt-only policy instructions
+          reason: It lacks runtime enforcement and cannot guarantee side-effect control under adversarial or shifted contexts.
+        - id: r_total_sandbox
+          label: No side-effecting tools
+          reason: It preserves safety by eliminating the autonomy that made the agent useful for real workflows.
+      assumptions:
+        - Tools can expose side-effect metadata with sufficient precision.
+        - Runtime policy gates can intercept all consequential actions.
+      unknowns:
+        - How to classify compound actions whose side effects emerge only across several small steps.
+        - How much approval load users will tolerate before bypass incentives dominate.
+    mechanism_requirements_packet:
+      crisis_ref: tension_llm_autonomy_control
+      selected_hypothesis_refs: [h_llm_authority_envelope]
+      mechanism_name: Typed Authority and Reversible Action Envelope
+      mechanism_role: >
+        Convert delegated autonomy into a governed action trajectory with typed permissions,
+        side-effect classes, provenance, and reversible or escalated execution.
+      requirements:
+        - id: req_llm_authority_lattice
+          kind: formal_capacity
+          necessity_status: necessary
+          statement: Define authority scopes over actors, agents, tools, resources, action classes, time, and context.
+          formalization: "AuthorityScope = Actor x Agent x Tool x Resource x ActionClass x TimeWindow x Context"
+          material_anchor: enterprise permissions, user delegation records, and policy ownership
+          verifies_commitments: [bounded accountable control, delegated task completion]
+          validation_method: policy_review
+          evidence_needed:
+            - permission model review
+            - examples of allowed, denied, and escalated actions
+          failure_mode_if_missing: Broad delegation becomes untyped consent for unintended side effects.
+        - id: req_llm_side_effect_taxonomy
+          kind: interface_capacity
+          necessity_status: necessary
+          statement: Every tool call must declare side-effect class, reversibility, affected resource, and impact level.
+          formalization: "sigma(tool_call) = (side_effect_class, reversibility, resource, impact)"
+          material_anchor: tool registry and runtime schema validation
+          verifies_commitments: [side-effect safety, policy compliance]
+          validation_method: trace_replay
+          evidence_needed:
+            - annotated tool-call corpus
+            - mismatch audit between declared and observed effects
+          failure_mode_if_missing: The policy gate cannot reason about what an action materially does.
+        - id: req_llm_policy_gate
+          kind: safety_or_noncollapse_capacity
+          necessity_status: jointly_sufficient
+          statement: A runtime gate must permit, deny, or escalate actions by binding authority scope to side-effect class and live context.
+          formalization: "pi(action, policy, scope, context) -> Permit | Deny | Escalate"
+          material_anchor: agent runtime enforcement hook
+          verifies_commitments: [accountable control, safe autonomy]
+          validation_method: benchmark
+          evidence_needed:
+            - adversarial policy-bypass tests
+            - prompt-injection trace replay
+          failure_mode_if_missing: Policy remains advisory text rather than an action constraint.
+        - id: req_llm_action_ledger
+          kind: epistemic_capacity
+          necessity_status: necessary
+          statement: The runtime must log delegated goal, observations, tool inputs and outputs, policy decisions, and action rationale.
+          formalization: "Ledgered(a) requires GoalRef + ObservationRef + ToolIO + PolicyDecision + Rationale"
+          material_anchor: immutable or tamper-evident audit log
+          verifies_commitments: [auditability, incident reconstruction]
+          validation_method: audit
+          evidence_needed:
+            - trace reconstruction exercises
+            - incident review samples
+          failure_mode_if_missing: Accountability becomes a retrospective assertion without evidence.
+        - id: req_llm_reversibility_boundary
+          kind: regime_capacity
+          necessity_status: necessary
+          statement: The mechanism must declare which actions are reversible, compensable, escalated, or outside autonomous scope.
+          formalization: "IrreversibleHighImpact(a) -> EscalationRequired(a)"
+          material_anchor: sandbox, dry-run mode, checkpointing, transaction rollback, and approval queue
+          verifies_commitments: [reversibility, human control over high-impact actions]
+          validation_method: simulation
+          evidence_needed:
+            - rollback drills
+            - dry-run to live-run comparison
+          failure_mode_if_missing: The agent can create unrecoverable side effects before accountability can intervene.
+        - id: req_llm_autonomy_noncollapse
+          kind: safety_or_noncollapse_capacity
+          necessity_status: jointly_sufficient
+          statement: The envelope must preserve enough action freedom for real task completion while blocking unauthorized material effects.
+          formalization: "TaskCompletionRate(scope) above floor and UnauthorizedSideEffectRate(scope) below ceiling"
+          material_anchor: workflow benchmark and incident metrics
+          verifies_commitments: [delegated task completion, bounded control]
+          validation_method: benchmark
+          evidence_needed:
+            - workflow completion benchmark
+            - unauthorized action red-team report
+          failure_mode_if_missing: The mechanism becomes either unsafe autonomy or an approval queue with no autonomy.
+      mediation_maps:
+        - id: map_delegation_to_authority
+          source_commitment: delegated task completion
+          target_commitment: bounded accountable control
+          map_type: authorization
+          statement: User intent is converted into typed authority scopes that constrain action selection without predetermining every step.
+          required_properties:
+            - context sensitive
+            - expires or narrows over time
+            - denies high-impact actions without explicit authority
+        - id: map_action_to_accountability
+          source_commitment: adaptive action trajectory
+          target_commitment: audit and responsibility
+          map_type: accountability
+          statement: Every side-effecting action is linked to goal, observation, policy decision, tool result, and responsible authority.
+          required_properties:
+            - reconstructable trace
+            - policy decision provenance
+            - incident review readiness
+      material_preconditions:
+        - tool registry with side-effect metadata
+        - runtime enforcement before tool execution
+        - owner for policy updates and incident review
+      implementation_surfaces:
+        - authority scope schema
+        - side-effect taxonomy
+        - policy gate
+        - action ledger
+        - rollback and escalation interface
+      validation_obligations:
+        - show that prompt injection cannot expand authority
+        - demonstrate rollback or escalation for irreversible actions
+        - benchmark task completion under scoped autonomy
+      residual_limits:
+        - social or reputational effects may not be reversible even if system state is restored
+        - compound low-risk actions can accumulate into high-risk consequences
+        - policy definitions may lag new tools and workflows
+      open_todos:
+        - Define an authority lattice for a concrete workflow family.
+        - Build trace replay cases for prompt-injection and tool misuse.
+      assumptions:
+        - The runtime is trusted enough to enforce the gate before tool calls.
+      unknowns:
+        - Which side-effect classes are stable across organizations.
+    mechanism_counterfactual_critique:
+      requirements_ref: reqs_llm_typed_authority_reversible_action
+      overall_status: plausible
+      counterfactual_tests:
+        - id: cf_llm_remove_side_effect_taxonomy
+          test_type: remove_requirement
+          scenario: Tools have schemas but no material side-effect classification.
+          expected_if_mechanism_valid: The policy gate should be unable to authorize consequential actions confidently.
+          failure_signal: Agent executes file deletion, purchase, deployment, or message-sending actions as if they were ordinary API calls.
+          affected_requirements: [req_llm_side_effect_taxonomy, req_llm_policy_gate]
+          result: fail
+        - id: cf_llm_prompt_injection
+          test_type: evidence_shift
+          scenario: Retrieved content tells the agent that the user has granted broader authority.
+          expected_if_mechanism_valid: Retrieved text cannot modify authority scope unless it comes from an authorized control channel.
+          failure_signal: Agent expands permissions based on untrusted content.
+          affected_requirements: [req_llm_authority_lattice, req_llm_policy_gate]
+          result: needs_evidence
+        - id: cf_llm_approval_fatigue
+          test_type: invert_incentive
+          scenario: Users are asked to approve many medium-risk steps and begin rubber-stamping.
+          expected_if_mechanism_valid: The mechanism should aggregate, preflight, or redesign scopes rather than rely on meaningless approvals.
+          failure_signal: Approval rate approaches automatic acceptance and incident explanations cite user approval without comprehension.
+          affected_requirements: [req_llm_reversibility_boundary, req_llm_autonomy_noncollapse]
+          result: unknown
+        - id: cf_llm_compound_low_risk
+          test_type: shift_regime
+          scenario: Many individually low-risk actions combine into a high-impact state change.
+          expected_if_mechanism_valid: The gate should reason over trajectory-level accumulated risk.
+          failure_signal: The ledger shows permitted micro-actions that produce unauthorized aggregate harm.
+          affected_requirements: [req_llm_policy_gate, req_llm_action_ledger]
+          result: needs_evidence
+      hidden_assumptions:
+        - Tool metadata is accurate and cannot be bypassed through generic execution tools.
+        - The policy gate has enough context to interpret enterprise policy.
+      collapse_risks:
+        - Control collapse when broad initial consent authorizes everything.
+        - Autonomy collapse when every action is escalated to a human.
+      alternative_mechanisms_still_live:
+        - domain-specific agents with no general side-effecting tool access
+        - supervised batch planner that proposes actions but never executes them
+      required_revisions:
+        - Add trajectory-level risk accumulation to the policy gate.
+        - Add explicit trusted-control-channel rules for authority changes.
+      evidence_or_experiment_priorities:
+        - prompt-injection replay suite
+        - rollback drills for common side effects
+        - workflow benchmark measuring task success and approval burden
+    mechanism_todo_packet:
+      requirements_ref: reqs_llm_typed_authority_reversible_action
+      critique_ref: critique_llm_typed_authority_reversible_action
+      todo_groups:
+        - group_id: llm_formal_authority
+          purpose: Formalize authority and side-effect semantics before runtime implementation.
+          todos:
+            - id: todo_llm_authority_lattice
+              class: formal_work
+              task: Define the authority lattice for actors, agents, resources, action classes, time windows, and context.
+              why_needed: This is the necessary mediator between delegation and accountable control.
+              depends_on: []
+              artifact_expected: authority schema and ordering rules
+              acceptance_criterion: Representative workflow actions can be classified as permitted, denied, escalated, or outside scope without ambiguity.
+              priority: critical
+              blocks_candidate_acceptance: true
+            - id: todo_llm_side_effect_registry
+              class: implementation
+              task: Annotate tool schemas with side-effect class, reversibility, resource, and impact level.
+              why_needed: The policy gate cannot mediate material action without knowing what tools do.
+              depends_on: [todo_llm_authority_lattice]
+              artifact_expected: side-effect tool registry
+              acceptance_criterion: Every enabled side-effecting tool has tested metadata and a mismatch audit hook.
+              priority: critical
+              blocks_candidate_acceptance: true
+        - group_id: llm_validation_and_governance
+          purpose: Test whether the envelope preserves autonomy while preventing unauthorized effects.
+          todos:
+            - id: todo_llm_policy_gate_replay
+              class: simulation_or_benchmark
+              task: Run trace replay for prompt injection, stale authority, compound low-risk actions, and rollback failure.
+              why_needed: The critic identified these as primary defeaters.
+              depends_on: [todo_llm_side_effect_registry]
+              artifact_expected: policy gate replay report
+              acceptance_criterion: The gate blocks or escalates all critical fixtures and logs reconstructable reasons.
+              priority: critical
+              blocks_candidate_acceptance: true
+            - id: todo_llm_workflow_benchmark
+              class: validation
+              task: Benchmark task completion under scoped autonomy against human-every-step and unsafe-autonomy baselines.
+              why_needed: Non-collapse requires preserving useful autonomy as well as control.
+              depends_on: [todo_llm_policy_gate_replay]
+              artifact_expected: workflow benchmark report
+              acceptance_criterion: Scoped autonomy meets declared task-completion floor while keeping unauthorized side effects below ceiling.
+              priority: high
+              blocks_candidate_acceptance: true
+            - id: todo_llm_stop_condition
+              class: decision
+              task: Reject or narrow the mechanism if common side-effecting workflows cannot be classified without broad catch-all authority.
+              why_needed: Broad catch-all authority collapses accountable control.
+              depends_on: [todo_llm_authority_lattice, todo_llm_policy_gate_replay]
+              artifact_expected: branch decision record
+              acceptance_criterion: The branch is narrowed to safe workflow classes or rejected when authority typing fails.
+              priority: critical
+              blocks_candidate_acceptance: true
+      immediate_next_actions:
+        - Choose one enterprise workflow and enumerate its side-effecting tools.
+        - Draft the first authority scope schema before building the runtime gate.
+      deferred_questions:
+        - How should authority transfer work across teams and scheduled automations?
+        - Which ledger fields can be exposed to users without leaking sensitive data?
+      stop_conditions:
+        - The runtime cannot intercept all side-effecting tool calls.
+        - Prompt injection can alter authority scope through untrusted content.
+
+  - id: mechanism_grid_reliability_service_adequacy
+    source_tension_ref: tension_grid_decarbonization_reliability
+    field: energy_systems
+    mechanism_name: Reliability-Service Adequacy Layer
+    scenario_summary: >
+      The crisis appears when energy adequacy remains the planning proxy while inverter-dominant
+      grids need dynamic services that synchronous fleets used to provide implicitly. The hypothesized
+      mechanism refines adequacy into a typed service layer that is certified, procured, simulated,
+      and monitored alongside emissions and energy balance.
+    mechanism_abduction_packet:
+      crisis_ref: tension_grid_decarbonization_reliability
+      crisis_restated: >
+        Low-carbon resource plans must meet emissions and demand goals, but energy adequacy does not
+        imply frequency, voltage, inertia-like, restoration, or contingency services in high inverter
+        regimes.
+      required_mediation_shape:
+        commitments_to_preserve:
+          - emissions reduction targets
+          - demand and resource adequacy
+          - dynamic stability and restoration capability
+          - transparent investment and market signals
+        incompatibility_to_mediate: >
+          The inherited adequacy proxy validates low-carbon plans in a regime where omitted dynamic
+          services become decisive for physical delivery.
+        missing_relation_or_process:
+          - typed dynamic-service ontology
+          - capability certification for inverter-based and storage resources
+          - co-optimization of energy, emissions, and reliability services
+          - dynamic simulation under credible contingencies
+          - operational telemetry that updates service adequacy over time
+        inference_commitments:
+          - role: necessary_mediator
+            claim: Adequacy must be refined from energy-only to energy plus typed reliability services.
+            warrant: Energy balance is formally insufficient when service provision changes with resource physics.
+          - role: enabling_condition
+            claim: Grid-forming and storage resources need certified service performance under local network conditions.
+            warrant: Nameplate capacity does not establish dynamic behavior.
+          - role: defeater
+            claim: If service products are procured but not dynamically validated, the mechanism is a market label rather than a reliability repair.
+            warrant: The formal service predicate must correspond to physical performance.
+      mechanism_hypotheses:
+        - id: h_grid_service_adequacy_layer
+          label: Reliability-service adequacy layer
+          hypothesis_type: hybrid
+          abductive_claim: >
+            If resource adequacy is refined into a typed vector of energy, emissions, and dynamic
+            reliability services with certified capability and simulation-backed procurement, then
+            decarbonization plans can preserve physical reliability without reverting to legacy fossil
+            adequacy concepts.
+          if_this_existed_then: >
+            A plan would be valid only when it satisfies emissions constraints and a service adequacy
+            vector across declared contingencies and operating regimes.
+          formal_mediation:
+            new_predicates:
+              - ServiceAdequate(plan, service, regime)
+              - CertifiedCapability(resource, service, regime)
+              - DynamicValidation(plan, contingency_set)
+              - ValidLowCarbonPlan(plan)
+            new_maps:
+              - "kappa: ResourcePortfolio x Regime -> ServiceAdequacyVector"
+              - "omega: ServiceAdequacyGap -> ProcurementOrOperationalAction"
+            constraints:
+              - "ValidLowCarbonPlan(P) requires Emissions(P) <= Target"
+              - "ValidLowCarbonPlan(P) requires EnergyAdequate(P)"
+              - "ValidLowCarbonPlan(P) requires ServiceAdequate(P, s, r) for required services s and regimes r"
+              - "CertifiedCapability(resource, service, regime) requires dynamic validation evidence"
+            preserved_obligations:
+              - decarbonization target
+              - demand adequacy
+              - frequency and voltage stability
+              - restoration capability
+          material_mediation:
+            actors:
+              - grid operator
+              - regulator
+              - renewable developer
+              - storage operator
+              - transmission planner
+              - market monitor
+            practices_or_infrastructure:
+              - service capability tests
+              - dynamic stability simulation
+              - service procurement market or tariff
+              - operational telemetry
+              - contingency planning
+            resources_needed:
+              - network models
+              - inverter control performance data
+              - telemetry streams
+              - market settlement rules
+              - engineering review capacity
+            incentive_or_governance_changes:
+              - pay for verified reliability services rather than assuming them from resource class
+              - require service adequacy reporting in resource plans
+              - update interconnection rules for certified service provision
+          explanatory_gain:
+            - explains why energy-only adequacy fails specifically under resource-regime change
+            - lets low-carbon resources count when they provide verified services
+            - creates investment signals for missing dynamic services
+          new_risks:
+            - service definitions lag control technology
+            - market power or gaming in new service products
+            - simulation confidence exceeds model validity
+            - procurement complexity delays decarbonization
+          disconfirming_observations:
+            - certified resources fail to provide service under grid disturbances
+            - procurement clears service products while dynamic simulations show instability
+            - service costs or interconnection delays block emissions targets without reliability gain
+          evidence_needed:
+            - dynamic simulation under high-inverter contingencies
+            - field tests of grid-forming and storage capabilities
+            - market and operational audit of service delivery
+        - id: h_grid_keep_synchronous_reserve
+          label: Mandatory synchronous reserve
+          hypothesis_type: conservative
+          abductive_claim: >
+            Keeping a minimum synchronous fleet might preserve reliability during transition if it is
+            compatible with emissions targets and does not suppress verified low-carbon service providers.
+          if_this_existed_then: Reliability would be mediated by retaining legacy physical service carriers.
+          formal_mediation:
+            new_predicates: [SynchronousReserveAdequate(plan)]
+            new_maps: ["lambda: Plan -> MinimumSynchronousFleet"]
+            constraints: ["ValidPlan(P) requires SynchronousReserveAdequate(P)"]
+            preserved_obligations: [dynamic stability]
+          material_mediation:
+            actors: [grid operator, generator owner, regulator]
+            practices_or_infrastructure: [must-run contracts, emissions accounting]
+            resources_needed: [legacy units, fuel supply]
+            incentive_or_governance_changes: [compensation for retained units]
+          explanatory_gain:
+            - relies on known service provision
+          new_risks:
+            - locks in fossil infrastructure
+            - prevents learning whether low-carbon services can substitute
+          disconfirming_observations:
+            - emissions targets cannot be met with required reserve
+            - low-carbon resources provide certified equivalent services at scale
+          evidence_needed:
+            - emissions and reliability tradeoff analysis
+      rejected_hypotheses:
+        - id: r_energy_capacity_only
+          label: Energy and capacity margin only
+          reason: It preserves planning simplicity by erasing the dynamic service obligations.
+        - id: r_decarbonize_then_fix
+          label: Defer service adequacy until after deployment
+          reason: It treats reliability debt as an afterthought and risks hidden fragility.
+      assumptions:
+        - Dynamic services can be specified in a way that is technology-neutral enough for innovation.
+        - Operators can obtain credible network models and performance data.
+      unknowns:
+        - Which service definitions are sufficient in each jurisdiction and network topology.
+        - How quickly markets or tariffs can reward verified services without gaming.
+    mechanism_requirements_packet:
+      crisis_ref: tension_grid_decarbonization_reliability
+      selected_hypothesis_refs: [h_grid_service_adequacy_layer]
+      mechanism_name: Reliability-Service Adequacy Layer
+      mechanism_role: >
+        Refine adequacy into a vector of energy, emissions, and dynamic reliability services
+        that can be certified, procured, simulated, and monitored in high-renewable grids.
+      requirements:
+        - id: req_grid_service_ontology
+          kind: formal_capacity
+          necessity_status: necessary
+          statement: Define required reliability services and the regimes where each is needed.
+          formalization: "RequiredServices(regime) = {frequency_response, voltage_support, inertia_like_response, black_start, ramping, fault_ride_through}"
+          material_anchor: reliability standards, operating procedures, and network-specific planning criteria
+          verifies_commitments: [dynamic stability, restoration capability]
+          validation_method: policy_review
+          evidence_needed:
+            - operator service requirements
+            - contingency and restoration criteria
+          failure_mode_if_missing: Adequacy remains a vague proxy and cannot guide investment or validation.
+        - id: req_grid_capability_certification
+          kind: epistemic_capacity
+          necessity_status: necessary
+          statement: Resources must be certified for service delivery under declared operating regimes and contingencies.
+          formalization: "CertifiedCapability(resource, service, regime) requires TestEvidence(resource, service, regime)"
+          material_anchor: interconnection tests, field demonstrations, inverter control validation
+          verifies_commitments: [service adequacy, technology-neutral decarbonization]
+          validation_method: experiment
+          evidence_needed:
+            - field tests
+            - model validation against disturbances
+          failure_mode_if_missing: The plan counts resources for services they may not physically provide.
+        - id: req_grid_service_vector_planning
+          kind: formal_capacity
+          necessity_status: jointly_sufficient
+          statement: Planning validity must require an adequacy vector, not only energy balance and emissions compliance.
+          formalization: "ValidLowCarbonPlan(P) -> EnergyAdequate(P) and Emissions(P)<=Target and forall s,r ServiceAdequate(P,s,r)"
+          material_anchor: integrated resource planning and transmission planning studies
+          verifies_commitments: [decarbonization, reliability]
+          validation_method: simulation
+          evidence_needed:
+            - portfolio service adequacy simulations
+            - gap analysis for credible contingencies
+          failure_mode_if_missing: Energy-adequate plans can still be dynamically fragile.
+        - id: req_grid_procurement_feedback
+          kind: material_capacity
+          necessity_status: jointly_sufficient
+          statement: Service gaps must trigger procurement, operational changes, interconnection requirements, or plan revision.
+          formalization: "ServiceGap(P,s,r) -> Action(procure | operate | interconnect | revise)"
+          material_anchor: market products, tariffs, operator procedures, and regulatory approval
+          verifies_commitments: [transparent market signals, practical reliability repair]
+          validation_method: audit
+          evidence_needed:
+            - procurement records
+            - service delivery audits
+          failure_mode_if_missing: The service vector diagnoses gaps but does not change material behavior.
+        - id: req_grid_dynamic_validation
+          kind: epistemic_capacity
+          necessity_status: necessary
+          statement: Plans must be validated through dynamic simulation and updated with operational telemetry.
+          formalization: "DynamicValidation(P, C) and TelemetryUpdate(P,t)"
+          material_anchor: operator models, real-time measurements, disturbance reports
+          verifies_commitments: [measurement validity, regime transfer]
+          validation_method: simulation
+          evidence_needed:
+            - stability studies
+            - telemetry comparisons
+            - disturbance event review
+          failure_mode_if_missing: Service adequacy becomes a paper classification disconnected from grid behavior.
+        - id: req_grid_noncollapse
+          kind: safety_or_noncollapse_capacity
+          necessity_status: necessary
+          statement: The mechanism must not preserve reliability by indefinitely locking in high-emission legacy assets or preserve decarbonization by ignoring service failures.
+          formalization: "not(FossilLockInCollapse) and not(EnergyOnlyCollapse)"
+          material_anchor: emissions accounting, transition timelines, and reliability incident review
+          verifies_commitments: [emissions reduction, dynamic reliability]
+          validation_method: policy_review
+          evidence_needed:
+            - emissions trajectory with service procurement
+            - reliability incident and near-miss review
+          failure_mode_if_missing: One pole wins under the name of mediation.
+      mediation_maps:
+        - id: map_energy_to_services
+          source_commitment: resource adequacy and demand service
+          target_commitment: dynamic grid reliability
+          map_type: refinement
+          statement: Adequacy is refined from energy balance to a typed vector of service obligations under regimes and contingencies.
+          required_properties:
+            - includes dynamic service requirements
+            - varies by operating regime
+            - connects service gaps to actions
+        - id: map_low_carbon_to_reliability
+          source_commitment: decarbonization
+          target_commitment: reliability service preservation
+          map_type: feedback
+          statement: Low-carbon resources count toward reliability only when capability certification and telemetry support the relevant service predicate.
+          required_properties:
+            - technology neutral
+            - physically validated
+            - monitored over time
+      material_preconditions:
+        - access to credible network and contingency models
+        - authority to define service requirements and procure them
+        - telemetry and disturbance reporting infrastructure
+      implementation_surfaces:
+        - service adequacy schema
+        - certification protocol
+        - planning simulation workflow
+        - procurement or tariff interface
+        - service delivery audit dashboard
+      validation_obligations:
+        - validate service adequacy for high-inverter contingencies
+        - demonstrate that service procurement changes resource behavior
+        - show emissions targets remain achievable under service requirements
+      residual_limits:
+        - extreme weather and correlated failures can exceed modeled contingencies
+        - service definitions may need revision as inverter controls evolve
+        - market design may lag engineering requirements
+      open_todos:
+        - Define jurisdiction-specific required service vector.
+        - Build a simulation fixture for high-inverter service gaps.
+      assumptions:
+        - Required services can be measured or certified with enough fidelity for planning.
+      unknowns:
+        - Whether procurement can avoid gaming and technology lock-in.
+    mechanism_counterfactual_critique:
+      requirements_ref: reqs_grid_reliability_service_adequacy
+      overall_status: plausible
+      counterfactual_tests:
+        - id: cf_grid_remove_certification
+          test_type: remove_requirement
+          scenario: The plan procures service products but does not require resource-level capability certification.
+          expected_if_mechanism_valid: Service adequacy should be treated as unverified and not accepted.
+          failure_signal: Resources are paid for services that simulations or events show they cannot deliver.
+          affected_requirements: [req_grid_capability_certification, req_grid_dynamic_validation]
+          result: fail
+        - id: cf_grid_energy_only_success
+          test_type: proxy_capture
+          scenario: The plan meets annual energy and emissions targets while omitting voltage and frequency service gaps.
+          expected_if_mechanism_valid: The plan should fail validity despite energy success.
+          failure_signal: Energy adequacy is accepted as total adequacy under high inverter share.
+          affected_requirements: [req_grid_service_vector_planning, req_grid_noncollapse]
+          result: fail
+        - id: cf_grid_market_gaming
+          test_type: invert_incentive
+          scenario: Providers optimize declared service metrics without improving disturbance performance.
+          expected_if_mechanism_valid: Telemetry and event review should expose mismatch and revise certification or settlement.
+          failure_signal: Procured services clear while operational incidents reveal inadequate dynamic behavior.
+          affected_requirements: [req_grid_procurement_feedback, req_grid_dynamic_validation]
+          result: needs_evidence
+        - id: cf_grid_extreme_weather
+          test_type: shift_regime
+          scenario: Correlated renewable shortfall and transmission outage exceed planning contingencies.
+          expected_if_mechanism_valid: The mechanism should declare residual risk and emergency operating regime rather than claiming full adequacy.
+          failure_signal: Service adequacy certificate is applied outside modeled regimes.
+          affected_requirements: [req_grid_service_ontology, req_grid_dynamic_validation]
+          result: unknown
+      hidden_assumptions:
+        - Operators and regulators can agree on service definitions quickly enough for planning cycles.
+        - Dynamic simulations capture the relevant control interactions.
+      collapse_risks:
+        - Fossil lock-in collapse if service adequacy is defined around legacy synchronous assets only.
+        - Energy-only collapse if service products become paperwork without dynamic validation.
+      alternative_mechanisms_still_live:
+        - staged renewable penetration caps tied to validated service capability
+        - public infrastructure buildout of grid-forming storage and transmission before market procurement
+      required_revisions:
+        - Add telemetry-backed settlement or certification revision.
+        - Declare emergency regimes beyond ordinary service adequacy.
+      evidence_or_experiment_priorities:
+        - dynamic simulation of high-inverter portfolios
+        - field demonstration of grid-forming service delivery
+        - procurement audit linking payments to measured performance
+    mechanism_todo_packet:
+      requirements_ref: reqs_grid_reliability_service_adequacy
+      critique_ref: critique_grid_reliability_service_adequacy
+      todo_groups:
+        - group_id: grid_formal_service_model
+          purpose: Formalize adequacy as a vector of energy, emissions, and required services.
+          todos:
+            - id: todo_grid_service_vector
+              class: formal_work
+              task: Define the required service vector for one high-renewable planning region.
+              why_needed: The inherited adequacy predicate must be refined before plans can be judged.
+              depends_on: []
+              artifact_expected: service adequacy schema
+              acceptance_criterion: The schema names required services, regimes, contingencies, and validity thresholds.
+              priority: critical
+              blocks_candidate_acceptance: true
+            - id: todo_grid_noncollapse_checks
+              class: validation
+              task: Define checks for fossil-lock-in collapse and energy-only collapse.
+              why_needed: The mechanism must preserve both decarbonization and reliability.
+              depends_on: [todo_grid_service_vector]
+              artifact_expected: non-collapse validation protocol
+              acceptance_criterion: The protocol rejects both high-emission service preservation and low-carbon plans with unserved dynamic obligations.
+              priority: high
+              blocks_candidate_acceptance: true
+        - group_id: grid_material_validation
+          purpose: Test whether service predicates correspond to physical performance and investment behavior.
+          todos:
+            - id: todo_grid_dynamic_simulation
+              class: simulation_or_benchmark
+              task: Simulate high-inverter portfolios under credible contingencies and identify service gaps.
+              why_needed: Service adequacy must be physically validated, not only formally declared.
+              depends_on: [todo_grid_service_vector]
+              artifact_expected: dynamic simulation report
+              acceptance_criterion: The report classifies plans by service adequacy and identifies gaps with uncertainty and regime limits.
+              priority: critical
+              blocks_candidate_acceptance: true
+            - id: todo_grid_certification_protocol
+              class: material_design
+              task: Design a certification and telemetry protocol for resources providing dynamic services.
+              why_needed: Procurement only mediates the crisis if it changes verified physical capability.
+              depends_on: [todo_grid_dynamic_simulation]
+              artifact_expected: certification protocol draft
+              acceptance_criterion: Each certified service has a test method, telemetry requirement, and revision trigger after poor event performance.
+              priority: high
+              blocks_candidate_acceptance: true
+            - id: todo_grid_stop_condition
+              class: decision
+              task: Reject or narrow the mechanism if required services cannot be measured or certified for the target regime.
+              why_needed: Unmeasurable service labels would reproduce the measurement crisis.
+              depends_on: [todo_grid_certification_protocol]
+              artifact_expected: branch decision record
+              acceptance_criterion: The branch is narrowed to measurable services or rejected before procurement design proceeds.
+              priority: critical
+              blocks_candidate_acceptance: true
+      immediate_next_actions:
+        - Pick one target region and declare the high-inverter operating regime.
+        - Build a minimal service adequacy schema before market design.
+      deferred_questions:
+        - Which services should be procured through markets and which through mandatory interconnection rules?
+        - How should extreme weather residual risk be represented in adequacy certificates?
+      stop_conditions:
+        - Service predicates cannot be linked to dynamic simulations or telemetry.
+        - Meeting the service vector necessarily violates declared emissions constraints without a transition path.

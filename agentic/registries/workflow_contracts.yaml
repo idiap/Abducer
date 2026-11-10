@@ -1,0 +1,229 @@
+{
+  "version": 2,
+  "named_workflow_contracts": "agentic/registries/named_workflow_contracts.yaml",
+  "skill_dispositions": "agentic/registries/skill_workflow_dispositions.yaml",
+  "workflows": [
+    {
+      "id": "target_navigation_loop",
+      "kind": "control_plane_contract",
+      "phase": "target_navigation",
+      "owner_skill": "looper-target-dependency-cartographer",
+      "required_artifacts": [
+        "agentic/state/current_target.json",
+        "agentic/state/dependency_frontier.json",
+        "agentic/reports/dependency_closure/yang-mills-existence-and-mass-gap.md",
+        "agentic/spec/reasoning_event_log_schema.json",
+        "agentic/spec/reasoning_monitor_packet.schema.json",
+        "agentic/spec/formal_subgoal_control.schema.json",
+        "agentic/spec/abstraction_machinery_selection.schema.json",
+        "agentic/spec/api_key_config.schema.json",
+        "config/README.md",
+        "config/api_keys.example.json",
+        "config/api_keys.example.env",
+        "docs/research-methods/formal-subgoal-control-policy.md",
+        "docs/research-methods/abstraction-machinery-selection-policy.md",
+        "docs/examples/yang-mills-abstraction-machinery-alignment.md",
+        "tests/generative/test_abstraction_machinery_selection_quality.md",
+        "agentic/reports/reasoning_progress/latest.json",
+        "agentic/reports/abstraction_chains/latest.json",
+        "agentic/reports/abstraction_chains/latest.md",
+        "agentic/reports/abstraction_machinery_validation/latest.json",
+        "agentic/reports/abstraction_machinery_validation/latest.md",
+        "agentic/reports/reasoning_monitor/latest.json",
+        "agentic/reports/reasoning_monitor/latest.html",
+        "agentic/reports/long_horizon/latest.json",
+        "agentic/reports/long_horizon/latest.md",
+        "agentic/reports/discovery_stretch/latest.json",
+        "agentic/reports/discovery_stretch/latest.md",
+        "agentic/reports/discovery_marathon/latest.json",
+        "agentic/reports/discovery_marathon/latest.md",
+        "agentic/registries/discovery_marathon_skill_dispatch.yaml",
+        "agentic/reports/compliance/latest.md",
+        "agentic/reports/drift/latest.md",
+        "agentic/reports/releases/ITER-0001.md"
+      ],
+      "gate": "target_navigation_release_gate",
+      "reasoning_log_events": [
+        "skill_application_start",
+        "skill_application_context_loaded",
+        "skill_application_input_normalized",
+        "skill_application_action_taken",
+        "skill_application_evidence_recorded",
+        "skill_application_gate_evaluated",
+        "skill_application_complete",
+        "skill_application_error"
+      ],
+      "validators": [
+        "agentic/scripts/validate_target_packets.py",
+        "agentic/scripts/validate_dependency_graph.py",
+        "agentic/scripts/validate_reasoning_event_logs.py",
+        "agentic/scripts/validate_reasoning_monitor.py",
+        "agentic/scripts/validate_long_horizon_probe.py",
+        "agentic/scripts/validate_discovery_stretch.py",
+        "agentic/scripts/validate_api_key_config.py",
+        "agentic/scripts/validate_discovery_marathon_state.py",
+        "agentic/scripts/validate_discovery_marathon_cycle.py",
+        "agentic/scripts/validate_discovery_marathon_skill_dispatch.py",
+        "agentic/scripts/validate_discovery_marathon_report.py",
+        "agentic/scripts/validate_task_skill_registry.py",
+        "agentic/scripts/validate_workflow_contracts.py"
+      ],
+      "handoff_to": [
+        "abducer_work_loop",
+        "release_promotion_loop"
+      ]
+    },
+    {
+      "id": "discovery_marathon_loop",
+      "kind": "long_horizon_discovery_contract",
+      "phase": "target_navigation",
+      "owner_skill": "long-horizon-route-portfolio-manager",
+      "required_artifacts": [
+        "agentic/spec/discovery_marathon_run.schema.json",
+        "agentic/spec/discovery_marathon_cycle.schema.json",
+        "agentic/spec/discovery_branch_state.schema.json",
+        "agentic/spec/discovery_marathon_branch_output.schema.json",
+        "agentic/spec/discovery_marathon_codex_branch_output.schema.json",
+        "agentic/spec/api_key_config.schema.json",
+        "config/README.md",
+        "config/api_keys.example.json",
+        "config/api_keys.example.env",
+        "agentic/registries/discovery_marathon_skill_dispatch.yaml",
+        "agentic/scripts/init_discovery_marathon.py",
+        "agentic/scripts/run_discovery_marathon.py",
+        "agentic/scripts/run_branch_exploration_cycle.py",
+        "agentic/scripts/discovery_marathon_scheduler.py",
+        "agentic/scripts/validate_discovery_marathon_state.py",
+        "agentic/scripts/validate_discovery_marathon_cycle.py",
+        "agentic/scripts/validate_discovery_marathon_skill_dispatch.py",
+        "agentic/scripts/build_discovery_marathon_report.py",
+        "agentic/scripts/validate_discovery_marathon_report.py",
+        "agentic/scripts/run_marathon_deep_review.py",
+        "agentic/scripts/validate_marathon_deep_review.py",
+        "agentic/scripts/api_key_config.py",
+        "agentic/scripts/validate_api_key_config.py",
+        "agentic/reports/discovery_marathon/latest.json",
+        "agentic/reports/discovery_marathon/latest.md",
+        "docs/operations/discovery-marathon-operations.md",
+        "agentic/runs/discovery_marathons/README.md",
+        "registry/tasks/discovery-marathon/task_registry.json"
+      ],
+      "gate": "discovery_marathon_gate",
+      "reasoning_log_events": [
+        "skill_application_start",
+        "skill_application_action_taken",
+        "skill_application_evidence_recorded",
+        "skill_application_gate_evaluated",
+        "skill_application_complete",
+        "skill_application_error"
+      ],
+      "validators": [
+        "agentic/scripts/validate_discovery_marathon_state.py",
+        "agentic/scripts/validate_discovery_marathon_cycle.py",
+        "agentic/scripts/validate_discovery_marathon_skill_dispatch.py",
+        "agentic/scripts/validate_discovery_marathon_report.py",
+        "agentic/scripts/validate_marathon_deep_review.py",
+        "agentic/scripts/validate_api_key_config.py",
+        "agentic/scripts/validate_reasoning_monitor.py"
+      ],
+      "handoff_to": [
+        "target_navigation_loop",
+        "conceptual_hypothesis_exploration_loop",
+        "release_promotion_loop"
+      ]
+    },
+    {
+      "id": "abducer_work_loop",
+      "kind": "domain_engine_contract",
+      "phase": "proof_search",
+      "owner_skill": "work",
+      "required_artifacts": [
+        "artifacts/p-vs-np/work-state.json",
+        "artifacts/p-vs-np/proof-queue.json",
+        "artifacts/p-vs-np/search-space-tree.json"
+      ],
+      "gate": "dependency_frontier_gate",
+      "reasoning_log_events": [
+        "skill_application_start",
+        "skill_application_action_taken",
+        "skill_application_evidence_recorded",
+        "skill_application_gate_evaluated",
+        "skill_application_complete",
+        "skill_application_error"
+      ],
+      "validators": [
+        "agentic/scripts/validate_dependency_graph.py"
+      ],
+      "handoff_to": [
+        "target_navigation_loop",
+        "conceptual_hypothesis_exploration_loop",
+        "release_promotion_loop"
+      ]
+    },
+    {
+      "id": "conceptual_hypothesis_exploration_loop",
+      "kind": "hypothesis_space_contract",
+      "phase": "conceptual_refinement",
+      "owner_skill": "abducer-refinement-route-ranker",
+      "required_artifacts": [
+        "artifacts/hegelian/hypothesis_exploration_map.json",
+        "artifacts/hegelian/failure_signal_cartography.json",
+        "artifacts/hegelian/mediation_candidates.json",
+        "artifacts/hegelian/validation_packets.json",
+        "artifacts/hegelian/candidate_rankings.json",
+        "artifacts/hegelian/formal_subgoal_controls.json",
+        "artifacts/hegelian/machinery_selection_packets.json",
+        "artifacts/hegelian/conceptual_refinement_trace.json",
+        "agentic/logs/hegelian-conceptual-refinement.jsonl",
+        "agentic/reports/hegelian_conceptual_refinement_release_report.md"
+      ],
+      "gate": "conceptual_creativity_release_gate",
+      "reasoning_log_events": [
+        "skill_application_start",
+        "skill_application_action_taken",
+        "skill_application_evidence_recorded",
+        "skill_application_gate_evaluated",
+        "skill_application_complete",
+        "skill_application_error"
+      ],
+      "validators": [
+        "agentic/scripts/validate_hypothesis_exploration.py",
+        "agentic/scripts/apply_gate_policy.py",
+        "agentic/scripts/validate_dependency_graph.py",
+        "agentic/scripts/validate_todos.py"
+      ],
+      "handoff_to": [
+        "abducer_work_loop",
+        "release_promotion_loop"
+      ]
+    },
+    {
+      "id": "release_promotion_loop",
+      "kind": "release_contract",
+      "phase": "release_promotion",
+      "owner_skill": "looper-release-promoter",
+      "required_artifacts": [
+        "agentic/reports/releases/ITER-0001.md",
+        "agentic/reports/compliance/latest.md",
+        "agentic/reports/drift/latest.md"
+      ],
+      "gate": "release_promotion_gate",
+      "reasoning_log_events": [
+        "skill_application_start",
+        "skill_application_action_taken",
+        "skill_application_evidence_recorded",
+        "skill_application_gate_evaluated",
+        "skill_application_complete",
+        "skill_application_error"
+      ],
+      "validators": [
+        "agentic/scripts/validate_promotion_gates.py",
+        "agentic/scripts/apply_gate_policy.py"
+      ],
+      "handoff_to": [
+        "target_navigation_loop",
+        "conceptual_hypothesis_exploration_loop"
+      ]
+    }
+  ]
+}

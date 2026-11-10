@@ -1,0 +1,56 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://abducer.local/spec/dynamic_experiment_world_observation_transition_v1.schema.json",
+  "title": "One canonical committed world observation transition",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "transition_kind", "programme_id", "target_id", "run_id",
+    "anchor_commit", "parent_commit", "prior_observation_commits",
+    "expected_commit_generation", "ordinal", "world_id", "commission_id", "commission_digest",
+    "observation_envelope", "observed_world_ids", "missing_world_ids", "observation_count",
+    "new_observation_count", "status", "certificate", "prior_state_semantic_digest",
+    "next_state_semantic_digest", "changed_state_paths", "theory_state_changed",
+    "frozen_theory_state_projection_digest", "commit_local_evidence_manifest",
+    "authority_boundary", "transition_digest"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "transition_kind": {"const": "world_observation"},
+    "programme_id": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/identifier"},
+    "target_id": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/identifier"},
+    "run_id": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/identifier"},
+    "anchor_commit": {"$ref": "./discovery_commit_reference.schema.json"},
+    "parent_commit": {"$ref": "./discovery_commit_reference.schema.json"},
+    "prior_observation_commits": {
+      "type": "array", "maxItems": 4,
+      "items": {"$ref": "./discovery_commit_reference.schema.json"}
+    },
+    "expected_commit_generation": {"type": "integer", "minimum": 2},
+    "ordinal": {"type": "integer", "minimum": 0, "maximum": 4},
+    "world_id": {"enum": ["no_probe", "neutral_inconclusive", "misleading_toy_positive", "registered_premise_falsifier", "operational_failure"]},
+    "commission_id": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/identifier"},
+    "commission_digest": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/digest"},
+    "observation_envelope": {"$ref": "./dynamic_experiment_world_observation_envelope_v2.schema.json"},
+    "observed_world_ids": {
+      "type": "array", "minItems": 1, "maxItems": 5, "uniqueItems": true,
+      "items": {"enum": ["no_probe", "neutral_inconclusive", "misleading_toy_positive", "registered_premise_falsifier", "operational_failure"]}
+    },
+    "missing_world_ids": {
+      "type": "array", "maxItems": 4, "uniqueItems": true,
+      "items": {"enum": ["no_probe", "neutral_inconclusive", "misleading_toy_positive", "registered_premise_falsifier", "operational_failure"]}
+    },
+    "observation_count": {"type": "integer", "minimum": 1, "maximum": 5},
+    "new_observation_count": {"const": 1},
+    "status": {"enum": ["observations_in_progress", "ready_for_aggregation"]},
+    "certificate": {"type": "null"},
+    "prior_state_semantic_digest": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/digest"},
+    "next_state_semantic_digest": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/digest"},
+    "changed_state_paths": {"const": ["/generation"]},
+    "theory_state_changed": {"const": false},
+    "frozen_theory_state_projection_digest": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/digest"},
+    "commit_local_evidence_manifest": {"$ref": "./dynamic_experiment_world_matrix_anchor_transition_v1.schema.json#/$defs/evidenceManifest"},
+    "authority_boundary": {"$ref": "./dynamic_experiment_world_matrix_anchor_transition_v1.schema.json#/$defs/authorityBoundary"},
+    "transition_digest": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/digest"}
+  }
+}

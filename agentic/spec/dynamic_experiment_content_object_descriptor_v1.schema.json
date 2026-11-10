@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://abducer.local/spec/dynamic_experiment_content_object_descriptor_v1.schema.json",
+  "title": "Local dynamic-experiment content-object descriptor",
+  "description": "Locates one content object inside the graph's own verified immutable root. The nested ref carries all identity and semantic authority; path is only a portable root-relative locator and must not participate in object identity. Runtime validation must enforce unique canonical paths, component-wise containment and no-follow regular-file reads before comparing the reopened bytes with ref.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "ref",
+    "path"
+  ],
+  "properties": {
+    "ref": {
+      "$ref": "./dynamic_experiment_content_object_ref_v1.schema.json"
+    },
+    "path": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$)).+$"
+    }
+  }
+}

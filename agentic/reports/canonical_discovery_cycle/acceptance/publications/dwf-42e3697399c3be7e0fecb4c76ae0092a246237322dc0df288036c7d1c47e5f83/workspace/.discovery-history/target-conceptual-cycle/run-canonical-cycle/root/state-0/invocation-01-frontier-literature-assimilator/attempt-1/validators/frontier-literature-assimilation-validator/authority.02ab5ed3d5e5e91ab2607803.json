@@ -1,0 +1,99 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://abducer.local/spec/dynamic_probe_triage.schema.json",
+  "title": "Dynamic probe triage",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "triage_id",
+    "target_id",
+    "theory_programme_id",
+    "source_theory_programme_digest",
+    "source_reflection_packet_digest",
+    "conceptual_system_ids",
+    "theoretical_question_id",
+    "question",
+    "programme_maturity",
+    "probe_role",
+    "decision",
+    "decision_effect",
+    "expected_conceptual_change",
+    "theory_generated_justification",
+    "candidate_methods",
+    "state_version",
+    "input_digest"
+  ],
+  "properties": {
+    "schema_version": {"const": 1},
+    "triage_id": {"type": "string", "minLength": 1},
+    "target_id": {"type": "string", "minLength": 1},
+    "theory_programme_id": {"type": ["string", "null"]},
+    "source_theory_programme_digest": {
+      "type": ["string", "null"],
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "source_reflection_packet_digest": {
+      "type": ["string", "null"],
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "conceptual_system_ids": {
+      "type": "array",
+      "items": {"type": "string", "minLength": 1},
+      "uniqueItems": true
+    },
+    "theoretical_question_id": {"type": ["string", "null"]},
+    "question": {"type": "string"},
+    "programme_maturity": {
+      "enum": ["unformed", "incubating", "mature", "formalization_ready"]
+    },
+    "probe_role": {
+      "enum": ["none", "discriminator", "falsifier", "mechanism_support", "boundary_mapper", "proof_support"]
+    },
+    "decision": {"enum": ["commission", "no_probe_needed", "immature_question"]},
+    "decision_effect": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["if_supported", "if_not_supported"],
+      "properties": {
+        "if_supported": {"type": "string"},
+        "if_not_supported": {"type": "string"}
+      }
+    },
+    "expected_conceptual_change": {"type": "string"},
+    "theory_generated_justification": {"type": "string"},
+    "candidate_methods": {
+      "type": "array",
+      "items": {"enum": ["exact", "sympy", "finite_model", "numeric", "sweep", "lean", "hybrid"]},
+      "uniqueItems": true
+    },
+    "state_version": {"type": "integer", "minimum": 0},
+    "input_digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "reasons": {"type": "array", "items": {"type": "string", "minLength": 1}},
+    "created_at": {"type": "string", "format": "date-time"}
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"decision": {"const": "commission"}}},
+      "then": {
+        "properties": {
+          "theory_programme_id": {"type": "string", "minLength": 1},
+          "source_theory_programme_digest": {
+            "type": "string",
+            "pattern": "^sha256:[0-9a-f]{64}$"
+          },
+          "source_reflection_packet_digest": {
+            "type": "string",
+            "pattern": "^sha256:[0-9a-f]{64}$"
+          },
+          "theoretical_question_id": {"type": "string", "minLength": 1},
+          "question": {"type": "string", "minLength": 1},
+          "expected_conceptual_change": {"type": "string", "minLength": 1},
+          "theory_generated_justification": {"type": "string", "minLength": 1},
+          "conceptual_system_ids": {"minItems": 1},
+          "candidate_methods": {"minItems": 1}
+        }
+      }
+    }
+  ]
+}

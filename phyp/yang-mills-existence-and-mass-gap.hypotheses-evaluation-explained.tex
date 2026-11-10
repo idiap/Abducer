@@ -1,0 +1,1140 @@
+% SPDX-FileCopyrightText: © 2026 Idiap Research Institute <contact@idiap.ch>
+%
+% SPDX-FileContributor: Andre Freitas <andre.freitas@idiap.ch>
+% Neuro-symbolic AI Group
+%
+% SPDX-FileContributor: Danilo Gusicuma <danilo.gusicuma@idiap.ch>
+% Neuro-symbolic AI Group
+%
+% SPDX-License-Identifier: MIT
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\documentclass[
+]{article}
+\usepackage{xcolor}
+\usepackage{amsmath,amssymb}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  pdftitle={Yang Mills Existence And Mass Gap.hypotheses Evaluation Explained},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\title{Yang Mills Existence And Mass Gap.hypotheses Evaluation
+Explained}
+\author{}
+\date{}
+
+\begin{document}
+\maketitle
+
+\section{Yang-\/-Mills Hypothesis Evaluation
+Explained}\label{yang--mills-hypothesis-evaluation-explained}
+
+\subsection{Purpose}\label{purpose}
+
+This document explains how to read the hypothesis evaluation report in
+\href{/Users/user/files/abducer/abducer/phyp/yang-mills-existence-and-mass-gap.hypotheses-evaluated.md}{yang-mills-existence-and-mass-gap.hypotheses-evaluated.md}.
+The report is not a proof checker. It is a triage layer over proof
+hypotheses generated from the Yang-\/-Mills knowledge base. Its job is
+to decide which hypotheses are currently well-grounded in the KB, which
+ones remain plausible but underdetermined, and which ones should be
+deprioritized or refuted.
+
+The central point is this:
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{supported} means the framework currently sees enough
+  structural and coherence-based evidence to keep the hypothesis in the
+  active frontier
+\item
+  \texttt{inconclusive} means the hypothesis is still live, but the
+  present KB does not yet justify promoting it
+\item
+  \texttt{refuted} would mean the framework found sufficiently strong
+  structural conflict or explicit negative evidence
+\end{itemize}
+
+In this run there are no \texttt{refuted} hypotheses. That matters. The
+system is not saying that most proposals are bad. It is saying that most
+proposals are not yet sharp enough, evidenced enough, or deductively
+connected enough to the current Yang-\/-Mills KB.
+
+\subsection{What Was Evaluated}\label{what-was-evaluated}
+
+\begin{itemize}
+\tightlist
+\item
+  Total hypotheses: \texttt{44}
+\item
+  Direct bridge hypotheses: \texttt{001} to \texttt{020}
+\item
+  Intervention-focus hypotheses: \texttt{021} to \texttt{032}
+\item
+  Higher-order conceptual hypotheses: \texttt{033} to \texttt{044}
+\end{itemize}
+
+These are three different inferential roles.
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{bridge-link}: a direct proposed connection from one statement
+  to another
+\item
+  \texttt{intervention-focus}: a claim that a particular statement is a
+  high-value place to concentrate reasoning effort
+\item
+  \texttt{representation-shift} / \texttt{intermediate-invariant} /
+  \texttt{definition-introduction}: higher-order conceptual moves that
+  reorganize the proof search space rather than asserting a single
+  direct theorem jump
+\end{itemize}
+
+This distinction is essential for interpreting the result. The strongest
+results in this run are mostly not direct theorem-to-theorem bridges.
+They are conceptual restructurings.
+
+\subsection{How The Evaluator Decides}\label{how-the-evaluator-decides}
+
+The evaluator combines four layers of evidence.
+
+\subsubsection{1. Structural support}\label{1-structural-support}
+
+For bridge and conceptual hypotheses, the evaluator looks at:
+
+\begin{itemize}
+\tightlist
+\item
+  typed similarity between source and target statement structure
+\item
+  symbol-role alignment
+\item
+  theorem-family similarity
+\item
+  connector analysis score
+\item
+  whether the target already depends on the source
+\item
+  whether the proposal loops back on itself
+\item
+  whether there are contradiction markers
+\end{itemize}
+
+This is implemented in
+\href{/Users/user/files/abducer/abducer/skills/common/hypothesis_eval.py:755}{hypothesis\_eval.py}
+and
+\href{/Users/user/files/abducer/abducer/skills/common/hypothesis_eval.py:969}{hypothesis\_eval.py}.
+
+\subsubsection{2. Inferential commitment
+grounding}\label{2-inferential-commitment-grounding}
+
+Each non-intervention hypothesis can carry four explicit commitments:
+
+\begin{itemize}
+\tightlist
+\item
+  antecedent schema
+\item
+  target consequence schema
+\item
+  preserved invariant
+\item
+  barrier scope
+\end{itemize}
+
+The evaluator asks whether those commitments are actually visible in the
+structured content of the source and target statements. This is why the
+report contains alignment signals such as:
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{antecedent\_alignment}
+\item
+  \texttt{consequence\_alignment}
+\item
+  \texttt{invariant\_alignment}
+\item
+  \texttt{barrier\_alignment}
+\end{itemize}
+
+This matters because the framework is trying to reason mathematically,
+not just lexically. A hypothesis is stronger when it states a concrete
+inferential interface and that interface is visible in the KB statements
+themselves.
+
+\subsubsection{3. External evidence
+adjustments}\label{3-external-evidence-adjustments}
+
+Optional deductive, abductive, contradiction, or experimental signals
+can adjust support or refutation. The logic is in
+\href{/Users/user/files/abducer/abducer/skills/common/hypothesis_eval.py:620}{hypothesis\_eval.py}.
+
+For example:
+
+\begin{itemize}
+\tightlist
+\item
+  a deductive entailment can increase support
+\item
+  a failed derivation can increase refutation
+\item
+  an explicit contradiction can strongly increase refutation
+\end{itemize}
+
+In this Yang-\/-Mills run, the results are driven mainly by structural
+and coherence signals, not by hard deductive discharge.
+
+\subsubsection{4. Coherence adjustments}\label{4-coherence-adjustments}
+
+Each hypothesis also receives a local coherence readout against the
+current theory graph. This is why the report lists:
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{Coherence\ signals:\ 44}
+\item
+  \texttt{Global\ coherence\ baseline:\ 0.320043}
+\end{itemize}
+
+The baseline is the current global coherence score of the KB before
+accepting any specific hypothesis. Each hypothesis is then evaluated
+against that background. This does not yet mean the system has found a
+globally optimized theory. It means each hypothesis is judged partly by
+whether it improves or destabilizes the current web of claims.
+
+\subsection{How Verdicts Are Assigned}\label{how-verdicts-are-assigned}
+
+The decision rule is explicit in
+\href{/Users/user/files/abducer/abducer/skills/common/hypothesis_eval.py:662}{hypothesis\_eval.py}.
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{supported} requires:
+
+  \begin{itemize}
+  \tightlist
+  \item
+    \texttt{support\ \textgreater{}=\ 0.62}
+  \item
+    and \texttt{support\ -\ refute\ \textgreater{}=\ 0.08}
+  \end{itemize}
+\item
+  \texttt{refuted} would require:
+
+  \begin{itemize}
+  \tightlist
+  \item
+    \texttt{refute\ \textgreater{}=\ 0.62}
+  \item
+    and \texttt{refute\ -\ support\ \textgreater{}=\ 0.08}
+  \end{itemize}
+\item
+  otherwise the result is \texttt{inconclusive}
+\end{itemize}
+
+For this run:
+
+\begin{itemize}
+\tightlist
+\item
+  support threshold = \texttt{0.62}
+\item
+  refute threshold = \texttt{0.62}
+\item
+  margin = \texttt{0.08}
+\item
+  force resolution = \texttt{False}
+\end{itemize}
+
+\texttt{force\ resolution\ =\ False} is important. It means the
+evaluator is allowed to leave a hypothesis unresolved. It does not have
+to pretend every hypothesis is either accepted or rejected.
+
+\subsection{What Confidence Means}\label{what-confidence-means}
+
+\texttt{confidence} is not the same thing as \texttt{support}.
+
+It is computed from:
+
+\begin{itemize}
+\tightlist
+\item
+  the stronger of the support/refute scores
+\item
+  multiplied by a factor that rewards separation between them
+\end{itemize}
+
+The formula is in
+\href{/Users/user/files/abducer/abducer/skills/common/hypothesis_eval.py:854}{hypothesis\_eval.py},
+\href{/Users/user/files/abducer/abducer/skills/common/hypothesis_eval.py:1019}{hypothesis\_eval.py},
+and
+\href{/Users/user/files/abducer/abducer/skills/common/hypothesis_eval.py:1170}{hypothesis\_eval.py}.
+
+Interpretation:
+
+\begin{itemize}
+\tightlist
+\item
+  high \texttt{support} with low \texttt{refute} gives higher confidence
+\item
+  moderate \texttt{support} with moderate \texttt{refute} can still be
+  \texttt{supported}, but with lower confidence
+\end{itemize}
+
+That is why \texttt{phyp.yang-mills-existence-and-mass-gap.040} is
+\texttt{supported} even though its confidence is only \texttt{0.4823}:
+its support clears threshold and its margin over refute is large enough,
+but the absolute strength is still moderate.
+
+\subsection{What the Summary Means}\label{what-the-summary-means}
+
+\subsubsection{Stats}\label{stats}
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{44} hypotheses were evaluated
+\item
+  \texttt{44} coherence signals means every hypothesis had a coherence
+  row
+\item
+  global coherence baseline \texttt{0.320043} means the current KB is
+  only moderately integrated; the framework is still working inside a
+  partially coherent theory graph
+\end{itemize}
+
+\subsubsection{Verdict counts}\label{verdict-counts}
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{12\ supported}
+\item
+  \texttt{32\ inconclusive}
+\item
+  \texttt{0\ refuted}
+\end{itemize}
+
+This pattern has a clear interpretation:
+
+\begin{itemize}
+\tightlist
+\item
+  the framework found several promising conceptual reorganizations
+\item
+  it did not yet find enough grounded direct bridges to turn those
+  reorganizations into a strong proof path
+\item
+  it also did not find decisive negative evidence against most of the
+  frontier
+\end{itemize}
+
+So the current Yang-\/-Mills state is exploratory but not collapsed.
+
+\subsection{How To Read The Three Hypothesis
+Classes}\label{how-to-read-the-three-hypothesis-classes}
+
+\subsection{\texorpdfstring{Intervention-Focus Hypotheses (\texttt{021}
+to
+\texttt{032})}{Intervention-Focus Hypotheses (021 to 032)}}\label{intervention-focus-hypotheses-021-to-032}
+
+These do not propose a theorem bridge. They propose where attention
+should go next.
+
+Examples:
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{021}: focus on \texttt{st.def.os-euclidean-qft}
+\item
+  \texttt{022}: focus on \texttt{st.def.mass-gap}
+\item
+  \texttt{023}: focus on
+  \texttt{st.thm.euclidean-correlator-decay-as-a-mass-gap-signatu}
+\end{itemize}
+
+Their alignment signals are all zero in the mathematical readout. That
+is expected. Intervention hypotheses do not carry explicit antecedent,
+consequence, invariant, or barrier commitments in the same way bridge
+hypotheses do. They are scored mostly from:
+
+\begin{itemize}
+\tightlist
+\item
+  inherited priority
+\item
+  cross-component potential
+\item
+  downstream impact
+\item
+  betweenness and dependency pressure
+\end{itemize}
+
+This logic is in
+\href{/Users/user/files/abducer/abducer/skills/common/hypothesis_eval.py:1079}{hypothesis\_eval.py}.
+
+Interpretation of their current outcome:
+
+\begin{itemize}
+\tightlist
+\item
+  they are plausible focal points
+\item
+  they are not yet strong enough to be promoted as decisive intervention
+  commitments
+\item
+  they should guide the next reasoning round rather than be treated as
+  mathematical conclusions
+\end{itemize}
+
+\subsection{\texorpdfstring{Direct Bridge Hypotheses (\texttt{001} to
+\texttt{020})}{Direct Bridge Hypotheses (001 to 020)}}\label{direct-bridge-hypotheses-001-to-020}
+
+These are the most literal bridging proposals. They connect one KB
+statement to another and state an intended invariant.
+
+Examples:
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{001}: from \texttt{st.def.os-euclidean-qft} toward OS
+  reconstruction and Wightman equivalence, preserving
+  \texttt{OS-to-Wightman\ mass-gap\ transfer\ in\ Hamiltonian-mass-gap}
+\item
+  \texttt{003}: from \texttt{st.def.os-euclidean-qft} toward Euclidean
+  correlator decay as a mass-gap signature, preserving
+  \texttt{correlator-decay\ mass-gap\ witness\ in\ Schwinger-function-decay}
+\item
+  \texttt{006}: from \texttt{st.def.mass-gap}-adjacent transfer-matrix
+  structure toward correlator decay, preserving
+  \texttt{transfer-matrix\ spectral\ witness\ in\ reflection-positive-transfer-matrix}
+\end{itemize}
+
+These hypotheses are mostly \texttt{inconclusive}.
+
+That does not mean they are wrong. It means the framework sees real
+structure but not enough decisive grounding.
+
+Typical reasons:
+
+\begin{itemize}
+\tightlist
+\item
+  good invariant alignment but weak consequence alignment
+\item
+  good semantic overlap but barrier scope not yet grounded
+\item
+  connector score present but not strong enough to clear support
+  threshold
+\item
+  bridge is mathematically plausible but still too under-specified
+  relative to the current KB
+\end{itemize}
+
+Example:
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{001} has:
+
+  \begin{itemize}
+  \tightlist
+  \item
+    antecedent alignment \texttt{0.3869}
+  \item
+    invariant alignment \texttt{0.5114}
+  \item
+    consequence alignment \texttt{0.0000}
+  \item
+    support \texttt{0.4709}
+  \item
+    refute \texttt{0.0540}
+  \end{itemize}
+\end{itemize}
+
+This says:
+
+\begin{itemize}
+\tightlist
+\item
+  the source really does look like an OS/reconstruction antecedent
+\item
+  the proposed invariant is visible across source and target
+\item
+  but the target consequence \texttt{positive-self-adjoint-Hamiltonian}
+  is not yet grounded strongly enough in the target statement structure
+\end{itemize}
+
+So the bridge is mathematically suggestive but not yet inferentially
+tight.
+
+\subsection{\texorpdfstring{Higher-Order Conceptual Hypotheses
+(\texttt{033} to
+\texttt{044})}{Higher-Order Conceptual Hypotheses (033 to 044)}}\label{higher-order-conceptual-hypotheses-033-to-044}
+
+These are the strongest part of the current run. All \texttt{12}
+supported hypotheses are in this class.
+
+This is the central result of the report.
+
+The framework is saying that, for this Yang-\/-Mills KB, the best
+current progress is not a direct proof bridge. It is a conceptual
+reframing of the proof search space.
+
+The supported hypotheses split into three families.
+
+\subsection{Supported Family A: Representation
+Shift}\label{supported-family-a-representation-shift}
+
+Supported hypotheses:
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{033}
+\item
+  \texttt{036}
+\item
+  \texttt{037}
+\item
+  \texttt{041}
+\item
+  \texttt{043}
+\end{itemize}
+
+These propose that the right reasoning move is to shift representation
+between:
+
+\begin{itemize}
+\tightlist
+\item
+  OS Euclidean data
+\item
+  Wightman axiomatic structure
+\item
+  Hamiltonian/spectral formulations
+\item
+  constructive QFT examples
+\item
+  rigorous renormalization group programs
+\end{itemize}
+
+Interpretation:
+
+\begin{itemize}
+\tightlist
+\item
+  the framework sees the Euclidean-to-Wightman/Hamiltonian interface as
+  a structurally coherent route
+\item
+  it prefers proof search that moves through representation changes
+  instead of trying to jump directly from geometric or gauge-theoretic
+  statements to the Clay conclusion
+\end{itemize}
+
+The strongest single supported hypothesis is:
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{041}
+
+  \begin{itemize}
+  \tightlist
+  \item
+    support \texttt{0.7829}
+  \item
+    refute \texttt{0.0216}
+  \item
+    confidence \texttt{0.6988}
+  \end{itemize}
+\end{itemize}
+
+\texttt{041} is a representation shift from
+\texttt{st.def.os-euclidean-qft} to the more explicit OS definition
+statement. This is significant because the system is effectively saying:
+
+\begin{itemize}
+\tightlist
+\item
+  before pushing further, stabilize the exact OS formulation
+\item
+  then use that stabilization as the anchor for the mass-gap route
+\end{itemize}
+
+This is not yet a proof of a mass gap. It is a diagnosis that
+definitional precision at the OS level is one of the strongest currently
+supported moves.
+
+\subsection{Supported Family B: Intermediate
+Invariant}\label{supported-family-b-intermediate-invariant}
+
+Supported hypotheses:
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{034}
+\item
+  \texttt{035}
+\item
+  \texttt{038}
+\item
+  \texttt{044}
+\end{itemize}
+
+These propose that the proof search should be mediated by explicitly
+preserved middle objects, especially:
+
+\begin{itemize}
+\tightlist
+\item
+  correlator-decay mass-gap witnesses
+\item
+  transfer-matrix spectral witnesses
+\item
+  mass-gap witness transfer in compact simple gauge group settings
+\end{itemize}
+
+Interpretation:
+
+\begin{itemize}
+\tightlist
+\item
+  the framework does not trust a raw statement-to-statement jump
+\item
+  it wants an invariant that survives translation between formulations
+\end{itemize}
+
+This is mathematically appropriate. In hard existence-and-gap problems,
+a preserved witness or invariant is usually what makes a bridge usable.
+
+The two most important invariant families here are:
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{correlator-decay\ -\textgreater{}\ gap}
+\item
+  \texttt{transfer-matrix\ -\textgreater{}\ spectral\ gap}
+\end{itemize}
+
+These are supported because the Yang-\/-Mills KB already contains the
+right structural ingredients:
+
+\begin{itemize}
+\tightlist
+\item
+  OS positivity
+\item
+  reflection positivity
+\item
+  transfer-matrix language
+\item
+  exponential decay language
+\item
+  Hamiltonian gap language
+\end{itemize}
+
+So the evaluator is identifying a meaningful inferential spine:
+
+\begin{itemize}
+\tightlist
+\item
+  prove or control the right decay witness
+\item
+  transfer that witness through reflection positivity / transfer matrix
+  structure
+\item
+  interpret it as a Hamiltonian gap signal
+\end{itemize}
+
+\subsection{Supported Family C: Definition
+Introduction}\label{supported-family-c-definition-introduction}
+
+Supported hypotheses:
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{039}
+\item
+  \texttt{040}
+\item
+  \texttt{042}
+\end{itemize}
+
+These are geometric/gauge-theoretic conceptual moves from the compact
+simple gauge group definition toward:
+
+\begin{itemize}
+\tightlist
+\item
+  ADHM instanton classification
+\item
+  Uhlenbeck gauge fixing and compactness
+\item
+  BPST instanton existence
+\end{itemize}
+
+Interpretation:
+
+\begin{itemize}
+\tightlist
+\item
+  the system sees these as legitimate concept-building moves
+\item
+  but it treats them as preparatory structure, not as direct mass-gap
+  resolution
+\end{itemize}
+
+This is the right reading. These statements provide geometric control,
+local compactness, or model constructions. They matter because they
+enrich the ontology of Yang-\/-Mills objects. But they are not yet by
+themselves a route to the positive mass gap in four-dimensional quantum
+Yang-\/-Mills.
+
+So these are supported as concept-building steps, not as decisive
+closure steps.
+
+\subsection{What The Report Is Really Saying About
+Yang-\/-Mills}\label{what-the-report-is-really-saying-about-yang--mills}
+
+The report points to a fairly specific mathematical diagnosis.
+
+\subsubsection{1. The current KB supports conceptual transport better
+than direct proof
+transport}\label{1-the-current-kb-supports-conceptual-transport-better-than-direct-proof-transport}
+
+The evaluator supports:
+
+\begin{itemize}
+\tightlist
+\item
+  representation shifts
+\item
+  invariant introduction
+\item
+  definition sharpening
+\end{itemize}
+
+It does not yet support most direct bridge links.
+
+This means the KB is rich enough to describe the right proof ecology,
+but not yet rich enough to discharge the main proof obligations.
+
+\subsubsection{2. The most promising mass-gap route currently runs
+through the Euclidean/OS/Wightman/spectral
+interface}\label{2-the-most-promising-mass-gap-route-currently-runs-through-the-euclideanoswightmanspectral-interface}
+
+The strongest supported cluster is centered on:
+
+\begin{itemize}
+\tightlist
+\item
+  OS Euclidean QFT
+\item
+  OS reconstruction
+\item
+  Wightman realization
+\item
+  transfer-matrix and reflection positivity
+\item
+  correlator decay as a signature of spectral gap
+\end{itemize}
+
+That is a coherent mathematical route. It says the framework currently
+believes the best entry into the Clay problem is not through instantons
+alone, nor through gauge-fixing alone, but through the problem of
+transporting a gap witness across formulations.
+
+\subsubsection{3. The main blockers remain continuum and ultraviolet
+issues}\label{3-the-main-blockers-remain-continuum-and-ultraviolet-issues}
+
+Several of the better bridge proposals are barrier-scoped by:
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{continuum-limit}
+\item
+  \texttt{ultraviolet-control}
+\item
+  \texttt{open-construction-gap}
+\end{itemize}
+
+This is exactly what one should expect. The lattice or Euclidean objects
+can give partial witness structure, but the unresolved problem is
+whether that structure survives the full continuum construction in four
+dimensions.
+
+\subsubsection{4. Geometry is present, but not yet integrated into the
+mass-gap
+mechanism}\label{4-geometry-is-present-but-not-yet-integrated-into-the-mass-gap-mechanism}
+
+The supported geometric hypotheses are mostly:
+
+\begin{itemize}
+\tightlist
+\item
+  ADHM
+\item
+  BPST instantons
+\item
+  Uhlenbeck compactness
+\item
+  Donaldson-style moduli control
+\end{itemize}
+
+These are mathematically important, but the report is implicitly saying:
+
+\begin{itemize}
+\tightlist
+\item
+  geometry is currently contributing ontology and structural control
+\item
+  not yet a precise spectral-gap mechanism
+\end{itemize}
+
+So the geometry side of the KB needs better coupling to the mass-gap
+witness side.
+
+\subsection{Why So Many Hypotheses Are
+Inconclusive}\label{why-so-many-hypotheses-are-inconclusive}
+
+There are three main reasons.
+
+\subsubsection{1. The KB still contains more conceptual adjacency than
+proof obligation
+data}\label{1-the-kb-still-contains-more-conceptual-adjacency-than-proof-obligation-data}
+
+Many hypotheses are plausible because the statements live in the same
+conceptual neighborhood. But plausibility is not enough. The evaluator
+wants:
+
+\begin{itemize}
+\tightlist
+\item
+  explicit consequence grounding
+\item
+  explicit invariant grounding
+\item
+  visible barrier handling
+\end{itemize}
+
+When one of those is missing, support tends to stay in the \texttt{0.43}
+to \texttt{0.53} range instead of crossing \texttt{0.62}.
+
+\subsubsection{2. Direct bridges are harder than conceptual
+reframings}\label{2-direct-bridges-are-harder-than-conceptual-reframings}
+
+A representation shift only needs to show that one formulation can
+organize another in a productive way.
+
+A direct bridge-link has to show more:
+
+\begin{itemize}
+\tightlist
+\item
+  why this exact support statement helps this exact target statement
+\item
+  what is preserved
+\item
+  why that preservation survives the stated barriers
+\end{itemize}
+
+That is a much harder demand, and the current KB often does not yet
+encode enough detail for it.
+
+\subsubsection{3. The Yang-\/-Mills problem is hard in exactly the
+places the report
+highlights}\label{3-the-yang--mills-problem-is-hard-in-exactly-the-places-the-report-highlights}
+
+The pattern of inconclusiveness is not a defect of the evaluator alone.
+It reflects the mathematical problem:
+
+\begin{itemize}
+\tightlist
+\item
+  how to construct the full continuum theory
+\item
+  how to prove a positive mass gap in the physically relevant setting
+\item
+  how to connect Euclidean, Hamiltonian, spectral, and constructive
+  viewpoints without losing the witness
+\end{itemize}
+
+That is precisely where the hypotheses stall.
+
+\subsection{How To Read Individual Fields In The Mathematical
+Readout}\label{how-to-read-individual-fields-in-the-mathematical-readout}
+
+\subsubsection{Antecedent schema}\label{antecedent-schema}
+
+This is the type of input condition the hypothesis claims to rely on.
+
+Examples:
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{reflection-positivity-and-transfer-matrix}
+\item
+  \texttt{constructive-existence}
+\item
+  \texttt{unconditional}
+\end{itemize}
+
+If antecedent alignment is high, the source statement genuinely looks
+like the kind of statement the hypothesis says it needs.
+
+\subsubsection{Target consequence}\label{target-consequence}
+
+This is the type of mathematical outcome the hypothesis claims to move
+toward.
+
+Examples:
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{positive-self-adjoint-Hamiltonian}
+\item
+  \texttt{rigorous-Yang-Mills-construction}
+\item
+  \texttt{moduli-space-control}
+\end{itemize}
+
+If consequence alignment is low or zero, that usually means the target
+statement does not yet explicitly encode that consequence strongly
+enough.
+
+\subsubsection{Preserved invariant}\label{preserved-invariant}
+
+This is the most important field in many of the supported hypotheses.
+
+Examples:
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{OS-to-Wightman\ mass-gap\ transfer\ in\ Hamiltonian-mass-gap}
+\item
+  \texttt{correlator-decay\ mass-gap\ witness\ in\ Schwinger-function-decay}
+\item
+  \texttt{transfer-matrix\ spectral\ witness\ in\ reflection-positive-transfer-matrix}
+\end{itemize}
+
+This field says what must survive the bridge if the bridge is to have
+mathematical value.
+
+\subsubsection{Barrier scope}\label{barrier-scope}
+
+This names what kind of obstruction the move is expected to face.
+
+Examples:
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{continuum-limit}
+\item
+  \texttt{ultraviolet-control}
+\item
+  \texttt{gauge-control}
+\item
+  \texttt{open-construction-gap\ +\ quantum-measure-construction}
+\end{itemize}
+
+A bridge with a realistic barrier scope is often better than a bridge
+with no barriers named, because it is more mathematically honest. But it
+can also be harder to support if the KB does not yet encode
+barrier-handling details.
+
+\subsection{Recommended Reading Of The Supported
+Hypotheses}\label{recommended-reading-of-the-supported-hypotheses}
+
+If the goal is to use the current output as a research steering
+document, the hypotheses should be read in this order.
+
+\subsubsection{Tier 1: Core mass-gap
+interface}\label{tier-1-core-mass-gap-interface}
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{041}
+\item
+  \texttt{033}
+\item
+  \texttt{037}
+\item
+  \texttt{035}
+\item
+  \texttt{038}
+\item
+  \texttt{044}
+\end{itemize}
+
+These are the most informative hypotheses for the central problem
+because they organize the interface between:
+
+\begin{itemize}
+\tightlist
+\item
+  OS formulation
+\item
+  Wightman/Hamiltonian realization
+\item
+  correlator decay
+\item
+  transfer matrix
+\item
+  spectral gap witness
+\end{itemize}
+
+\subsubsection{Tier 2: Construction-oriented
+transfer}\label{tier-2-construction-oriented-transfer}
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{036}
+\item
+  \texttt{043}
+\end{itemize}
+
+These say that constructive QFT examples and Balaban-style RG analysis
+are valuable as representation-shift anchors, but they remain
+barrier-loaded and do not yet close the four-dimensional problem.
+
+\subsubsection{Tier 3: Geometric ontology
+enrichment}\label{tier-3-geometric-ontology-enrichment}
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{034}
+\item
+  \texttt{039}
+\item
+  \texttt{040}
+\item
+  \texttt{042}
+\end{itemize}
+
+These are useful for concept formation and structural control, but they
+are secondary unless they are connected more explicitly to a mass-gap
+witness mechanism.
+
+\subsection{What To Do Next}\label{what-to-do-next}
+
+The report itself already suggests the next action:
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{promote-or-retest-with-deduction} for supported hypotheses
+\item
+  \texttt{run-another-abduce-deduce-round} for inconclusive hypotheses
+\end{itemize}
+
+For the Yang-\/-Mills KB, the right next moves are:
+
+\begin{itemize}
+\tightlist
+\item
+  strengthen the OS/reconstruction/Wightman statements with more
+  explicit spectral-gap obligations
+\item
+  encode more explicit transfer principles from correlator decay to
+  Hamiltonian gap
+\item
+  connect geometric control statements to the mass-gap witness layer
+  instead of leaving them as parallel concept clusters
+\item
+  add sharper continuum-limit and ultraviolet-control statements so
+  barrier alignment is no longer mostly implicit
+\end{itemize}
+
+\subsection{Bottom Line}\label{bottom-line}
+
+This evaluation does not yet identify a completed Yang-\/-Mills proof
+pathway.
+
+It does identify something more precise than a vague frontier:
+
+\begin{itemize}
+\tightlist
+\item
+  the current best-supported discovery path is conceptual and
+  representational
+\item
+  the strongest bridge objects are invariant-like witnesses, not direct
+  theorem jumps
+\item
+  the Euclidean/OS/Wightman/transfer-matrix/correlator-decay chain is
+  the main supported inferential spine
+\item
+  the geometry/moduli/instanton side is useful, but still insufficiently
+  coupled to the actual mass-gap mechanism
+\end{itemize}
+
+So the correct reading is:
+
+\begin{itemize}
+\tightlist
+\item
+  the framework has begun to isolate the right kinds of mathematical
+  objects and interfaces
+\item
+  it has not yet resolved the core proof obligations that would turn
+  those interfaces into a proof
+\end{itemize}
+
+\end{document}

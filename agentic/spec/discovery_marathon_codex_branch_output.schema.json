@@ -1,0 +1,167 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "branch_id",
+    "branch_title",
+    "candidate_lemmas",
+    "attempted_derivation",
+    "falsifiers",
+    "gedanken_experiment_design",
+    "dependency_updates",
+    "mathematical_learning",
+    "control_decision",
+    "negative_tactic_decision",
+    "next_experiment"
+  ],
+  "properties": {
+    "branch_id": {"type": "string"},
+    "branch_title": {"type": "string"},
+    "candidate_lemmas": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["lemma_id", "statement", "definitions", "assumptions", "equations", "proof_role", "failure_test"],
+        "properties": {
+          "lemma_id": {"type": "string"},
+          "statement": {"type": "string"},
+          "definitions": {"type": "array", "items": {"type": "string"}, "minItems": 3},
+          "assumptions": {"type": "array", "items": {"type": "string"}, "minItems": 2},
+          "equations": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["label", "latex", "valid_when"],
+              "properties": {
+                "label": {"type": "string"},
+                "latex": {"type": "string"},
+                "valid_when": {"type": "string"}
+              }
+            }
+          },
+          "proof_role": {"type": "string"},
+          "failure_test": {"type": "string"}
+        }
+      }
+    },
+    "attempted_derivation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["derivation_id", "steps", "blocking_gap", "why_not_yet_a_proof"],
+      "properties": {
+        "derivation_id": {"type": "string"},
+        "steps": {"type": "array", "items": {"type": "string"}, "minItems": 3},
+        "blocking_gap": {"type": "string"},
+        "why_not_yet_a_proof": {"type": "string"}
+      }
+    },
+    "falsifiers": {"type": "array", "items": {"type": "string"}, "minItems": 2},
+    "gedanken_experiment_design": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "need_decision",
+        "rationale",
+        "situation_seed",
+        "varied_variable",
+        "held_fixed_controls",
+        "expected_observation",
+        "transfer_certificate_needed"
+      ],
+      "properties": {
+        "need_decision": {
+          "type": "string",
+          "description": "Whether to design a concrete thought experiment now, defer it, or use it only as a falsifier probe."
+        },
+        "rationale": {
+          "type": "string",
+          "description": "Why this branch currently needs a concrete complexity-theoretic thought experiment rather than another abstract restatement."
+        },
+        "situation_seed": {
+          "type": "string",
+          "description": "A concrete, target-preserving imagined case such as a padded SAT-query family, an MCSP certificate family, an oracle world, or a restricted circuit-class transfer."
+        },
+        "varied_variable": {
+          "type": "string",
+          "description": "The one mathematical parameter varied in the thought experiment, for example query length exponent beta, circuit-class closure, advice leakage, density, explicitness, or verifier overhead."
+        },
+        "held_fixed_controls": {
+          "type": "array",
+          "items": {"type": "string"},
+          "minItems": 2,
+          "description": "Target commitments and model assumptions held fixed so the thought experiment has a clean transfer certificate."
+        },
+        "expected_observation": {
+          "type": "string",
+          "description": "The qualitative or quantitative observation that would teach something about the route."
+        },
+        "transfer_certificate_needed": {
+          "type": "string",
+          "description": "The formal bridge, uniformity, barrier, or threshold condition required before the intuition may affect the proof queue."
+        }
+      }
+    },
+    "dependency_updates": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["dependency_id", "kind", "description", "status"],
+        "properties": {
+          "dependency_id": {"type": "string"},
+          "kind": {"type": "string"},
+          "description": {"type": "string"},
+          "status": {"type": "string"}
+        }
+      }
+    },
+    "mathematical_learning": {"type": "string"},
+    "control_decision": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["decision", "reason", "pivot_test", "promotion_test"],
+      "properties": {
+        "decision": {"type": "string"},
+        "reason": {"type": "string"},
+        "pivot_test": {"type": "string"},
+        "promotion_test": {"type": "string"}
+      }
+    },
+    "negative_tactic_decision": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "tactic_mode",
+        "route_family",
+        "reason_for_tactic",
+        "exact_negation_or_method_class",
+        "contradiction_carrier_or_no_go_family",
+        "conflict_target",
+        "escape_conditions",
+        "proof_obligations",
+        "branch_control_decision",
+        "next_validation_handoff",
+        "paper_contribution_potential"
+      ],
+      "properties": {
+        "tactic_mode": {"type": "string"},
+        "route_family": {"type": "string"},
+        "reason_for_tactic": {"type": "string"},
+        "exact_negation_or_method_class": {"type": "string"},
+        "contradiction_carrier_or_no_go_family": {"type": "string"},
+        "conflict_target": {"type": "string"},
+        "escape_conditions": {"type": "array", "items": {"type": "string"}, "minItems": 2},
+        "proof_obligations": {"type": "array", "items": {"type": "string"}, "minItems": 2},
+        "branch_control_decision": {"type": "string"},
+        "next_validation_handoff": {"type": "string"},
+        "paper_contribution_potential": {"type": "string"}
+      }
+    },
+    "next_experiment": {"type": "string"}
+  }
+}

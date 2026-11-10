@@ -1,0 +1,182 @@
+# Promising Directions Assessment
+
+- Generated (UTC): 2026-03-16T22:26:32.766903+00:00
+- KB ref: p-vs-np
+- Source run: 2026-03-16T22:26:28.893056+00:00
+- Evidence count: 0
+- Unresolved hypotheses: 22
+
+## Executive Summary
+
+There is real programmatic novelty in the sense of a new content-level bridge program: the framework isolates specific theorem-pair deltas, proposes typed intermediate carriers, and exposes missing route lemmas. There is not yet evidence of theorem-level novelty, because the decisive lemmas remain open and the run has not accumulated external or adversarial evidence.
+
+## Most Promising Directions
+
+### 1. MCSP witness family: major consequences such as NP not in P/poly
+
+- Bridge ID: bridge.001
+- Type: magnification bridge
+- Priority: 0.744
+- Route: st.def.hardness-magnification-phenomenon-programme-leve -> st.thm.oliveira-pich-santhanam-magnification-near-state
+- Abstraction: MCSP witness family
+- Carrier: family of instances equipped with a monotone witness measure
+- Invariant: MCSP complexity profile in nonuniform-circuits
+- Route synopsis: Move from `st.def.hardness-magnification-phenomenon-programme-leve` on problem `MCSP` in model `nonuniform-circuits` using `A barely-nontrivial lower bound for an explicit problem Q in a weak model` toward `st.thm.oliveira-pich-santhanam-magnification-near-state` in model `nonuniform-circuits` to obtain `major consequences such as NP not in P/poly`.
+
+#### Why It Is Promising
+
+- Bridge priority 0.744 with sketch score 0.905, mathematical specificity 1.000, evidence signal 0.188, and sketch operationalization 1.000.
+- The route synopsis is: Move from `st.def.hardness-magnification-phenomenon-programme-leve` on problem `MCSP` in model `nonuniform-circuits` using `A barely-nontrivial lower bound for an explicit problem Q in a weak model` toward `st.thm.oliveira-pich-santhanam-magnification-near-state` in model `nonuniform-circuits` to obtain `major consequences such as NP not in P/poly`.
+- The proof family `invariant-lift-through-intermediate-object` is used because Introduce a conjectured intermediate object or invariant, prove that the source regime induces it, then force the target consequence through that invariant.
+- Linked hypotheses: 4 with verdict profile {'supported': 3, 'inconclusive': 1} and best confidence 0.804.
+
+#### Content-wise Novelty Argument
+
+- The route is theorem-pair specific: it tries to move from `A barely-nontrivial lower bound for an explicit problem Q in a weak model` to `major consequences such as NP not in P/poly` rather than proposing a generic topic-level bridge.
+- The candidate novelty is the object `MCSP witness family`, typed as `family of instances equipped with a monotone witness measure`, which is meant to make the hidden transport mechanism mathematically explicit.
+- The route is constrained by the preserved invariant `MCSP complexity profile in nonuniform-circuits`, so the proposal is not only to reach the target consequence but to preserve a specific mathematical profile while doing so.
+- The novelty remains programmatic rather than theorem-level because the decisive missing lemma is still: Prove that a hardness-magnification witness family turns `A barely-nontrivial lower bound for an explicit problem Q in a weak model` into `major consequences such as NP not in P/poly` while preserving `MCSP complexity profile in nonuniform-circuits`.
+- The route includes an explicit falsification probe: Allow `MCSP witness family` to ignore the source-side content `A barely-nontrivial lower bound for an explicit problem Q in a weak model` and only preserve topical overlap. bridge-degrades-or-fails The bridge object must absorb the actual source-side mathematical content rather than merely name the antecedent.
+
+#### Key Obligations
+
+- Prove the source-to-object claim: the source-side content `A barely-nontrivial lower bound for an explicit problem Q in a weak model` available at `st.def.hardness-magnification-phenomenon-programme-leve` can be organized into `MCSP witness family` as a family of instances equipped with a monotone witness measure.
+- Prove the payoff claim: once `MCSP witness family` carries the route data from `A barely-nontrivial lower bound for an explicit problem Q in a weak model` toward `major consequences such as NP not in P/poly`, it forces `NP-not-in-P/poly` at `st.thm.oliveira-pich-santhanam-magnification-near-state`.
+- Prove the transport claim: every admissible realization of `MCSP witness family` preserves `MCSP complexity profile in nonuniform-circuits` while crossing the route nonuniform-circuits.
+- Discharge the route lemma: Prove that a hardness-magnification witness family turns `A barely-nontrivial lower bound for an explicit problem Q in a weak model` into `major consequences such as NP not in P/poly` while preserving `MCSP complexity profile in nonuniform-circuits`.
+
+#### Main Risks
+
+- Failure mode: `MCSP witness family` never becomes more than topical overlap because the route-specific lemma remains missing. Prove that a hardness-magnification witness family turns `A barely-nontrivial lower bound for an explicit problem Q in a weak model` into `major consequences such as NP not in P/poly` while preserving `MCSP complexity profile in nonuniform-circuits`.
+- Abort logic: Abort if the negative-route intervention does not expose the expected failure: Allow `MCSP witness family` to ignore the source-side content `A barely-nontrivial lower bound for an explicit problem Q in a weak model` and only preserve topical overlap. => bridge-degrades-or-fails.
+- Global limitation: evidence_count=0 and unresolved hypotheses=22, so the route is still under mathematical pressure.
+
+#### Expert Actions
+
+- Discharge the route-specific lemma: Prove that a hardness-magnification witness family turns `A barely-nontrivial lower bound for an explicit problem Q in a weak model` into `major consequences such as NP not in P/poly` while preserving `MCSP complexity profile in nonuniform-circuits`.
+- Stabilize the main bridge lemma: Source-to-object lemma: the source-side content `A barely-nontrivial lower bound for an explicit problem Q in a weak model` at `st.def.hardness-magnification-phenomenon-programme-leve` yields a realization of `MCSP witness family` as a family of instances equipped with a monotone witness measure, satisfying admits source-side witness data for `A barely-nontrivial lower bound for an explicit problem Q in a weak model`; preserves the route invariant `MCSP complexity profile in nonuniform-circuits`; forces the target-side payoff `NP-not-in-P/poly`.
+- Run the designated counterfactual probe: Allow `MCSP witness family` to ignore the source-side content `A barely-nontrivial lower bound for an explicit problem Q in a weak model` and only preserve topical overlap. bridge-degrades-or-fails The bridge object must absorb the actual source-side mathematical content rather than merely name the antecedent.
+
+### 2. MCSP witness family: major lower bounds for NP in much stronger models (including superpolynomial formula/circuit lower bounds, and in some parameter...
+
+- Bridge ID: bridge.002
+- Type: magnification bridge
+- Priority: 0.732
+- Route: st.def.hardness-magnification-phenomenon-programme-leve -> st.thm.oliveira-santhanam-hardness-magnification-for-na
+- Abstraction: MCSP witness family
+- Carrier: family of instances equipped with a monotone witness measure
+- Invariant: MCSP complexity profile in nonuniform-circuits
+- Route synopsis: Move from `st.def.hardness-magnification-phenomenon-programme-leve` on problem `MCSP` in model `nonuniform-circuits` using `A barely-nontrivial lower bound for an explicit problem Q in a weak model` toward `st.thm.oliveira-santhanam-hardness-magnification-for-na` in model `formula-size` to obtain `major lower bounds for NP in much stronger models (including superpolynomial formula/circuit lower bounds, and in some parameter...`.
+
+#### Why It Is Promising
+
+- Bridge priority 0.732 with sketch score 0.897, mathematical specificity 1.000, evidence signal 0.188, and sketch operationalization 1.000.
+- The route synopsis is: Move from `st.def.hardness-magnification-phenomenon-programme-leve` on problem `MCSP` in model `nonuniform-circuits` using `A barely-nontrivial lower bound for an explicit problem Q in a weak model` toward `st.thm.oliveira-santhanam-hardness-magnification-for-na` in model `formula-size` to obtain `major lower bounds for NP in much stronger models (including superpolynomial formula/circuit lower bounds, and in some parameter...`.
+- The proof family `invariant-lift-through-intermediate-object` is used because Introduce a conjectured intermediate object or invariant, prove that the source regime induces it, then force the target consequence through that invariant.
+- Linked hypotheses: 4 with verdict profile {'supported': 3, 'inconclusive': 1} and best confidence 0.804.
+
+#### Content-wise Novelty Argument
+
+- The route is theorem-pair specific: it tries to move from `A barely-nontrivial lower bound for an explicit problem Q in a weak model` to `major lower bounds for NP in much stronger models (including superpolynomial formula/circuit lower bounds, and in some parameter...` rather than proposing a generic topic-level bridge.
+- The candidate novelty is the object `MCSP witness family`, typed as `family of instances equipped with a monotone witness measure`, which is meant to make the hidden transport mechanism mathematically explicit.
+- The route is constrained by the preserved invariant `MCSP complexity profile in nonuniform-circuits`, so the proposal is not only to reach the target consequence but to preserve a specific mathematical profile while doing so.
+- The novelty remains programmatic rather than theorem-level because the decisive missing lemma is still: Prove that a hardness-magnification witness family preserves `MCSP complexity profile in nonuniform-circuits` while transporting the route from the nonuniform-circuits regime to the formula-size regime strongly enough to derive `major lower bounds for NP in much stronger models (including superpolynomial formula/circuit lower bounds, and in some parameter...`.
+- The route includes an explicit falsification probe: Allow `MCSP witness family` to ignore the source-side content `A barely-nontrivial lower bound for an explicit problem Q in a weak model` and only preserve topical overlap. bridge-degrades-or-fails The bridge object must absorb the actual source-side mathematical content rather than merely name the antecedent.
+
+#### Key Obligations
+
+- Prove the source-to-object claim: the source-side content `A barely-nontrivial lower bound for an explicit problem Q in a weak model` available at `st.def.hardness-magnification-phenomenon-programme-leve` can be organized into `MCSP witness family` as a family of instances equipped with a monotone witness measure.
+- Prove the payoff claim: once `MCSP witness family` carries the route data from `A barely-nontrivial lower bound for an explicit problem Q in a weak model` toward `major lower bounds for NP in much stronger models (including superpolynomial formula/circuit lower bounds, and in some parameter...`, it forces `NP-not-in-P/poly` at `st.thm.oliveira-santhanam-hardness-magnification-for-na`.
+- Prove the transport claim: every admissible realization of `MCSP witness family` preserves `MCSP complexity profile in nonuniform-circuits` while crossing the route nonuniform-circuits -> formula-size.
+- Discharge the route lemma: Prove that a hardness-magnification witness family preserves `MCSP complexity profile in nonuniform-circuits` while transporting the route from the nonuniform-circuits regime to the formula-size regime strongly enough to derive `major lower bounds for NP in much stronger models (including superpolynomial formula/circuit lower bounds, and in some parameter...`.
+
+#### Main Risks
+
+- Failure mode: `MCSP witness family` never becomes more than topical overlap because the route-specific lemma remains missing. Prove that a hardness-magnification witness family preserves `MCSP complexity profile in nonuniform-circuits` while transporting the route from the nonuniform-circuits regime to the formula-size regime strongly enough to derive `major lower bounds for NP in much stronger models (including superpolynomial formula/circuit lower bounds, and in some parameter...`.
+- Abort logic: Abort if the negative-route intervention does not expose the expected failure: Allow `MCSP witness family` to ignore the source-side content `A barely-nontrivial lower bound for an explicit problem Q in a weak model` and only preserve topical overlap. => bridge-degrades-or-fails.
+- Global limitation: evidence_count=0 and unresolved hypotheses=22, so the route is still under mathematical pressure.
+
+#### Expert Actions
+
+- Discharge the route-specific lemma: Prove that a hardness-magnification witness family preserves `MCSP complexity profile in nonuniform-circuits` while transporting the route from the nonuniform-circuits regime to the formula-size regime strongly enough to derive `major lower bounds for NP in much stronger models (including superpolynomial formula/circuit lower bounds, and in some parameter...`.
+- Stabilize the main bridge lemma: Source-to-object lemma: the source-side content `A barely-nontrivial lower bound for an explicit problem Q in a weak model` at `st.def.hardness-magnification-phenomenon-programme-leve` yields a realization of `MCSP witness family` as a family of instances equipped with a monotone witness measure, satisfying admits source-side witness data for `A barely-nontrivial lower bound for an explicit problem Q in a weak model`; preserves the route invariant `MCSP complexity profile in nonuniform-circuits`; forces the target-side payoff `NP-not-in-P/poly`.
+- Run the designated counterfactual probe: Allow `MCSP witness family` to ignore the source-side content `A barely-nontrivial lower bound for an explicit problem Q in a weak model` and only preserve topical overlap. bridge-degrades-or-fails The bridge object must absorb the actual source-side mathematical content rather than merely name the antecedent.
+
+### 3. MCSP witness family: There exist general-purpose magnification theorems (not problem-specific) showing that certain mild lower bounds for...
+
+- Bridge ID: bridge.016
+- Type: magnification bridge
+- Priority: 0.711
+- Route: st.def.hardness-magnification-phenomenon-programme-leve -> st.thm.atserias-m-uller-simple-general-magnification-fr
+- Abstraction: MCSP witness family
+- Carrier: family of instances equipped with a monotone witness measure
+- Invariant: exponential-lower-bound witness complexity
+- Route synopsis: Move from `st.def.hardness-magnification-phenomenon-programme-leve` on problem `MCSP` in model `nonuniform-circuits` using `A barely-nontrivial lower bound for an explicit problem Q in a weak model` toward `st.thm.atserias-m-uller-simple-general-magnification-fr` to obtain `There exist general-purpose magnification theorems (not problem-specific) showing that certain mild lower bounds for...`.
+
+#### Why It Is Promising
+
+- Bridge priority 0.711 with sketch score 0.890, mathematical specificity 1.000, evidence signal 0.200, and sketch operationalization 1.000.
+- The route synopsis is: Move from `st.def.hardness-magnification-phenomenon-programme-leve` on problem `MCSP` in model `nonuniform-circuits` using `A barely-nontrivial lower bound for an explicit problem Q in a weak model` toward `st.thm.atserias-m-uller-simple-general-magnification-fr` to obtain `There exist general-purpose magnification theorems (not problem-specific) showing that certain mild lower bounds for...`.
+- The proof family `invariant-lift-through-intermediate-object` is used because Introduce a conjectured intermediate object or invariant, prove that the source regime induces it, then force the target consequence through that invariant.
+- Linked hypotheses: 5 with verdict profile {'supported': 4, 'inconclusive': 1} and best confidence 0.804.
+
+#### Content-wise Novelty Argument
+
+- The route is theorem-pair specific: it tries to move from `A barely-nontrivial lower bound for an explicit problem Q in a weak model` to `There exist general-purpose magnification theorems (not problem-specific) showing that certain mild lower bounds for...` rather than proposing a generic topic-level bridge.
+- The candidate novelty is the object `MCSP witness family`, typed as `family of instances equipped with a monotone witness measure`, which is meant to make the hidden transport mechanism mathematically explicit.
+- The route is constrained by the preserved invariant `exponential-lower-bound witness complexity`, so the proposal is not only to reach the target consequence but to preserve a specific mathematical profile while doing so.
+- The novelty remains programmatic rather than theorem-level because the decisive missing lemma is still: Prove that a hardness-magnification witness family upgrades the route from major separation consequence to exponential lower bound without losing `exponential-lower-bound witness complexity`.
+- The route includes an explicit falsification probe: Allow `MCSP witness family` to ignore the source-side content `A barely-nontrivial lower bound for an explicit problem Q in a weak model` and only preserve topical overlap. bridge-degrades-or-fails The bridge object must absorb the actual source-side mathematical content rather than merely name the antecedent.
+
+#### Key Obligations
+
+- Prove the source-to-object claim: the source-side content `A barely-nontrivial lower bound for an explicit problem Q in a weak model` available at `st.def.hardness-magnification-phenomenon-programme-leve` can be organized into `MCSP witness family` as a family of instances equipped with a monotone witness measure.
+- Prove the payoff claim: once `MCSP witness family` carries the route data from `A barely-nontrivial lower bound for an explicit problem Q in a weak model` toward `There exist general-purpose magnification theorems (not problem-specific) showing that certain mild lower bounds for...`, it forces `exponential-lower-bound` at `st.thm.atserias-m-uller-simple-general-magnification-fr`.
+- Prove the transport claim: every admissible realization of `MCSP witness family` preserves `exponential-lower-bound witness complexity` while crossing the route nonuniform-circuits.
+- Exhibit the model-alignment claim: `MCSP witness family` gives a faithful translation across nonuniform-circuits.
+
+#### Main Risks
+
+- Failure mode: `MCSP witness family` never becomes more than topical overlap because the route-specific lemma remains missing. Prove that a hardness-magnification witness family upgrades the route from major separation consequence to exponential lower bound without losing `exponential-lower-bound witness complexity`.
+- Abort logic: Abort if the negative-route intervention does not expose the expected failure: Allow `MCSP witness family` to ignore the source-side content `A barely-nontrivial lower bound for an explicit problem Q in a weak model` and only preserve topical overlap. => bridge-degrades-or-fails.
+- Global limitation: evidence_count=0 and unresolved hypotheses=22, so the route is still under mathematical pressure.
+
+#### Expert Actions
+
+- Discharge the route-specific lemma: Prove that a hardness-magnification witness family upgrades the route from major separation consequence to exponential lower bound without losing `exponential-lower-bound witness complexity`.
+- Stabilize the main bridge lemma: Source-to-object lemma: the source-side content `A barely-nontrivial lower bound for an explicit problem Q in a weak model` at `st.def.hardness-magnification-phenomenon-programme-leve` yields a realization of `MCSP witness family` as a family of instances equipped with a monotone witness measure, satisfying admits source-side witness data for `A barely-nontrivial lower bound for an explicit problem Q in a weak model`; preserves the route invariant `exponential-lower-bound witness complexity`; aligns the model shift (nonuniform-circuits) with an explicit transport map.
+- Run the designated counterfactual probe: Allow `MCSP witness family` to ignore the source-side content `A barely-nontrivial lower bound for an explicit problem Q in a weak model` and only preserve topical overlap. bridge-degrades-or-fails The bridge object must absorb the actual source-side mathematical content rather than merely name the antecedent.
+
+## Novelty Assessment
+
+### Positive Evidence
+
+- The leading route is theorem-grounded at the level of source and target excerpts, not only labels: st.def.hardness-magnification-phenomenon-programme-leve -> st.thm.oliveira-pich-santhanam-magnification-near-state.
+- The bridge objects are typed carriers such as `MCSP witness family` with carrier `family of instances equipped with a monotone witness measure`, rather than generic placeholders.
+- The routes expose explicit missing lemmas and negative routes, so novelty is attached to a falsifiable mathematical program rather than to generic thematic similarity.
+
+### Limits
+
+- The current run still has evidence_count=0, so support is structural and explanatory, not evidential.
+- There remain 22 inconclusive hypotheses, so the frontier is not yet mathematically settled.
+- The novelty is therefore programmatic: new route decompositions, typed carriers, and missing lemmas, not validated new theorems.
+
+### Verdict
+
+There is real programmatic novelty in the sense of a new content-level bridge program: the framework isolates specific theorem-pair deltas, proposes typed intermediate carriers, and exposes missing route lemmas. There is not yet evidence of theorem-level novelty, because the decisive lemmas remain open and the run has not accumulated external or adversarial evidence.
+
+## Next Best Direction To Explore
+
+- Bridge ID: bridge.002
+- Title: MCSP witness family: major lower bounds for NP in much stronger models (including superpolynomial formula/circuit lower bounds, and in some parameter...
+- Route: st.def.hardness-magnification-phenomenon-programme-leve -> st.thm.oliveira-santhanam-hardness-magnification-for-na
+- Assessment: This is the next best direction because it keeps the leading bridge object fixed while forcing it through a harder transport regime. If the same witness family survives this adjacent target, that is evidence that the carrier is mathematically real rather than tuned only to one theorem statement.
+- Missing route lemma: Prove that a hardness-magnification witness family preserves `MCSP complexity profile in nonuniform-circuits` while transporting the route from the nonuniform-circuits regime to the formula-size regime strongly enough to derive `major lower bounds for NP in much stronger models (including superpolynomial formula/circuit lower bounds, and in some parameter...`.
+
+## Recommended Probe
+
+- Hypothesis: phyp.p-vs-np.021
+- Target statement: st.thm.oliveira-santhanam-hardness-magnification-for-na
+- Priority: 0.690
+- Recommended action: run-another-abduce-deduce-round
+- Reason: high priority inherited from connector hypotheses

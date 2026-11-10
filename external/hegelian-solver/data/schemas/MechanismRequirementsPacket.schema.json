@@ -1,0 +1,250 @@
+{
+  "$defs": {
+    "MechanismRequirement": {
+      "additionalProperties": false,
+      "properties": {
+        "evidence_needed": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Evidence Needed",
+          "type": "array"
+        },
+        "failure_mode_if_missing": {
+          "title": "Failure Mode If Missing",
+          "type": "string"
+        },
+        "formalization": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Formalization"
+        },
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "kind": {
+          "enum": [
+            "formal_capacity",
+            "material_capacity",
+            "interface_capacity",
+            "epistemic_capacity",
+            "safety_or_noncollapse_capacity",
+            "regime_capacity"
+          ],
+          "title": "Kind",
+          "type": "string"
+        },
+        "material_anchor": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Material Anchor"
+        },
+        "necessity_status": {
+          "enum": [
+            "necessary",
+            "jointly_sufficient",
+            "exploratory",
+            "regime_specific"
+          ],
+          "title": "Necessity Status",
+          "type": "string"
+        },
+        "statement": {
+          "title": "Statement",
+          "type": "string"
+        },
+        "validation_method": {
+          "enum": [
+            "proof",
+            "simulation",
+            "benchmark",
+            "audit",
+            "field_study",
+            "policy_review",
+            "experiment",
+            "trace_replay",
+            "human_review"
+          ],
+          "title": "Validation Method",
+          "type": "string"
+        },
+        "verifies_commitments": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Verifies Commitments",
+          "type": "array"
+        }
+      },
+      "required": [
+        "id",
+        "kind",
+        "necessity_status",
+        "statement",
+        "validation_method",
+        "failure_mode_if_missing"
+      ],
+      "title": "MechanismRequirement",
+      "type": "object"
+    },
+    "MediationMap": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "map_type": {
+          "enum": [
+            "transport",
+            "calibration",
+            "authorization",
+            "accountability",
+            "limiting",
+            "embedding",
+            "refinement",
+            "feedback",
+            "governance"
+          ],
+          "title": "Map Type",
+          "type": "string"
+        },
+        "required_properties": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Required Properties",
+          "type": "array"
+        },
+        "source_commitment": {
+          "title": "Source Commitment",
+          "type": "string"
+        },
+        "statement": {
+          "title": "Statement",
+          "type": "string"
+        },
+        "target_commitment": {
+          "title": "Target Commitment",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "source_commitment",
+        "target_commitment",
+        "map_type",
+        "statement"
+      ],
+      "title": "MediationMap",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "assumptions": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Assumptions",
+      "type": "array"
+    },
+    "crisis_ref": {
+      "title": "Crisis Ref",
+      "type": "string"
+    },
+    "implementation_surfaces": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Implementation Surfaces",
+      "type": "array"
+    },
+    "material_preconditions": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Material Preconditions",
+      "type": "array"
+    },
+    "mechanism_name": {
+      "title": "Mechanism Name",
+      "type": "string"
+    },
+    "mechanism_role": {
+      "title": "Mechanism Role",
+      "type": "string"
+    },
+    "mediation_maps": {
+      "items": {
+        "$ref": "#/$defs/MediationMap"
+      },
+      "title": "Mediation Maps",
+      "type": "array"
+    },
+    "open_todos": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Open Todos",
+      "type": "array"
+    },
+    "requirements": {
+      "items": {
+        "$ref": "#/$defs/MechanismRequirement"
+      },
+      "title": "Requirements",
+      "type": "array"
+    },
+    "residual_limits": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Residual Limits",
+      "type": "array"
+    },
+    "selected_hypothesis_refs": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Selected Hypothesis Refs",
+      "type": "array"
+    },
+    "unknowns": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Unknowns",
+      "type": "array"
+    },
+    "validation_obligations": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Validation Obligations",
+      "type": "array"
+    }
+  },
+  "required": [
+    "crisis_ref",
+    "mechanism_name",
+    "mechanism_role"
+  ],
+  "title": "MechanismRequirementsPacket",
+  "type": "object"
+}

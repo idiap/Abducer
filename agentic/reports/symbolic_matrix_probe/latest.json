@@ -1,0 +1,138 @@
+{
+  "analytic_obligation_seeds": [
+    "boundary OPE coefficient extraction for B_ij",
+    "additive contact term control for C_ij",
+    "same-theory quotient phase control for Phi",
+    "modulus quotient PSD estimates",
+    "observable realization in the reflected Wilson algebra"
+  ],
+  "falsifier_templates": [
+    {
+      "condition": "pairwise minors hold but det(Q) < 0",
+      "decision_effect": "Demote any branch claiming pairwise quotient positivity suffices for finite-family positivity.",
+      "id": "fals.det-negative",
+      "latex": "1-\\rho_{12}^2-\\rho_{23}^2-\\rho_{13}^2+2\\rho_{12}\\rho_{23}\\rho_{13}\\cos\\Phi < 0"
+    },
+    {
+      "condition": "Phi is not 0 modulo pi after diagonal rephasing",
+      "decision_effect": "Require phase-control or coboundary lemma before Schur quotient positivity transfer.",
+      "id": "fals.nonzero-holonomy",
+      "latex": "\\Phi\\not\\equiv 0\\pmod{\\pi}"
+    }
+  ],
+  "generated_utc": "2026-07-21T14:37:29+00:00",
+  "identities": [
+    {
+      "derivation_method": "SymPy unavailable or unsuitable; used exact known three-by-three Hermitian determinant formula (No module named 'sympy').",
+      "epistemic_status": "symbolic_formula",
+      "formula": "det(Q)=1-rho12^2-rho23^2-rho13^2+2*rho12*rho23*rho13*cos(Phi)",
+      "id": "id.det-normalized-hermitian-3x3",
+      "latex": "\\det Q = 1-\\rho_{12}^{2}-\\rho_{23}^{2}-\\rho_{13}^{2}+2\\rho_{12}\\rho_{23}\\rho_{13}\\cos\\Phi",
+      "name": "normalized Hermitian three-by-three determinant",
+      "valid_when": "Q is a normalized Hermitian 3x3 quotient matrix, 0 <= rho_ij <= 1, and Phi is the gauge-invariant cycle phase arg(Q_12 Q_23 Q_31)."
+    },
+    {
+      "derivation_method": "principal minor expansion",
+      "epistemic_status": "symbolic_formula",
+      "formula": "rho_ij <= 1 for every pair",
+      "id": "id.principal-minors",
+      "latex": "1-\\rho_{ij}^{2}\\ge 0\\quad(1\\le i<j\\le3)",
+      "name": "pairwise minor constraints",
+      "valid_when": "Each two-by-two principal minor of Q is required to be nonnegative."
+    },
+    {
+      "derivation_method": "cycle-product invariance under vertex phase cancellation",
+      "epistemic_status": "symbolic_formula",
+      "formula": "Phi=theta12+theta23+theta31 modulo 2*pi",
+      "id": "id.rephasing-holonomy",
+      "latex": "\\Phi=\\arg(Q_{12}Q_{23}Q_{31})",
+      "name": "diagonal rephasing invariant",
+      "valid_when": "Q is compared modulo diagonal unitary rephasings DQD*."
+    }
+  ],
+  "non_claims": [
+    "This is not a Yang-Mills existence proof.",
+    "This does not establish a continuum Hilbert space.",
+    "This does not prove a spectral gap.",
+    "This is not a simulation."
+  ],
+  "probe_decision": {
+    "analytic_estimate_target": {
+      "certifies": "The finite quotient interface is realized by reflected Wilson observables in the continuum transfer regime.",
+      "falsifies": "A negative determinant, non-removable quotient holonomy, or failed same-theory realization blocks the positivity bridge.",
+      "needed": true,
+      "objects": [
+        "boundary OPE factors",
+        "additive contacts",
+        "quotient phase",
+        "modulus quotient minors",
+        "same-theory observable realization"
+      ]
+    },
+    "carrier": {
+      "mathematical_type": "finite 3x3 Hermitian PSD interface",
+      "name": "three-observable normalized Hermitian quotient matrix",
+      "validity_conditions": [
+        "Q is Hermitian.",
+        "Q_ii = 1 for i in {1,2,3}.",
+        "Q_ij = rho_ij exp(i theta_ij) with 0 <= rho_ij <= 1.",
+        "Phi = arg(Q_12 Q_23 Q_31) is invariant under diagonal rephasing."
+      ],
+      "variables": [
+        "rho12",
+        "rho23",
+        "rho13",
+        "Phi"
+      ]
+    },
+    "decision": "derive_symbolically",
+    "dependencies": [
+      "docs/research-methods/parsimonious-probe-policy.md",
+      "agentic/spec/parsimonious_probe_decision.schema.json"
+    ],
+    "epistemic_status": "symbolic_formula",
+    "numeric_probe_if_needed": {
+      "allowed": false,
+      "bounded_domain": [],
+      "expected_decision_value": "Numeric search may later calibrate sharp phase/modulus bounds only after analytic obligations are named.",
+      "non_proof_boundary": "A numeric sample is never Yang-Mills proof progress.",
+      "stopping_condition": "No numeric search is needed for the exact determinant."
+    },
+    "packet_id": "pmp.decision.bc7279c4257d",
+    "question": "When do pairwise normalized quotient moduli and holonomy give a positive finite Gram interface?",
+    "source_cycle_ids": [
+      "cycle-0198",
+      "cycle-0199",
+      "cycle-0200",
+      "cycle-0201",
+      "cycle-0202",
+      "cycle-0203",
+      "cycle-0204",
+      "cycle-0205"
+    ],
+    "symbolic_first_attempt": {
+      "available": true,
+      "expected_output": "determinant, pairwise minors, holonomy, and falsifier inequalities",
+      "method": "manual_fallback",
+      "why_sufficient_or_not": "It fully types the finite algebra interface, but leaves Yang-Mills analytic realization and uniform estimates open."
+    },
+    "target_id": "yang-mills-existence-and-mass-gap-target",
+    "transfer_boundary": "Finite matrix algebra supplies a bridge interface, not a construction of continuum Yang-Mills or a spectral gap.",
+    "validation_handoff": "python agentic/scripts/validate_symbolic_matrix_probe.py"
+  },
+  "source_cycle_ids": [
+    "cycle-0198",
+    "cycle-0199",
+    "cycle-0200",
+    "cycle-0201",
+    "cycle-0202",
+    "cycle-0203",
+    "cycle-0204",
+    "cycle-0205"
+  ],
+  "status": "symbolic_formula",
+  "symbolic_backend": "manual_fallback",
+  "target_id": "yang-mills-existence-and-mass-gap-target",
+  "validation_handoff": "python agentic/scripts/validate_symbolic_matrix_probe.py",
+  "version": 1
+}

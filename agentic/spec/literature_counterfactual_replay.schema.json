@@ -1,0 +1,77 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://abducer.local/schemas/literature_counterfactual_replay.schema.json",
+  "title": "Literature mapping-to-assimilation counterfactual replay",
+  "description": "Baseline and counterfactual snapshot worlds, each rebuilt through deterministic mapping and assimilation with semantic null effects exposed.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "replay_id", "causal_replay_id", "causal_transformation_ids", "target_id", "theory_state_digest", "baseline_snapshot_id", "baseline_snapshot_digest", "theory_catalog_id", "theory_catalog_digest", "baseline", "world_results", "null_effect_world_ids", "control_status", "claim_boundary", "content_digest"],
+  "$defs": {
+    "id": {"type": "string", "minLength": 1, "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$"},
+    "digest": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
+    "text": {"type": "string", "minLength": 1},
+    "artifact": {"type": "object", "required": ["schema_version", "content_digest"]},
+    "transformation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["operation"],
+      "properties": {
+        "operation": {"enum": ["delete_source", "no_literature", "supersede_source", "contradict_source", "coverage_only_change"]},
+        "source_id": {"$ref": "#/$defs/id"},
+        "source_version": {"$ref": "#/$defs/text"},
+        "replacement_claim": {"$ref": "#/$defs/text"},
+        "contradictory_claim": {"$ref": "#/$defs/text"},
+        "coverage_limit": {"$ref": "#/$defs/text"}
+      },
+      "allOf": [
+        {"if": {"properties": {"operation": {"enum": ["delete_source", "supersede_source", "contradict_source"]}}}, "then": {"required": ["source_id"]}},
+        {"if": {"properties": {"operation": {"const": "contradict_source"}}}, "then": {"required": ["contradictory_claim"]}},
+        {"if": {"properties": {"operation": {"const": "coverage_only_change"}}}, "then": {"required": ["coverage_limit"]}}
+      ]
+    }
+  },
+  "properties": {
+    "schema_version": {"const": "2.0"},
+    "replay_id": {"$ref": "#/$defs/id"},
+    "causal_replay_id": {"$ref": "#/$defs/id"}, "causal_transformation_ids": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"$ref": "#/$defs/id"}},
+    "target_id": {"$ref": "#/$defs/id"},
+    "theory_state_digest": {"$ref": "#/$defs/digest"},
+    "baseline_snapshot_id": {"$ref": "#/$defs/id"},
+    "baseline_snapshot_digest": {"$ref": "#/$defs/digest"},
+    "theory_catalog_id": {"$ref": "#/$defs/id"},
+    "theory_catalog_digest": {"$ref": "#/$defs/digest"},
+    "baseline": {
+      "type": "object", "additionalProperties": false,
+      "required": ["mapping_derivation", "assimilation", "decision_projection_digest"],
+      "properties": {"mapping_derivation": {"$ref": "#/$defs/artifact"}, "assimilation": {"$ref": "#/$defs/artifact"}, "decision_projection_digest": {"$ref": "#/$defs/digest"}}
+    },
+    "world_results": {
+      "type": "array", "minItems": 1,
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["world_id", "transformation_id", "transformation", "transformation_digest", "evaluation", "snapshot", "mapping_derivation", "assimilation", "decision_projection_digest", "effects", "content_digest"],
+        "properties": {
+          "world_id": {"$ref": "#/$defs/id"}, "transformation_id": {"$ref": "#/$defs/id"}, "transformation": {"$ref": "#/$defs/transformation"}, "transformation_digest": {"$ref": "#/$defs/digest"},
+          "evaluation": {"type": "object", "additionalProperties": false, "required": ["expected_effect", "observed_effect", "status"], "properties": {"expected_effect": {"enum": ["change", "null", "unspecified"]}, "observed_effect": {"enum": ["change", "null"]}, "status": {"const": "passed"}}},
+          "snapshot": {"$ref": "#/$defs/artifact"}, "mapping_derivation": {"$ref": "#/$defs/artifact"}, "assimilation": {"$ref": "#/$defs/artifact"},
+          "decision_projection_digest": {"$ref": "#/$defs/digest"},
+          "effects": {
+            "type": "object", "additionalProperties": false,
+            "required": ["snapshot_digest_changed", "mapping_packet_digest_changed", "assimilation_packet_digest_changed", "mapping_or_theory_decision_changed", "concept_updates_changed", "branch_updates_changed", "semantic_claim_layer_changed", "semantic_relation_decisions_changed", "semantic_coverage_audit_changed", "null_effect"],
+            "properties": {
+              "snapshot_digest_changed": {"type": "boolean"}, "mapping_packet_digest_changed": {"type": "boolean"}, "assimilation_packet_digest_changed": {"type": "boolean"},
+              "mapping_or_theory_decision_changed": {"type": "boolean"}, "concept_updates_changed": {"type": "boolean"}, "branch_updates_changed": {"type": "boolean"},
+              "semantic_claim_layer_changed": {"type": "boolean"}, "semantic_relation_decisions_changed": {"type": "boolean"}, "semantic_coverage_audit_changed": {"type": "boolean"},
+              "null_effect": {"type": "boolean"}
+            }
+          },
+          "content_digest": {"$ref": "#/$defs/digest"}
+        }
+      }
+    },
+    "null_effect_world_ids": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/id"}},
+    "control_status": {"const": "passed"},
+    "claim_boundary": {"$ref": "#/$defs/text"},
+    "content_digest": {"$ref": "#/$defs/digest"}
+  }
+}

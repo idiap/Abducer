@@ -1,0 +1,619 @@
+[
+  {
+    "id": "NWTRACE-001",
+    "type": "planning_todo",
+    "phase": "compatibility-baseline",
+    "owner": "agentic/reporting",
+    "priority": "critical",
+    "risk_class": "main-workflow-regression",
+    "title": "Freeze the successful main-workflow visualizers as compatibility baselines",
+    "intent": "Extend trace visualization without changing the existing process-graph, reasoning-dynamics, or Yang-Mills monitor behavior that already works well.",
+    "use_skills": [],
+    "implementation_steps": [
+      "Record the current input contracts, output paths, embedded packet shapes, DOM identifiers, tabs, filters, labels, and default first-viewport semantics for the legacy process/reasoning-dynamics reports and the specialized Yang-Mills monitor.",
+      "Add deterministic golden fixtures and semantic assertions around the current main-workflow reports; avoid brittle full-file snapshots for timestamps or incidental ordering.",
+      "Define an explicit compatibility boundary: existing generators and specialized monitor remain supported projections, while the new generic trace path is additive and opt-in until parity is demonstrated."
+    ],
+    "required_artifact": [
+      "tests/fixtures/reasoning_trace/main_workflow_baseline/",
+      "tests/reporting/test_main_workflow_trace_compatibility.py",
+      "docs/architecture/reasoning-trace-compatibility.md"
+    ],
+    "acceptance_criteria": [
+      "Existing process-graph, reasoning-dynamics, conceptual-dynamics, and Yang-Mills monitor tests pass unchanged.",
+      "The baseline checks target identity, core metrics, current tabs, filters, evidence access, proof-debt visibility, packet embedding, and offline rendering.",
+      "No generic-trace migration changes the current default output path or renderer behavior."
+    ],
+    "blocked_by": [],
+    "evidence": [
+      "file:skills/orchestration/kb-orchestrator/scripts/generate_process_graph.py",
+      "file:skills/orchestration/kb-orchestrator/scripts/generate_reasoning_dynamics.py",
+      "file:agentic/scripts/generate_reasoning_monitor_html.py",
+      "file:tests/reporting/test_reasoning_monitor_html.py"
+    ],
+    "review_date": "2026-08-05",
+    "failure_modes": [
+      "The generic work silently changes the successful main-workflow HTML or its packet.",
+      "A snapshot passes while expert-visible semantics or filter behavior regress.",
+      "The specialized Yang-Mills projection is mistaken for the workflow-neutral contract."
+    ],
+    "status": "resolved",
+    "completed_utc": "2026-08-05T00:00:00Z",
+    "resolution_summary": "Frozen the main-workflow semantic and DOM compatibility boundary and added regression coverage."
+  },
+  {
+    "id": "NWTRACE-002",
+    "type": "workflow_todo",
+    "phase": "trace-contract",
+    "owner": "agentic/spec",
+    "priority": "critical",
+    "risk_class": "semantic-observability",
+    "title": "Define a versioned workflow-neutral public reasoning trace contract",
+    "intent": "Represent inspectable inference summaries for every workflow without recording hidden chain-of-thought and without reducing reasoning to an execution transcript.",
+    "use_skills": [],
+    "implementation_steps": [
+      "Define run identity fields: trace/run ID, workflow ID and version, optional profile, target, activation receipt, trigger facts, approved budget, lifecycle status, and portable repository-relative paths.",
+      "Define event identity fields: event ID, monotonic sequence, source timestamp, phase, step, skill, attempt, branch, causal parent event IDs, parent artifact IDs, and event family.",
+      "Define public inference fields: question, typed premises, public claim or proposed delta, inference/transformation operator, inspectable warrant, conclusion, assumptions, alternatives and dispositions, falsifiers/counterevidence, uncertainty, scope/regime/model, and before/after scope.",
+      "Define typed evidence references with path, digest, receipt ID, artifact type, and relation in supports/refutes/constrains/background.",
+      "Define control, failure, gate, obligation, and handoff objects, plus presentation hints that are advisory rather than semantic authority.",
+      "Retain the current v1 event fields through an explicit adapter or additive compatibility profile. State normatively that logs contain public artifact-grounded rationales, never private model deliberation."
+    ],
+    "required_artifact": [
+      "agentic/spec/public_reasoning_trace.schema.json",
+      "agentic/spec/public_reasoning_event.schema.json",
+      "docs/reference/public-reasoning-trace-contract.md"
+    ],
+    "acceptance_criteria": [
+      "The schema validates a representative complete run for all six named workflows and Route-A.",
+      "The schema rejects missing event identity, invalid causal parents, malformed evidence relations, unsupported scope transitions, and malformed handoffs.",
+      "The contract clearly distinguishes public rationale from hidden chain-of-thought and allows explicit unknown or trace-incomplete states.",
+      "All stored artifact paths are portable and repository-relative unless explicitly marked external."
+    ],
+    "blocked_by": ["NWTRACE-001"],
+    "evidence": [
+      "file:agentic/spec/reasoning_event_log_schema.json",
+      "file:skills/common/reasoning_log.py",
+      "file:agentic/registries/named_workflow_contracts.yaml"
+    ],
+    "review_date": "2026-08-05",
+    "failure_modes": [
+      "The contract captures only skill starts and completions rather than inferential content.",
+      "Free-form narrative is treated as hidden chain-of-thought or as scientific authority.",
+      "Workflow-specific concepts are hard-coded into the generic schema."
+    ],
+    "status": "resolved",
+    "completed_utc": "2026-08-05T00:00:00Z",
+    "resolution_summary": "Implemented the versioned workflow-neutral public reasoning event and trace schemas."
+  },
+  {
+    "id": "NWTRACE-003",
+    "type": "dependency_todo",
+    "phase": "epistemic-semantics",
+    "owner": "agentic/spec",
+    "priority": "critical",
+    "risk_class": "epistemic-status-confusion",
+    "title": "Separate integrity validation, scientific epistemic status, and workflow disposition",
+    "intent": "Prevent a valid envelope or digest-bound receipt from being displayed as proof that its scientific claim is correct, novel, or entailed.",
+    "use_skills": [],
+    "implementation_steps": [
+      "Define independent fields and vocabularies for artifact_validation_status, claim_epistemic_status, and workflow_disposition.",
+      "Define authority-aware labels explaining that digest receipts establish identity/integrity only, not provenance quality, entailment, novelty, or correctness.",
+      "Specify allowed transitions, who may cause them, required evidence, and invalid upgrades such as finite result to continuum theorem or review finding to proof acceptance.",
+      "Provide deterministic v2-to-v1 status and visual-lane projections so specialized existing reports remain compatible."
+    ],
+    "required_artifact": [
+      "agentic/spec/reasoning_trace_status_vocabulary.json",
+      "agentic/spec/reasoning_trace_v2_to_v1_crosswalk.json",
+      "tests/infrastructure/test_reasoning_trace_status_semantics.py"
+    ],
+    "acceptance_criteria": [
+      "The HTML can simultaneously show a receipt as integrity-valid and its claim as conjectural, refuted, or unknown.",
+      "Validators reject authority-free epistemic upgrades and scope widening.",
+      "The backward projection is deterministic and does not alter existing v1 outputs."
+    ],
+    "blocked_by": ["NWTRACE-002"],
+    "evidence": [
+      "file:agentic/spec/named_workflow_artifacts.schema.json",
+      "file:agentic/spec/reasoning_event_log_schema.json",
+      "file:hooks/scripts/post_skill_use_review.py"
+    ],
+    "review_date": "2026-08-05",
+    "failure_modes": [
+      "A green receipt is rendered as a validated theorem or established contribution.",
+      "One status field is overloaded for control, science, and routing.",
+      "Compatibility projection silently strengthens epistemic claims."
+    ],
+    "status": "resolved",
+    "completed_utc": "2026-08-05T00:00:00Z",
+    "resolution_summary": "Separated artifact integrity, scientific epistemic status, and workflow disposition with a non-strengthening compatibility crosswalk."
+  },
+  {
+    "id": "NWTRACE-004",
+    "type": "workflow_todo",
+    "phase": "append-only-trace-store",
+    "owner": "agentic/traces",
+    "priority": "critical",
+    "risk_class": "trace-loss-and-causality",
+    "title": "Implement a run-scoped append-only reasoning trace store",
+    "intent": "Make complete, interleaved workflow lifecycles reconstructable instead of overwriting one latest hook snapshot.",
+    "use_skills": [],
+    "implementation_steps": [
+      "Persist canonical events as append-only per-run JSONL with a run manifest, stable event IDs, source timestamps, monotonic sequence numbers, parent references, and atomic writes.",
+      "Retain latest-* hook files only as compatibility views pointing to or copying the newest event.",
+      "Make retry/idempotence rules explicit and prevent rebuilds from assigning fresh timestamps to historically stable event IDs.",
+      "Support concurrent runs without cross-run contamination and redact prompts, secrets, and unbounded tool payloads."
+    ],
+    "required_artifact": [
+      "agentic/traces/public_reasoning/README.md",
+      "agentic/scripts/public_reasoning_trace_store.py",
+      "tests/infrastructure/test_public_reasoning_trace_store.py"
+    ],
+    "acceptance_criteria": [
+      "Two interleaved workflow runs reconstruct independently and in causal order.",
+      "Retries do not duplicate an accepted event and rebuilds do not rewrite historical timestamps.",
+      "Denied hook decisions and failed runs remain visible, and latest compatibility files still work.",
+      "Interrupted writes cannot leave a partially valid event."
+    ],
+    "blocked_by": ["NWTRACE-002", "NWTRACE-003"],
+    "evidence": [
+      "file:hooks/scripts/hook_utils.py",
+      "file:agentic/traces/hook_runs/",
+      "file:agentic/scripts/build_reasoning_event_log.py"
+    ],
+    "review_date": "2026-08-05",
+    "failure_modes": [
+      "A later hook invocation erases earlier lifecycle evidence.",
+      "Events from different runs become causally connected.",
+      "Stable event IDs receive changing timestamps or meanings."
+    ],
+    "status": "resolved",
+    "completed_utc": "2026-08-05T00:00:00Z",
+    "resolution_summary": "Implemented atomic append-only run traces, manifests, idempotence, causal validation, and latest compatibility views."
+  },
+  {
+    "id": "NWTRACE-005",
+    "type": "hook_todo",
+    "phase": "control-plane-instrumentation",
+    "owner": "hooks/scripts",
+    "priority": "critical",
+    "risk_class": "lifecycle-observability",
+    "title": "Emit correlated lifecycle events from named-workflow hooks",
+    "intent": "Capture activation, authorization, execution control, failure, and handoff boundaries while preserving all current hook decisions.",
+    "use_skills": [],
+    "implementation_steps": [
+      "Instrument prompt activation, PreSkillUse, PostSkillUse, PreToolUse, Stop, conditional skip, quarantine, failure, and workflow handoff events.",
+      "Correlate every event by run/workflow/version/profile/step/skill/attempt and link receipt and artifact digests instead of embedding large payloads.",
+      "Record authority exercised, authority explicitly absent, prohibitions checked, decision, reason, and downstream consequence.",
+      "Keep hook return values, blocking behavior, and current latest trace views unchanged."
+    ],
+    "required_artifact": [
+      "hooks/scripts/hook_utils.py",
+      "hooks/scripts/user_prompt_submit_intake.py",
+      "hooks/scripts/pre_skill_use_policy.py",
+      "hooks/scripts/post_skill_use_review.py",
+      "hooks/scripts/pre_tool_use_policy.py",
+      "hooks/scripts/stop_artifact_check.py",
+      "tests/orchestration/test_named_workflow_hook_trace_lifecycle.py"
+    ],
+    "acceptance_criteria": [
+      "A complete named-workflow run has correlated activation, step, tool where applicable, result, exit, and handoff control events.",
+      "Conditional N/A, denied, forged-receipt, quarantined, and failed paths remain inspectable.",
+      "No scientific rationale is invented from control-plane bookkeeping.",
+      "Existing hook contract and realistic workflow tests retain their decision behavior."
+    ],
+    "blocked_by": ["NWTRACE-004"],
+    "evidence": [
+      "file:agentic/registries/named_workflow_contracts.yaml",
+      "file:tests/orchestration/test_workflow_local_hooks.py",
+      "file:tests/orchestration/test_named_workflow_realistic_scenarios.py"
+    ],
+    "review_date": "2026-08-05",
+    "failure_modes": [
+      "Hook events are mistaken for scientific inference events.",
+      "Conditional skips disappear or look like successful executions.",
+      "Tracing changes an allow/block decision."
+    ],
+    "status": "resolved",
+    "completed_utc": "2026-08-05T00:00:00Z",
+    "resolution_summary": "Instrumented named-workflow hooks with correlated control events without changing hook decisions."
+  },
+  {
+    "id": "NWTRACE-006",
+    "type": "workflow_todo",
+    "phase": "reasoning-logger-extension",
+    "owner": "skills/common",
+    "priority": "critical",
+    "risk_class": "logger-compatibility",
+    "title": "Extend ReasoningLogger with explicit public inference events",
+    "intent": "Give scripted and generative components a typed way to expose expert-readable inference summaries while retaining legacy Markdown and surface JSON behavior.",
+    "use_skills": [],
+    "implementation_steps": [
+      "Add optional workflow/version/profile/target/step/attempt context to ReasoningLogger.",
+      "Add a typed public_inference API, or equivalent typed methods for claims, transformations, alternatives, validation, failures, obligations, and handoffs.",
+      "Emit the canonical JSONL sidecar through the append-only store while leaving current audit Markdown and reasoning-surface Markdown/JSON valid.",
+      "Adapt legacy moments and optional PDL records conservatively; record trace_incomplete when premises, warrants, or evidence are unavailable rather than guessing from title prefixes."
+    ],
+    "required_artifact": [
+      "skills/common/reasoning_log.py",
+      "tests/infrastructure/test_reasoning_logger.py",
+      "tests/infrastructure/test_reasoning_log_index.py",
+      "tests/infrastructure/test_reasoning_logger_public_events.py"
+    ],
+    "acceptance_criteria": [
+      "All existing logger and index tests pass unchanged.",
+      "New events contain workflow coordinates, causal links, evidence roles, public warrant, scope, and authority fields.",
+      "Legacy title-prefix classification remains supported but is not the semantic source for new workflows.",
+      "No emitted event contains absolute local paths when a repository-relative path exists."
+    ],
+    "blocked_by": ["NWTRACE-004"],
+    "evidence": [
+      "file:skills/common/reasoning_log.py",
+      "file:skills/orchestration/kb-orchestrator/scripts/generate_reasoning_log_index.py",
+      "file:skills/orchestration/kb-orchestrator/scripts/generate_reasoning_surface_index.py"
+    ],
+    "review_date": "2026-08-05",
+    "failure_modes": [
+      "Existing logs or parsers break because headings or fields change.",
+      "The API encourages narrative dumps instead of bounded public rationales.",
+      "Missing semantics are inferred from filenames or title prefixes."
+    ],
+    "status": "resolved",
+    "completed_utc": "2026-08-05T00:00:00Z",
+    "resolution_summary": "Added backward-compatible typed public inference emission to ReasoningLogger."
+  },
+  {
+    "id": "NWTRACE-007",
+    "type": "workflow_todo",
+    "phase": "step-trace-contracts",
+    "owner": "agentic/registries",
+    "priority": "critical",
+    "risk_class": "semantic-coverage",
+    "title": "Declare trace requirements for every named workflow step and Route-A role",
+    "intent": "Make expert-readable inference coverage a contract rather than an accidental property of the few steps with Python loggers.",
+    "use_skills": [],
+    "implementation_steps": [
+      "Add a registry-side trace contract per step: event family, inference operator, required objects, evidence roles, scope fields, alternatives/falsifier expectations, authority, and terminal relation.",
+      "Define the required expert trace spine for each workflow: provenance-to-route; context-to-formal-claim; theorem-to-proof-gate; atlas-to-contribution-handoff; draft-marker-to-readiness; independent-review-to-repair; and Route-A specialist fan-out/join-to-validation-tail.",
+      "For prompt-only or manual skills, define a small validated public-reasoning result sidecar consumed at PostSkillUse.",
+      "Distinguish required executed steps, conditional N/A steps with reasons, validator-only steps, and specialist/profile roles."
+    ],
+    "required_artifact": [
+      "agentic/registries/named_workflow_trace_contracts.yaml",
+      "agentic/spec/named_workflow_trace_contract.schema.json",
+      "tests/orchestration/test_named_workflow_trace_contracts.py"
+    ],
+    "acceptance_criteria": [
+      "All 59 base named-workflow steps and all Route-A profile/specialist roles have explicit trace dispositions.",
+      "Every workflow contract names the inferential contrast or failure an expert must be able to inspect.",
+      "Prompt-only skills can satisfy the contract without requiring a Python implementation.",
+      "The validator reports semantic coverage separately from control-event coverage."
+    ],
+    "blocked_by": ["NWTRACE-002", "NWTRACE-006"],
+    "evidence": [
+      "file:agentic/registries/named_workflow_contracts.yaml",
+      "file:docs/architecture/named-workflows.md",
+      "file:tests/fixtures/named_workflow_scenarios.json"
+    ],
+    "review_date": "2026-08-05",
+    "failure_modes": [
+      "Coverage is declared complete because hooks ran even though no inference is explained.",
+      "All steps receive the same generic claim/evidence payload.",
+      "Conditional or profile steps are silently omitted."
+    ],
+    "status": "resolved",
+    "completed_utc": "2026-08-05T00:00:00Z",
+    "resolution_summary": "Declared and validated semantic trace requirements for 59 base steps and all 15 Route-A profile and specialist roles."
+  },
+  {
+    "id": "NWTRACE-008",
+    "type": "workflow_todo",
+    "phase": "trace-assembly-and-adapters",
+    "owner": "agentic/scripts",
+    "priority": "critical",
+    "risk_class": "trace-integration",
+    "title": "Build registry-aware trace assembly and backward-compatible adapters",
+    "intent": "Combine observed public inference, hook control events, artifacts, receipts, and declared workflow routes into one causally coherent trace without manufacturing missing reasoning.",
+    "use_skills": [],
+    "implementation_steps": [
+      "Ingest canonical logger events, append-only hooks, skill-application events, artifact envelopes, receipt references, legacy surfaces/PDL, and the named workflow registry.",
+      "Overlay observed events on the declared required/conditional route and report missing, extra, duplicated, out-of-order, unexplained skip, and unjustified transition states.",
+      "Implement conservative adapters for the legacy process/reasoning-dynamics stack and specialized Yang-Mills monitor; preserve them as projections rather than rewriting their source data.",
+      "Implement semantic adapters for all six named workflows and Route-A using their trace contracts, including rejected alternatives, negative evidence, scope boundaries, profile fan-out/join, and typed handoffs.",
+      "Emit explicit observability gaps wherever source artifacts do not support an inference."
+    ],
+    "required_artifact": [
+      "agentic/scripts/build_public_reasoning_trace.py",
+      "agentic/scripts/reasoning_trace_adapters/",
+      "tests/reporting/test_public_reasoning_trace_assembly.py"
+    ],
+    "acceptance_criteria": [
+      "Assembly is deterministic, causally acyclic, run-isolated, and idempotent.",
+      "Each exercised named step has a control event and each semantically required step has an inference event or visible gap.",
+      "Conditional skips, branches, exit gates, obligations, and accepted or rejected handoffs are traceable.",
+      "Adapters never infer scientific claims solely from filenames, green receipts, or hook decisions."
+    ],
+    "blocked_by": ["NWTRACE-003", "NWTRACE-005", "NWTRACE-006", "NWTRACE-007"],
+    "evidence": [
+      "file:skills/orchestration/kb-orchestrator/scripts/generate_process_graph.py",
+      "file:agentic/scripts/log_skill_application.py",
+      "file:agentic/registries/named_workflow_contracts.yaml"
+    ],
+    "review_date": "2026-08-05",
+    "failure_modes": [
+      "The assembler fills missing rationale with plausible but unsupported text.",
+      "Control chronology is presented as an inference graph.",
+      "Legacy adapter changes the established main-workflow report."
+    ],
+    "status": "resolved",
+    "completed_utc": "2026-08-05T00:00:00Z",
+    "resolution_summary": "Implemented registry-aware assembly, causal diagnostics, conservative legacy projections, and six workflow plus Route-A adapters."
+  },
+  {
+    "id": "NWTRACE-009",
+    "type": "report_todo",
+    "phase": "generic-monitor-packet",
+    "owner": "agentic/reporting",
+    "priority": "critical",
+    "risk_class": "report-data-contract",
+    "title": "Define and build a workflow-neutral expert monitor packet",
+    "intent": "Provide a deterministic self-contained data packet for expert inspection across workflows while retaining specialized domain projections.",
+    "use_skills": [],
+    "implementation_steps": [
+      "Define generic packet sections for run/workflow/target identity, declared route, chronological events, inference graph, claim/evidence graph, scope ledger, alternatives, failures, obligations, gates, artifacts/receipts, authority ledger, handoffs, and coverage.",
+      "Define a graph IR with workflow, profile, step, skill, artifact, claim, evidence, obligation, gate, and handoff nodes and typed edges such as consumes, produces, supports, challenges, refines, validates, blocks, branches, hands_off, and precedes.",
+      "Support optional workflow projections or lenses without placing domain vocabulary in the generic core.",
+      "Keep the current Yang-Mills packet and sections as an unchanged specialized projection."
+    ],
+    "required_artifact": [
+      "agentic/spec/public_reasoning_monitor_packet.schema.json",
+      "agentic/scripts/build_public_reasoning_monitor_packet.py",
+      "tests/reporting/test_public_reasoning_monitor_packet.py"
+    ],
+    "acceptance_criteria": [
+      "The packet is deterministic, self-contained, run-isolated, and referentially valid.",
+      "Every rendered substantive claim points to typed evidence, explicit unknowns, or an open obligation.",
+      "Execution/control events and scientific inference events remain visibly distinct.",
+      "Empty or incomplete optional lanes are explicit rather than silently removed."
+    ],
+    "blocked_by": ["NWTRACE-008"],
+    "evidence": [
+      "file:agentic/spec/reasoning_monitor_packet.schema.json",
+      "file:agentic/scripts/build_reasoning_monitor_packet.py",
+      "file:agentic/spec/reasoning_event_log_schema.json"
+    ],
+    "review_date": "2026-08-05",
+    "failure_modes": [
+      "The generic packet inherits Yang-Mills-specific required sections.",
+      "Claims lose their evidence, scope, or authority relationships during projection.",
+      "Events from separate runs or profiles are merged."
+    ],
+    "status": "resolved",
+    "completed_utc": "2026-08-05T00:00:00Z",
+    "resolution_summary": "Implemented and schema-tested the deterministic workflow-neutral expert monitor packet."
+  },
+  {
+    "id": "NWTRACE-010",
+    "type": "report_todo",
+    "phase": "expert-html-renderer",
+    "owner": "agentic/reporting",
+    "priority": "critical",
+    "risk_class": "expert-readability",
+    "title": "Render a self-contained expert HTML trace with declarative workflow lenses",
+    "intent": "Let an expert determine what changed, why, from what evidence, in what scope, under whose authority, what failed, and where the result went next.",
+    "use_skills": [],
+    "implementation_steps": [
+      "Create a generic offline HTML shell with workflow/run/profile selection and core views: Overview, Workflow Route, Inference Graph, Timeline, Claims and Evidence, Alternatives and Failures, Scope, Decisions and Gates, Obligations, Artifacts and Receipts, Authority, Handoffs, and Trace Coverage.",
+      "Show uncertainty, claim status, scope, authority limits, and proof debt without requiring experts to open collapsed details.",
+      "Drive workflow-specific labels, panels, metrics, and mandatory trace spines from declarative lens descriptors; provide a neutral fallback when no lens exists.",
+      "Render Route-A as a profile of its parent workflow and expose specialist fork/join provenance and the common validation tail.",
+      "Escape all untrusted fields, avoid remote assets, preserve keyboard access and narrow-width readability, and bound large-trace rendering."
+    ],
+    "required_artifact": [
+      "agentic/scripts/generate_public_reasoning_trace_html.py",
+      "agentic/registries/reasoning_trace_lenses.yaml",
+      "docs/reference/reasoning-trace-visual-grammar.md",
+      "tests/reporting/test_public_reasoning_trace_html.py"
+    ],
+    "acceptance_criteria": [
+      "All six named workflows and Route-A render through descriptors without domain-specific JavaScript branches.",
+      "The page works from the filesystem with no network, external font, script, style, or image dependency.",
+      "An expert can inspect causal parents, evidence polarity, alternatives, failure routes, scope changes, authority, obligations, and handoffs.",
+      "The current main-workflow report paths, DOM, content, and default behavior remain unchanged."
+    ],
+    "blocked_by": ["NWTRACE-001", "NWTRACE-009"],
+    "evidence": [
+      "file:agentic/scripts/generate_reasoning_monitor_html.py",
+      "file:docs/reference/reasoning-monitor-visual-grammar.md",
+      "file:tests/generative/test_reasoning_monitor_visual_quality.md"
+    ],
+    "review_date": "2026-08-05",
+    "failure_modes": [
+      "A polished dashboard hides uncertainty, minority findings, or unresolved obligations.",
+      "Workflow labels are hard-coded in the renderer.",
+      "The page leaks Yang-Mills content into unrelated workflows or requires network access."
+    ],
+    "status": "resolved",
+    "completed_utc": "2026-08-05T00:00:00Z",
+    "resolution_summary": "Implemented the offline expert HTML renderer and declarative lenses for all workflows and Route-A."
+  },
+  {
+    "id": "NWTRACE-011",
+    "type": "test_todo",
+    "phase": "realistic-semantic-fixtures",
+    "owner": "tests/fixtures",
+    "priority": "critical",
+    "risk_class": "fixture-realism",
+    "title": "Create realistic expert-level trace fixtures for every workflow and Route-A",
+    "intent": "Test inferential readability rather than replaying one generic claim/evidence envelope at every lifecycle step.",
+    "use_skills": [],
+    "implementation_steps": [
+      "Extend each existing realistic scenario with step-specific claims, premises, transformations, warrants, evidence roles, alternatives, falsifiers, scope changes, authority decisions, obligations, and handoff acceptance.",
+      "Include one realistic negative or demotion branch per workflow: bias/regime/counterexample route demotion; blind-adjudication rejection; failed lemma or countermodel; novelty/enablement demotion; scope or prior-art block; minority review finding; Route-A identity/endpoint/margin failure.",
+      "Preserve blind-review identity during adjudication and disclose it only in the post-decision audit view.",
+      "Generate trace JSON, monitor packet, and HTML from the real assembler and renderer, not hand-authored HTML."
+    ],
+    "required_artifact": [
+      "tests/fixtures/named_workflow_scenarios.json",
+      "tests/fixtures/reasoning_trace/",
+      "tests/orchestration/test_named_workflow_realistic_trace_scenarios.py"
+    ],
+    "acceptance_criteria": [
+      "Fixture semantics differ meaningfully by step and workflow.",
+      "Every workflow contains an inspectable contrast, rejected route, failure, or demotion—not only a success path.",
+      "Every fixture resolves evidence and receipt references and reaches a typed exit or handoff disposition.",
+      "Route-A visibly preserves finite/asymptotic/continuum boundaries and specialist provenance."
+    ],
+    "blocked_by": ["NWTRACE-007", "NWTRACE-008", "NWTRACE-009"],
+    "evidence": [
+      "file:tests/fixtures/named_workflow_scenarios.json",
+      "file:tests/orchestration/test_named_workflow_realistic_scenarios.py",
+      "file:agentic/registries/named_workflow_contracts.yaml"
+    ],
+    "review_date": "2026-08-05",
+    "failure_modes": [
+      "Fixtures prove only that hooks accept well-formed envelopes.",
+      "Every step repeats identical narrative or evidence.",
+      "Negative branches are synthetic schema errors rather than realistic scientific failures."
+    ],
+    "status": "resolved",
+    "completed_utc": "2026-08-05T00:00:00Z",
+    "resolution_summary": "Added seven realistic semantic scenarios, negative branches, digest-bound evidence, and generated trace, packet, and HTML fixtures."
+  },
+  {
+    "id": "NWTRACE-012",
+    "type": "test_todo",
+    "phase": "trace-integrity-and-html-coverage",
+    "owner": "tests/reporting",
+    "priority": "critical",
+    "risk_class": "verification-coverage",
+    "title": "Validate causal, epistemic, authority, and HTML trace coverage",
+    "intent": "Make trace correctness and expert-visible coverage release gates for every workflow.",
+    "use_skills": [],
+    "implementation_steps": [
+      "Validate schema, path portability, digests, receipt bindings, parent references, monotonic sequence, causal acyclicity, evidence relations, conditional skips, terminal gates, handoffs, scope transitions, and authority boundaries.",
+      "Generate and parse one offline HTML report per named workflow and Route-A; compare its embedded packet to the validated source packet.",
+      "Assert visible workflow identity, route order, substantive claim, typed evidence, transformation, alternative/failure, uncertainty, scope, authority, gate/obligation, handoff, and coverage—not merely DOM element presence.",
+      "Add negative tests for forged receipt, invalid parent, missing rationale, unexplained skip, status confusion, blind identity leak, circular proof DAG, novelty inflation, finite-to-continuum promotion, review authority escalation, and absent Route-A specialist/CAS audit.",
+      "Add escaping, no-network, keyboard/filter, selector, narrow-width, and bounded-large-trace checks."
+    ],
+    "required_artifact": [
+      "agentic/scripts/validate_public_reasoning_trace.py",
+      "tests/reporting/test_named_workflow_trace_html.py",
+      "tests/reporting/test_reasoning_trace_epistemic_safety.py",
+      "tests/generative/named_workflow_trace_expert_review.md"
+    ],
+    "acceptance_criteria": [
+      "All seven workflow/profile reports pass semantic DOM and embedded-packet checks with no cross-workflow vocabulary leakage.",
+      "Invalid causal, integrity, epistemic, scope, or authority cases fail with actionable diagnostics.",
+      "Incomplete traces render visible gaps and cannot be counted as semantic coverage.",
+      "The full main-workflow compatibility suite remains green."
+    ],
+    "blocked_by": ["NWTRACE-010", "NWTRACE-011"],
+    "evidence": [
+      "file:tests/reporting/test_reasoning_monitor_html.py",
+      "file:tests/generative/test_reasoning_monitor_visual_quality.md",
+      "file:tests/orchestration/test_named_workflow_realistic_scenarios.py"
+    ],
+    "review_date": "2026-08-05",
+    "failure_modes": [
+      "Tests assert only file existence or CSS selectors.",
+      "Missing inference semantics are counted as covered because control hooks ran.",
+      "A domain-invalid epistemic or scope transition passes schema validation."
+    ],
+    "status": "resolved",
+    "completed_utc": "2026-08-05T00:00:00Z",
+    "resolution_summary": "Added causal, epistemic, scope, authority, path, HTML, accessibility, and compatibility verification."
+  },
+  {
+    "id": "NWTRACE-013",
+    "type": "report_todo",
+    "phase": "coverage-reporting",
+    "owner": "agentic/reporting",
+    "priority": "high",
+    "risk_class": "coverage-accountability",
+    "title": "Generate per-workflow semantic trace coverage reports",
+    "intent": "Show exactly which declared steps and inference obligations are visible to an expert and which remain control-only, conditional, or missing.",
+    "use_skills": [],
+    "implementation_steps": [
+      "Calculate coverage by workflow, profile, step, event family, required field, and terminal relation.",
+      "Separate control-event coverage, substantive inference coverage, evidence resolution, negative-evidence coverage, authority coverage, and HTML visibility.",
+      "Classify conditional steps as executed, justified N/A, unjustified skip, or missing; never penalize justified N/A as an execution failure.",
+      "Expose orphan events, orphan artifacts, missing parents, unresolved handoffs, and trace-incomplete legacy projections."
+    ],
+    "required_artifact": [
+      "agentic/scripts/build_reasoning_trace_coverage.py",
+      "agentic/reports/reasoning_trace_coverage/latest.json",
+      "agentic/reports/reasoning_trace_coverage/latest.md",
+      "tests/reporting/test_reasoning_trace_coverage.py"
+    ],
+    "acceptance_criteria": [
+      "Coverage reports all base steps and Route-A roles with explicit dispositions.",
+      "A hook-only lifecycle cannot reach 100 percent semantic coverage.",
+      "Every missing requirement identifies the workflow, step, expected event/field, and nearest evidence source.",
+      "The HTML Trace Coverage view is derived from the same validated report."
+    ],
+    "blocked_by": ["NWTRACE-007", "NWTRACE-008", "NWTRACE-012"],
+    "evidence": [
+      "file:agentic/registries/named_workflow_contracts.yaml",
+      "file:agentic/scripts/validate_skill_integration.py",
+      "file:tests/orchestration/test_named_workflow_realistic_scenarios.py"
+    ],
+    "review_date": "2026-08-05",
+    "failure_modes": [
+      "Coverage conflates execution with inference visibility.",
+      "Conditional steps vanish instead of receiving a disposition.",
+      "Report percentages cannot be traced to individual requirements."
+    ],
+    "status": "resolved",
+    "completed_utc": "2026-08-05T00:00:00Z",
+    "resolution_summary": "Generated separate control, semantic, evidence, authority, and HTML coverage for every workflow and Route-A."
+  },
+  {
+    "id": "NWTRACE-014",
+    "type": "release_todo",
+    "phase": "migration-documentation-and-rollout",
+    "owner": "agentic/release",
+    "priority": "high",
+    "risk_class": "migration-and-adoption",
+    "title": "Document, pilot, and release the generic reasoning trace without changing the main default",
+    "intent": "Roll out the workflow-neutral trace safely, with clear authoring rules and evidence-backed parity gates.",
+    "use_skills": [],
+    "implementation_steps": [
+      "Document event authoring, public-rationale boundaries, evidence roles, status separation, scope changes, workflow lenses, coverage interpretation, CLI usage, report locations, and expert review procedure.",
+      "Provide one complete inference, failure, gate, and handoff example plus examples of trace_incomplete and integrity-valid-but-claim-conjectural states.",
+      "Support dual-read v1/v2 and backfill only claims supported by old artifacts; mark other legacy data incomplete.",
+      "Pilot one bounded named workflow, then all named workflows and Route-A, then cross-workflow handoffs; keep generic mode opt-in until compatibility, semantic, security, and expert-readability gates pass.",
+      "Release only after coverage, TODO status, test evidence, and documentation agree."
+    ],
+    "required_artifact": [
+      "docs/operations/reasoning-trace-runbook.md",
+      "docs/architecture/reasoning-trace-architecture.md",
+      "docs/reference/public-reasoning-trace-examples.md",
+      "agentic/reports/reasoning_trace_coverage/latest.json"
+    ],
+    "acceptance_criteria": [
+      "A skill author can emit a conforming public inference without reading renderer code.",
+      "An expert reviewer can distinguish execution, integrity validation, scientific support, scope, uncertainty, and authority in every report.",
+      "All six workflows, Route-A, and representative cross-workflow handoffs pass trace and HTML gates.",
+      "Existing main-workflow visualizers remain the default and pass their frozen compatibility suite."
+    ],
+    "blocked_by": ["NWTRACE-012", "NWTRACE-013"],
+    "evidence": [
+      "file:docs/operations/logging.md",
+      "file:docs/architecture/orchestration.md",
+      "file:docs/architecture/named-workflows.md",
+      "cmd:python agentic/scripts/validate_public_reasoning_trace.py",
+      "cmd:pytest tests/reporting tests/orchestration/test_named_workflow_realistic_trace_scenarios.py"
+    ],
+    "review_date": "2026-08-05",
+    "failure_modes": [
+      "Migration fabricates unsupported legacy inference detail.",
+      "Generic rendering becomes the default before compatibility and expert review pass.",
+      "Documentation treats trace visibility as proof of scientific correctness."
+    ],
+    "status": "resolved",
+    "completed_utc": "2026-08-05T00:00:00Z",
+    "resolution_summary": "Documented architecture, authoring, review, migration, compatibility, and operational procedures with complete examples."
+  }
+]

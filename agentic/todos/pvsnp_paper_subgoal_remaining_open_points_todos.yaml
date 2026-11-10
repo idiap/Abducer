@@ -1,0 +1,391 @@
+# SPDX-FileCopyrightText: © 2026 Idiap Research Institute <contact@idiap.ch>
+#
+# SPDX-FileContributor: Andre Freitas <andre.freitas@idiap.ch>
+# Neuro-symbolic AI Group
+#
+# SPDX-FileContributor: Danilo Gusicuma <danilo.gusicuma@idiap.ch>
+# Neuro-symbolic AI Group
+#
+# SPDX-License-Identifier: MIT
+version: 1
+target_id: p-vs-np-target
+created_at: "2026-07-11"
+status: open
+source_artifacts:
+  latest_strategy_judge: agentic/reports/strategy_progression_judge/latest.md
+  latest_contribution_monitor: agentic/reports/scientific_contribution_monitor/latest.md
+  latest_inference_quality: agentic/reports/pvsnp_inference_quality/latest.md
+  latest_discovery_report: agentic/reports/discovery_marathon/latest.md
+  focus_run_state: agentic/runs/discovery_marathons/p-vs-np-marathon/run_state.json
+  cycle_0079: agentic/runs/discovery_marathons/p-vs-np-marathon/cycles/cycle-0079.json
+reflection:
+  purpose: >
+    Convert the current P vs NP near-paper-note candidate into a bounded
+    certification program. The current result is promising because the
+    beta-zero XOR carrier, sparse-row patching bound, and ForcedRows(Q)
+    parameter now form a theorem-shaped obstruction for occurrence-local or
+    functional-row-local certificate methods. It is not yet publishable because
+    the inference-quality packet is still absent, the prior-art boundary is
+    unchecked, and full EF+SAT_U may use real SAT syntax in a way not captured
+    by occurrence-label spoofing.
+  smallest_honest_claim: >
+    A scoped hardness-magnification audit theorem: for beta-zero XOR carriers,
+    any occurrence-local or functional-row-local proof-mediated certificate
+    below the row-forcing threshold must either force N^{epsilon-o(1)}
+    complete parity rows, become direct/nonlarge/nonconstructive, or fail by a
+    sparse-row patching upper bound. This claim does not prove P != NP and does
+    not cover full EF+SAT_U until an extraction theorem or nonrelativizing
+    semantic analysis is supplied.
+  central_obstruction: >
+    The derivation is complete only for EF+SAT_U^{occ} or functional
+    label-local certificates. Full EF+SAT_U can mention real formula syntax and
+    may constrain unmentioned generated instances. The next proof task is to
+    define the proof parser Q_pi, prove transcript invariance under
+    occurrence-label spoofing for the scoped model, and determine whether known
+    EF encodings force complete rows or only individual generated formula
+    occurrences.
+  good_enough_gate: >
+    Promotion to paper handoff requires four things: a live
+    pvsnp_inference_quality packet, a clean prior-art boundary, a formal theorem
+    packet for EF+SAT_U^{occ}/functional-row-local certificates or a precisely
+    stated full-EF limitation, and closure of disqualifiers for advice leakage,
+    target-equivalent assumptions, and barrier status.
+todos:
+  - id: pvsnp-paper-subgoal-001
+    type: planning_todo
+    phase: paper-subgoal-certification
+    owner: agentic/reports/pvsnp_paper_subgoal
+    priority: critical
+    risk_class: publishable_claim_without_scope
+    title: State the scoped paper-subgoal theorem and non-claims.
+    intent: >
+      Write a theorem packet that fixes the precise domain of the current
+      contribution: beta-zero XOR carriers and occurrence-local or
+      functional-row-local proof-mediated certificates. The packet must state
+      what is proved, what remains conditional, and why the result is a scoped
+      no-go/audit theorem rather than evidence for P != NP.
+    use_skills:
+      - pvsnp-proof-derivation-builder
+      - pvsnp-inference-quality-controller
+      - pvsnp-barrier-specificity-reviewer
+      - scientific-contribution-detector
+    required_artifact:
+      - agentic/reports/pvsnp_paper_subgoal/theorem_packet.md
+      - agentic/reports/pvsnp_paper_subgoal/theorem_packet.json
+    acceptance_criteria:
+      - States the source object H_N^SAT, M_N, L_N, q, rho, epsilon, and the beta-zero regime.
+      - States the certificate model covered: EF+SAT_U^{occ}, occurrence-local certificates, or functional-row-local certificates.
+      - States explicit non-claims for full EF+SAT_U, P != NP, and unrestricted proof-complexity certificates.
+      - Lists all hypotheses required for the theorem and maps each hypothesis to a proof step or validation task.
+    blocked_by: []
+    evidence:
+      - agentic/reports/strategy_progression_judge/latest.md
+      - agentic/runs/discovery_marathons/p-vs-np-marathon/cycles/cycle-0079.json
+    review_date: "2026-07-11"
+    failure_modes:
+      - The theorem statement quietly covers full EF+SAT_U without an extraction theorem.
+      - The statement says "hardness magnification obstruction" without naming the certificate model and row-forcing threshold.
+      - The theorem is framed as progress on P != NP rather than a scoped route audit.
+    status: open
+
+  - id: pvsnp-paper-subgoal-002
+    type: target_todo
+    phase: formal-definitions
+    owner: skills/reasoning/pvsnp-symbolic-complexity-auditor
+    priority: critical
+    risk_class: undefined_forced_rows_parameter
+    title: Formalize ForcedRows(Q) and the occurrence-label spoof model.
+    intent: >
+      Define the central finite object introduced by cycle 0079. ForcedRows(Q)
+      must identify complete source parity rows forced by a proof transcript or
+      verifier query set Q, not merely individual generated SAT occurrences.
+      The occurrence-label spoof model A_Q must be defined precisely enough to
+      support a transcript-invariance proof.
+    use_skills:
+      - pvsnp-symbolic-complexity-auditor
+      - pvsnp-proof-derivation-builder
+      - pvsnp-negative-tactic-selector
+    required_artifact:
+      - agentic/reports/pvsnp_paper_subgoal/forced_rows_definitions.md
+      - agentic/reports/pvsnp_paper_subgoal/forced_rows_definitions.json
+    acceptance_criteria:
+      - Defines generated occurrence labels, source rows, complete parity rows, Q_pi, ForcedRows(Q), and A_Q.
+      - Distinguishes row forcing from occurrence forcing and explains why the distinction matters for sparse-row patching.
+      - Includes a minimal worked example showing a query set that touches many occurrences but forces few complete rows.
+      - Records validity assumptions about generator explicitness, circuit basis, nonuniformity, and advice.
+    blocked_by:
+      - pvsnp-paper-subgoal-001
+    evidence:
+      - agentic/runs/discovery_marathons/p-vs-np-marathon/cycles/cycle-0079.json
+    review_date: "2026-07-11"
+    failure_modes:
+      - ForcedRows(Q) is defined as a vague support size rather than a complete-row closure.
+      - The spoof model hides advice or assumes an oracle power not present in the scoped method class.
+      - The definition cannot be used to prove a circuit upper bound.
+    status: open
+
+  - id: pvsnp-paper-subgoal-003
+    type: target_todo
+    phase: theorem-derivation
+    owner: skills/reasoning/pvsnp-proof-derivation-builder
+    priority: critical
+    risk_class: underived_no_go_theorem
+    title: Prove the sparse-row patching and row-forcing no-go lemma.
+    intent: >
+      Derive the core finite theorem: if a scoped certificate/verifier forces
+      fewer than N^{epsilon-o(1)} complete rows, occurrence-label spoofing and
+      equality patching give a subthreshold circuit for H_N, contradicting the
+      claimed N^{1+epsilon-o(1)} source lower bound.
+    use_skills:
+      - pvsnp-proof-derivation-builder
+      - pvsnp-symbolic-complexity-auditor
+      - pvsnp-reduction-consistency-reviewer
+      - pvsnp-quantifier-uniformity-reviewer
+    required_artifact:
+      - agentic/reports/pvsnp_paper_subgoal/row_forcing_no_go_proof.md
+      - agentic/reports/pvsnp_paper_subgoal/row_forcing_no_go_proof.tex
+    acceptance_criteria:
+      - Proves the substitution bound C(H_N^SAT) <= N^{rho+o(1)} + N^{q+o(1)} L_N^c in the beta-zero regime.
+      - Proves the patching bound C(H_N) <= S_D + O(E_N N) with explicit circuit-basis assumptions.
+      - Derives the threshold ForcedRows(Q) >= N^{epsilon-o(1)} or else the source lower bound is falsified.
+      - States exactly where EF+SAT_U^{occ} or functional-row-locality is used and where full EF+SAT_U remains outside scope.
+    blocked_by:
+      - pvsnp-paper-subgoal-002
+    evidence:
+      - agentic/runs/discovery_marathons/p-vs-np-marathon/cycles/cycle-0078.json
+      - agentic/runs/discovery_marathons/p-vs-np-marathon/cycles/cycle-0079.json
+    review_date: "2026-07-11"
+    failure_modes:
+      - The proof assumes the lower bound it is trying to audit.
+      - The patching cost ignores row address length or nonuniform advice.
+      - The theorem remains a sketch without definitions-to-conclusion derivation.
+    status: open
+
+  - id: pvsnp-paper-subgoal-004
+    type: workflow_todo
+    phase: inference-quality-certification
+    owner: skills/orchestration/pvsnp-inference-quality-controller
+    priority: critical
+    risk_class: missing_live_inference_packet
+    title: Emit the live P vs NP inference-quality packet for the theorem candidate.
+    intent: >
+      Convert the theorem packet into a live pvsnp_inference_quality packet so
+      the claim is reviewed by reduction consistency, quantifier/uniformity,
+      barrier specificity, proof-complexity transfer, and proof derivation
+      reviewers before any paper promotion.
+    use_skills:
+      - pvsnp-inference-quality-controller
+      - pvsnp-reduction-consistency-reviewer
+      - pvsnp-quantifier-uniformity-reviewer
+      - pvsnp-barrier-specificity-reviewer
+      - pvsnp-proof-complexity-transfer-reviewer
+      - pvsnp-proof-derivation-builder
+    required_artifact:
+      - agentic/reports/pvsnp_inference_quality/live/forced_rows_packet.json
+      - agentic/reports/pvsnp_inference_quality/live/forced_rows_packet.md
+    acceptance_criteria:
+      - Packet identifies source statement, target statement, model context, quantifier context, reduction/transfer type, and derivation status.
+      - Reviewer findings explicitly decide reduction direction, all-exponent preservation, advice status, barrier status, and proof-system scope.
+      - The packet decision is one of accept_for_derivation, needs_repair, review_only, quarantine, or reject_overclaim.
+      - validate_pvsnp_inference_quality.py reports at least one live packet after the builder runs.
+    blocked_by:
+      - pvsnp-paper-subgoal-003
+    evidence:
+      - agentic/reports/pvsnp_inference_quality/latest.md
+    review_date: "2026-07-11"
+    failure_modes:
+      - The packet is a fixture or exemplar rather than a live packet for this theorem candidate.
+      - The packet omits all-exponent, advice, or barrier status.
+      - The packet promotes a claim with an incomplete derivation.
+    status: open
+
+  - id: pvsnp-paper-subgoal-005
+    type: dependency_todo
+    phase: prior-art-boundary
+    owner: agentic/reports/pvsnp_paper_subgoal
+    priority: critical
+    risk_class: novelty_overclaim
+    title: Run the finite prior-art boundary check.
+    intent: >
+      Determine whether the beta-zero XOR row-forcing no-go is genuinely novel
+      or already subsumed by known hardness magnification threshold theorems,
+      natural proofs, algebrization/relativization, proof-complexity
+      certificate barriers, MCSP/MKtP carrier limitations, or padding/projection
+      transfer arguments.
+    use_skills:
+      - pvsnp-barrier-specificity-reviewer
+      - pvsnp-proof-complexity-transfer-reviewer
+      - pvsnp-meta-complexity-carrier-reviewer
+      - scientific-contribution-detector
+    required_artifact:
+      - agentic/reports/pvsnp_paper_subgoal/prior_art_boundary.md
+      - agentic/reports/pvsnp_paper_subgoal/prior_art_boundary.json
+    acceptance_criteria:
+      - Compares against hardness magnification and minimum circuit size problem lines in the P vs NP KB.
+      - Compares against natural-proofs, relativization, and algebrization barriers at the route-specific premise level.
+      - Compares against proof-complexity certificate and EF/reflection routes, especially where proofs encode SAT syntax.
+      - Classifies the result as novel, known, partially known, or not claimable, with citations or KB references.
+    blocked_by:
+      - pvsnp-paper-subgoal-003
+    evidence:
+      - KB/p-vs-np.kb.md
+      - agentic/reports/scientific_contribution_monitor/latest.md
+    review_date: "2026-07-11"
+    failure_modes:
+      - The prior-art check only lists broad barriers without comparing exact hypotheses.
+      - It claims novelty because the local terminology is new while the theorem is a known naturalization or relativization argument.
+      - It ignores full EF+SAT_U semantic syntax as an escape condition.
+    status: open
+
+  - id: pvsnp-paper-subgoal-006
+    type: target_todo
+    phase: full-ef-boundary
+    owner: skills/evaluation/pvsnp-proof-complexity-transfer-reviewer
+    priority: critical
+    risk_class: full_ef_scope_gap
+    title: Decide the full EF+SAT_U boundary.
+    intent: >
+      Analyze whether full EF+SAT_U proofs can be reduced to the scoped
+      occurrence-local model, or whether real SAT formula syntax provides a
+      nonrelativizing semantic escape. This is the main mathematical boundary
+      between a scoped method-class theorem and a broader proof-complexity
+      obstruction.
+    use_skills:
+      - pvsnp-proof-complexity-transfer-reviewer
+      - pvsnp-proof-derivation-builder
+      - pvsnp-barrier-specificity-reviewer
+      - pvsnp-impossibility-theorem-forger
+    required_artifact:
+      - agentic/reports/pvsnp_paper_subgoal/full_ef_boundary.md
+      - agentic/reports/pvsnp_paper_subgoal/full_ef_boundary.json
+    acceptance_criteria:
+      - Defines full EF+SAT_U syntax, occurrence-local EF+SAT_U^{occ}, and the proposed parser/extractor Q_pi.
+      - Either proves a reduction/extraction from full EF+SAT_U to occurrence-local row forcing, or states a precise escape condition based on real SAT syntax.
+      - Identifies whether the final paper claim should cover full EF+SAT_U, only EF+SAT_U^{occ}, or a broader but still scoped method class.
+      - Records barrier status: relativizing, algebrizing, naturalizing, or explicitly nonrelativizing.
+    blocked_by:
+      - pvsnp-paper-subgoal-002
+      - pvsnp-paper-subgoal-003
+    evidence:
+      - agentic/reports/strategy_progression_judge/latest.md
+      - agentic/runs/discovery_marathons/p-vs-np-marathon/cycles/cycle-0079.json
+    review_date: "2026-07-11"
+    failure_modes:
+      - Full EF+SAT_U is assumed equivalent to the occurrence model without proof.
+      - The escape condition is described philosophically but not in proof-system syntax.
+      - The branch continues without a decision on theorem scope.
+    status: open
+
+  - id: pvsnp-paper-subgoal-007
+    type: test_todo
+    phase: disqualifier-closure
+    owner: agentic/scripts
+    priority: high
+    risk_class: unresolved_disqualifiers
+    title: Close or encode disqualifier checks for paper readiness.
+    intent: >
+      Turn the currently queued disqualifiers into explicit pass/fail/unknown
+      checks: already-known result, target-equivalent assumption, advice
+      leakage, barrier status, and restricted-model proxy drift. These checks
+      should control whether the candidate can become a paper handoff.
+    use_skills:
+      - pvsnp-inference-quality-controller
+      - pvsnp-quantifier-uniformity-reviewer
+      - pvsnp-barrier-specificity-reviewer
+      - scientific-contribution-detector
+    required_artifact:
+      - agentic/reports/pvsnp_paper_subgoal/disqualifier_matrix.json
+      - agentic/reports/pvsnp_paper_subgoal/disqualifier_matrix.md
+      - agentic/scripts/validate_pvsnp_paper_subgoal.py
+    acceptance_criteria:
+      - Each disqualifier has status pass, fail, finite_check_queued, or unknown_with_blocker.
+      - Advice leakage is checked separately for row lists, certificate search, proof transcript hardwiring, and nonuniform circuit families.
+      - Target-equivalence checks identify whether proving the source lower bound is already as hard as the intended target lower bound.
+      - A validator fails if any paper-ready flag is set while critical disqualifiers remain unresolved.
+    blocked_by:
+      - pvsnp-paper-subgoal-004
+      - pvsnp-paper-subgoal-005
+      - pvsnp-paper-subgoal-006
+    evidence:
+      - agentic/reports/scientific_contribution_monitor/latest.md
+    review_date: "2026-07-11"
+    failure_modes:
+      - Disqualifiers remain prose in the report and do not affect promotion.
+      - Advice leakage is checked only generically rather than at row/certificate/proof-transcript level.
+      - The validator permits paper readiness while prior-art or full-EF scope remains unresolved.
+    status: open
+
+  - id: pvsnp-paper-subgoal-008
+    type: report_todo
+    phase: paper-synthesis
+    owner: agentic/scripts/build_timeline_paper.py
+    priority: high
+    risk_class: narrative_without_certification
+    title: Draft the scoped paper narrative only after certification gates are explicit.
+    intent: >
+      Build a paper-facing narrative that presents the scoped contribution
+      without pipeline jargon: target bottleneck, beta-zero XOR carrier,
+      row-residual patching, ForcedRows(Q), theorem/no-go statement,
+      proof-system boundary, prior-art boundary, limitations, and implications.
+    use_skills:
+      - timeline-report-to-latex-paper
+      - pvsnp-proof-derivation-builder
+      - scientific-contribution-detector
+      - pvsnp-barrier-specificity-reviewer
+    required_artifact:
+      - agentic/reports/pvsnp_paper_subgoal/paper_draft.tex
+      - agentic/reports/pvsnp_paper_subgoal/paper_draft.pdf
+    acceptance_criteria:
+      - The paper draft includes theorem statements and proofs from the certified theorem packet.
+      - The draft has a prior-art section and limitations section before claiming novelty.
+      - The draft names the exact certificate/proof-system class covered and excludes full EF+SAT_U unless pvsnp-paper-subgoal-006 resolves it positively.
+      - No workflow or pipeline jargon appears in the mathematical narrative.
+    blocked_by:
+      - pvsnp-paper-subgoal-004
+      - pvsnp-paper-subgoal-005
+      - pvsnp-paper-subgoal-007
+    evidence:
+      - agentic/reports/timeline_paper/latest.pdf
+      - agentic/reports/discovery_marathon/full_timeline.html
+    review_date: "2026-07-11"
+    failure_modes:
+      - The draft summarizes the timeline rather than proving the scoped theorem.
+      - The draft overclaims relevance to P != NP.
+      - The draft hides the full-EF boundary or prior-art uncertainty.
+    status: open
+
+  - id: pvsnp-paper-subgoal-009
+    type: hook_todo
+    phase: workflow-integration
+    owner: agentic/scripts/agentic_check.py
+    priority: medium
+    risk_class: certification_path_not_enforced
+    title: Add a focused paper-subgoal validator to the standard gate after artifacts exist.
+    intent: >
+      Once the theorem packet, inference-quality packet, prior-art boundary,
+      and disqualifier matrix exist, wire a validator into the standard gate so
+      future marathons cannot regress to broad exploration while marking this
+      subgoal as paper-ready.
+    use_skills:
+      - pvsnp-inference-quality-controller
+      - scientific-contribution-detector
+      - pvsnp-proof-derivation-builder
+    required_artifact:
+      - agentic/scripts/validate_pvsnp_paper_subgoal.py
+      - agentic/scripts/agentic_check.py
+    acceptance_criteria:
+      - The validator fails if live inference-quality packets are missing for paper-ready claims.
+      - The validator fails if prior-art boundary or full-EF scope fields are unresolved.
+      - agentic_check.py runs the validator after the pvsnp paper-subgoal artifacts are generated.
+      - The validator permits the TODO deck to remain open until certification artifacts exist.
+    blocked_by:
+      - pvsnp-paper-subgoal-007
+      - pvsnp-paper-subgoal-008
+    evidence:
+      - agentic/scripts/agentic_check.py
+    review_date: "2026-07-11"
+    failure_modes:
+      - The validator is added before artifacts exist and blocks all normal workflow.
+      - The validator checks file existence but not live packet, prior-art, or disqualifier content.
+      - Future reports can still call the subgoal paper-ready without certification.
+    status: open

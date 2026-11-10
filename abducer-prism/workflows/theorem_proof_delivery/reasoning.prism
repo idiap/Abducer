@@ -1,0 +1,69 @@
+# SPDX-FileCopyrightText: © 2026 Idiap Research Institute <contact@idiap.ch>
+#
+# SPDX-FileContributor: Andre Freitas <andre.freitas@idiap.ch>
+# Neuro-symbolic AI Group
+#
+# SPDX-FileContributor: Danilo Gusicuma <danilo.gusicuma@idiap.ch>
+# Neuro-symbolic AI Group
+#
+# SPDX-License-Identifier: MIT
+# Function: derive and test the exact theorem requested by a proof-queue item.
+# Input: ProofQueueItem carries the exact statement and ExplicitPremises.
+# Types: ExactTheoremClaim retains premises and obligations; refutation and gate types determine its status.
+# Output: TheoremProofDispositionAssessment returns the claim, refutation, gate, and optional failure certificate.
+# Routing: accepted proofs continue to contribution assessment; failure certificates return to conceptual work.
+# Boundary: open obligations remain explicit and no theorem statement is weakened or enlarged.
+# Layer: high-level epistemic topology only.
+# Metadata: workflows/manifest.json (`theorem_proof_delivery`).
+
+from workflows.theorem_proof_delivery.types import (
+    TheoremProofDispositionAssessment,
+    ExactTheoremClaim,
+    ExplicitPremises,
+    FormalProofObligations,
+    TheoremProofDisposition,
+    ProofFailureCertificate,
+    FormalProofGateDecision,
+    ProofQueueItem,
+    ExactClaimRefutationAssessment,
+)
+
+from workflows.theorem_proof_delivery.occurrences import (
+    EvidentialTheoremProofDispositionAssessment,
+    DeductiveExactTheoremClaimDerivation,
+    TheoremProofDispositionInput,
+    RefutationalExactTheoremClaimAssessment,
+)
+
+from workflows.theorem_proof_delivery.relations import (
+    CalibratesTheoremProofDisposition,
+    TestsExactTheoremClaim,
+)
+
+reasoning TheoremProofDelivery(
+    item: ProofQueueItem,
+) -> Generated[TheoremProofDispositionAssessment]:
+    sequence:
+        # Deduction constructs the exact claim from explicit premises and obligations.
+        [d0: DeductiveExactTheoremClaimDerivation(item.premises)]
+        # Refutation tests exactly that claim rather than a weakened paraphrase.
+        [r0: RefutationalExactTheoremClaimAssessment(d0.value)] by TestsExactTheoremClaim
+        # Calibration joins claim and refutation to produce the gate and any certificate.
+        [e0: EvidentialTheoremProofDispositionAssessment(TheoremProofDispositionInput(
+            theorem_claim = d0.value,
+            refutation_assessment = r0.value,
+        ))] by CalibratesTheoremProofDisposition
+
+    return e0
+
+# HANDOFF (non-executable): a proof-accepted e0 is adapted to ResultAtlasSlice
+# and offered to scientific_contribution_cultivation. A failure certificate is
+# offered to conceptual_hypothesis_exploration_loop. Handoff preserves source,
+# target, exact statement, provenance, taints, and open obligations and adds no
+# proof or truth warrant.
+# ACCEPT (non-executable): proof_accepted is a calibrated handoff condition,
+# not a local terminal accept that can bypass contribution assessment.
+# STOP (non-executable): a quarantined e0 stops. Step failures stop or
+# quarantine according to the named contract. Exit validation consumes
+# FormalProofGateDecision and requires both the gate and FormalProofObligations;
+# open obligations remain explicit and no exact-statement claim is enlarged.

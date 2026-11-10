@@ -1,0 +1,929 @@
+{
+  "branch_execution_records": [
+    {
+      "api_attempt": "primary",
+      "api_key_config": {
+        "active_provider": "azure_openai",
+        "configured_keys": [
+          "AZURE_OPENAI_API_KEY",
+          "AZURE_OPENAI_ENDPOINT",
+          "AZURE_OPENAI_MODEL",
+          "AZURE_OPENAI_REASONING_EFFORT",
+          "AZURE_OPENAI_RESPONSES_ENDPOINT",
+          "OPENAI_BASE_URL",
+          "OPENAI_MODEL",
+          "OPENAI_REASONING_EFFORT"
+        ],
+        "has_openai_api_key": true,
+        "source": "config/api_keys.json"
+      },
+      "api_timeout_seconds": 1140,
+      "branch_id": "marathon.branch.bcdeffa51f87",
+      "elapsed_seconds": 111.21,
+      "engine": "azure_responses_api",
+      "http_status": 200,
+      "max_output_tokens": 12000,
+      "model": "gpt-5.5",
+      "output_schema": "agentic/spec/discovery_marathon_codex_branch_output.schema.json",
+      "prior_attempt_errors": [],
+      "reasoning_effort": "high",
+      "response_id": "resp_017757f4d411b01b006a514dea1a4481908f47d771294d8dea",
+      "status": "complete"
+    },
+    {
+      "api_attempt": "primary",
+      "api_key_config": {
+        "active_provider": "azure_openai",
+        "configured_keys": [
+          "AZURE_OPENAI_API_KEY",
+          "AZURE_OPENAI_ENDPOINT",
+          "AZURE_OPENAI_MODEL",
+          "AZURE_OPENAI_REASONING_EFFORT",
+          "AZURE_OPENAI_RESPONSES_ENDPOINT",
+          "OPENAI_BASE_URL",
+          "OPENAI_MODEL",
+          "OPENAI_REASONING_EFFORT"
+        ],
+        "has_openai_api_key": true,
+        "source": "config/api_keys.json"
+      },
+      "api_timeout_seconds": 1140,
+      "branch_id": "marathon.branch.4b0edf3359d1",
+      "elapsed_seconds": 84.899,
+      "engine": "azure_responses_api",
+      "http_status": 200,
+      "max_output_tokens": 12000,
+      "model": "gpt-5.5",
+      "output_schema": "agentic/spec/discovery_marathon_codex_branch_output.schema.json",
+      "prior_attempt_errors": [],
+      "reasoning_effort": "high",
+      "response_id": "resp_04197a6433e51714006a514e594e68819384f336df27342507",
+      "status": "complete"
+    },
+    {
+      "api_attempt": "primary",
+      "api_key_config": {
+        "active_provider": "azure_openai",
+        "configured_keys": [
+          "AZURE_OPENAI_API_KEY",
+          "AZURE_OPENAI_ENDPOINT",
+          "AZURE_OPENAI_MODEL",
+          "AZURE_OPENAI_REASONING_EFFORT",
+          "AZURE_OPENAI_RESPONSES_ENDPOINT",
+          "OPENAI_BASE_URL",
+          "OPENAI_MODEL",
+          "OPENAI_REASONING_EFFORT"
+        ],
+        "has_openai_api_key": true,
+        "source": "config/api_keys.json"
+      },
+      "api_timeout_seconds": 1140,
+      "branch_id": "marathon.branch.138e68639c07",
+      "elapsed_seconds": 103.252,
+      "engine": "azure_responses_api",
+      "http_status": 200,
+      "max_output_tokens": 12000,
+      "model": "gpt-5.5",
+      "output_schema": "agentic/spec/discovery_marathon_codex_branch_output.schema.json",
+      "prior_attempt_errors": [],
+      "reasoning_effort": "high",
+      "response_id": "resp_033839ff4005b3e6006a514eae2ddc819789aa35a6f704753d",
+      "status": "complete"
+    }
+  ],
+  "branch_outputs": [
+    {
+      "attempted_derivation": {
+        "blocking_gap": "No known source theorem proves C_{H_k}(N)>N^{1+epsilon} for unbounded k with a common epsilon against general nonuniform circuits.",
+        "derivation_id": "D2.p_poly_from_uniform_padding",
+        "steps": [
+          "Assume for contradiction that SAT has circuits of size O(n^c) for some fixed c.",
+          "Choose k from the source hypothesis with c/k<1+epsilon.",
+          "Construct a circuit for H_k on length N=n^k by checking the padding pattern in O(N) gates and running the SAT circuit on the first n=N^{1/k} bits.",
+          "Obtain C_{H_k}(N)=O(N^{max{1,c/k}}).",
+          "Since max{1,c/k}<1+epsilon, the upper bound is eventually below N^{1+epsilon}.",
+          "Contradict the asserted source lower bound for H_k at that k.",
+          "Because c was arbitrary only under the forall c exists k source quantifier, derive SAT notin P/poly conditionally."
+        ],
+        "why_not_yet_a_proof": "This is a valid conditional bridge, not a proof of P != NP. The hard work is the unproved source lower-bound family, which must also evade natural-proofs and relativization-style obstructions."
+      },
+      "branch_id": "marathon.branch.bcdeffa51f87",
+      "branch_title": "Hardness-Magnification Bridge Realization",
+      "candidate_lemmas": [
+        {
+          "assumptions": [
+            "Circuit model is nonuniform fan-in two Boolean circuits over total length-N functions.",
+            "The lower bound is eventual over padded lengths N=n^k; an i.o. version gives only the corresponding i.o. contradiction.",
+            "The exponent epsilon is independent of N and must remain positive after the padding overhead.",
+            "The source claim is not a compressed-input SAT lower bound in disguise."
+          ],
+          "definitions": [
+            "source object: H_k=Pad_k(SAT), the total padded SAT language at lengths N=n^k, measured by nonuniform Boolean circuit size C_{H_k}(N).",
+            "target object: SAT circuit lower bounds C_{SAT}(n) notin O(n^c) for every fixed c, implying NP not subset P/poly.",
+            "controlled interface: the uniform padding map R_k(x)=x10^{n^k-n-1} and circuit pullback/pushforward with an explicit O(N)-size padding-validity checker.",
+            "target-preserving condition: for each target exponent c one must have a source lower bound for some k satisfying c/k<1+epsilon on all sufficiently large padded lengths, with no advice depending on x beyond length."
+          ],
+          "equations": [
+            {
+              "label": "length_relation",
+              "latex": "N=n^k,\\quad R_k(x)=x1 0^{n^k-n-1}",
+              "valid_when": "Valid when k is fixed and padded lengths N=n^k are the only target lengths considered."
+            },
+            {
+              "label": "upper_transfer",
+              "latex": "C_{H_k}(N)\\le aN+b\\,C_{SAT}(N^{1/k})",
+              "valid_when": "Applies when the total padded language includes the O(N) off-image validity checker and constants are model-fixed."
+            },
+            {
+              "label": "exponent_transfer",
+              "latex": "C_{SAT}(n)=O(n^c)\\Rightarrow C_{H_k}(N)=O(N^{\\max\\{1,c/k\\}})",
+              "valid_when": "Requires the padding reduction to preserve nonuniform length parameters and circuit-size accounting without extra advice leakage."
+            },
+            {
+              "label": "strict_margin",
+              "latex": "\\Delta=1+\\epsilon-\\max\\{1,c/k\\}>0\\Rightarrow C_{H_k}(N)=O(N^{1+\\epsilon-\\Delta})<N^{1+\\epsilon}\\text{ eventually}",
+              "valid_when": "Valid when the exponent margin is strict, so asymptotic constants are absorbed for large padded lengths."
+            },
+            {
+              "label": "uniform_k_consequence",
+              "latex": "(\\exists\\epsilon>0)(\\forall c)(\\exists k>c/(1+\\epsilon))\\ C_{H_k}(N)>N^{1+\\epsilon}\\Rightarrow NP\\nsubseteq P/poly",
+              "valid_when": "Valid only when the source lower bound is available for unbounded padding parameters, not one fixed k."
+            }
+          ],
+          "failure_test": "falsifier: any proof using one fixed k, a finite set of k values, or a threshold swallowed by the O(N) checker cannot validly imply NP not subset P/poly.",
+          "lemma_id": "L2.uniform_padding_exponent_bridge",
+          "proof_role": "Repaired route-level bridge: it gives an exact quantitative transfer and isolates the additional quantifier needed for a P/poly consequence.",
+          "statement": "Fix epsilon>0. Let H_k=Pad_k(SAT). If for every target exponent c there is a padding parameter k with c/k<1+epsilon such that C_{H_k}(N)>N^{1+epsilon} on all sufficiently large padded lengths N=n^k, then SAT notin SIZE(n^c) for every c, hence NP is not contained in P/poly. For one fixed k the same bridge excludes only c<k(1+epsilon)."
+        },
+        {
+          "assumptions": [
+            "No independent amplification changes k or epsilon.",
+            "The only reduction used is padding plus total-language checking."
+          ],
+          "definitions": [
+            "source object: one fixed padded carrier H_k with threshold N^{1+epsilon}.",
+            "target object: finite-exponent SAT lower bounds below n^{k(1+epsilon)}.",
+            "controlled interface: same padding simulation as L2.uniform_padding_exponent_bridge.",
+            "target-preserving condition: the target exponent must lie strictly below k(1+epsilon)."
+          ],
+          "equations": [
+            {
+              "label": "excluded_exponent_window",
+              "latex": "\\{c:\\text{excluded by }H_k>N^{1+\\epsilon}\\}\\subseteq\\{c:c<k(1+\\epsilon)\\}",
+              "valid_when": "Applies in the fixed-k regime where no second theorem amplifies the padding parameter."
+            }
+          ],
+          "failure_test": "falsifier: k=2 and epsilon=0.01 cannot refute SAT in SIZE(n^3), since c/k=1.5 exceeds 1.01.",
+          "lemma_id": "L2.fixed_k_ceiling",
+          "proof_role": "Quarantine lemma preventing route overclaim from a finite-exponent separation to P/poly separation.",
+          "statement": "For fixed k and epsilon, a lower bound C_{H_k}(N)>N^{1+epsilon} cannot by padding alone exclude SAT circuits of size n^c when c>=k(1+epsilon). The simulated H_k circuit then has size O(N^{c/k}), which is not below the source threshold."
+        },
+        {
+          "assumptions": [
+            "Standard PRF-based natural-proofs barrier is treated as a conditional obstruction, not a theorem ruling out every method.",
+            "Relativization blocks the bridge only if the source theorem relativizes and purports to separate relativizing worlds."
+          ],
+          "definitions": [
+            "source object: lower-bound method proving C_{H_k}(N)>N^{1+epsilon}.",
+            "target object: nonuniform circuit separation for SAT.",
+            "controlled interface: the bridge transfers only size exponents, not barrier-escaping structure.",
+            "target-preserving condition: the source lower-bound proof must avoid becoming a large constructive useful property for general circuit lower bounds."
+          ],
+          "equations": [
+            {
+              "label": "barrier_localization",
+              "latex": "\\text{padding transfer is valid}\\;\\not\\Rightarrow\\;\\text{source lower bound avoids naturalness}",
+              "valid_when": "Valid when auditing the route separates the conditional bridge from the unproved lower-bound machinery."
+            }
+          ],
+          "failure_test": "falsifier: a claimed generic constructive density-heavy property proving H_k hardness would be natural and therefore not a valid barrier-escaping source theorem.",
+          "lemma_id": "L2.barrier_scope_audit",
+          "proof_role": "Barrier interaction ledger: it locates the obstruction in proving the source lower bounds, not in the exponent transfer.",
+          "statement": "The padding bridge itself is relativizing and algebraically inert; it is not the nonrelativizing ingredient. Any source lower-bound proof for H_k that works by a large constructive property against general circuits risks the natural-proofs obstruction under PRF assumptions, so the source proof must be non-natural, explicit-singleton, or outside that scope."
+        }
+      ],
+      "control_decision": {
+        "decision": "continue_repaired",
+        "pivot_test": "Pivot if the next candidate source theorem supplies only one fixed k, a finite k set, or a threshold at or below the linear padding overhead.",
+        "promotion_test": "Promote only if a non-natural or otherwise barrier-aware method proves C_{H_k}(N)>N^{1+epsilon} for arbitrarily large k with preserved total-language circuit parameters.",
+        "reason": "The branch now has a precise conditional bridge and a named blocking gap; next work should seek or refute a source lower-bound family for unbounded k."
+      },
+      "dependency_updates": [
+        {
+          "dependency_id": "hardness magnification theorem",
+          "description": "The theorem is now the explicit padding exponent transfer; fixed-k magnification is capped, while unbounded-k lower bounds with common epsilon imply NP not subset P/poly.",
+          "kind": "repaired_quantitative_bridge",
+          "status": "valid_conditional"
+        },
+        {
+          "dependency_id": "source lower-bound model",
+          "description": "Need total nonuniform circuit lower bounds C_{H_k}(N)>N^{1+epsilon} for arbitrarily large k, not promise-only or compressed-input claims.",
+          "kind": "sharpened_requirement",
+          "status": "open_core_gap"
+        },
+        {
+          "dependency_id": "target class consequence",
+          "description": "One k gives SAT notin SIZE(n^c) only for c<k(1+epsilon); P/poly exclusion requires forall c exists k with strict margin.",
+          "kind": "quantifier_calibration",
+          "status": "conditional"
+        },
+        {
+          "dependency_id": "barrier audit",
+          "description": "Padding transfer is relativizing; barrier avoidance must occur in the source lower-bound proof, especially against natural-proofs-style largeness and constructivity.",
+          "kind": "obstruction_localization",
+          "status": "active_risk"
+        }
+      ],
+      "falsifiers": [
+        "falsifier: fixed k only yields a finite exponent ceiling c<k(1+epsilon), so arbitrary polynomial advice sizes survive.",
+        "falsifier: threshold C_{H_k}(N)>N+N^{0.9} is absorbed by the O(N) padding checker and transfers no SAT exponent lower bound.",
+        "falsifier: a lower bound for a compressed n-bit version of SAT merely restates the target and is not a valid source model.",
+        "falsifier: if lower bounds hold for only finitely many k, every c above (1+epsilon) max k remains unaddressed.",
+        "falsifier: a large constructive property proving the source lower bound against general circuits would meet the natural-proofs obstruction under standard PRF assumptions."
+      ],
+      "generated_by": "azure_responses_api",
+      "mathematical_learning": "Cycle 2 turns the previous threshold collapse into an exact quantifier repair. The valid route lemma is: fixed k gives only a finite SAT exponent lower bound, while a common-epsilon lower bound for unbounded padded carriers H_k would imply NP not subset P/poly. The decisive falsifier is not folklore but the inequality c/k>=1+epsilon, plus the O(N) checker floor.",
+      "next_experiment": "Test MCSP or proof-complexity carriers for producing the unbounded-k source family: formalize whether a weak lower bound for MCSP[2^{N^{1/k}}] transfers to C_{H_k}(N)>N^{1+epsilon} without becoming natural or losing the strict exponent margin."
+    },
+    {
+      "attempted_derivation": {
+        "blocking_gap": "The argument only blocks fully relativizing, target-preserving templates. It does not evaluate a route whose decisive step is nonrelativizing, non-natural, or non-algebrizing in a formally specified way.",
+        "derivation_id": "cycle2_relativization_bridge_derivation",
+        "steps": [
+          "Type the source model as deterministic oracle Turing machines plus the canonical bounded NP^O-complete language K^O.",
+          "Assume a sound proof template T has a uniform oracle lift L(T,O) preserving every inference and polynomial-time reduction.",
+          "Under target preservation, a T-proof of K^emptyset notin union_c DTIME(n^c) becomes, for every oracle O, a proof of K^O notin union_c DTIME^O(n^c).",
+          "Instantiate O by a Baker-Gill-Solovay collapsing oracle A with P^A=NP^A.",
+          "Because K^A is NP^A-complete and P^A=NP^A, K^A lies in P^A, hence in DTIME^A(n^d) for some fixed d.",
+          "This contradicts the transferred lower bound, so no sound route satisfying RelTP(T) can establish the target."
+        ],
+        "why_not_yet_a_proof": "This is a negative audit of a proof interface. It separates bad routes from admissible ones but proves no lower bound for K in the real, unrelativized world."
+      },
+      "branch_id": "marathon.branch.4b0edf3359d1",
+      "branch_title": "Barrier-Aware Lower-Bound Route",
+      "candidate_lemmas": [
+        {
+          "assumptions": [
+            "K^O is complete for NP^O under polynomial-time many-one reductions with oracle access to O.",
+            "T is a sound finite or recursively enumerable proof template whose semantic inferences remain sound after replacing all machines by oracle machines.",
+            "The oracle lift preserves the quantitative threshold union_c DTIME(n^c), allowing only fixed polynomial reindexing of exponents.",
+            "There exists a Baker-Gill-Solovay oracle A such that P^A=NP^A.",
+            "The conclusion is a route-level quarantine, not a proof of P != NP."
+          ],
+          "definitions": [
+            "source object: a uniformly relativizing proof template T for deterministic oracle Turing-machine lower bounds on the canonical bounded oracle-NP complete language K^O, claiming K^emptyset notin DTIME(n^c) for all fixed c.",
+            "target object: P != NP via K^emptyset notin P, with the oracle target family K^O notin P^O used only for the barrier audit.",
+            "controlled interface: proposed lower-bound method -> relativization audit, formalized by an oracle-lift map L(T,O) preserving each inference, reduction, and machine simulation.",
+            "target-preserving condition: if T proves the unrelativized polynomial-time lower bound, then L(T,O) proves the same fixed-exponent lower bound against DTIME^O(n^c) for every oracle O."
+          ],
+          "equations": [
+            {
+              "label": "target_threshold",
+              "latex": "K^{\\emptyset}\\notin \\mathsf{P}=\\bigcup_{c\\ge 1}\\mathsf{DTIME}(n^c)",
+              "valid_when": "Valid when K is the fixed NP-complete language and the intended target is a uniform polynomial-time lower bound."
+            },
+            {
+              "label": "relativizing_transfer",
+              "latex": "\\mathsf{RelTP}(T)\\wedge T\\vdash K^{\\emptyset}\\notin\\bigcup_c\\mathsf{DTIME}(n^c)\\Rightarrow \\forall O\\;K^O\\notin\\bigcup_c\\mathsf{DTIME}^O(n^c)",
+              "valid_when": "Applies when every proof inference has a uniform oracle lift and preserves all fixed polynomial exponents."
+            },
+            {
+              "label": "bgs_falsifier",
+              "latex": "\\exists A\\;[\\mathsf{P}^A=\\mathsf{NP}^A]\\Rightarrow K^A\\in \\mathsf{P}^A=\\bigcup_c\\mathsf{DTIME}^A(n^c)",
+              "valid_when": "Valid when K^A is chosen complete for NP^A under oracle polynomial-time reductions."
+            },
+            {
+              "label": "quarantine_conclusion",
+              "latex": "\\mathsf{RelTP}(T)\\Rightarrow \\neg\\bigl(T\\text{ is a sound proof of }K^{\\emptyset}\\notin\\mathsf{P}\\bigr)",
+              "valid_when": "Requires the target-preserving complexity-class transfer and the BGS collapsing oracle in the same oracle convention."
+            }
+          ],
+          "failure_test": "A falsifier is an explicitly nonrelativizing inference, such as arithmetization or interactive-checking algebra, whose correctness is not preserved by arbitrary oracle substitution.",
+          "lemma_id": "relativizing_target_preservation_quarantine",
+          "proof_role": "Certifies failure of fully black-box relativizing lower-bound routes at the exact P-polynomial threshold.",
+          "statement": "A sound lower-bound template for the canonical NP-complete language K cannot both relativize uniformly and preserve the P-vs-NP target threshold. If it did, a proof of K notin P would transfer to K^O notin P^O for every oracle O, contradicting a BGS oracle A with P^A=NP^A."
+        },
+        {
+          "assumptions": [
+            "R has density delta_N under the uniform distribution on n-bit Boolean functions.",
+            "R is useful against SIZE(n^k): no n^k-size truth-table function satisfies R.",
+            "The PRF family maps seeds to truth tables of functions computable by circuits of size n^k.",
+            "The distinguisher receives full truth-table access, so its running time is measured in N=2^n."
+          ],
+          "definitions": [
+            "source object: a Razborov-Rudich style property R_N subseteq {0,1}^{2^n} decidable in time N^b, where N=2^n.",
+            "target object: circuit lower bound K notin SIZE(n^k), used only as a proof-object audit against pseudorandom function barriers.",
+            "controlled interface: lower-bound property -> natural-proof audit, exposing constructivity, largeness, usefulness, and truth-table access.",
+            "target-preserving condition: usefulness must reject every function computed by circuits of size n^k, including each output function generated by the candidate PRF family."
+          ],
+          "equations": [
+            {
+              "label": "density",
+              "latex": "\\Pr_{f\\leftarrow U_n}[R_N(f)=1]=\\delta_N",
+              "valid_when": "Valid when the property is evaluated over complete truth tables of n-variable Boolean functions."
+            },
+            {
+              "label": "prf_rejection",
+              "latex": "\\Pr_{s}[R_N(G(s))=1]=0",
+              "valid_when": "Valid when every PRF output function lies inside the circuit class against which R is useful."
+            },
+            {
+              "label": "advantage",
+              "latex": "\\left|\\Pr_{f\\leftarrow U_n}[R_N(f)=1]-\\Pr_s[R_N(G(s))=1]\\right|\\ge \\delta_N",
+              "valid_when": "Applies after constructivity gives the distinguisher enough time to evaluate R on the full truth table."
+            }
+          ],
+          "failure_test": "The lemma is falsified for this route if R is non-large, nonconstructive, not useful against the PRF circuit size, or does not operate on full truth tables.",
+          "lemma_id": "natural_truth_table_threshold_audit",
+          "proof_role": "Quantifies the natural-proof obstruction so future routes must name a real escape feature instead of only saying nonstandard.",
+          "statement": "A poly(N)-constructive property R of n-bit truth tables with density delta_N that is useful against SIZE(n^k) yields a full-truth-table distinguisher of advantage at least delta_N against any PRF family whose n-bit output functions have size at most n^k. Thus the natural-proof route must escape by non-largeness, nonconstructivity, non-black-box access, or by targeting a regime below the PRF threshold."
+        }
+      ],
+      "control_decision": {
+        "decision": "quarantine_fully_relativizing_templates",
+        "pivot_test": "Pivot unless the next candidate supplies an explicit nonrelativizing feature and proves that the target-preserving transfer is still valid in the unrelativized setting.",
+        "promotion_test": "Promote only if the route states a source lower-bound object whose decisive inference is nonrelativizing, non-natural or non-algebrizing, and whose quantitative threshold still reaches K notin P.",
+        "reason": "The named source model, target class, reduction interface, and polynomial threshold jointly trigger a formal oracle contradiction."
+      },
+      "dependency_updates": [
+        {
+          "dependency_id": "relativization audit",
+          "description": "Fully relativizing and target-preserving lower-bound templates for K at the union_c DTIME(n^c) threshold are quarantined by the BGS collapsing oracle.",
+          "kind": "barrier_certification",
+          "status": "certified_block_for_RelTP_routes"
+        },
+        {
+          "dependency_id": "natural proof audit",
+          "description": "The prior N^{-a}-density truth-table distinguisher calculation remains active; any natural property route must specify its escape feature before promotion.",
+          "kind": "quantitative_threshold",
+          "status": "active_constraint"
+        },
+        {
+          "dependency_id": "algebrization audit",
+          "description": "If a route claims arithmetization as the escape from relativization, the next valid test is whether the proof still algebrizes under low-degree oracle extensions.",
+          "kind": "open_obligation",
+          "status": "not_yet_instantiated"
+        }
+      ],
+      "falsifiers": [
+        "falsifier: exhibit a necessary proof step whose statement is not valid relative to arbitrary oracles.",
+        "falsifier: show the route uses algebraic extension queries in a way that is nonrelativizing and then pass a separate algebrization audit.",
+        "falsifier: demonstrate that the claimed lower bound is for a nonuniform or promise target that no longer transfers to K notin P.",
+        "falsifier: quantify a threshold loss where K notin DTIME(n^c) transfers only to a subpolynomial or advice-bearing statement, not to P != NP."
+      ],
+      "generated_by": "azure_responses_api",
+      "mathematical_learning": "Cycle 2 converts the relativization barrier from folklore into a route-specific bridge lemma: RelTP(T) plus a K notin P proof would force K^O notin P^O for all O, but the BGS oracle A is a concrete falsifier. This is meaningful route-level progress: it certifies a class of proof objects as invalid while leaving P != NP untouched.",
+      "next_experiment": "Instantiate an arithmetization-based proof object, such as a low-degree extension or PCP-style consistency test, and run the algebrization audit: specify oracle access, extension degree, reduction overhead, and whether a BGS/AW-style oracle remains a falsifier."
+    },
+    {
+      "attempted_derivation": {
+        "blocking_gap": "No known SAT-to-MCSP reduction supplies a no-side gap s>=N^epsilon with uniform length balance. Ordinary MCSP-hardness conjectures, Turing reductions, or reductions with tiny thresholds do not provide this carrier.",
+        "derivation_id": "D2-sat-reduction-no-side-extraction",
+        "steps": [
+          "Start with the stronger-than-folklore source model: a length-balanced gap Karp reduction R from SAT to LowMCSP with no-instances mapped to CC>N^epsilon.",
+          "Choose a canonical unsatisfiable 3CNF family psi_m, e.g. z AND not z padded to length m, so the SAT answer is known without solving SAT.",
+          "Compute R(psi_m)=(x_m,s_m). By correctness, x_m is high-complexity on the no side; no MCSP decision procedure is invoked.",
+          "Use length balance m<=N_m^k to output x_m in poly(N_m) time, hence in E after interpreting x_m as a truth table.",
+          "Pad to the next power of two and lose only O(log N_m) gates when restricting a small circuit for the padded function back to x_m.",
+          "Conclude an i.o. E lower bound CC(L_n)>2^{epsilon' n} on the image lengths for every epsilon'<epsilon."
+        ],
+        "why_not_yet_a_proof": "The derivation is a conditional bridge lemma. It neither proves the source reduction nor implies P != NP; it only shows that such a reduction would already contain explicit lower-bound content."
+      },
+      "branch_id": "marathon.branch.138e68639c07",
+      "branch_title": "MCSP / Meta-Complexity Carrier Transfer",
+      "candidate_lemmas": [
+        {
+          "assumptions": [
+            "R is uniform and runs in m^{O(1)} time.",
+            "There is a fixed epsilon>0 with no-side gap s_phi>=N_phi^epsilon.",
+            "For infinitely many canonical contradictions psi_m, N_{psi_m} tends to infinity and m<=N_{psi_m}^k.",
+            "Circuit size is measured for Boolean circuits computing the truth table function; padding overhead is O(log N)."
+          ],
+          "definitions": [
+            "source object: a deterministic polynomial-time reduction R that maps a 3CNF phi of length m to (x_phi,s_phi), where x_phi has length N_phi, and phi unsat implies CC(x_phi)>s_phi>=N_phi^epsilon.",
+            "target object: an E-uniform language L whose length-n truth table equals a padded x_{psi_m} on infinitely many n, with CC(L_n)>2^{epsilon' n}.",
+            "controlled interface: feed only canonical unsatisfiable formulas psi_m into R; use no MCSP oracle, no advice string, and no search over truth tables.",
+            "target-preserving condition: the output lengths are unbounded and length-balanced, m<=N_phi^k, and padding from N_phi to a power of two loses only o(N_phi^{epsilon'})."
+          ],
+          "equations": [
+            {
+              "label": "threshold-transfer",
+              "latex": "s_m \\ge N_m^{\\epsilon} \\ge (2^{n_m})^{\\epsilon'} = 2^{\\epsilon' n_m}",
+              "valid_when": "Valid when n_m=ceil(log N_m), epsilon'<epsilon, and padding changes length by less than a factor two."
+            },
+            {
+              "label": "uniform-output-time",
+              "latex": "T_A(n_m) \\le m^{O(1)} \\le N_m^{O(k)} = 2^{O(n_m)}",
+              "valid_when": "Valid when the reduction is length-balanced on the canonical contradiction family and no nonuniform advice is used."
+            },
+            {
+              "label": "lower-bound-instance",
+              "latex": "CC(L_{n_m}) > 2^{\\epsilon' n_m} - O(n_m)",
+              "valid_when": "Applies after the padded truth table still restricts to the original high-MCSP string with only comparator overhead."
+            }
+          ],
+          "failure_test": "A falsifier is any reduction whose no-side threshold is o(N^epsilon), whose output length is not balanced, or whose construction uses advice.",
+          "lemma_id": "L1-gap-no-instance-carrier-extraction",
+          "proof_role": "Bridge lemma: it converts a named MCSP gap-reduction source into an explicit E lower-bound target with quantitative threshold preservation.",
+          "statement": "If a uniform length-balanced many-one gap reduction from SAT to LowMCSP maps every no-instance to a truth table of circuit complexity at least N^epsilon, then canonical contradictions yield an explicit high-MCSP carrier and an i.o. E circuit lower bound of size 2^{epsilon' n} for every epsilon'<epsilon. This is route-level progress, not P != NP."
+        },
+        {
+          "assumptions": [
+            "A is uniform and deterministic.",
+            "A(1^n) runs in 2^{O(n)} time and outputs exactly 2^n bits.",
+            "CC(A(1^n))>2^{epsilon n} for all sufficiently large n."
+          ],
+          "definitions": [
+            "HighMCSP_epsilon(N) means strings x in {0,1}^N with Boolean circuit complexity greater than N^epsilon.",
+            "The target language L_A has L_A(u) equal to the u-indexed bit of A(1^{|u|}).",
+            "The IW consequence requires hardness on all sufficiently large input lengths, not merely infinitely often."
+          ],
+          "equations": [
+            {
+              "label": "mcsp-to-size",
+              "latex": "CC(A(1^n))>N^\\epsilon=2^{\\epsilon n}",
+              "valid_when": "Valid when N=2^n and the MCSP threshold is measured on the full length-n truth table."
+            },
+            {
+              "label": "iw-use",
+              "latex": "E \\not\\subseteq SIZE(2^{\\epsilon n}) \\Rightarrow BPP=P",
+              "valid_when": "Requires the hardness bound for all sufficiently large lengths and the standard Impagliazzo-Wigderson uniform computability hypothesis."
+            }
+          ],
+          "failure_test": "If the carrier is only infinitely often, IW gives at most an i.o. derandomization variant, not full BPP=P.",
+          "lemma_id": "L2-uniform-high-mcsp-to-iw",
+          "proof_role": "Extraction theorem already available once the source carrier is uniform; the unresolved task is source construction.",
+          "statement": "A deterministic poly(N)-time generator outputting, for every n, a length N=2^n truth table with CC>N^epsilon gives a language in E with 2^{epsilon n} circuit lower bounds and supplies the standard IW hardness hypothesis for BPP=P."
+        },
+        {
+          "assumptions": [
+            "The advice may encode the hard truth table or the choice of a hard candidate.",
+            "No canonical, efficiently computable selector for a_n is provided."
+          ],
+          "definitions": [
+            "Advice leakage means x_n is produced by A(1^n,a_n) with |a_n|>O(1) and no uniform way to recover a_n in 2^{O(n)} time.",
+            "The target-preserving transfer requires a single E machine deciding all bits of L.",
+            "The obstruction is nonrelativizing only if the advice is eliminated by an arithmetized or diagonal uniform construction; otherwise it is merely outside the target model."
+          ],
+          "equations": [
+            {
+              "label": "advice-target",
+              "latex": "A(1^n,a_n)\\in TIME(2^{O(n)})/|a_n| \\not\\Rightarrow L\\in E",
+              "valid_when": "Valid when the selected carrier depends on nonuniform advice not reconstructible by the eventual E decider."
+            }
+          ],
+          "failure_test": "A valid repair must replace advice by a deterministic selector computable in 2^{O(n)} time.",
+          "lemma_id": "L3-nonuniform-leakage-quarantine",
+          "proof_role": "Barrier interaction: identifies the precise formal obstruction behind the branch memory's nonuniform leakage warning.",
+          "statement": "An advice-selected MCSP carrier does not preserve the target: it yields at best E/poly-style truth-table generation and cannot be fed into the uniform IW theorem or into a clean E lower bound."
+        }
+      ],
+      "control_decision": {
+        "decision": "continue-with-repair",
+        "pivot_test": "Pivot if all available MCSP carriers either use advice, have subpolynomial thresholds, or are Turing reductions without a fixed high-output instance.",
+        "promotion_test": "Promote if a candidate reduction from SAT or TAUT to gap-MCSP is shown to map canonical no-instances to length-balanced strings with CC>=N^epsilon.",
+        "reason": "The branch produced a checkable conditional bridge lemma and a precise falsifier list. It should continue only by testing whether any known or proposed MCSP reduction has the required no-side gap, length balance, and uniformity."
+      },
+      "dependency_updates": [
+        {
+          "dependency_id": "MCSP carrier",
+          "description": "Carrier can be extracted from the no side of a length-balanced gap reduction using canonical contradictions; high complexity must be explicit in the reduction's soundness clause.",
+          "kind": "sharpened",
+          "status": "conditional"
+        },
+        {
+          "dependency_id": "extraction theorem",
+          "description": "Uniform high truth tables at threshold N^epsilon transfer to i.o. E lower bounds; all-length carriers give the IW derandomization hypothesis.",
+          "kind": "partially-validated",
+          "status": "valid-under-stated-uniformity"
+        },
+        {
+          "dependency_id": "explicitness condition",
+          "description": "Explicitness is poly(N) output time with no advice; length balance m<=N^k is now a formal obligation for reduction-based carriers.",
+          "kind": "tightened",
+          "status": "open-obligation"
+        }
+      ],
+      "falsifiers": [
+        "falsifier: the reduction outputs N_m much smaller than m^{c}, so computing the carrier costs super-polynomial time in its truth-table length.",
+        "falsifier: the no-side MCSP threshold is logarithmic, polylogarithmic, or otherwise below N^epsilon, causing quantitative threshold collapse.",
+        "falsifier: the construction needs advice to choose the hard MCSP instance, so the target becomes nonuniform and the IW transfer is not valid.",
+        "falsifier: the reduction is a Turing reduction whose accepting path depends on unknown SAT answers, so a fixed contradiction does not expose a single high truth table.",
+        "falsifier: the output is an MCSP yes-instance on contradictions under the chosen convention; then it certifies low complexity rather than high complexity."
+      ],
+      "generated_by": "azure_responses_api",
+      "mathematical_learning": "The repair isolates a concrete bridge: co-side gap reductions to MCSP are not just hardness evidence; with length balance and threshold N^epsilon they automatically manufacture explicit E lower bounds. Thus the route's main obstruction is quantitative source strength, not extraction. This also explains why weak MCSP reductions and nonuniform selectors are invalid for the target.",
+      "next_experiment": "Audit known MCSP-hardness constructions for the exact tuple (many-one, no-side high, s>=N^epsilon, N between m^a and m^b, no advice); reject or record the first valid tuple."
+    }
+  ],
+  "completed_utc": "2026-07-10T20:09:17+00:00",
+  "created_utc": "2026-07-10T19:54:17+00:00",
+  "cycle_id": "cycle-0002",
+  "cycle_index": 2,
+  "cycle_learning": "This research cycle converted active route pressure into typed branch lemmas. The main mathematical change is that each branch now names a source object, target object, equation, validity condition, falsifier, and next experiment. Only research-mode cycles with elapsed-time and branch-engine evidence count as genuine long-horizon research progress.",
+  "execution_mode": "research",
+  "next_cycle_queue": [
+    "Test MCSP or proof-complexity carriers for producing the unbounded-k source family: formalize whether a weak lower bound for MCSP[2^{N^{1/k}}] transfers to C_{H_k}(N)>N^{1+epsilon} without becoming natural or losing the strict exponent margin.",
+    "Instantiate an arithmetization-based proof object, such as a low-degree extension or PCP-style consistency test, and run the algebrization audit: specify oracle access, extension degree, reduction overhead, and whether a BGS/AW-style oracle remains a falsifier.",
+    "Audit known MCSP-hardness constructions for the exact tuple (many-one, no-side high, s>=N^epsilon, N between m^a and m^b, no advice); reject or record the first valid tuple."
+  ],
+  "research_seconds_elapsed": 900.003,
+  "research_seconds_target": 900,
+  "run_id": "p-vs-np-marathon",
+  "scheduler_decisions": [
+    {
+      "branch_id": "marathon.branch.bcdeffa51f87",
+      "branch_title": "Hardness-Magnification Bridge Realization",
+      "controlled_interface": "barely-nontrivial lower bound -> major class separation consequence",
+      "reason": "The branch remains target-linked and has not exhausted its certification tests.",
+      "recommended_move": "persist_adapt"
+    },
+    {
+      "branch_id": "marathon.branch.4b0edf3359d1",
+      "branch_title": "Barrier-Aware Lower-Bound Route",
+      "controlled_interface": "proposed lower-bound method -> relativization/natural-proof/algebrization audit",
+      "reason": "The branch remains target-linked and has not exhausted its certification tests.",
+      "recommended_move": "persist_adapt"
+    },
+    {
+      "branch_id": "marathon.branch.138e68639c07",
+      "branch_title": "MCSP / Meta-Complexity Carrier Transfer",
+      "controlled_interface": "MCSP-type witness object -> circuit lower-bound or derandomization consequence",
+      "reason": "The branch remains target-linked and has not exhausted its certification tests.",
+      "recommended_move": "persist_adapt"
+    }
+  ],
+  "selected_branch_ids": [
+    "marathon.branch.bcdeffa51f87",
+    "marathon.branch.4b0edf3359d1",
+    "marathon.branch.138e68639c07"
+  ],
+  "skill_dispatch_trace": [
+    {
+      "cycle_id": "cycle-0002",
+      "input_artifacts": [
+        "agentic/state/current_target.json",
+        "agentic/reports/discovery_stretch/latest.json",
+        "agentic/registries/discovery_marathon_skill_dispatch.yaml"
+      ],
+      "invoked_skills": [
+        "looper-target-goal-enricher",
+        "looper-target-dependency-cartographer",
+        "looper-workflow-contract-governor",
+        "looper-hook-policy-maintainer"
+      ],
+      "missing_required_skills": [],
+      "output_artifacts": [
+        "cycle:cycle-0002",
+        "branch:marathon.branch.bcdeffa51f87",
+        "branch:marathon.branch.4b0edf3359d1",
+        "branch:marathon.branch.138e68639c07"
+      ],
+      "phase": "preflight_target_navigation",
+      "queued_conditional_skills": [
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "kb-orchestrator"
+        }
+      ],
+      "skipped_skills_with_reason": [],
+      "validation_handoff": "preflight_target_navigation used 4 required skills while exploring Hardness-Magnification Bridge Realization, Barrier-Aware Lower-Bound Route, MCSP / Meta-Complexity Carrier Transfer."
+    },
+    {
+      "cycle_id": "cycle-0002",
+      "input_artifacts": [
+        "agentic/state/current_target.json",
+        "agentic/reports/discovery_stretch/latest.json",
+        "agentic/registries/discovery_marathon_skill_dispatch.yaml"
+      ],
+      "invoked_skills": [
+        "long-horizon-route-portfolio-manager",
+        "abducer-refinement-route-ranker",
+        "next-experiment-queue-ranker",
+        "kb-discovery-governor"
+      ],
+      "missing_required_skills": [],
+      "output_artifacts": [
+        "cycle:cycle-0002",
+        "branch:marathon.branch.bcdeffa51f87",
+        "branch:marathon.branch.4b0edf3359d1",
+        "branch:marathon.branch.138e68639c07"
+      ],
+      "phase": "branch_selection",
+      "queued_conditional_skills": [
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "kb-promising-direction-assessor"
+        }
+      ],
+      "skipped_skills_with_reason": [],
+      "validation_handoff": "branch_selection used 4 required skills while exploring Hardness-Magnification Bridge Realization, Barrier-Aware Lower-Bound Route, MCSP / Meta-Complexity Carrier Transfer."
+    },
+    {
+      "cycle_id": "cycle-0002",
+      "input_artifacts": [
+        "agentic/state/current_target.json",
+        "agentic/reports/discovery_stretch/latest.json",
+        "agentic/registries/discovery_marathon_skill_dispatch.yaml"
+      ],
+      "invoked_skills": [
+        "kb-abduce",
+        "kb-deduce",
+        "kb-induce",
+        "kb-concept-bridge-planner",
+        "kb-gap-abstraction-conjecturer"
+      ],
+      "missing_required_skills": [],
+      "output_artifacts": [
+        "cycle:cycle-0002",
+        "branch:marathon.branch.bcdeffa51f87",
+        "branch:marathon.branch.4b0edf3359d1",
+        "branch:marathon.branch.138e68639c07"
+      ],
+      "phase": "branch_exploration",
+      "queued_conditional_skills": [
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "kb-proof-sketcher"
+        },
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "kb-proof-connector"
+        }
+      ],
+      "skipped_skills_with_reason": [],
+      "validation_handoff": "branch_exploration used 5 required skills while exploring Hardness-Magnification Bridge Realization, Barrier-Aware Lower-Bound Route, MCSP / Meta-Complexity Carrier Transfer."
+    },
+    {
+      "cycle_id": "cycle-0002",
+      "input_artifacts": [
+        "agentic/state/current_target.json",
+        "agentic/reports/discovery_stretch/latest.json",
+        "agentic/registries/discovery_marathon_skill_dispatch.yaml"
+      ],
+      "invoked_skills": [
+        "qualitative-variable-isolator",
+        "physics-regime-map-builder",
+        "monotonicity-sensitivity-prober",
+        "limit-convergence-behavior-auditor",
+        "qualitative-toy-model-builder",
+        "qualitative-physics-falsifier"
+      ],
+      "missing_required_skills": [],
+      "output_artifacts": [
+        "cycle:cycle-0002",
+        "branch:marathon.branch.bcdeffa51f87",
+        "branch:marathon.branch.4b0edf3359d1",
+        "branch:marathon.branch.138e68639c07"
+      ],
+      "phase": "qualitative_physics_reasoning",
+      "queued_conditional_skills": [
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "dimensional-symmetry-constraint-checker"
+        },
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "scale-asymptotic-reasoner"
+        }
+      ],
+      "skipped_skills_with_reason": [],
+      "validation_handoff": "qualitative_physics_reasoning used 6 required skills while exploring Hardness-Magnification Bridge Realization, Barrier-Aware Lower-Bound Route, MCSP / Meta-Complexity Carrier Transfer."
+    },
+    {
+      "cycle_id": "cycle-0002",
+      "input_artifacts": [
+        "agentic/state/current_target.json",
+        "agentic/reports/discovery_stretch/latest.json",
+        "agentic/registries/discovery_marathon_skill_dispatch.yaml"
+      ],
+      "invoked_skills": [
+        "gedanken-need-assessor"
+      ],
+      "missing_required_skills": [],
+      "output_artifacts": [
+        "cycle:cycle-0002",
+        "branch:marathon.branch.bcdeffa51f87",
+        "branch:marathon.branch.4b0edf3359d1",
+        "branch:marathon.branch.138e68639c07"
+      ],
+      "phase": "gedanken_experiment_design",
+      "queued_conditional_skills": [
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "gedanken-situation-designer"
+        },
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "gedanken-counterfactual-variant-builder"
+        },
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "gedanken-transfer-guard"
+        },
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "gedanken-followup-planner"
+        },
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "qualitative-toy-model-builder"
+        }
+      ],
+      "skipped_skills_with_reason": [],
+      "validation_handoff": "gedanken_experiment_design used 1 required skills while exploring Hardness-Magnification Bridge Realization, Barrier-Aware Lower-Bound Route, MCSP / Meta-Complexity Carrier Transfer."
+    },
+    {
+      "cycle_id": "cycle-0002",
+      "input_artifacts": [
+        "agentic/state/current_target.json",
+        "agentic/reports/discovery_stretch/latest.json",
+        "agentic/registries/discovery_marathon_skill_dispatch.yaml"
+      ],
+      "invoked_skills": [
+        "kb-contradiction-strategist",
+        "contradiction-route-auditor",
+        "kb-hypothesis-refutation-loop"
+      ],
+      "missing_required_skills": [],
+      "output_artifacts": [
+        "cycle:cycle-0002",
+        "branch:marathon.branch.bcdeffa51f87",
+        "branch:marathon.branch.4b0edf3359d1",
+        "branch:marathon.branch.138e68639c07"
+      ],
+      "phase": "contradiction_and_falsifier_generation",
+      "queued_conditional_skills": [
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "kb-novel-proof-strategist"
+        }
+      ],
+      "skipped_skills_with_reason": [],
+      "validation_handoff": "contradiction_and_falsifier_generation used 3 required skills while exploring Hardness-Magnification Bridge Realization, Barrier-Aware Lower-Bound Route, MCSP / Meta-Complexity Carrier Transfer."
+    },
+    {
+      "cycle_id": "cycle-0002",
+      "input_artifacts": [
+        "agentic/state/current_target.json",
+        "agentic/reports/discovery_stretch/latest.json",
+        "agentic/registries/discovery_marathon_skill_dispatch.yaml"
+      ],
+      "invoked_skills": [
+        "evidence-acquisition-planner",
+        "prior-art-importer",
+        "kb-prior-art-pass"
+      ],
+      "missing_required_skills": [],
+      "output_artifacts": [
+        "cycle:cycle-0002",
+        "branch:marathon.branch.bcdeffa51f87",
+        "branch:marathon.branch.4b0edf3359d1",
+        "branch:marathon.branch.138e68639c07"
+      ],
+      "phase": "evidence_acquisition",
+      "queued_conditional_skills": [
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "kb-epistemic-hardness"
+        }
+      ],
+      "skipped_skills_with_reason": [],
+      "validation_handoff": "evidence_acquisition used 3 required skills while exploring Hardness-Magnification Bridge Realization, Barrier-Aware Lower-Bound Route, MCSP / Meta-Complexity Carrier Transfer."
+    },
+    {
+      "cycle_id": "cycle-0002",
+      "input_artifacts": [
+        "agentic/state/current_target.json",
+        "agentic/reports/discovery_stretch/latest.json",
+        "agentic/registries/discovery_marathon_skill_dispatch.yaml"
+      ],
+      "invoked_skills": [
+        "abducer-obligation-gatekeeper",
+        "entailment-gap-auditor",
+        "kb-end-to-end-proof-critic"
+      ],
+      "missing_required_skills": [],
+      "output_artifacts": [
+        "cycle:cycle-0002",
+        "branch:marathon.branch.bcdeffa51f87",
+        "branch:marathon.branch.4b0edf3359d1",
+        "branch:marathon.branch.138e68639c07"
+      ],
+      "phase": "obligation_gating",
+      "queued_conditional_skills": [
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "kb-coherence-evaluator"
+        }
+      ],
+      "skipped_skills_with_reason": [],
+      "validation_handoff": "obligation_gating used 3 required skills while exploring Hardness-Magnification Bridge Realization, Barrier-Aware Lower-Bound Route, MCSP / Meta-Complexity Carrier Transfer."
+    },
+    {
+      "cycle_id": "cycle-0002",
+      "input_artifacts": [
+        "agentic/state/current_target.json",
+        "agentic/reports/discovery_stretch/latest.json",
+        "agentic/registries/discovery_marathon_skill_dispatch.yaml"
+      ],
+      "invoked_skills": [
+        "review-reasoner",
+        "review-reasoner-epistemologist",
+        "review-reasoner-discovery-scientist",
+        "kb-discovery-breakthrough-profiler"
+      ],
+      "missing_required_skills": [],
+      "output_artifacts": [
+        "cycle:cycle-0002",
+        "branch:marathon.branch.bcdeffa51f87",
+        "branch:marathon.branch.4b0edf3359d1",
+        "branch:marathon.branch.138e68639c07"
+      ],
+      "phase": "review_and_synthesis",
+      "queued_conditional_skills": [
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "review-reasoner-fields-medalist"
+        },
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "review-reasoner-concept-logician"
+        }
+      ],
+      "skipped_skills_with_reason": [],
+      "validation_handoff": "review_and_synthesis used 4 required skills while exploring Hardness-Magnification Bridge Realization, Barrier-Aware Lower-Bound Route, MCSP / Meta-Complexity Carrier Transfer."
+    },
+    {
+      "cycle_id": "cycle-0002",
+      "input_artifacts": [
+        "agentic/state/current_target.json",
+        "agentic/reports/discovery_stretch/latest.json",
+        "agentic/registries/discovery_marathon_skill_dispatch.yaml"
+      ],
+      "invoked_skills": [
+        "show-reasoning",
+        "kb-explain"
+      ],
+      "missing_required_skills": [],
+      "output_artifacts": [
+        "cycle:cycle-0002",
+        "branch:marathon.branch.bcdeffa51f87",
+        "branch:marathon.branch.4b0edf3359d1",
+        "branch:marathon.branch.138e68639c07"
+      ],
+      "phase": "report_rendering",
+      "queued_conditional_skills": [
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "kb-expert-paper-generator"
+        },
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "kb-macro-proof-paper-writer"
+        }
+      ],
+      "skipped_skills_with_reason": [],
+      "validation_handoff": "report_rendering used 2 required skills while exploring Hardness-Magnification Bridge Realization, Barrier-Aware Lower-Bound Route, MCSP / Meta-Complexity Carrier Transfer."
+    },
+    {
+      "cycle_id": "cycle-0002",
+      "input_artifacts": [
+        "agentic/state/current_target.json",
+        "agentic/reports/discovery_stretch/latest.json",
+        "agentic/registries/discovery_marathon_skill_dispatch.yaml"
+      ],
+      "invoked_skills": [
+        "looper-release-promoter",
+        "looper-workflow-contract-governor"
+      ],
+      "missing_required_skills": [],
+      "output_artifacts": [
+        "cycle:cycle-0002",
+        "branch:marathon.branch.bcdeffa51f87",
+        "branch:marathon.branch.4b0edf3359d1",
+        "branch:marathon.branch.138e68639c07"
+      ],
+      "phase": "release_promotion",
+      "queued_conditional_skills": [
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "looper-hook-policy-maintainer"
+        }
+      ],
+      "skipped_skills_with_reason": [],
+      "validation_handoff": "release_promotion used 2 required skills while exploring Hardness-Magnification Bridge Realization, Barrier-Aware Lower-Bound Route, MCSP / Meta-Complexity Carrier Transfer."
+    }
+  ],
+  "target_id": "p-vs-np-target",
+  "timing_validation": {
+    "reason": "Elapsed 900.003 seconds against target 900 seconds.",
+    "status": "research"
+  },
+  "valid_as_research_cycle": true,
+  "validation_handoff": [
+    "agentic/scripts/validate_discovery_marathon_cycle.py",
+    "agentic/scripts/validate_discovery_marathon_skill_dispatch.py"
+  ],
+  "version": 1
+}

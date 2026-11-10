@@ -1,0 +1,357 @@
+% SPDX-FileCopyrightText: © 2026 Idiap Research Institute <contact@idiap.ch>
+%
+% SPDX-FileContributor: Andre Freitas <andre.freitas@idiap.ch>
+% Neuro-symbolic AI Group
+%
+% SPDX-FileContributor: Danilo Gusicuma <danilo.gusicuma@idiap.ch>
+% Neuro-symbolic AI Group
+%
+% SPDX-License-Identifier: MIT
+\subsection{Target navigation: choose an obligation before doing research}
+\label{app:granular-target-navigation-loop}
+The linked dependency-cartographer skill supplies the conceptual procedure hidden
+by this compact boundary. It reads the target's acceptance conditions against a
+recursive dependency graph, distinguishes a missing premise from a bridge object,
+route lemma, proof debt or stale route, and groups unresolved nodes into coherent
+proof tasks. Priority is judged by how a node serves the target, not merely by
+its local score. Similarity does not count as logical dependence, and a mentioned
+lemma does not count as a discharged obligation. Cycle detection prevents a route
+from supporting itself through a chain of references. The crucial inference is
+from the \emph{structure of what is missing} to a justified next research question.
+This is a prescribed interpretation procedure linked to the workflow, rather than
+an algorithm encoded by the native projection signature.
+
+Target navigation separates identifying what remains to be established from
+establishing it. Write $T$ for \texttt{Unscoped\allowbreak Research\allowbreak Target}, $F$ for
+\texttt{Target\allowbreak Dependency\allowbreak Frontier}, and $N$ for
+\texttt{Target\allowbreak Navigation\allowbreak Disposition}. The native occurrences are an unresolved
+projection $P_T$ and an evidential assessment $E_T$:
+\[
+\begin{aligned}
+&P_T:T\to\operatorname{Generated}[F],\qquad
+ E_T:F\to\operatorname{Generated}[N],\\
+&f=P_T(t),\qquad n=E_T(f.\mathrm{value}),\\
+&N=\{\mathrm{WorkReady},\mathrm{ReadyForReleasePromotion},\mathrm{Stalled}\}.
+\end{aligned}
+\]
+The first occurrence, \texttt{dependency\_\allowbreak frontier}, changes an identified target
+into a target with a referenced dependency frontier. It makes the unresolved
+obligations available for selection, but adds no warrant for the target.
+Crucially, the original \texttt{pre:\_\allowbreak } does not encode the linked procedure:
+$P_T$ names a declared input/output boundary, not a recovered cartography
+algorithm. The second occurrence, \texttt{target\_\allowbreak disposition}, assesses that
+frontier to choose the next kind of work. The relation
+\texttt{Dependency\allowbreak Frontier\allowbreak Enables\allowbreak Target\allowbreak Disposition} records the declared dependency
+of the generated decision on the frontier; its generic source/target certificate
+shape does not itself establish that the frontier is complete. The displayed
+$\mathrm{value}$ selection is the native explicit wrapper adapter.
+
+For a constructed example, suppose the target is a decay bound uniform over a
+family of networks. A frontier can distinguish the proved conditional estimate
+from the open obligation that the spectral gaps have a positive common lower
+bound. Since that obligation remains open, \texttt{Work\allowbreak Ready} directs work to the
+gap question; it cannot mean that uniform decay has been proved. This illustrates
+why selecting an obligation is a distinct conceptual move from deriving a result.
+The native function returns $n$. The original control policy instead switches
+work-ready to \texttt{abducer\_\allowbreak work\_\allowbreak loop}, release-candidate to
+\texttt{release\_\allowbreak promotion\_\allowbreak loop}, and stops on stall. Those transfers are not
+executed by the native return statement, and the native declarations do not encode the skill-level
+judgment that chooses among them.
+
+\input{paper-workflow-representations/steps/target_navigation_loop.tex}
+
+\subsection{Release promotion: conserve the scope of the evidence}
+\label{app:granular-release-promotion-loop}
+The release-promoter skill prescribes a comparative interpretation of evidence:
+separate robust support from missing or fragile support, inspect whether the
+active route still addresses the target, and determine whether the chosen
+mathematical machinery has the objects it needs. This last question can change the
+research decision even when every report validates: endpoint spectral machinery
+cannot replace an absent construction or transfer object. A route that repeatedly
+hits the same blocker must explain what was learned and what would trigger a
+pivot. Promotion consequently depends on whether the proposed claim survives
+these comparisons; repair can change the target scope or conceptual route rather
+than merely regenerate a report. These are skill-level prescriptions associated
+with the release contract, not extra native occurrences or evidence of execution.
+
+A release decision bounds the result supported by a research iteration.
+Here $V$ denotes \texttt{Promotion\allowbreak Evidence\allowbreak Packet}, $Q$ denote
+\texttt{Claim\allowbreak Bounded\allowbreak Release\allowbreak Proposal}, and $D$ denote
+\texttt{Release\allowbreak Promotion\allowbreak Disposition}. Its typed boundary is
+\[
+\begin{aligned}
+&P_R:V\to\operatorname{Generated}[Q],\qquad
+ E_R:Q\to\operatorname{Generated}[D],\\
+&q=P_R(v),\qquad d=E_R(q.\mathrm{value}),\\
+&D=\{\mathrm{Promoted},\mathrm{RepairTarget},
+       \mathrm{RepairConcept},\mathrm{Rejected}\}.
+\end{aligned}
+\]
+At \texttt{release\_\allowbreak proposal}, the evidence packet's run and evidence references
+are projected into a proposal with run-identity and proposal-reference fields.
+Preserving run identity is intended, but equality of the two string fields is
+not enforced by these nominal types. Conceptually this is the move from accumulated evidence to a bounded
+claim about it. The source's \texttt{pre:\_\allowbreak } leaves proposal construction open;
+\texttt{Unresolved\allowbreak Release\allowbreak Proposal\allowbreak Projection} must not be read as an implemented
+claim-selection algorithm. At \texttt{promotion\_\allowbreak disposition}, evidential
+assessment asks whether that proposal is supportable, needs a target or conceptual
+repair, or should be rejected. \texttt{Release\allowbreak Proposal\allowbreak Enables\allowbreak Promotion\allowbreak Disposition}
+licenses the declared proposal-to-assessment dependency. It supplies neither an
+independent proof nor a rule that reference-bearing proposals must pass. There is
+no native multi-input join: the assessment receives the unwrapped proposal, whose
+reference must carry the evidence boundary.
+
+For a constructed example, a Yang--Mills route has a finite-regulator correlation
+estimate and proposes promoting it as evidence that its continuum construction is
+complete. The release comparison exposes an absent same-theory transfer and
+nonuniform error control. Repairing the target can license a finite-result claim;
+repairing the concept instead asks for the missing transfer object. Passing the
+workflow validators cannot decide between those scientific scopes. The skill's
+machinery assessment makes the difference explicit: a spectral conclusion cannot
+be obtained by invoking endpoint machinery before its analytic preconditions are
+available.
+The original policy accepts a promoted outcome, routes target repair to target
+navigation and conceptual repair to conceptual hypothesis exploration, and stops
+on rejection. The native function returns the wrapped disposition and contains
+none of those switches. Thus the workflow's contribution is scope calibration,
+not an additional experiment or an automatic truth certificate.
+
+\input{paper-workflow-representations/steps/release_promotion_loop.tex}
+
+\subsection{Timeline-to-paper: translate a reasoning record without upgrading it}
+\label{app:granular-timeline-paper-independent-workflow}
+The linked argument-architect and failed-route-interpreter skills explain how
+the record becomes a scientific argument. The architect chooses the paper's form
+from the evidence: theorem, worked calculation, obstruction, method, negative
+result or positioning note. It identifies the smallest defensible contribution
+and maps it to the evidence, novelty boundary and remaining validation burden.
+The failure interpreter compresses a route into its original idea, the pressure
+that defeated it, the learned invariant and the narrowed object that survives.
+Their conceptual product is an explanation of why the current claim is the right
+claim, rather than a chronological list of attempts. Section responsibilities
+then distribute that argument across the paper. The skill procedures specify this
+reasoning even though the native claim-set projection does not implement it;
+manifest membership alone supplies no execution order between the linked skills.
+
+Paper construction has an epistemic boundary: reorganizing a reasoning record
+must not turn its open conjectures into established results. Let $L$ be
+\texttt{Timeline\allowbreak Reasoning\allowbreak Outputs}, $C$ be
+\texttt{Bounded\allowbreak Manuscript\allowbreak Claim\allowbreak Set}, and $D$ be
+\texttt{Timeline\allowbreak Paper\allowbreak Disposition}. The two declared occurrences give
+\[
+\begin{aligned}
+&P_P:L\to\operatorname{Generated}[C],\qquad
+ E_P:C\to\operatorname{Generated}[D],\\
+&c=P_P(\ell),\qquad d=E_P(c.\mathrm{value}),\\
+&D=\{\mathrm{PaperReady},\mathrm{ClaimBoundaryFailure},\mathrm{Stalled}\}.
+\end{aligned}
+\]
+The \texttt{bounded\_\allowbreak claim\_\allowbreak set} occurrence translates a timeline reference into
+a source reference and claim-ledger reference. This establishes presentation
+input, not new evidence. Its unresolved projection corresponds to the original
+\texttt{pre:\_\allowbreak }; the declarations do not specify how competing claims are
+selected, reconciled, or written. The \texttt{paper\_\allowbreak disposition} occurrence
+assesses whether this bounded set supports paper assembly.
+\texttt{Claim\allowbreak Set\allowbreak Enables\allowbreak Paper\allowbreak Disposition} records the assessment's dependence on
+that claim set, with explicit unwrapping at $c.\mathrm{value}$. It does not assert
+that the ledger faithfully reflects its source merely because both references
+exist. Neither types nor topology specify an internal drafting sequence.
+
+Consider a constructed diffusion study whose timeline contains a conditional
+decay derivation, an unsuccessful attempt to generalize it, and the cycle-graph
+counterexample to a size-independent spectral gap. A faithful claim set separates
+these three statuses. The paper can explain why the generalization fails while
+retaining the conditional theorem. If a draft instead states uniform decay for
+all connected graphs, \texttt{Claim\allowbreak Boundary\allowbreak Failure} is an appropriate assessment:
+the presentation has dropped precisely the assumption challenged by the record.
+The outcome is a corrected scientific claim boundary, not merely a formatted
+manuscript. The original workflow accepts paper-ready and stops on claim-boundary
+failure or stall. The native function only returns $d$; its readiness value is
+not itself a publication act. This distinction matters because readable exposition
+can improve understanding without increasing the evidential status of any claim.
+
+\input{paper-workflow-representations/steps/timeline-paper-independent-workflow.tex}
+
+\subsection{Yang--Mills overlay: keep representation and continuum claims apart}
+\label{app:granular-ym-representational-dynamics-overlay}
+The linked Yang--Mills skills describe a much richer scientific program behind
+this audit boundary. Observable-core construction asks whether the chosen
+observables separate states and generate enough physical vectors to see every
+relevant spectral sector. Representation construction independently specifies
+source and target carriers, observables, states and dynamics, then asks what an
+observable pullback and state pushforward preserve. Exact equivalence is
+separated from coarse-graining and approximation with explicit error dependence.
+Continuum coherence asks whether regulated correlations converge in a topology
+strong enough to preserve positivity and spectral estimates, with justified limit
+orders and theory identity. Rigidity transfer then asks whether a uniform decay
+estimate extends from a dense physical class to spectral exclusion. These are
+prescribed mathematical burdens, not solved theorems or an execution sequence
+inferred from the skill list. The native two-stage audit compresses their results;
+it does not make the underlying conceptual questions unknown.
+
+This overlay tests whether a representation candidate stays within the declared
+continuum boundary. Write $Y$ for \texttt{Yang\allowbreak Mills\allowbreak Target\allowbreak Context}, $A$ for
+\texttt{Continuum\allowbreak Boundary\allowbreak Audit\allowbreak Input}, and $D$ for
+\texttt{Yang\allowbreak Mills\allowbreak Overlay\allowbreak Disposition}:
+\[
+\begin{aligned}
+&P_Y:Y\to\operatorname{Generated}[A],\qquad
+ E_Y:A\to\operatorname{Generated}[D],\\
+&a=P_Y(y),\qquad d=E_Y(a.\mathrm{value}),\\
+&D=\{\mathrm{Accepted},\mathrm{Quarantined},\mathrm{Stalled}\}.
+\end{aligned}
+\]
+At \texttt{continuum\_\allowbreak audit\_\allowbreak input}, the projection supplies target-identity and
+continuum-boundary fields together with a representation-candidate reference.
+Those fields can retain the input context, but preserving their values is an
+obligation not enforced by the nominal string types.
+Its conceptual purpose is to put a candidate beside the boundary it must respect.
+It supplies no bridge from a finite representation to a continuum assertion.
+The original \texttt{pre:\_\allowbreak } leaves that preparation internally unspecified;
+one cannot infer literature search, simulation, or theorem construction as extra
+native occurrences. At \texttt{overlay\_\allowbreak disposition}, evidential assessment
+judges the prepared candidate against the boundary.
+\texttt{Audit\allowbreak Input\allowbreak Enables\allowbreak Overlay\allowbreak Disposition} connects this audit input to its
+generated assessment, without certifying that the boundary has been crossed or
+that an accepted representation proves the scientific target.
+
+For a constructed illustration, suppose a selected observable has exponentially
+decaying correlations. Add an orthogonal sector unseen by that observable whose
+positive energies approach zero. The selected correlation is unchanged, yet a
+global spectral-gap claim is defeated. Observable-core reasoning identifies the
+missing density obligation; rigidity transfer restricts the conclusion to the
+visible sector until that obligation is met. This countermodel distinguishes
+``the measurement decays'' from ``all physical excitations are gapped.'' It is a
+test of the prescribed inference, not a proposed Yang--Mills construction.
+The original ERFL additionally queries the connected knowledge base during
+preparation and persists the audit. These effects have no corresponding native
+query or persistence occurrence in this two-stage projection. Original accepted,
+quarantined, and stalled outcomes lead respectively to accept or stop, whereas the
+native function returns $d$. Thus acceptance concerns an overlay disposition;
+it must not silently acquire the meaning of a continuum existence proof.
+
+\input{paper-workflow-representations/steps/ym-representational-dynamics-overlay.tex}
+
+\subsection{Deep review: challenge and repair the same epistemic state}
+\label{app:granular-deep-review-and-reorientation}
+The linked review skill makes disagreement itself an object of reasoning.
+Reviewers inspect implemented code and persisted state through mathematical,
+epistemic, conceptual, discovery and design lenses; they separate a mathematical
+defect from an implementation defect and compare where the diagnoses converge or
+conflict. Reflection then asks what the search changed in the understanding of
+the problem: a new perspective, a sharper obstruction, persistent hardness or a
+regression. A more elaborate artifact is not automatically a deeper result.
+The named contract prescribes state formalization, advisory reviews, meta-review
+and repair governance; this procedural ordering is a different layer from the
+native parallel challenge/repair topology. Together they explain how a failure
+becomes a revised research question while preserving unresolved disagreement,
+rather than averaging reviewer opinions into apparent confirmation.
+
+Deep review separates detecting why a research direction fails from proposing how
+it might recover. Let $B,S,F,P,J,D$ abbreviate respectively
+\texttt{Review\allowbreak Evidence\allowbreak Bundle}, \texttt{Formalized\allowbreak Review\allowbreak State},
+\texttt{Review\allowbreak Defeater\allowbreak Assessment}, \texttt{Reorientation\allowbreak Repair\allowbreak Options},
+\texttt{Reorientation\allowbreak Decision\allowbreak Input}, and \texttt{Reorientation\allowbreak Decision\allowbreak Assessment}.
+\[
+\begin{aligned}
+&G:B\to\operatorname{Generated}[S],\quad
+ R:S\to\operatorname{Generated}[F],\quad
+ A:S\to\operatorname{Generated}[P],\\
+&E:J\to\operatorname{Generated}[D],\qquad s=G(b),\\
+&\left.\begin{aligned} f&=R(s.\mathrm{value})\\
+                        p&=A(s.\mathrm{value})\end{aligned}\right\}
+ \text{ declared parallel},\\
+&j=\{\mathrm{defeater\_assessment}=f.\mathrm{value},\;
+       \mathrm{repair\_options}=p.\mathrm{value}\},\qquad d=E(j).
+\end{aligned}
+\]
+\texttt{review\_\allowbreak state} grounds the accumulated evidence in one formalized state.
+\texttt{defeater\_\allowbreak assessment} attacks that state to identify bounded defects,
+while \texttt{repair\_\allowbreak options} abductively proposes changes from the same state.
+The two branches are complementary, not competing votes.
+\texttt{Grounds\allowbreak Reorientation\allowbreak Alternatives} annotates both dependencies and makes
+explicit that their point of departure is shared.
+\texttt{reorientation\_\allowbreak decision} then calibrates the response using both named
+fields of $J$. \texttt{Calibrates\allowbreak Reorientation\allowbreak Decision} records this joined
+assessment boundary. The relation records express declared dependencies, not a
+proof that a suggested repair resolves the defeater. Importantly, the repair
+branch does not consume $f$: a repair proposed in parallel still has to be judged
+against the defeater at the join.
+
+For a constructed example, one review sees a promising correlation-decay
+calculation, while another finds that the chosen observables miss a possible
+low-energy sector. The disagreement is resolved by identifying its object: the
+calculation may be valid for a visible sector while the global conclusion lacks
+density. Reflection records a sharpening of the obstruction, not a completed gap
+proof. Repair must construct a sufficiently rich observable class or restrict the
+claim; simply collecting more decay curves would not address the defeater.
+The output pairs a decision explanation with repair-assigned,
+conceptual-reorientation-required, or stalled disposition. Original control routes
+the first two to target navigation or conceptual hypothesis exploration and stops
+on stall. Native reasoning returns the wrapped assessment; declared parallelism
+and routing do not establish an observed execution.
+
+\input{paper-workflow-representations/steps/deep_review_and_reorientation.tex}
+
+\subsection{Contribution cultivation: test what a result enables}
+\label{app:granular-scientific-contribution-cultivation}
+The linked contribution skills separate finding a useful object from judging
+its value and its effect on the target. Detection asks whether a subresult can
+stand alone as a bridge, obstruction, reusable method or explanatory reframing,
+then tests the smallest proposed claim against prior art, hidden premises and
+proxy drift. Value assessment compares what would remain unknown without the
+result, distinguishing exploration payoff from paper readiness. Alignment asks
+whether the source object can feed the original target through a stated transfer;
+enablement compares the precondition before the result with the postcondition
+actually consumed by a next proof, falsifier or route decision. A beautiful local
+calculation can therefore be valuable yet non-enabling, while a negative result
+can enable a decisive pivot. The named contract explicitly separates these
+assessments; they refine the meaning of the three native occurrences rather than
+adding undocumented operations to that topology.
+
+A supported result does not determine its scientific contribution by itself.
+Contribution cultivation proposes an interpretation, challenges it, and assesses
+readiness without inflating novelty. Let $S,H,T,J,Q$ abbreviate
+\texttt{Result\allowbreak Atlas\allowbreak Slice}, \texttt{Scientific\allowbreak Contribution\allowbreak Hypothesis},
+\texttt{Contribution\allowbreak Support\allowbreak Assessment}, \texttt{Contribution\allowbreak Readiness\allowbreak Input},
+and \texttt{Contribution\allowbreak Readiness\allowbreak Assessment}:
+\[
+\begin{aligned}
+&A:S\to\operatorname{Generated}[H],\qquad
+ R:H\to\operatorname{Generated}[T],\qquad
+ E:J\to\operatorname{Generated}[Q],\\
+&h=A(s),\qquad t=R(h.\mathrm{value}),\\
+&j=\{\mathrm{contribution\_hypothesis}=h.\mathrm{value},\;
+       \mathrm{support\_assessment}=t.\mathrm{value}\},\qquad q=E(j).
+\end{aligned}
+\]
+Occurrence \texttt{a0} abductively interprets the result as a candidate
+contribution. Occurrence \texttt{r0} tests whether the result supports that
+interpretation, under \texttt{Tests\allowbreak Contribution\allowbreak Hypothesis}. Occurrence
+\texttt{e0} retains both interpretation and assessment at the named join and
+calibrates readiness under \texttt{Calibrates\allowbreak Contribution\allowbreak Readiness}. The first
+relation marks a test dependency; the second marks a calibration dependency.
+Neither supplies missing evidence merely by being declared. The output contains
+a disposition together with \texttt{Contribution\allowbreak Value\allowbreak Assessment},
+\texttt{Main\allowbreak Problem\allowbreak Alignment\allowbreak Audit}, and \texttt{Enablement\allowbreak Audit}. These are returned
+components, not three additional declared operation occurrences. Notice that
+$q.\mathrm{value}$ unwraps \texttt{Generated}, whereas the assessment's own
+\texttt{value} field denotes the contribution-value audit.
+
+For a constructed example, cycle graphs show that connectedness alone cannot
+support a spectral-gap lower bound uniform in graph size. An initial contribution
+hypothesis might claim a general obstruction to fast diffusion. Testing rejects
+that breadth: the result obstructs the uniform claim for the stated family and
+assumptions. A defensible contribution can instead identify the missing structural
+condition, align it with the uniform-decay problem, and enable a sharper search
+for sufficient assumptions. Readiness still requires support for significance;
+this illustration establishes neither novelty nor publication merit.
+Original control stops when \texttt{r0} is refuted, routes paper-ready to
+\texttt{manuscript\_\allowbreak result\_\allowbreak elaboration}, and stops on stall. The native sequence
+always displays \texttt{e0} after \texttt{r0} and returns its wrapped assessment;
+its handoff and stop comments are explicitly non-executable. A refuted
+interpretation therefore must not be narrated as necessarily reaching the native
+full-path calibration in the original policy.
+
+\input{paper-workflow-representations/steps/scientific_contribution_cultivation.tex}
+

@@ -1,0 +1,133 @@
+\section{Product--log and heat-kernel estimates}\label{app:heat-kernel}
+
+\subsection{A normed-algebra logarithm}
+
+Let $\mathbb H$ carry its Euclidean quaternion norm, which is
+submultiplicative and in fact multiplicative.  If $z=1+h$ and $\norm h<1$,
+the power series for $\log(1+h)$ gives
+\begin{equation}\label{eq:log-derivatives}
+ \norm{D\log z}\le\frac1{1-\norm h},\quad
+ \norm{D^2\log z}\le\frac1{(1-\norm h)^2},\quad
+ \norm{D^3\log z}\le\frac2{(1-\norm h)^3}.
+\end{equation}
+Indeed, after differentiating $h^n/n$, the ordered insertion counts are
+$1$, $n-1$, and $(n-1)(n-2)$; their geometric sums are the right sides of
+\eqref{eq:log-derivatives}.
+
+For $P(a_1,\ldots,a_m)=\prod_i\exp a_i$ with the direct-sum input norm,
+the iterated Duhamel formula and Cauchy--Schwarz give
+\[
+ \norm{D^kP}\le m^{k/2},\qquad k=1,2,3.
+\]
+Furthermore,
+$\norm{P-1}\le\sum_i\norm{\exp a_i-1}\le\sqrt m\,\norm a$.
+Composing with \eqref{eq:log-derivatives}, setting $m=4$, and integrating the
+second derivative from the origin proves Lemma~\ref{lem:product-log}.
+
+For global directions $h,k,\ell$, extraction counting gives
+\begin{align*}
+ \sum_p\norm{E_ph}^2&\le6\norm h^2,\\
+ \sum_p\norm{E_ph}\norm{E_pk}\norm{E_p\ell}
+ &\le6\norm h\norm k\norm\ell.
+\end{align*}
+The second line follows by applying Cauchy--Schwarz twice and using
+$\max_p\norm{E_ph}\le\norm h$.
+
+\subsection{The local $\SUtwo$ heat kernel}
+
+For generator $\frac12\Delta$ on the unit three-sphere, the radial heat kernel
+has the Poisson-image form, up to a positive factor depending only on $t$,
+\begin{equation}\label{eq:poisson-image}
+ p_t(\theta)=\frac1{\sin\theta}
+ \sum_{k\in\mathbb Z}(\theta+2\pi k)
+ \exp\left[-\frac{(\theta+2\pi k)^2}{2t}\right],
+ \qquad 0\le\theta<\pi.
+\end{equation}
+Factoring out the zero image gives
+\[
+ p_t(\theta)=c_t\frac{\theta}{\sin\theta}
+ e^{-\theta^2/(2t)}(1+q_t(\theta)).
+\]
+Pairing $k$ and $-k$, with $a=2\pi k$, writes their contribution to $q_t$ as
+\begin{equation}\label{eq:paired-image}
+ 2e^{-a^2/(2t)}
+ \left[\cosh\left(\frac{a\theta}{t}\right)
+ -\frac a\theta\sinh\left(\frac{a\theta}{t}\right)\right].
+\end{equation}
+Put $u=a\theta/t$ and $b=a^2/t$.  Since
+$\sinh u/u=\int_0^1\cosh(su)\dd s$, the bracket in
+\eqref{eq:paired-image} equals
+\[
+ \cosh u-b\int_0^1\cosh(su)\dd s.
+\]
+This representation is entire and even, so the apparent singularity is
+removable.  After $j$ derivatives, $0\le j\le3$, its absolute value is at most
+\[
+ \left(\frac at\right)^j e^{a\theta/t}
+ \left(1+\frac{a^2}{(j+1)t}\right).
+\]
+
+We record the elementary tail argument used for the certified rectangle.  If
+$0\le\theta\le1/50000$, $0<t\le10^{-18}$, and $a\ge2\pi>6$, then
+\[
+ \frac{a^2-2a\theta}{2t}>\frac{17}{t}.
+\]
+Using also $a<7k$, the paired contribution satisfies
+\[
+ |q_{t,k}^{(j)}(\theta)|
+ \le 2e^{-17k^2/t}\left(\frac{7k}{t}\right)^j
+ \left(1+\frac{49k^2}{t}\right).
+\]
+Use
+\[
+ e^{-x}\le\frac{8!}{x^8},\qquad x>0,
+\]
+with $x=17k^2/t$.  For $j\le3$ this leaves powers no worse than
+$k^{-11}$ and a factor no worse than $t^4$.  Since
+$\sum_{k\ge1}k^{-11}<1+\int_1^\infty s^{-11}\dd s=11/10$,
+exact rational comparison at $t=10^{-18}$ yields
+\begin{equation}\label{eq:image-small}
+ \max_{0\le j\le3}\sup_{\theta,t}
+ \left|\frac{\dd^j}{\dd\theta^j}q_t(\theta)\right|<10^{-70}.
+\end{equation}
+The certificate uses the weaker bound $1$; \eqref{eq:image-small} shows that
+all denominators $1+q_t$ remain positive.
+
+The geometric remainder is
+\[
+ \phi(\theta)=\log\frac{\sin\theta}{\theta}.
+\]
+Alternating Taylor bounds for sine and cosine on
+$[0,1/50000]$ give, for the associated smooth radial function on $\R^3$,
+\[
+ \norm{D\phi(x)}\le\norm x,\qquad
+ \norm{D^2\phi(x)}\le1,\qquad
+ \norm{D^3\phi(x)}\le1.
+\]
+For an even radial function, the Euclidean Hessian and third derivative are
+controlled by its first three radial derivatives: $f'(r)/r$ is an average of
+$f''$ and $(f''-f'/r)/r$ is bounded by a radial third-derivative supremum.
+Combining this observation with \eqref{eq:image-small} and
+$-t\log p_t=\norm x^2/2+t\phi-t\log(1+q_t)+c_t$ proves the heat-kernel part
+of Lemma~\ref{lem:heat-init} with the deliberately relaxed constants $2$ and
+$10$.
+
+Finally, $-\log j=-2\phi$.  The same Taylor inequalities give Hessian norm
+at most $1$ and third derivative norm at most $2$ on the link ball.
+
+\subsection{Block chain rule}
+
+For one plaquette, the principal term obeys
+\[
+ D^2\tfrac12\norm X_p^2=(DX_p)^{\mathsf T}DX_p+\ip{X_p}{D^2X_p}.
+\]
+The first term differs from the linear curvature Hessian by at most
+$\kappa(2\sqrt{12}+\kappa)$ after block aggregation.  The second contributes
+$6(2r)M_2$.  The heat remainder contributes
+$2t(\sqrt{12}+\kappa)^2+6(4rt)M_2$, and logarithmic Haar contributes $t$.
+This is \eqref{eq:eta-bound}.  The third-order chain rule has the three terms
+\[
+ 10tM_1^3,\qquad 3(1+2t)M_1M_2,\qquad (2r+4rt)M_3,
+\]
+whose block aggregation factor is six; logarithmic Haar adds $2t$.  This is
+\eqref{eq:tau-bound}.

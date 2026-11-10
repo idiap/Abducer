@@ -1,0 +1,48 @@
+# lunar-runtime: {"declaration":"MaterializedReleasePromotionLoop","entry_argument":"promotion_evidence","execute_hook":"abducer-workflow-execute","id":"release_promotion_loop","input_schema":{"additionalProperties":false,"default":{"evidence_ref":"KB/markov-kakutani-fixed-point-theorem.kb.md","run_id":"markov-kakutani-review-01"},"properties":{"evidence_ref":{"default":"KB/markov-kakutani-fixed-point-theorem.kb.md","maxLength":16000,"minLength":1,"type":"string"},"run_id":{"default":"markov-kakutani-review-01","maxLength":16000,"minLength":1,"type":"string"}},"required":["run_id","evidence_ref"],"type":"object"},"metadata":{"completion_contract":{"allowed_final_statuses":["passed","completed"],"forbid_blockers":true,"reasoning_complete":true,"reasoning_events_min":4,"terminal_state":"completed"},"description":"issue a claim-conserving promotion, repair, or rejection disposition","model_required":true,"network_required":false,"provenance_contract":{"agent_invocations":[{"activated_skill_ids":["looper-release-promoter"],"agent_name":"release_proposal_material_agent","workflow_occurrence":"release_proposal"},{"activated_skill_ids":["epistemic-status-ledger"],"agent_name":"promotion_disposition_material_agent","workflow_occurrence":"promotion_disposition"}],"required_source_reads":[]},"reasoning_contract":{"steps":["release_proposal","promotion_disposition"],"workflow":"ReleasePromotionLoop"},"reasoning_required":true,"required_host_capabilities":["model","prism-engine","reasoning-events"],"scientific_truth_verified":false,"semantic_mode":"operational-model-generated","source_materialization_status":"blocked_unresolved_projection_gap","timeout_seconds":1800},"output_schema":{"additionalProperties":false,"properties":{"analysis_results":{"type":"object"},"compact_prism_input":{"type":"object"},"markdown":{"minLength":1,"type":"string"},"narrative_slots":{"type":"array"},"report_verification":{"properties":{"reasoning_complete":{"const":true},"status":{"const":"passed"}},"required":["status","reasoning_complete"],"type":"object"},"structured_value":{"properties":{"execution_provenance":{"type":"object"},"final_disposition":{"properties":{"blockers":{"maxItems":0,"type":"array"},"reasoning_complete":{"const":true},"status":{"const":"passed"}},"required":["status","reasoning_complete","blockers"],"type":"object"},"reasoning_result":{"type":"object"}},"required":["final_disposition","reasoning_result","execution_provenance"],"type":"object"}},"required":["markdown","structured_value","analysis_results","compact_prism_input","narrative_slots","report_verification"],"type":"object"},"prepare_hook":"abducer-workflow-prepare","verify_hook":"abducer-workflow-verify"}
+
+# Host-executed material graph for the complete reviewed reasoning path.
+# Generated values retain the source epistemic boundary and are not native proof or experiment receipts.
+
+from types import (
+    ClaimBoundedReleaseProposal,
+    PromotionEvidencePacket,
+    ReleasePromotionDisposition,
+)
+
+from generated.promotion_disposition_skill_1 import promotion_disposition_skill_1
+from generated.release_proposal_skill_1 import release_proposal_skill_1
+
+# Real model capability for source occurrence release_proposal:UnresolvedReleaseProposalProjection.
+agent release_proposal_material_agent(
+    task: PromotionEvidencePacket,
+) -> Result[Generated[ClaimBoundedReleaseProposal], ModelFailure]
+    ! {AI.Generate, Context.Disclose}:
+    skills: Skills[PromotionEvidencePacket] = [release_proposal_skill_1]
+
+# Real model capability for source occurrence promotion_disposition:EvidentialReleasePromotionDispositionAssessment.
+agent promotion_disposition_material_agent(
+    task: ClaimBoundedReleaseProposal,
+) -> Result[Generated[String], ModelFailure]
+    ! {AI.Generate, Context.Disclose}:
+    skills: Skills[ClaimBoundedReleaseProposal] = [promotion_disposition_skill_1]
+
+workflow MaterializedReleasePromotionLoop(
+    promotion_evidence: PromotionEvidencePacket,
+) -> Generated[String]
+    fails ModelFailure
+    ! {AI.Generate, Context.Disclose}:
+    sequence:
+        # Proposal formation is claim-conserving and adds no epistemic warrant.
+        [release_proposal: release_proposal_material_agent(promotion_evidence)]
+        # The gate evaluates the bounded proposal and emits the cross-workflow route.
+        [promotion_disposition: promotion_disposition_material_agent(release_proposal.value)]
+
+    return promotion_disposition
+
+
+def main(
+    promotion_evidence: PromotionEvidencePacket,
+    model_access: ModelGenerate,
+    disclosure: ContextDisclose,
+) -> Result[Generated[String], ModelFailure] ! {AI.Generate, Context.Disclose}:
+    return solve MaterializedReleasePromotionLoop(promotion_evidence)

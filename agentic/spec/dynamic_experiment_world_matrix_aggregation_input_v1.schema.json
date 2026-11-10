@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://abducer.local/spec/dynamic_experiment_world_matrix_aggregation_input_v1.schema.json",
+  "title": "Exact committed inputs to five-world aggregation",
+  "description": "The aggregation producer must consume this ordered, path-free commit vector. It cannot receive caller-supplied observation envelopes as substitute authority.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "input_kind",
+    "programme_id",
+    "target_id",
+    "run_id",
+    "commission_id",
+    "commission_digest",
+    "anchor_commit",
+    "observation_commits",
+    "world_ids",
+    "input_digest"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "input_kind": {"const": "ordered_committed_world_matrix_inputs"},
+    "programme_id": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/identifier"},
+    "target_id": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/identifier"},
+    "run_id": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/identifier"},
+    "commission_id": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/identifier"},
+    "commission_digest": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/digest"},
+    "anchor_commit": {"$ref": "./discovery_commit_reference.schema.json"},
+    "observation_commits": {
+      "type": "array",
+      "minItems": 5,
+      "maxItems": 5,
+      "items": {"$ref": "./discovery_commit_reference.schema.json"}
+    },
+    "world_ids": {"const": ["no_probe", "neutral_inconclusive", "misleading_toy_positive", "registered_premise_falsifier", "operational_failure"]},
+    "input_digest": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/digest"}
+  }
+}

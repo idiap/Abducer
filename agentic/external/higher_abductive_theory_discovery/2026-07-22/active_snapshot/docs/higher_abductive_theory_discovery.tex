@@ -1,0 +1,1794 @@
+\documentclass[11pt]{article}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage[a4paper,margin=28mm]{geometry}
+\usepackage{microtype}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{xurl}
+\usepackage{hyperref}
+
+\definecolor{linkblue}{RGB}{30,70,130}
+\definecolor{codebg}{RGB}{247,248,250}
+\definecolor{codeframe}{RGB}{210,214,220}
+\hypersetup{
+  colorlinks=true,
+  linkcolor=linkblue,
+  citecolor=linkblue,
+  urlcolor=linkblue,
+  pdftitle={Higher Abductive Theory Discovery},
+  pdfauthor={Concept paper}
+}
+
+\lstdefinestyle{spec}{
+  basicstyle=\ttfamily\footnotesize,
+  backgroundcolor=\color{codebg},
+  frame=single,
+  rulecolor=\color{codeframe},
+  breaklines=true,
+  columns=fullflexible,
+  keepspaces=true,
+  showstringspaces=false,
+  xleftmargin=0.5em,
+  xrightmargin=0.5em,
+  aboveskip=0.7em,
+  belowskip=0.7em
+}
+
+\setlist[itemize]{leftmargin=1.6em,itemsep=0.25em,topsep=0.35em}
+\setlist[enumerate]{leftmargin=1.8em,itemsep=0.3em,topsep=0.35em}
+\renewcommand{\arraystretch}{1.18}
+
+\newtheorem{definition}{Definition}[section]
+\newtheorem{principle}[definition]{Principle}
+\newtheorem{proposition}[definition]{Proposition}
+\newtheorem{remark}[definition]{Remark}
+
+\newcommand{\Th}{\mathbf{Th}}
+\newcommand{\Cat}{\mathbf{Cat}}
+\newcommand{\Mod}{\mathsf{Mod}}
+\newcommand{\Obs}{\mathsf{Obs}}
+\newcommand{\Scope}{\mathsf{Scope}}
+\newcommand{\Evidence}{\mathsf{Evidence}}
+\newcommand{\Rel}{\mathsf{Rel}}
+\newcommand{\Press}{\mathsf{Press}}
+\newcommand{\Comp}{\mathsf{Comp}}
+\newcommand{\Gen}{\mathsf{Gen}}
+\newcommand{\Val}{\mathsf{Val}}
+\newcommand{\Cl}{\mathsf{Cl}}
+\newcommand{\Def}{\mathsf{Def}}
+\newcommand{\Cost}{\mathsf{Cost}}
+\newcommand{\id}{\mathrm{id}}
+
+\title{\textbf{Higher Abductive Theory Discovery}\\
+\large A Categorical and Homotopical Framework for Relevance-Guided Generative Reasoning}
+\author{Conceptual research programme}
+\date{July 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+This paper develops a framework for systematic theory discovery across mathematics and physics.
+The central proposal is to represent partial theories, models, observations, and transformations as
+a higher theory atlas. Category theory supplies the grammar of composition, interpretation, and
+universal construction; homotopy type theory supplies a proof-relevant treatment of identity,
+equivalence, deformation, and higher coherence. Abduction is then formulated as the constrained
+completion of defective diagrams: missing representing objects, noncommuting translations, failed
+descent, absent adjoints, broken factorisations, and unresolved obstructions become mathematically
+structured locations at which a new concept may enter.
+
+Completion alone, however, cannot distinguish a scientifically important discovery from an elegant
+but sterile mathematical construction. We therefore introduce a relevance layer. A research context
+induces a field of conceptual pressures over the atlas: empirical anomalies, proof bottlenecks,
+explanatory fragmentation, duplicated structure, representational instability, and pragmatic needs.
+A philosophical-reflective generative layer reconstructs the meaning, inferential role, operational
+anchors, and modal commitments of concepts at essential points of fragmentation before those
+pressures are compiled into formal defects. A generative element then proposes typed theory
+transformations. Candidates are evaluated by separate operators for unblocking relevance, explanatory
+power, unification power, predictive yield, theorem transport, pragmatic value, conceptual necessity,
+robustness, and concrete return. Relevance guides search but does not establish truth; proof, model
+construction, simulation, counterexample search, and experiment remain independent validation
+channels. The paper concludes with an implementation-grade agentic architecture: typed skills, data
+contracts, workflows, validation boundaries, storage and prover adapters, evaluation procedures, and
+a staged construction programme. The strongest attainable guarantee remains relative: within an
+explicit theory atlas and operator grammar, the system can identify, compare, instantiate, and test
+minimal high-leverage transformations, while diagnosing when progress requires a revision of the
+representation space itself.
+\end{abstract}
+
+\tableofcontents
+\newpage
+
+\section{Motivation}
+
+The discovery of a new theory is rarely a matter of unconstrained invention. It usually takes place
+inside a partially mapped conceptual field. Several descriptions work in restricted regimes; recurring
+calculations suggest a common structure; local models fail to assemble globally; two mature theories
+make incompatible identifications; or a proof programme repeatedly reaches the same obstruction.
+Creative work consists partly in recognizing what kind of missing concept would reorganize these
+pressures into a more coherent whole.
+
+There are therefore two complementary problems:
+\begin{enumerate}
+  \item How can a machine represent and reason over a space of theories, models, transformations,
+  and equivalences without reducing it to an untyped semantic graph?
+  \item How can it determine which formally available completion matters for the actual mathematical
+  or physical problem?
+\end{enumerate}
+
+Category theory is well suited to the first problem because it treats relations, translations,
+composition, and universal properties as primary. Homotopy type theory (HoTT) enriches this picture
+by making identity proof-relevant and by retaining transformations between transformations
+\cite{hottbook}. Neither discipline, by itself, answers the second problem. A category contains many
+possible completions, most of which have no scientific importance. Relevance must therefore be made
+an explicit component of the discovery architecture.
+
+The thesis of this paper is:
+
+\begin{quote}
+\emph{Theory discovery can be organized as relevance-guided search for semantics-preserving
+completions of structured defects in a higher theory atlas, together with controlled revision of the
+atlas when its existing representational grammar becomes the obstacle.}
+\end{quote}
+
+This formulation is deliberately weaker than the claim that all conceptual discovery can be
+mechanized. It does not presuppose an absolute category of every possible theory or an exhaustive
+metric of explanatory value. It instead makes the scope, transformations, pressures, and evaluative
+commitments explicit, so that both the power and the limits of the reasoner can be examined.
+
+\section{The higher theory atlas}
+
+\subsection{Theories as structured, scoped objects}
+
+A theory used for discovery must contain more than a signature and a set of axioms.
+
+\begin{definition}[Theory fragment]
+A theory fragment is a structured object
+\begin{equation}
+T=(\Sigma,A,\Mod,\Obs,\Scope,\Evidence),
+\end{equation}
+where:
+\begin{itemize}
+  \item $\Sigma$ contains types, concepts, symbols, and admissible constructions;
+  \item $A$ contains axioms, laws, constraints, dynamics, and inference rules;
+  \item $\Mod(T)$ is the category or higher groupoid of models and model maps;
+  \item $\Obs(T)$ specifies observables, measurements, computational outputs, or target judgments;
+  \item $\Scope(T)$ specifies regimes, scales, idealizations, background conditions, and approximation
+  status;
+  \item $\Evidence(T)$ links claims to proofs, examples, counterexamples, simulations, and experiments.
+\end{itemize}
+\end{definition}
+
+For mathematics, $\Obs(T)$ may contain canonical invariants, decision problems, and conjectures.
+For physics, it includes the operational bridge from formal states to quantities that can be measured
+or computed. Scope is essential in both cases: a low-energy effective theory, a finite-dimensional
+theorem, and an asymptotic approximation must not be treated as unrestricted claims.
+
+\subsection{Morphisms and higher cells}
+
+Let $\Th$ denote a category, bicategory, double category, or $(\infty,1)$-category of theory
+fragments. A theory morphism
+\begin{equation}
+f:T\longrightarrow T'
+\end{equation}
+interprets the vocabulary and validated structure of $T$ inside $T'$. It induces a contravariant
+operation on models,
+\begin{equation}
+f^*:\Mod(T')\longrightarrow \Mod(T).
+\end{equation}
+
+This separates the translation of theoretical language from the migration of models. The MMT
+framework already treats formal knowledge as modular theories related by theory morphisms and
+mediates across different logical foundations \cite{rabe2016}. Generalized algebraic theories provide
+a restricted computational setting in which theory morphisms and model migration can be implemented
+declaratively \cite{gatlab}.
+
+An ordinary directed graph is insufficient because several scientifically different relations must be
+distinguished. A practical atlas can be organized as a double category:
+\begin{itemize}
+  \item horizontal morphisms represent translations, dualities, changes of description, and exact
+  representation maps;
+  \item vertical morphisms represent specialization, approximation, refinement, coarse-graining, and
+  limiting regimes;
+  \item squares state that a translation is compatible with a refinement;
+  \item higher cells compare alternative compatibility proofs.
+\end{itemize}
+
+The atlas must also retain partiality. Two theories may overlap on only a sublanguage, a morphism may
+be defined only in one regime, and a comparison may commute only up to a controlled approximation.
+Forcing every relationship to be total would manufacture false unifications.
+
+\subsection{The role of homotopy type theory}
+
+HoTT contributes a disciplined treatment of equivalence and coherence:
+\begin{enumerate}
+  \item Identity types retain the paths by which two structures are identified.
+  \item Higher identity types compare identifications themselves.
+  \item Univalence permits equivalent structures to be identified at the appropriate level, reducing
+  duplication by presentation.
+  \item Higher inductive types permit free construction by generators, relations, and explicit gluing.
+  \item Truncations control how much higher information is retained.
+  \item Modalities can distinguish exact from approximate, local from global, classical from quantum,
+  or Euclidean from Lorentzian contexts.
+\end{enumerate}
+
+HoTT should not be imposed uniformly. Many useful theory graphs can be implemented using dependent
+type theory and ordinary categorical structures. Higher structure is justified when multiple paths of
+translation, deformation, or gluing are themselves part of the scientific content.
+
+\section{Abduction as defect-driven completion}
+
+Let
+\begin{equation}
+D:J\longrightarrow\Th
+\end{equation}
+be a diagram representing a mapped collection of theory fragments. An opportunity for discovery is
+not simply an empty location in a graph. It is a typed defect: a failure of a desired structural or
+semantic property.
+
+\begin{definition}[Completion problem]
+A completion problem is a tuple
+\begin{equation}
+\mathcal{O}=(D,\delta,\mathcal{K},C),
+\end{equation}
+where $D$ is a theory diagram, $\delta$ is a detected defect, $\mathcal{K}$ is an admissible class of
+extensions, and $C$ contains semantic, evidential, and scope constraints. A candidate solution is an
+extension $D\hookrightarrow\widehat D$ in $\mathcal{K}$ that removes or explains $\delta$ while
+respecting $C$.
+\end{definition}
+
+The main defect--completion operators are summarized in Table~\ref{tab:defects}.
+
+\begin{table}[ht]
+\centering
+\small
+\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{0.20\textwidth}
+>{\raggedright\arraybackslash}p{0.23\textwidth}
+>{\raggedright\arraybackslash}p{0.24\textwidth}
+X}
+\toprule
+Detected defect & Categorical question & Abductive proposal & Validation demand \\
+\midrule
+Recurrent natural family without a corresponding object & Is the functor representable? & New object, state, field, invariant, or space & Prove the universal property and construct models \\
+Two equivalent paths disagree & Is a natural transformation, homotopy, or correction term missing? & Coupling, interaction, contextual dependency, or coherence law & Prove coherence and identify observable consequences \\
+Local models agree but fail to assemble globally & What is the descent or cohomological obstruction? & Topological sector, anomaly, boundary datum, or global degree of freedom & Compute the obstruction and recover local behavior \\
+Theories share an interface but remain separate & Does a pushout or homotopy pushout give a joint extension? & Unifying theory or common generative core & Show model existence and conservative recovery of inputs \\
+Theorem transport fails across scale or representation & Is an adjoint, Kan extension, lift, or error object missing? & Effective variable, renormalization law, or controlled approximation & Establish transport bounds and limiting cases \\
+Many derivations factor through an unnamed structure & Is there a universal factorization? & Mediating concept or organizing principle & Demonstrate uniqueness, compression, and new consequences \\
+An expected exactness or lifting property fails & Which obstruction measures the failure? & New invariant or no-go principle & Prove necessity and exhibit discriminating examples \\
+\bottomrule
+\end{tabularx}
+\caption{Defect-driven generators of candidate concepts.}
+\label{tab:defects}
+\end{table}
+
+These operators make creativity constrained rather than mechanical. A pushout of signatures, for
+example, is not automatically a unification: the combined theory may have no models or may destroy
+the validated meaning of its components. A homotopy pushout records richer identifications, but it
+still requires a semantic interpretation.
+
+\subsection{Abductive admissibility}
+
+Suppose $T$ is a base theory and $E$ an unexplained observation, partial model, or proof demand. An
+abductive proposal is an extension
+\begin{equation}
+i:T\longrightarrow T_H.
+\end{equation}
+It is initially admissible only when:
+\begin{enumerate}
+  \item $\Mod(T_H)$ is nonempty;
+  \item there exists $M_H\in\Mod(T_H)$ whose reduct $i^*M_H$ agrees with the validated part of $E$;
+  \item $i$ is conservative over protected content, or every revision is made explicit;
+  \item $T_H$ entails consequences not already encoded in $E$;
+  \item at least one path exists from these consequences to concrete proofs, models, calculations,
+  interventions, or experiments.
+\end{enumerate}
+
+Abduction proposes what would make the diagram work. Deduction determines what accepting the
+proposal commits us to. Model construction establishes realizability. Falsification and experiment
+test whether the commitment is borne by the intended world.
+
+\section{Why completion mechanics are insufficient}
+
+A category may contain indefinitely many completions, universal constructions, adjoints, and formal
+factorizations. Most are irrelevant to the research problem. Three distinctions are therefore
+fundamental.
+
+\subsection{Truth, relevance, and novelty}
+
+Truth and relevance are not interchangeable. A hypothesis can be highly relevant and false; a
+theorem can be true and irrelevant to the target question. Novelty is also independent: a new formal
+construction may be correct but explanatorily empty.
+
+The architecture must enforce a separation of powers:
+\begin{equation}
+\text{generation and relevance routing}
+\quad\neq\quad
+\text{formal or empirical validation}.
+\end{equation}
+
+The generative component is allowed to be speculative. It is not allowed to certify its own output.
+
+\subsection{Relevance is conditional}
+
+There is no context-free ranking of theoretical importance. Relevance is conditional on a research
+context
+\begin{equation}
+Q=(q,\mathcal{E},\mathcal{S},\mathcal{B},\mathcal{V}),
+\end{equation}
+where $q$ is the target question, $\mathcal{E}$ the accepted evidential standards, $\mathcal{S}$ the
+protected scope, $\mathcal{B}$ the computational or experimental budget, and $\mathcal{V}$ the
+research values and intended uses. Thus
+\begin{equation}
+\Rel(H\mid Q,D,E)
+\end{equation}
+is meaningful, whereas an absolute $\Rel(H)$ generally is not.
+
+\subsection{Universality is relative to representation}
+
+Every universal construction is universal relative to selected objects and morphisms. A poor atlas can
+make an unimportant object appear universal or prevent an important concept from being expressible.
+The reasoner must consequently distinguish completion within an atlas from revision of the atlas.
+
+\section{Conceptual pressures}
+
+\subsection{Pressures as typed demands}
+
+A conceptual pressure is evidence that the present theory organization is inadequate relative to $Q$.
+It is not necessarily a contradiction. It may be inefficiency, fragmentation, fragility, or unrealized
+opportunity.
+
+\begin{definition}[Pressure item]
+A pressure item is
+\begin{equation}
+p=(s,\tau,c,\rho,w,d),
+\end{equation}
+where $s$ is its location in the atlas, $\tau$ its type, $c$ its scope and context, $\rho$ its evidential
+reliability, $w$ its importance relative to $Q$, and $d$ the data, proof state, or argument supporting it.
+\end{definition}
+
+Important pressure types include:
+\begin{description}[leftmargin=2.6cm,style=nextline]
+  \item[Empirical pressure.] An anomaly, unexplained regularity, failed prediction, or measurement that
+  separates otherwise plausible theories.
+  \item[Inferential pressure.] A blocked proof, repeated lemma pattern, unresolved dependence, or
+  computational bottleneck.
+  \item[Structural pressure.] Noncommutation, failure of naturality, failed gluing, nonexactness, or an
+  unrepresented functor.
+  \item[Explanatory pressure.] Many independent laws or mechanisms account for related phenomena
+  without explaining why they co-occur.
+  \item[Unification pressure.] Parallel constructions, duplicated axioms, or recurring translations suggest
+  a shared generative structure.
+  \item[Representational pressure.] Results depend excessively on coordinates, presentation, gauge,
+  encoding, or an unstable distinction between concepts.
+  \item[Generative pressure.] A theory accommodates known cases but yields few new questions,
+  predictions, or transferable methods.
+  \item[Pragmatic pressure.] A decision, intervention, experiment, computation, or design task cannot be
+  resolved efficiently by the present framework.
+\end{description}
+
+\subsection{Pressure as a context-indexed covector}
+
+Let $\Def_D$ denote admissible local changes or completions of a diagram $D$. Conceptually, a pressure
+acts like a covector: it evaluates how relevant a possible movement in theory space would be. In a
+discrete implementation, this is simply a valuation
+\begin{equation}
+\pi_Q:\Def_D\longrightarrow V,
+\end{equation}
+where $V$ is a partially ordered space of relevance dimensions. In a geometric or derived setting,
+$\Def_D$ may be replaced by a tangent complex or deformation object.
+
+The pairing
+\begin{equation}
+\langle \pi_Q,h\rangle
+\end{equation}
+measures the expected relief or leverage of a candidate deformation $h$. This gives mathematical
+content to the phrase ``follow the conceptual pressure'' without assuming that theory space is a
+smooth manifold.
+
+Alternatively, define a pressure functional
+\begin{equation}
+\Phi_Q(D)=\sum_{j}\lambda_j\phi_j(D),
+\end{equation}
+where the $\phi_j$ measure unresolved observations, blocked dependencies, duplicated assumptions,
+representational sensitivity, and pragmatic cost. A completion $h:D\to D_h$ has pressure-relief vector
+\begin{equation}
+\Delta\Phi_Q(h)=\Phi_Q(D)-\Phi_Q(D_h).
+\end{equation}
+This quantity guides attention; it does not prove that $D_h$ is correct.
+
+\subsection{From informal pressure to a formal defect}
+
+The interpretation of pressure is itself generative. Scientific problems are usually stated in natural
+language, equations, proof traces, simulation outputs, and expert disagreements rather than as labeled
+categorical diagrams. Table~\ref{tab:pressure} gives typical translations.
+
+\begin{table}[ht]
+\centering
+\small
+\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{0.29\textwidth}
+>{\raggedright\arraybackslash}p{0.30\textwidth}X}
+\toprule
+Observed conceptual pressure & Candidate formal diagnosis & Generative questions \\
+\midrule
+The same ad hoc construction appears in unrelated proofs & Missing universal factor or representing object & What are all instances natural in? Through what minimal object do they factor? \\
+Equivalent descriptions lead to different conclusions & Noncommuting square or missing higher coherence & Which path-dependent residue remains? Is it observable or representational? \\
+Local models work but no global model does & Failed descent or nontrivial obstruction & What cocycle, topology, boundary datum, or anomaly measures the failure? \\
+A parameter must be retuned independently at each scale & Missing naturality under scale change or incomplete effective variables & Is there an adjunction, flow, or latent invariant controlling the retuning? \\
+Several laws explain correlated phenomena independently & Explanatory fragmentation & Can the laws be derived as specializations of a common mechanism with fewer independent assumptions? \\
+A proof programme repeatedly stalls at the same interface & Dependency bottleneck or absent bridge theorem & What weakest lemma or interface semantics would close the largest downstream set? \\
+A formalism is elegant but yields no new calculation & Missing concrete-return morphism & Which observable, theorem, algorithm, or experiment would distinguish it from a relabeling? \\
+All completions inside the current vocabulary are fragile & Representational lock-in & Which object, morphism, identity criterion, or logic must be changed? \\
+\bottomrule
+\end{tabularx}
+\caption{Interpreting informal conceptual pressures as formal search opportunities.}
+\label{tab:pressure}
+\end{table}
+
+\section{A relevance calculus}
+
+\subsection{Three gates before ranking}
+
+Before assigning detailed scores, a candidate should pass three conjunctive gates:
+\begin{equation}
+\Rel_{\mathrm{gate}}(H\mid Q)
+=
+\Press_Q(H)\otimes
+\mathsf{Leverage}_Q(H)\otimes
+\mathsf{Return}_Q(H).
+\end{equation}
+
+Here $\otimes$ is a conjunction-like operation, such as a meet or geometric aggregation, chosen so
+that a near-zero value in any factor cannot be concealed by a large value elsewhere.
+\begin{itemize}
+  \item $\Press_Q(H)$ asks whether $H$ addresses a material, well-supported pressure.
+  \item $\mathsf{Leverage}_Q(H)$ asks whether resolving it affects important downstream structures.
+  \item $\mathsf{Return}_Q(H)$ asks whether the abstraction can be pushed back to concrete
+  consequences.
+\end{itemize}
+
+This prevents a highly connected but ungrounded abstraction from dominating the search merely because
+it creates many formal relationships.
+
+\subsection{A multi-objective relevance vector}
+
+Candidates that pass the gates are compared using
+\begin{equation}
+\mathbf{R}_Q(H)=
+\left(
+R_{\mathrm{ub}},R_{\mathrm{exp}},R_{\mathrm{uni}},R_{\mathrm{pred}},
+R_{\mathrm{trans}},R_{\mathrm{prag}},R_{\mathrm{nec}},R_{\mathrm{rob}}
+\,;\,
+-C_{\mathrm{comp}},-C_{\mathrm{frag}},-C_{\mathrm{aux}},-C_{\mathrm{risk}}
+\right).
+\label{eq:relevance-vector}
+\end{equation}
+
+The system should maintain a Pareto frontier rather than immediately collapsing
+\eqref{eq:relevance-vector} to one scalar. Scalarization is useful only after the research context and
+resource decision are explicit.
+
+\subsection{Unblocking relevance}
+
+Let $G_Q$ be a dependency hypergraph of open proof obligations, modeling tasks, experimental
+decisions, and downstream goals. Let $B_Q$ denote blocked nodes and $D_H$ the obligations directly
+resolved by $H$. Define
+\begin{equation}
+R_{\mathrm{ub}}(H)
+=
+\sum_{x\in \Cl_{G_Q}(D_H)\cap B_Q}w_Q(x)
+-\lambda\Cost_Q(H).
+\end{equation}
+
+The closure $\Cl_{G_Q}(D_H)$ captures indirect effects: a modest bridge lemma may be more relevant
+than a profound isolated theorem if it unlocks an entire proof chain. To avoid superficial gaming,
+an obligation counts as resolved only after the relevant proof, computation, or empirical test has
+actually passed.
+
+\subsection{Explanatory power}
+
+An explanation should do more than entail observations. It should reduce independent assumptions,
+identify a mechanism or structural necessity, support counterfactual reasoning, and distinguish cases
+that would otherwise be conflated. A schematic operator is
+\begin{align}
+R_{\mathrm{exp}}(H)
+=\;&\sum_{e\in\mathcal{E}_Q}w_e\,
+\mathsf{Derive}(H,e)
++\alpha\,\mathsf{Counterfactual}(H,e) \\
+&-\beta\,\mathsf{AuxiliaryAssumptions}(H,e)
+-\gamma\,\mathsf{Overfit}(H,e).
+\end{align}
+
+Explanatory compression resembles accounts of unification in which many phenomena are derived from a
+smaller set of argument patterns \cite{kitcher1981}, but compression alone is insufficient. A physical
+explanation must retain an operational connection to observables, and a mathematical explanation
+should illuminate why the result follows rather than merely shorten a proof term.
+
+\subsection{Unification power}
+
+Unification power is high when independent theories or derivations become specializations of a common
+structure and when nontrivial results can be transported through it. Define
+\begin{align}
+R_{\mathrm{uni}}(H)
+=\;&a\,\Delta\mathsf{DescriptionLength}(H)
++b\,\mathsf{SharedFactorization}(H) \\
+&+c\,\mathsf{CrossDomainTransport}(H)
+-d\,\mathsf{ForcedIdentifications}(H).
+\end{align}
+
+The last term penalizes unification obtained by erasing distinctions that matter empirically or
+mathematically. High unification value requires recoverability: the original theories should reappear as
+controlled specializations, images, limits, or sectors of the proposed framework.
+
+\subsection{Predictive and generative power}
+
+Let $\mathsf{Cons}(H)$ be the consequences generated from $H$ and let $\Cl(E)$ be the deductive or
+statistical closure of evidence used to construct it. Then
+\begin{equation}
+R_{\mathrm{pred}}(H)
+=\sum_{q\in\mathsf{Cons}(H)\setminus\Cl(E)}
+w_q\,\mathsf{Independence}(q,E)\,
+\mathsf{Discrimination}(q)\,
+\mathsf{Testability}(q).
+\end{equation}
+
+For pure mathematics, a prediction can be a new conjecture, a reusable lemma, a classification, a
+counterexample, or an algorithm. For physics, it should ideally identify a quantitative regime in which
+the proposal differs from live alternatives.
+
+\subsection{Theorem-transport relevance}
+
+A concept can be valuable because it turns a proof in one domain into a family of results elsewhere.
+If $F_i$ are validated theory morphisms, define
+\begin{equation}
+R_{\mathrm{trans}}(H)
+=\sum_i\sum_{\varphi\in\mathcal{T}_H}
+w_{i,\varphi}\,
+\mathbf{1}\!\left[
+F_i(\varphi)\text{ is well-typed, nontrivial, and newly derivable}
+\right].
+\end{equation}
+
+Transport must preserve meaning and scope, not merely syntax. The satisfaction condition from
+institution theory is a natural formal requirement for this layer \cite{goguenburstall1992}.
+
+\subsection{Pragmatic relevance}
+
+Pragmatic value includes new experiments, improved decisions, reduced computation, better model
+selection, or feasible interventions. A decision-theoretic form is
+\begin{equation}
+R_{\mathrm{prag}}(H)
+=
+\max_a\mathbb{E}[U(a)\mid H,E]
+-\max_a\mathbb{E}[U(a)\mid E]
+-\Cost_{\mathrm{use}}(H).
+\end{equation}
+
+This operator is intentionally context-specific. It must not be confused with epistemic truth: an
+instrumentally useful effective model can have high pragmatic relevance without being a fundamental
+ontology.
+
+\subsection{Necessity, robustness, and anti-sterility}
+
+Conceptual necessity is high when a candidate is selected by a universal property, a minimal
+obstruction, a uniqueness theorem, or a conservative minimality result. Robustness asks whether the
+candidate survives equivalent encodings, reasonable changes of granularity, and perturbations of the
+evidential set.
+
+An anti-sterility condition requires at least one concrete return path:
+\begin{enumerate}
+  \item a blocked proof obligation is resolved;
+  \item a new discriminating prediction or conjecture is produced;
+  \item an existing result is derived from strictly weaker or fewer assumptions;
+  \item a simulation, experiment, or computation becomes possible;
+  \item a useful intervention or decision changes;
+  \item a counterexample or no-go result eliminates a substantial search region.
+\end{enumerate}
+
+The marginal contribution of $H$ should also be tested by ablation:
+\begin{equation}
+R_{\mathrm{abl}}(H)
+=\Val_Q(D+H)-\Val_Q(D),
+\end{equation}
+with the rest of the theory and evidence held fixed as far as possible.
+
+\section{The relevance-guided generative element}
+
+\subsection{A constrained proposal kernel}
+
+The generative element should not be modeled as a theorem prover or a deterministic categorical
+operator. It is a context-sensitive proposal mechanism
+\begin{equation}
+\Gen_\theta
+\bigl(H\mid D,\mathcal{P}_Q,Q,\mathcal{K},\mathcal{H}\bigr),
+\end{equation}
+where $D$ is the current atlas region, $\mathcal{P}_Q$ the active pressure field, $\mathcal{K}$ the
+allowed completion grammar, and $\mathcal{H}$ the history of attempts, failures, and validations.
+Its output is a distribution or ranked portfolio over typed hypothesis extensions.
+
+The generator has four modes:
+\begin{enumerate}
+  \item \textbf{Local completion:} fill a missing object, morphism, law, or proof interface inside the
+  present representation.
+  \item \textbf{Bridge induction:} propose a functor, adjunction, duality, shared interface, or common
+  universal property between previously separate theories.
+  \item \textbf{Mechanism induction:} introduce a latent state, interaction, invariant, or dynamical law
+  that explains several pressures jointly.
+  \item \textbf{Representation mutation:} alter the object language, morphism types, identity criterion,
+  scope modalities, or foundational logic when the existing atlas systematically produces fragile
+  completions.
+\end{enumerate}
+
+Only the first mode resembles ordinary completion. The fourth is necessary for nonincremental
+conceptual change.
+
+\subsection{The hypothesis package}
+
+Every generated candidate should be compiled into a typed package
+\begin{equation}
+H=(s,p,m,\widehat D,\eta,\mathcal{C},\mathcal{F},\kappa,u),
+\end{equation}
+containing:
+\begin{itemize}
+  \item the pressure site $s$ and pressure items $p$ it claims to address;
+  \item the formal move $m$ and extended diagram $\widehat D$;
+  \item an informal explanatory rationale $\eta$;
+  \item expected consequences $\mathcal{C}$;
+  \item explicit falsifiers, counterexamples, or failure conditions $\mathcal{F}$;
+  \item implementation and validation cost $\kappa$;
+  \item uncertainty $u$, including uncertainty about the formalization itself.
+\end{itemize}
+
+This prevents the generator from producing an attractive concept with no account of what it changes,
+why it is relevant, or how it could fail.
+
+\subsection{Selection without a single reward}
+
+A single learned reward for ``interesting theory'' would be vulnerable to Goodhart effects. It would
+favor fluent, highly connected, fashionable, or excessively general proposals. The controller should
+instead:
+\begin{enumerate}
+  \item apply the pressure--leverage--return gates;
+  \item enforce formal and empirical admissibility thresholds;
+  \item retain a Pareto frontier over the relevance vector;
+  \item allocate validation effort by expected value of information;
+  \item reserve an exploration budget for candidates outside the current dominant representation;
+  \item preserve negative results and failed candidates so that the same sterile abstractions are not
+  repeatedly regenerated.
+\end{enumerate}
+
+A stochastic portfolio is desirable. Scientific relevance is uncertain, and premature convergence on
+one elegant unification can suppress alternative representations that later prove essential.
+
+\section{Philosophical reflection at essential fragmentation points}
+
+\subsection{Meaning before mechanics}
+
+The preceding machinery still risks beginning too late. A noncommuting diagram is visible only after
+the relevant objects and morphisms have been chosen. Yet the deepest conceptual pressure often concerns
+the prior choice of what counts as an object, an identity, a state, an observable, an explanation, or a
+legitimate transformation. At such points the reasoner must temporarily suspend the completion grammar
+and ask what the competing concepts mean in their native theoretical practices.
+
+\begin{principle}[Semantic priority]
+When a pressure concerns the identity, explanatory role, or operational interpretation of a concept,
+the system must reconstruct that concept's meaning profile before selecting a mathematical completion
+operator.
+\end{principle}
+
+This does not place informal reflection outside the architecture. It gives reflection a typed output
+which can subsequently constrain formalization. The philosophical layer is generative because it can
+redescribe the problem, alter the primitives, and expose a pressure that was invisible in the original
+atlas.
+
+\subsection{Meaning profiles}
+
+The meaning of a scientific concept cannot be represented adequately by a textual definition or a
+vector embedding. It is distributed across its inferential, referential, operational, modal, and
+pragmatic roles. For a concept $c$ in theory fragment $T$ and research context $Q$, define
+\begin{equation}
+\mu_Q(c,T)=
+\bigl(
+\mathsf{Ref},\mathsf{Infer},\mathsf{Id},\mathsf{Modal},
+\mathsf{Op},\mathsf{Scale},\mathsf{Explain},
+\mathsf{Use},\mathsf{Exclude}
+\bigr).
+\label{eq:meaning-profile}
+\end{equation}
+The components record:
+\begin{itemize}
+  \item what the concept purports to refer to, if anything;
+  \item which inferences license its introduction and which follow from it;
+  \item the criterion by which two instances count as the same;
+  \item its counterfactual and modal commitments;
+  \item its measurement, construction, or computational anchors;
+  \item the scales and regimes in which it is meaningful;
+  \item the explanatory role it performs;
+  \item the interventions, predictions, or mathematical operations it enables;
+  \item the distinctions it is intended to preserve or rule out.
+\end{itemize}
+
+This plural profile avoids committing the system to one philosophical theory of meaning. Referential,
+inferentialist, operational, structural, and pragmatic aspects are retained as distinguishable
+constraints. The inclusion of inferential commitment and relational function draws on traditions
+exemplified by Brandom and Cassirer without reducing scientific meaning to either account
+\cite{brandom1994,cassirer1910}. Their disagreement is often itself the source of discovery. For
+example, two formulations
+may agree extensionally on all current observations while assigning different identity criteria or
+counterfactual roles to the same term. The disagreement is scientifically dormant until a new regime
+or intervention makes it visible.
+
+\subsection{Fragmentation and essential fragmentation}
+
+Let $c_i$ be local realizations of an apparent common concept across contexts $T_i$, with partial
+transport maps
+\begin{equation}
+\tau_{ij}:\mu_Q(c_i,T_i)\dashrightarrow\mu_Q(c_j,T_j).
+\end{equation}
+A fragmentation site occurs when these transports are missing, path dependent, scope violating, or
+unable to preserve a protected component of the meaning profile.
+
+Fragmentation has several forms:
+\begin{description}[leftmargin=3.0cm,style=nextline]
+  \item[Lexical fragmentation.] Different vocabularies express compatible structures but no reliable
+  translation has been articulated.
+  \item[Representational fragmentation.] The same content is encoded through nonaligned state spaces,
+  variables, gauges, or mathematical foundations.
+  \item[Inferential fragmentation.] Results cannot be transported even though the concepts appear to
+  refer to the same objects.
+  \item[Explanatory fragmentation.] Theories agree on predictions but disagree about why they hold or
+  which counterfactuals sustain them.
+  \item[Ontological fragmentation.] The theories disagree about what is fundamental, derivative, or
+  physically real.
+  \item[Operational fragmentation.] A concept has incompatible measurement, construction, or
+  intervention procedures.
+  \item[Scale fragmentation.] The identity and role of a concept change across regimes without an
+  explicit transition law.
+  \item[Global fragmentation.] Locally coherent meanings fail to glue into a global interpretation.
+\end{description}
+
+Not every fragmentation is conceptually important. Some disappear under renaming, unit conversion,
+definitional expansion, gauge transformation, conservative extension, or a known equivalence.
+Let $\mathcal{R}_{\mathrm{cheap}}$ be a declared class of such low-cost repairs and
+$\delta_Q(D,s)$ a vector of semantic and inferential mismatch at site $s$. Define the residual
+fragmentation
+\begin{equation}
+\mathsf{EssFrag}_Q(s)
+=
+\inf_{r\in\mathcal{R}_{\mathrm{cheap}}}
+\left\lVert \delta_Q(rD,s)\right\rVert.
+\label{eq:essential-fragmentation}
+\end{equation}
+A fragmentation is \emph{essential relative to $Q$} when this residual remains high while the site
+also has substantial downstream consequence:
+\begin{align}
+\mathsf{FragValue}_Q(s)
+=\;&\mathsf{EssFrag}_Q(s)
+\otimes\mathsf{Centrality}_Q(s) \\
+&\otimes\mathsf{ConsequenceDivergence}_Q(s)
+\otimes\mathsf{ConcreteReach}_Q(s).
+\end{align}
+
+The essentiality judgment must identify what would be lost by a proposed repair. If two ontologies can
+be made formally equivalent only by discarding their intervention semantics, the fragmentation has not
+been dissolved; it has been hidden.
+
+\subsection{Philosophical reflection lenses}
+
+Deep reflection should not be one unrestricted prompt asking a model to think philosophically.
+The system applies several lenses independently and then compares their outputs.
+
+\begin{table}[ht]
+\centering
+\small
+\begin{tabularx}{\textwidth}{
+>{\raggedright\arraybackslash}p{0.19\textwidth}
+>{\raggedright\arraybackslash}p{0.33\textwidth}X}
+\toprule
+Lens & Central question & Required output \\
+\midrule
+Hermeneutic & How does the part acquire meaning from the whole theory, and how does it revise that whole? & Context-dependent meanings, translation losses, and alternative readings \\
+Phenomenological--operational & What is actually given, measured, constructed, or experienced before theoretical interpretation? & Operational anchors and a separation of datum from interpretation \\
+Constitutive & What must already be presupposed for the theory's objects, measurements, or explanations to be possible? & Hidden background structures and conditions of intelligibility \\
+Dialectical--immanent & Which commitments of the theory generate internal tension when jointly developed? & Minimal contradiction or tension and possible transformations that preserve both insights \\
+Genealogical & Which historical problems and inherited distinctions produced the present conceptual division? & Contingent versus necessary distinctions and plausible alternative developments \\
+Pragmatic & What difference would adopting the concept make to inquiry, intervention, calculation, or decision? & Actionable consequences and cases in which the distinction is idle \\
+Structural realist & Which relations or invariants survive changes of representation and ontology? & Candidate preserved structure and the maps under which it is invariant \\
+Modal--counterfactual & In which possible or counterfactual cases do the competing concepts separate? & Discriminating counterworlds, boundary cases, and modal commitments \\
+\bottomrule
+\end{tabularx}
+\caption{Reflection lenses used to interpret essential conceptual fragmentation.}
+\label{tab:reflection-lenses}
+\end{table}
+
+These lenses need not converge. Their disagreement becomes a structured pressure. A pragmatic
+equivalence combined with an ontological divergence, for example, calls for a different research move
+than an inferential equivalence combined with an operational divergence. Philosophical pluralism is
+therefore represented as a portfolio of constrained views rather than averaged into a bland synthesis.
+The use of historical and immanent reconstruction also guards against treating the current formal
+vocabulary as inevitable, a concern emphasized in different ways by Kuhn and Lakatos
+\cite{kuhn1962,lakatos1976}.
+
+\subsection{Generative reflection operators}
+
+The reflection layer acts through operators that can change the conceptual organization before a
+categorical construction is chosen:
+\begin{description}[leftmargin=3.2cm,style=nextline]
+  \item[Ontological suspension.] \(\mathsf{Suspend}\) temporarily withholds the dominant ontology and restates the pressure in
+  terms of observations, inferential roles, and practices.
+  \item[Primitive shift.] \(\mathsf{PrimitiveShift}\) promotes a relation, process, transformation, or constraint to a
+  primitive, or reconstruct an apparent object as relationally generated.
+  \item[Dependency inversion.] \(\mathsf{DependencyInvert}\) exchanges explanans and explanandum: ask whether what was treated
+  as a background law is generated by the states it was supposed to govern.
+  \item[Context internalization.] \(\mathsf{ContextInternalize}\) turns an implicit background, scale, observer, coordinate
+  system, or experimental arrangement into an explicit variable or indexed context.
+  \item[Level shift.] \(\mathsf{LevelShift}\) moves between object, process, law, constraint on laws, and
+  transformation between theories.
+  \item[Identity revision.] \(\mathsf{IdentityRevise}\) alters the criterion of sameness: strict equality may become
+  equivalence, path-connectedness, observational indistinguishability, or coherent transport.
+  \item[Invariant extraction.] \(\mathsf{InvariantExtract}\) searches for what survives the competing representations rather
+  than choosing one representation as fundamental.
+  \item[Obstruction reification.] \(\mathsf{ObstructionReify}\) treats a failure of translation or gluing as a positive object
+  carrying information rather than as noise to eliminate.
+  \item[Dualization.] \(\mathsf{Dualize}\) exchanges state and observable, syntax and semantics, local and global,
+  kinematics and dynamics, or construction and constraint.
+  \item[Boundary probing.] \(\mathsf{BoundaryProbe}\) moves to singular limits, extreme scales, degenerate examples, and
+  interface cases in which implicit assumptions become visible.
+  \item[Counterworld construction.] \(\mathsf{Counterworld}\) constructs the smallest coherent model in which two apparently
+  equivalent meanings give different consequences.
+  \item[Operational reanchoring.] \(\mathsf{OperationalReanchor}\) requires a proposed redescription to change or simplify a
+  measurement, proof, calculation, intervention, or experimental discrimination.
+\end{description}
+
+The operators can be composed, but the composition must remain traceable. A proposed theory may arise,
+for example, by internalizing the descriptive context, revising identity from equality to coherent
+transport, and then extracting the invariant of that transport. This is a materially different
+discovery path from directly taking a pushout of the original theories.
+
+\subsection{Compiling reflection into formal transformations}
+
+Reflection becomes part of a rigorous reasoner only when its outputs generate formal obligations.
+Table~\ref{tab:reflection-compilation} gives a nonexclusive compilation map.
+
+\begin{table}[ht]
+\centering
+\small
+\begin{tabularx}{\textwidth}{
+>{\raggedright\arraybackslash}p{0.25\textwidth}
+>{\raggedright\arraybackslash}p{0.32\textwidth}X}
+\toprule
+Reflective move & Candidate formal expression & Immediate obligation \\
+\midrule
+Internalize context & Indexed category, fibration, modality, dependent type & Show how old context-specific claims arise by reindexing \\
+Revise identity & Localization, quotient, groupoid completion, univalence & Prove which distinctions are preserved and which are intentionally identified \\
+Promote relations to primitives & Enriched category, profunctor, process theory, operad & Reconstruct former objects and their observables \\
+Extract an invariant & Limit, end, natural transformation, representable functor & Establish invariance and nontriviality under validated transformations \\
+Reify failed gluing & Homotopy fiber, obstruction class, cohomology, descent datum & Compute the obstruction in at least one concrete model \\
+Invert dependence & Adjunction, duality, fixed-point problem, coupled dynamics & Derive both directions and prevent circular explanation \\
+Shift theoretical level & Internal language, meta-theory morphism, reflective tower & State type levels and block self-referential collapse \\
+Construct a counterworld & Model finder, free model, forcing or perturbation family & Verify consistency and isolate the discriminating commitment \\
+\bottomrule
+\end{tabularx}
+\caption{From philosophical redescription to formal operator and proof obligation.}
+\label{tab:reflection-compilation}
+\end{table}
+
+The compilation relation is many-to-many. No philosophical lens mechanically determines a category
+theoretic construction. Instead, it restricts which constructions preserve the meaning at stake and
+which proof obligations must be discharged.
+
+\subsection{The deep-reflection cycle}
+
+At an essential fragmentation point, the system executes the following cycle:
+\begin{enumerate}
+  \item \textbf{Native reconstruction.} Restate each theory in its own terms, with sources and scope.
+  \item \textbf{Semantic profiling.} Construct the meaning profiles in
+  \eqref{eq:meaning-profile}.
+  \item \textbf{Cheap-repair test.} Attempt definitional, representational, and conservative repairs.
+  \item \textbf{Essentiality localization.} Record the residual mismatch and its downstream importance.
+  \item \textbf{Plural reflection.} Apply the lenses in Table~\ref{tab:reflection-lenses} independently.
+  \item \textbf{Immanent challenge.} Let each lens challenge the assumptions and losses of the others.
+  \item \textbf{Redescription portfolio.} Generate several conceptual reorganizations using the
+  reflection operators.
+  \item \textbf{Counterworld stress.} Construct cases in which the redescriptions make divergent
+  commitments.
+  \item \textbf{Formal compilation.} Translate each surviving redescription into formal objects,
+  morphisms, and obligations.
+  \item \textbf{Concrete return.} Demand a proof, model, computation, prediction, or intervention that
+  would change if the redescription were adopted.
+\end{enumerate}
+
+The cycle is hermeneutic in a precise operational sense: local concepts are interpreted through the
+whole theory, candidate revisions alter the whole, and the altered whole changes the local meaning.
+Iteration stops when further passes do not materially change the protected meaning profiles, active
+pressure set, candidate frontier, or concrete discriminations.
+
+\subsection{The reflection record}
+
+Each reflection pass produces
+\begin{equation}
+\mathcal{J}=
+(s,\mu,\delta,L,\rho,\Pi,\Omega,\mathcal{O},u),
+\end{equation}
+where $s$ is the fragmentation site, $\mu$ the meaning profiles, $\delta$ the residual mismatch, $L$
+the lens outputs, $\rho$ the proposed redescriptions, $\Pi$ the protected commitments, $\Omega$ the
+anticipated losses, $\mathcal{O}$ the formalization and concrete-return obligations, and $u$ the
+uncertainty.
+
+A reflection record is rejected as shallow when it:
+\begin{itemize}
+  \item merely restates the source terminology;
+  \item names a familiar philosophical position without deriving consequences;
+  \item proposes a synthesis by deleting the disputed distinction;
+  \item lacks a counterworld in which alternatives separate;
+  \item cannot identify what the new representation preserves and sacrifices;
+  \item has no route to a formal or concrete obligation.
+\end{itemize}
+
+This is the main defense against decorative philosophy. Reflection earns a role in discovery by
+changing the admissible transformations, the ranking of candidates, or the concrete tests.
+
+\section{Agentic implementation}
+
+\subsection{Implementation objective and design constraints}
+
+The implementation target is a local-first, provider-neutral research system that turns a scoped body
+of mathematical or physical material into a validated portfolio of conceptual hypotheses. It must
+support open-ended generation without allowing generated prose to alter the canonical theory atlas
+directly.
+
+The following constraints are architectural:
+\begin{enumerate}
+  \item \textbf{Typed boundaries.} Every skill has versioned input and output schemas.
+  \item \textbf{Separation of epistemic roles.} Generators propose; formal, computational, and empirical
+  components validate.
+  \item \textbf{Provenance.} Every extracted claim, interpretation, and formal object points to its
+  source or is explicitly labeled as conjectural.
+  \item \textbf{Scope preservation.} Regime and approximation metadata travel with every claim.
+  \item \textbf{Plurality.} Competing interpretations remain separate until an accepted equivalence or
+  synthesis is established.
+  \item \textbf{Replayability.} Model, prompt, skill version, parameters, inputs, and random seed are
+  recorded for every generative action.
+  \item \textbf{Budgeted persistence.} Every loop has termination conditions, resource limits, and an
+  explicit unresolved outcome.
+  \item \textbf{No graph-only semantics.} The graph indexes relationships, while typed declarations,
+  proofs, models, evidence, and reflection records carry the meaning.
+\end{enumerate}
+
+\subsection{Logical architecture}
+
+The system is organized into six planes:
+\begin{description}[leftmargin=3.0cm,style=nextline]
+  \item[Knowledge plane.] Versioned theory fragments, morphisms, higher cells, meaning profiles,
+  evidence, examples, proof obligations, and source documents.
+  \item[Interpretive plane.] Pressure items, fragmentation sites, philosophical lens outputs, protected
+  commitments, and conceptual redescriptions.
+  \item[Generative plane.] Candidate completions, bridges, mechanisms, counterworlds, and representation
+  mutations.
+  \item[Formal plane.] Type checking, theorem proving, model finding, categorical computations, and
+  transport verification.
+  \item[Concrete plane.] Symbolic calculation, numerical simulation, benchmark instances, experimental
+  design, and pragmatic evaluation.
+  \item[Control plane.] Workflow state, budgets, Pareto selection, uncertainty, drift monitoring,
+  human review, and final synthesis.
+\end{description}
+
+The planes interact through immutable artifacts and typed references. A free-text reflection can be
+stored as part of a reflection record, but only its explicitly extracted commitments, losses,
+obligations, and candidate transformations may enter downstream formal workflows.
+
+\subsection{Agentic functions and authority boundaries}
+
+The system uses the following agentic functions:
+\begin{description}[leftmargin=3.3cm,style=nextline]
+  \item[Atlas cartographer.] Extracts definitions, claims, models, observables, scopes, examples, and
+  proposed translations. It may stage additions but cannot approve merges.
+  \item[Pressure interpreter.] Converts anomalies, proof traces, expert questions, and pragmatic needs
+  into weighted pressure items.
+  \item[Meaning profiler.] Reconstructs the meaning profile of contested concepts in each native
+  theoretical context.
+  \item[Fragmentation analyst.] Performs cheap-repair tests and identifies residual, high-consequence
+  fragmentation.
+  \item[Philosophical reflector.] Runs the independent lenses, generates redescriptions, states losses,
+  and constructs discriminating counterworlds.
+  \item[Structural diagnostician.] Compiles reflections into representability, coherence, descent,
+  factorization, adjunction, obstruction, or meta-theory problems.
+  \item[Generative theorist.] Produces a diverse portfolio of typed hypothesis packages across local,
+  bridge, mechanism, and representation-mutation modes.
+  \item[Relevance analyst.] Applies the gates and computes the multi-objective relevance profile without
+  making truth judgments.
+  \item[Formalizer and prover.] Checks typing, universal properties, conservative extension, consistency
+  relative to the selected foundation, and theorem transport.
+  \item[Concrete instantiator.] Derives equations, examples, simulations, observables, algorithms, or
+  experiments from the abstract proposal.
+  \item[Adversarial critic.] Searches for countermodels, vacuity, scope violations, hidden auxiliary
+  assumptions, equivalent prior art, and rival explanations.
+  \item[Meta-representation critic.] Determines whether repeated failure is caused by the current
+  ontology or morphism grammar and proposes a new atlas schema.
+  \item[Portfolio controller.] Allocates effort, maintains diversity, requests human judgment, and
+  promotes only candidates that satisfy declared thresholds.
+\end{description}
+
+No function validates its own generative output. The portfolio controller may schedule tasks and apply
+declared policy, but it may not override a failed proof, falsifying model, or absent concrete return
+path.
+
+\subsection{Canonical data contracts}
+
+The canonical objects should be represented as versioned, schema-validated records. The following
+Python-like definitions are indicative rather than tied to one library:
+
+\begin{lstlisting}[style=spec,language=Python,caption={Core typed records.}]
+class EvidenceRef:
+    artifact_id: str
+    locator: str
+    evidence_type: Literal[
+        "proof", "paper", "data", "simulation", "expert", "conjecture"
+    ]
+    reliability: float
+
+class MeaningProfile:
+    concept_id: str
+    theory_id: str
+    referential_role: list[str]
+    inferential_commitments: list[str]
+    identity_criteria: list[str]
+    modal_commitments: list[str]
+    operational_anchors: list[str]
+    scale_and_scope: list[str]
+    explanatory_role: list[str]
+    pragmatic_uses: list[str]
+    protected_distinctions: list[str]
+    evidence: list[EvidenceRef]
+    uncertainty: dict[str, float]
+
+class FragmentationSite:
+    site_id: str
+    concept_ids: list[str]
+    theory_ids: list[str]
+    mismatch_vector: dict[str, float]
+    cheap_repairs_attempted: list[str]
+    residual_fragmentation: float
+    protected_losses: list[str]
+    downstream_targets: list[str]
+
+class ReflectionRecord:
+    site_id: str
+    lens_outputs: dict[str, str]
+    redescriptions: list[str]
+    preserved_commitments: list[str]
+    anticipated_losses: list[str]
+    counterworlds: list[str]
+    formal_obligations: list[str]
+    concrete_obligations: list[str]
+    source_refs: list[EvidenceRef]
+
+class HypothesisPackage:
+    candidate_id: str
+    pressure_ids: list[str]
+    reflection_ids: list[str]
+    formal_move: str
+    atlas_patch: dict
+    consequences: list[str]
+    falsifiers: list[str]
+    relevance_vector: dict[str, float]
+    validation_tasks: list[str]
+    uncertainty: dict[str, float]
+\end{lstlisting}
+
+Additional first-class records represent theory fragments, theory morphisms, higher cells, research
+contexts, pressure items, validation outcomes, task dependencies, and run states. Every record has a
+stable identifier, schema version, creation provenance, and parent versions. Its lifecycle status is
+one of
+\begin{equation}
+\mathsf{staged},\qquad
+\mathsf{accepted},\qquad
+\mathsf{rejected},\qquad
+\mathsf{superseded}.
+\end{equation}
+
+\subsection{Skill contract}
+
+A skill is a bounded epistemic operation, not merely a prompt. Its specification is
+\begin{equation}
+\mathcal{S}=
+(\mathsf{name},\mathsf{version},I,O,P,Q,T,B,E),
+\end{equation}
+where $I$ and $O$ are input and output schemas, $P$ the preconditions, $Q$ the postconditions, $T$
+the authorized tools, $B$ the resource budget, and $E$ the termination and escalation policy.
+
+Every skill directory should contain:
+\begin{lstlisting}[style=spec,caption={Required skill directory contract.}]
+skills/<skill-name>/
+  SKILL.md                 # purpose, method, boundaries
+  input.schema.json
+  output.schema.json
+  policy.yaml              # tools, budget, stop and escalation rules
+  prompts/
+    system.md
+    task.md
+    critique.md
+  tests/
+    fixtures/
+    test_contract.py
+    test_invariance.py
+    test_adversarial.py
+  examples/
+    minimal_input.json
+    expected_output.json
+\end{lstlisting}
+
+All skill results return a common envelope:
+\begin{equation}
+\mathsf{SkillResult}=
+(\mathsf{status},\mathsf{artifacts},\mathsf{claims},
+\mathsf{uncertainties},\mathsf{next},\mathsf{provenance}).
+\end{equation}
+The status vocabulary includes \(\mathsf{completed}\), \(\mathsf{partial}\),
+\(\mathsf{blocked}\), and \(\mathsf{invalid}\). A blocked result is a valid terminal outcome and must
+state the missing information or authority.
+
+\subsection{Initial skill catalogue}
+
+\begin{longtable}{@{}
+>{\raggedright\arraybackslash}p{0.23\textwidth}
+>{\raggedright\arraybackslash}p{0.31\textwidth}
+>{\raggedright\arraybackslash}p{0.38\textwidth}@{}}
+\toprule
+Skill & Primary input and output & Core validation \\
+\midrule
+\endfirsthead
+\toprule
+Skill & Primary input and output & Core validation \\
+\midrule
+\endhead
+Scope research context & Question, corpus, goals, budgets \(\to Q\) & Scope is explicit; success and stop criteria are measurable \\
+Map theory fragment & Source artifacts \(\to\) typed theory fragments & Every nonconjectural claim has a source; types and regimes are retained \\
+Propose theory morphism & Two fragments \(\to\) staged interpretation map & Symbol mapping is total on declared domain; satisfaction obligations emitted \\
+Interpret conceptual pressure & Goals, anomalies, proof states \(\to\) pressure items & Pressure is localized, evidenced, and distinguished from preferred solution \\
+Profile concept meaning & Concept plus native sources \(\to\) meaning profile & All nine components of \eqref{eq:meaning-profile} are filled or marked unknown \\
+Detect essential fragmentation & Meaning profiles and translations \(\to\) fragmentation sites & Cheap repairs attempted; protected losses and residual mismatch reported \\
+Run philosophical reflection & Fragmentation site \(\to\) reflection records & Independent lenses, counterworld, losses, and obligations are present \\
+Diagnose categorical defect & Atlas diagram and reflection \(\to\) formal defect candidates & Required objects and morphisms are typed; metaphorical mappings are flagged \\
+Generate theory candidates & Pressures, reflections, defects \(\to\) hypothesis portfolio & Minimum diversity across generation modes; duplicates quotient by equivalence \\
+Evaluate relevance & Candidate, context, dependency graph \(\to\) relevance vector & Gates reported separately; no truth claim inferred from score \\
+Formalize candidate & Hypothesis package \(\to\) formal declarations and obligations & Type checking passes or exact blockers are returned \\
+Prove transport & Morphism and theorem set \(\to\) transport results & Scope and satisfaction preserved; trivial restatements excluded \\
+Instantiate concretely & Formal candidate and target domains \(\to\) models or experiments & Return diagrams and error bounds supplied \\
+Falsify candidate & Candidate and adversarial budget \(\to\) countermodels and stress report & Searches scope boundaries, degenerate cases, and rival explanations \\
+Mutate representation & Repeated structured failures \(\to\) atlas-schema proposal & Existing content migration and information-loss analysis included \\
+Synthesize portfolio & Validations and relevance profiles \(\to\) research recommendation & Pareto frontier, disagreement, uncertainty, and next discriminating actions retained \\
+Audit reasoning run & Complete run trace \(\to\) integrity report & Provenance, role separation, budget, drift, and replay checks pass \\
+\bottomrule
+\caption{Initial skill catalogue for the theory-discovery system.}
+\label{tab:skills}
+\end{longtable}
+
+\subsection{Critical skill procedures}
+
+\paragraph{The philosophical-reflection skill.}
+This skill runs one branch per lens in Table~\ref{tab:reflection-lenses}. Each branch receives the same
+source-grounded meaning profiles but does not see the other branches' synthesis. A comparison pass then
+identifies convergence, contradiction, and complementary insight. A final generative pass proposes at
+least three redescriptions, including one that changes the primitive ontology and one conservative
+alternative. The output fails validation if it contains no protected loss, counterworld, or downstream
+obligation.
+
+\paragraph{The essential-fragmentation skill.}
+This skill runs repair attempts in increasing order of cost: lexical normalization, unit and notation
+alignment, definitional extension, known equivalence, conservative interpretation, and scope
+restriction. It estimates the residual only after these attempts. Human review is required when a
+repair would change operational or ontological commitments.
+
+\paragraph{The candidate-generation skill.}
+Generation occurs in two passes. An exploratory pass samples diverse conceptual moves with higher
+temperature or equivalent diversity controls. A normalization pass converts them into hypothesis
+packages, merges equivalent candidates, and rejects packages without formalization hooks. The
+generator may cite source claims or label novel conjectures; it may not blur the two.
+
+\paragraph{The representation-mutation skill.}
+Mutation is triggered by a pattern of failures rather than one unsuccessful proof. Its proposal must
+specify the new object and morphism grammar, a migration functor from the current atlas, information
+lost or newly expressible, and at least one previously sterile pressure that becomes tractable.
+
+\subsection{Workflow state machine}
+
+A research run advances through the following states:
+\begin{equation}
+\begin{split}
+\mathsf{SCOPED}&\to\mathsf{MAPPED}\to\mathsf{PRESSURED}\to
+\mathsf{FRAGMENTED}\to\mathsf{REFLECTED}\\
+&\to\mathsf{GENERATED}\to\mathsf{GATED}\to
+\mathsf{FORMALIZED}\to\mathsf{INSTANTIATED}\\
+&\to\mathsf{TESTED}\to\mathsf{SYNTHESIZED}.
+\end{split}
+\label{eq:state-machine}
+\end{equation}
+
+Transitions are guarded:
+\begin{itemize}
+  \item \(\mathsf{MAPPED}\to\mathsf{PRESSURED}\) requires a versioned atlas region and research context.
+  \item \(\mathsf{FRAGMENTED}\to\mathsf{REFLECTED}\) requires a passed essentiality or high-impact
+  uncertainty threshold.
+  \item \(\mathsf{GATED}\to\mathsf{FORMALIZED}\) requires pressure, leverage, and return gates.
+  \item \(\mathsf{FORMALIZED}\to\mathsf{INSTANTIATED}\) permits partial formalization only when exact
+  residual obligations are carried forward.
+  \item \(\mathsf{TESTED}\to\mathsf{SYNTHESIZED}\) requires both supportive and adversarial results.
+\end{itemize}
+
+Failure transitions are productive. A failed formalization returns to \(\mathsf{REFLECTED}\) when the
+concept is ill typed, to \(\mathsf{GENERATED}\) when only one candidate is defective, and to a
+\(\mathsf{REPRESENTATION\_REVIEW}\) branch when several candidates fail for the same structural
+reason. A falsified candidate is retained with its failure conditions and may delimit a no-go region.
+
+\subsection{End-to-end workflows}
+
+\paragraph{Workflow A: atlas construction.}
+\begin{enumerate}
+  \item Ingest papers, formal libraries, code, data descriptions, and expert notes.
+  \item Segment them into source-addressable claims, definitions, equations, examples, and scopes.
+  \item Build staged theory fragments and identify unresolved term alignments.
+  \item Propose morphisms and generate satisfaction, typing, and scope obligations.
+  \item Approve only validated fragments and maps into the canonical atlas revision.
+\end{enumerate}
+
+\paragraph{Workflow B: pressure and reflection.}
+\begin{enumerate}
+  \item Construct the task dependency graph and collect anomalies, disagreements, and pragmatic goals.
+  \item Localize pressure items and estimate evidential reliability.
+  \item Profile the meaning of concepts touching high-impact sites.
+  \item Run cheap-repair and essential-fragmentation analysis.
+  \item Apply plural philosophical lenses and generate reflection records.
+  \item Compile the records into formal defects and redescription obligations.
+\end{enumerate}
+
+\paragraph{Workflow C: theory generation.}
+\begin{enumerate}
+  \item Generate candidates independently in local, bridge, mechanism, and mutation modes.
+  \item Normalize candidates into typed packages and quotient obvious equivalences.
+  \item Apply pressure--leverage--return gates.
+  \item Compute the relevance vector and retain a diverse Pareto frontier.
+  \item Schedule the cheapest discriminating validation for each frontier candidate.
+\end{enumerate}
+
+\paragraph{Workflow D: formal and concrete validation.}
+\begin{enumerate}
+  \item Compile the candidate into MMT, Lean, a generalized algebraic theory, or another declared
+  formal target.
+  \item Check type correctness, model existence, conservativity, universal properties, and theorem
+  transport.
+  \item Instantiate it in at least one mathematical and, where applicable, physical model.
+  \item Derive held-out consequences and construct countermodels or boundary cases.
+  \item Update the relevance profile using realized rather than anticipated value.
+\end{enumerate}
+
+\paragraph{Workflow E: synthesis or representation revision.}
+The controller compares surviving candidates, unresolved disagreements, and validation cost. It emits
+one of four outcomes: promote a candidate; continue a discriminating experiment; suspend with explicit
+unknowns; or revise the atlas representation. A synthesis never hides a failed validation or collapses
+non-equivalent interpretations.
+
+\subsection{Concrete software architecture}
+
+The initial implementation can be a modular monorepository:
+\begin{lstlisting}[style=spec,caption={Proposed repository layout.}]
+theory-discovery/
+  pyproject.toml
+  src/tdr/
+    domain/              # canonical schemas and invariants
+    atlas/               # fragments, morphisms, higher cells
+    pressures/           # pressure and dependency analysis
+    reflection/          # lenses and redescription operators
+    generation/          # provider-neutral proposal kernel
+    relevance/           # gates, vectors, Pareto selection
+    orchestration/       # state machine, budgets, policies
+    validation/          # formal, numerical, empirical adapters
+    provenance/          # artifacts, source anchors, replay
+    api/                 # HTTP and CLI interfaces
+  skills/                # versioned skill directories
+  adapters/
+    mmt/
+    lean/
+    gatlab/
+    cubical_agda/
+    smt/
+    simulation/
+    language_models/
+  schemas/
+  benchmarks/
+  tests/
+  artifacts/             # local content-addressed development store
+\end{lstlisting}
+
+The recommended runtime components are:
+\begin{itemize}
+  \item a Python orchestration and API layer with schema validation;
+  \item SQLite for a single-researcher prototype and PostgreSQL for concurrent deployment;
+  \item a content-addressed artifact store for sources, prompts, proofs, models, and outputs;
+  \item MMT for foundation-independent theory graphs \cite{rabe2016};
+  \item Lean for machine-checked category theory and mathematical consequences
+  \cite{leanmathlib};
+  \item GATlab for computable generalized algebraic theories and theory morphisms
+  \cite{gatlab};
+  \item Cubical Agda or a comparable cubical system for experiments requiring computational univalence
+  and higher inductive structure;
+  \item SMT solvers, model finders, symbolic algebra, and numerical simulation behind typed adapters;
+  \item a provider-neutral language-model interface supporting local and hosted models without making
+  model-specific messages part of the domain schema.
+\end{itemize}
+
+Embeddings and semantic retrieval may propose relevant sources or alignments, but they never establish
+concept identity. Accepted identity and equivalence claims require explicit profiles, maps, and
+validation.
+
+\subsection{Persistence and provenance}
+
+The relational index stores identifiers and queryable metadata in tables for contexts, fragments,
+morphisms, higher cells, pressures, meaning profiles, fragmentation sites, reflections, candidates,
+validations, runs, and dependencies. Large artifacts remain immutable files addressed by a content
+hash. A canonical atlas revision contains references to accepted records, not mutable copies.
+
+Each generated claim stores:
+\begin{equation}
+(\mathsf{source\_set},\mathsf{skill\_version},\mathsf{model\_id},
+\mathsf{prompt\_hash},\mathsf{parameters},\mathsf{seed},
+\mathsf{parent\_artifacts}).
+\end{equation}
+This supports replay, comparison across models, and audits of whether an alleged prediction was already
+present in the generation context.
+
+\subsection{Orchestration algorithm}
+
+\begin{lstlisting}[style=spec,language=Python,caption={Simplified orchestration loop.}]
+def run_discovery(context_id: str, budget: Budget) -> RunOutcome:
+    state = load_or_create_state(context_id)
+
+    while budget.available() and not state.is_terminal():
+        skill = policy.next_skill(state)
+        inputs = build_typed_inputs(skill, state)
+
+        if not skill.preconditions(inputs):
+            state.block(skill, reason="precondition")
+            continue
+
+        result = execute_with_budget(skill, inputs, budget)
+        validate_schema(result)
+        persist_immutable(result)
+        state = transition(state, result)
+
+        if repeated_structural_failure(state):
+            state.request("mutate-representation")
+
+        if human_gate_required(state):
+            return RunOutcome.awaiting_review(state)
+
+    return synthesize_or_report_blocker(state)
+\end{lstlisting}
+
+The policy chooses the next skill by expected value of information, relevance, validation cost, and
+portfolio diversity. It may run independent reflection lenses, candidate branches, and adversarial
+tests concurrently. Writes to canonical state remain serialized and require schema and policy checks.
+
+\subsection{Interfaces}
+
+The first release should expose both a command-line interface and a small HTTP API:
+\begin{lstlisting}[style=spec,caption={Minimum external interface.}]
+tdr init <project>
+tdr ingest <source-path> --context <id>
+tdr map --context <id>
+tdr reflect --site <fragmentation-id>
+tdr generate --context <id> --budget <profile>
+tdr validate --candidate <id>
+tdr inspect --run <id>
+tdr replay --run <id>
+tdr export --candidate <id> --format latex|json|mmt|lean
+
+POST /contexts
+POST /contexts/{id}/sources
+POST /runs
+GET  /runs/{id}
+GET  /sites/{id}/reflections
+POST /candidates/{id}/validations
+GET  /contexts/{id}/frontier
+\end{lstlisting}
+
+A research interface should visualize the local atlas, active pressures, essential fragmentation
+profiles, candidate lineage, proof obligations, concrete-return paths, and Pareto frontier. It should
+never imply that graph centrality or model confidence is equivalent to truth.
+
+\subsection{Testing strategy}
+
+Testing occurs at five levels:
+\begin{enumerate}
+  \item \textbf{Contract tests:} every skill accepts and emits only schema-valid records and respects
+  its authority boundary.
+  \item \textbf{Metamorphic tests:} renaming, equivalent presentation, unit change, and reordering do not
+  materially alter accepted relevance or conclusions.
+  \item \textbf{Adversarial tests:} sterile abstractions, inconsistent pushouts, false friends, prompt
+  contamination, and scope erasure are rejected.
+  \item \textbf{Historical reconstruction:} held-out concepts are recovered from pre-conceptual
+  pressure without lexical leakage.
+  \item \textbf{Prospective calibration:} expected unblocking, theorem transfer, and prediction are
+  compared with realized research outcomes.
+\end{enumerate}
+
+Every benchmark contains positive and negative cases. A system that rediscovers tensor products but
+also promotes every formal commonality as a deep unification has failed the intended task.
+
+\subsection{Human review and epistemic governance}
+
+Human approval is mandatory when:
+\begin{itemize}
+  \item the research context changes its goals or protected commitments;
+  \item a representation mutation would migrate or discard accepted content;
+  \item two lens outputs encode a genuine value or ontological choice rather than a factual question;
+  \item a candidate is promoted as a substantive theory rather than a speculative research direction;
+  \item an external experiment, publication claim, or irreversible action is proposed.
+\end{itemize}
+
+The interface must display uncertainty about extraction, interpretation, formalization, and validation
+separately. A single confidence number would obscure where epistemic risk resides.
+
+\subsection{Construction roadmap}
+
+\begin{longtable}{@{}
+>{\raggedright\arraybackslash}p{0.14\textwidth}
+>{\raggedright\arraybackslash}p{0.24\textwidth}
+>{\raggedright\arraybackslash}p{0.397\textwidth}
+>{\raggedright\arraybackslash}p{0.14\textwidth}@{}}
+\toprule
+Phase & Build target & Measurable exit condition & Indicative duration \\
+\midrule
+\endfirsthead
+\toprule
+Phase & Build target & Measurable exit condition & Indicative duration \\
+\midrule
+\endhead
+0 & Domain schemas, skill contract, run state, artifact provenance & Schema round-trips, replay, and authority-boundary tests pass & 3 weeks \\
+1 & Atlas mapping, morphisms, source anchoring, scope tracking & Two benchmark domains mapped with at least 95\% sampled claim provenance & 5 weeks \\
+2 & Pressure, meaning-profile, fragmentation, and reflection skills & Essential versus superficial fragmentation distinguished on a curated test set; every reflection emits losses and obligations & 5 weeks \\
+3 & Candidate generation, relevance gates, and Pareto controller & Diverse valid portfolios produced without promoting seeded sterile completions & 4 weeks \\
+4 & MMT, Lean, GATlab, solver, and simulation adapters & At least three end-to-end candidates formalized and concretely instantiated & 7 weeks \\
+5 & Historical reconstruction and prospective pilot & Prespecified held-out rediscovery, invariance, unblocking, and adversarial thresholds met & 8 weeks \\
+\bottomrule
+\caption{Staged construction plan for a research-grade prototype.}
+\label{tab:roadmap}
+\end{longtable}
+
+The first prospective pilot should use one mathematical and one physical boundary problem sharing a
+structural theme. A suitable pair would be representability and obstruction discovery in mathematics,
+together with state transport, coarse-graining, and spectral coercivity in gauge theory. This makes
+cross-domain unification testable without assuming in advance that the same ontology governs both.
+
+Natural-language generation is most valuable at pressure interpretation, meaning reconstruction, and
+representation mutation, where the relevant abstraction may not yet have a formal name. Formal methods
+become decisive once a candidate claims a particular structural role. The architecture is designed so
+that neither can silently substitute for the other.
+
+\section{Abstract-to-concrete return}
+
+Let $U$ be an abstract candidate theory and $F_i:U\to T_i$ validated interpretations into concrete
+domains. Change-of-base functors on model categories and proof translations should instantiate the
+abstract construction. Where adjoints exist, Kan extensions or universal lifts may systematically
+generate domain realizations; where they do not, the absence is itself a defect to be studied.
+
+Every candidate should carry a return diagram
+\begin{equation}
+\begin{array}{ccc}
+U & \xrightarrow{\;\varphi\;} & U' \\
+\downarrow F_i && \downarrow F_i' \\
+T_i & \xrightarrow{\;\varphi_i\;} & T_i',
+\end{array}
+\end{equation}
+whose commutation states that the concrete consequence $\varphi_i$ genuinely instantiates the
+abstract move $\varphi$. Approximate commutation requires an explicit error object or bound.
+
+The return path has two purposes. First, it prevents sterile formalism. Second, it allows evidence from
+the concrete domain to flow back and revise the abstract theory. The system is therefore not a one-way
+pipeline from abstraction to application but a closed abductive--deductive loop.
+
+\section{Illustration: representation systems, state connections, and mass}
+
+Consider the proposal that a physical theory is a representation system equipped with a state
+connection. Let
+\begin{equation}
+\pi:\mathcal{S}\longrightarrow\mathcal{R}
+\end{equation}
+be a fibration in which $\mathcal{R}$ is a space of descriptions and the fiber $\mathcal{S}_r$ contains
+states available in representation $r$. A connection $\nabla$ transports states along descriptive
+morphisms.
+
+The atlas then generates precise pressures:
+\begin{itemize}
+  \item exact descriptive equivalences should induce flat or coherently path-independent transport;
+  \item physical path dependence must be separated from artifacts of representation;
+  \item nontrivial holonomy may encode global sectors only if it maps to known observables;
+  \item coarse-graining should transform the connection naturally or with a controlled defect;
+  \item any relation between curvature and interaction must be derived, not stipulated.
+\end{itemize}
+
+For Euclidean-time or transfer evolution $E_t$ with vacuum projection $P_\Omega$, a mass gap can be
+expressed as a coercive estimate
+\begin{equation}
+\lVert E_t(1-P_\Omega)\rVert\leq C e^{-mt}.
+\label{eq:gap}
+\end{equation}
+A relevance-guided generator may propose that $m$ measures the contraction rate of nonvacuum
+relational curvature or holonomy sectors. The proposal has high potential unification value because it
+connects representation transport, topology, interaction, and spectral decay. It is nevertheless only
+admissible if it passes the following return tests:
+\begin{enumerate}
+  \item recover the usual spectral definition $H|_{\Omega^\perp}\geq m$;
+  \item specify the map from curvature or holonomy data to the nonvacuum spectral subspace;
+  \item establish naturality under exact changes of representation;
+  \item derive a lattice transfer inequality or a continuum correlation-decay statement;
+  \item produce a new bound or distinction not already contained in the spectral formulation.
+\end{enumerate}
+
+The relevance layer also detects a scope correction. Real-time quantum evolution is unitary and does
+not literally dissipate nonvacuum structure. The contraction language belongs to Euclidean time,
+transfer operators, heat semigroups, open systems, or coarse-grained dynamics. A modal distinction
+between Lorentzian and Euclidean regimes is therefore not a technical detail but a relevance-preserving
+repair: without it, the attractive unification would erase a physically essential difference.
+
+This example shows the division of labor. Category theory identifies the possible structural bridge.
+The generative function recognizes why the bridge would matter. Relevance operators prioritize the
+candidate. Formal and physical validation decide whether the bridge is real.
+
+\section{Levels of conceptual innovation}
+
+The reasoner should label candidates by the depth at which they modify the atlas:
+\begin{enumerate}
+  \item \textbf{Parametric innovation:} a missing coefficient, term, boundary condition, or lemma.
+  \item \textbf{Structural innovation:} a new invariant, mediator, universal object, interaction, or
+  obstruction.
+  \item \textbf{Representational innovation:} a new notion of state, observable, morphism, scale, or
+  decomposition.
+  \item \textbf{Foundational innovation:} a new criterion of identity, locality, explanation, or logic.
+\end{enumerate}
+
+High immediate unblocking relevance often occurs at Level 1. High unification and explanatory value
+often occurs at Level 2. Major conceptual novelty usually requires Level 3 or 4. These dimensions must
+not be conflated: a foundational proposal can be profound but irrelevant to the current bottleneck,
+while a small bridge theorem can transform an active programme.
+
+A meta-abductive trigger should activate representation mutation when:
+\begin{itemize}
+  \item all low-complexity completions inside the present grammar fail;
+  \item successful candidates require repeated exceptions or auxiliary structures;
+  \item relevance scores are unstable under equivalent presentations;
+  \item concrete instantiation systematically breaks the same abstraction;
+  \item independent pressure types localize at the same representational boundary.
+\end{itemize}
+
+\section{Formal properties and attainable guarantees}
+
+The complete discovery process is not decidable or exhaustive. Several relative results are nevertheless
+reasonable targets.
+
+\begin{principle}[Transport soundness]
+For an accepted theory morphism, derivability and satisfaction should be preserved in the declared
+scope. A transported theorem must remain well typed and semantically valid under model reduct.
+\end{principle}
+
+\begin{principle}[Conservative completion]
+For selected completion operators, sufficient conditions should guarantee that protected theorems of
+the original theory are neither invalidated nor strengthened vacuously by inconsistency.
+\end{principle}
+
+\begin{principle}[Relative abductive coverage]
+For a finite theory fragment, bounded complexity, and a fixed operator grammar, the system should be
+able to enumerate all minimal completions up to the declared equivalence relation. This is a relative
+coverage claim, not completeness over all possible concepts.
+\end{principle}
+
+\begin{principle}[Representation invariance]
+If $F:D\simeq D'$ is an accepted equivalence of atlas regions, then relevance should be stable under
+transport:
+\begin{equation}
+\mathbf{R}_Q(H;D)
+\simeq
+\mathbf{R}_{FQ}(FH;D'),
+\end{equation}
+up to explicitly declared approximation tolerances.
+\end{principle}
+
+\begin{principle}[Relevance calibration]
+Relevance estimates should be empirically calibrated against downstream outcomes: proof closure,
+held-out theorem transfer, successful prediction, assumption reduction, experiment design, or expert
+research decisions. This is an evaluation requirement rather than a purely formal theorem.
+\end{principle}
+
+\section{Evaluation programme}
+
+\subsection{Historical reconstruction}
+
+The first benchmark should be counterfactual rediscovery. Construct an atlas from material that
+predates or omits a known concept, then test whether the reasoner localizes the relevant pressure and
+proposes the right structural role. Suitable mathematical targets include quotient objects, tensor
+products, completions, localization, sheafification, spectral sequences, and representability results.
+Physics targets may include state spaces, gauge connections, effective actions, order parameters,
+renormalization maps, and topological sectors.
+
+Success must be measured by the recovery of the concept's universal or operational role, not by lexical
+similarity to its historical name.
+
+\subsection{Prospective metrics}
+
+Useful metrics include:
+\begin{itemize}
+  \item top-$k$ recovery of held-out universal constructions;
+  \item weighted proof obligations unblocked per unit validation cost;
+  \item reduction in independent assumptions or description length;
+  \item number and importance of newly transported theorems;
+  \item held-out predictions or conjectures produced;
+  \item survival under countermodel and adversarial scope testing;
+  \item stability under equivalent encodings and changes of terminology;
+  \item expert judgments of explanatory and pragmatic relevance;
+  \item calibration between predicted and realized research value.
+\end{itemize}
+
+Negative cases are essential. The benchmark should include elegant but sterile completions, vacuous
+common abstractions, inconsistent pushouts, and high-connectivity concepts that erase decisive domain
+distinctions.
+
+\subsection{A staged implementation}
+
+\begin{enumerate}
+  \item Build a small foundation-independent theory atlas with explicit scopes, model functors, and
+  provenance. MMT is a plausible knowledge substrate \cite{rabe2016}.
+  \item Implement a restricted completion calculus using sketches or generalized algebraic theories.
+  GATlab demonstrates that theory morphisms and symbolic models can be computational objects
+  \cite{gatlab}.
+  \item Connect a proof assistant for categories, functors, natural transformations, limits, adjunctions,
+  and theorem transport. Lean's mathlib contains substantial category-theory infrastructure
+  \cite{leanmathlib}.
+  \item Add the pressure interpreter and multi-objective relevance layer.
+  \item Evaluate on historical reconstruction before attempting open scientific problems.
+  \item Add HoTT or cubical foundations where higher coherence is empirically necessary.
+  \item Run prospective pilots at a boundary with both rich formal structure and concrete return paths.
+\end{enumerate}
+
+Category-theoretic augmentation of executable scientific models already provides evidence that
+semantic model structure can support model combination and transformation \cite{halter2020}. The
+proposed programme extends this direction from model manipulation to explicit opportunity detection,
+relevance-guided generation, and meta-level representational revision.
+
+\section{Limitations}
+
+The framework has several irreducible limitations.
+
+First, no fixed formal language can exhaust all scientifically meaningful abstractions. The atlas is a
+map, not the conceptual universe. Second, relevance depends on values, aims, and opportunity costs;
+these can be made explicit but not eliminated. Third, formal unification may fail to correspond to
+causal or physical unity. Fourth, empirical underdetermination permits several inequivalent theories to
+fit the same evidence. Fifth, formalization itself can distort a concept by privileging what is easy to
+encode. Finally, generative systems inherit biases from their corpora and may repeatedly rediscover
+dominant frameworks while overlooking weakly documented alternatives.
+
+The appropriate response is not to abandon formal structure but to preserve plural representations,
+track uncertainty, test invariance, retain human criticism, and treat representation mutation as a
+normal part of discovery rather than as a failure of the system.
+
+\section{Conclusion}
+
+The proposed reasoner combines five distinct capacities:
+\begin{enumerate}
+  \item a higher theory atlas that represents theories, models, scopes, and transformations;
+  \item a philosophical-reflective layer that identifies essential fragmentation and reconstructs
+  meaning before formal completion;
+  \item a categorical and homotopical calculus of structural defects and completions;
+  \item a relevance-guided generative element that proposes local, bridging, mechanistic, and
+  representational changes;
+  \item an independent validation loop connecting abstraction to proof, computation, experiment, and
+  pragmatic consequence.
+\end{enumerate}
+
+Its central innovation is to treat relevance as part of the formal discovery problem without confusing
+relevance with truth. High-value concepts are not simply those that complete many diagrams. They are
+those that relieve material pressures, unlock consequential work, compress explanations, unify without
+erasure, transport results, generate discriminating consequences, and return to concrete practice.
+
+The strongest defensible objective is therefore:
+
+\begin{quote}
+Given an explicit theory atlas, research context, and pressure field, identify essential conceptual
+fragmentation; reconstruct the meanings and commitments at stake; generate and compare minimal
+semantics-preserving transformations with high unblocking, explanatory, unifying, predictive, and
+pragmatic relevance; instantiate and test their consequences; and diagnose when the highest-value move
+is to revise the representation space itself.
+\end{quote}
+
+This would turn category theory from a retrospective language of unification into an operational guide
+to where conceptual invention should be attempted, while the relevance-guided generative element
+supplies the context-sensitive judgment that pure completion mechanics cannot provide.
+
+\begin{thebibliography}{99}
+
+\bibitem{hottbook}
+The Univalent Foundations Program.
+\newblock \emph{Homotopy Type Theory: Univalent Foundations of Mathematics}.
+\newblock Institute for Advanced Study, 2013.
+\newblock \url{https://homotopytypetheory.org/book/}
+
+\bibitem{rabe2016}
+Florian Rabe.
+\newblock MMT: A foundation-independent approach to formal knowledge.
+\newblock 2016.
+\newblock \url{https://uniformal.github.io/doc/philosophy/articles/mmt.pdf}
+
+\bibitem{goguenburstall1992}
+Joseph A. Goguen and Rod M. Burstall.
+\newblock Institutions: Abstract model theory for specification and programming.
+\newblock \emph{Journal of the ACM}, 39(1):95--146, 1992.
+
+\bibitem{fongspivak2019}
+Brendan Fong and David I. Spivak.
+\newblock \emph{An Invitation to Applied Category Theory: Seven Sketches in Compositionality}.
+\newblock Cambridge University Press, 2019.
+\newblock \url{https://arxiv.org/abs/1803.05316}
+
+\bibitem{gatlab}
+Owen Lynch, James Fairbanks, Evan Patterson, and collaborators.
+\newblock GATlab: Modeling and programming with generalized algebraic theories.
+\newblock 2024.
+\newblock \url{https://arxiv.org/abs/2404.04837}
+
+\bibitem{halter2020}
+Micah Halter, Christine Herlihy, and James Fairbanks.
+\newblock A compositional framework for scientific model augmentation.
+\newblock \emph{Electronic Proceedings in Theoretical Computer Science}, 323:172--182, 2020.
+\newblock \url{https://arxiv.org/abs/1907.03536}
+
+\bibitem{leanmathlib}
+Lean Community.
+\newblock Category theory in mathlib.
+\newblock \url{https://leanprover-community.github.io/theories/category_theory.html}
+
+\bibitem{kitcher1981}
+Philip Kitcher.
+\newblock Explanatory unification.
+\newblock \emph{Philosophy of Science}, 48(4):507--531, 1981.
+
+\bibitem{harman1965}
+Gilbert H. Harman.
+\newblock The inference to the best explanation.
+\newblock \emph{The Philosophical Review}, 74(1):88--95, 1965.
+
+\bibitem{rissanen1978}
+Jorma Rissanen.
+\newblock Modeling by shortest data description.
+\newblock \emph{Automatica}, 14(5):465--471, 1978.
+
+\bibitem{kuhn1962}
+Thomas S. Kuhn.
+\newblock \emph{The Structure of Scientific Revolutions}.
+\newblock University of Chicago Press, 1962.
+
+\bibitem{lakatos1976}
+Imre Lakatos.
+\newblock \emph{Proofs and Refutations: The Logic of Mathematical Discovery}.
+\newblock Cambridge University Press, 1976.
+
+\bibitem{brandom1994}
+Robert B. Brandom.
+\newblock \emph{Making It Explicit: Reasoning, Representing, and Discursive Commitment}.
+\newblock Harvard University Press, 1994.
+
+\bibitem{cassirer1910}
+Ernst Cassirer.
+\newblock \emph{Substance and Function}.
+\newblock 1910; English translation, Open Court, 1923.
+
+\end{thebibliography}
+
+\end{document}

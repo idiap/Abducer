@@ -1,0 +1,167 @@
+\documentclass[11pt]{article}
+
+\usepackage[margin=1in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage{booktabs}
+\usepackage{enumitem}
+\usepackage{hyperref}
+\usepackage{longtable}
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue!50!black,
+  urlcolor=blue!50!black,
+  citecolor=blue!50!black,
+  pdftitle={Prior-Art Pass Report for p-vs-np}
+}
+
+\title{Prior-Art Pass Report for \texttt{p-vs-np}}
+\author{Neuro-symbolic AI Group\\Idiap Research Institute}
+\date{March 17, 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+This report records a targeted prior-art pass over the current blocked proof frontier. It imports decisive external theorem-level references into the problem-scoped InformalMathLib and explains what those references change about the current proof state.
+\end{abstract}
+
+\section{Snapshot}
+\begin{itemize}[leftmargin=*,itemsep=0.2em]
+\item Imported references: 8
+\item Blocked queue items: 24
+\item Covered blocked queue items: 24
+\item Uncovered blocked queue items: 
+\end{itemize}
+
+\section{Search Justification}
+The local queue is exhausted through route conjectures, abstraction repairs, and repair lemmas, so browsing is justified only for named missing lemmas that materially affect novelty or barrier judgments.
+
+\section{Key Findings}
+\begin{itemize}[leftmargin=*,itemsep=0.2em]
+\item The imported references ground most target-side theorems and barriers, but none closes the missing carrier-realization or formula-size transport lemmas.
+\item The PIT route sharpens from a vague semantic-to-algorithmic gap into an explicitness gap: known results already connect explicit hitting sets to black-box PIT and PIT derandomization to lower bounds.
+\item The Cook-Reckhow route is not discovering a new target theorem; the real gap is the bridge from the local definitional object to the existing NP=coNP characterization.
+\item The MCSP local-reduction route is now barrier-aware because prior art already shows non-NP-hardness under local reductions and strong consequences for harder reductions.
+\item The general magnification route is literature-backed, but the unresolved step remains object-class alignment between the MCSP-specific carrier and the sparse-problem or distinguisher framework.
+\end{itemize}
+
+\section{Imported References}
+\begin{longtable}{p{0.13\linewidth}p{0.1\linewidth}p{0.42\linewidth}p{0.25\linewidth}}
+\toprule
+ID & Type & Title & Obstruction classes \\
+\midrule
+mathlibref.p-vs-np.001 & theorem & Hardness Magnification for Natural Problems & carrier-realization, mcsp-magnification \\
+mathlibref.p-vs-np.002 & theorem & Hardness Magnification Near State-of-the-Art Lower Bounds & carrier-realization, formula-size-transport, mcsp-magnification \\
+mathlibref.p-vs-np.003 & theorem & MCSP Is Not NP-Hard Under Local Reductions & local-reduction-barrier \\
+mathlibref.p-vs-np.004 & theorem & Hitting-Set Generators Yield Black-Box PIT & pit-upgrade, explicitness-gap \\
+mathlibref.p-vs-np.005 & theorem & Derandomizing Polynomial Identity Tests Means Proving Circuit Lower Bounds & pit-upgrade, target-grounding \\
+mathlibref.p-vs-np.008 & theorem & Many Natural Problems Are NP-Complete & schema-to-examples, target-grounding \\
+mathlibref.p-vs-np.006 & theorem & Polynomially Bounded Proof Systems Characterize NP Equals coNP & characterization-bridge, target-grounding \\
+mathlibref.p-vs-np.007 & theorem & A Simple and General Hardness Magnification Theorem & target-alignment, general-magnification \\
+\bottomrule
+\end{longtable}
+
+\section{Obstruction Map}
+\subsection*{carrier-realization}
+\textbf{References.} mathlibref.p-vs-np.001, mathlibref.p-vs-np.002
+
+\textbf{Queue ids.} proofq.p-vs-np.001, proofq.p-vs-np.002, proofq.p-vs-np.005, proofq.p-vs-np.009, proofq.p-vs-np.010, proofq.p-vs-np.013, proofq.p-vs-np.018, proofq.p-vs-np.020, proofq.p-vs-np.021
+
+\begin{itemize}[leftmargin=*,itemsep=0.2em]
+\item The leading MCSP route is no longer novel at the level of magnification-as-such; the open step is the typed carrier or realization theorem that would instantiate the route inside the current proof state.
+\item The bridge.001 target is externally grounded, so the remaining novelty claim shifts to how the current framework realizes a usable MCSP carrier rather than to the target theorem itself.
+\end{itemize}
+\subsection*{characterization-bridge}
+\textbf{References.} mathlibref.p-vs-np.006
+
+\textbf{Queue ids.} proofq.p-vs-np.006, proofq.p-vs-np.014, proofq.p-vs-np.024
+
+\begin{itemize}[leftmargin=*,itemsep=0.2em]
+\item The Cook-Reckhow route is now clearly a bridge problem, not a target-theorem problem: the open step is the semantic bridge from the local definitional object to this existing characterization theorem.
+\end{itemize}
+\subsection*{explicitness-gap}
+\textbf{References.} mathlibref.p-vs-np.004
+
+\textbf{Queue ids.} proofq.p-vs-np.016, proofq.p-vs-np.017
+
+\begin{itemize}[leftmargin=*,itemsep=0.2em]
+\item The PIT route is not blocked by the total absence of a hitting-set-to-PIT connection; it is blocked by the lack of an explicit generator or certificate object for the right class.
+\end{itemize}
+\subsection*{formula-size-transport}
+\textbf{References.} mathlibref.p-vs-np.002
+
+\textbf{Queue ids.} proofq.p-vs-np.001, proofq.p-vs-np.005, proofq.p-vs-np.009, proofq.p-vs-np.010, proofq.p-vs-np.013, proofq.p-vs-np.018, proofq.p-vs-np.020, proofq.p-vs-np.021
+
+\begin{itemize}[leftmargin=*,itemsep=0.2em]
+\item The bridge.001 target is externally grounded, so the remaining novelty claim shifts to how the current framework realizes a usable MCSP carrier rather than to the target theorem itself.
+\end{itemize}
+\subsection*{general-magnification}
+\textbf{References.} mathlibref.p-vs-np.007
+
+\textbf{Queue ids.} proofq.p-vs-np.003, proofq.p-vs-np.011, proofq.p-vs-np.023
+
+\begin{itemize}[leftmargin=*,itemsep=0.2em]
+\item The general magnification route is literature-backed, but its live gap is an alignment theorem from the MCSP obstruction family to the sparse-problem or distinguisher object class required by the general theorem.
+\end{itemize}
+\subsection*{local-reduction-barrier}
+\textbf{References.} mathlibref.p-vs-np.003
+
+\textbf{Queue ids.} proofq.p-vs-np.004, proofq.p-vs-np.012, proofq.p-vs-np.019
+
+\begin{itemize}[leftmargin=*,itemsep=0.2em]
+\item The local-reduction route is now explicitly barrier-aware: the missing gadget lemma must overcome known non-hardness and consequence results, not just fill an arbitrary construction gap.
+\end{itemize}
+\subsection*{mcsp-magnification}
+\textbf{References.} mathlibref.p-vs-np.001, mathlibref.p-vs-np.002
+
+\textbf{Queue ids.} proofq.p-vs-np.001, proofq.p-vs-np.002, proofq.p-vs-np.005, proofq.p-vs-np.009, proofq.p-vs-np.010, proofq.p-vs-np.013, proofq.p-vs-np.018, proofq.p-vs-np.020, proofq.p-vs-np.021
+
+\begin{itemize}[leftmargin=*,itemsep=0.2em]
+\item The leading MCSP route is no longer novel at the level of magnification-as-such; the open step is the typed carrier or realization theorem that would instantiate the route inside the current proof state.
+\item The bridge.001 target is externally grounded, so the remaining novelty claim shifts to how the current framework realizes a usable MCSP carrier rather than to the target theorem itself.
+\end{itemize}
+\subsection*{pit-upgrade}
+\textbf{References.} mathlibref.p-vs-np.004, mathlibref.p-vs-np.005
+
+\textbf{Queue ids.} proofq.p-vs-np.008, proofq.p-vs-np.016, proofq.p-vs-np.017
+
+\begin{itemize}[leftmargin=*,itemsep=0.2em]
+\item The PIT route is not blocked by the total absence of a hitting-set-to-PIT connection; it is blocked by the lack of an explicit generator or certificate object for the right class.
+\item The PIT route's target theorem is prior art; the remaining open step is the current framework's inability to produce the required derandomization premise from its local PIT carrier.
+\end{itemize}
+\subsection*{schema-to-examples}
+\textbf{References.} mathlibref.p-vs-np.008
+
+\textbf{Queue ids.} proofq.p-vs-np.007, proofq.p-vs-np.015, proofq.p-vs-np.022
+
+\begin{itemize}[leftmargin=*,itemsep=0.2em]
+\item The NP-complete examples route is now target-grounded: the open step is constructing or transferring explicit examples from the local abstraction, not discovering that natural NP-complete problems exist.
+\end{itemize}
+\subsection*{target-alignment}
+\textbf{References.} mathlibref.p-vs-np.007
+
+\textbf{Queue ids.} proofq.p-vs-np.003, proofq.p-vs-np.011, proofq.p-vs-np.023
+
+\begin{itemize}[leftmargin=*,itemsep=0.2em]
+\item The general magnification route is literature-backed, but its live gap is an alignment theorem from the MCSP obstruction family to the sparse-problem or distinguisher object class required by the general theorem.
+\end{itemize}
+\subsection*{target-grounding}
+\textbf{References.} mathlibref.p-vs-np.005, mathlibref.p-vs-np.006, mathlibref.p-vs-np.008
+
+\textbf{Queue ids.} proofq.p-vs-np.006, proofq.p-vs-np.007, proofq.p-vs-np.008, proofq.p-vs-np.014, proofq.p-vs-np.015, proofq.p-vs-np.016, proofq.p-vs-np.017, proofq.p-vs-np.022, proofq.p-vs-np.024
+
+\begin{itemize}[leftmargin=*,itemsep=0.2em]
+\item The PIT route's target theorem is prior art; the remaining open step is the current framework's inability to produce the required derandomization premise from its local PIT carrier.
+\item The NP-complete examples route is now target-grounded: the open step is constructing or transferring explicit examples from the local abstraction, not discovering that natural NP-complete problems exist.
+\item The Cook-Reckhow route is now clearly a bridge problem, not a target-theorem problem: the open step is the semantic bridge from the local definitional object to this existing characterization theorem.
+\end{itemize}
+
+\section{Still Uncovered}
+\begin{itemize}[leftmargin=*,itemsep=0.2em]
+\item All blocked queue items have at least one linked imported reference.
+\end{itemize}
+
+\end{document}

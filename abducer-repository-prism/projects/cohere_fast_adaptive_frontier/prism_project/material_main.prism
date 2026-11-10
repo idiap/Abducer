@@ -1,0 +1,51 @@
+# lunar-runtime: {"declaration":"MaterializedCohereFastAdaptiveFrontier","entry_argument":"scope_grounding","execute_hook":"abducer-workflow-execute","id":"cohere_fast_adaptive_frontier","input_schema":{"additionalProperties":false,"default":{"claim_ceiling":"conditional finite-regulator statements only","domain_id":"yang-mills","target_ref":"finite-regulator-frontier"},"properties":{"claim_ceiling":{"default":"conditional finite-regulator statements only","maxLength":16000,"minLength":1,"type":"string"},"domain_id":{"default":"yang-mills","maxLength":16000,"minLength":1,"type":"string"},"target_ref":{"default":"finite-regulator-frontier","maxLength":16000,"minLength":1,"type":"string"}},"required":["domain_id","target_ref","claim_ceiling"],"type":"object"},"metadata":{"completion_contract":{"allowed_final_statuses":["passed","completed"],"forbid_blockers":true,"reasoning_complete":true,"reasoning_events_min":4,"terminal_state":"completed"},"description":"form a bounded domain frontier without epistemic promotion","model_required":true,"network_required":false,"provenance_contract":{"agent_invocations":[{"activated_skill_ids":["ym-build-observable-core","ym-build-representation-calculus","ym-calibrate-restricted-models","ym-design-regulator-atlas"],"agent_name":"bounded_frontier_material_agent","workflow_occurrence":"bounded_frontier"},{"activated_skill_ids":["epistemic-status-ledger"],"agent_name":"frontier_readiness_material_agent","workflow_occurrence":"frontier_readiness"}],"required_source_reads":[]},"reasoning_contract":{"steps":["bounded_frontier","frontier_readiness"],"workflow":"CohereFastAdaptiveFrontier"},"reasoning_required":true,"required_host_capabilities":["model","prism-engine","reasoning-events"],"scientific_truth_verified":false,"semantic_mode":"operational-model-generated","source_materialization_status":"blocked_unresolved_projection_gap","timeout_seconds":1800},"output_schema":{"additionalProperties":false,"properties":{"analysis_results":{"type":"object"},"compact_prism_input":{"type":"object"},"markdown":{"minLength":1,"type":"string"},"narrative_slots":{"type":"array"},"report_verification":{"properties":{"reasoning_complete":{"const":true},"status":{"const":"passed"}},"required":["status","reasoning_complete"],"type":"object"},"structured_value":{"properties":{"execution_provenance":{"type":"object"},"final_disposition":{"properties":{"blockers":{"maxItems":0,"type":"array"},"reasoning_complete":{"const":true},"status":{"const":"passed"}},"required":["status","reasoning_complete","blockers"],"type":"object"},"reasoning_result":{"type":"object"}},"required":["final_disposition","reasoning_result","execution_provenance"],"type":"object"}},"required":["markdown","structured_value","analysis_results","compact_prism_input","narrative_slots","report_verification"],"type":"object"},"prepare_hook":"abducer-workflow-prepare","verify_hook":"abducer-workflow-verify"}
+
+# Host-executed material graph for the complete reviewed reasoning path.
+# Generated values retain the source epistemic boundary and are not native proof or experiment receipts.
+
+from types import (
+    BoundedDomainFrontier,
+    DomainScopeGrounding,
+    FrontierReadinessDisposition,
+)
+
+from generated.bounded_frontier_skill_1 import bounded_frontier_skill_1
+from generated.bounded_frontier_skill_2 import bounded_frontier_skill_2
+from generated.bounded_frontier_skill_3 import bounded_frontier_skill_3
+from generated.bounded_frontier_skill_4 import bounded_frontier_skill_4
+from generated.frontier_readiness_skill_1 import frontier_readiness_skill_1
+
+# Real model capability for source occurrence bounded_frontier:UnresolvedDomainFrontierProjection.
+agent bounded_frontier_material_agent(
+    task: DomainScopeGrounding,
+) -> Result[Generated[BoundedDomainFrontier], ModelFailure]
+    ! {AI.Generate, Context.Disclose}:
+    skills: Skills[DomainScopeGrounding] = [bounded_frontier_skill_1, bounded_frontier_skill_2, bounded_frontier_skill_3, bounded_frontier_skill_4]
+
+# Real model capability for source occurrence frontier_readiness:EvidentialFrontierReadinessAssessment.
+agent frontier_readiness_material_agent(
+    task: BoundedDomainFrontier,
+) -> Result[Generated[String], ModelFailure]
+    ! {AI.Generate, Context.Disclose}:
+    skills: Skills[BoundedDomainFrontier] = [frontier_readiness_skill_1]
+
+workflow MaterializedCohereFastAdaptiveFrontier(
+    scope_grounding: DomainScopeGrounding,
+) -> Generated[String]
+    fails ModelFailure
+    ! {AI.Generate, Context.Disclose}:
+    sequence:
+        # Frontier construction must preserve the grounding's domain and claim ceiling.
+        [bounded_frontier: bounded_frontier_material_agent(scope_grounding)]
+        # Readiness gates use of the bounded frontier; they do not promote its claims.
+        [frontier_readiness: frontier_readiness_material_agent(bounded_frontier.value)]
+
+    return frontier_readiness
+
+
+def main(
+    scope_grounding: DomainScopeGrounding,
+    model_access: ModelGenerate,
+    disclosure: ContextDisclose,
+) -> Result[Generated[String], ModelFailure] ! {AI.Generate, Context.Disclose}:
+    return solve MaterializedCohereFastAdaptiveFrontier(scope_grounding)

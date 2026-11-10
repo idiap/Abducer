@@ -1,0 +1,65 @@
+# SPDX-FileCopyrightText: © 2026 Idiap Research Institute <contact@idiap.ch>
+#
+# SPDX-FileContributor: Andre Freitas <andre.freitas@idiap.ch>
+# Neuro-symbolic AI Group
+#
+# SPDX-FileContributor: Danilo Gusicuma <danilo.gusicuma@idiap.ch>
+# Neuro-symbolic AI Group
+#
+# SPDX-License-Identifier: MIT
+# Prism ME escalation rules for Codex.
+#
+# These rules only affect commands that Codex wants to run outside the sandbox.
+# Keep them narrow and conservative. Repo-local workflow enforcement lives mainly
+# in `.codex/hooks.json` and `prism_me/scripts/prism_control.py`.
+
+prefix_rule(
+    pattern = ["git", "reset"],
+    decision = "prompt",
+    justification = "History-rewriting Git commands require explicit review in Prism-controlled work.",
+    match = [
+        "git reset --hard HEAD",
+        "git reset HEAD~1",
+    ],
+    not_match = [
+        "git status",
+    ],
+)
+
+prefix_rule(
+    pattern = ["git", "clean"],
+    decision = "forbidden",
+    justification = "Use an explicit reviewed cleanup path instead of `git clean`.",
+    match = [
+        "git clean -fd",
+    ],
+    not_match = [
+        "git status",
+    ],
+)
+
+prefix_rule(
+    pattern = ["rm"],
+    decision = "prompt",
+    justification = "File deletion outside the sandbox should be reviewed explicitly.",
+    match = [
+        "rm -rf ../outside-workspace",
+        "rm /tmp/example.txt",
+    ],
+    not_match = [
+        "rg rm README.md",
+    ],
+)
+
+prefix_rule(
+    pattern = ["python3", "prism_me/scripts/prism_control.py"],
+    decision = "allow",
+    justification = "The Prism control CLI is a blessed local workflow entrypoint.",
+    match = [
+        "python3 prism_me/scripts/prism_control.py status",
+        "python3 prism_me/scripts/prism_control.py validate",
+    ],
+    not_match = [
+        "python3 other_script.py",
+    ],
+)

@@ -1,0 +1,768 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://abducer.local/spec/formal_lens_production_packet.schema.json",
+  "title": "Constructive parallel Category/HoTT production packet",
+  "description": "A four-route, one-ancestor internal protocol packet. Formal routes may change a precommitted domain decision only after a finite constructive completion validates; assumption deletion and unchanged decisions remain quarantined. All physics, theorem, continuum, Yang--Mills, value, and independence authority is explicitly null.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "packet_id",
+    "formal_request_id",
+    "request_digest",
+    "frozen_ancestor_digest",
+    "registry_binding",
+    "execution_contract",
+    "route_receipts",
+    "terminal_barrier",
+    "production_status",
+    "artifact_manifest",
+    "authority_boundary",
+    "packet_digest"
+  ],
+  "$defs": {
+    "text": {"type": "string", "minLength": 1},
+    "id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 180,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$"
+    },
+    "digest": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
+    "idList": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {"$ref": "#/$defs/id"}
+    },
+    "textList": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {"$ref": "#/$defs/text"}
+    },
+    "decision": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["decision_id", "decision_kind", "action", "target_burden_id"],
+      "properties": {
+        "decision_id": {"$ref": "#/$defs/id"},
+        "decision_kind": {
+          "enum": [
+            "continue_route",
+            "compare_route_order",
+            "construct_mediator",
+            "require_coherence",
+            "split_route",
+            "run_secondary_falsifier",
+            "revise_translation",
+            "quarantine_route"
+          ]
+        },
+        "action": {"$ref": "#/$defs/text"},
+        "target_burden_id": {"$ref": "#/$defs/id"}
+      }
+    },
+    "predicateValue": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["predicate_id", "value", "derivation_kind", "evidence_digest"],
+      "properties": {
+        "predicate_id": {"$ref": "#/$defs/id"},
+        "value": {"type": "boolean"},
+        "derivation_kind": {
+          "enum": [
+            "declared_baseline",
+            "validated_categorical_completion",
+            "validated_hott_coherence_completion",
+            "unchanged_capable_nonformal_control",
+            "hypothetical_assumption_away_not_actual"
+          ]
+        },
+        "evidence_digest": {"$ref": "#/$defs/digest"}
+      }
+    },
+    "finiteAction": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source_id", "target_id"],
+      "properties": {
+        "source_id": {"$ref": "#/$defs/id"},
+        "target_id": {"$ref": "#/$defs/id"}
+      }
+    },
+    "obstructionWitness": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "obstruction_id",
+        "lens",
+        "obstruction_kind",
+        "task_relation_ids",
+        "baseline_artifact_digest",
+        "baseline_model_digest",
+        "baseline_witness_digest",
+        "validator_receipt_id",
+        "replay_result",
+        "counterexamples",
+        "witness_digest"
+      ],
+      "properties": {
+        "obstruction_id": {"$ref": "#/$defs/id"},
+        "lens": {"enum": ["categorical", "hott"]},
+        "obstruction_kind": {"enum": ["noncommuting_composition", "missing_transport_coherence"]},
+        "task_relation_ids": {"$ref": "#/$defs/idList"},
+        "baseline_artifact_digest": {"$ref": "#/$defs/digest"},
+        "baseline_model_digest": {"$ref": "#/$defs/digest"},
+        "baseline_witness_digest": {"$ref": "#/$defs/digest"},
+        "validator_receipt_id": {"$ref": "#/$defs/id"},
+        "replay_result": {"enum": ["noncommuting", "noncoherent"]},
+        "counterexamples": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["input_id", "left_output_id", "right_output_id", "left_truth", "right_truth"],
+            "properties": {
+              "input_id": {"$ref": "#/$defs/id"},
+              "left_output_id": {"$ref": "#/$defs/id"},
+              "right_output_id": {"$ref": "#/$defs/id"},
+              "left_truth": {"type": ["boolean", "null"]},
+              "right_truth": {"type": ["boolean", "null"]}
+            }
+          }
+        },
+        "witness_digest": {"$ref": "#/$defs/digest"}
+      }
+    },
+    "categoryObject": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["object_id", "role", "semantic_binding_ids", "carrier_member_ids"],
+      "properties": {
+        "object_id": {"$ref": "#/$defs/id"},
+        "role": {"enum": ["source", "mediator", "target", "coequalizer"]},
+        "semantic_binding_ids": {"$ref": "#/$defs/idList"},
+        "carrier_member_ids": {"$ref": "#/$defs/idList"}
+      }
+    },
+    "categoryMorphism": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["morphism_id", "domain_object_id", "codomain_object_id", "morphism_kind", "relation_id", "action"],
+      "properties": {
+        "morphism_id": {"$ref": "#/$defs/id"},
+        "domain_object_id": {"$ref": "#/$defs/id"},
+        "codomain_object_id": {"$ref": "#/$defs/id"},
+        "morphism_kind": {"enum": ["task_route", "identity", "quotient", "factored"]},
+        "relation_id": {"$ref": "#/$defs/id"},
+        "action": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"$ref": "#/$defs/finiteAction"}
+        }
+      }
+    },
+    "categoricalCompletion": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "construction_kind",
+        "objects",
+        "morphisms",
+        "composition",
+        "coequalizer_classes",
+        "commuting_completion",
+        "naturality_checks",
+        "universal_property",
+        "protected_structure",
+        "construction_valid",
+        "model_digest"
+      ],
+      "properties": {
+        "construction_kind": {"const": "finite_coequalizer_commuting_completion"},
+        "objects": {"type": "array", "minItems": 4, "items": {"$ref": "#/$defs/categoryObject"}},
+        "morphisms": {"type": "array", "minItems": 3, "items": {"$ref": "#/$defs/categoryMorphism"}},
+        "composition": {
+          "type": "array",
+          "minItems": 2,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["composition_id", "path_morphism_ids", "result_action_digest", "associative_on_declared_carrier"],
+            "properties": {
+              "composition_id": {"$ref": "#/$defs/id"},
+              "path_morphism_ids": {"$ref": "#/$defs/idList"},
+              "result_action_digest": {"$ref": "#/$defs/digest"},
+              "associative_on_declared_carrier": {"const": true}
+            }
+          }
+        },
+        "coequalizer_classes": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["class_id", "target_member_ids"],
+            "properties": {
+              "class_id": {"$ref": "#/$defs/id"},
+              "target_member_ids": {"$ref": "#/$defs/idList"}
+            }
+          }
+        },
+        "commuting_completion": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["left_postcomposition", "right_postcomposition", "pointwise_equal"],
+          "properties": {
+            "left_postcomposition": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/finiteAction"}},
+            "right_postcomposition": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/finiteAction"}},
+            "pointwise_equal": {"const": true}
+          }
+        },
+        "naturality_checks": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["relation_id", "left_action_digest", "right_action_digest", "commutes"],
+            "properties": {
+              "relation_id": {"$ref": "#/$defs/id"},
+              "left_action_digest": {"$ref": "#/$defs/digest"},
+              "right_action_digest": {"$ref": "#/$defs/digest"},
+              "commutes": {"const": true}
+            }
+          }
+        },
+        "universal_property": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["property_kind", "finite_candidate_maps_checked", "factorizations_found", "unique_factorization_for_every_compatible_map"],
+          "properties": {
+            "property_kind": {"const": "finite_coequalizer_factorization"},
+            "finite_candidate_maps_checked": {"type": "integer", "minimum": 1},
+            "factorizations_found": {"type": "integer", "minimum": 1},
+            "unique_factorization_for_every_compatible_map": {"const": true}
+          }
+        },
+        "protected_structure": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["invariants", "preservation_status", "physics_transfer_authorized"],
+          "properties": {
+            "invariants": {"$ref": "#/$defs/textList"},
+            "preservation_status": {"const": "retained_as_open_translation_obligations"},
+            "physics_transfer_authorized": {"const": false}
+          }
+        },
+        "construction_valid": {"const": true},
+        "model_digest": {"$ref": "#/$defs/digest"}
+      }
+    },
+    "hottType": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type_id", "semantic_binding_ids", "term_ids", "universe_level", "truncation_level"],
+      "properties": {
+        "type_id": {"$ref": "#/$defs/id"},
+        "semantic_binding_ids": {"$ref": "#/$defs/idList"},
+        "term_ids": {"$ref": "#/$defs/idList"},
+        "universe_level": {"type": "integer", "minimum": 0},
+        "truncation_level": {"type": "integer", "minimum": -2, "maximum": 2}
+      }
+    },
+    "hottMap": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["map_id", "source_type_id", "target_type_id", "relation_id", "term_action"],
+      "properties": {
+        "map_id": {"$ref": "#/$defs/id"},
+        "source_type_id": {"$ref": "#/$defs/id"},
+        "target_type_id": {"$ref": "#/$defs/id"},
+        "relation_id": {"$ref": "#/$defs/id"},
+        "term_action": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/finiteAction"}}
+      }
+    },
+    "hottPath": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path_id", "level", "ambient_type_id", "source_term_id", "target_term_id", "constructor", "predicate_truth_preserved"],
+      "properties": {
+        "path_id": {"$ref": "#/$defs/id"},
+        "level": {"type": "integer", "minimum": 1, "maximum": 2},
+        "ambient_type_id": {"$ref": "#/$defs/id"},
+        "source_term_id": {"$ref": "#/$defs/id"},
+        "target_term_id": {"$ref": "#/$defs/id"},
+        "constructor": {"const": "freely_adjoined_pointwise_coherence_path"},
+        "predicate_truth_preserved": {"const": true}
+      }
+    },
+    "hottCompletion": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "construction_kind",
+        "types",
+        "maps",
+        "equivalences",
+        "transport_compositions",
+        "adjoined_paths",
+        "coherence_cell",
+        "equality_boundaries",
+        "protected_structure",
+        "construction_valid",
+        "model_digest"
+      ],
+      "properties": {
+        "construction_kind": {"const": "finite_pointwise_transport_coherence_completion"},
+        "types": {"type": "array", "minItems": 3, "items": {"$ref": "#/$defs/hottType"}},
+        "maps": {"type": "array", "minItems": 2, "items": {"$ref": "#/$defs/hottMap"}},
+        "equivalences": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["equivalence_id", "forward_map_id", "inverse_map_id", "inverse_homotopies_valid", "treated_as_identity"],
+            "properties": {
+              "equivalence_id": {"$ref": "#/$defs/id"},
+              "forward_map_id": {"$ref": "#/$defs/id"},
+              "inverse_map_id": {"$ref": "#/$defs/id"},
+              "inverse_homotopies_valid": {"const": true},
+              "treated_as_identity": {"const": false}
+            }
+          }
+        },
+        "transport_compositions": {
+          "type": "array",
+          "minItems": 2,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["composition_id", "transport_ids", "pointwise_action_digest"],
+            "properties": {
+              "composition_id": {"$ref": "#/$defs/id"},
+              "transport_ids": {"$ref": "#/$defs/idList"},
+              "pointwise_action_digest": {"$ref": "#/$defs/digest"}
+            }
+          }
+        },
+        "adjoined_paths": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/hottPath"}},
+        "coherence_cell": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["cell_id", "level", "source_composition_id", "target_composition_id", "pointwise_path_ids", "all_boundaries_inhabited", "coherent"],
+          "properties": {
+            "cell_id": {"$ref": "#/$defs/id"},
+            "level": {"const": 2},
+            "source_composition_id": {"$ref": "#/$defs/id"},
+            "target_composition_id": {"$ref": "#/$defs/id"},
+            "pointwise_path_ids": {"$ref": "#/$defs/idList"},
+            "all_boundaries_inhabited": {"const": true},
+            "coherent": {"const": true}
+          }
+        },
+        "equality_boundaries": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "judgmental_equality_claimed",
+            "identity_paths_constructed",
+            "equivalences_validated_as_finite_bijections",
+            "equivalence_collapsed_to_identity",
+            "transport_scope",
+            "truncation_scope",
+            "univalence_assumed",
+            "universe_scope",
+            "higher_coherence_scope"
+          ],
+          "properties": {
+            "judgmental_equality_claimed": {"const": false},
+            "identity_paths_constructed": {"const": true},
+            "equivalences_validated_as_finite_bijections": {"const": true},
+            "equivalence_collapsed_to_identity": {"const": false},
+            "transport_scope": {"const": "declared_finite_predicate_fibers_only"},
+            "truncation_scope": {"const": "retain_through_constructed_level_2_cell_no_higher_claim"},
+            "univalence_assumed": {"const": false},
+            "universe_scope": {"const": "one_declared_finite_local_universe_only"},
+            "higher_coherence_scope": {"const": "exact_constructed_cell_only"}
+          }
+        },
+        "protected_structure": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["invariants", "preservation_status", "physics_transfer_authorized"],
+          "properties": {
+            "invariants": {"$ref": "#/$defs/textList"},
+            "preservation_status": {"const": "retained_as_open_translation_obligations"},
+            "physics_transfer_authorized": {"const": false}
+          }
+        },
+        "construction_valid": {"const": true},
+        "model_digest": {"$ref": "#/$defs/digest"}
+      }
+    },
+    "formalComponent": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "lens",
+        "semantic_compilation",
+        "obstruction",
+        "construction_mode",
+        "intervened_model",
+        "construction_status",
+        "predicate_derivations",
+        "component_digest"
+      ],
+      "properties": {
+        "lens": {"enum": ["categorical", "hott"]},
+        "semantic_compilation": {"$ref": "task_relation_compilation.schema.json"},
+        "obstruction": {"$ref": "#/$defs/obstructionWitness"},
+        "construction_mode": {"enum": ["constructive_finite_completion", "unavailable_assumption_away_only"]},
+        "intervened_model": {
+          "anyOf": [
+            {"$ref": "#/$defs/categoricalCompletion"},
+            {"$ref": "#/$defs/hottCompletion"},
+            {"type": "null"}
+          ]
+        },
+        "construction_status": {"enum": ["constructively_removed", "hypothetical_assumption_away_sensitivity"]},
+        "predicate_derivations": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/predicateValue"}},
+        "component_digest": {"$ref": "#/$defs/digest"}
+      }
+    },
+    "ruleReplay": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "precommit_digest",
+        "rule_digest",
+        "baseline_predicates",
+        "intervened_predicates",
+        "hypothetical_predicates",
+        "baseline_decision",
+        "intervened_decision",
+        "hypothetical_decision",
+        "actual_decision_changed",
+        "hypothetical_decision_changed",
+        "replay_status",
+        "replay_digest"
+      ],
+      "properties": {
+        "precommit_digest": {"$ref": "#/$defs/digest"},
+        "rule_digest": {"$ref": "#/$defs/digest"},
+        "baseline_predicates": {"type": "array", "minItems": 2, "items": {"$ref": "#/$defs/predicateValue"}},
+        "intervened_predicates": {"type": "array", "minItems": 2, "items": {"$ref": "#/$defs/predicateValue"}},
+        "hypothetical_predicates": {
+          "anyOf": [
+            {"type": "array", "minItems": 2, "items": {"$ref": "#/$defs/predicateValue"}},
+            {"type": "null"}
+          ]
+        },
+        "baseline_decision": {"$ref": "#/$defs/decision"},
+        "intervened_decision": {"$ref": "#/$defs/decision"},
+        "hypothetical_decision": {"anyOf": [{"$ref": "#/$defs/decision"}, {"type": "null"}]},
+        "actual_decision_changed": {"type": "boolean"},
+        "hypothetical_decision_changed": {"type": "boolean"},
+        "replay_status": {
+          "enum": [
+            "constructive_decision_change",
+            "quarantined_no_decision_change",
+            "hypothetical_assumption_away_sensitivity"
+          ]
+        },
+        "replay_digest": {"$ref": "#/$defs/digest"}
+      }
+    },
+    "physicsHandback": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "handback_status",
+        "changed_burden",
+        "correction",
+        "falsifier",
+        "physical_carrier",
+        "regime",
+        "quantifiers",
+        "untouched_physics_gates",
+        "baseline_decision",
+        "intervened_decision",
+        "experiment_role",
+        "authority_nulls",
+        "physics_value_authorized",
+        "investment_authorized",
+        "handback_digest"
+      ],
+      "properties": {
+        "handback_status": {
+          "enum": [
+            "internal_constructive_decision_probe",
+            "quarantined_no_decision_change",
+            "hypothetical_assumption_away_sensitivity"
+          ]
+        },
+        "changed_burden": {"$ref": "#/$defs/text"},
+        "correction": {"$ref": "#/$defs/text"},
+        "falsifier": {"$ref": "#/$defs/text"},
+        "physical_carrier": {"type": ["string", "null"]},
+        "regime": {"$ref": "#/$defs/text"},
+        "quantifiers": {"$ref": "#/$defs/textList"},
+        "untouched_physics_gates": {"$ref": "#/$defs/textList"},
+        "baseline_decision": {"$ref": "#/$defs/decision"},
+        "intervened_decision": {"$ref": "#/$defs/decision"},
+        "experiment_role": {"const": "secondary_theory_requested_falsifier_only"},
+        "authority_nulls": {
+          "const": [
+            "external_or_cognitive_independence",
+            "creativity",
+            "relevance",
+            "conceptual_depth",
+            "philosophical_understanding",
+            "unification_power",
+            "abstraction_value",
+            "physics_value",
+            "physical_equivalence",
+            "continuum_construction",
+            "Osterwalder_Schrader_reconstruction",
+            "theorem",
+            "spectral_result",
+            "mass_gap",
+            "Yang_Mills_result"
+          ]
+        },
+        "physics_value_authorized": {"const": false},
+        "investment_authorized": {"const": false},
+        "handback_digest": {"$ref": "#/$defs/digest"}
+      }
+    },
+    "routeResult": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "route_id",
+        "route_kind",
+        "formal_components",
+        "nonformal_analysis",
+        "rule_replay",
+        "disposition",
+        "physics_handback",
+        "result_digest"
+      ],
+      "properties": {
+        "route_id": {"enum": ["categorical", "hott", "combined", "capable_nonformal"]},
+        "route_kind": {"enum": ["category_theory", "homotopy_type_theory", "combined_formal", "capable_nonformal_control"]},
+        "formal_components": {"type": "array", "maxItems": 2, "items": {"$ref": "#/$defs/formalComponent"}},
+        "nonformal_analysis": {
+          "anyOf": [
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["pressure", "direct_burden", "correction", "falsifier", "formal_predicates_mutated", "analysis_digest"],
+              "properties": {
+                "pressure": {"$ref": "#/$defs/text"},
+                "direct_burden": {"$ref": "#/$defs/text"},
+                "correction": {"$ref": "#/$defs/text"},
+                "falsifier": {"$ref": "#/$defs/text"},
+                "formal_predicates_mutated": {"const": false},
+                "analysis_digest": {"$ref": "#/$defs/digest"}
+              }
+            },
+            {"type": "null"}
+          ]
+        },
+        "rule_replay": {"$ref": "#/$defs/ruleReplay"},
+        "disposition": {"enum": ["internal_constructive_candidate", "quarantined_non_investment"]},
+        "physics_handback": {"$ref": "#/$defs/physicsHandback"},
+        "result_digest": {"$ref": "#/$defs/digest"}
+      }
+    },
+    "failure": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["error_type", "message", "message_digest"],
+      "properties": {
+        "error_type": {"$ref": "#/$defs/id"},
+        "message": {"$ref": "#/$defs/text"},
+        "message_digest": {"$ref": "#/$defs/digest"}
+      }
+    },
+    "routeReceipt": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "receipt_id",
+        "route_id",
+        "producer_id",
+        "request_digest",
+        "frozen_ancestor_digest",
+        "registry_binding_digest",
+        "execution_backend",
+        "terminal_status",
+        "result",
+        "failure",
+        "isolation_assurance",
+        "authority_boundary",
+        "receipt_digest"
+      ],
+      "properties": {
+        "receipt_id": {"$ref": "#/$defs/id"},
+        "route_id": {"enum": ["categorical", "hott", "combined", "capable_nonformal"]},
+        "producer_id": {"$ref": "#/$defs/id"},
+        "request_digest": {"$ref": "#/$defs/digest"},
+        "frozen_ancestor_digest": {"$ref": "#/$defs/digest"},
+        "registry_binding_digest": {"$ref": "#/$defs/digest"},
+        "execution_backend": {"const": "shared_process_thread_pool"},
+        "terminal_status": {"enum": ["completed", "quarantined", "failed"]},
+        "result": {"anyOf": [{"$ref": "#/$defs/routeResult"}, {"type": "null"}]},
+        "failure": {"anyOf": [{"$ref": "#/$defs/failure"}, {"type": "null"}]},
+        "isolation_assurance": {
+          "const": {
+            "process_isolation": false,
+            "kernel_isolation": false,
+            "filesystem_isolation": false,
+            "network_isolation": false,
+            "hidden_input_independence": false,
+            "cognitive_independence": false,
+            "semantic_independence": false
+          }
+        },
+        "authority_boundary": {"const": "concurrent_local_protocol_execution_only"},
+        "receipt_digest": {"$ref": "#/$defs/digest"}
+      }
+    },
+    "fileDescriptor": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["role", "relative_path", "sha256", "byte_length"],
+      "properties": {
+        "role": {"enum": ["request", "route_receipt", "terminal_barrier"]},
+        "relative_path": {"type": "string", "minLength": 1, "pattern": "^[A-Za-z0-9._/-]+$"},
+        "sha256": {"$ref": "#/$defs/digest"},
+        "byte_length": {"type": "integer", "minimum": 1}
+      }
+    }
+  },
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "packet_id": {"$ref": "#/$defs/id"},
+    "formal_request_id": {"$ref": "#/$defs/id"},
+    "request_digest": {"$ref": "#/$defs/digest"},
+    "frozen_ancestor_digest": {"$ref": "#/$defs/digest"},
+    "registry_binding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["registry_version", "registry_path", "registry_file_sha256", "route_bindings", "authority_boundary", "binding_digest"],
+      "properties": {
+        "registry_version": {"const": "1.0.0"},
+        "registry_path": {"const": "agentic/registries/formal_lens_producer_registry.yaml"},
+        "registry_file_sha256": {"$ref": "#/$defs/digest"},
+        "route_bindings": {
+          "type": "array",
+          "minItems": 4,
+          "maxItems": 4,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["route_id", "producer_id", "module", "callable", "implementation_sha256", "dependency_descriptors"],
+            "properties": {
+              "route_id": {"enum": ["categorical", "hott", "combined", "capable_nonformal"]},
+              "producer_id": {"$ref": "#/$defs/id"},
+              "module": {"const": "agentic.discovery.formal_lens_production"},
+              "callable": {"enum": ["produce_categorical_route", "produce_hott_route", "produce_combined_route", "produce_capable_nonformal_route"]},
+              "implementation_sha256": {"$ref": "#/$defs/digest"},
+              "dependency_descriptors": {
+                "type": "array",
+                "minItems": 1,
+                "items": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": ["relative_path", "sha256", "byte_length"],
+                  "properties": {
+                    "relative_path": {"type": "string", "minLength": 1},
+                    "sha256": {"$ref": "#/$defs/digest"},
+                    "byte_length": {"type": "integer", "minimum": 1}
+                  }
+                }
+              }
+            }
+          }
+        },
+        "authority_boundary": {"const": "repository_local_registered_execution_not_external_authority"},
+        "binding_digest": {"$ref": "#/$defs/digest"}
+      }
+    },
+    "execution_contract": {
+      "const": {
+        "scheduler": "ThreadPoolExecutor",
+        "max_workers": 4,
+        "start_barrier_parties": 4,
+        "routes_share_only_frozen_request_bytes": true,
+        "route_results_collected_after_terminal_barrier": true,
+        "execution_backend": "shared_process_thread_pool",
+        "process_isolation": false,
+        "kernel_isolation": false,
+        "filesystem_isolation": false,
+        "network_isolation": false,
+        "hidden_input_independence_authorized": false,
+        "cognitive_independence_authorized": false,
+        "semantic_independence_authorized": false,
+        "claim_scope": "concurrent_local_protocol_routes_only"
+      }
+    },
+    "route_receipts": {
+      "type": "array",
+      "minItems": 4,
+      "maxItems": 4,
+      "items": {"$ref": "#/$defs/routeReceipt"}
+    },
+    "terminal_barrier": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["barrier_id", "expected_routes", "terminal_receipt_ids", "terminal_receipt_digests", "all_routes_terminal", "failed_routes", "barrier_digest"],
+      "properties": {
+        "barrier_id": {"$ref": "#/$defs/id"},
+        "expected_routes": {"const": ["categorical", "hott", "combined", "capable_nonformal"]},
+        "terminal_receipt_ids": {"type": "array", "minItems": 4, "maxItems": 4, "uniqueItems": true, "items": {"$ref": "#/$defs/id"}},
+        "terminal_receipt_digests": {"type": "array", "minItems": 4, "maxItems": 4, "uniqueItems": true, "items": {"$ref": "#/$defs/digest"}},
+        "all_routes_terminal": {"const": true},
+        "failed_routes": {"type": "array", "uniqueItems": true, "items": {"enum": ["categorical", "hott", "combined", "capable_nonformal"]}},
+        "barrier_digest": {"$ref": "#/$defs/digest"}
+      }
+    },
+    "production_status": {"enum": ["complete_internal_protocol", "complete_with_quarantine", "partial_failure"]},
+    "artifact_manifest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["bundle_relative_root", "files", "atomic_last_packet_path"],
+      "properties": {
+        "bundle_relative_root": {"$ref": "#/$defs/id"},
+        "files": {"type": "array", "minItems": 6, "maxItems": 6, "items": {"$ref": "#/$defs/fileDescriptor"}},
+        "atomic_last_packet_path": {"const": "formal-lens-production-packet.json"}
+      }
+    },
+    "authority_boundary": {
+      "const": {
+        "theory_first": true,
+        "experiments_secondary": true,
+        "automatic_theory_selection": false,
+        "formal_routes_internal_only": true,
+        "truth_authorized": false,
+        "creativity_authorized": false,
+        "conceptual_depth_authorized": false,
+        "unification_power_authorized": false,
+        "abstraction_value_authorized": false,
+        "physics_value_authorized": false,
+        "theorem_authorized": false,
+        "continuum_authorized": false,
+        "yang_mills_authorized": false,
+        "publication_authorized": false
+      }
+    },
+    "packet_digest": {"$ref": "#/$defs/digest"}
+  }
+}

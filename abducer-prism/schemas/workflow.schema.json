@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://prism.local/to-prism/workflow.schema.json",
+  "additionalProperties": false,
+  "properties": {
+    "artifact": {"const": "workflow"},
+    "contracts_hash": {"pattern": "^sha256:[0-9a-f]{64}$", "type": "string"},
+    "schema_version": {"const": "1.0"},
+    "tool": {"type": "object"},
+    "workflows": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "critical": {"type": "boolean"},
+          "edges": {"items": {"type": "object"}, "type": "array"},
+          "entry_node": {"type": ["string", "null"]},
+          "id": {"pattern": "^workflow_[0-9a-f]{24}$", "type": "string"},
+          "name": {"minLength": 1, "type": "string"},
+          "nodes": {"items": {"type": "object"}, "type": "array"},
+          "review_status": {"enum": ["extracted", "proposed", "reviewed", "approved"]}
+        },
+        "required": ["critical", "edges", "entry_node", "id", "name", "nodes", "review_status"],
+        "type": "object"
+      },
+      "type": "array"
+    }
+  },
+  "required": ["artifact", "contracts_hash", "schema_version", "tool", "workflows"],
+  "type": "object"
+}

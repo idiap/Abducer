@@ -1,0 +1,160 @@
+# Search-Space Tree
+
+## Summary
+
+- KB reference: p-vs-np
+- Run ID: 20260316T213552Z-15436
+- Generated UTC: 2026-03-16T21:35:52.914245+00:00
+- Route count: 20
+- Persistent state path: C:\files\projects\abducer\abducer\artifacts\search-space-state\p-vs-np.json
+- Persistent branches tracked: 20
+
+## Resume Frontier
+
+- bridge.001: st.def.hardness-magnification-phenomenon-programme-leve -> st.thm.oliveira-pich-santhanam-magnification-near-state (priority=0.7786, outcome=promising, policy=resume-with-deeper-proof)
+  - Move from `st.def.hardness-magnification-phenomenon-programme-leve` on problem `MCSP` in model `nonuniform-circuits` using `A barely-nontrivial lower bound for an explicit problem Q in a weak model` toward `st.thm.oliveira-pich-santhanam-magnification-near-state` in model `nonuniform-circuits` to obtain `major consequences such as NP not in P/poly`.
+- bridge.002: st.def.hardness-magnification-phenomenon-programme-leve -> st.thm.oliveira-santhanam-hardness-magnification-for-na (priority=0.7577, outcome=promising, policy=resume-with-deeper-proof)
+  - Move from `st.def.hardness-magnification-phenomenon-programme-leve` on problem `MCSP` in model `nonuniform-circuits` using `A barely-nontrivial lower bound for an explicit problem Q in a weak model` toward `st.thm.oliveira-santhanam-hardness-magnification-for-na` in model `formula-size` to obtain `major lower bounds for NP in much stronger models (including superpolynomial formula/circuit lower bounds, and in some parameter...`.
+- bridge.016: st.def.hardness-magnification-phenomenon-programme-leve -> st.thm.atserias-m-uller-simple-general-magnification-fr (priority=0.7216, outcome=promising, policy=resume-with-deeper-proof)
+  - Move from `st.def.hardness-magnification-phenomenon-programme-leve` on problem `MCSP` in model `nonuniform-circuits` using `A barely-nontrivial lower bound for an explicit problem Q in a weak model` toward `st.thm.atserias-m-uller-simple-general-magnification-fr` to obtain `There exist general-purpose magnification theorems (not problem-specific) showing that certain mild lower bounds for...`.
+- bridge.007: st.thm.karp-many-natural-problems-are-np-complete-karp1 -> st.thm.murray-williams-non-np-hardness-of-mcsp-under-lo (priority=0.7152, outcome=promising, policy=resume-with-deeper-proof)
+  - Move from `st.thm.karp-many-natural-problems-are-np-complete-karp1` using `NP-complete under polynomial-time many-one reductions` toward `st.thm.murray-williams-non-np-hardness-of-mcsp-under-lo` on problem `MCSP` to obtain `is not NP-complete. More broadly, the paper develops evidence and conditional consequences suggesting NP-hardness of MCSP under various...`.
+- bridge.010: st.thm.oliveira-pich-santhanam-magnification-near-state -> st.thm.oliveira-santhanam-hardness-magnification-for-na (priority=0.3971, outcome=promising, policy=resume-with-deeper-proof)
+  - Move from `st.thm.oliveira-pich-santhanam-magnification-near-state` on problem `MCSP` in model `nonuniform-circuits` using `In refined regimes, lower bounds for Gap-MCSP slightly beyond known frontiers (e.g. N^ 1+varepsilon -type circuit lower bounds for...` toward `st.thm.oliveira-santhanam-hardness-magnification-for-na` in model `formula-size` to obtain `major lower bounds for NP in much stronger models (including superpolynomial formula/circuit lower bounds, and in some parameter...`.
+- bridge.003: st.def.cook-reckhow-propositional-proof-system -> st.thm.cook-reckhow-proof-systems-and-cookreckhow1979 (priority=0.3838, outcome=promising, policy=resume-with-deeper-proof)
+  - Move from `st.def.cook-reckhow-propositional-proof-system` on problem `TAUT` in model `Cook-Reckhow-proof-system` using `A (Cook--Reckhow) propositional proof system is a polynomial-time computable surjection f:bits^*twoheadrightarrow TAUT, where TAUT is...` toward `st.thm.cook-reckhow-proof-systems-and-cookreckhow1979` in model `Cook-Reckhow-proof-system` to obtain `There exists a polynomially bounded propositional proof system for TAUT if and only if NP=coNP`.
+- bridge.013: st.def.hitting-set-for-pit-black-box -> st.thm.kabanets-impagliazzo-pit-derandomisation-implies (priority=0.3752, outcome=open, policy=continue)
+  - Move from `st.def.hitting-set-for-pit-black-box` on problem `PIT` in model `black-box-PIT` using `A set Hsubseteq mathbb F ^n is a hitting set for a class mathcal C of n -variate circuits if for every nonzero polynomial p computed by...` toward `st.thm.kabanets-impagliazzo-pit-derandomisation-implies` in model `arithmetic-circuits` to obtain `If mathrm PIT in Pclass (or even suitable infinitely-often derandomisations in nondeterministic subexponential time, in standard...`.
+- bridge.012: st.def.np-completeness -> st.thm.karp-many-natural-problems-are-np-complete-karp1 (priority=0.375, outcome=promising, policy=resume-with-deeper-proof)
+  - Move from `st.def.np-completeness` using `A language L is emph NP-complete (under le_m^p ) iff (i) LinNP` toward `st.thm.karp-many-natural-problems-are-np-complete-karp1` to obtain `NP-complete under polynomial-time many-one reductions`.
+- bridge.004: st.def.item-5 -> st.thm.adleman-adleman1978 (priority=0.3652, outcome=underspecified, policy=re-encode-before-retrying)
+  - Move from `st.def.item-5` in model `nonuniform-circuits` using `P/poly is the class of languages L decidable by polynomial-size Boolean circuit families, equivalently by polynomial-time Turing...` toward `st.thm.adleman-adleman1978` in model `nonuniform-circuits` to obtain `Every BPP language has polynomial-size circuits`.
+- bridge.005: st.def.item-5 -> st.thm.williams-improved-exhaustive-search-circuit-lowe (priority=0.3625, outcome=underspecified, policy=re-encode-before-retrying)
+  - Move from `st.def.item-5` in model `nonuniform-circuits` using `P/poly is the class of languages L decidable by polynomial-size Boolean circuit families, equivalently by polynomial-time Turing...` toward `st.thm.williams-improved-exhaustive-search-circuit-lowe` on problem `SAT` in model `nondeterministic-verifier` to obtain `is circuit size), then there exist explicit languages in relatively low exponential-time classes that require superpolynomial (indeed...`.
+
+## Deprioritized Frontier
+
+- No routes are currently marked as deprioritized or held.
+
+## Tree
+
+- search-space
+  - MCSP [routes=4]
+    - nonuniform-circuits [routes=2]
+      - NP-not-in-P/poly [routes=1]
+        - MCSP complexity profile in nonuniform-circuits [routes=1]
+          - st.def.hardness-magnification-phenomenon-programme-leve -> st.thm.oliveira-pich-santhanam-magnification-near-state [outcome=promising; policy=resume-with-deeper-proof; visits=1]
+            - MCSP witness family
+              - MCSP witness family via strat.001
+            - Gap-MCSP promise problem
+              - Gap-MCSP promise problem via strat.001
+            - MCSP obstruction family
+      - exponential-lower-bound [routes=1]
+        - exponential-lower-bound witness complexity [routes=1]
+          - st.def.hardness-magnification-phenomenon-programme-leve -> st.thm.atserias-m-uller-simple-general-magnification-fr [outcome=promising; policy=resume-with-deeper-proof; visits=1]
+            - MCSP witness family
+              - MCSP witness family via strat.001
+            - MCSP obstruction family
+            - Gap-MCSP promise problem
+    - nonuniform-circuits -> formula-size [routes=2]
+      - NP-not-in-P/poly [routes=2]
+        - MCSP complexity profile in nonuniform-circuits [routes=2]
+          - st.def.hardness-magnification-phenomenon-programme-leve -> st.thm.oliveira-santhanam-hardness-magnification-for-na [outcome=promising; policy=resume-with-deeper-proof; visits=1]
+            - MCSP witness family
+              - MCSP witness family via strat.001
+            - Gap-MCSP promise problem
+            - MCSP obstruction family
+          - st.thm.oliveira-pich-santhanam-magnification-near-state -> st.thm.oliveira-santhanam-hardness-magnification-for-na [outcome=promising; policy=resume-with-deeper-proof; visits=1]
+            - MCSP witness family
+            - Gap-MCSP promise problem
+            - MCSP obstruction family
+  - unspecified [routes=12]
+    - model shift not yet typed [routes=2]
+      - MCSP-hardness-transfer [routes=1]
+        - consequence schema NP-complete-classification [routes=1]
+          - st.thm.karp-many-natural-problems-are-np-complete-karp1 -> st.thm.murray-williams-non-np-hardness-of-mcsp-under-lo [outcome=promising; policy=resume-with-deeper-proof; visits=1]
+            - unspecified witness family
+              - unspecified witness family via strat.002
+            - unspecified reduction gadget family
+              - unspecified reduction gadget family via strat.002
+            - unspecified promise-gap problem
+      - NP-complete-classification [routes=1]
+        - consequence schema NP-complete-classification [routes=1]
+          - st.def.np-completeness -> st.thm.karp-many-natural-problems-are-np-complete-karp1 [outcome=promising; policy=resume-with-deeper-proof; visits=1]
+            - unspecified witness family
+            - unspecified reduction gadget family
+            - unspecified transport normal form
+    - nonuniform-circuits [routes=1]
+      - nonuniform-circuit-lower-bound [routes=1]
+        - consequence schema nonuniform-circuit-lower-bound [routes=1]
+          - st.def.item-5 -> st.thm.adleman-adleman1978 [outcome=underspecified; policy=re-encode-before-retrying; visits=1]
+            - unspecified transport normal form
+            - unspecified obstruction family
+    - nonuniform-circuits -> nondeterministic-verifier [routes=1]
+      - nonuniform-circuit-superpolynomial-lower-bound [routes=1]
+        - nonuniform-circuit-lower-bound witness complexity [routes=1]
+          - st.def.item-5 -> st.thm.williams-improved-exhaustive-search-circuit-lowe [outcome=underspecified; policy=re-encode-before-retrying; visits=1]
+            - unspecified certificate family
+            - unspecified transport normal form
+            - unspecified obstruction family
+    - nonuniform-circuits -> ACC0-circuits [routes=1]
+      - NEXP-not-in-ACC0 [routes=1]
+        - nonuniform-circuit-lower-bound witness complexity [routes=1]
+          - st.def.item-5 -> st.thm.williams-nonuniform-0-lower-bounds-for-williams2 [outcome=underspecified; policy=re-encode-before-retrying; visits=1]
+            - unspecified certificate family
+            - unspecified obstruction family
+    - nonuniform-circuits -> monotone-circuits [routes=1]
+      - superpolynomial-lower-bound [routes=1]
+        - lower-bound witness complexity [routes=1]
+          - st.def.item-5 -> st.thm.monotone-lower-bounds-for-clique-exemplar-razbor [outcome=underspecified; policy=re-encode-before-retrying; visits=1]
+            - unspecified witness family
+            - unspecified transport normal form
+            - unspecified certificate family
+    - formula-size [routes=1]
+      - NP-complete-classification [routes=1]
+        - consequence schema NP-complete-classification [routes=1]
+          - st.def.np-completeness -> st.thm.cook-levin-sat-is-np-complete-cook1971 [outcome=promising; policy=resume-with-deeper-proof; visits=1]
+    - AC0[p]-circuits -> nondeterministic-verifier [routes=1]
+      - nonuniform-circuit-superpolynomial-lower-bound [routes=1]
+        - consequence schema nonuniform-circuit-exponential-lower-bound [routes=1]
+          - st.def.standard-restricted-circuit-classes -> st.thm.williams-improved-exhaustive-search-circuit-lowe [outcome=promising; policy=resume-with-deeper-proof; visits=1]
+    - AC0[p]-circuits [routes=1]
+      - AC0[p]-exponential-lower-bound [routes=1]
+        - consequence schema AC0[p]-exponential-lower-bound [routes=1]
+          - st.def.standard-restricted-circuit-classes -> st.thm.razborov-smolensky-0-p [outcome=promising; policy=resume-with-deeper-proof; visits=1]
+    - AC0[p]-circuits -> ACC0-circuits [routes=1]
+      - NEXP-not-in-ACC0 [routes=1]
+        - nonuniform-circuit-lower-bound witness complexity [routes=1]
+          - st.def.standard-restricted-circuit-classes -> st.thm.williams-nonuniform-0-lower-bounds-for-williams2 [outcome=unexplored; policy=await-more-structure; visits=1]
+    - nonuniform-circuits -> PRF-assumption [routes=1]
+      - Assuming the existence of sufficiently strong pseudorandom functions, no family of"natural"properties (constructive and large) can be... [routes=1]
+        - support-to-target interface [routes=1]
+          - st.def.item-5 -> st.thm.razborov-rudich-natural-proofs-barrier-razborovr [outcome=unexplored; policy=await-more-structure; visits=1]
+    - extension-oracle [routes=1]
+      - P-not-equal-NP [routes=1]
+        - claim schema algebrization-barrier [routes=1]
+          - st.def.algebrising-proof-technique-informal -> st.thm.aaronson-wigderson-algebrisation-barrier-aaronso [outcome=promising; policy=resume-with-deeper-proof; visits=1]
+  - TAUT [routes=2]
+    - Cook-Reckhow-proof-system [routes=2]
+      - TAUT-proof-system-characterization [routes=1]
+        - TAUT complexity profile in Cook-Reckhow-proof-system [routes=1]
+          - st.def.cook-reckhow-propositional-proof-system -> st.thm.cook-reckhow-proof-systems-and-cookreckhow1979 [outcome=promising; policy=resume-with-deeper-proof; visits=1]
+            - TAUT proof progress measure
+            - TAUT certificate family
+            - TAUT transport normal form
+      - There exists a polynomially bounded propositional proof system for TAUT if and only if NP=coNP [routes=1]
+        - support-to-target interface [routes=1]
+          - st.def.polynomially-bounded-proof-system -> st.thm.cook-reckhow-proof-systems-and-cookreckhow1979 [outcome=unexplored; policy=await-more-structure; visits=1]
+  - PIT [routes=1]
+    - black-box-PIT -> arithmetic-circuits [routes=1]
+      - NEXP-vs-P/poly-or-Permanent-lower-bound [routes=1]
+        - PIT semantic object [routes=1]
+          - st.def.hitting-set-for-pit-black-box -> st.thm.kabanets-impagliazzo-pit-derandomisation-implies [outcome=open; policy=continue; visits=1]
+            - PIT witness family
+            - PIT certificate family
+            - PIT hitting-set family
+  - SAT [routes=1]
+    - formula-size [routes=1]
+      - NP-complete under polynomial-time many-one reductions [routes=1]
+        - support-to-target interface [routes=1]
+          - st.thm.cook-levin-sat-is-np-complete-cook1971 -> st.thm.karp-many-natural-problems-are-np-complete-karp1 [outcome=unexplored; policy=await-more-structure; visits=1]

@@ -1,0 +1,81 @@
+{
+  "artifact": "generation-plan",
+  "schema_version": "1.0",
+  "hooks": [],
+  "python_adapters": [],
+  "type_definitions": [
+    {
+      "name": "ReleaseEvidenceReviewRequest",
+      "description": "Release identity, asserted notes, and the policy used to assess their support.",
+      "kind": "record",
+      "fields": [
+        {"name": "release_id", "type": "String", "description": "Stable identifier of the software release whose claims are assessed."},
+        {"name": "asserted_notes", "type": "List[String]", "description": "Individual release-note claims presented by the source project."},
+        {"name": "support_policy", "type": "String", "description": "Project rule specifying what counts as explicit support for a claim."}
+      ]
+    },
+    {
+      "name": "ReleaseEvidenceReviewReport",
+      "description": "A defeasible separation of supported and unsupported release-note claims.",
+      "kind": "record",
+      "fields": [
+        {"name": "release_id", "type": "String", "description": "Stable identifier carried from the assessed release request."},
+        {"name": "supported_claims", "type": "List[String]", "description": "Release claims for which the supplied notes state policy-adequate support."},
+        {"name": "unsupported_claims", "type": "List[String]", "description": "Release claims lacking support under the supplied project policy."},
+        {"name": "follow_up_recommendation", "type": "String", "description": "Recommended evidence-gathering action, distinct from observed support."}
+      ]
+    }
+  ],
+  "workflows": [
+    {
+      "id": "release_evidence_review",
+      "review_status": "approved",
+      "semantic_mode": "epistemic",
+      "description": "Assess the explicit evidential support for claims in one software release.",
+      "input": {
+        "name": "review_request",
+        "type": "ReleaseEvidenceReviewRequest",
+        "fixture": {
+          "release_id": "v2.4.0",
+          "asserted_notes": ["The new cache reduces median response latency.", "The migration is backward compatible."],
+          "support_policy": "A claim is supported only when the notes identify a test, measurement, or compatibility check."
+        }
+      },
+      "output": {"type": "ReleaseEvidenceReviewReport", "provenance": "generated"},
+      "epistemic_contract": {
+        "subject": "The explicit support supplied for claims in software release v2.4.0.",
+        "question": "Which release-note claims satisfy the project's stated support policy?",
+        "observations": ["The supplied release notes are assertions and do not by themselves constitute verification evidence."],
+        "defeaters": ["A referenced test may be irrelevant, incomplete, stale, or unavailable for inspection."],
+        "defeater_rationale": "The review preserves these limitations instead of converting textual support into proof.",
+        "output_meaning": "A generated and defeasible classification of claims under the supplied policy.",
+        "assurance": "generated",
+        "assurance_justification": "The model performs an evidential critique; it does not execute or certify the referenced tests.",
+        "unresolved": []
+      },
+      "steps": [
+        {
+          "id": "assess_release_claim_support",
+          "description": "Separate supported and unsupported release claims under the stated evidence policy.",
+          "input_type": "ReleaseEvidenceReviewRequest",
+          "output_type": "ReleaseEvidenceReviewReport",
+          "semantic_role": "epistemic",
+          "granularity_rationale": "The source exposes one independently reviewed support assessment and no separately consumed epistemic intermediate.",
+          "reasoning_type": "EvidentialReleaseClaimCritique",
+          "reasoning_rationale": "The operation compares each assertion with explicit support while retaining defeaters.",
+          "output_provenance": "generated",
+          "failure_type": "ModelFailure",
+          "effects": ["AI.Generate", "Context.Disclose"],
+          "skills": [
+            {
+              "path": ".agents/skills/release-review",
+              "role": "Release-claim support assessor",
+              "contribution": "Applies the project's support criterion and separates observations from recommendations.",
+              "resource_dispositions": {}
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

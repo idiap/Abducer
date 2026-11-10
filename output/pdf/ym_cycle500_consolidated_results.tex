@@ -1,0 +1,1333 @@
+% SPDX-FileCopyrightText: © 2026 Idiap Research Institute <contact@idiap.ch>
+%
+% SPDX-FileContributor: Andre Freitas <andre.freitas@idiap.ch>
+% Neuro-symbolic AI Group
+%
+% SPDX-FileContributor: Danilo Gusicuma <danilo.gusicuma@idiap.ch>
+% Neuro-symbolic AI Group
+%
+% SPDX-License-Identifier: MIT
+\documentclass[11pt,oneside]{report}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage{geometry}
+\geometry{margin=1in,headheight=15pt}
+\usepackage{microtype}
+\usepackage{amsmath,amssymb,mathtools,amsthm}
+\usepackage{booktabs,longtable,tabularx,array}
+\usepackage[dvipsnames]{xcolor}
+\usepackage{enumitem}
+\usepackage{fancyhdr}
+\usepackage[hypertexnames=false]{hyperref}
+\usepackage{xurl}
+\hypersetup{colorlinks=true,linkcolor=MidnightBlue,urlcolor=RoyalBlue,citecolor=ForestGreen,
+  pdftitle={Yang-Mills Mass-Gap Programme: Consolidated Results and Proofs},
+  pdfauthor={Cycle-500 research programme}}
+\setlist[itemize,enumerate]{nosep,leftmargin=*}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{5pt}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{Yang--Mills Cycle-500 report}
+\fancyhead[R]{Scoped results and proofs}
+\fancyfoot[C]{\thepage}
+
+\newtheorem{theorem}{Theorem}[chapter]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{contract}[theorem]{Open contract}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{counterexample}[theorem]{Counterexample}
+
+\newcommand{\HOS}{\mathcal H_{\mathrm{OS}}}
+\newcommand{\Kperp}{(\ker H)^{\perp}}
+\newcommand{\one}{\mathbf 1}
+\newcommand{\spec}{\operatorname{spec}}
+\newcommand{\supp}{\operatorname{supp}}
+\newcommand{\Dom}{\operatorname{Dom}}
+\newcommand{\Ran}{\operatorname{Ran}}
+\newcommand{\Span}{\operatorname{span}}
+\newcommand{\class}[1]{\textbf{[#1]}}
+\newcommand{\credit}{\textbf{YM target credit: 0}}
+\newcommand{\src}[1]{\par\smallskip{\footnotesize\textit{Canonical evidence:} \path{#1}}}
+
+\begin{document}
+
+\begin{titlepage}
+\centering
+\vspace*{1.1in}
+{\Huge\bfseries Yang--Mills Mass-Gap Programme\par}
+\vspace{0.3in}
+{\LARGE Scoped Theorems, Obstructions, and the Remaining Wilson--OS Bridge\par}
+\vspace{0.25in}
+{\Large Consolidated results and proofs through the Cycle-500 freeze\par}
+\vfill
+\fcolorbox{BrickRed}{BrickRed!5}{\begin{minipage}{0.84\textwidth}
+\textbf{Binding scientific status.} This report does not contain a proof of
+four-dimensional Yang--Mills existence or of a positive mass gap. It does not
+construct the continuum theory and it is not an authorized publication.
+The frozen ledgers are
+\[
+  0/9,\qquad 0/18,\qquad \mathrm{BR\!-!1}=0,\qquad
+  \mathrm{BR\!-!2}\text{ unopened},\qquad \Delta_{\rm YM}=0.
+\]
+Cycle 500 closed as a typed-null programme reconciliation. The mathematical
+results below are exact abstract theorems, fixed-regulator facts, conditional
+bridges, calibrations, and scoped obstruction theorems.
+\end{minipage}}
+\vfill
+{\large Evidence freeze: 29 July 2026\par}
+\end{titlepage}
+
+\pagenumbering{roman}
+\chapter*{Abstract}
+\addcontentsline{toc}{chapter}{Abstract}
+This monograph consolidates the reviewed mathematical output of a long-term
+Yang--Mills mass-gap research programme. Its strongest positive results are:
+(i) a dense-core spectral criterion converting a common diagonal semigroup
+rate into a gap; (ii) a finite stationary Perron--Doob/OS construction whose
+OS space is $L^2(\pi)$ and whose descended time translation is a positive
+self-adjoint Markov contraction; (iii) an exact source-visible edge-resolvent
+threshold; (iv) a positive-block shorting theorem showing that an upper WTR
+bound is structural at an already known global edge; and (v) an exact
+candidate-edge/shorted-Dirichlet-coercivity equivalence. The programme also
+proved sharp contour-incidence bounds, finite graph completeness statements,
+many exact $SU(2)$ coefficient identities, and a family of scoped no-go
+theorems for finite-complexity carriers.
+
+None of these results locates a physical four-dimensional Wilson spectral
+edge, proves a lower signed connected response at that edge, derives a
+surviving transmuted Wilson coefficient, or completes continuum OS survival.
+Those four items form the exact remaining bridge for the selected route.
+
+\chapter*{How to read the claims}
+\addcontentsline{toc}{chapter}{How to read the claims}
+Every result carries one of the following status classes.
+\begin{description}
+\item[\class{A}] Exact abstract theorem.
+\item[\class{F}] Exact finite-volume or fixed-regulator result.
+\item[\class{C}] Conditional implication whose hypotheses remain open.
+\item[\class{O}] Obstruction or no-go theorem under stated premises.
+\item[\class{K}] Calibration or countermodel, often in another theory.
+\item[\class{S}] Support result or route reduction.
+\item[\class{OPEN}] Sufficient theorem contract with unproved hypotheses.
+\end{description}
+``Proof'' means a mathematical proof of the displayed scoped statement, not a
+proof of the Yang--Mills target. Superseded drafts are omitted from theorem
+statements and listed only in the provenance appendix.
+
+\tableofcontents
+\clearpage
+\pagenumbering{arabic}
+
+\chapter{Common setup and result atlas}
+
+\section{Operators, spectral measures, and OS notation}
+Let $H\geq0$ be self-adjoint on a Hilbert space $\mathcal K$, with semigroup
+$e^{-tH}$. For $\psi\in\mathcal K$, write
+\[
+ L_\psi(t)=\langle\psi,e^{-tH}\psi\rangle
+ =\int_{[0,\infty)}e^{-t\lambda}\,d\mu_\psi(\lambda).
+\]
+In an OS reconstruction, $\Omega$ denotes the vacuum and $q(F)$ the OS class
+of a positive-time observable. Pointed centering means
+$(I-P_\Omega)q(F)$; full-ground-space centering means $(I-P_0)q(F)$.
+
+For a retained/eliminated decomposition $P+R=I$, write a self-adjoint block
+operator as
+\[
+B=\begin{pmatrix}A&C\\D&E\end{pmatrix},\qquad D=C^*.
+\]
+At a proposed order bound $q$, set $X=qP-A$ and $H_R=qR-E$. The shorted
+operator is $S_P(q)=X-CH_R^{-1}D$ in the strict-tail regime.
+
+For a source $s$ coupled by $D$ to a tail operator $E$ with upper edge $e^+$,
+the source-visible edge measure is
+\[
+ \nu_s(\Lambda)=\|\one_\Lambda(E)Ds\|^2,\qquad
+ F_s(u)=\nu_s([e^+-u,e^+]).
+\]
+
+\section{Executive result atlas}
+\scriptsize
+\begin{longtable}{p{0.07\textwidth}p{0.35\textwidth}p{0.09\textwidth}p{0.35\textwidth}}
+\toprule ID & Result & Class & Exact boundary \\
+\midrule\endfirsthead
+\toprule ID & Result & Class & Exact boundary \\
+\midrule\endhead
+DCG & Common diagonal decay on a total centered core is equivalent to a spectral gap. & A & Requires a common exponent and post-quotient totality. \\
+OS-stat & Perron--Doob stationary finite extension has $\HOS\cong L^2(\pi)$ and positive Markov time translation. & F & New stationary finite object; no continuum edge. \\
+WTR & Edge distribution power law controls the sandwiched resolvent threshold. & A & Upper mass law alone supplies upper growth, not a lower response. \\
+GEWTR & Positive full block supplies upper WTR control at a known global edge. & A/S & Cannot locate the edge or prove signed lower mass. \\
+SDC-1 & $B\leq qI$ is equivalent to shorted Dirichlet coercivity, with a touching-edge form version. & A/S & Does not prove Wilson satisfies it at $q_\beta<1$. \\
+JCT & Compatible $r$-contour unions carry sharp incidence charge $2^{r-1}/(2^r-1)$. & A & Abstract incidence sharpness; Wilson realization/multiplicity remain open. \\
+FCC & Successive semigroup norm ratios converge to the cyclic spectral edge. & A/O & Finite favorable ratios cannot bootstrap a gap. \\
+Loop core & Finite graph loop density and continuum sigma-completeness criterion. & C/F & Actual continuum measure and OS cyclicity remain open. \\
+Trans. & Required two-loop lattice response scale $\beta^{51/121}e^{-3\pi^2\beta/11}$. & C & Required scale, not a derived Wilson coefficient. \\
+Finite complexity & Fixed-rank/fixed-depth/analytic architectures face leakage, reach, and flat-scale obstructions. & O & Growing, reducing, nonanalytic, stochastic, and nonlocal escapes remain. \\
+\bottomrule
+\end{longtable}
+\normalsize
+
+\chapter{The dense-core spectral theorem}
+
+\begin{theorem}[Vector spectral criterion, VSC-1]\label{thm:vsc}
+Let $H\geq0$ be self-adjoint and $m>0$. For every $\psi\in\mathcal K$,
+the following are equivalent:
+\begin{enumerate}
+\item there are finite $C_\psi,T_\psi$ with
+$L_\psi(t)\leq C_\psi e^{-mt}$ for $t\geq T_\psi$;
+\item $\mu_\psi([0,m))=0$;
+\item $L_\psi(t)\leq\|\psi\|^2e^{-mt}$ for every $t\geq0$.
+\end{enumerate}
+For $\psi\neq0$ these are also equivalent to
+$\liminf_{t\to\infty}-t^{-1}\log L_\psi(t)\geq m$.
+\end{theorem}
+\begin{proof}
+If the spectral measure is supported in $[m,\infty)$, the all-time bound is
+immediate from the spectral integral. Conversely, suppose the eventual bound
+holds and $\mu_\psi([0,m))>0$. Then for some $\varepsilon>0$ the interval
+$[0,m-\varepsilon]$ has positive mass $a$. Hence
+$L_\psi(t)\geq a e^{-(m-\varepsilon)t}$, contradicting
+$C_\psi e^{-mt}$ as $t\to\infty$. The logarithmic formulation follows by
+taking logarithms of positive Laplace transforms. The zero vector is handled
+separately and creates no logarithmic expression.
+\end{proof}
+
+\begin{theorem}[Dense-core gap criteria, DCG-1 and DCG-2]\label{thm:dcg}
+Let $\mathcal K_0=(\ker H)^\perp$ and let $S\subset\mathcal K_0$ be total.
+There is one $m>0$ such that every $\psi\in S$ obeys the eventual bound of
+Theorem~\ref{thm:vsc}, with vector-dependent finite constants, if and only if
+$\spec(H|_{\mathcal K_0})\subset[m,\infty)$.
+
+If $H\Omega=0$ and $S\subset\Omega^\perp$ is total in $\Omega^\perp$, the
+same premise implies
+\[
+ \ker H=\mathbb C\Omega,\qquad
+ \spec(H)\subset\{0\}\cup[m,\infty).
+\]
+\end{theorem}
+\begin{proof}
+Theorem~\ref{thm:vsc} places every vector of $S$ in the closed spectral
+subspace $E_H([m,\infty))\mathcal K$. Totality places all of $\mathcal K_0$
+there. The converse is the sharp all-time spectral bound. In the pointed
+branch, totality in $\Omega^\perp$ rules out any additional zero-energy vector,
+because such a vector is orthogonal to the closed positive spectral subspace.
+\end{proof}
+
+\begin{corollary}[Conditional OS handoff, OS-DCG]
+In an OS theory, suppose the centered classes $(I-P_\Omega)q(F_\lambda)$ from
+an admissible positive-time core are total in $\Omega^\perp$ and their exact
+connected diagonal coefficients equal
+$\langle\psi_\lambda,e^{-tH}\psi_\lambda\rangle$. A common physical exponent
+$m$ with label-dependent finite constants proves vacuum uniqueness and a gap
+at least $m$. With $(I-P_0)$ centering and totality only in $(\ker H)^\perp$,
+one proves a gap above the full ground space but not uniqueness.
+\end{corollary}
+\begin{remark}
+The unproved Yang--Mills inputs are the continuum OS construction, a fixed
+physical-time cutoff handoff on one cofinal sequence, a common Wilson rate,
+nonnull descent, and post-quotient totality. No generator-domain or
+unit-sphere-uniform constant is required once these inputs are present.
+\end{remark}
+\src{.prism/physics-first-strong-cp-workflow-import-20260727/cycle6-dense-core-spectral-criterion-v2.md; review-cycle6-dense-core-spectral-criterion-v2.md}
+
+\chapter{Observable completeness and hidden sectors}
+
+\begin{theorem}[Loop sigma-completeness criterion]\label{thm:loopsigma}
+Let $(z_n)$ be bounded countably many Wilson variables and let $\Sigma_W$ be
+their completed sigma-algebra. Rational star-polynomials in the $z_n$ are
+dense in $L^2(\Sigma_W)$. Consequently they are dense in the full positive-time
+gauge-invariant $L^2$ space exactly when
+$\Sigma_W=\Sigma_+^{\rm gi}$ modulo null sets.
+\end{theorem}
+\begin{proof}
+The joint map $Z$ takes values in a compact metrizable product. On its compact
+support, cylinder star-polynomials separate points and contain constants.
+Stone--Weierstrass gives uniform density in continuous functions; continuous
+functions are dense in $L^2$ of the push-forward measure. Pullback gives the
+claim, and rational coefficients are dense in the complex coefficients.
+\end{proof}
+
+\begin{proposition}[OS quotient continuity]
+For reflection-invariant measure and reflection-positive form,
+$\|q(F)\|_{\rm OS}^2\leq\|F\|_2^2$. Hence raw $L^2$ density of bounded loop
+representatives descends to OS density, provided the full OS algebra and
+measure have already been constructed.
+\end{proposition}
+\begin{proof}
+Cauchy--Schwarz and reflection invariance give
+$|\int\overline{\theta F}F,d\mu|\leq\|\theta F\|_2\|F\|_2=\|F\|_2^2$.
+Thus the quotient map is continuous and carries a dense raw core to a dense
+quotient core.
+\end{proof}
+
+\begin{counterexample}[Hidden nonnull sector]
+Take $X=X_d\times\{\pm1\}$, let all Wilson loops depend only on $X_d$, and use
+identity or tensor reflection. The function $h(x,s)=s$ is nonzero, nonnull,
+and orthogonal to every loop polynomial. Thus finite-graph loop completeness
+and reflection positivity do not imply full continuum OS cyclicity.
+\end{counterexample}
+\src{.prism/physics-first-strong-cp-workflow-import-20260727/cycle7-os-loop-core-density.md; review-cycle7-os-loop-core-density.md}
+
+\chapter{Sharp finite and combinatorial results}
+
+\section{Joint compatible contour charge}
+\begin{theorem}[JCT-FR]\label{thm:jct}
+Let $X_1,\ldots,X_r$ be compatible repair contours with one baseline and
+linear repair space. Put $V=\bigcup_iX_i$ and
+$D_\varepsilon=\triangle_{i:\varepsilon_i=1}X_i$ for
+$0\neq\varepsilon\in\mathbb F_2^r$. Then for some $\varepsilon$,
+\[
+ |D_\varepsilon|\geq\alpha_r|V|,
+ \qquad \alpha_r=\frac{2^{r-1}}{2^r-1}.
+\]
+The constant is sharp using only incidence information. If the incidence rank
+is $d$, replace $r$ by $d$.
+\end{theorem}
+\begin{proof}
+At each face in $V$, the nonzero incidence functional equals one for exactly
+$2^{r-1}$ of the $2^r-1$ nonzero vectors $\varepsilon$. Summing
+$|D_\varepsilon|$ over nonzero $\varepsilon$ therefore gives
+$2^{r-1}|V|$. At least one term is no smaller than the average. Sharpness is
+realized by the abstract incidence system $V=\mathbb F_2^r\setminus\{0\}$,
+$X_i=\{v:v_i=1\}$, in which every nonzero $\varepsilon$ attains the average.
+\end{proof}
+\begin{remark}
+The resulting Peierls factor is
+$\exp[-2\beta\cos\rho\,\alpha_r|V|]$. Connected Wilson realization,
+source coefficients, and multiplicity entropy are not supplied by the theorem.
+\end{remark}
+\src{.prism/physics-first-strong-cp-workflow-import-20260727/cycle8-joint-center-contour-bridge-v3.md; review-cycle8-joint-center-contour-bridge-v3.md}
+
+\section{Finite-calibration ledger}
+\begin{longtable}{p{0.25\textwidth}p{0.48\textwidth}p{0.18\textwidth}}
+\toprule Calibration & Exact content & Boundary \\
+\midrule\endfirsthead\toprule Calibration & Exact content & Boundary \\
+\midrule\endhead
+Finite Wilson endpoint covariance & Reflection-square identity, strict finite covariance, normalized spectral coefficient. & No uniform rate. \\
+Exact-center contours & Minimal sizes $4$ globally, $5$ at temporal boundary, $6$ in bulk; fixed-contour suppression $e^{-2\beta|X|\cos\rho}$. & No contour-union theorem. \\
+Two-dimensional heat kernel & $q(R)=e^{-3g^2\ell R/8}$ and gap $3g^2\ell/8$. & Two dimensions only. \\
+Four-dimensional $\mathbb Z_2$ surface model & Positive source-surface/union-entropy architecture at strong coupling. & Different theory. \\
+$SU(2)$ one-link and star integrals & Exact Bessel coefficients, hinge/star norms, adjacent-spin Haar fusion rules. & Finite cells/cylinders. \\
+Covariance quotient toy & Source norm $\sim\sqrt{3/2}/\beta$ while serial norm remains algebraic and fusion leaks. & Not a closed carrier. \\
+Spin-leakage Schur test & Selected residual $15/(8\beta^4)$ but omitted-leakage squared ratio tends to $6$. & Finite-rank conditioning fails. \\
+\bottomrule
+\end{longtable}
+
+\chapter{Spectral ratios and source-visible edges}
+
+\begin{theorem}[FCC spectral-ratio theorem]\label{thm:fcc}
+Let $T=e^{-RH}$, $R>0$, and $\psi\neq0$. Define
+$r_n=\|T^{n+1}\psi\|/\|T^n\psi\|$. Then $r_n$ is nondecreasing and
+\[
+ \lim_{n\to\infty}r_n=e^{-R\inf\supp\mu_\psi}.
+\]
+An eventual bound $r_n\leq q<1$ is equivalent to exclusion of cyclic spectral
+support below $-R^{-1}\log q$.
+\end{theorem}
+\begin{proof}
+The sequence $a_n=\|T^n\psi\|^2$ is a Hausdorff moment sequence.
+Cauchy--Schwarz gives $a_{n+1}^2\leq a_na_{n+2}$, so
+$r_n^2=a_{n+1}/a_n$ is nondecreasing. The $n$th-root principle for positive
+moments identifies the limit with the top of the support of $e^{-2R\lambda}$,
+which is $e^{-2R\inf\supp\mu_\psi}$ after taking square roots.
+\end{proof}
+\begin{counterexample}[No finite bootstrap]
+Put arbitrarily small positive spectral mass at an arbitrarily soft edge. Any
+fixed finite list of ratios can look favorable while the monotone sequence
+later rises to one. Thus finite favorable ratios do not imply a gap.
+\end{counterexample}
+\src{.prism/physics-first-strong-cp-workflow-import-20260727/cycle8-fcc-spectral-ratio-audit-v2.md; review-cycle8-fcc-spectral-ratio-audit-v2.md}
+
+\begin{theorem}[Source-visible WTR threshold]\label{thm:wtr}
+Let $z=e^++\delta$, $\delta>0$. Then
+\[
+ \langle s,D^*(z-E)^{-1}Ds\rangle
+ =\int_{[0,\infty)}\frac{dF_s(x)}{\delta+x}.
+\]
+Assume $\|D\|\leq M$ and, near zero, $F_s(u)\leq Cu^\gamma$ uniformly.
+Then the resolvent is $O(1)$ for $\gamma>1$,
+$O(\log(1/\delta))$ for $\gamma=1$, and
+$O(\delta^{\gamma-1})$ for $0<\gamma<1$. An edge atom of mass $a$ contributes
+$a/\delta$. Matching lower mass laws give matching sharp orders.
+\end{theorem}
+\begin{proof}
+Push the spectral measure forward by $x=e^+-\lambda$. Separate a fixed far
+part, bounded by $M^2$, from $x\in[0,1]$. Stieltjes integration by parts gives
+\[
+ \int_{[0,1]}\frac{dF(x)}{\delta+x}
+ \leq C_0+C\int_0^1\frac{x^\gamma}{(\delta+x)^2}\,dx.
+\]
+The substitution $x=\delta y$ yields the three regimes. An atom at $x=0$
+appears exactly as $a/\delta$. Reversing the inequalities under a matching
+lower law proves sharpness.
+\end{proof}
+\begin{remark}
+An upper law gives upper growth only. It does not locate the Wilson edge or
+prove the lower signed connected window mass required for a physical response.
+\end{remark}
+\src{.prism/physics-first-strong-cp-workflow-import-20260727/route2-batch49-programme-reflection.md; route2-batch49-programme-reflection-independent-review.md}
+
+\chapter{The finite stationary Wilson--OS theorem}
+
+\begin{theorem}[Perron--Doob stationary OS construction]\label{thm:stationaryOS}
+Fix a registered finite spatial $SU(2)$ lattice and $\beta>0$. Let $K$ be a
+continuous positivity-preserving, positive-semidefinite, self-adjoint,
+injective Wilson slab operator with Perron pair $(\lambda_0,h)$, $h>0$,
+normalized by $\int h^2\,d\mu=1$. Define
+\[
+ P(x,dy)=\frac{K(x,y)h(y)}{\lambda_0h(x)}\,\mu(dy),
+ \qquad \pi(dx)=h(x)^2\mu(dx),
+\]
+and $T=\lambda_0^{-1}h^{-1}Kh$ on $L^2(\pi)$. The stationary bi-infinite
+Markov chain is reflection positive across a bond. Its completed future OS
+space is unitarily isomorphic to $L^2(\pi)$, and time translation descends to
+the positive self-adjoint Markov contraction $T$. Every nonzero bounded
+one-slice gauge-invariant source survives the OS quotient.
+\end{theorem}
+\begin{proof}
+The Doob formula and $Kh=\lambda_0h$ show that $P$ is Markov. Self-adjointness
+of $K$ gives detailed balance with $\pi$, hence a reversible stationary chain
+by Kolmogorov extension. For a future observable $F$, set
+$CF=\mathbb E[F\mid X_1]$. The Markov property and reflection give
+\[
+ \langle q(F),q(G)\rangle_{\rm OS}=\langle CF,T\,CG\rangle_{L^2(\pi)}.
+\]
+Because $T\geq0$, the map $JF=T^{1/2}CF$ realizes the quotient norm and has
+kernel exactly the OS null space. Injectivity of the Wilson slab follows from
+strictly positive Peter--Weyl multipliers; hence $T^{1/2}$ has dense range and
+$J$ completes onto $L^2(\pi)$. Conditional expectation intertwines one time
+shift with $T$, so the descended shift is the positive self-adjoint Markov
+contraction. Finally, for nonzero one-slice $f$, injectivity and positivity give
+$\langle f,Tf\rangle>0$, proving survival.
+\end{proof}
+\begin{remark}
+The stationary endpoint law $h^2\mu$ is a newly registered finite object and
+is not automatically the frozen open-slab law. Compactness gives finite-volume
+spectral discreteness, but no regulator-uniform physical edge, continuum
+semigroup, Wilson-core totality, or mass gap.
+\end{remark}
+\src{.prism/physics-first-strong-cp-workflow-import-20260727/route2-batch23-os-quotient-construction-v5.md; route2-batch23-os-quotient-construction-v5-review.md}
+
+\chapter{Shorting theory and the exact candidate-edge test}
+
+\begin{theorem}[GEWTR-1: positive-block shortening]\label{thm:gewtr}
+Let $B=\bigl(\begin{smallmatrix}A&C\\D&E\end{smallmatrix}\bigr)$ be bounded
+self-adjoint and let $\lambda\geq\sup\spec(B)$. Put
+$X=\lambda P-A$ and $H_R=\lambda R-E$. Then there is a contraction $K$ with
+\[
+ C=X^{1/2}KH_R^{1/2},\qquad D=H_R^{1/2}K^*X^{1/2}.
+\]
+For every retained $s$, $Ds\perp\ker H_R$ and
+\[
+ \|H_{R,\rm red}^{-1/2}Ds\|^2\leq\langle s,Xs\rangle,
+\quad
+ \langle s,D^*(H_R+\delta)^{-1}Ds\rangle
+ \leq\langle s,Xs\rangle.
+\]
+\end{theorem}
+\begin{proof}
+The block $\lambda I-B$ is positive. The standard positive-block
+factorization supplies the contraction $K$ without requiring closed range.
+Substituting the factorization into the quadratic form gives the reduced
+inverse estimate; the regularized resolvent is smaller than the reduced form.
+\end{proof}
+
+\begin{proposition}[GEWTR-2]
+For $y$ in the eliminated sector, the form-domain criterion is
+$\sup_{\delta>0}\langle y,(H_R+\delta)^{-1}y\rangle<\infty$ exactly when
+$y\perp\ker H_R$ and $y\in\Dom H_{R,\rm red}^{-1/2}$.
+\end{proposition}
+\begin{proof}
+Apply the spectral theorem and monotone convergence to
+$\int(\lambda+\delta)^{-1}d\mu_y(\lambda)$.
+\end{proof}
+\begin{remark}
+GEWTR begins with the global order $B\leq\lambda I$. It cannot prove that
+order, locate $\lambda$, or supply a lower signed connected response.
+\end{remark}
+\src{.prism/physics-first-strong-cp-workflow-import-20260727/post-route2-wtr-shortening-theorem-v2.md; post-route2-wtr-shortening-theorem-v2-independent-review.md; post-route2-wtr-shortening-theorem-v2-erratum.md}
+
+\begin{theorem}[CEOE/SDC-1 strict-tail equivalence]\label{thm:sdc}
+Suppose $q>\sup\spec(E)$. Then
+\[
+ B\leq qI
+ \quad\Longleftrightarrow\quad
+ qP-A-C(qR-E)^{-1}D\geq0.
+\]
+At $q=\sup\spec(E)$, the equivalent form statement requires $X\geq0$,
+$Ds\perp\ker H_R$, $Ds\in\Dom H_{R,\rm red}^{-1/2}$, and
+\[
+ \|H_{R,\rm red}^{-1/2}Ds\|^2\leq\langle s,Xs\rangle
+\quad\text{for every retained }s.
+\]
+\end{theorem}
+\begin{proof}
+In the strict regime, triangular congruence factorization gives
+\[
+ qI-B=
+ \begin{pmatrix}I&-CH_R^{-1}\\0&I\end{pmatrix}
+ \begin{pmatrix}S_P(q)&0\\0&H_R\end{pmatrix}
+ \begin{pmatrix}I&0\\-H_R^{-1}D&I\end{pmatrix}.
+\]
+Congruence preserves positivity and $H_R>0$, proving the equivalence. At the
+touching edge, replace the inverse by the reduced closed quadratic form. The
+positive-block contraction criterion is equivalent to the stated kernel,
+domain, and form inequality.
+\end{proof}
+\begin{counterexample}[Bounded WTR does not establish a candidate edge]
+Take scalar $A=q$, $E=0$, and $D=C=\varepsilon\neq0$. The tail resolvent
+correction is finite, yet the top eigenvalue of the full $2\times2$ block is
+strictly larger than $q$. Thus an upper WTR estimate cannot replace SDC-1.
+\end{counterexample}
+\begin{remark}
+For a proposed physical edge $q_\beta=e^{-ma_\beta}<1$, the first open Wilson
+lemma is precisely SDC-1 on the complete carrier, with uniform schedule and
+norm control. The theorem repackages the target-strength order; it does not
+make it true.
+\end{remark}
+\src{.prism/physics-first-strong-cp-workflow-import-20260727/post-route2-candidate-edge-order-equivalence-v2.md; post-route2-candidate-edge-order-equivalence-v2-independent-review.md}
+
+\chapter{Wilson source, scale, and no-go results from Cycles 10--18}
+
+\section{Exact identities and their proof mechanisms}
+\begin{longtable}{p{0.22\textwidth}p{0.45\textwidth}p{0.23\textwidth}}
+\toprule Result & Statement and proof mechanism & Consequence \\
+\midrule\endfirsthead\toprule Result & Statement and proof mechanism & Consequence \\
+\midrule\endhead
+Open-index source gluing & Haar integration and intertwiners give exact gluing. The unblocked absolute character sum equals $\beta e^\beta/(2I_1)-1\sim\sqrt{\pi/2}\,\beta^{3/2}$. & Early absolute norms do not contract. \\
+Central convolution cylinder & Peter--Weyl diagonalization gives norm $(I_2/I_1)^L$. A blocked activity with $A/\beta\to\lambda$ has exact threshold $\lambda_*\simeq1.033465466478$. & Finite cylinder calibration only. \\
+Recoupling & The $6j$ recoupling matrix is $\ell^2$-unitary by orthogonality. & Recoupling alone creates no cancellation margin. \\
+Carrier comparison & Telescoping normalized logs gives $-\log(\|T^\ell y_n\|/\|y_n\|)=\Gamma_n-c_n$. & All comparison costs must be paid. \\
+Physical clock & A mesoscopic block $A=\Theta(\beta)$ has vanishing physical diameter. Strong continuity forces surviving response $m\tau_a+o(\tau_a)$. & Order-one response at shrinking time is invalid. \\
+Perimeter invariance & Rescaling open kernels by $z_a^{n-m}$ preserves positivity/gluing but shifts raw energy; separable perimeter factors cancel from centered ratios and mixed logs. & Open charged energy is not physical mass. \\
+Finite-valence star & Haar orthogonality gives norm $c_{1/2}$ for every fixed valence; compressed norms remain algebraically close to one. & Valence does not create a transmuted margin. \\
+Centered neutral channel & Bessel asymptotics give $-\log c_j=2j(j+1)/\beta+j(j+1)/\beta^2+O(\beta^{-3})$. & Wrong algebraic clock. \\
+\bottomrule
+\end{longtable}
+
+\section{Diagonal-norm obstruction}
+\begin{proposition}[Fixed diagonal fusion-norm no-go]
+For fixed $\beta$-independent diagonal weights $d_j^p$, the centered source
+norm satisfies
+\[
+ \|S_\beta\|_p^2\sim\frac18\Gamma\!\left(\frac{p+7}{2}\right)
+ \beta^{(p-1)/2}.
+\]
+Source smallness requires $p<1$, while continuous evaluation and the standard
+pointwise fusion algebra require $p>3$. Hence no fixed norm in this class has
+both properties.
+\end{proposition}
+\begin{proof}
+Insert the large-$\beta$, $j=O(\sqrt\beta)$ heat-kernel/Bessel asymptotics into
+the weighted character sum and pass to the Gaussian Riemann integral. The
+stated gamma factor is the resulting radial moment. Evaluation/fusion
+stability requires summability of the inverse dimension weights, forcing
+$p>3$, whereas the displayed power is bounded only for $p\leq1$ and small only
+for $p<1$.
+\end{proof}
+\begin{remark}
+The theorem excludes a fixed diagonal architecture, not non-diagonal signed
+blocks, connected quotients, transported norms, or scale-dependent carriers.
+\end{remark}
+
+\section{Dimensional transmutation and finite-rank leakage}
+\begin{proposition}[Required two-loop response scale]
+If a finite physical $SU(2)$ mass $M_F$ tracks the generated two-loop lattice
+scale, then
+\[
+ aM_F=K_F\,\beta^{51/121}
+ \exp\!\left(-\frac{3\pi^2}{11}\beta\right)
+ [1+O(\beta^{-1})].
+\]
+\end{proposition}
+\begin{proof}
+Integrate the two-loop beta function using the universal $SU(2)$ coefficients
+$b_0,b_1$, convert $g^2=4/\beta$, and collect the power
+$b_1/(2b_0^2)=51/121$ and exponential $1/(2b_0g^2)=3\pi^2\beta/11$.
+The physical-mass identification is the conditional premise.
+\end{proof}
+\begin{remark}
+The scale is beyond every algebraic order. It is a required matching scale,
+not an action-derived nonzero Wilson coefficient.
+\end{remark}
+
+\begin{proposition}[Finite Schur recompression fails]
+Adding the first leaked spin can reduce one selected Schur residual to
+$15/(8\beta^4)+\cdots$, while the squared omitted-leakage ratio tends to $6$;
+the full fusion Gram singular values tend to $(3\pm\sqrt5)/2$ and the
+two-fusion return remains algebraic.
+\end{proposition}
+\begin{proof}
+Compute the exact finite Gram and Schur matrices from adjacent-spin Haar
+coefficients and expand the Bessel ratios. The small selected residual is
+cancelled by conditioning inside the retained block, but the orthogonal
+leakage channel has nonvanishing norm and restores the algebraic return.
+\end{proof}
+
+\chapter{Route 2: normalized obstruction library}
+
+Route 2 used 500 identifiers for result rows, falsifiers, deferred items, and
+gates. The correct mathematical unit is a reviewed theorem family, not an
+identifier. The following table is the consolidated family ledger.
+
+\small
+\begin{longtable}{p{0.08\textwidth}p{0.23\textwidth}p{0.47\textwidth}p{0.06\textwidth}}
+\toprule Range & Family & Proved content and escape clauses & Credit \\
+\midrule\endfirsthead\toprule Range & Family & Proved content and escape clauses & Credit \\
+\midrule\endhead
+001--010 & Finite-rank leakage & Natural spin cutoffs leak; fixed-rank Wilson-filter approximation degenerates; finite analytic carriers cannot manufacture a nonzero flat response. Growing/full carriers escape. & 0 \\
+011--020 & Local fusion & Fixed finite spin/bond carrier and fixed depth cannot remain faithful under repeated fundamental fusion while certifying a transmuted response. Reducing cores and nonanalytic input escape. & 0 \\
+021--030 & Moving comparison & Metric changes redistribute response among drift, comparison, and tail return; coherent response-tempered gauges preserve the normalized exponent. Nonanalytic full-carrier telescoping escapes. & 0 \\
+031--040 & Tensor width & Saturated crossed singlets require exponential bond dimension; fixed bond fails on growing boundaries. Exact invariant-core states show nonuniversality. & 0 \\
+041--050 & Locality/reach & Finite propagation requires depth $\Omega(R/a)$ for fixed physical reach; finite analytic local data do not generate a flat scale. Rare events and growing depth escape. & 0 \\
+051--060 & Norm pairs & Tame strong-to-weak interpolation does not create same-space contraction; derivative loss accumulates. Genuine smoothing with same-space response escapes. & 0 \\
+061--070 & Cancellation complexity & Transmuted sign certification can require precision linear in $\beta$ in declared numerical/oracle models. Small values need not have high description complexity. & 0 \\
+071--080 & Full spin-network tests & Exact finite boundary carrier, multiplicity projector, vacuum cancellation, and finite OS positivity; naive comparison has extensive cost. No cofinal theorem. & 0 \\
+081--100 & Consolidation attacks & Faithful fusion depth gives dimension growth; crossed singlets give bond growth; local depth gives reach bound; analytic germs cannot be positive asymptotic to $K\beta^pe^{-A\beta}$. Premise-bounded only. & 0 \\
+101--140 & Operator ideals/quotients & Compact surgery cannot remove a unit essential/Calkin edge on the retained carrier; exact quotient needs invariant null space; leakage, Schur return, resolvent, Riccati, and comparison costs are explicit. Reducing/nonlinear escapes. & 0 \\
+141--200 & Moving carriers/categories & Wilson filter rank grows as $\Theta(\sqrt\beta)$ at fixed tolerance; physical clock is much deeper; fusion support radius grows linearly and multiplicity exponentially; no finite complete fundamental-fusion carrier. & 0 \\
+201--250 & Finite Wilson/OS & Finite source/reflection kernels and the stationary theorem are exact. Open/stationary handoff, continuum binding, core totality, and physical edge remain held. & 0 \\
+251--300 & Proof complexity/numerics & Encoding, output-size, query, oracle, and certification bounds are exact only in their declared models. Scaling experiments cannot prove a uniform theorem. & 0 \\
+301--350 & Stochastic mechanisms & Rare-event, contour, polymer, and martingale identities show abstract nonanalytic mechanisms and failure modes. No compatible Wilson C/R/K/N/O package is derived. & 0 \\
+351--400 & Constructive architectures & Feshbach, Krylov, graph-transform, and nonuniform infinite-carrier mechanisms can realize flat scales abstractly; small residuals may accumulate order-one error. Exact Wilson coefficient/sign/schedule/OS survival remain absent. & 0 \\
+401--450 & Normalization/audits & Twelve scoped families normalized; contradictions, priority, significance, and publication audited. These are evidence gates, not new YM results. & 0 \\
+451--500 & Terminal gates & Manuscript, hostile review, reproducibility, reflection, and final audit close as typed null/nonpublication. & 0 \\
+\bottomrule
+\end{longtable}
+\normalsize
+
+\section{A compact publication-form obstruction theorem}
+\begin{theorem}[Separated finite-complexity obstruction]\label{thm:finitecomplex}
+Under the corresponding explicit architecture hypotheses:
+\begin{enumerate}
+\item a faithful linear carrier through fundamental fusion depth $n$ has
+dimension at least $n+1$;
+\item a family containing $m$ crossed singlets needs bond dimension at least
+$2^m$;
+\item a direct block of radius $b$ followed by $\ell$ radius-$r$ local layers
+has reach at most $b+r\ell$, so fixed physical reach requires $\ell=\Omega(1/a)$;
+\item a real-analytic response germ at $1/\beta=0$ cannot be positive
+asymptotic to $K\beta^pe^{-A\beta}$ with $A>0$;
+\item replacing a normalized response $q$ by $\widehat q$ over $N$ steps
+preserves a target exponent $\rho$ only with
+$|\log\widehat q-\log q|=o(N\rho)$ or complete two-sided accounting.
+\end{enumerate}
+\end{theorem}
+\begin{proof}
+(1) Repeated fundamental fusion reaches $n+1$ distinct spin labels.
+(2) Schmidt rank multiplies across independent crossed singlets.
+(3) Supports grow by at most $r$ per local layer.
+(4) A nonzero analytic germ has a first nonzero algebraic order, while a flat
+exponential is smaller than every power; the zero germ cannot be positive
+asymptotic to it.
+(5) Telescope the logarithmic response difference over $N$ steps.
+\end{proof}
+\begin{remark}
+The theorem is deliberately separated. It does not exclude growing carriers,
+reducing sectors, nonanalytic inputs, rare-event mechanisms, nonlocal methods,
+or exact full-carrier constructions.
+\end{remark}
+\src{.prism/physics-first-strong-cp-workflow-import-20260727/route2-batch09-theorem-consolidation-attacks-v2.md; review-route2-batch09-theorem-consolidation-attacks-v2.md}
+
+\chapter{Counterexample and barrier catalogue}
+
+\begin{proposition}[Maxwell spin-wave method barrier]
+In a Gaussian Maxwell spin-wave model, let $\phi$ be real, smooth, compactly
+supported, and normalized by $\int\phi=1$, and compare separated time
+translates with the declared reflection-positive ultraviolet regularization.
+For $X=F_{12}(\phi)$ one has
+$c_\beta(t)=1/(\pi^2\beta t^4)+O_\phi(\beta^{-1}t^{-5})$. For
+$W=\cos(qX)$,
+\[
+ G_\beta(t)=e^{-q^2\sigma^2}\bigl(\cosh(q^2c_\beta(t))-1\bigr)
+ \sim\frac{q^4e^{-q^2\sigma^2}}{2\pi^4\beta^2}t^{-8}.
+\]
+Thus local curvature convexity, gauge fixing, Gauss projection, asymptotic
+stiffness, and a bounded gauge-invariant source do not by themselves imply a
+common exponential center-free rate.
+\end{proposition}
+\begin{proof}
+Use the Gaussian characteristic function for the cosine covariance and expand
+$\cosh u-1\sim u^2/2$. On a cofinal sequence
+$\beta_j=\Theta(\log L_j)$, choose
+$t_j=(3/m)\log\beta_j=o(L_j)$. The polynomial tail is then incompatible with
+a regulator-uniform common-exponent conclusion having the Cycle-8 LC-NG
+premises and fixed source normalization.
+\end{proof}
+\begin{remark}
+This is a method-class countermodel, not compact $SU(2)$ and not an
+identification of the Wilson center-free sector with Maxwell theory.
+\end{remark}
+
+\begin{longtable}{p{0.28\textwidth}p{0.60\textwidth}}
+\toprule Barrier & What it rules out \\
+\midrule\endfirsthead\toprule Barrier & What it rules out \\
+\midrule\endhead
+Hidden soft OS sector & Tested-loop decay without post-quotient totality does not imply a full gap. \\
+Finite favorable FCC ratios & No finite temporal window bootstraps a cyclic spectral edge. \\
+Open-line normalization freedom & Raw charged open energy is not a physical mass without closure/normalization invariance. \\
+Fixed diagonal fusion norm & Absolute same-space diagonal norms destroy the signed cancellations needed at weak coupling. \\
+Finite-rank Schur conditioning & A small selected residual can coexist with order-one omitted leakage. \\
+Calkin/essential edge & Compact perturbations cannot remove an essential unit edge on the same retained carrier. \\
+Graph residual accumulation & A small local residual may accumulate order one over the physical clock. \\
+Exact flattening & A fully constrained finite hierarchy and its existentially eliminated endpoint relation agree on extensional endpoint queries. \\
+\bottomrule
+\end{longtable}
+
+\chapter{The exact remaining Wilson--OS bridge}
+
+The following packages are necessary for the selected route. They are not
+claimed necessary for every conceivable proof of the mass gap.
+
+\begin{contract}[B1: physical-edge localization]
+Construct the actual full-carrier Wilson transfer/block operator and prove
+SDC-1 at
+$q_\beta=e^{-ma_\beta}<1$ uniformly in the declared volume/cutoff/boundary
+schedule. This must derive the order from the Wilson action and overlap
+geometry; numerical fitting or an assumed edge does not count.
+\end{contract}
+
+\begin{contract}[B2: lower signed connected window mass]
+After vacuum/connected subtraction, prove a positive lower bound on the signed
+source-visible spectral mass in a window adjacent to $q_\beta$. The source
+must be nonnull in the OS quotient and cancellation cannot be replaced by an
+absolute majorant that diverges.
+\end{contract}
+
+\begin{contract}[B3: transmuted coefficient and physical clock]
+Derive the nonzero Wilson coefficient at
+$\Theta(\beta^{51/121}e^{-3\pi^2\beta/11})$, and control leakage, comparison,
+and accumulated clock error at that same scale. An algebraic error overwhelms
+the signal and is therefore inadmissible.
+\end{contract}
+
+\begin{contract}[B4: OS survival and continuum handoff]
+Prove tightness/continuum OS reconstruction, nonnull source descent, compatible
+physical-time semigroup convergence, and cyclic or sigma-complete Wilson core
+totality. Only then may Theorem~\ref{thm:dcg} be invoked.
+\end{contract}
+
+\section{Dependency chain}
+\[
+\begin{aligned}
+ \boxed{\text{Wilson SDC-1}}&\Longrightarrow\boxed{\text{physical edge}}
+ \Longrightarrow\boxed{\text{lower signed window mass}}\\
+ &\Longrightarrow\boxed{\text{transmuted response + clock}}
+ \Longrightarrow\boxed{\text{nonnull continuum OS core}}\\
+ &\Longrightarrow\boxed{\text{dense-core gap criterion}}.
+\end{aligned}
+\]
+GEWTR supplies only an upper positive resolvent estimate after the first box is
+already established. It does not bypass any later box.
+
+\chapter{Scientific accounting and freeze verdict}
+
+\begin{center}
+\fcolorbox{MidnightBlue}{MidnightBlue!4}{\begin{minipage}{0.86\textwidth}
+\textbf{Cycle-500 disposition.}\\
+\small PASS-RECONCILIATION / TYPED-NULL PROGRAMME CLOSURE /\\
+ZERO YANG--MILLS CREDIT / ZERO PUBLICATION AUTHORITY.\normalsize
+
+The report contains useful mathematics and a sharper research priority. It
+does not contain a major Yang--Mills breakthrough or a currently authorized
+publishable theorem. The strongest conceptual conclusion is that ambient
+positive WTR upper control is structural at an already known edge; the hard
+physics is edge localization and lower signed connected response at the
+transmuted scale, followed by clock and OS survival.
+\end{minipage}}
+\end{center}
+
+The terminal evidence snapshot contains 37 unique bound rows with zero missing
+paths, hash/size mismatches, duplicate paths, or outside-repository entries.
+Its SHA-256 is
+\nolinkurl{31507D5BA847AE756765EF817B3E3DFF14DA0BA1AE00F9928A0BF1BAADB3F056}.
+The independent frozen-snapshot review has SHA-256
+\nolinkurl{629CC9DB5258C14935577556B2D2D35B9D2C3EFD4D2C9A9ED586420A7CCC8523}.
+
+\appendix
+\chapter{Canonical provenance map}
+\small
+\begin{longtable}{p{0.28\textwidth}p{0.62\textwidth}}
+\toprule Topic & Canonical source and binding review \\
+\midrule\endfirsthead\toprule Topic & Canonical source and binding review \\
+\midrule\endhead
+Dense core & \path{cycle6-dense-core-spectral-criterion-v2.md}; \path{review-cycle6-dense-core-spectral-criterion-v2.md} \\
+Wilson core contract & \path{cycle6-wilson-observable-core-contract-v2.md}; matching v2 review \\
+Loop completeness & \path{cycle7-os-loop-core-density.md}; matching review \\
+Joint contour charge & \path{cycle8-joint-center-contour-bridge-v3.md}; matching v3 review \\
+FCC ratios & \path{cycle8-fcc-spectral-ratio-audit-v2.md}; matching v2 review \\
+Dimensional transmutation & \path{cycle17-dimensional-transmutation-response-scale-v2.md}; matching v2 review \\
+Finite stationary OS & \path{route2-batch23-os-quotient-construction-v5.md}; \path{route2-batch23-os-quotient-construction-v5-review.md} \\
+WTR threshold & \path{route2-batch49-programme-reflection.md}; independent review \\
+GEWTR & \path{post-route2-wtr-shortening-theorem-v2.md}; independent review and rendering erratum \\
+SDC-1 & \path{post-route2-candidate-edge-order-equivalence-v2.md}; independent v2 review \\
+Terminal synthesis & \path{route2-cycle500-final-synthesis-v2.md}; \path{route2-cycle500-freeze-record-v1.md} \\
+Frozen manifest & \path{route2-cycle500-terminal-manifest-v5.tsv}; independent review v4 \\
+\bottomrule
+\end{longtable}
+\normalsize
+
+\chapter{Supersession and correction rules}
+Only canonical versions named in Appendix A are used for theorem statements.
+In particular: Cycle 6 uses the v2 zero-vector and pointed-ground-state repair;
+Cycle 8 uses the v3 joint-contour baseline/onset repair and v2 FCC cutoff-edge
+repair; Cycle 17 uses the v2 two-loop exponent/lattice-scale repair; the finite
+stationary OS theorem uses Batch 23 v5; GEWTR uses v2 plus its rendering-only
+erratum; and CEOE/SDC-1 uses the v2 strict/touching domain split. Earlier files
+remain historical evidence and are not silently merged into canonical claims.
+
+\chapter{Open 11-lemma full-carrier contract}
+The full-carrier signed-block programme remains open. Its sufficient contract
+requires, in order: a complete carrier; a closed signed/connected source;
+Feshbach domain control; leakage control; a derived transmuted coefficient;
+comparison stability; physical-clock accumulation; reflection positivity;
+OS-null control; cofinal regulator uniformity; and dense-core totality. The
+finite-rank Schur calculation proves that satisfying a selected residual is
+not a substitute for these lemmas.
+
+\chapter{Complete Cycle 1--9 theorem ledger and proofs}
+
+This appendix restores the reviewed early result chain in theorem order. Each
+proof is complete at the level of the stated finite or conditional result; no
+entry receives continuum Yang--Mills credit.
+
+\begin{proposition}[Endpoint-response duality (ERD-1)]
+For the fixed regulated boundary-density and observable classes, the BR-1
+response bound with constants $C,m_\partial>0$ is equivalent, for every
+registered $j,B,n$, to
+\[
+ \|\mathcal R_{j,B,n}\|_{\mathcal O^0_{j,n}\to\mathcal G^0_{j,0}}
+ \leq C e^{-m_\partial n\ell_0},\qquad
+ \mathcal R_{j,B,n}=Q^0_{j,0}\mathbb E_{\mu_{j,B}}
+ [\,\cdot\mid q_{j,0}].
+\]
+\end{proposition}
+\begin{proof}
+For admissible normalized endpoint densities write their difference as a
+centered gauge-invariant $g$. Conditional expectation gives the exact pairing
+$\omega_h(F)-\omega_{h'}(F)=\langle g,\mathcal R(F-\mu F)\rangle$.
+The operator bound implies BR-1 by Cauchy--Schwarz. Conversely use
+$h=1+\varepsilon g$, $h'=1$ for bounded $g$, cancel $\varepsilon$, take the
+Hilbert dual supremum, and extend by density.
+\end{proof}
+\src{.prism/physics-first-strong-cp-workflow-import-20260727/cycle3-positive-fixed-width.md; review-cycle3-positive-fixed-width.md}
+
+\begin{proposition}[Reachable contraction (RAC-1)]
+Assume the still-open exact header factorization
+$J_{j,0}^*F=T_{j,0}\cdots T_{j,n-1}J_{j,n}^*F$.  If every $T_{j,k}$ contracts
+the corresponding centered observable-reachable subspace by one uniform
+$q_{\rm reach}<1$, then
+$\|\mathcal R_{j,B,n}\|\le q_{\rm reach}^n$ and ERD-1 holds with
+$m_\partial=-\ell_0^{-1}\log q_{\rm reach}$.
+\end{proposition}
+\begin{proof}
+Apply the restricted contraction successively from $k=n-1$ to $0$; endpoint
+conditional expectation and centering are contractions. ERD-1 converts the
+resulting operator estimate into the response bound. No contraction is needed
+on the unreachable orthogonal complement. The exact factorization premise is
+not proved for the Wilson target here.
+\end{proof}
+\src{.prism/physics-first-strong-cp-workflow-import-20260727/cycle3-positive-fixed-width.md; review-cycle3-positive-fixed-width.md}
+
+\begin{proposition}[WEC-1--3 finite endpoint covariance]
+For the selected reflected plaquette endpoint pair in the finite Wilson
+measure, reflection positivity gives a transfer representation of the endpoint
+covariance. Source nonconstancy together with injectivity of the positive
+finite transfer gives strict positivity, and normalization yields the exact
+finite spectral coefficient.
+\end{proposition}
+\begin{proof}
+Reflect the endpoint insertion into the opposite half and use the Wilson
+Boltzmann density to obtain the positive transfer Gram form. Peter--Weyl
+expansion gives strictly positive multipliers, hence an injective transfer;
+the selected centered source is nonzero, so its Gram minor is strictly
+positive. Divide by the endpoint variances for the normalized coefficient.
+\end{proof}
+\src{.prism/physics-first-strong-cp-workflow-import-20260727/cycle3-wilson-endpoint-covariance.md; review-cycle3-wilson-endpoint-covariance.md}
+
+\begin{proposition}[Active-variance hierarchy (AVE/ALP/BAV)]
+For an active channel $A_k=P_{U_k}T_k|_{W_{k+1}}$, the exact one-layer loss is
+\[
+ \|w\|^2-\|A_kw\|^2=
+ \mathbb E[\operatorname{Var}(w(q_{k+1})\mid q_k)]
+ +\|(I-P_{U_k})T_kw\|^2.
+\]
+These losses telescope along a propagated vector. If the accumulated scalar
+log losses $-\log\|A_k\|$, or the norms of a preregistered bounded-horizon
+block partition, exceed $m_\partial n\ell_0-\log C_*$, then the corresponding
+endpoint product is at most $C_*e^{-m_\partial n\ell_0}$.
+\end{proposition}
+\begin{proof}
+Use the conditional-expectation intertwiner and apply orthogonal Pythagoras
+first to the conditional-expectation defect and then to $P_{U_k}$. Product
+submultiplicativity proves ALP-1 and its bounded-horizon BAV-1 extension.
+One-dimensional scalar chains show optimality from layer norms alone; rotating
+weak directions show why bounded blocks can succeed when one-layer minima do
+not. The Wilson lower-loss hypotheses remain open.
+\end{proof}
+\src{.prism/physics-first-strong-cp-workflow-import-20260727/cycle3-active-variance-v2.md; review-cycle3-active-variance-v2.md}
+
+\begin{proposition}[Normalized transfer reduction (NTR-1--4)]
+Writing the positive finite transfer as $T=\lambda_0P$, the normalized WEC
+coefficient satisfies
+\[
+ c_j=\frac{\langle u,P^Du\rangle}{d}
+ =\frac{\langle f,M_sP^DM_sf\rangle}{\|f\|^2}.
+\]
+If $q=q_0\phi_0+q_\perp$, $u=u_0\phi_0+u_\perp$, with
+$q_0=\langle\phi_0,q\rangle>0$, $d=\|f\|^2>0$, and centering gives
+$\langle q,u\rangle=0$, define
+$P_\perp=(I-|\phi_0\rangle\langle\phi_0|)P
+(I-|\phi_0\rangle\langle\phi_0|)$,
+$\kappa_j=\|u_\perp\|^2/d$,
+$\delta_j=\|q_\perp\|/q_0$, and
+$\tau_j(D)=\langle u_\perp,P_\perp^Du_\perp\rangle/\|u_\perp\|^2$.
+Here $u_\perp\ne0$ follows from centering and $d>0$. Then
+\[
+ c_j=\frac{|\langle q_\perp,u_\perp\rangle|^2}{q_0^2d}
+ +\frac{\langle u_\perp,P^Du_\perp\rangle}{d}
+ \le\kappa_j(\delta_j^2+\tau_j(D)).
+\]
+\end{proposition}
+\begin{proof}
+Factor the same power $\lambda_0^N$ from numerator and partition function to
+obtain NTR-1; conjugate the boundary weights to obtain the Rayleigh form
+NTR-2. Resolve the identity into the Perron vector and its orthogonal
+complement and use the centering relation for NTR-3. Cauchy--Schwarz gives
+NTR-4. A two-state example shows centering need not remove the Perron term;
+none of $\kappa_j,\delta_j,\tau_j$ is uniformly controlled here.
+\end{proof}
+\src{.prism/physics-first-strong-cp-workflow-import-20260727/cycle3-wec-rate-reduction-v2.md; review-cycle3-wec-rate-reduction-v2.md}
+
+\begin{proposition}[WRX-1/CW-1 exact Wilson factorization]
+On a finite lattice split into outer region, separating blanket, and inner
+region, the Wilson density factors into outer, blanket, and inner action
+terms. Conditional integration therefore gives an exact same-measure channel
+identity through the blanket.
+\end{proposition}
+\begin{proof}
+Every plaquette belongs to the outer, inner, or blanket interaction set. Split
+the action accordingly, apply Fubini to the finite Haar product measure, and
+normalize the two conditional kernels. Their composition reproduces the
+original expectation exactly. No contraction estimate is used.
+\end{proof}
+\src{.prism/physics-first-strong-cp-workflow-import-20260727/cycle3-wilson-raw-crosswalk.md; review-cycle3-wilson-raw-crosswalk.md}
+
+\begin{proposition}[MDB-1/MDR-1 geometric rate conversion]
+For the registered cube decomposition, maximal cube depth and support distance
+differ by less than $2\ell_0$. Consequently an exponential depth bound converts
+to a support-distance bound with only a fixed multiplicative constant.
+\end{proposition}
+\begin{proof}
+The cube containing a support point has diameter below $2\ell_0$. Apply the
+triangle inequality between the support point, cube representative, and the
+reference boundary, then exponentiate the additive error.
+\end{proof}
+\src{.prism/physics-first-strong-cp-workflow-import-20260727/cycle3-endpoint-bridge-v5.md; review-cycle3-endpoint-bridge-v5.md}
+
+\begin{proposition}[PCL/PML active-localization identity]
+A patch conditional residual is bounded by the exact variance over its two
+blankets, and a Doob reveal decomposes that variance losslessly into orthogonal
+increments. The increments need not be local.
+\end{proposition}
+\begin{proof}
+Conditional expectation is the $L^2$ orthogonal projection onto the blanket
+sigma-algebra. Pythagoras gives the residual/variance identity. Revealing
+variables in order and applying martingale orthogonality gives the sum of
+increment squares.
+\end{proof}
+\src{.prism/physics-first-strong-cp-workflow-import-20260727/cycle4-wal-active-localization.md; review-cycle4-wal-active-localization.md}
+
+\begin{proposition}[FAR transverse extraction]
+The finite transverse Fourier decomposition of a centered witness has
+nonnegative momentum contributions. At least one real momentum component
+retains the total response up to the polynomial factor $L^4$; hence a genuine
+zero exponential rate survives extraction.
+\end{proposition}
+\begin{proof}
+Parseval decomposes the squared norm into nonnegative momentum sectors. The
+largest sector is at least the sum divided by the number of modes. Pair
+conjugate modes to obtain a real direction; polynomial factors disappear
+after division by physical time in an exponential rate.
+\end{proof}
+\src{.prism/physics-first-strong-cp-workflow-import-20260727/cycle4-esw-active-slow-witness.md; review-cycle4-esw-active-slow-witness.md}
+
+\begin{proposition}[Collar-energy spectral diagnostic]
+The boundary and insertion collar energies admit exact Laplace-transform
+representations with threshold inequalities obtained by splitting their
+spectral measures. Literal finite-lattice comparison costs can grow as
+$\exp[O(\beta L^6)]$, so the diagnostic alone has no cofinal authority.
+\end{proposition}
+\begin{proof}
+Apply the spectral theorem to the positive collar operator and split the
+integral below and above a threshold. Bound each piece by the extremal
+exponential on its interval. Direct action comparison over all affected
+plaquettes yields the displayed volume cost.
+\end{proof}
+\src{.prism/physics-first-strong-cp-workflow-import-20260727/cycle4-wec-spectral-diagnostic-v2.md; review-cycle4-wec-spectral-diagnostic-v2.md}
+
+\begin{theorem}[Fixed exact-center contour suppression]
+Actual lattice topology gives exact-center contour minima $4$ globally, $5$
+at a temporal boundary, and $6$ in the bulk. For a fixed repair-admissible
+contour $X$,
+\[
+ \mu(E_X^-(\rho))\leq\exp[-2\beta|X|\cos\rho].
+\]
+A rooted connected-family estimate follows after summing the declared repair
+multiplicities.
+\end{theorem}
+\begin{proof}
+The topological minima follow by enumerating the incidence parity constraints
+on the lattice cells. Twist the center on $X$ and repair along the admitted
+chain. Each bad plaquette gains at least $2\beta\cos\rho$ in action. Haar
+invariance compares the event with its repaired image and gives the bound;
+the rooted estimate is the union sum over the registered family.
+\end{proof}
+\src{.prism/physics-first-strong-cp-workflow-import-20260727/cycle5-center-contour-threshold-v2.md; review-cycle5-center-contour-threshold-v2.md}
+
+\begin{proposition}[Rare-event amplification obstructions (RAO/REA)]
+For an event $B$ of mass $q$, the centered unit vector
+$h_B=(\mathbf1_B-q)/\sqrt{q(1-q)}$ satisfies
+$\|\mathbf1_Bh_B\|^2=1-q$. Thus small event probability alone gives no small
+multiplication norm on a full centered space. Moreover, a reversible two-state
+chain can have stationary rare-state mass $\varepsilon$ while its normalized
+rare-state mode has correlation $\rho^n$; taking
+$\varepsilon\to0$ and $-\log\rho\to0$ destroys any common rate.
+\end{proposition}
+\begin{proof}
+The first assertion is direct substitution. For the second choose transition
+probabilities $P(1|0)=\varepsilon(1-\rho)$ and
+$P(1|1)=\varepsilon+(1-\varepsilon)\rho$. Detailed balance is immediate and
+the normalized centered indicator is an eigenvector with eigenvalue $\rho$.
+These are abstract method countermodels, not Wilson-dynamics counterexamples.
+\end{proof}
+\src{.prism/physics-first-strong-cp-workflow-import-20260727/cycle5-positive-curvature-coercivity.md; review-cycle5-positive-curvature-coercivity.md; cycle5-rare-event-amplification-obstruction.md; review-cycle5-rare-event-amplification-obstruction.md}
+
+\begin{proposition}[Multiscale loss identities (MSR/MAR/MLR)]
+For $A_{r:t}=A_{r:s}A_{s:t}$ and
+$L_{r:s}=I-A_{r:s}^*A_{r:s}$,
+\[
+ L_{r:t}=L_{s:t}+A_{s:t}^*L_{r:s}A_{s:t}.
+\]
+Restricting the earlier block to the later surviving range gives
+$\alpha_{r:t}\ge\alpha_{s:t}+(1-\alpha_{s:t})\alpha_{r:s|s:t}$. For nonzero
+blocks the log losses satisfy
+$\Lambda_{r:t}=\Lambda_{r:s}+\Lambda_{s:t}+\chi_{r,s,t}$ with merge bonus
+$\chi_{r,s,t}\ge0$.
+\end{proposition}
+\begin{proof}
+Expand $I-(A_{r:s}A_{s:t})^*(A_{r:s}A_{s:t})$ for MSR-1. Bound the product
+norm using the restriction of $A_{r:s}$ to
+$\overline{A_{s:t}W_t}$, square, and rearrange for MAR-1. Taking negative
+logarithms and isolating the submultiplicativity defect gives MLR-1. No scalar
+child data alone controls the merge bonus, and no Wilson lower bound is proved.
+\end{proof}
+\src{.prism/physics-first-strong-cp-workflow-import-20260727/cycle5-multiscale-bypass-v2.md; review-cycle5-multiscale-bypass-v2.md}
+
+\begin{proposition}[Observable-weighted polymer identity (OWI/OAC)]
+For a finite weighted contour family define
+$N_a=\sum_Xa_X\mathbf1_{E_X}$. Then
+\[
+ \sum_Xa_X\|\mathbf1_{E_X}h\|_2^2=\int N_a|h|^2d\mu,
+ \qquad
+ C(a)=\|M_{\sqrt{N_a}}|_{\mathcal H_{\rm act}}\|_{2\to2}^2.
+\]
+Hence the desired active observable-weighted estimate is exactly a uniform
+Carleson/multiplication-operator bound; the scalar activity $\mathbb EN_a$
+does not imply it.
+\end{proposition}
+\begin{proof}
+Interchange the finite nonnegative sum with integration to obtain OWI-1.
+Taking the supremum of its quadratic form over nonzero active innovations is
+the multiplication-operator variational norm, proving OAC-1. The RAO indicator
+calculation shows why a first moment cannot replace the active operator bound.
+\end{proof}
+\src{.prism/physics-first-strong-cp-workflow-import-20260727/cycle5-observable-weighted-polymer.md; review-cycle5-observable-weighted-polymer.md}
+
+\begin{proposition}[Fixed-observable first-moment bridge]
+If a chosen centered observable has an exact positive source majorant, scalar
+first-moment leakage of that majorant controls its fixed-observable connected
+response. The result supplies neither a Wilson majorant nor a common rate.
+\end{proposition}
+\begin{proof}
+Dominate the signed insertion by the positive source measure, integrate the
+spectral tail once, and apply Tonelli. The estimate is labelwise and therefore
+does not provide the uniform common exponent required by DCG.
+\end{proof}
+\src{.prism/physics-first-strong-cp-workflow-import-20260727/cycle7-fixed-observable-cluster-bridge-v2.md; review-cycle7-fixed-observable-cluster-bridge-v2.md}
+
+\begin{proposition}[Finite graph all-loop density]
+On a finite connected graph, the star-algebra generated by characters of all
+closed paths, including retracing and self-intersections, is uniformly dense
+in continuous gauge-invariant functions.
+\end{proposition}
+\begin{proof}
+Fix a spanning-tree gauge to identify the orbit space with
+$SU(2)^r/\mathrm{Ad}$. Traces of all words separate compact orbits. The
+self-adjoint unital loop algebra is therefore dense by Stone--Weierstrass.
+\end{proof}
+\src{.prism/physics-first-strong-cp-workflow-import-20260727/cycle7-os-loop-core-density.md; review-cycle7-os-loop-core-density.md}
+
+\begin{proposition}[Exact two-dimensional heat-kernel FCC calibration]
+For $SU(2)$ heat-kernel lattice Yang--Mills on a spatial circle of circumference
+$\ell$, a physical time block $R$ acts on class functions by heat convolution,
+\[
+ T(R)\chi_s=e^{-RE_s}\chi_s,\qquad
+ E_s=\frac{g^2\ell}{2}s(s+1).
+\]
+On the centered Wilson-character polynomial core the common contraction is
+$q(R)=e^{-3g^2\ell R/8}$, and the reconstructed finite-circle Hamiltonian has
+gap $3g^2\ell/8$.
+\end{proposition}
+\begin{proof}
+Character orthogonality gives the exact heat-kernel convolution law, so all
+interior edges of the cylinder glue to parameter $g^2\ell R/2$. Peter--Weyl
+diagonalizes the transfer on the orthonormal characters. Removing $\chi_0$,
+the largest eigenvalue is the $s=1/2$ value. Character polynomials contain the
+complete character basis, hence form a countable dense core; iterating the
+diagonal estimate proves FCC with the stated common exponent.
+\end{proof}
+\src{.prism/physics-first-strong-cp-workflow-import-20260727/cycle8-2d-fcc-calibration.md; review-cycle8-2d-fcc-calibration.md}
+
+\begin{proposition}[Conditional RG kernel and source-polymer certificates]
+On every exactly tracked fixed-source cyclic space suppose
+$T_{j,R}=L_{j,R}+E_{j,R}$ with uniform bounds
+$\|L_{j,R}f\|\le q_0\|f\|$, $\|E_{j,R}f\|\le\varepsilon\|f\|$, and
+$q_0+\varepsilon<1$. Then FCC holds with
+$m_{\rm RG}=-R^{-1}\log(q_0+\varepsilon)$.  Sufficient inputs are either
+two-sided centered-kernel Schur bounds with the same margin, or an exact
+source-connected polymer recursion in a norm isometric to, recovering, or
+one-time uniformly equivalent to the physical response norm.
+\end{proposition}
+\begin{proof}
+Insert $f=T_{j,R}^n\phi_{j,A}$ and apply the triangle inequality to obtain the
+one-step ratio $q_0+\varepsilon$. Iteration and the even-index reflection-square
+identity yield exponential correlation decay. The kernel version follows from
+the two-sided Schur test; the polymer version applies the same estimate to the
+exact connected recursion. These are conditional certificates: no uniform
+four-dimensional Wilson bound is supplied.
+\end{proof}
+\src{.prism/physics-first-strong-cp-workflow-import-20260727/cycle8-rg-entry-to-fcc-v2.md; review-cycle8-rg-entry-to-fcc-v2.md}
+
+\begin{proposition}[Source-visible soft-mode stability lower bound]
+Let $T_j^0,T_j$ be contractions and let unit source-carrier vectors $f_j$
+satisfy $\delta_j=\|(I-T_j^0)f_j\|$ and
+$\eta_j=\|(T_j-T_j^0)f_j\|$. Then
+\[
+ \|T_jf_j\|\ge1-\delta_j-\eta_j.
+\]
+Consequently a claimed bound $\|T_jf_j\|\le q<1$ requires
+$\eta_j\ge1-\delta_j-q$; a perturbation vanishing on soft witnesses cannot
+create a uniform strict contraction.
+\end{proposition}
+\begin{proof}
+Twice apply the reverse triangle inequality:
+$\|T_j^0f_j\|\ge1-\delta_j$ and
+$\|T_jf_j\|\ge\|T_j^0f_j\|-\eta_j$. Rearrangement gives the necessary
+perturbation size. The scalar example $T^0=I$, $T=qI$ shows sharpness.
+\end{proof}
+\src{.prism/physics-first-strong-cp-workflow-import-20260727/cycle8-rg-soft-mode-stability-nogo.md; review-cycle8-rg-soft-mode-stability-nogo.md}
+
+\begin{proposition}[Multiscale source-reorganization budget]
+For reference transitions $A_k$ and interacting transitions $B_k$,
+\[
+ B_{N:1}-A_{N:1}=\sum_{k=1}^N
+ B_{N:k+1}(B_k-A_k)A_{k-1:1}.
+\]
+If $\|A_{N:1}f\|\ge1-\delta$ and $\|B_{N:1}f\|\le q$, then the
+post-transition-weighted local changes sum to at least $1-\delta-q$.
+\end{proposition}
+\begin{proof}
+Telescope through hybrid ordered products to obtain the exact noncommutative
+identity. The reverse triangle inequality lower-bounds the product difference;
+the triangle inequality upper-bounds it by
+$\sum_k\|B_{N:k+1}\|\,\|(B_k-A_k)A_{k-1:1}f\|$. Combine the bounds. Thus many
+$O(1/N)$ changes may accumulate, but a vanishing total remainder cannot pay a
+fixed physical contraction budget.
+\end{proof}
+\src{.prism/physics-first-strong-cp-workflow-import-20260727/cycle8-rg-multiscale-reorganization-budget.md; review-cycle8-rg-multiscale-reorganization-budget.md}
+
+\begin{proposition}[Beta-flow/physical-response separation]
+For an infrared coupling flow $dg/ds=b(g)>0$ and an exactly tracked response
+cocycle with contraction density
+$\gamma=-d\log\|u(s)\|/ds$,
+\[
+ \frac{\|u(S)\|}{\|u(0)\|}
+ =\exp\!\left[-\int_0^S\gamma(s)\,ds\right],\qquad
+ \int_0^S\gamma(s)\,ds
+ =\int_{g(0)}^{g(S)}\frac{\gamma(g)}{b(g)}\,dg.
+\]
+The beta function supplies the clock, not a positive response density; equal
+beta trajectories can support zero or positive excitation gaps.
+\end{proposition}
+\begin{proof}
+Integrate the logarithmic derivative and change variables using $ds=dg/b(g)$.
+Choosing two response cocycles with the same $g(s)$ but respectively zero and
+positive generators proves non-implication. A physical FCC conclusion still
+requires a uniform positive integrated response margin after all comparison
+and carrier costs.
+\end{proof}
+\src{.prism/physics-first-strong-cp-workflow-import-20260727/cycle9-beta-response-separation.md; review-cycle9-beta-response-separation-v2.md}
+
+\begin{proposition}[Finite $4D$ $\mathbb Z_2$ source-surface calibration]
+At strong coupling, the source-connected surface expansion has positive
+activities and a convergent rooted union-entropy sum within its explicit
+parameter region.
+\end{proposition}
+\begin{proof}
+Expand each plaquette Boltzmann factor into its two characters. Haar/group
+summation imposes even incidence away from the source, leaving surfaces with
+the prescribed boundary. Count rooted connected surfaces by an exponential
+entropy bound and sum the resulting geometric series.
+\end{proof}
+\src{.prism/physics-first-strong-cp-workflow-import-20260727/cycle9-z2-source-surface-calibration-v2.md; review-cycle9-z2-source-surface-calibration-v2.md}
+
+\chapter{Complete Cycle 10--18 exact-result ledger}
+
+\begin{longtable}{p{0.23\textwidth}p{0.45\textwidth}p{0.23\textwidth}}
+\toprule Canonical result & Statement and proof & Scope/falsifier \\
+\midrule\endfirsthead\toprule Canonical result & Statement and proof & Scope/falsifier \\
+\midrule\endhead
+Cycle 10 open-index gluing & Haar orthogonality and intertwiner resolution give exact source gluing; Bessel summation gives $\sum_{j>0}d_j^2c_j\sim\sqrt{\pi/2}\beta^{3/2}$. & Absolute early cone diverges. Source: \path{cycle10-su2-source-character-kernel.md}; matching review. \\
+Cycle 10 delayed onset & Telescoping the WRC log shows a Gaussian-soft UV orbit with vanishing defect cannot supply a fixed early margin; later blocks must pay the full $mR$ budget and comparison costs. & Conditional obstruction. Source: \path{cycle10-wrc-delayed-onset-obstruction.md}; review. \\
+Cycle 11 cylinder threshold & Peter--Weyl diagonalization gives $(I_2/I_1)^L$ and Laplace asymptotics give the exact $A/\beta\to\lambda$ activity threshold $\lambda_*=1.033465466478\ldots$. & Calibrated cylinder only. Source/review: \path{cycle11-blocked-su2-source-norm.md}. \\
+Cycle 11 recoupling & $6j$ orthogonality makes the recoupling matrix unitary; it preserves the $\ell^2$ norm and cannot itself yield contraction. & Source: \path{cycle11-su2-recoupling-contraction-v2.md}; v2 review. \\
+Cycle 12 shared link & Exact Haar decomposition gives hinge norm $c_{1/2}$, $PBP=0$, cross norms $c_{1/2}$, compressed norm $c_{1/2}c_1$, and adjacent-spin selection. & Finite cell. Source/review: \path{cycle12-shared-link-su2-cell.md}, \path{cycle12-source-sector-composition.md}. \\
+Cycle 12 scale matching & Strong continuity at physical time $\tau_a\to0$ forces a surviving response $m\tau_a+o(\tau_a)$; an order-one response contradicts the semigroup limit and an algebraic raw response gives divergent effective mass. & Source: \path{cycle12-mesoscopic-to-physical-scale-matching-v2.md}; v2 review. \\
+Cycle 13 perimeter freedom & $K_{mn}\mapsto z_a^{n-m}K_{mn}$ preserves gluing/positivity but shifts open energy; endpoint/perimeter factors cancel from centered ratios and mixed logs. & Open energy is normalization-dependent. Source: \path{cycle13-perimeter-renormalization-vs-mass-v2.md}; review. \\
+Cycle 13 star norms & Haar recoupling gives norm $c_{1/2}$ at all finite valence; after one-face removal the norm is $c_{1/2}c_1$ for $k=2$ and $c_{1/2}^3$ for $k\geq3$. Turan's inequality shows no improved margin. & Source/review: \path{cycle13-finite-valence-link-star.md}. \\
+Cycle 14 neutral WRC & The stated cumulative neutral response, common physical exponent, comparison budget, strong survival, and dense-core handoff are logically sufficient and invariant under endpoint/perimeter renormalization. & Hypotheses open. Source/review: \path{cycle14-neutral-renormalization-invariant-wrc.md}. \\
+Cycle 15 centered source & Differentiating the character expansion removes the trivial coefficient; the two-source mixed log cancels vacuum and one-anchor parts. Yet the absolute majorant is at least $(3/2)\sqrt{\pi/2}\,\beta^{1/2}$. & Absolute values destroy cancellation; source: \path{cycle15-neutral-source-polymer-attempt.md}; review. \\
+Cycle 16 weighted norm & Gaussian/Bessel Riemann sums yield the exact $d_j^p$ asymptotic proved in Chapter 8; evaluation needs $p>3$, smallness $p<1$. & Fixed diagonal norms only; source: \path{cycle16-weighted-centerfree-source-norm.md}; review. \\
+Cycle 17 connected quotient & The covariance Gram quotient has source norm $\sim\sqrt{3/2}/\beta$ but serial norm $c_{1/2}$; exact fusion generates spin $1$ and then unbounded labels. & Non-diagonal toy fails closure; source/review: \path{cycle17-nondiagonal-connected-quotient-toy.md}. \\
+Cycle 18 two-fusion return & Exact finite Gram/Schur algebra gives residual $15/(8\beta^4)$, leakage ratio $6$, limiting singular values $(3\pm\sqrt5)/2$, and $-\log(c^2q)=7/\beta+7/(2\beta^2)+\cdots$. & Finite-rank recompression fails; source: \path{cycle18-spin-leakage-schur-complement-v2.md}; v2 review. \\
+\bottomrule
+\end{longtable}
+
+Every table proof uses exact Haar/Peter--Weyl identities followed by stated
+Bessel or Laplace asymptotics; the source/review pair contains the full finite
+algebra. The table is a consolidation, not a replacement for its hypotheses.
+
+\chapter{The twelve normalized Route-2 families}
+
+Batch 41 normalized the exact Route-2 mathematics into twelve scoped families.
+The following statements and proof kernels are the complete normalized list.
+
+\begin{enumerate}[label=\textbf{F\arabic*.}]
+\item \textbf{Approximation-number leakage.} Fixed-rank approximation error is
+the corresponding singular/approximation number; Wilson-filter widths do not
+vanish uniformly at fixed rank. Proof: minimax characterization. Falsifier:
+growing rank.
+\item \textbf{Calkin and ideal edge.} Compact or Schatten perturbations do not
+remove a unit essential edge on the retained carrier. Proof: invariance of the
+essential spectrum in the Calkin algebra. Falsifier: exact reducing quotient.
+\item \textbf{Nonlinear full-ball width.} Adaptive linear information cannot
+beat the singular tail uniformly on a full Hilbert ball, while unrestricted
+data-dependent rank-one surrogates can fit one vector. Proof: adversarial
+orthogonal direction/minimax. Falsifier: restricted orbit.
+\item \textbf{Coherent comparison and metric telescoping.} Exact coherent
+gauges telescope, so scalar comparison losses cannot be charged repeatedly.
+Proof: insert adjacent comparison maps and cancel inverse pairs. Falsifier:
+a genuinely noncoherent two-sided defect.
+\item \textbf{Locality, reach, and moving-carrier clock.} Fixed microscopic
+depth has bounded reach and cannot by itself realize a fixed physical block as
+the cutoff shrinks. Proof: support induction and duration accounting.
+Falsifier: a proved growing depth/radius schedule with controlled clock.
+\item \textbf{Fusion-graph and categorical carrier growth.} Fundamental
+$SU(2)$ fusion reaches a linearly growing label ball with growing path
+multiplicity. Proof: Clebsch--Gordan recursion. Falsifier: an exact finite
+source-complete fusion-closed reducing carrier.
+\item \textbf{Tensor/encoding width.} Crossed singlets multiply Schmidt rank,
+preventing bounded-width exact encoding on the same generated class. Proof:
+Schmidt-rank multiplicativity. Falsifier: an exact bounded-width encoding.
+\item \textbf{Signed-return/Feshbach completeness.} A retained residual controls
+the full response only with a valid tail-resolvent domain, leakage, and Schur
+return. Proof: the block resolvent identity. Falsifier: a complete return
+calculation; one-way or absolute leakage is insufficient.
+\item \textbf{Reducing-source-core escape.} An invariant reducing source core
+can carry exact dynamics despite large ambient complexity. Proof: block
+diagonalization. This is an escape from, not an instance of, the obstructions.
+\item \textbf{Analytic finite-data/nonuniform-input boundary.} A nonzero
+normally convergent analytic germ cannot be positive asymptotic to
+$K\beta^pe^{-A\beta}$. Proof: the first nonzero Taylor coefficient. Falsifier:
+a genuinely nonanalytic or nonuniform input provider.
+\item \textbf{Finite-cutoff Wilson source/local-carrier facts.} Exact finite
+lattice character coefficients, source identities, and local carrier algebra
+remain valid only at their stated cutoff and volume. Proof: Haar/Peter--Weyl
+calculation. Falsifier for promotion: absence of a uniform cofinal theorem.
+\item \textbf{Finite stationary OS quotient/transfer facts.} The Perron--Doob
+construction gives an exact finite stationary OS object. Proof: detailed
+balance, Markov factorization, and the $T^{1/2}$ quotient map. Falsifier for
+target use: no unitary frozen-open or continuum-limit handoff.
+\end{enumerate}
+
+\src{.prism/physics-first-strong-cp-workflow-import-20260727/route2-batch41-theorem-normalization.md; route2-batch41-theorem-normalization-independent-review.md}
+
+The WTR threshold, GEWTR shorting result, and SDC-1/CEOE equivalence proved in
+Chapters 7 and 11 are \emph{post-Route-2 additions}. They are not relabeled as
+Batch-41 families and do not alter the twelve-family normalization.
+
+The underlying canonical batch chain is: \path{route2-batch11-operator-ideals-v3.md},
+\path{route2-batch12-nonlinear-approximation.md},
+\path{route2-batch13-quotient-essential-spectrum-v2.md},
+\path{route2-batch14-quotient-algebra-boundaries-v4.md},
+\path{route2-batch15-moving-carriers-clock.md},
+\path{route2-batch16-fusion-graph-growth.md},
+\path{route2-batch17-categorical-carrier-completeness-v2.md},
+\path{route2-batch18-signed-return-categories.md},
+\path{route2-batch19-fusion-growth-clock.md},
+\path{route2-batch20-category-reducing-sectors-v2.md},
+\path{route2-batch21-finite-wilson-source-block-v2.md}, and
+\path{route2-batch23-os-quotient-construction-v5.md}; each is paired with its
+same-stem binding review or independent review in the request workspace.
+
+\chapter{Expanded provenance and review index}
+All paths below are relative to
+\path{.prism/physics-first-strong-cp-workflow-import-20260727/} unless prefixed
+by \path{docs/}. Review filenames are exact when the canonical file has a
+versioned repair; ``same-stem review'' means the literal source stem followed
+by \path{-review.md} or \path{-independent-review.md}, discoverable without a
+name alias.
+
+\begin{longtable}{p{0.43\textwidth}p{0.48\textwidth}}
+\toprule Canonical source & Binding review \\
+\midrule\endfirsthead\toprule Canonical source & Binding review \\
+\midrule\endhead
+\path{cycle5-center-contour-threshold-v2.md} & \path{review-cycle5-center-contour-threshold-v2.md} \\
+\path{cycle6-dense-core-spectral-criterion-v2.md} & \path{review-cycle6-dense-core-spectral-criterion-v2.md} \\
+\path{cycle6-wilson-observable-core-contract-v2.md} & \path{review-cycle6-wilson-observable-core-contract-v2.md} \\
+\path{cycle7-os-loop-core-density.md} & \path{review-cycle7-os-loop-core-density.md} \\
+\path{cycle7-fixed-observable-cluster-bridge-v2.md} & \path{review-cycle7-fixed-observable-cluster-bridge-v2.md} \\
+\path{cycle8-joint-center-contour-bridge-v3.md} & \path{review-cycle8-joint-center-contour-bridge-v3.md} \\
+\path{cycle8-fcc-spectral-ratio-audit-v2.md} & \path{review-cycle8-fcc-spectral-ratio-audit-v2.md} \\
+\path{cycle17-dimensional-transmutation-response-scale-v2.md} & same-stem v2 review \\
+\path{cycle18-spin-leakage-schur-complement-v2.md} & same-stem v2 review \\
+\path{route2-batch09-theorem-consolidation-attacks-v2.md} & \path{review-route2-batch09-theorem-consolidation-attacks-v2.md} \\
+\path{route2-batch11-operator-ideals-v3.md} & \path{route2-batch11-operator-ideals-v3-review.md} \\
+\path{route2-batch13-quotient-essential-spectrum-v2.md} & same-stem v2 review \\
+\path{route2-batch14-quotient-algebra-boundaries-v4.md} & same-stem v4 review \\
+\path{route2-batch17-categorical-carrier-completeness-v2.md} & same-stem v2 review \\
+\path{route2-batch20-category-reducing-sectors-v2.md} & same-stem v2 review \\
+\path{route2-batch23-os-quotient-construction-v5.md} & \path{route2-batch23-os-quotient-construction-v5-review.md} \\
+\path{route2-batch49-programme-reflection.md} & \path{route2-batch49-programme-reflection-independent-review.md} \\
+\path{post-route2-wtr-shortening-theorem-v2.md} & \path{post-route2-wtr-shortening-theorem-v2-independent-review.md} \\
+\path{post-route2-candidate-edge-order-equivalence-v2.md} & \path{post-route2-candidate-edge-order-equivalence-v2-independent-review.md} \\
+\path{route2-cycle500-terminal-manifest-v5.tsv} & \path{route2-cycle500-final-reconciliation-independent-review-v4.md} \\
+\bottomrule
+\end{longtable}
+
+\chapter{Final nonclaims}
+This document does not establish external novelty, literature priority,
+continuum existence, a Wightman theory, vacuum uniqueness in four-dimensional
+Yang--Mills, a positive physical spectral gap, glueball masses, confinement,
+or publication readiness. It is a consolidated mathematical research record
+whose result-bearing next step is Wilson SDC-1 at a physically scaled edge.
+
+\end{document}

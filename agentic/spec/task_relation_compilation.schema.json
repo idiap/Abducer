@@ -1,0 +1,277 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://abducer.local/spec/task_relation_compilation.schema.json",
+  "title": "Meaning-derived finite Category/HoTT task-relation compilation",
+  "description": "A strict semantic graph, lens selection, and presentation-hint contract. The compilation binds task meaning to a finite formal profile but grants no theorem, continuum, Yang--Mills, physics-value, or investment authority.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "compiler_id", "mode", "lens", "case_id", "target_id",
+    "obligation_id", "case_digest", "task_semantics_digest", "semantic_nodes",
+    "task_relations", "selected_relation_ids", "lens_selection", "lens_consequences",
+    "task_contract", "primitive_bindings", "invariant_bindings", "target_bindings",
+    "formal_projection", "finite_quotient_boundary", "authority_boundary",
+    "compilation_digest"
+  ],
+  "$defs": {
+    "text": {"type": "string", "minLength": 1},
+    "digest": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
+    "id": {"type": "string", "minLength": 1, "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$"},
+    "lens": {"enum": ["categorical", "hott"]},
+    "stringList": {
+      "type": "array", "minItems": 1, "uniqueItems": true,
+      "items": {"$ref": "#/$defs/text"}
+    },
+    "decision": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["decision_id", "decision_kind", "action", "target_burden_id", "trigger_relation_id"],
+      "properties": {
+        "decision_id": {"$ref": "#/$defs/id"},
+        "decision_kind": {
+          "enum": [
+            "continue_route", "compare_route_order", "construct_mediator",
+            "require_coherence", "split_route", "run_secondary_falsifier",
+            "revise_translation", "quarantine_route"
+          ]
+        },
+        "action": {"$ref": "#/$defs/text"},
+        "target_burden_id": {"$ref": "#/$defs/id"},
+        "trigger_relation_id": {
+          "anyOf": [{"$ref": "#/$defs/id"}, {"type": "null"}]
+        }
+      }
+    },
+    "lensDecision": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["lens", "decision_id", "decision_kind", "action", "target_burden_id", "trigger_relation_id"],
+      "properties": {
+        "lens": {"$ref": "#/$defs/lens"},
+        "decision_id": {"$ref": "#/$defs/id"},
+        "decision_kind": {
+          "enum": [
+            "continue_route", "compare_route_order", "construct_mediator",
+            "require_coherence", "split_route", "run_secondary_falsifier",
+            "revise_translation", "quarantine_route"
+          ]
+        },
+        "action": {"$ref": "#/$defs/text"},
+        "target_burden_id": {"$ref": "#/$defs/id"},
+        "trigger_relation_id": {"$ref": "#/$defs/id"}
+      }
+    },
+    "quantifier": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["quantifier_id", "statement", "origin"],
+      "properties": {
+        "quantifier_id": {"$ref": "#/$defs/id"},
+        "statement": {"$ref": "#/$defs/text"},
+        "origin": {"enum": ["declared", "finite_translation_boundary"]}
+      }
+    },
+    "binding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "binding_id", "semantic_kind", "ordinal", "statement",
+        "canonical_formal_role", "canonical_member_slot", "formal_id", "formal_member_id"
+      ],
+      "properties": {
+        "binding_id": {"$ref": "#/$defs/id"},
+        "semantic_kind": {"enum": ["incumbent_primitive", "protected_invariant", "target_anchor"]},
+        "ordinal": {"type": "integer", "minimum": 0},
+        "statement": {"$ref": "#/$defs/text"},
+        "canonical_formal_role": {"enum": ["source", "mediator", "target"]},
+        "canonical_member_slot": {"type": "integer", "minimum": 0, "maximum": 2},
+        "formal_id": {"$ref": "#/$defs/id"},
+        "formal_member_id": {"$ref": "#/$defs/id"}
+      }
+    },
+    "consequence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "consequence_id", "relation_id", "consequence_kind", "statement",
+        "changed_burden", "decision_dimension"
+      ],
+      "properties": {
+        "consequence_id": {"$ref": "#/$defs/id"},
+        "relation_id": {"$ref": "#/$defs/id"},
+        "consequence_kind": {
+          "enum": [
+            "ordered_composite_comparison", "mediator_existence_uniqueness",
+            "functorial_preservation", "identity_transport_coherence",
+            "equivalence_coherence_cell", "path_independence", "descent_coherence"
+          ]
+        },
+        "statement": {"$ref": "#/$defs/text"},
+        "changed_burden": {"$ref": "#/$defs/text"},
+        "decision_dimension": {
+          "enum": [
+            "route_order", "mediator_choice", "transfer_route",
+            "coherence_obligation", "path_choice", "descent_route"
+          ]
+        }
+      }
+    }
+  },
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "compiler_id": {"const": "meaning-derived-task-relation-compiler.v1"},
+    "mode": {"const": "task_derived_finite_semantic_translation"},
+    "lens": {"$ref": "#/$defs/lens"},
+    "case_id": {"$ref": "#/$defs/id"},
+    "target_id": {"$ref": "#/$defs/id"},
+    "obligation_id": {"$ref": "#/$defs/id"},
+    "case_digest": {"$ref": "#/$defs/digest"},
+    "task_semantics_digest": {"$ref": "#/$defs/digest"},
+    "semantic_nodes": {
+      "type": "array", "minItems": 9,
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["node_id", "node_kind", "ordinal", "statement", "statement_digest"],
+        "properties": {
+          "node_id": {"$ref": "#/$defs/id"},
+          "node_kind": {
+            "enum": [
+              "pressure", "formal_pressure", "incumbent_primitive",
+              "protected_invariant", "regime", "quantifier", "falsifier", "physical_carrier"
+            ]
+          },
+          "ordinal": {"type": "integer", "minimum": 0},
+          "statement": {"$ref": "#/$defs/text"},
+          "statement_digest": {"$ref": "#/$defs/digest"}
+        }
+      }
+    },
+    "task_relations": {
+      "type": "array",
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": [
+          "relation_id", "ordinal", "relation_kind", "statement", "source_node_id",
+          "target_node_id", "source_statement", "target_statement", "applicable_lens"
+        ],
+        "properties": {
+          "relation_id": {"$ref": "#/$defs/id"},
+          "ordinal": {"type": "integer", "minimum": 0},
+          "relation_kind": {
+            "enum": [
+              "noncommuting_composition", "mediating_factorization", "functorial_transfer",
+              "identity_transport", "equivalence_coherence", "path_independence", "descent_coherence"
+            ]
+          },
+          "statement": {"$ref": "#/$defs/text"},
+          "source_node_id": {"$ref": "#/$defs/id"},
+          "target_node_id": {"$ref": "#/$defs/id"},
+          "source_statement": {"$ref": "#/$defs/text"},
+          "target_statement": {"$ref": "#/$defs/text"},
+          "applicable_lens": {"$ref": "#/$defs/lens"}
+        }
+      }
+    },
+    "selected_relation_ids": {
+      "type": "array", "uniqueItems": true,
+      "items": {"$ref": "#/$defs/id"}
+    },
+    "lens_selection": {
+      "type": "object", "additionalProperties": false,
+      "required": ["status", "reason", "native_relation_kinds"],
+      "properties": {
+        "status": {"enum": ["applicable", "inapplicable"]},
+        "reason": {"$ref": "#/$defs/text"},
+        "native_relation_kinds": {
+          "type": "array", "minItems": 3, "uniqueItems": true,
+          "items": {"$ref": "#/$defs/text"}
+        }
+      }
+    },
+    "lens_consequences": {
+      "type": "array", "items": {"$ref": "#/$defs/consequence"}
+    },
+    "task_contract": {
+      "type": "object", "additionalProperties": false,
+      "required": [
+        "lens", "case_id", "target_id", "obligation_id", "pressure", "formal_pressure",
+        "primitives", "invariants", "physical_carrier", "domain_kind", "formal_carrier",
+        "regime", "regime_origin", "quantifiers", "quantifier_bindings", "falsifier",
+        "correction", "untouched_physics_gates", "incumbent_decision", "lens_decisions"
+      ],
+      "properties": {
+        "lens": {"$ref": "#/$defs/lens"},
+        "case_id": {"$ref": "#/$defs/id"},
+        "target_id": {"$ref": "#/$defs/id"},
+        "obligation_id": {"$ref": "#/$defs/id"},
+        "pressure": {"$ref": "#/$defs/text"},
+        "formal_pressure": {"$ref": "#/$defs/text"},
+        "primitives": {"$ref": "#/$defs/stringList"},
+        "invariants": {"$ref": "#/$defs/stringList"},
+        "physical_carrier": {"anyOf": [{"$ref": "#/$defs/text"}, {"type": "null"}]},
+        "domain_kind": {"enum": ["physics", "non_physics"]},
+        "formal_carrier": {"$ref": "#/$defs/text"},
+        "regime": {"$ref": "#/$defs/text"},
+        "regime_origin": {"enum": ["declared", "pressure_boundary"]},
+        "quantifiers": {"$ref": "#/$defs/stringList"},
+        "quantifier_bindings": {
+          "type": "array", "minItems": 1, "items": {"$ref": "#/$defs/quantifier"}
+        },
+        "falsifier": {"$ref": "#/$defs/text"},
+        "correction": {"$ref": "#/$defs/text"},
+        "untouched_physics_gates": {"$ref": "#/$defs/stringList"},
+        "incumbent_decision": {"anyOf": [{"$ref": "#/$defs/decision"}, {"type": "null"}]},
+        "lens_decisions": {
+          "type": "array", "maxItems": 2, "items": {"$ref": "#/$defs/lensDecision"}
+        }
+      }
+    },
+    "primitive_bindings": {"type": "array", "minItems": 2, "items": {"$ref": "#/$defs/binding"}},
+    "invariant_bindings": {"type": "array", "minItems": 2, "items": {"$ref": "#/$defs/binding"}},
+    "target_bindings": {"type": "array", "minItems": 4, "items": {"$ref": "#/$defs/binding"}},
+    "formal_projection": {
+      "type": "object", "additionalProperties": false,
+      "required": [
+        "formal_profile_id", "semantic_prefix", "canonical_role_order", "carriers",
+        "source_id", "target_id", "left_path_ids", "right_path_ids",
+        "left_composite_id", "right_composite_id", "formal_pressure"
+      ],
+      "properties": {
+        "formal_profile_id": {"enum": ["finite-categorical-obstruction-profile.v1", "finite-hott-obstruction-profile.v1"]},
+        "semantic_prefix": {"$ref": "#/$defs/id"},
+        "canonical_role_order": {
+          "const": ["source", "mediator", "target"]
+        },
+        "carriers": {
+          "type": "array", "minItems": 3, "maxItems": 3,
+          "items": {
+            "type": "object", "additionalProperties": false,
+            "required": ["role", "formal_id", "member_ids"],
+            "properties": {
+              "role": {"enum": ["source", "mediator", "target"]},
+              "formal_id": {"$ref": "#/$defs/id"},
+              "member_ids": {
+                "type": "array", "minItems": 2, "maxItems": 3, "uniqueItems": true,
+                "items": {"$ref": "#/$defs/id"}
+              }
+            }
+          }
+        },
+        "source_id": {"$ref": "#/$defs/id"},
+        "target_id": {"$ref": "#/$defs/id"},
+        "left_path_ids": {
+          "type": "array", "minItems": 2, "maxItems": 2, "items": {"$ref": "#/$defs/id"}
+        },
+        "right_path_ids": {
+          "type": "array", "minItems": 2, "maxItems": 2, "items": {"$ref": "#/$defs/id"}
+        },
+        "left_composite_id": {"$ref": "#/$defs/id"},
+        "right_composite_id": {"$ref": "#/$defs/id"},
+        "formal_pressure": {"$ref": "#/$defs/text"}
+      }
+    },
+    "finite_quotient_boundary": {"$ref": "#/$defs/text"},
+    "authority_boundary": {"$ref": "#/$defs/text"},
+    "compilation_digest": {"$ref": "#/$defs/digest"}
+  }
+}

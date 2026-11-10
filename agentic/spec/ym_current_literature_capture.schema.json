@@ -1,0 +1,257 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://abducer.local/schemas/ym_current_literature_capture.schema.json",
+  "title": "Yang-Mills current literature capture v2.1",
+  "description": "The target-specific manifest binding six differentiated multi-execution literature artifacts, their null-or-result outcomes, dispositions, and correction-aware version lineages. Historical capture v1 is governed separately and cannot satisfy this current-acquisition contract.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "capture_id",
+    "target_id",
+    "capture_started_at",
+    "capture_completed_at",
+    "coverage_cutoff",
+    "capture_mode",
+    "provider",
+    "exhaustive_coverage_claim",
+    "peer_validation_claim",
+    "source_correctness_claim",
+    "coverage_limits",
+    "inclusion_policy",
+    "exclusion_policy",
+    "lanes",
+    "raw_results",
+    "provider_response_artifacts",
+    "version_lineages",
+    "content_digest"
+  ],
+  "$defs": {
+    "id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 200,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$"
+    },
+    "digest": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
+    "bare_digest": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "nonempty": {"type": "string", "minLength": 1},
+    "lane_type": {
+      "enum": [
+        "closest_known_work",
+        "recent_frontier_preprints",
+        "negative_results_barriers",
+        "conceptual_genealogy",
+        "adjacent_field_mechanisms",
+        "dissenting_positions"
+      ]
+    },
+    "disposition": {
+      "enum": [
+        "included_authoritative_status",
+        "included_current_review",
+        "included_unverified_challenger",
+        "included_bounded_result",
+        "included_conceptual_genealogy",
+        "included_adjacent_mechanism",
+        "included_correction_or_supersession",
+        "excluded_retracted",
+        "excluded_target_mismatch",
+        "excluded_duplicate",
+        "excluded_insufficient_metadata"
+      ]
+    }
+  },
+  "properties": {
+    "schema_version": {"enum": ["2.0", "2.1"]},
+    "capture_id": {"$ref": "#/$defs/id"},
+    "target_id": {"const": "yang-mills-existence-and-mass-gap-target"},
+    "capture_started_at": {"type": "string", "format": "date-time"},
+    "capture_completed_at": {"type": "string", "format": "date-time"},
+    "coverage_cutoff": {"type": "string", "format": "date-time"},
+    "capture_mode": {
+      "enum": [
+        "live_external_web_search_frozen_for_replay",
+        "agent_observed_multi_execution_literature_capture_frozen_for_replay"
+      ]
+    },
+    "provider": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "provider_id",
+        "name",
+        "index",
+        "execution_boundary",
+        "raw_payload_retention",
+        "receipt_status",
+        "executable_replay_status",
+        "external_authentication_status"
+      ],
+      "properties": {
+        "provider_id": {
+          "enum": ["openai-web-search", "codex-multi-execution-literature-observation"]
+        },
+        "name": {"$ref": "#/$defs/nonempty"},
+        "index": {"$ref": "#/$defs/nonempty"},
+        "execution_boundary": {"$ref": "#/$defs/nonempty"},
+        "raw_payload_retention": {"$ref": "#/$defs/nonempty"},
+        "receipt_status": {
+          "enum": [
+            "externally_executed_then_frozen",
+            "agent_observed_unauthenticated_executions_then_frozen"
+          ]
+        },
+        "executable_replay_status": {"const": "frozen_response_adapter_only"},
+        "external_authentication_status": {"const": "unavailable"}
+      }
+    },
+    "exhaustive_coverage_claim": {"const": false},
+    "peer_validation_claim": {"const": false},
+    "source_correctness_claim": {"const": false},
+    "coverage_limits": {
+      "type": "array",
+      "minItems": 6,
+      "uniqueItems": true,
+      "items": {"$ref": "#/$defs/nonempty"}
+    },
+    "inclusion_policy": {"$ref": "#/$defs/nonempty"},
+    "exclusion_policy": {"$ref": "#/$defs/nonempty"},
+    "lanes": {
+      "type": "array",
+      "minItems": 6,
+      "maxItems": 6,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "lane_id",
+          "lane_type",
+          "queries",
+          "query_policy",
+          "status",
+          "raw_result_ids"
+        ],
+        "properties": {
+          "lane_id": {"$ref": "#/$defs/id"},
+          "lane_type": {"$ref": "#/$defs/lane_type"},
+          "queries": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 1,
+            "items": {"$ref": "#/$defs/nonempty"}
+          },
+          "query_policy": {"$ref": "#/$defs/nonempty"},
+          "status": {"const": "completed"},
+          "raw_result_ids": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": {"$ref": "#/$defs/id"}
+          }
+        }
+      }
+    },
+    "raw_results": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "result_id",
+          "source_id",
+          "title",
+          "url",
+          "retrieval_status",
+          "disposition",
+          "reason",
+          "claim_status",
+          "surveillance_tags"
+        ],
+        "properties": {
+          "result_id": {"$ref": "#/$defs/id"},
+          "source_id": {"$ref": "#/$defs/id"},
+          "title": {"$ref": "#/$defs/nonempty"},
+          "url": {"type": "string", "format": "uri"},
+          "retrieval_status": {
+            "enum": [
+              "tool_visible_search_metadata_captured",
+              "primary_page_metadata_captured",
+              "primary_api_metadata_captured",
+              "publisher_metadata_captured"
+            ]
+          },
+          "disposition": {"$ref": "#/$defs/disposition"},
+          "reason": {"$ref": "#/$defs/nonempty"},
+          "claim_status": {
+            "enum": [
+              "authoritative_open_status",
+              "current_review_boundary",
+              "unverified_challenger",
+              "bounded_result",
+              "conceptual_context",
+              "correction_context",
+              "excluded_negative_evidence",
+              "excluded_target_mismatch"
+            ]
+          },
+          "surveillance_tags": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": {
+              "enum": [
+                "correction",
+                "supersession",
+                "withdrawal",
+                "bounded_lattice",
+                "conceptual_genealogy",
+                "adjacent_field",
+                "target_mismatch",
+                "authoritative_status",
+                "current_review",
+                "direct_claim"
+              ]
+            }
+          }
+        }
+      }
+    },
+    "provider_response_artifacts": {
+      "type": "array",
+      "minItems": 6,
+      "maxItems": 6,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "lane_id",
+          "path",
+          "sha256",
+          "size_bytes",
+          "acquired_at",
+          "provider_request_id",
+          "source_ids"
+        ],
+        "properties": {
+          "lane_id": {"$ref": "#/$defs/id"},
+          "path": {"type": "string", "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$)).+\\.json$"},
+          "sha256": {"$ref": "#/$defs/bare_digest"},
+          "size_bytes": {"type": "integer", "minimum": 2},
+          "acquired_at": {"type": "string", "format": "date-time"},
+          "provider_request_id": {"$ref": "#/$defs/id"},
+          "source_ids": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": {"$ref": "#/$defs/id"}
+          }
+        }
+      }
+    },
+    "version_lineages": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "literature_source_version_graph.schema.json"}
+    },
+    "content_digest": {"$ref": "#/$defs/digest"}
+  }
+}

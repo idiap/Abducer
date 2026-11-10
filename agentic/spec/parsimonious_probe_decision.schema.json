@@ -1,0 +1,92 @@
+{
+  "type": "object",
+  "required": [
+    "packet_id",
+    "target_id",
+    "decision",
+    "carrier",
+    "question",
+    "symbolic_first_attempt",
+    "analytic_estimate_target",
+    "numeric_probe_if_needed",
+    "dependencies",
+    "transfer_boundary",
+    "epistemic_status",
+    "source_cycle_ids",
+    "validation_handoff"
+  ],
+  "properties": {
+    "packet_id": {"type": "string"},
+    "target_id": {"type": "string"},
+    "decision": {
+      "type": "string",
+      "enum": [
+        "derive_symbolically",
+        "estimate_analytically",
+        "run_bounded_numeric_probe",
+        "defer_until_variables_typed",
+        "defer_until_framework_available",
+        "external_evidence_only",
+        "not_needed"
+      ]
+    },
+    "carrier": {
+      "type": "object",
+      "required": ["name", "mathematical_type", "variables", "validity_conditions"],
+      "properties": {
+        "name": {"type": "string"},
+        "mathematical_type": {"type": "string"},
+        "variables": {"type": "array", "items": {"type": "string"}},
+        "validity_conditions": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "question": {"type": "string"},
+    "symbolic_first_attempt": {
+      "type": "object",
+      "required": ["available", "method", "expected_output", "why_sufficient_or_not"],
+      "properties": {
+        "available": {"type": "boolean"},
+        "method": {"type": "string"},
+        "expected_output": {"type": "string"},
+        "why_sufficient_or_not": {"type": "string"}
+      }
+    },
+    "analytic_estimate_target": {
+      "type": "object",
+      "required": ["needed", "objects", "certifies", "falsifies"],
+      "properties": {
+        "needed": {"type": "boolean"},
+        "objects": {"type": "array", "items": {"type": "string"}},
+        "certifies": {"type": "string"},
+        "falsifies": {"type": "string"}
+      }
+    },
+    "numeric_probe_if_needed": {
+      "type": "object",
+      "required": ["allowed", "bounded_domain", "stopping_condition", "expected_decision_value", "non_proof_boundary"],
+      "properties": {
+        "allowed": {"type": "boolean"},
+        "bounded_domain": {"type": "array", "items": {"type": "string"}},
+        "stopping_condition": {"type": "string"},
+        "expected_decision_value": {"type": "string"},
+        "non_proof_boundary": {"type": "string"}
+      }
+    },
+    "dependencies": {"type": "array", "items": {"type": "string"}},
+    "transfer_boundary": {"type": "string"},
+    "epistemic_status": {
+      "type": "string",
+      "enum": [
+        "symbolic_formula",
+        "analytic_obligation",
+        "calibration_only",
+        "validated_probe",
+        "falsifier_candidate",
+        "evidence_task",
+        "not_needed"
+      ]
+    },
+    "source_cycle_ids": {"type": "array", "items": {"type": "string"}},
+    "validation_handoff": {"type": "string"}
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://prism.local/to-prism/decisions.schema.json",
+  "additionalProperties": false,
+  "properties": {
+    "artifact": {"const": "decisions"},
+    "decisions": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "choice": {},
+          "depends_on": {"items": {"type": "string"}, "type": "array"},
+          "evidence": {"items": {"type": "object"}, "type": "array"},
+          "id": {"pattern": "^decision_[0-9a-f]{24}$", "type": "string"},
+          "kind": {"type": "string"},
+          "rationale": {"type": "string"},
+          "status": {"enum": ["extracted", "proposed", "reviewed", "approved", "invalidated"]}
+        },
+        "required": ["choice", "depends_on", "evidence", "id", "kind", "rationale", "status"],
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "schema_version": {"const": "1.0"},
+    "tool": {"type": "object"}
+  },
+  "required": ["artifact", "decisions", "schema_version", "tool"],
+  "type": "object"
+}

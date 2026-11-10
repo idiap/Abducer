@@ -1,0 +1,506 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools,bm,booktabs,array,longtable}
+\usepackage[hidelinks]{hyperref}
+\usepackage{xcolor}
+\usepackage{microtype}
+
+\hypersetup{
+  pdftitle={Fibered Renormalization as Representational Dynamics},
+  pdfauthor={Research dossier},
+  pdfsubject={Restricted Yang--Mills block-RG theorems and frontier audit},
+  pdfkeywords={Yang--Mills, mass gap, renormalization group, heat kernel, conditional fiber}
+}
+
+\definecolor{openred}{RGB}{150,25,25}
+\definecolor{provedgreen}{RGB}{20,105,55}
+\definecolor{conditionalblue}{RGB}{25,65,145}
+\newcommand{\proved}{\textcolor{provedgreen}{\textsc{proved}}}
+\newcommand{\conditional}{\textcolor{conditionalblue}{\textsc{conditional}}}
+\newcommand{\open}{\textcolor{openred}{\textsc{open}}}
+\newcommand{\TV}{\operatorname{TV}}
+\newcommand{\Cov}{\operatorname{Cov}}
+\newcommand{\E}{\mathbb E}
+\newcommand{\R}{\mathbb R}
+\newcommand{\T}{\mathbb T}
+\newcommand{\ind}{\mathbf 1}
+
+\newtheorem{definition}{Definition}[section]
+\newtheorem{theorem}[definition]{Theorem}
+\newtheorem{proposition}[definition]{Proposition}
+\newtheorem{lemma}[definition]{Lemma}
+\newtheorem{corollary}[definition]{Corollary}
+\theoremstyle{remark}
+\newtheorem{remark}[definition]{Remark}
+
+\title{Fibered Renormalization as Representational Dynamics:\\
+An Interacting-Block Attack on the Yang--Mills Mass-Gap Programme}
+\author{Research dossier---restricted theorems, calibrations, and frontier audit}
+\date{20 July 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We refine a representation-aware constructive programme for four-dimensional
+pure Yang--Mills theory.  The central correction is that a renormalization step
+must not be required to contract the degrees of freedom it intentionally
+retains.  It should transport the retained coarse information and contract only
+the conditional fiber that it eliminates.  A two-plaquette heat-kernel block
+makes this distinction exact: in the Gaussian tangent model the uncentered
+internal coordinate has boundary response $1/2$, whereas the centered fiber is
+independent of the retained total holonomy and has response zero.  We prove an
+exact multiscale covariance decomposition, formulate a conditional fibered
+clustering theorem, prove an independent-defect connected-cluster bound, and
+give a finite-product regulator comparison.  Compact $U(1)$ computations
+calibrate these claims.  None of these results proves four-dimensional basin
+entry, continuum existence, or a mass gap; those obligations are isolated
+explicitly.
+\end{abstract}
+
+\begin{center}
+\fbox{\parbox{0.92\textwidth}{\textbf{Status.}
+The compact bridge and Gaussian statements, the covariance identity, the
+independent-defect bound, and product-TV comparison are \proved.
+The clustering implication is \conditional\ on stated estimates.
+The Clay target remains \open.}}
+\end{center}
+
+\tableofcontents
+
+\section{The target and the representational correction}
+
+The Clay problem asks, for every compact simple gauge group $G$, for a
+nontrivial quantum Yang--Mills theory on $\R^4$ satisfying axiomatic properties
+and possessing a mass gap $\Delta>0$ \cite{jaffe-witten}.  In Euclidean language
+a constructive route must produce coherent gauge-invariant Schwinger functions,
+verify reflection positivity and the remaining reconstruction hypotheses, and
+obtain decay strong enough to imply a positive spectral threshold after
+Osterwalder--Schrader reconstruction \cite{osterwalder-schrader1,osterwalder-schrader2}.
+
+The guiding ontology is not that one coordinate system is the theory.  Gauge
+potentials are local coordinates on relational information; a regulator is a
+temporary realization; a particle is a spectral interpretation after
+reconstruction; renormalization changes descriptive scale; and the continuum
+theory is coherence across compatible limiting representations.  On this view
+the mass gap is an invariant form of infrared spectral rigidity.
+
+The earlier one-step question ``does every block variable contract?'' is too
+coarse.  An RG transformation separates a block into
+\[
+   x \longmapsto (y,r), \qquad y=\pi(x),
+\]
+where $y$ is retained and $r$ is integrated out.  Relevant information in $y$
+need not contract; indeed its survival is the point of blocking.  A defensible
+local question is instead:
+\begin{quote}
+After fixing the retained gauge-invariant coarse data and quotienting gauge
+redundancy, does the conditional law on the eliminated fiber forget distant
+boundary perturbations, apart from a quantitatively controlled defect channel?
+\end{quote}
+
+\section{A two-plaquette heat-kernel block}
+
+Let $\T=\R/2\pi\mathbb Z$ and let
+\[
+ p_t(\theta)=\frac{1}{\sqrt{2\pi t}}
+ \sum_{n\in\mathbb Z}\exp\!\left[-\frac{(\theta+2\pi n)^2}{2t}\right]
+ =\frac1{2\pi}\sum_{k\in\mathbb Z}e^{-k^2t/2}e^{ik\theta}
+\]
+be the $U(1)$ heat kernel in the convention used here.  It satisfies the exact
+convolution semigroup identity $p_t*p_u=p_{t+u}$.
+
+Consider two adjacent plaquette angles $q_1,q_2$ with density
+$p_t(q_1)p_t(q_2)$ and retain their total holonomy
+\[
+ s=q_1+q_2\pmod{2\pi}.
+\]
+The internal coordinate is $q=q_1$ and a centered fiber coordinate is
+$r=q-s/2$ (locally, with the usual circle ambiguity away from the small-field
+chart).
+
+\begin{proposition}[Compact heat-kernel bridge, \proved]
+For every $t>0$ and $s\in\T$, a regular conditional density of $q$ given $s$
+is
+\begin{equation}\label{eq:bridge}
+ \gamma_t^s(q)=\frac{p_t(q)p_t(s-q)}{p_{2t}(s)}.
+\end{equation}
+Consequently the centered fiber has density
+$\widetilde\gamma_t^s(r)=\gamma_t^s(r+s/2)$.
+\end{proposition}
+\begin{proof}
+The joint density in coordinates $(q,s)$ is $p_t(q)p_t(s-q)$, because Haar
+measure and the linear change of circle coordinates have unit Jacobian.  Its
+$q$-integral is $(p_t*p_t)(s)=p_{2t}(s)$.  Division gives
+\eqref{eq:bridge}; translation gives the centered formula.
+\end{proof}
+
+This is already an interacting conditional law: conditioning couples the two
+plaquettes.  It is exactly solvable because the heat kernel is closed under
+convolution, a feature familiar in two-dimensional Yang--Mills constructions
+\cite{driver2d}.  It is a calibration model, not a substitute for the
+four-dimensional nonabelian block.
+
+\section{The retained-mode obstruction and its fiber resolution}
+
+The small-field tangent model replaces the circle by $\R$.  Let
+$X_1,X_2\stackrel{\mathrm{iid}}\sim N(0,t)$, retain $S=X_1+X_2$, and set
+$R=X_1-S/2$.
+
+\begin{theorem}[Exact Gaussian response split, \proved]\label{thm:gaussian}
+For each $s\in\R$,
+\[
+ X_1\mid S=s\sim N(s/2,t/2),
+ \qquad R\mid S=s\sim N(0,t/2).
+\]
+Therefore, for the $1$-Wasserstein metric,
+\[
+ \frac{W_1(\mathcal L(X_1\mid S=s),\mathcal L(X_1\mid S=s'))}{|s-s'|}
+ =\frac12,
+ \qquad
+ \frac{W_1(\mathcal L(R\mid S=s),\mathcal L(R\mid S=s'))}{|s-s'|}=0.
+\]
+\end{theorem}
+\begin{proof}
+Gaussian conditioning gives mean
+$\Cov(X_1,S)\operatorname{Var}(S)^{-1}s=(t/2t)s=s/2$ and conditional variance
+$t-t^2/(2t)=t/2$.  Subtracting $s/2$ removes the conditional mean.  Translates
+of the same one-dimensional probability measure have $W_1$ equal to the
+translation distance, proving both ratios.
+\end{proof}
+
+The coefficient $1/2$ is not a failure of mixing: it is deterministic transport
+of retained information.  Centering separates this transport from the
+fluctuation that is actually eliminated.  On a longer Gaussian chain, analogous
+interpolation of retained endpoint data can make a full-coordinate Dobrushin
+row sum reach one even when the pinned fluctuation field is well controlled.
+Thus full-mode contraction is not representation invariant.
+
+For the compact bridge, winding sectors make
+$\widetilde\gamma_t^s$ weakly $s$-dependent, but this dependence is
+exponentially suppressed in a small-field chart as $t\downarrow0$.  Section
+\ref{sec:numerics} verifies this numerically without promoting the observation
+to a four-dimensional theorem.
+
+\section{Fibered representation packages}
+
+\begin{definition}[Fibered RG step]
+A fibered RG step is a tuple
+\[
+ \mathfrak R_k=(X_k,\mu_k,X_{k+1},\pi_k,Q_k,\mathcal O_k,\mathcal G_k,\mathcal B_k)
+\]
+with:
+\begin{enumerate}
+\item a probability space $(X_k,\mu_k)$ and a coarse space $X_{k+1}$;
+\item a measurable retained-data map $\pi_k:X_k\to X_{k+1}$ and
+      $\mu_{k+1}=(\pi_k)_*\mu_k$;
+\item a disintegration
+      $\mu_k(dx)=\int Q_k(y,dx)\,\mu_{k+1}(dy)$ supported on
+      $\pi_k^{-1}(y)$;
+\item a gauge-invariant observable core $\mathcal O_k$ and an explicit
+      transport rule $P_kF(y)=\int F(x)Q_k(y,dx)$;
+\item a good event $\mathcal G_k$ on which conditional fiber influence is
+      bounded by $K_k$, and a defect family $\mathcal B_k$ whose connected
+      contribution is bounded by $R_k$.
+\end{enumerate}
+The retained base $y$ is transported.  The numbers $K_k$ and $R_k$ measure only
+loss of memory through the conditional fiber and defects, respectively.
+\end{definition}
+
+For gauge theory, $X_k$ may be a regulated connection space modulo specified
+local gauge actions; $y$ must consist of explicitly chosen coarse covariant or
+invariant data.  This definition does not solve gauge fixing: existence,
+measurability, locality, stabilizers, Gribov-type ambiguity, topology, and
+reflection compatibility are part of the open construction of $\mathfrak R_k$.
+
+\section{Exact covariance bookkeeping across scales}
+
+Let $\mathcal F_{k+1}\subseteq\mathcal F_k$ be the sigma-algebra generated by
+the retained map at step $k$, and write $P_kF=\E[F\mid\mathcal F_{k+1}]$.
+
+\begin{theorem}[One-step fiber decomposition, \proved]\label{thm:one-step}
+For $F,G\in L^2(\mu_k)$,
+\begin{equation}\label{eq:total-cov}
+ \Cov_{\mu_k}(F,G)
+ =\Cov_{\mu_{k+1}}(P_kF,P_kG)
+ +\E_{\mu_{k+1}}\!\left[
+       \Cov_{Q_k(y,\cdot)}(F,G)
+   \right].
+\end{equation}
+\end{theorem}
+\begin{proof}
+Insert $F=P_kF+(F-P_kF)$ and similarly for $G$.  The mixed terms vanish after
+conditioning because $\E[F-P_kF\mid\mathcal F_{k+1}]=0$.  The covariance of
+the conditional means is the first term; the conditional covariance of the
+residuals is the second.
+\end{proof}
+
+\begin{corollary}[Iterated fiber decomposition, \proved]\label{cor:iterated}
+For a tower $\mathcal F_0\supseteq\cdots\supseteq\mathcal F_n$, define
+$F_k=\E[F\mid\mathcal F_k]$ and $G_k=\E[G\mid\mathcal F_k]$.  Then
+\begin{equation}\label{eq:iterated}
+ \Cov(F,G)=\Cov(F_n,G_n)
+ +\sum_{k=0}^{n-1}
+ \E\!\left[\Cov(F_k,G_k\mid\mathcal F_{k+1})\right].
+\end{equation}
+\end{corollary}
+\begin{proof}
+Apply Theorem~\ref{thm:one-step} to $(F_k,G_k)$ and telescope.
+\end{proof}
+
+Equation \eqref{eq:iterated} is the precise form of representational dynamics
+used here.  Each step declares what information survives in $(F_{k+1},G_{k+1})$
+and accounts separately for what is forgotten in the fiber covariance.  It is
+an identity, not a decay estimate.
+
+\section{A conditional fibered rigidity theorem}
+
+We now state an abstract implication that makes the missing estimates visible.
+Let $d_k(A,B)$ denote separation of transported supports at scale $k$, and let
+$b>1$ be the block factor.  The theorem is deliberately formulated as a
+certificate: an application must provide all constants and verify all
+hypotheses without using clustering itself.
+
+\begin{theorem}[Fibered two-tier clustering certificate, \conditional]
+\label{thm:certificate}
+Suppose a tower of $n$ fibered RG steps has the following properties for
+centered local observables $F,G$ with initial support distance $d$.
+\begin{enumerate}
+\item \textbf{Quasilocal transport.}  The transported observables $F_k,G_k$
+have norms at most $A_F,A_G$ and effective separation
+$d_k\ge c_0d/b^k-c_1$.
+\item \textbf{Good-fiber loss.}  For constants $C_f,m_f>0$ and $0\le K_k<1$,
+\[
+ \left|\E\Cov(F_k,G_k\mid\mathcal F_{k+1});\mathcal G_k\right|
+ \le C_f A_FA_G K_k e^{-m_fd_k}.
+\]
+\item \textbf{Defect channel.}  Connected bad objects joining the two
+transported supports contribute at most
+\[
+ C_bA_FA_G R_k e^{-m_bd_k},
+\]
+where $R_k\ge0$ is established by a dependent polymer or domination estimate.
+\item \textbf{Terminal base rigidity.}  For some $C_*,m_*>0$,
+\[
+ |\Cov(F_n,G_n)|\le C_*A_FA_Ge^{-m_*d_n}.
+\]
+\end{enumerate}
+Then
+\begin{equation}\label{eq:certificate-bound}
+ |\Cov(F,G)|\le A_FA_G\left[
+ C_*e^{-m_*d_n}+
+ \sum_{k=0}^{n-1}(C_fK_k e^{-m_fd_k}+C_bR_ke^{-m_bd_k})
+ \right].
+\end{equation}
+In particular, any cutoff-uniform choice of $n=n(d)$ for which the right-hand
+side is bounded by $Ce^{-m d}$ proves exponential clustering on the specified
+observable core.
+\end{theorem}
+\begin{proof}
+Take absolute values in \eqref{eq:iterated}.  Split each conditional fiber term
+into its good and bad contributions and apply hypotheses 2 and 3.  Apply
+hypothesis 4 to the terminal covariance and sum.  The last sentence is exactly
+the stated uniform bound.
+\end{proof}
+
+The theorem does not say that $K_k+R_k<1$ alone automatically gives physical
+exponential decay; scale conversion, support growth, amplitudes, and the number
+of steps matter.  Its value is logical: retained information appears only in
+the transported terminal term, while every eliminated degree of freedom appears
+in a fiber increment.  No relevant mode is incorrectly charged as a mixing
+failure.
+
+\section{A restricted connected-defect theorem}
+
+The simplest calibration makes bad blocks independent.  It cannot describe
+four-dimensional gauge defects, but it gives a falsifiable numerical target.
+
+\begin{theorem}[Independent rooted defect clusters, \proved]
+\label{thm:defect}
+Let $\Gamma$ be a graph of maximum degree $\Delta$, and mark vertices bad
+independently with probability $p$.  For a root $o$ and $n\ge1$,
+\[
+ \Pr\{\text{there exists a connected all-bad }A\ni o, |A|=n\}
+ \le \min\{1,\ p(\Delta^2p)^{n-1}\}.
+\]
+Thus $\Delta^2p<1$ gives exponential decay in $n$ for this event.
+\end{theorem}
+\begin{proof}
+Every finite connected $A\ni o$ has a spanning tree.  A depth-first traversal
+of that tree starting at $o$ has at most $2(n-1)$ directed edge steps.  There
+are at most $\Delta^{2(n-1)}$ such walks, hence at most that many encoded
+connected sets (overcounting is harmless).  A fixed set of $n$ distinct
+vertices is all bad with probability $p^n$.  The union bound gives
+$\Delta^{2(n-1)}p^n=p(\Delta^2p)^{n-1}$.
+\end{proof}
+
+In the Gaussian bridge of Theorem~\ref{thm:gaussian}, declaring the centered
+fiber bad when $|R|>\rho\sqrt{t/2}$ gives
+\[
+ p_\rho=\Pr\{|N(0,1)|>\rho\}
+ =\operatorname{erfc}(\rho/\sqrt2).
+\]
+At $\rho=3$, $p_3\approx0.0026998$.  With $\Delta=8$,
+$\Delta^2p_3\approx0.1728<1$.  This proves subcriticality only for the
+independent Gaussian calibration.  In Yang--Mills theory, bad blocks are
+dependent and may contain large curvature, cut-locus effects, exceptional gauge
+orbits, or topological flux.  A valid $R_k$ must control those mechanisms rather
+than assume them away.
+
+\section{Regulator comparison at block level}
+
+\begin{theorem}[Finite-product TV comparison, \proved]
+\label{thm:tensor}
+For probability measures $\mu,\nu$ and integer $m\ge1$,
+\[
+ \TV(\mu^{\otimes m},\nu^{\otimes m})
+ \le 1-(1-\TV(\mu,\nu))^m
+ \le m\,\TV(\mu,\nu).
+\]
+\end{theorem}
+\begin{proof}
+Choose a maximal coupling of one $\mu$ and one $\nu$ sample, whose mismatch
+probability is $\TV(\mu,\nu)$.  Couple $m$ pairs independently.  The product
+samples agree unless at least one pair mismatches, which has probability
+$1-(1-\TV)^m$.  Total variation is no larger than the mismatch probability of
+any coupling, and Bernoulli's inequality gives the second bound.
+\end{proof}
+
+Consequently convergence of heat-kernel and Wilson one-plaquette laws implies
+agreement for each fixed finite product block.  It does \emph{not} imply
+universality for a fixed physical block containing $m(a)\to\infty$ plaquettes:
+the displayed bound would require the one-plaquette discrepancy to be
+$o(1/m(a))$, unless correlations or a sharper comparison provide compensation.
+The same warning applies more strongly to interacting nonabelian blocks.
+
+\section{Executable compact calibration}\label{sec:numerics}
+
+The accompanying program evaluates the compact bridge on a periodic grid,
+using the median-corrected cumulative-distribution formula for geodesic
+$W_1$ on the circle.  Boundary increments are $0.1\sqrt t$; defects use
+$\rho=3$.  The Wilson one-plaquette density is matched to the heat-kernel
+quadratic small-angle scale before TV comparison.
+
+\begin{center}
+\small
+\begin{tabular}{@{}rrrrrrrr@{}}
+\toprule
+$t$ & $\delta s$ & full $W_1/\delta s$ & fiber $W_1/\delta s$
+& $p_{\rm bad}$ & $64p_{\rm bad}$ & one TV & $16\,$TV bound\\
+\midrule
+0.50 & 0.07071 & 0.498316 & $1.8\!\times\!10^{-8}$ & 0.002696 & 0.172523 & 0.063595 & 1.000000\\
+0.20 & 0.04472 & 0.499999 & $<10^{-9}$ & 0.002697 & 0.172636 & 0.019918 & 0.318686\\
+0.10 & 0.03162 & 0.500000 & $<10^{-9}$ & 0.002688 & 0.172036 & 0.009232 & 0.147705\\
+0.05 & 0.02236 & 0.500000 & $<10^{-9}$ & 0.002719 & 0.174015 & 0.004477 & 0.071629\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Eight automated tests verify normalization, the $1/2$ tangent response, small
+centered response, the Gaussian-tail limit, defect subcriticality in the stated
+model, TV tensorization, and failure-closed input checks.  These computations
+are reproducible evidence about the selected finite model, not computer-assisted
+proofs for nonabelian four-dimensional Yang--Mills theory.
+
+\section{The theorem dependency chain}
+
+The representational programme now factors the Clay target as follows:
+\begin{equation}\label{eq:chain}
+\begin{split}
+&\text{regulated gauge measure}
+\xrightarrow{\text{gauge-covariant block/disintegration}}
+\text{base + conditional fiber}\\
+&\xrightarrow{\ K_k\ \text{and}\ R_k\ \text{bounds}\ }
+\text{uniform fibered basin}
+\xrightarrow{\text{Theorem \ref{thm:certificate}}}
+\text{Euclidean clustering}\\
+&\xrightarrow{\text{continuum coherence + OS axioms}}
+\text{physical Hilbert space}
+\xrightarrow{\text{spectral transfer}}
+\operatorname{spec}(H)\subset\{0\}\cup[\Delta,\infty).
+\end{split}
+\end{equation}
+
+Theorems \ref{thm:gaussian}--\ref{thm:tensor} clarify the middle language but
+do not supply the four-dimensional arrows in \eqref{eq:chain}.  In particular,
+the existence of a cutoff sequence and compactness alone are insufficient for
+the stated endpoint if nontriviality, axioms, and a physical-unit gap are not
+preserved \cite{jaffe-witten}.
+
+\section{Frontier audit: what remains open}
+
+\begin{longtable}{@{}p{0.08\textwidth}p{0.58\textwidth}p{0.22\textwidth}@{}}
+\toprule
+ID & Required result & Status\\
+\midrule
+\endhead
+O1 & Construct local, gauge-covariant four-dimensional block maps and
+disintegrations; specify retained loop data, fiber quotients, stabilizers,
+overlap consistency, locality, and reflection compatibility. & \open\\
+O2 & On good blocks prove a quotient Wasserstein or related influence bound
+$K_k<1$, uniform in volume and cutoff, after retained modes are removed. & \open\\
+O3 & Control dependent large-field, exceptional-orbit, cut-locus, and
+topological defects by a connected polymer estimate with summable $R_k$. & \open\\
+O4 & Prove that the asymptotically free ultraviolet family enters the fibered
+basin with constants in physical units, without defining the basin by the
+desired clustering conclusion. & \open\\
+O5 & Prove convergence and regulator independence on a separating
+gauge-invariant observable core, together with reflection positivity,
+Euclidean covariance, symmetry, regularity, and nontriviality. & \open\\
+O6 & Reconstruct the Hilbert space and show that uniform Euclidean decay gives
+$\operatorname{spec}(H)\subset\{0\}\cup[\Delta,\infty)$ with $\Delta>0$. & \open\\
+\bottomrule
+\end{longtable}
+
+The frontier theorem is O4, but it should not be attacked before O1--O3 are
+made quantitative.  The immediate next nonabelian experiment is the smallest
+$SU(2)$ block with explicitly described retained conjugacy/loop data.  It should
+be tested against noncommuting boundary changes and four adversarial defect
+classes: large curvature, holonomy near the cut locus, reducible stabilizers,
+and nontrivial flux.  A positive numerical coefficient is useful only after the
+metric, quotient, and locality constants are fixed independently of the target
+claim.
+
+\section{Conclusion}
+
+The new ontology changes the proof obligation in a concrete way.  An RG step is
+not a map that should erase all information.  It is a typed transformation that
+\emph{preserves} selected relational information in its base and
+\emph{forgets} conditional fiber information with controlled error.  The exact
+covariance decomposition records both operations.  The mass-gap programme then
+asks whether infrared rigidity is stable across this chain and survives the
+continuum/reconstruction interface.
+
+The two-plaquette bridge supplies a sharp sanity check: failure of full-mode
+contraction can coexist with perfect fiber contraction.  This rescues a viable
+local target but does not establish it for four-dimensional Yang--Mills.  The
+remaining mathematical core is now narrower and more honest: construct the
+nonabelian conditional fibers, prove their good-field contraction, control the
+dependent defect channel, and carry the resulting physical-unit estimate
+through a coherent continuum limit.
+
+\begin{thebibliography}{9}
+\bibitem{jaffe-witten}
+A.~Jaffe and E.~Witten,
+\emph{Quantum Yang--Mills Theory}, Clay Mathematics Institute Millennium
+Problem description (2000),
+\url{https://www.claymath.org/wp-content/uploads/2022/06/yangmills.pdf}.
+
+\bibitem{osterwalder-schrader1}
+K.~Osterwalder and R.~Schrader,
+``Axioms for Euclidean Green's functions,''
+\emph{Communications in Mathematical Physics} \textbf{31} (1973), 83--112.
+
+\bibitem{osterwalder-schrader2}
+K.~Osterwalder and R.~Schrader,
+``Axioms for Euclidean Green's functions II,''
+\emph{Communications in Mathematical Physics} \textbf{42} (1975), 281--305.
+
+\bibitem{driver2d}
+B.~K. Driver,
+``Two dimensional Yang--Mills theory: expectations for Wilson loops,''
+heat-kernel/Wilson-loop notes,
+\url{https://www.math.ucsd.edu/~bdriver/DRIVER/Papers/Drivers_Papers/A3-YM2-Expectations.pdf}.
+\end{thebibliography}
+
+\end{document}

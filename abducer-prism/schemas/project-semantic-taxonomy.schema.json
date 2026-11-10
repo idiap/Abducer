@@ -1,0 +1,132 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://prism.local/to-prism/project-semantic-taxonomy.schema.json",
+  "additionalProperties": false,
+  "properties": {
+    "artifact": {"const": "project-semantic-taxonomy"},
+    "objects": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "assurance_justification": {"minLength": 20, "type": "string"},
+          "description": {"minLength": 20, "type": "string"},
+          "epistemic_role": {
+            "enum": [
+              "statement",
+              "proposition",
+              "claim",
+              "observation",
+              "evidence",
+              "assumption",
+              "hypothesis",
+              "ranked_hypotheses",
+              "critique",
+              "objection",
+              "defeater",
+              "counterexample",
+              "judgment",
+              "decision",
+              "recommendation",
+              "action",
+              "query",
+              "retrieval_result",
+              "formal_representation",
+              "informal_argument",
+              "mathematical_representation",
+              "operational"
+            ]
+          },
+          "fields": {
+            "items": {
+              "additionalProperties": false,
+              "properties": {
+                "description": {"minLength": 20, "type": "string"},
+                "name": {"pattern": "^[A-Za-z_][A-Za-z0-9_]*$", "type": "string"},
+                "type": {"minLength": 1, "type": "string"}
+              },
+              "required": ["description", "name", "type"],
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "id": {"pattern": "^[A-Za-z_][A-Za-z0-9_-]*$", "type": "string"},
+          "nominal_type": {"pattern": "^[A-Z][A-Za-z0-9_]*$", "type": "string"},
+          "provenance": {
+            "enum": ["raw", "generated", "observed", "computed", "validated", "supported", "proved", "verified"]
+          },
+          "source_anchors": {
+            "items": {"minLength": 1, "type": "string"},
+            "minItems": 1,
+            "type": "array"
+          },
+          "unresolved": {
+            "items": {"minLength": 20, "type": "string"},
+            "type": "array"
+          }
+        },
+        "required": ["assurance_justification", "description", "epistemic_role", "fields", "id", "nominal_type", "provenance", "source_anchors", "unresolved"],
+        "type": "object"
+      },
+      "minItems": 1,
+      "type": "array"
+    },
+    "operations": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "granularity_rationale": {"minLength": 20, "type": "string"},
+          "id": {"pattern": "^[A-Za-z_][A-Za-z0-9_-]*$", "type": "string"},
+          "inference_class": {
+            "enum": ["none", "formal", "material_defeasible", "representational", "symbolic_computational"]
+          },
+          "input_types": {
+            "items": {"pattern": "^[A-Z][A-Za-z0-9_]*$", "type": "string"},
+            "minItems": 1,
+            "type": "array"
+          },
+          "kind": {
+            "enum": ["generate_hypotheses", "abduct", "rank", "compare", "critique", "adversarial_review", "refute", "validate", "calibrate", "synthesize", "judge", "recommend", "decide", "retrieve", "query", "formalize", "symbolic_transform", "operational"]
+          },
+          "output_type": {"pattern": "^[A-Z][A-Za-z0-9_]*$", "type": "string"},
+          "rationale": {"minLength": 20, "type": "string"},
+          "result_provenance": {
+            "enum": ["raw", "generated", "observed", "computed", "validated", "supported", "proved", "verified"]
+          },
+          "semantic_role": {"enum": ["epistemic", "operational"]},
+          "skill_composition": {
+            "items": {
+              "additionalProperties": false,
+              "properties": {
+                "contribution": {"minLength": 20, "type": "string"},
+                "path": {"minLength": 1, "type": "string"},
+                "role": {"minLength": 20, "type": "string"}
+              },
+              "required": ["contribution", "path", "role"],
+              "type": "object"
+            },
+            "minItems": 1,
+            "type": "array"
+          },
+          "source_anchors": {
+            "items": {"minLength": 1, "type": "string"},
+            "minItems": 1,
+            "type": "array"
+          }
+        },
+        "required": ["granularity_rationale", "id", "input_types", "kind", "output_type", "rationale", "result_provenance", "semantic_role", "skill_composition", "source_anchors"],
+        "type": "object"
+      },
+      "minItems": 1,
+      "type": "array"
+    },
+    "review_status": {"enum": ["proposed", "approved"]},
+    "schema_version": {"const": "1.0"},
+    "source_fingerprint": {"pattern": "^sha256:[0-9a-f]{64}$", "type": "string"},
+    "unresolved": {
+      "items": {"minLength": 20, "type": "string"},
+      "type": "array"
+    }
+  },
+  "required": ["artifact", "objects", "operations", "review_status", "schema_version", "source_fingerprint", "unresolved"],
+  "type": "object"
+}

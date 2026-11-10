@@ -1,0 +1,624 @@
+# SPDX-FileCopyrightText: © 2026 Idiap Research Institute <contact@idiap.ch>
+#
+# SPDX-FileContributor: Andre Freitas <andre.freitas@idiap.ch>
+# Neuro-symbolic AI Group
+#
+# SPDX-FileContributor: Danilo Gusicuma <danilo.gusicuma@idiap.ch>
+# Neuro-symbolic AI Group
+#
+# SPDX-License-Identifier: MIT
+version: 1
+target_id: p-vs-np-target
+created_at: "2026-07-11"
+status: resolved
+completed_at: "2026-07-11"
+implementation_status:
+  status: completed
+  completed_at: "2026-07-11"
+implementation_summary:
+  - Created `skills/orchestration/pvsnp-negative-tactic-selector` with P vs NP-specific tactic selection, escape-condition preservation, and report handoff guidance.
+  - Added `agentic/scripts/build_pvsnp_negative_tactic_packet.py`, `agentic/scripts/validate_pvsnp_negative_tactics.py`, live JSON/Markdown reports, and five route-family fixtures plus valid/invalid fixtures.
+  - Hooked the selector into discovery-marathon dispatch, target-specific skill traces, branch prompts, branch-output schema, branch validation, scheduler ranking, parallel synthesis, report rendering, report validation, contribution monitoring, agentic checks, and the P vs NP runbook.
+  - Validated live P vs NP packet, future branch-output attachment, skill registry, skill dispatch, scientific contribution monitor, and self-contained HTML report.
+source_artifacts:
+  contradiction_skill: skills/reasoning/kb-contradiction-strategist/SKILL.md
+  pvsnp_no_go_skill: skills/reasoning/pvsnp-impossibility-theorem-forger/SKILL.md
+  contradiction_auditor: skills/evaluation/contradiction-route-auditor/SKILL.md
+  pressure_bridge_skill: skills/reasoning/pvsnp-pressure-bridge-forger/SKILL.md
+  symbolic_auditor: skills/reasoning/pvsnp-symbolic-complexity-auditor/SKILL.md
+  qualitative_reasoner: skills/reasoning/pvsnp-qualitative-complexity-reasoner/SKILL.md
+  dispatch_matrix: agentic/registries/discovery_marathon_skill_dispatch.yaml
+  latest_report: agentic/reports/discovery_marathon/latest.json
+tactical_policy:
+  purpose: >
+    Make negative proof tactics first-class in the P vs NP discovery loop
+    without letting them become generic pessimism. The workflow must decide
+    when a branch should pursue a proof by contradiction, when it should
+    formulate an impossibility theorem about a route family, and when it should
+    stay in constructive bridge-building mode.
+  distinction:
+    proof_by_contradiction: >
+      Use when the negation of a target or subclaim has mathematical structure
+      and may force a conflict with a named theorem, invariant, transfer
+      inequality, or complexity-class assumption. In P vs NP this is usually
+      not "assume P=NP and derive absurdity" globally; it is more often
+      "assume the branch transfer succeeds with beta>0", "assume a natural
+      property is useful against P/poly", or "assume a proof-system lower bound
+      transfers to language hardness" and derive the exact contradiction.
+    impossibility_theorem: >
+      Use when the object of study is a method family rather than the main
+      conjecture. The aim is a theorem-shaped statement such as "no
+      black-box-substitution interface with positive target-query exponent can
+      yield all-exponent NP not subset P/poly", or "no projection-padding
+      carrier of this form can magnify without importing sparse-valid-length
+      lower bounds equivalent to the target." This can be a publishable
+      stepping-stone even when the main conjecture remains untouched.
+    falsifier_or_counterexample: >
+      Use when a proposed bridge has a concrete finite or symbolic failure
+      mode: advice leakage, easy restricted-model witness, low-degree
+      invariant accepting sparse tables, Gaussian-elimination shortcut, or
+      bounded exponent window. This should feed either repair or no-go
+      theorem formation, not just branch demotion.
+    constructive_bridge: >
+      Keep constructive bridge-building when the route still has a plausible
+      subpolynomial-query, nonblackbox, non-natural, advice-free, or
+      target-preserving escape condition that has not yet been computed.
+  tactical_triggers:
+    go_for_reductio_when:
+      - The branch has a precise subclaim whose negation preserves the same P vs NP target, source class, target class, and quantifier order.
+      - Assuming the subclaim false generates a structured object: small SAT circuits, low-support sketches, short proofs, easy MCSP witnesses, oracle-respecting simulations, or advice-dependent selectors.
+      - There is a named conflict target such as a transfer inequality, barrier theorem, counting bound, diagonalization premise, or validated branch invariant.
+      - The contradiction would decide a live branch: promote, repair, quarantine, or convert to no-go theorem.
+    go_for_impossibility_when:
+      - Multiple cycles keep repairing the same route without changing the obstruction family.
+      - The route's assumptions can be abstracted into a method class with parameters such as beta, q, padding exponent, largeness, constructivity, advice, oracle access, or algebraic extension access.
+      - A negative theorem would be more valuable than another positive attempt because it would delimit a family of hardness-magnification, MCSP, proof-complexity, natural-property, or padding/projection strategies.
+      - The candidate can state escape conditions precisely, so it does not overrule genuinely nonblackbox or subpolynomial-interface variants.
+    stay_constructive_when:
+      - A route still has an untested target-preserving escape condition: beta=0, q below threshold, nonblackbox SAT-circuit use, advice-free row-hard certificate, non-large/nonconstructive property, or explicit restricted-model-to-unrestricted compiler.
+      - The current failure only shows a calculational gap, not a route-family obstruction.
+      - The branch has not yet run the symbolic transfer audit or qualitative exponent map needed to decide whether the failure is structural.
+    backtrack_or_quarantine_when:
+      - The contradiction target is not accepted, or the proof switches source/target model, quantifier order, oracle status, or advice regime.
+      - The proposed no-go is just a known barrier label without a route-specific hypothesis and conclusion.
+      - The branch cannot name what escapes the theorem, making the impossibility claim too broad.
+      - Two sharpened attempts fail to produce a source object, target class, transfer inequality, barrier status, and falsifiable next theorem.
+  epistemic_discipline:
+    - Negative results are scientific content only when theorem-shaped, scoped, and useful for branch control.
+    - A contradiction route must never hide the hard global negation of P vs NP behind a local branch contradiction.
+    - A route impossibility theorem must preserve the target boundary and list escape conditions.
+    - Every negative tactic must report whether it contributes to a paper-level stepping stone: conceptual novelty, explanatory power, implications, applicability, and unblocking value.
+  decision_order:
+    - >
+      First localize the mathematical pressure: is the live difficulty a
+      transfer loss, quantifier mismatch, advice leak, barrier-family signature,
+      restricted-model gap, or missing source lower bound?
+    - >
+      Then ask whether the pressure has a computable parameter or finite
+      witness. If yes, run symbolic or qualitative audit before any broad
+      impossibility claim.
+    - >
+      If a precise subclaim has a structured negation and a named conflict
+      target, choose proof by contradiction.
+    - >
+      If repeated audits identify a stable method class with parameters and
+      escape conditions, choose impossibility/no-go theorem formation.
+    - >
+      If a genuine escape condition remains untested, keep constructive
+      exploration alive and protect the branch from premature quarantine.
+    - >
+      If none of source object, target class, transfer inequality, conflict
+      target, or escape condition can be named after sharpening, backtrack or
+      quarantine.
+  route_family_matrix:
+    - route_family: black_box_substitution_or_hardness_magnification
+      central_question: >
+        Does the interface use target SAT circuits only through black-box
+        queries of length n^beta and overhead N^q?
+      prefer_contradiction_when: >
+        A branch asserts all-exponent transfer despite beta>0; assume the
+        transfer succeeds and derive the upper bound N^{q+beta c+o(1)} from
+        SAT in SIZE(n^c), contradicting the claimed all-exponent conclusion.
+      prefer_impossibility_when: >
+        Several carriers share the same positive-beta interface. State a no-go
+        theorem for every black-box interface with beta>0 and specified q,
+        while preserving escape conditions beta=0, subpolynomial queries, or
+        nonblackbox use.
+      stay_constructive_when: >
+        A candidate has beta=0, subpolynomial target queries, or a concrete
+        nonblackbox circuit-use mechanism not yet audited.
+    - route_family: padding_projection_or_sparse_valid_length
+      central_question: >
+        Is the source lower bound merely a padded or projected restatement of
+        SAT hardness at a different length?
+      prefer_contradiction_when: >
+        A branch claims weak source lower bounds imply NP not subset P/poly;
+        assume SAT has SIZE(n^c) circuits and compute whether the padded source
+        circuit still lies below N^{1+epsilon}.
+      prefer_impossibility_when: >
+        The route repeatedly collapses to a bounded exponent window or to
+        sparse-valid-length lower bounds equivalent to the target.
+      stay_constructive_when: >
+        A nonprojection carrier with target-preserving compression and no
+        uncharged advice remains available.
+    - route_family: natural_property_or_combinatorial_lower_bound
+      central_question: >
+        Is the proposed hard-function property large, constructive, and useful
+        against a class containing plausible pseudorandom functions?
+      prefer_contradiction_when: >
+        The branch simultaneously asserts constructivity, largeness,
+        usefulness, and cryptographic hardness; derive the natural-proofs
+        tension for the exact circuit class.
+      prefer_impossibility_when: >
+        A route family systematically depends on large constructive useful
+        properties without a non-natural escape condition.
+      stay_constructive_when: >
+        The property is plausibly non-large, nonconstructive, semantic,
+        proof-system-specific, or otherwise outside the natural-proofs template.
+    - route_family: mcsp_mktp_or_meta_complexity_carrier
+      central_question: >
+        Does the carrier produce direct language hardness, or only aggregate,
+        ranked, or advice-selected hard rows?
+      prefer_contradiction_when: >
+        A branch claims row hardness but the certificate selects rows
+        nonuniformly; assume the transfer and derive the advice or ranked
+        decoder leakage.
+      prefer_impossibility_when: >
+        Repeated carrier variants require advice-free row selection that the
+        route cannot provide, or all accepted witnesses include easy sparse
+        tables.
+      stay_constructive_when: >
+        A candidate gives an explicit advice-free row-hard certificate,
+        non-natural density control, or verifier-overhead bound not yet tested.
+    - route_family: proof_complexity_transfer
+      central_question: >
+        Does proof-system hardness transfer to language hardness, or only to a
+        fixed-family proof lower bound?
+      prefer_contradiction_when: >
+        A branch asserts language hardness while the proof family admits a
+        shortcut such as Gaussian elimination, recognition, or semantic
+        bypass; assume transfer and expose the shortcut conflict.
+      prefer_impossibility_when: >
+        A route family cannot connect proof length lower bounds to SAT circuit
+        lower bounds without adding an unproved semantic bridge.
+      stay_constructive_when: >
+        The proof system, semantic target, and shortcut model are explicitly
+        typed and a transfer theorem remains open rather than refuted.
+todos:
+  - id: pvsnp-neg-tactics-001
+    type: workflow_todo
+    phase: pvsnp-negative-tactic-selection
+    owner: skills/orchestration/pvsnp-negative-tactic-selector
+    priority: critical
+    risk_class: tactic_selection_gap
+    title: Create a P vs NP negative-tactic selector skill.
+    intent: >
+      Add a generative orchestration skill that reads the current P vs NP branch,
+      pressure packet, symbolic transfer audit, qualitative relation map, and
+      latest marathon story, then decides whether the next move should be
+      constructive bridge-building, proof by contradiction, impossibility/no-go
+      theorem formation, counterexample/falsifier search, backtrack, or
+      quarantine.
+    use_skills:
+      - pvsnp-negative-tactic-selector
+      - pvsnp-conceptual-pressure-localizer
+      - pvsnp-impossibility-theorem-forger
+      - kb-contradiction-strategist
+      - contradiction-route-auditor
+    required_artifact:
+      - skills/orchestration/pvsnp-negative-tactic-selector/SKILL.md
+      - skills/orchestration/pvsnp-negative-tactic-selector/agents/openai.yaml
+    acceptance_criteria:
+      - The selector distinguishes contradiction, impossibility theorem, falsifier, and constructive bridge tactics in P vs NP terms.
+      - It requires source object, target class, method family, transfer parameters, barrier status, and escape conditions before recommending a no-go theorem.
+      - It refuses global "assume P=NP" rhetoric unless the exact negation has a concrete local carrier and conflict target.
+      - It emits a branch-control decision with persist/adapt/backtrack/pivot/quarantine/stop and a next validation handoff.
+    blocked_by: []
+    evidence:
+      - skills/orchestration/pvsnp-negative-tactic-selector/SKILL.md
+      - skills/orchestration/pvsnp-negative-tactic-selector/agents/openai.yaml
+    review_date: "2026-07-11"
+    failure_modes:
+      - The selector only repeats known barriers without choosing a tactic.
+      - The selector recommends impossibility too early, before symbolic or qualitative audits.
+      - The selector keeps branches constructive after the obstruction family is stable and theorem-shaped.
+    status: resolved
+  - id: pvsnp-neg-tactics-002
+    type: workflow_todo
+    phase: pvsnp-negative-tactic-selection
+    owner: skills/orchestration/pvsnp-negative-tactic-selector/SKILL.md
+    priority: critical
+    risk_class: conceptually_shallow_negative_reasoning
+    title: Encode the tactical decision calculus for contradiction versus impossibility.
+    intent: >
+      Make the selector reason from mathematical structure rather than from
+      generic failure labels. It should know that reductio is appropriate when
+      a negated branch subclaim produces a contradiction carrier, while
+      impossibility is appropriate when repeated failures define a method class
+      with stable parameters and escape conditions.
+    use_skills:
+      - pvsnp-negative-tactic-selector
+      - pvsnp-qualitative-complexity-reasoner
+      - pvsnp-symbolic-complexity-auditor
+      - pvsnp-impossibility-theorem-forger
+    required_artifact:
+      - skills/orchestration/pvsnp-negative-tactic-selector/SKILL.md
+    acceptance_criteria:
+      - The skill states triggers for reductio, no-go theorem, falsifier search, constructive persistence, and quarantine.
+      - The triggers mention P vs NP-specific objects: beta, q, padding exponent, naturalness, constructivity, largeness, advice, oracle/algebraic access, source lower bound, and target class.
+      - It requires the selector to ask whether the negative route can become a scoped scientific contribution.
+      - It requires escape-condition preservation so nonblackbox, subpolynomial-query, non-natural, or advice-free variants are not overruled.
+    blocked_by:
+      - pvsnp-neg-tactics-001
+    evidence:
+      - skills/orchestration/pvsnp-negative-tactic-selector/SKILL.md
+    review_date: "2026-07-11"
+    failure_modes:
+      - Contradiction is treated as a stylistic proof choice rather than a carrier-based tactic.
+      - No-go theorem formation becomes a premature stopping excuse.
+      - Escape conditions are omitted, making impossibility claims too broad.
+    status: resolved
+  - id: pvsnp-neg-tactics-003
+    type: hook_todo
+    phase: discovery_marathon_dispatch
+    owner: agentic/registries/discovery_marathon_skill_dispatch.yaml
+    priority: high
+    risk_class: workflow_integration
+    title: Hook negative-tactic selection into the contradiction and branch-selection phases.
+    intent: >
+      Ensure the selector is invoked when P vs NP branches are selected and
+      again before contradiction/falsifier generation. The first invocation
+      prevents low-value route continuation; the second invocation chooses the
+      right negative tactic and handoff.
+    use_skills:
+      - pvsnp-negative-tactic-selector
+      - long-horizon-route-portfolio-manager
+      - next-experiment-queue-ranker
+      - pvsnp-impossibility-theorem-forger
+    required_artifact:
+      - agentic/registries/discovery_marathon_skill_dispatch.yaml
+    acceptance_criteria:
+      - The branch_selection phase lists pvsnp-negative-tactic-selector as a conditional P vs NP skill.
+      - The contradiction_and_falsifier_generation phase lists pvsnp-negative-tactic-selector before pvsnp-impossibility-theorem-forger.
+      - The required output for contradiction_and_falsifier_generation mentions tactic selection, exact negation, route-family no-go, escape conditions, and learning from failure.
+      - Skill-dispatch validation records whether the selector ran or why it was skipped.
+    blocked_by:
+      - pvsnp-neg-tactics-001
+    evidence:
+      - agentic/registries/discovery_marathon_skill_dispatch.yaml
+      - command: python agentic/scripts/validate_discovery_marathon_skill_dispatch.py
+    review_date: "2026-07-11"
+    failure_modes:
+      - The skill exists but marathon cycles bypass it.
+      - The selector runs too late, after a branch has already spent cycles restating a known obstruction.
+      - The dispatch matrix cannot distinguish P vs NP negative tactics from generic falsifier generation.
+    status: resolved
+  - id: pvsnp-neg-tactics-004
+    type: workflow_todo
+    phase: branch_output_contract
+    owner: agentic/spec/discovery_marathon_codex_branch_output.schema.json
+    priority: high
+    risk_class: missing_negative_tactic_evidence
+    title: Extend branch outputs with a negative-tactic decision packet.
+    intent: >
+      Make each P vs NP branch record why it did or did not move into proof by
+      contradiction or impossibility theorem mode. This prevents the loop from
+      hiding tactical choices inside prose and gives validators a stable object
+      to inspect.
+    use_skills:
+      - pvsnp-negative-tactic-selector
+      - pvsnp-impossibility-theorem-forger
+      - contradiction-route-auditor
+    required_artifact:
+      - agentic/spec/discovery_marathon_codex_branch_output.schema.json
+      - agentic/spec/discovery_marathon_cycle.schema.json
+      - agentic/scripts/run_discovery_marathon.py
+    acceptance_criteria:
+      - Branch outputs can include tactic_mode with values constructive_bridge, proof_by_contradiction, impossibility_theorem, falsifier_search, backtrack, quarantine, or stop.
+      - The packet includes exact_negation_or_method_class, contradiction_carrier_or_no_go_family, conflict_target, escape_conditions, and validation_handoff.
+      - The packet is optional for non-P-vs-NP targets but required for P vs NP research cycles after the selector is available.
+      - Existing cycle fixtures are updated without breaking legacy reports.
+    blocked_by:
+      - pvsnp-neg-tactics-001
+    evidence:
+      - agentic/spec/discovery_marathon_codex_branch_output.schema.json
+      - agentic/spec/discovery_marathon_cycle.schema.json
+      - agentic/scripts/run_discovery_marathon.py
+    review_date: "2026-07-11"
+    failure_modes:
+      - Negative tactics remain unstructured and cannot be validated.
+      - The schema forces generic fields that do not capture P vs NP transfer parameters.
+      - Legacy target cycles fail because the packet is not target-scoped.
+    status: resolved
+  - id: pvsnp-neg-tactics-005
+    type: test_todo
+    phase: negative_tactic_validation
+    owner: agentic/scripts/validate_pvsnp_negative_tactics.py
+    priority: high
+    risk_class: validation_control
+    title: Add a validator for P vs NP negative-tactic decisions.
+    intent: >
+      Validate that contradiction and impossibility decisions are theorem-shaped,
+      scoped, target-preserving, and not merely rhetorical. The validator should
+      fail on vague barrier labels, missing escape conditions, absent target
+      class, or missing symbolic/qualitative audit handoff.
+    use_skills:
+      - pvsnp-negative-tactic-selector
+      - contradiction-route-auditor
+      - pvsnp-symbolic-complexity-auditor
+    required_artifact:
+      - agentic/scripts/validate_pvsnp_negative_tactics.py
+      - tests/fixtures/discovery_marathon/pvsnp_negative_tactic_valid.json
+      - tests/fixtures/discovery_marathon/pvsnp_negative_tactic_invalid.json
+    acceptance_criteria:
+      - The validator accepts a valid black-box-substitution no-go packet with beta, q, target class, theorem conclusion, and escape conditions.
+      - It rejects a packet that only says relativization, natural proofs, or algebrization without route-specific hypotheses and conclusion.
+      - It rejects proof-by-contradiction packets with non-exact negation or missing conflict target.
+      - It is wired into agentic_check.py or the relevant marathon validation path.
+    blocked_by:
+      - pvsnp-neg-tactics-004
+    evidence:
+      - agentic/scripts/validate_pvsnp_negative_tactics.py
+      - command: python agentic/scripts/validate_pvsnp_negative_tactics.py
+    review_date: "2026-07-11"
+    failure_modes:
+      - Invalid no-go claims pass and make reports sound stronger than the mathematics supports.
+      - Valid negative contribution candidates are discarded because the validator only rewards constructive progress.
+      - The validator does not inspect escape conditions and overbroad impossibility claims survive.
+    status: resolved
+  - id: pvsnp-neg-tactics-006
+    type: report_todo
+    phase: discovery_marathon_report
+    owner: agentic/scripts/generate_discovery_marathon_html.py
+    priority: medium
+    risk_class: invisible_tactic_reasoning
+    title: Add a visible negative-tactics panel to the P vs NP report.
+    intent: >
+      Show the reader why the loop chose proof by contradiction,
+      impossibility/no-go theorem formation, falsifier search, or constructive
+      persistence for each active branch. The panel should explain what was
+      learned from failed routes without making negative results look like
+      defeat.
+    use_skills:
+      - pvsnp-negative-tactic-selector
+      - kb-explain
+      - show-reasoning
+    required_artifact:
+      - agentic/scripts/generate_discovery_marathon_html.py
+      - agentic/reports/discovery_marathon/full_timeline.html
+    acceptance_criteria:
+      - The report displays tactic mode, reason for choice, theorem/no-go candidate, escape conditions, and next validation handoff.
+      - The panel appears in the expert timeline flow or Strategy Judge area, not as a disconnected bureaucratic card wall.
+      - It uses P vs NP language: SAT, P/poly, circuit lower bounds, beta/q, naturalness, relativization, algebrization, advice, MCSP/MKtP, proof complexity.
+      - Existing math rendering validators still pass.
+    blocked_by:
+      - pvsnp-neg-tactics-004
+    evidence:
+      - agentic/scripts/generate_discovery_marathon_html.py
+      - command: python agentic/scripts/generate_discovery_marathon_html.py
+      - command: python agentic/scripts/validate_discovery_marathon_report.py
+    review_date: "2026-07-11"
+    failure_modes:
+      - The report hides why a branch is being turned into a no-go theorem.
+      - The panel becomes generic process text instead of expert-readable mathematics.
+      - Escape conditions and non-claim boundaries are omitted.
+    status: resolved
+  - id: pvsnp-neg-tactics-007
+    type: workflow_todo
+    phase: queue_ranking_and_branch_control
+    owner: agentic/scripts/discovery_marathon_scheduler.py
+    priority: high
+    risk_class: premature_stop_or_infinite_branching
+    title: Make negative-tactic readiness affect queue ranking and branch stopping.
+    intent: >
+      Use the selector's decision to promote high-value no-go theorem candidates,
+      protect constructive routes with untested escape conditions, and stop
+      branches that repeatedly fail to produce target-preserving transfer or
+      route-family theorem statements.
+    use_skills:
+      - pvsnp-negative-tactic-selector
+      - next-experiment-queue-ranker
+      - progression-payoff-judge
+      - paper-contribution-readiness-judge
+    required_artifact:
+      - agentic/scripts/discovery_marathon_scheduler.py
+      - agentic/scripts/generate_discovery_marathon_html.py
+    acceptance_criteria:
+      - Queue ranking boosts negative theorem candidates when they are theorem-shaped and paper-relevant.
+      - Queue ranking protects a branch from premature quarantine when a named escape condition remains untested.
+      - Stop criteria include repeated failure to state a method class, parameters, conflict target, and escape conditions.
+      - Branch status distinguishes low-value failure from publishable obstruction work.
+    blocked_by:
+      - pvsnp-neg-tactics-001
+      - pvsnp-neg-tactics-004
+    evidence:
+      - agentic/scripts/discovery_marathon_scheduler.py
+      - command: python agentic/scripts/validate_discovery_marathon_state.py
+      - command: python agentic/scripts/validate_discovery_marathon_report.py
+    review_date: "2026-07-11"
+    failure_modes:
+      - The loop keeps exploring branches whose only output is the same obstruction in new words.
+      - The loop quarantines a branch before testing a legitimate nonblackbox or subpolynomial-query escape.
+      - No-go theorem candidates are ranked below vague constructive tasks even when they have clearer payoff.
+    status: resolved
+  - id: pvsnp-neg-tactics-008
+    type: test_todo
+    phase: integration_fixtures
+    owner: tests/fixtures/discovery_marathon
+    priority: medium
+    risk_class: untested_tactic_cases
+    title: Add P vs NP fixture cases for contradiction and impossibility tactic selection.
+    intent: >
+      Create content-specific fixtures that exercise the selector across the
+      main P vs NP route families: black-box substitution, padding/projection
+      magnification, natural-property lower bounds, MCSP/MKtP row-hardness,
+      proof-complexity transfer, and algebraizing/oracle-respecting methods.
+    use_skills:
+      - pvsnp-negative-tactic-selector
+      - pvsnp-gedanken-complexity-lab
+      - pvsnp-symbolic-complexity-auditor
+    required_artifact:
+      - tests/fixtures/discovery_marathon/pvsnp_negative_tactic_blackbox_cap.json
+      - tests/fixtures/discovery_marathon/pvsnp_negative_tactic_padding_projection.json
+      - tests/fixtures/discovery_marathon/pvsnp_negative_tactic_natural_property.json
+      - tests/fixtures/discovery_marathon/pvsnp_negative_tactic_mcsp_row.json
+      - tests/fixtures/discovery_marathon/pvsnp_negative_tactic_proof_complexity.json
+    acceptance_criteria:
+      - Each fixture names source object, target class, tactic mode, conflict target, escape conditions, and next validation handoff.
+      - At least one fixture requires staying constructive because a legitimate escape condition is untested.
+      - At least one fixture requires no-go theorem formation as the highest-value next move.
+      - At least one fixture is rejected for generic barrier language.
+    blocked_by:
+      - pvsnp-neg-tactics-005
+    evidence:
+      - tests/fixtures/discovery_marathon/pvsnp_negative_tactic_blackbox_cap.json
+      - command: python agentic/scripts/validate_pvsnp_negative_tactics.py
+    review_date: "2026-07-11"
+    failure_modes:
+      - Fixtures are too generic and do not reflect current marathon branches.
+      - The selector cannot distinguish constructive persistence from no-go formation.
+      - Tests ignore proof-complexity and MCSP cases, overfitting to beta/q examples.
+    status: resolved
+  - id: pvsnp-neg-tactics-009
+    type: documentation_todo
+    phase: pvsnp_runbook
+    owner: docs/case-studies/pvsnp/pvsnp-runbook.md
+    priority: medium
+    risk_class: operational_ambiguity
+    title: Document when the P vs NP workflow should choose contradiction or no-go work.
+    intent: >
+      Add a runbook section explaining the tactical policy in plain mathematical
+      language for future marathon runs: when to try reductio, when to prove a
+      route impossibility theorem, when to search for falsifiers, and when to
+      keep constructive exploration alive.
+    use_skills:
+      - pvsnp-negative-tactic-selector
+      - kb-explain
+    required_artifact:
+      - docs/case-studies/pvsnp/pvsnp-runbook.md
+    acceptance_criteria:
+      - The runbook includes a decision table for constructive bridge, contradiction, impossibility theorem, falsifier search, and quarantine.
+      - Examples are P vs NP specific and include beta/q black-box substitution, padding/projection debt, natural proofs, proof complexity, and MCSP/MKtP.
+      - The documentation warns against using barriers as vague pessimism.
+      - The documentation explains how negative theorem candidates can become paper-level contributions.
+    blocked_by:
+      - pvsnp-neg-tactics-001
+    evidence:
+      - docs/case-studies/pvsnp/pvsnp-runbook.md
+    review_date: "2026-07-11"
+    failure_modes:
+      - Operators cannot tell why a branch was converted to no-go work.
+      - Documentation treats negative results as failed discovery rather than scoped scientific contributions.
+      - The runbook omits stop/persist criteria and allows infinite branch progression.
+    status: resolved
+  - id: pvsnp-neg-tactics-010
+    type: report_todo
+    phase: paper_contribution_monitor
+    owner: agentic/scripts/build_scientific_contribution_monitor.py
+    priority: medium
+    risk_class: negative_contribution_undervalued
+    title: Teach the contribution monitor to recognize scoped P vs NP no-go results as paper-level candidates.
+    intent: >
+      Make the scientific contribution monitor detect when a contradiction or
+      impossibility route has enough novelty, explanatory power, and implication
+      payoff to become a publishable stepping-stone subproblem, even if it does
+      not solve P vs NP.
+    use_skills:
+      - scientific-contribution-detector
+      - paper-contribution-readiness-judge
+      - pvsnp-impossibility-theorem-forger
+    required_artifact:
+      - agentic/scripts/build_scientific_contribution_monitor.py
+      - agentic/reports/scientific_contribution_monitor/latest.json
+    acceptance_criteria:
+      - The monitor recognizes route-specific impossibility lemmas as candidates when they are formal, scoped, and useful.
+      - Candidate scoring includes conceptual novelty, explanatory power, implications, applicability, and unblocking value for P vs NP routes.
+      - The monitor refuses generic restatements of relativization, natural proofs, or algebrization as contributions.
+      - Report output states what paper section the no-go theorem would support.
+    blocked_by:
+      - pvsnp-neg-tactics-004
+    evidence:
+      - agentic/scripts/build_scientific_contribution_monitor.py
+      - command: python agentic/scripts/validate_scientific_contribution_monitor.py
+    review_date: "2026-07-11"
+    failure_modes:
+      - The monitor only rewards positive bridge proofs and misses valuable obstruction theorems.
+      - Generic barrier discussion is over-scored as novelty.
+      - No-go candidates lack paper-safe non-claim boundaries.
+    status: resolved
+  - id: pvsnp-neg-tactics-011
+    type: workflow_todo
+    phase: pre_cycle_negative_tactic_packet
+    owner: agentic/scripts/build_pvsnp_negative_tactic_packet.py
+    priority: high
+    risk_class: selector_not_grounded_in_current_state
+    title: Build a pre-cycle P vs NP negative-tactic packet from current marathon state.
+    intent: >
+      Add a deterministic/generative hybrid packet builder that reads the latest
+      P vs NP report, active branches, pressure bridges, symbolic audits,
+      qualitative maps, contribution monitor, and recent cycles, then emits a
+      concise tactic recommendation for each active branch before the next API
+      or Codex branch execution.
+    use_skills:
+      - pvsnp-negative-tactic-selector
+      - pvsnp-pressure-bridge-forger
+      - pvsnp-symbolic-complexity-auditor
+      - pvsnp-qualitative-complexity-reasoner
+      - pvsnp-impossibility-theorem-forger
+    required_artifact:
+      - agentic/scripts/build_pvsnp_negative_tactic_packet.py
+      - agentic/reports/pvsnp_negative_tactics/latest.json
+      - agentic/reports/pvsnp_negative_tactics/latest.md
+    acceptance_criteria:
+      - The packet contains one recommendation per active P vs NP branch.
+      - Each recommendation includes route_family, tactic_mode, reason_for_tactic, conflict_target, escape_conditions, proof_obligations, and next_validation_handoff.
+      - The packet distinguishes at least constructive_bridge, proof_by_contradiction, impossibility_theorem, falsifier_search, backtrack, quarantine, and stop.
+      - Recommendations quote current cycle IDs or branch IDs so the tactic is grounded in live discovery state.
+      - The packet builder refuses to emit impossibility_theorem when symbolic/qualitative audits are missing and a legitimate escape condition remains untested.
+    blocked_by:
+      - pvsnp-neg-tactics-001
+    evidence:
+      - agentic/scripts/build_pvsnp_negative_tactic_packet.py
+      - command: python agentic/scripts/build_pvsnp_negative_tactic_packet.py
+    review_date: "2026-07-11"
+    failure_modes:
+      - The packet summarizes the policy but does not decide per branch.
+      - The packet recommends no-go work without route-specific parameters.
+      - The packet cannot be consumed by the marathon runner before branch execution.
+    status: resolved
+  - id: pvsnp-neg-tactics-012
+    type: hook_todo
+    phase: branch_prompt_context
+    owner: agentic/scripts/run_discovery_marathon.py
+    priority: high
+    risk_class: negative_tactic_not_reaching_api_agent
+    title: Inject negative-tactic packet guidance into P vs NP branch prompts.
+    intent: >
+      Ensure API/Codex branch agents receive the current tactic recommendation
+      before generating the next cycle, so they know whether to compute a
+      constructive bridge, attempt reductio, formulate a route no-go theorem,
+      search for a falsifier, or stop/quarantine the branch.
+    use_skills:
+      - pvsnp-negative-tactic-selector
+      - pvsnp-impossibility-theorem-forger
+      - kb-contradiction-strategist
+    required_artifact:
+      - agentic/scripts/run_discovery_marathon.py
+      - agentic/reports/pvsnp_negative_tactics/latest.json
+    acceptance_criteria:
+      - P vs NP branch prompts include the branch-specific tactic_mode and reason_for_tactic when the packet exists.
+      - The prompt explicitly says not to restate barriers; it must produce theorem-shaped contradiction, no-go, falsifier, or constructive bridge content according to tactic_mode.
+      - API branch outputs are validated against the negative-tactic packet when the packet requested proof_by_contradiction or impossibility_theorem.
+      - Non-P-vs-NP targets are unaffected.
+    blocked_by:
+      - pvsnp-neg-tactics-004
+      - pvsnp-neg-tactics-011
+    evidence:
+      - agentic/scripts/run_discovery_marathon.py
+      - command: python agentic/scripts/validate_discovery_marathon_cycle.py
+    review_date: "2026-07-11"
+    failure_modes:
+      - The selector produces a good recommendation but the API agent never sees it.
+      - Branch outputs ignore tactic mode and continue generic exploration.
+      - Prompt injection is global and contaminates Yang-Mills or other target runs.
+    status: resolved

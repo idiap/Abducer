@@ -1,0 +1,366 @@
+# SPDX-FileCopyrightText: © 2026 Idiap Research Institute <contact@idiap.ch>
+#
+# SPDX-FileContributor: Danilo Gusicuma <danilo.gusicuma@idiap.ch>
+# Neuro-symbolic AI Group
+#
+# SPDX-License-Identifier: MIT
+# REUSE-IgnoreStart
+schema_version: workflow-skill/v1
+namespace: abducer
+id: kb_prove_cycle_workflow
+version: 1.0.0
+kind: workflow
+description: Draft interface projection of kb-prove-cycle; native execution and authority remain unchanged.
+aliases:
+- kb-prove-cycle
+lifecycle: draft
+activation:
+  mode: explicit
+  prerequisites: []
+types:
+  NativeRequest:
+    schema:
+      type: object
+      description: Skill-defined request; consult preserved source text for inputs and conditions.
+    representation: value
+  NativeResult:
+    schema:
+      type: object
+      description: Skill-defined durable artifact bundle; no invented runtime output shape.
+    representation: value
+inputs:
+  request:
+    type: NativeRequest
+outputs:
+  result:
+    type: NativeResult
+    value:
+      ref: steps.native.outputs.result
+operations:
+  native_workflow:
+    inputs:
+      request:
+        type: NativeRequest
+    outputs:
+      result:
+        type: NativeResult
+    execution:
+      mode: specification_only
+      reason: No workflow-skill/v1 host adapter is supplied. Native skill/hook/CLI interfaces exist, but
+        payload materialization, guard evidence, execution effects and receipt translation are not qualified
+        for this format.
+flow:
+  kind: sequence
+  steps:
+  - id: native
+    kind: call
+    operation: native_workflow
+    description: Opaque native workflow boundary; internal ordering, guards and handoffs are retained
+      in abducer.native_contract.
+    arguments:
+      request:
+        ref: inputs.request
+    on_failure: blocked
+policy:
+  effects:
+    filesystem:
+      read:
+      - native_sources
+      - inputs
+      write: []
+    network: []
+    external_write: []
+  authority:
+    allowed:
+    - describe_native_interface
+    forbidden:
+    - execute_scientific_workflow
+    - approve
+    - prove
+    - publish
+    - promote
+  limits:
+    wall_time_seconds: 1800
+    max_operation_calls: 1
+  failure:
+    default: blocked
+    retry:
+      max_attempts: 1
+      retryable_codes: []
+  resume:
+    mode: none
+    require_matching_definition_and_inputs: true
+  claim_ceiling: Interface description only; no proof, scientific validity, runtime qualification, promotion
+    or approval.
+observability:
+  receipts: required
+  artifact_digests: sha256
+  provenance: required
+  events:
+  - workflow_started
+  - step_failed
+  - workflow_completed
+provenance:
+  coverage: interface_only
+  sources:
+  - path: skills/discovery/kb-prove-cycle/SKILL.md
+    digest: sha256:a079830d1f3c2dfef4bb64c694579fa4950561e6a3927794293634e8bf5687f5
+  - path: skills/discovery/kb-prove-cycle/references/critique-judges.md
+    digest: sha256:d1ac662b236644f8f767133d42617373e994dc327994833d23d481a3d106dc23
+  - path: skills/discovery/kb-prove-cycle/references/prompt-template.md
+    digest: sha256:e0c0fcb4f33bd79a5576242e7e6f967a1261094330822e0e4bbd4807fe9b795a
+  - path: skills/discovery/kb-prove-cycle/references/web-search-policy.md
+    digest: sha256:52074e5eab9b11ece2b65d09d8d544e53cf0b545daf7eaebbee23cec39be0e85
+  - path: skills/discovery/kb-prove-cycle/scripts/finalize_proof_cycle.py
+    digest: sha256:70b891f00c3efb64dd2e12c2d84759b91116f18ebac8842ba7b9a2004225bdfd
+  - path: skills/discovery/kb-prove-cycle/scripts/generate_proof_cycle_summary.py
+    digest: sha256:7b0be95487bfb1ff1de242809f0b5cab8830a06eb5adb1bfa57ae82e65655af8
+  - path: skills/discovery/kb-prove-cycle/scripts/generate_proof_queue_report.py
+    digest: sha256:225041086afd823d78d7275fc913c9ee864f9876ce02745f2543cde694cfcaeb
+  - path: skills/discovery/kb-prove-cycle/scripts/start_proof_cycle.py
+    digest: sha256:28002f5a6ca58de36eae064a1b95adb6d8de402c95ab25b641454fa231e4d871
+  - path: agentic/registries/skill_registry.yaml
+    digest: sha256:15076ed8d1bd4c10895060ab485353fe520421c44e1fc6f506508d2d566eacf0
+  - path: pyproject.toml
+    digest: sha256:69325c4805f66033ce7f7e0e68f4a0996913728c6041bb3cee656571693b2f1e
+  - path: uv.lock
+    digest: sha256:a6c77e5d86a93915eeb0f129f80bc8c45d572be387872e3ace7460a3d6ada9ae
+  - path: prism_me/shared/references/codex-control-stack.md
+    digest: sha256:4e8e7a5cdbc0572cf9b0d4ffc4a41c8f4f9c9a304fae3bcee99d8af3553be30e
+  gaps:
+  - No workflow-skill/v1 host adapter is supplied. Native skill/hook/CLI interfaces exist, but payload
+    materialization, guard evidence, execution effects and receipt translation are not qualified for this
+    format.
+  - Native control flow remains opaque; coverage is interface_only, not source-equivalence certification.
+  - One or more native payloads have no exact JSON Schema; object-only types remain explicitly underspecified.
+extensions:
+  abducer.owner:
+    path: skills/discovery/kb-prove-cycle/SKILL.md
+  abducer.native_identity:
+    id: kb-prove-cycle
+  abducer.native_contract:
+    source_skill: skills/discovery/kb-prove-cycle/SKILL.md
+    source_text: '---
+
+      name: kb-prove-cycle
+
+      description: "Run the prove cycle over the persistent proof queue: consume one queued claim, attempt
+      an informal proof or disproof, apply systematic critique judges, use web search only under a parsimonious
+      gate, and persist terminal positive or negative results into a problem-scoped InformalMathLib plus
+      a summary report."
+
+      ---
+
+
+      # KB Prove Cycle
+
+
+      ## Conceptual Role
+
+
+      This skill turns one queued proof target into an auditable informal proof or disproof attempt.
+
+
+      ## When To Use It
+
+
+      Use it when a user asks to:
+
+
+      1. consume the next proof target from the queue;
+
+      2. attempt an informal proof or negative result;
+
+      3. run systematic critique over each proof step;
+
+      4. persist proved/disproved results into a problem-scoped InformalMathLib.
+
+
+      ## Workflow
+
+
+      1. Start from the persistent queue.
+
+      Consume exactly one queue item and scaffold a proof dossier with:
+
+      proof target stated as a self-contained conjecture,
+
+      route lemma under test,
+
+      local KB grounding,
+
+      local InformalMathLib hits,
+
+      web-search gate,
+
+      critique judges.
+
+
+      2. Work locally first.
+
+      Use the queue item, KB, existing artifacts, and InformalMathLib before considering web search.
+
+
+      3. Attempt an informal proof or disproof.
+
+      Write the argument step-by-step, keeping assumptions explicit and organizing the proof through an
+      informal tactic trace inspired by proof-assistant moves such as `intro`, `have`, `suffices`, `obtain`,
+      `apply`, contradiction, negation, impossibility framing, and obstruction probing.
+
+
+      4. Run critique judges.
+
+      Every terminal outcome must pass through the systematic judge set, including tactic-aware judges
+      that inspect goal control, tactic-trace discipline, and explicit subgoal exposure.
+
+
+      5. Apply the web-search gate parsimoniously.
+
+      Browse only if the policy in [references/web-search-policy.md](references/web-search-policy.md)
+      is triggered.
+
+
+      6. Finalize.
+
+      Persist positive or negative terminal results into `InformalMathLib/<kb-ref>/...`, update the queue
+      state, and refresh the proof-cycle summary report.
+
+      Also import any externally cited theorem, definition, or axiom into the same problem-scoped InformalMathLib
+      as a searchable external-reference entry.
+
+      If a proved or disproved intermediate result clears the major-subresult threshold, also emit a standalone
+      LaTeX/PDF paper into `artifacts/<kb-ref>/produced_papers/`.
+
+
+      Read [references/prompt-template.md](references/prompt-template.md) for the proof-cycle prompt.
+
+      Read [references/critique-judges.md](references/critique-judges.md) for the mandatory critique structure.
+
+      Read [references/web-search-policy.md](references/web-search-policy.md) before any browsing.
+
+
+      ## Guardrails
+
+
+      - Do not claim a proof when the result is only a plausible sketch.
+
+      - Do not browse unless the web-search gate is triggered.
+
+      - If prior art is found, classify the outcome as `prior_art_found` rather than novelty.
+
+      - Negative results are first-class outcomes if they are explicit, theorem-shaped, and informative.
+
+      - Contradiction and impossibility reasoning should be represented explicitly, not only as vague
+      obstruction prose.
+
+      - Every proof step must be inspectable by a mathematical expert.
+
+
+      ## Deterministic Path
+
+
+      Use `scripts/start_proof_cycle.py` to consume the next queue item and create the dossier.
+
+      Use `scripts/finalize_proof_cycle.py` after the attempt is filled in.
+
+      Use `scripts/generate_proof_cycle_summary.py` to refresh the summary independently if needed.
+
+
+      Examples:
+
+
+      ```text
+
+      python skills/discovery/kb-prove-cycle/scripts/start_proof_cycle.py --kb kb/p-vs-np.kb.md --artifacts-dir
+      artifacts/p-vs-np
+
+      python skills/discovery/kb-prove-cycle/scripts/finalize_proof_cycle.py --kb-ref p-vs-np --attempt-json
+      artifacts/p-vs-np/proof-attempts/attempt.p-vs-np.001.json --outcome blocked
+
+      ```
+
+
+      <!-- ABducer skill-depth contract v1 -->
+
+
+      ## Guardrails
+
+
+      - Novelty is not value; generated hypotheses must carry status labels and disconfirming observations
+      before receiving active attention.
+
+      - Cite KB IDs, dependency node IDs, target packet IDs, artifact paths, validator output, or explicit
+      unknowns for every substantive claim.
+
+      - Keep workflow validity, artifact existence, and mathematical progress as separate statuses.
+
+
+      ## Mathematical Invariants
+
+
+      - Mathematical object: candidate bridge, conjecture, entrypoint, proof sketch, route family, or
+      conceptual transformation.
+
+      - Preserved invariants: target commitments, source-grounded definitions, bridge compatibility, and
+      explicit proof obligations.
+
+      - Name broken invariants, edge cases, counterexample classes, or boundary regimes whenever a route
+      changes representation or scope.
+
+
+      ## Epistemic Discipline
+
+
+      - Label claims as conjectural, evidence-backed, proof-obligation, blocked, refuted, promoted, quarantined,
+      or watch/archive.
+
+      - Record uncertainty, source limits, disconfirming observations, and demotion triggers before recommending
+      continuation.
+
+      - Treat explicit unknowns as first-class outputs rather than smoothing them into prose.
+
+
+      ## Codex Exec Protocol
+
+
+      Follow `docs/reference/codex-exec-skill-protocol.md` when execution can ground the answer. Run the
+      relevant local script(s), especially `finalize_proof_cycle.py, generate_proof_cycle_summary.py,
+      generate_proof_queue_report.py`; inspect the produced artifacts before interpreting them. After
+      execution, state the mathematical consequence, epistemic status, unresolved obligations, and next
+      action.
+
+
+      ## Output Contract
+
+
+      Return: candidate route, mathematical object, cited source artifacts or unknowns, epistemic status,
+      disconfirming observations, validation requirements, and next action. Include executed commands
+      and produced artifacts when a deterministic run occurs; otherwise state why execution was not appropriate.
+
+
+      ## Failure/Demotion
+
+
+      Demote to watch/archive, revision, quarantine, or reject when relevance is low, assumptions shift,
+      source grounding disappears, or a counterexample/boundary regime breaks the route.
+
+
+      ## Validation Handoff
+
+
+      End by naming the validator, artifact, TODO, proof obligation, or stop condition that should control
+      the next loop. Do not leave shallow deterministic output uninterpreted when generative mathematical
+      or epistemic interpretation is needed.
+
+      '
+  abducer.environment:
+    python: pyproject.toml
+    lock: uv.lock
+    native_controls: .codex/config.toml
+    native_controls_optional: true
+    control_policy: prism_me/shared/references/codex-control-stack.md
+  abducer.execution_boundary:
+    status: specification_only
+    notes: Source inspection only. Effects above deny native execution until a separately reviewed adapter
+      exists.
+# REUSE-IgnoreEnd

@@ -1,0 +1,96 @@
+# SPDX-FileCopyrightText: © 2026 Idiap Research Institute <contact@idiap.ch>
+#
+# SPDX-FileContributor: Andre Freitas <andre.freitas@idiap.ch>
+# Neuro-symbolic AI Group
+#
+# SPDX-FileContributor: Danilo Gusicuma <danilo.gusicuma@idiap.ch>
+# Neuro-symbolic AI Group
+#
+# SPDX-License-Identifier: MIT
+from examples.layered_release_review.occurrences import (
+    DefeaterInput,
+    ReadinessInput,
+)
+from examples.layered_release_review.reasoning import ReleaseReadiness
+from examples.layered_release_review.relations import (
+    Calibrated,
+    Required,
+    Tested,
+)
+from examples.layered_release_review.types import (
+    DefeaterReview,
+    ReadyToDeploy,
+    ReadinessPacket,
+    ReleaseCandidate,
+    ReleaseChecks,
+)
+
+def capture_release(change: ReleaseCandidate) -> Evidence[ReleaseCandidate]:
+    return observe(
+        change,
+        source = "supplied release candidate",
+        method = "direct structured input",
+    )
+
+def derive_checks(evidence: Evidence[ReleaseCandidate]) -> ReleaseChecks:
+    change = evidence.value
+    return ReleaseChecks(
+        tests_passed = change.tests_passed,
+        approved = change.approved,
+        rollback_ready = change.rollback_ready,
+    )
+
+def find_defeaters(source: DefeaterInput) -> DefeaterReview:
+    checks = source.checks
+    return DefeaterReview(
+        tests_failed = not checks.tests_passed,
+        approval_missing = not checks.approved,
+        rollback_missing = not checks.rollback_ready,
+        clear = checks.tests_passed and checks.approved and checks.rollback_ready,
+    )
+
+def support_readiness(
+    source: ReadinessInput,
+) -> Result[Supported[ReadyToDeploy()], Never]:
+    packet = combine_evidence(
+        source.evidence,
+        value = ReadinessPacket(
+            change = source.change,
+            checks = source.checks,
+            defeaters = source.defeaters,
+        ),
+        transformation = "deterministic release-readiness checks",
+    )
+    policy: MaterialPolicy[ReadinessPacket, ReadyToDeploy(), Never] = material_policy(
+        "release-readiness-v1",
+        require = [source.defeaters.clear],
+    )
+    return packet |~[policy] ReadyToDeploy()
+
+def build_required[SourceValue, TargetValue](
+    source: SourceValue,
+    target: TargetValue,
+) -> Required[SourceValue, TargetValue]:
+    return Required(source = source, target = target)
+
+def build_tested[SourceValue, TargetValue](
+    source: SourceValue,
+    target: TargetValue,
+) -> Tested[SourceValue, TargetValue]:
+    return Tested(source = source, target = target)
+
+def build_calibrated[SourceValue, TargetValue](
+    source: SourceValue,
+    target: TargetValue,
+) -> Calibrated[SourceValue, TargetValue]:
+    return Calibrated(source = source, target = target)
+
+release_readiness = ReleaseReadiness(
+    evidence = capture_release,
+    checks = derive_checks,
+    defeaters = find_defeaters,
+    finding = support_readiness,
+    checks_by = build_required,
+    defeaters_by = build_tested,
+    finding_by = build_calibrated,
+)

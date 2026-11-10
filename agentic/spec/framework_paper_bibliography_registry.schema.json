@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "framework_paper_bibliography_registry.schema.json",
+  "title": "Framework Paper Bibliography Registry",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "backend", "snapshot_digest", "entries"],
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "backend": {"enum": ["bibtex", "biblatex"]},
+    "snapshot_digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "entries": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["citation_key", "record_digest", "bibtex_digest"],
+        "properties": {
+          "citation_key": {"type": "string", "pattern": "^[A-Za-z][A-Za-z0-9:_-]*$"},
+          "record_digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+          "bibtex_digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"}
+        }
+      }
+    }
+  }
+}

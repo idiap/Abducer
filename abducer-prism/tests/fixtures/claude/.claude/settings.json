@@ -1,0 +1,24 @@
+{
+  "permissions": {
+    "allow": ["Read", "Grep", "Glob"],
+    "deny": ["Write", "Edit"]
+  },
+  "env": {"FIXTURE_MODE": "review"},
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {"type": "command", "command": "python scripts/deny_write.py", "timeout": 5}
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {"type": "prompt", "prompt": "Return {\"ok\": true} only if the review has evidence."}
+        ]
+      }
+    ]
+  }
+}

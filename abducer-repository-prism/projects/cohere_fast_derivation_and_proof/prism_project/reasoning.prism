@@ -1,0 +1,33 @@
+# Function: derive a conditional result and decide whether it is ready for independent audit.
+# Input: BoundedDomainFrontier supplies the scoped premise and claim ceiling.
+# Types: ConditionalDerivationPacket retains its derivation reference and open obligations.
+# Output: DerivationReadinessDisposition is Accepted or Quarantined; it is not a proof verdict.
+# Routing: Accepted continues to independent audit; Quarantined stops.
+# Layer: high-level epistemic topology only.
+# Metadata: workflows/manifest.json (`cohere_fast_derivation_and_proof`).
+
+from types import (
+    ConditionalDerivationPacket,
+    DerivationReadinessDisposition,
+    BoundedDomainFrontier,
+)
+
+from occurrences import (
+    UnresolvedConditionalDerivationProjection,
+    EvidentialDerivationReadinessAssessment,
+)
+
+from relations import (
+    DerivationPacketEnablesReadinessAssessment,
+)
+
+reasoning CohereFastDerivationAndProof(
+    bounded_frontier: BoundedDomainFrontier,
+) -> Generated[DerivationReadinessDisposition]:
+    sequence:
+        # The unresolved projection produces a conditional packet with obligations intact.
+        [conditional_derivation: UnresolvedConditionalDerivationProjection(bounded_frontier)]
+        # Readiness assesses auditability, not truth or continuum-level completion.
+        [derivation_readiness: EvidentialDerivationReadinessAssessment(conditional_derivation.value)] by DerivationPacketEnablesReadinessAssessment
+
+    return derivation_readiness

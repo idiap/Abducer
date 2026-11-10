@@ -1,0 +1,225 @@
+{
+  "metadata": {
+    "kb_ref": "p-vs-np",
+    "generated_utc": "2026-03-17T00:10:14.329532+00:00",
+    "expert_bridge_count": 20,
+    "proof_sketch_count": 6,
+    "queue_entry_count": 6,
+    "queue_pending_count": 6
+  },
+  "main_conjecture": {
+    "title": "P versus NP",
+    "core_claim": "P != NP",
+    "route_target_claim": "NP not in P/poly",
+    "grounding_statement_id": "st.thm.nonuniform-separation-target",
+    "grounding_statement_title": "Nonuniform separation target",
+    "grounding_implication": "If NP is not contained in P/poly, then P != NP.",
+    "narrative": "The current macro-proof does not try to prove P != NP directly. It organizes the search around a stronger nonuniform separation claim, then grounds the main conjecture by the implication NP not in P/poly implies P != NP."
+  },
+  "paper_narrative": {
+    "introduction": "This document should be read as a mathematical programme note. Its purpose is to explain how the current search state grounds the main conjecture in a sharper nonuniform target and to isolate the minimal theorem package still missing.",
+    "reduction_strategy": "The reduction strategy is deliberately high-level: prove a hardness-magnification route to `NP not in P/poly`, then close the main conjecture through the already available nonuniform implication. The mathematical substance therefore sits in the magnification bridge, not in the final reduction step.",
+    "leading_route_narrative": "The leading route centers on `bridge.001` and treats `MCSP witness family` as the bridge object intended to carry the source lower-bound regime into the target separation regime. The route is therefore being presented as a conditional theorem programme rather than as a proof. A remaining abstraction defect is the mismatch between the witness-family presentation and the Gap-MCSP operationalization.",
+    "frontier_narrative": "The current frontier should be interpreted as a small family of theorem-sized obligations, not as an execution backlog. Each queued item isolates one mathematically inspectable route conjecture whose proof or failure would materially change the state of the macro-proof."
+  },
+  "grounding_statements": [
+    {
+      "statement_id": "st.def.item",
+      "title": "Definition of P",
+      "excerpt": "P is the class of languages decidable by deterministic polynomial-time Turing machines."
+    },
+    {
+      "statement_id": "st.def.item-2",
+      "title": "Definition of NP",
+      "excerpt": "NP is the class of languages whose yes instances admit polynomial-size certificates verifiable in polynomial time."
+    },
+    {
+      "statement_id": "st.def.np-completeness",
+      "title": "Definition of NP-completeness",
+      "excerpt": "A language is NP-complete if it lies in NP and every language in NP polynomial-time many-one reduces to it."
+    },
+    {
+      "statement_id": "st.thm.cook-levin-sat-is-np-complete-cook1971",
+      "title": "Cook-Levin",
+      "excerpt": "SAT is NP-complete."
+    },
+    {
+      "statement_id": "st.def.item-5",
+      "title": "Definition of P/poly",
+      "excerpt": "P/poly is the class of languages decided by polynomial-size Boolean circuit families, equivalently polynomial-time computation with polynomial-length advice."
+    },
+    {
+      "statement_id": "st.thm.nonuniform-separation-target",
+      "title": "Nonuniform separation target",
+      "excerpt": "If NP is not contained in P/poly, then P != NP."
+    }
+  ],
+  "conditional_macro_proof": {
+    "proposition": "If these assumptions hold and the route-specific lemma `Prove that a hardness-magnification witness family turns `A barely-nontrivial lower bound for an explicit problem Q in a weak model` into `major consequences such as NP not in P/poly` while preserving `MCSP complexity profile in nonuniform-circuits`.` is discharged, then `NP not in P/poly` follows at `st.thm.oliveira-pich-santhanam-magnification-near-state`.",
+    "implication_chain": [
+      "Start from the hardness-magnification program: a barely nontrivial lower bound for an explicit MCSP-type problem in a weak model may amplify into a major separation consequence.",
+      "If these assumptions hold and the route-specific lemma `Prove that a hardness-magnification witness family turns `A barely-nontrivial lower bound for an explicit problem Q in a weak model` into `major consequences such as NP not in P/poly` while preserving `MCSP complexity profile in nonuniform-circuits`.` is discharged, then `NP not in P/poly` follows at `st.thm.oliveira-pich-santhanam-magnification-near-state`.",
+      "Invoke the grounding implication from the KB: if NP not in P/poly, then P != NP."
+    ],
+    "status_note": "This is a conditional macro-proof program. The central unresolved step is the route-specific bridge lemma, not the final grounding implication to P != NP."
+  },
+  "leading_route": {
+    "bridge_id": "bridge.001",
+    "priority": 0.7437261551898519,
+    "route_synopsis": "Move from `st.def.hardness-magnification-phenomenon-programme-leve` on problem `MCSP` in model `nonuniform-circuits` using `A barely-nontrivial lower bound for an explicit problem Q in a weak model` toward `st.thm.oliveira-pich-santhanam-magnification-near-state` in model `nonuniform-circuits` to obtain `major consequences such as NP not in P/poly`.",
+    "source_statement_id": "st.def.hardness-magnification-phenomenon-programme-leve",
+    "target_statement_id": "st.thm.oliveira-pich-santhanam-magnification-near-state",
+    "source_excerpt": "A hardness magnification theorem has the form:\"A barely-nontrivial lower bound for an explicit problem Q in a weak model implies a major lower bound/separation in a strong model.\"Typically, Q is a meta-problem (e.g. a Gap-MCSP variant) and\"major\"means consequences such as NP not in P/poly.",
+    "target_excerpt": "In refined regimes, lower bounds for Gap-MCSP slightly beyond known frontiers (e.g. N^ 1+varepsilon -type circuit lower bounds for suitable promise gaps and input length N=2^n ) imply major consequences such as NP not in P/poly.",
+    "source_claim_focus": "A barely-nontrivial lower bound for an explicit problem Q in a weak model",
+    "target_claim_focus": "major consequences such as NP not in P/poly",
+    "model_shift": "nonuniform-circuits",
+    "threshold_shift": "major separation consequence",
+    "consequence_shift": "upgrade `A barely-nontrivial lower bound for an explicit problem Q in a weak model` into `major consequences such as NP not in P/poly`",
+    "candidate_object": "MCSP witness family",
+    "carrier_kind": "family of instances equipped with a monotone witness measure",
+    "invariant": "MCSP complexity profile in nonuniform-circuits",
+    "family": "invariant-lift-through-intermediate-object",
+    "family_rationale": "Introduce a conjectured intermediate object or invariant, prove that the source regime induces it, then force the target consequence through that invariant.",
+    "conditional_proposition": "If these assumptions hold and the route-specific lemma `Prove that a hardness-magnification witness family turns `A barely-nontrivial lower bound for an explicit problem Q in a weak model` into `major consequences such as NP not in P/poly` while preserving `MCSP complexity profile in nonuniform-circuits`.` is discharged, then `NP not in P/poly` follows at `st.thm.oliveira-pich-santhanam-magnification-near-state`.",
+    "route_consistency_note": "The bridge portfolio names the carrier as `MCSP witness family`, while the selected proof sketch currently operationalizes the route through `Gap-MCSP promise problem`. This is an unresolved representation shift inside the current macro-proof state, not a proved equivalence.",
+    "mathematical_assumptions": [
+      "The source-side content `A barely-nontrivial lower bound for an explicit problem Q in a weak model` is available at `st.def.hardness-magnification-phenomenon-programme-leve`.",
+      "There exists an admissible realization of `MCSP witness family` as a family of instances equipped with a monotone witness measure.",
+      "The realization preserves `MCSP complexity profile in nonuniform-circuits` across nonuniform-circuits."
+    ],
+    "proof_obligations": [
+      "Prove the source-to-object claim: the source-side content `A barely-nontrivial lower bound for an explicit problem Q in a weak model` available at `st.def.hardness-magnification-phenomenon-programme-leve` can be organized into `Gap-MCSP promise problem` as a promise problem with an explicit yes/no gap and transfer reduction.",
+      "Prove the payoff claim: once `Gap-MCSP promise problem` carries the route data from `A barely-nontrivial lower bound for an explicit problem Q in a weak model` toward `major consequences such as NP not in P/poly`, it forces `NP not in P/poly` at `st.thm.oliveira-pich-santhanam-magnification-near-state`.",
+      "Prove the transport claim: every admissible realization of `Gap-MCSP promise problem` preserves `MCSP complexity profile in nonuniform-circuits` while crossing the route nonuniform-circuits.",
+      "Make the threshold control explicit: `Gap-MCSP promise problem` must realize the shift major separation consequence in a mathematically checkable way."
+    ],
+    "candidate_lemmas": [
+      "Source-to-object lemma: the source-side content `A barely-nontrivial lower bound for an explicit problem Q in a weak model` at `st.def.hardness-magnification-phenomenon-programme-leve` yields a realization of `Gap-MCSP promise problem` as a promise problem with an explicit yes/no gap and transfer reduction, satisfying admits source-side witness data for `A barely-nontrivial lower bound for an explicit problem Q in a weak model`; preserves the route invariant `MCSP complexity profile in nonuniform-circuits`; forces the target-side payoff `NP not in P/poly`.",
+      "Transport lemma: every admissible realization of `Gap-MCSP promise problem` preserves `MCSP complexity profile in nonuniform-circuits` while crossing nonuniform-circuits.",
+      "Payoff lemma: if `Gap-MCSP promise problem` is realized, carries `MCSP complexity profile in nonuniform-circuits`, and discharges the route-specific step from `A barely-nontrivial lower bound for an explicit problem Q in a weak model` to `major consequences such as NP not in P/poly`, then `NP not in P/poly` holds at `st.thm.oliveira-pich-santhanam-magnification-near-state`.",
+      "Reduction lemma: the source-side content `A barely-nontrivial lower bound for an explicit problem Q in a weak model` reduces to the surrogate object encoded by `Gap-MCSP promise problem` without weakening the path to `NP not in P/poly`."
+    ],
+    "proof_outline": [
+      "Define `Gap-MCSP promise problem` as a promise problem with an explicit yes/no gap and transfer reduction with the necessary attributes extracted in `conj.003`.",
+      "Show that the source-side content `A barely-nontrivial lower bound for an explicit problem Q in a weak model` induces `MCSP complexity profile in nonuniform-circuits` inside `Gap-MCSP promise problem`.",
+      "Construct the surrogate reduction into `Gap-MCSP promise problem` and verify that it preserves the needed route from `A barely-nontrivial lower bound for an explicit problem Q in a weak model` to `major consequences such as NP not in P/poly`.",
+      "Use the realized bridge object to force `NP not in P/poly`."
+    ],
+    "missing_route_lemma": "Prove that a hardness-magnification witness family turns `A barely-nontrivial lower bound for an explicit problem Q in a weak model` into `major consequences such as NP not in P/poly` while preserving `MCSP complexity profile in nonuniform-circuits`.",
+    "negative_route": "Allow `MCSP witness family` to ignore the source-side content `A barely-nontrivial lower bound for an explicit problem Q in a weak model` and only preserve topical overlap. bridge-degrades-or-fails The bridge object must absorb the actual source-side mathematical content rather than merely name the antecedent.",
+    "failure_diagnosis": "Failure mode: `MCSP witness family` never becomes more than topical overlap because the route-specific lemma remains missing. Prove that a hardness-magnification witness family turns `A barely-nontrivial lower bound for an explicit problem Q in a weak model` into `major consequences such as NP not in P/poly` while preserving `MCSP complexity profile in nonuniform-circuits`."
+  },
+  "supporting_routes": [
+    {
+      "bridge_id": "bridge.002",
+      "priority": 0.7318501551898519,
+      "route_synopsis": "Move from `st.def.hardness-magnification-phenomenon-programme-leve` on problem `MCSP` in model `nonuniform-circuits` using `A barely-nontrivial lower bound for an explicit problem Q in a weak model` toward `st.thm.oliveira-santhanam-hardness-magnification-for-na` in model `formula-size` to obtain `major lower bounds for NP in much stronger models (including superpolynomial formula/circuit lower bounds, and in some parameter...`.",
+      "candidate_object": "MCSP witness family",
+      "carrier_kind": "family of instances equipped with a monotone witness measure",
+      "target_claim_focus": "major lower bounds for NP in much stronger models (including superpolynomial formula/circuit lower bounds, and in some parameter...",
+      "missing_route_lemma": "Prove that a hardness-magnification witness family preserves `MCSP complexity profile in nonuniform-circuits` while transporting the route from the nonuniform-circuits regime to the formula-size regime strongly enough to derive `major lower bounds for NP in much stronger models (including superpolynomial formula/circuit lower bounds, and in some parameter...`.",
+      "target_statement_id": "st.thm.oliveira-santhanam-hardness-magnification-for-na"
+    },
+    {
+      "bridge_id": "bridge.016",
+      "priority": 0.710762719163399,
+      "route_synopsis": "Move from `st.def.hardness-magnification-phenomenon-programme-leve` on problem `MCSP` in model `nonuniform-circuits` using `A barely-nontrivial lower bound for an explicit problem Q in a weak model` toward `st.thm.atserias-m-uller-simple-general-magnification-fr` to obtain `There exist general-purpose magnification theorems (not problem-specific) showing that certain mild lower bounds for...`.",
+      "candidate_object": "MCSP witness family",
+      "carrier_kind": "family of instances equipped with a monotone witness measure",
+      "target_claim_focus": "There exist general-purpose magnification theorems (not problem-specific) showing that certain mild lower bounds for...",
+      "missing_route_lemma": "Prove that a hardness-magnification witness family upgrades the route from major separation consequence to exponential lower bound without losing `exponential-lower-bound witness complexity`.",
+      "target_statement_id": "st.thm.atserias-m-uller-simple-general-magnification-fr"
+    }
+  ],
+  "proof_frontier": [
+    {
+      "queue_id": "proofq.p-vs-np.001",
+      "title": "MCSP witness family: major consequences such as NP not in P/poly",
+      "priority": 0.7786,
+      "conjecture_statement": "There exists an admissible MCSP witness family, realized as a family of instances equipped with a monotone witness measure, such that whenever A barely-nontrivial lower bound for an explicit problem Q in a weak model holds for MCSP in nonuniform-circuits, the object organizes the source-side mathematical content while preserving the invariant MCSP complexity profile in nonuniform-circuits and yields major consequences such as NP not in P/poly.",
+      "missing_route_lemma": "Prove that a hardness-magnification witness family turns `A barely-nontrivial lower bound for an explicit problem Q in a weak model` into `major consequences such as NP not in P/poly` while preserving `MCSP complexity profile in nonuniform-circuits`.",
+      "candidate_object": "MCSP witness family"
+    },
+    {
+      "queue_id": "proofq.p-vs-np.002",
+      "title": "MCSP witness family: major lower bounds for NP in much stronger models (including superpolynomial formula/circuit lower bounds, and in some parameter...",
+      "priority": 0.7577,
+      "conjecture_statement": "There exists an admissible MCSP witness family, realized as a family of instances equipped with a monotone witness measure, such that whenever A barely-nontrivial lower bound for an explicit problem Q in a weak model holds for MCSP in nonuniform-circuits, the object organizes the source-side mathematical content while preserving the invariant MCSP complexity profile in nonuniform-circuits across the transfer nonuniform-circuits -> formula-size and yields major lower bounds for NP in much stronger models (including superpolynomial formula/circuit lower bounds, and in some parameter... for MCSP in formula-size.",
+      "missing_route_lemma": "Prove that a hardness-magnification witness family preserves `MCSP complexity profile in nonuniform-circuits` while transporting the route from the nonuniform-circuits regime to the formula-size regime strongly enough to derive `major lower bounds for NP in much stronger models (including superpolynomial formula/circuit lower bounds, and in some parameter...`.",
+      "candidate_object": "MCSP witness family"
+    },
+    {
+      "queue_id": "proofq.p-vs-np.003",
+      "title": "MCSP witness family: There exist general-purpose magnification theorems (not problem-specific) showing that certain mild lower bounds for...",
+      "priority": 0.7216,
+      "conjecture_statement": "There exists an admissible MCSP witness family, realized as a family of instances equipped with a monotone witness measure, such that whenever A barely-nontrivial lower bound for an explicit problem Q in a weak model holds for MCSP in nonuniform-circuits, the object organizes the source-side mathematical content while preserving the invariant exponential-lower-bound witness complexity and yields There exist general-purpose magnification theorems (not problem-specific) showing that certain mild lower bounds for....",
+      "missing_route_lemma": "Prove that a hardness-magnification witness family upgrades the route from major separation consequence to exponential lower bound without losing `exponential-lower-bound witness complexity`.",
+      "candidate_object": "MCSP witness family"
+    }
+  ],
+  "references": [
+    {
+      "statement_id": "st.def.item",
+      "title": "Definition of P",
+      "excerpt": "P is the class of languages decidable by deterministic polynomial-time Turing machines."
+    },
+    {
+      "statement_id": "st.def.item-2",
+      "title": "Definition of NP",
+      "excerpt": "NP is the class of languages whose yes instances admit polynomial-size certificates verifiable in polynomial time."
+    },
+    {
+      "statement_id": "st.def.np-completeness",
+      "title": "Definition of NP-completeness",
+      "excerpt": "A language is NP-complete if it lies in NP and every language in NP polynomial-time many-one reduces to it."
+    },
+    {
+      "statement_id": "st.thm.cook-levin-sat-is-np-complete-cook1971",
+      "title": "Cook-Levin",
+      "excerpt": "SAT is NP-complete."
+    },
+    {
+      "statement_id": "st.def.item-5",
+      "title": "Definition of P/poly",
+      "excerpt": "P/poly is the class of languages decided by polynomial-size Boolean circuit families, equivalently polynomial-time computation with polynomial-length advice."
+    },
+    {
+      "statement_id": "st.thm.nonuniform-separation-target",
+      "title": "Nonuniform separation target",
+      "excerpt": "If NP is not contained in P/poly, then P != NP."
+    },
+    {
+      "statement_id": "st.def.hardness-magnification-phenomenon-programme-leve",
+      "title": "Leading-route source",
+      "excerpt": "A hardness magnification theorem has the form:\"A barely-nontrivial lower bound for an explicit problem Q in a weak model implies a major lower bound/separation in a strong model.\"Typically, Q is a meta-problem (e.g. a Gap-MCSP variant) and\"major\"means consequences such as NP not in P/poly.",
+      "role": "Leading-route source statement"
+    },
+    {
+      "statement_id": "st.thm.oliveira-pich-santhanam-magnification-near-state",
+      "title": "Leading-route target",
+      "excerpt": "In refined regimes, lower bounds for Gap-MCSP slightly beyond known frontiers (e.g. N^ 1+varepsilon -type circuit lower bounds for suitable promise gaps and input length N=2^n ) imply major consequences such as NP not in P/poly.",
+      "role": "Leading-route target statement"
+    },
+    {
+      "statement_id": "st.thm.oliveira-santhanam-hardness-magnification-for-na",
+      "title": "bridge.002",
+      "excerpt": "There exist explicit\"meta\"problems (including MCSP variants) such that proving certain barely-superlinear lower bounds against restricted models (e.g. formulas) would imply major lower bounds for NP in much stronger models (including superpolynomial formula/circuit lower bounds, and in some parameter regimes consequences as strong as NP not in P/poly ).",
+      "role": "Supporting-route target statement"
+    },
+    {
+      "statement_id": "st.thm.atserias-m-uller-simple-general-magnification-fr",
+      "title": "bridge.016",
+      "excerpt": "There exist general-purpose magnification theorems (not problem-specific) showing that certain mild lower bounds for distinguishers/sparse-code objects can be amplified into stronger circuit/formula lower bounds, achieving magnification thresholds below previously known lower bounds in some settings.",
+      "role": "Supporting-route target statement"
+    }
+  ],
+  "status_assessment": {
+    "supported_hypotheses": 22,
+    "inconclusive_hypotheses": 22,
+    "evidence_count": 0,
+    "queue_pending_count": 6,
+    "assessment": "The macro-proof has a coherent leading route and a grounded implication to the main conjecture, but it remains conditional. The unresolved mass sits in the bridge object, the route lemma, and the absence of external evidence or discharged proof obligations.",
+    "novelty_argument": "The novelty is not a claimed proof of P versus NP. It is a theorem-pair-specific research program: a typed witness object, a preserved invariant, an explicit lemma chain, and a falsification route organized around hardness magnification."
+  }
+}

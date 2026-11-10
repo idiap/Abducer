@@ -1,0 +1,227 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://abducer.local/spec/blind_conceptual_judge_input_v3.schema.json",
+  "title": "Separated blind conceptual judge input v3",
+  "description": "Closed adjudication input containing only a commission digest, a precommitted nonaggregating rule, opaque 256-bit candidate nonces, and seven digest-backed evidence-status rows per candidate.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "commission_digest",
+    "adjudication_rule",
+    "opaque_candidates",
+    "request_digest"
+  ],
+  "properties": {
+    "schema_version": {"const": "3.0.0"},
+    "commission_digest": {"$ref": "#/$defs/digest"},
+    "adjudication_rule": {"$ref": "#/$defs/adjudicationRule"},
+    "opaque_candidates": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 1024,
+      "items": {"$ref": "#/$defs/opaqueCandidate"}
+    },
+    "request_digest": {"$ref": "#/$defs/digest"}
+  },
+  "$defs": {
+    "digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "nullableDigest": {
+      "oneOf": [
+        {"$ref": "#/$defs/digest"},
+        {"type": "null"}
+      ]
+    },
+    "nonce": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "criterion": {
+      "enum": [
+        "target_relevance",
+        "protected_success_preservation",
+        "consequence_specificity",
+        "burden_localization",
+        "unification_compression",
+        "discriminating_falsifier",
+        "conceptual_depth"
+      ]
+    },
+    "evidenceStatus": {
+      "enum": ["failed", "partial", "satisfied"]
+    },
+    "adjudicationRule": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "criteria",
+        "evidence_statuses",
+        "selection_policy",
+        "aggregation_policy",
+        "ties_allowed",
+        "candidate_order_policy",
+        "rule_digest"
+      ],
+      "properties": {
+        "criteria": {
+          "type": "array",
+          "minItems": 7,
+          "maxItems": 7,
+          "prefixItems": [
+            {"const": "target_relevance"},
+            {"const": "protected_success_preservation"},
+            {"const": "consequence_specificity"},
+            {"const": "burden_localization"},
+            {"const": "unification_compression"},
+            {"const": "discriminating_falsifier"},
+            {"const": "conceptual_depth"}
+          ],
+          "items": false
+        },
+        "evidence_statuses": {
+          "type": "array",
+          "minItems": 3,
+          "maxItems": 3,
+          "prefixItems": [
+            {"const": "failed"},
+            {"const": "partial"},
+            {"const": "satisfied"}
+          ],
+          "items": false
+        },
+        "selection_policy": {"const": "set_valued_pareto_nondomination"},
+        "aggregation_policy": {"const": "no_scalar_aggregation"},
+        "ties_allowed": {"const": true},
+        "candidate_order_policy": {
+          "const": "canonical_opaque_nonce_order_order_ignored"
+        },
+        "rule_digest": {"$ref": "#/$defs/digest"}
+      }
+    },
+    "criterionEvidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "criterion",
+        "status",
+        "support_digest",
+        "counterevidence_digest",
+        "criterion_digest"
+      ],
+      "properties": {
+        "criterion": {"$ref": "#/$defs/criterion"},
+        "status": {"$ref": "#/$defs/evidenceStatus"},
+        "support_digest": {"$ref": "#/$defs/nullableDigest"},
+        "counterevidence_digest": {"$ref": "#/$defs/nullableDigest"},
+        "criterion_digest": {"$ref": "#/$defs/digest"}
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {"status": {"const": "failed"}},
+            "required": ["status"]
+          },
+          "then": {
+            "properties": {
+              "counterevidence_digest": {"$ref": "#/$defs/digest"}
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {"status": {"const": "partial"}},
+            "required": ["status"]
+          },
+          "then": {
+            "properties": {
+              "support_digest": {"$ref": "#/$defs/digest"},
+              "counterevidence_digest": {"$ref": "#/$defs/digest"}
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {"status": {"const": "satisfied"}},
+            "required": ["status"]
+          },
+          "then": {
+            "properties": {
+              "support_digest": {"$ref": "#/$defs/digest"}
+            }
+          }
+        }
+      ]
+    },
+    "criterionLedger": {
+      "type": "array",
+      "minItems": 7,
+      "maxItems": 7,
+      "prefixItems": [
+        {
+          "allOf": [
+            {"$ref": "#/$defs/criterionEvidence"},
+            {"properties": {"criterion": {"const": "target_relevance"}}}
+          ]
+        },
+        {
+          "allOf": [
+            {"$ref": "#/$defs/criterionEvidence"},
+            {
+              "properties": {
+                "criterion": {"const": "protected_success_preservation"}
+              }
+            }
+          ]
+        },
+        {
+          "allOf": [
+            {"$ref": "#/$defs/criterionEvidence"},
+            {"properties": {"criterion": {"const": "consequence_specificity"}}}
+          ]
+        },
+        {
+          "allOf": [
+            {"$ref": "#/$defs/criterionEvidence"},
+            {"properties": {"criterion": {"const": "burden_localization"}}}
+          ]
+        },
+        {
+          "allOf": [
+            {"$ref": "#/$defs/criterionEvidence"},
+            {"properties": {"criterion": {"const": "unification_compression"}}}
+          ]
+        },
+        {
+          "allOf": [
+            {"$ref": "#/$defs/criterionEvidence"},
+            {"properties": {"criterion": {"const": "discriminating_falsifier"}}}
+          ]
+        },
+        {
+          "allOf": [
+            {"$ref": "#/$defs/criterionEvidence"},
+            {"properties": {"criterion": {"const": "conceptual_depth"}}}
+          ]
+        }
+      ],
+      "items": false
+    },
+    "opaqueCandidate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "opaque_candidate_nonce",
+        "criterion_evidence_ledger",
+        "evidence_ledger_digest"
+      ],
+      "properties": {
+        "opaque_candidate_nonce": {"$ref": "#/$defs/nonce"},
+        "criterion_evidence_ledger": {"$ref": "#/$defs/criterionLedger"},
+        "evidence_ledger_digest": {"$ref": "#/$defs/digest"}
+      }
+    }
+  }
+}

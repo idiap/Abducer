@@ -1,0 +1,68 @@
+\section{Introduction}
+
+Locality in lattice gauge theory is deceptively representation-dependent.  A
+plaquette action is local in link variables, while the part of that action
+seen by one link is naturally expressed through the surrounding staples.  In
+the staple description, changing the central link looks like a one-point
+optimization.  In the link description, however, changing the relative
+positions of the staples requires modifying shared links and therefore
+changes plaquettes outside the chosen star.  This paper makes that mismatch
+quantitative.
+
+Staples are central to heat-bath and overrelaxation updates, cooling, link
+smearing, and gauge-field flow.  These methods exploit the dependence of a
+local action on a link and its surrounding paths; see, for example,
+\cite{Adler1981,BrownWoch1987,MorningstarPeardon2004,Luscher2010}.  Our aim is
+not to propose another smoothing algorithm.  Instead, we isolate an invariant
+quantity that records how mutually compatible the surrounding transports are,
+and then ask whether an ideal operation on that quantity is realizable by an
+actual gauge field.
+
+The first observation is nonlinear and coordinate-free.  If $S_1,\ldots,S_m$
+are the complementary transports around a link, their Fr\'echet variance
+\[
+  D(S_1,\ldots,S_m)=\inf_C\sum_{i=1}^m d(C,S_i)^2
+\]
+is gauge invariant even though neither $S_i$ nor $C$ is.  It is precisely the
+minimum local geodesic-quadratic action obtainable by varying the central
+link.  On $\SU\simeq S^3$, a comparison with tangent-space variance then
+relates $D$ to the average of the pairwise squared distances.
+
+The second observation concerns dependence.  In the linearized Gaussian
+theory, plaquette curvatures are not independent Gaussians: their covariance
+is the orthogonal projection onto the image of the link-to-plaquette
+coboundary.  Restricting and centering this projection produces a nontrivial
+five-mode law.  We evaluate it exactly on the smallest open four-dimensional
+block with interior links.
+
+The third observation reverses the map.  Suppose one prescribes a centered
+change of the six curvatures incident on a link.  Among all link variations
+that realize it, minimize the curvature created on the other plaquettes.  The
+answer is a positive quadratic form.  Its smallest eigenvalue measures the
+irreducible spillover of a staple-space operation when lifted back to link
+space.  On our block it is $37/33>1$: there is no nonzero external-flat
+repair mode.
+
+These three results fit into one diagram:
+\begin{center}
+\begin{tikzpicture}[node distance=16mm and 23mm,>=Latex,every node/.style={align=center}]
+\node (links) [draw,rounded corners] {link variations\\$C^1$};
+\node (curv) [draw,rounded corners,right=of links] {plaquette curvature\\$d_1 C^1\subset C^2$};
+\node (star) [draw,rounded corners,above right=8mm and 22mm of curv] {centered star\\dispersion};
+\node (ext) [draw,rounded corners,below right=8mm and 22mm of curv] {external\\curvature};
+\draw[->] (links)--node[above] {$d_1$} (curv);
+\draw[->] (curv)--node[above left] {$C_m O_\ell S_\ell$} (star);
+\draw[->] (curv)--node[below left] {$E_\ell$} (ext);
+\draw[<-,dashed] (links) to[bend left=16] node[below] {minimum-spill lift} (star);
+\end{tikzpicture}
+\end{center}
+The forward arrows expose an observable; the dashed reverse arrow is a
+constrained reconstruction problem.  The spillover form is the obstruction
+to treating that reconstruction as lossless.
+
+The paper is organized as follows.  Sections~\ref{sec:setup}--\ref{sec:nonlinear}
+develop the gauge-covariant nonlinear dispersion.  Section~\ref{sec:gaussian}
+derives its exact Gaussian law on the finite block.  Section~\ref{sec:spill}
+defines the general minimum-spill form and evaluates it.  We then record the
+consequences for repair budgets and for representation change.  The
+appendices contain complete proofs and the exact certificate contract.

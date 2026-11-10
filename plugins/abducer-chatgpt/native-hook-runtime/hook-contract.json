@@ -1,0 +1,137 @@
+{
+  "configuration": "source/hooks/hooks.json",
+  "dispatcher": {
+    "class": "NativeHookDispatcher",
+    "decision_semantics": {
+      "accept": "Continue.",
+      "block": "require raises NativeHookBlocked even when the script exits 0.",
+      "execution_error": "Raise NativeHookError; no successful decision.",
+      "warn": "Continue and retain the warning in the receipt."
+    },
+    "enforcing_method": "require(event, payload)",
+    "inspection_method": "dispatch(event, payload)",
+    "path": "runner/native_hooks.py"
+  },
+  "events": [
+    {
+      "decisions": [
+        "accept",
+        "warn"
+      ],
+      "event": "UserPromptSubmit",
+      "meaning": "Suggest controlled-goal enrichment for native prompt markers.",
+      "payload_fields": [
+        "prompt"
+      ],
+      "script": "hooks/scripts/user_prompt_submit_intake.py"
+    },
+    {
+      "decisions": [
+        "accept",
+        "block"
+      ],
+      "event": "PreSkillUse",
+      "meaning": "Check skill membership in the union of visible native workflows; this does not validate workflow activation, step order or completion.",
+      "payload_fields": [
+        "skill",
+        "controlled"
+      ],
+      "script": "hooks/scripts/pre_skill_use_policy.py"
+    },
+    {
+      "decisions": [
+        "accept",
+        "warn"
+      ],
+      "event": "PostSkillUse",
+      "meaning": "Warn when declared artifacts do not exist; no content validation.",
+      "payload_fields": [
+        "expected_artifacts"
+      ],
+      "script": "hooks/scripts/post_skill_use_review.py"
+    },
+    {
+      "decisions": [
+        "accept",
+        "warn",
+        "block"
+      ],
+      "event": "PreToolUse",
+      "meaning": "Apply native destructive-command markers and protected-path evidence checks to caller-supplied fields; this is not a shell sandbox.",
+      "payload_fields": [
+        "command",
+        "path",
+        "evidence"
+      ],
+      "script": "hooks/scripts/pre_tool_use_policy.py"
+    },
+    {
+      "decisions": [
+        "accept",
+        "block"
+      ],
+      "event": "Stop",
+      "meaning": "Require the original five Looper artifact paths for controlled runs; existence does not certify scientific validity or fresh evidence.",
+      "payload_fields": [
+        "controlled"
+      ],
+      "script": "hooks/scripts/stop_artifact_check.py"
+    }
+  ],
+  "excluded": [
+    "hooks/workflow_local/",
+    "registry/optional-tasks/",
+    "research state, reports, traces, private settings and credentials"
+  ],
+  "kind": "abducer-native-hook-contract",
+  "membership": {
+    "field": "visible_workflows[].composed_skills[]",
+    "files": [
+      "registry/tasks/cohere-fast/task_registry.json",
+      "registry/tasks/discovery-marathon/task_registry.json",
+      "registry/tasks/hegelian-abducer-integration/task_registry.json",
+      "registry/tasks/p-vs-np-target-navigation/task_registry.json",
+      "registry/tasks/target-navigation/task_registry.json",
+      "registry/tasks/timeline-paper-workflow/task_registry.json"
+    ],
+    "namespace": "registry/tasks",
+    "pattern": "registry/tasks/*/task_registry.json"
+  },
+  "requirements": {
+    "caller": "Explicitly invoke lifecycle events, supply trusted payload fields, and enforce require before gated actions or completion.",
+    "controlled_default": true,
+    "runtime": "Python 3.10+ on POSIX with fcntl; the dispatcher and five registered events use the standard library only",
+    "stop_artifacts": [
+      "agentic/state/current_target.json",
+      "agentic/state/dependency_frontier.json",
+      "agentic/reports/compliance/latest.md",
+      "agentic/reports/drift/latest.md",
+      "agentic/todos/looper_integration_todos.yaml"
+    ],
+    "trusted_source_root": "source/ verified against a trusted release digest",
+    "writable_workspace": "A separate workspace with identical native hook and registry bytes, plus the workflow's own artifacts and dependencies."
+  },
+  "schema_version": 1,
+  "scope": {
+    "all_workflow_execution_parity": false,
+    "automatic_chatgpt_hooks": false,
+    "current_executor_limits": "The current hosted Marathon adapter supplies a synthesized intake prompt; errors and cancellation can skip finish-time PostSkillUse and Stop. Packaging does not repair lifecycle coverage.",
+    "host_hook_registration": false,
+    "host_payload_translation": "A future host adapter must map tool_input.command to command and native JSON decisions to the host's event-specific output. Passing host payloads directly does not preserve policy behavior.",
+    "note": "PreSkillUse and PostSkillUse are Abducer executor events. The native list-form configuration is not a ChatGPT host hook manifest.",
+    "workflow_engine_included": false
+  },
+  "source_digest": "17cf9c4b7891b37865ddb7fe339d819038ab56b55b771508b5c2979d7834c037",
+  "trace_behavior": {
+    "location": "Writable workspace only; no prior traces are exported.",
+    "native": "agentic/traces/hook_runs/latest-<script-stem>.json",
+    "receipts": "agentic/traces/hosted_native_hooks/events.jsonl"
+  },
+  "unregistered_scripts": {
+    "files": [
+      "hooks/scripts/cohere_fast_intake.py",
+      "hooks/scripts/cohere_fast_policy.py"
+    ],
+    "status": "Preserved for exact dispatcher source parity; not registered or activated. COHERE helpers require PyYAML and external domain/workflow registries that this hook-only bundle does not include."
+  }
+}

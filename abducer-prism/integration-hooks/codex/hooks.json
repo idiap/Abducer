@@ -1,0 +1,56 @@
+{
+  "description": "to_prism conversion guards; requires the installed to-prism command",
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "to-prism guard --provider codex --event PreToolUse",
+            "timeout": 10,
+            "statusMessage": "Checking conversion safety"
+          }
+        ]
+      }
+    ],
+    "PermissionRequest": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "to-prism guard --provider codex --event PermissionRequest",
+            "timeout": 10,
+            "statusMessage": "Checking conversion execution policy"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "to-prism guard --provider codex --event PostToolUse",
+            "timeout": 30,
+            "statusMessage": "Validating generated output"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "to-prism guard --provider codex --event Stop",
+            "timeout": 30,
+            "statusMessage": "Checking conversion completion"
+          }
+        ]
+      }
+    ]
+  }
+}

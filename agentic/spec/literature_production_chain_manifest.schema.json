@@ -1,0 +1,662 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "literature_production_chain_manifest.schema.json",
+  "title": "Publication-disabled literature production chain manifest",
+  "description": "A replayable, strictly ordered local-causality record from exact literature bytes through internally correlated theory-only conceptual adjudication. The manifest never authorizes publication, source truth, literature benefit, external or independent preference, world commissioning, or a physics result.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "manifest_id",
+    "chain_kind",
+    "target_id",
+    "run_id",
+    "state_version",
+    "execution_started_at",
+    "publication_enabled",
+    "world_commissioning_authorized",
+    "chain_status",
+    "source_bundle",
+    "schema_identity",
+    "ordered_stage_ids",
+    "stages",
+    "chain_order_digest",
+    "claim_boundaries",
+    "manifest_digest"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "manifest_id": {
+      "$ref": "#/$defs/identifier"
+    },
+    "chain_kind": {
+      "enum": [
+        "publication_disabled_exact_literature_to_theory",
+        "publication_disabled_live_model_literature_to_theory"
+      ]
+    },
+    "target_id": {
+      "$ref": "#/$defs/identifier"
+    },
+    "run_id": {
+      "$ref": "#/$defs/identifier"
+    },
+    "state_version": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "execution_started_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "publication_enabled": {
+      "const": false
+    },
+    "world_commissioning_authorized": {
+      "const": false
+    },
+    "chain_status": {
+      "const": "completed_before_world_commissioning"
+    },
+    "source_bundle": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "authority_root_kind",
+        "capture_id",
+        "snapshot_id",
+        "artifacts",
+        "embedded_version_graphs",
+        "source_ids",
+        "bundle_digest",
+        "authority_boundary"
+      ],
+      "properties": {
+        "authority_root_kind": {
+          "const": "caller_supplied_immutable_bundle_root"
+        },
+        "capture_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "snapshot_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "artifacts": {
+          "type": "array",
+          "minItems": 8,
+          "maxItems": 8,
+          "items": {
+            "$ref": "#/$defs/fileIdentity"
+          }
+        },
+        "embedded_version_graphs": {
+          "type": "array",
+          "minItems": 0,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "json_pointer",
+              "graph_id",
+              "content_digest"
+            ],
+            "properties": {
+              "json_pointer": {
+                "type": "string",
+                "pattern": "^/version_lineages/[0-9]+$"
+              },
+              "graph_id": {
+                "type": "string",
+                "minLength": 1
+              },
+              "content_digest": {
+                "$ref": "#/$defs/digest"
+              }
+            }
+          }
+        },
+        "source_ids": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "bundle_digest": {
+          "$ref": "#/$defs/digest"
+        },
+        "authority_boundary": {
+          "type": "string",
+          "minLength": 20
+        }
+      }
+    },
+    "schema_identity": {
+      "$ref": "#/$defs/fileIdentity"
+    },
+    "ordered_stage_ids": {
+      "type": "array",
+      "prefixItems": [
+        {
+          "const": "acquisition_reopen"
+        },
+        {
+          "const": "source_pre_map_policy"
+        },
+        {
+          "const": "warrant_validation"
+        },
+        {
+          "const": "claim_mapping"
+        },
+        {
+          "const": "assimilation"
+        },
+        {
+          "const": "source_routing_realization"
+        },
+        {
+          "const": "high_risk_input"
+        },
+        {
+          "const": "parent_reflection"
+        },
+        {
+          "const": "parent_conceptual_adjudication"
+        },
+        {
+          "const": "theory_only_synthesis"
+        },
+        {
+          "const": "synthesis_conceptual_adjudication"
+        }
+      ],
+      "items": false,
+      "minItems": 11,
+      "maxItems": 11
+    },
+    "stages": {
+      "type": "array",
+      "minItems": 11,
+      "maxItems": 11,
+      "items": {
+        "$ref": "#/$defs/stage"
+      }
+    },
+    "chain_order_digest": {
+      "$ref": "#/$defs/digest"
+    },
+    "claim_boundaries": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "bounded_local_production_causality",
+        "source_truth_authorized",
+        "global_latestness_authorized",
+        "exhaustive_coverage_authorized",
+        "literature_benefit_authorized",
+        "internal_correlated_conceptual_adjudication_executed",
+        "external_or_independent_conceptual_preference_authorized",
+        "internal_deep_lens_adjudication_executed",
+        "creativity_or_depth_authorized",
+        "physics_value_authorized",
+        "theorem_or_yang_mills_result_authorized",
+        "independent_producer_or_evaluator_authorized",
+        "experiments_executed"
+      ],
+      "properties": {
+        "bounded_local_production_causality": {
+          "const": true
+        },
+        "source_truth_authorized": {
+          "const": false
+        },
+        "global_latestness_authorized": {
+          "const": false
+        },
+        "exhaustive_coverage_authorized": {
+          "const": false
+        },
+        "literature_benefit_authorized": {
+          "const": false
+        },
+        "internal_correlated_conceptual_adjudication_executed": {
+          "const": true
+        },
+        "external_or_independent_conceptual_preference_authorized": {
+          "const": false
+        },
+        "internal_deep_lens_adjudication_executed": {
+          "const": true
+        },
+        "creativity_or_depth_authorized": {
+          "const": false
+        },
+        "physics_value_authorized": {
+          "const": false
+        },
+        "theorem_or_yang_mills_result_authorized": {
+          "const": false
+        },
+        "independent_producer_or_evaluator_authorized": {
+          "const": false
+        },
+        "experiments_executed": {
+          "const": false
+        }
+      }
+    },
+    "manifest_digest": {
+      "$ref": "#/$defs/digest"
+    }
+  },
+  "$defs": {
+    "digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "identifier": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,255}$"
+    },
+    "fileIdentity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "role",
+        "relative_path",
+        "sha256",
+        "size_bytes",
+        "content_digest"
+      ],
+      "properties": {
+        "role": {
+          "type": "string",
+          "minLength": 1
+        },
+        "relative_path": {
+          "type": "string",
+          "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$)).+$"
+        },
+        "sha256": {
+          "$ref": "#/$defs/digest"
+        },
+        "size_bytes": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "content_digest": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/digest"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "inputBinding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "role",
+        "digest",
+        "source_stage_id",
+        "source_artifact_path"
+      ],
+      "properties": {
+        "role": {
+          "type": "string",
+          "minLength": 1
+        },
+        "digest": {
+          "$ref": "#/$defs/digest"
+        },
+        "source_stage_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "source_artifact_path": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "derivedIntermediate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "role",
+        "derivation_kind",
+        "derived_from_input_roles",
+        "row_count",
+        "content_digest",
+        "authority_class",
+        "authority_boundary"
+      ],
+      "properties": {
+        "role": {
+          "const": "typed_conceptual_systems"
+        },
+        "derivation_kind": {
+          "const": "stage_internal_deterministic_projection"
+        },
+        "derived_from_input_roles": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "row_count": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "content_digest": {
+          "$ref": "#/$defs/digest"
+        },
+        "authority_class": {
+          "const": "derived_non_authoritative_intermediate"
+        },
+        "authority_boundary": {
+          "type": "string",
+          "minLength": 40
+        }
+      }
+    },
+    "implementation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "symbol",
+        "implementation_version",
+        "code_artifact",
+        "dependencies",
+        "dependency_set_digest",
+        "implementation_digest"
+      ],
+      "properties": {
+        "symbol": {
+          "type": "string",
+          "minLength": 3
+        },
+        "implementation_version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "code_artifact": {
+          "$ref": "#/$defs/fileIdentity"
+        },
+        "dependencies": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/fileIdentity"
+          }
+        },
+        "dependency_set_digest": {
+          "$ref": "#/$defs/digest"
+        },
+        "implementation_digest": {
+          "$ref": "#/$defs/digest"
+        }
+      }
+    },
+    "stageRequest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "request_id",
+        "stage_id",
+        "target_id",
+        "run_id",
+        "state_version",
+        "created_at",
+        "publication_enabled",
+        "world_commissioning_requested",
+        "input_bindings",
+        "input_digest",
+        "implementation_digest",
+        "dependency_set_digest",
+        "request_digest"
+      ],
+      "properties": {
+        "request_id": {
+          "$ref": "#/$defs/identifier"
+        },
+        "stage_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "target_id": {
+          "$ref": "#/$defs/identifier"
+        },
+        "run_id": {
+          "$ref": "#/$defs/identifier"
+        },
+        "state_version": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "publication_enabled": {
+          "const": false
+        },
+        "world_commissioning_requested": {
+          "const": false
+        },
+        "input_bindings": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/inputBinding"
+          }
+        },
+        "input_digest": {
+          "$ref": "#/$defs/digest"
+        },
+        "implementation_digest": {
+          "$ref": "#/$defs/digest"
+        },
+        "dependency_set_digest": {
+          "$ref": "#/$defs/digest"
+        },
+        "request_digest": {
+          "$ref": "#/$defs/digest"
+        }
+      }
+    },
+    "stageReceipt": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "receipt_id",
+        "status",
+        "started_at",
+        "completed_at",
+        "request_id",
+        "request_digest",
+        "input_digest",
+        "output_digest",
+        "implementation_digest",
+        "dependency_set_digest",
+        "producer_authority",
+        "reason_codes",
+        "authority_boundary",
+        "native_receipt"
+      ],
+      "properties": {
+        "receipt_id": {
+          "$ref": "#/$defs/identifier"
+        },
+        "status": {
+          "const": "succeeded"
+        },
+        "started_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "completed_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "request_id": {
+          "$ref": "#/$defs/identifier"
+        },
+        "request_digest": {
+          "$ref": "#/$defs/digest"
+        },
+        "input_digest": {
+          "$ref": "#/$defs/digest"
+        },
+        "output_digest": {
+          "$ref": "#/$defs/digest"
+        },
+        "implementation_digest": {
+          "$ref": "#/$defs/digest"
+        },
+        "dependency_set_digest": {
+          "$ref": "#/$defs/digest"
+        },
+        "producer_authority": {
+          "enum": [
+            "local_unregistered_execution",
+            "local_registered_operator_execution"
+          ]
+        },
+        "reason_codes": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "authority_boundary": {
+          "type": "string",
+          "minLength": 20
+        },
+        "native_receipt": {
+          "type": [
+            "object",
+            "null"
+          ]
+        }
+      }
+    },
+    "stageOutput": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "artifact_role",
+        "schema_path",
+        "content_digest",
+        "payload"
+      ],
+      "properties": {
+        "artifact_role": {
+          "type": "string",
+          "minLength": 1
+        },
+        "schema_path": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "content_digest": {
+          "$ref": "#/$defs/digest"
+        },
+        "payload": {
+          "type": "object"
+        }
+      }
+    },
+    "stage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "stage_index",
+        "stage_id",
+        "status",
+        "request",
+        "receipt",
+        "implementation",
+        "derived_intermediates",
+        "output"
+      ],
+      "properties": {
+        "stage_index": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 10
+        },
+        "stage_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "status": {
+          "const": "succeeded"
+        },
+        "request": {
+          "$ref": "#/$defs/stageRequest"
+        },
+        "receipt": {
+          "$ref": "#/$defs/stageReceipt"
+        },
+        "implementation": {
+          "$ref": "#/$defs/implementation"
+        },
+        "derived_intermediates": {
+          "type": "array",
+          "maxItems": 1,
+          "items": {
+            "$ref": "#/$defs/derivedIntermediate"
+          }
+        },
+        "output": {
+          "$ref": "#/$defs/stageOutput"
+        }
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "chain_kind": {
+            "const": "publication_disabled_exact_literature_to_theory"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "source_bundle": {
+            "properties": {
+              "embedded_version_graphs": {
+                "minItems": 1
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
+}

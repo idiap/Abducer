@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://abducer.local/spec/dynamic_experiment_reflection_receipt_v1.schema.json",
+  "title": "Executed post-result dynamic experiment reflection receipt",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "contract_version", "reflection_receipt_id", "target_id", "run_id", "state_version", "experiment_binding", "synthesis_binding", "epistemic_outcome", "decision", "typed_delta", "recommendation_digest", "authority_boundary", "created_at", "reflection_digest"],
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "contract_version": {"const": "post-result-experiment-reflection/1.0.0"},
+    "reflection_receipt_id": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/identifier"},
+    "target_id": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/identifier"},
+    "run_id": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/identifier"},
+    "state_version": {"type": "integer", "minimum": 0},
+    "experiment_binding": {
+      "type": "object", "additionalProperties": false,
+      "required": ["spec_id", "execution_id", "receipt_id", "spec_digest", "receipt_content_digest", "output_digest", "tested_claim_id", "tested_claim_digest", "theory_effect_contract_digest"],
+      "properties": {"spec_id": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/identifier"}, "execution_id": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/identifier"}, "receipt_id": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/identifier"}, "spec_digest": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/digest"}, "receipt_content_digest": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/digest"}, "output_digest": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/digest"}, "tested_claim_id": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/identifier"}, "tested_claim_digest": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/digest"}, "theory_effect_contract_digest": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/digest"}}
+    },
+    "synthesis_binding": {
+      "type": "object", "additionalProperties": false,
+      "required": ["operator_id", "operator_receipt_id", "operator_receipt_digest", "source_reflection_packet_digest", "result_reflection_packet_digest", "experiment_result_consumed"],
+      "properties": {"operator_id": {"enum": ["reflective-theory-synthesizer", "local-reflective-synthesizer"]}, "operator_receipt_id": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/identifier"}, "operator_receipt_digest": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/digest"}, "source_reflection_packet_digest": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/digest"}, "result_reflection_packet_digest": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/digest"}, "experiment_result_consumed": {"const": true}}
+    },
+    "epistemic_outcome": {"enum": ["supports_within_scope", "falsifies_claim", "maps_boundary", "inconclusive", "not_evaluated"]},
+    "decision": {"enum": ["record_only", "pending_registered_premise_review"]},
+    "typed_delta": {
+      "type": "object", "additionalProperties": false,
+      "required": ["status", "kind", "tested_claim_id", "tested_claim_digest", "theory_programme_id", "source_theory_programme_digest", "source_reflection_packet_digest", "conceptual_system_ids", "requested_followup_kind", "review_reason", "theory_identity_changed", "ontology_mutation_authorized", "selection_authorized", "proof_authorized", "automatic_evidence_relation_authorized", "schedule_mutation_authorized", "delta_digest"],
+      "properties": {
+        "status": {"enum": ["none", "pending"]}, "kind": {"enum": ["none", "registered_premise_review"]},
+        "tested_claim_id": {"type": ["string", "null"]}, "tested_claim_digest": {"oneOf": [{"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/digest"}, {"type": "null"}]}, "theory_programme_id": {"type": ["string", "null"]}, "source_theory_programme_digest": {"oneOf": [{"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/digest"}, {"type": "null"}]}, "source_reflection_packet_digest": {"oneOf": [{"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/digest"}, {"type": "null"}]}, "conceptual_system_ids": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1}}, "requested_followup_kind": {"enum": ["reflect", null]}, "review_reason": {"enum": ["registered_premise_falsified_within_declared_scope", null]},
+        "theory_identity_changed": {"const": false}, "ontology_mutation_authorized": {"const": false}, "selection_authorized": {"const": false}, "proof_authorized": {"const": false}, "automatic_evidence_relation_authorized": {"const": false}, "schedule_mutation_authorized": {"const": false}, "delta_digest": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/digest"}
+      }
+    },
+    "recommendation_digest": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/digest"},
+    "authority_boundary": {
+      "type": "object", "additionalProperties": false,
+      "required": ["experiment_subordinate_to_theory", "theory_identity_changed", "ontology_mutation_authorized", "theory_selected", "proof_authorized", "physical_target_support_authorized", "automatic_evidence_relation_authorized", "schedule_mutation_authorized"],
+      "properties": {"experiment_subordinate_to_theory": {"const": true}, "theory_identity_changed": {"const": false}, "ontology_mutation_authorized": {"const": false}, "theory_selected": {"const": false}, "proof_authorized": {"const": false}, "physical_target_support_authorized": {"const": false}, "automatic_evidence_relation_authorized": {"const": false}, "schedule_mutation_authorized": {"const": false}}
+    },
+    "created_at": {"type": "string", "format": "date-time"},
+    "reflection_digest": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/digest"}
+  },
+  "allOf": [
+    {"if": {"properties": {"decision": {"const": "pending_registered_premise_review"}}, "required": ["decision"]}, "then": {"properties": {"epistemic_outcome": {"const": "falsifies_claim"}, "typed_delta": {"properties": {"status": {"const": "pending"}, "kind": {"const": "registered_premise_review"}, "requested_followup_kind": {"const": "reflect"}, "review_reason": {"const": "registered_premise_falsified_within_declared_scope"}}}}}, "else": {"properties": {"typed_delta": {"properties": {"status": {"const": "none"}, "kind": {"const": "none"}, "tested_claim_id": {"type": "null"}, "tested_claim_digest": {"type": "null"}, "theory_programme_id": {"type": "null"}, "source_theory_programme_digest": {"type": "null"}, "source_reflection_packet_digest": {"type": "null"}, "conceptual_system_ids": {"maxItems": 0}, "requested_followup_kind": {"type": "null"}, "review_reason": {"type": "null"}}}}}}
+  ]
+}

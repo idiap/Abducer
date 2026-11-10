@@ -1,0 +1,87 @@
+% SPDX-FileCopyrightText: © 2026 Idiap Research Institute <contact@idiap.ch>
+%
+% SPDX-FileContributor: Andre Freitas <andre.freitas@idiap.ch>
+% Neuro-symbolic AI Group
+%
+% SPDX-FileContributor: Danilo Gusicuma <danilo.gusicuma@idiap.ch>
+% Neuro-symbolic AI Group
+%
+% SPDX-License-Identifier: MIT
+% Generated from step-explanations.json
+\paragraph{Step-by-step reconstruction.}
+A constructed sensor record contains temperature, elapsed time and a drifting offset. Thermal sensitivity and clock drift are rival explanations.
+The following is a source-guided illustrative reconstruction. Internal procedures are prescriptions; the native declarations do not establish their execution.
+\begin{enumerate}[leftmargin=*,label=\arabic*.]
+\item \textbf{Bound the search} (\texttt{search\_\allowbreak{}scope}).
+\begin{description}[style=standard,labelindent=0pt,leftmargin=5.5em,labelwidth=5em,labelsep=0.5em,align=left,font=\normalfont\bfseries,itemsep=0.15em,parsep=0pt,topsep=0.3em]
+\item[Purpose] Bound admissible evidence and comparisons.
+\item[Input] Sensor context; measurement constraints; calibration target
+\item[Method] Separate available evidence from desired measurements and delimit the regime in which candidate explanations must operate.
+\item[Check] A useful scope retains the target and exposes missing controls.
+\item[Output] Bounded sensor record and admissible comparisons
+\item[Next] Both formation branches consume this scope; insufficient controls constrain subsequent conclusions.
+\item[Example] Freeze the measured offset, temperature and elapsed-time columns; note that no intervention has yet separated thermal and temporal effects.
+\end{description}
+\item \textbf{Propose a mechanism} (\texttt{discovery\_\allowbreak{}hypothesis}).
+\begin{description}[style=standard,labelindent=0pt,leftmargin=5.5em,labelwidth=5em,labelsep=0.5em,align=left,font=\normalfont\bfseries,itemsep=0.15em,parsep=0pt,topsep=0.3em]
+\item[Purpose] Propose mechanisms with distinguishable predictions.
+\item[Input] Bounded sensor record, shared with pattern induction
+\item[Method] Construct rival dependencies and specify the observable on which they could disagree, rather than naming a cause without a test.
+\item[Check] A candidate must address the calibration target and admit a falsifier.
+\item[Output] Candidate thermal mechanism; clock-drift rival
+\item[Next] Both probes receive the hypothesis with the pattern; unsupported mechanisms remain candidates.
+\item[Example] Thermal sensitivity predicts offset changes with temperature at fixed elapsed time; clock drift predicts changes with elapsed time at fixed temperature.
+\end{description}
+\item \textbf{Extract the observed regularity} (\texttt{discovery\_\allowbreak{}pattern}).
+\begin{description}[style=standard,labelindent=0pt,leftmargin=5.5em,labelwidth=5em,labelsep=0.5em,align=left,font=\normalfont\bfseries,itemsep=0.15em,parsep=0pt,topsep=0.3em]
+\item[Purpose] Describe observed variation without inferring causation.
+\item[Input] Bounded observations; no hypothesis output
+\item[Method] Compare offsets across the observed conditions and state the trend together with its observational limits.
+\item[Check] The pattern must be supported within the record and retain confounding.
+\item[Output] Provisional offset trend, with confounding retained
+\item[Next] Join this pattern with the hypothesis for both probes; it is not independent confirmation.
+\item[Example] The record shows increasing offset while both temperature and time increase. This trend fits both candidate mechanisms and selects neither.
+\end{description}
+\item \textbf{Derive model predictions} (\texttt{model\_\allowbreak{}implications}).
+\begin{description}[style=standard,labelindent=0pt,leftmargin=5.5em,labelwidth=5em,labelsep=0.5em,align=left,font=\normalfont\bfseries,itemsep=0.15em,parsep=0pt,topsep=0.3em]
+\item[Purpose] Derive comparable predictions under explicit assumptions.
+\item[Input] Discovery hypothesis + provisional observed pattern
+\item[Method] Specify variables, controls and measurement assumptions; preregister which outcomes favor, weaken or fail to distinguish each rival, including an inconclusive region, before deriving comparable predictions.
+\item[Check] Predictions must concern the same observable and regime as the target.
+\item[Output] Conditional thermal and temporal model predictions
+\item[Next] Refutation later receives these implications with the contrast assessment; model failure remains informative.
+\item[Example] Under thermal sensitivity, holding temperature fixed removes the predicted thermal offset change; under clock drift the offset can still grow with time.
+\end{description}
+\item \textbf{Design the discriminating contrast} (\texttt{contrast\_\allowbreak{}assessment}).
+\begin{description}[style=standard,labelindent=0pt,leftmargin=5.5em,labelwidth=5em,labelsep=0.5em,align=left,font=\normalfont\bfseries,itemsep=0.15em,parsep=0pt,topsep=0.3em]
+\item[Purpose] Identify a control that separates the rivals.
+\item[Input] Discovery hypothesis + pattern, shared with model probe
+\item[Method] Perturb one relevant assumption or control while preserving the others; explain which dependency the contrast tests.
+\item[Check] A contrast is discriminating only if rivals predict different outcomes under justified controls.
+\item[Output] Contrast assessment: informative control or non-identifiability
+\item[Next] Send this assessment to refutation; unavailable controls require a new measurement plan.
+\item[Example] Compare readings at fixed temperature but different elapsed times. Continued drift challenges a purely thermal account if other conditions remain stable.
+\end{description}
+\item \textbf{Combine the challenges} (\texttt{refutation\_\allowbreak{}assessment}).
+\begin{description}[style=standard,labelindent=0pt,leftmargin=5.5em,labelwidth=5em,labelsep=0.5em,align=left,font=\normalfont\bfseries,itemsep=0.15em,parsep=0pt,topsep=0.3em]
+\item[Purpose] Locate what survives both challenges.
+\item[Input] Model implications + contrast assessment; scoped assumptions
+\item[Method] Compare predicted differences with the available contrast and localize inconsistency; do not count two analyses of one record as two independent experiments.
+\item[Check] A negative verdict needs a particular violated prediction, not an unfavorable label.
+\item[Output] Refutation assessment: proposed falsifier, no observed refutation
+\item[Next] Calibration receives this finding with the original hypothesis and pattern.
+\item[Example] If a future fixed-temperature test finds drift, it would defeat the thermal-only prediction under its control assumptions. The current confounded record supplies no such finding.
+\end{description}
+\item \textbf{Allocate the next discovery action} (\texttt{routing\_\allowbreak{}assessment}).
+\begin{description}[style=standard,labelindent=0pt,leftmargin=5.5em,labelwidth=5em,labelsep=0.5em,align=left,font=\normalfont\bfseries,itemsep=0.15em,parsep=0pt,topsep=0.3em]
+\item[Purpose] Choose continuation, reorientation or reset.
+\item[Input] Hypothesis + pattern + refutation; retained calibration target
+\item[Method] Compare target relevance and what the next action could change; preserve alternatives that remain indistinguishable.
+\item[Check] Continuation needs new learning or a sharper test, not repeated failure.
+\item[Output] Routing assessment: remaining mechanism question and justification
+\item[Next] Original cross-cycle routing is a policy; the native return does not execute a marathon.
+\item[Example] Retain the trend and both rival explanations; request the fixed-temperature measurement. Demote thermal-only only if the predicted falsifier is subsequently observed under the stated controls.
+\end{description}
+\end{enumerate}
+\paragraph{Changed-input contrast.}
+If temperature and elapsed time are perfectly confounded, neither probe identifies the cause. The proper next action is a discriminating measurement, not promotion of the more elaborate explanation.

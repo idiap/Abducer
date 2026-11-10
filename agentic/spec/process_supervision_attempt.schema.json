@@ -1,0 +1,423 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://abducer.local/spec/process_supervision_attempt.schema.json",
+  "title": "Closed v2 trusted local protocol-process supervision attempt",
+  "description": "Operational process evidence only. This contract carries no semantic, scientific, truth, proof, experiment-value, or physics authority.",
+  "$ref": "#/$defs/supervisionAttemptV2",
+  "$defs": {
+    "digest": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
+    "positiveInteger": {"type": "integer", "minimum": 1},
+    "nonnegativeInteger": {"type": "integer", "minimum": 0},
+    "nullablePositiveInteger": {"oneOf": [{"$ref": "#/$defs/positiveInteger"}, {"type": "null"}]},
+    "nullableNonnegativeInteger": {"oneOf": [{"$ref": "#/$defs/nonnegativeInteger"}, {"type": "null"}]},
+    "nullableInteger": {"oneOf": [{"type": "integer"}, {"type": "null"}]},
+    "environmentBindingV2": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "value_sha256"],
+      "properties": {
+        "name": {"type": "string", "minLength": 1, "pattern": "^[^=\\u0000]+$"},
+        "value_sha256": {"$ref": "#/$defs/digest"}
+      }
+    },
+    "processRequestBindingV2": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["argv", "argv_digest", "cwd", "environment_bindings", "environment_digest", "stdin_bytes", "stdin_sha256", "limits_digest", "sampling_executable", "request_digest"],
+      "properties": {
+        "argv": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1, "pattern": "^[^\\u0000]+$"}},
+        "argv_digest": {"$ref": "#/$defs/digest"},
+        "cwd": {"type": "string", "minLength": 1},
+        "environment_bindings": {"type": "array", "items": {"$ref": "#/$defs/environmentBindingV2"}, "uniqueItems": true},
+        "environment_digest": {"$ref": "#/$defs/digest"},
+        "stdin_bytes": {"$ref": "#/$defs/nonnegativeInteger"},
+        "stdin_sha256": {"$ref": "#/$defs/digest"},
+        "limits_digest": {"$ref": "#/$defs/digest"},
+        "sampling_executable": {"oneOf": [{"type": "string", "minLength": 1}, {"type": "null"}]},
+        "request_digest": {"$ref": "#/$defs/digest"}
+      }
+    },
+    "streamEvidenceV2": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["captured_bytes", "captured_sha256", "retained_tail_base64", "retained_bytes", "retained_limit_bytes", "ceiling_bytes", "ceiling_exceeded", "utf8_valid_retained_tail", "eof_observed", "capture_complete", "capture_disposition", "parent_descriptor_existed", "parent_close_attempted", "parent_descriptor_closed", "read_failed"],
+      "properties": {
+        "captured_bytes": {"$ref": "#/$defs/nonnegativeInteger"},
+        "captured_sha256": {"$ref": "#/$defs/digest"},
+        "retained_tail_base64": {"type": "string", "pattern": "^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$"},
+        "retained_bytes": {"$ref": "#/$defs/nonnegativeInteger"},
+        "retained_limit_bytes": {"$ref": "#/$defs/positiveInteger"},
+        "ceiling_bytes": {"$ref": "#/$defs/nullablePositiveInteger"},
+        "ceiling_exceeded": {"type": "boolean"},
+        "utf8_valid_retained_tail": {"type": "boolean"},
+        "eof_observed": {"type": "boolean"},
+        "capture_complete": {"type": "boolean"},
+        "capture_disposition": {"enum": ["not_started", "complete_eof", "forced_close_without_eof", "read_failed"]},
+        "parent_descriptor_existed": {"type": "boolean"},
+        "parent_close_attempted": {"type": "boolean"},
+        "parent_descriptor_closed": {"type": "boolean"},
+        "read_failed": {"type": "boolean"}
+      },
+      "allOf": [
+        {
+          "if": {"properties": {"capture_disposition": {"const": "not_started"}}, "required": ["capture_disposition"]},
+          "then": {"properties": {"captured_bytes": {"const": 0}, "captured_sha256": {"const": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"}, "retained_tail_base64": {"const": ""}, "retained_bytes": {"const": 0}, "ceiling_exceeded": {"const": false}, "eof_observed": {"const": false}, "capture_complete": {"const": false}, "parent_descriptor_existed": {"const": false}, "parent_close_attempted": {"const": false}, "parent_descriptor_closed": {"const": true}, "read_failed": {"const": false}}}
+        },
+        {
+          "if": {"properties": {"capture_disposition": {"const": "complete_eof"}}, "required": ["capture_disposition"]},
+          "then": {"properties": {"parent_descriptor_existed": {"const": true}, "eof_observed": {"const": true}, "capture_complete": {"const": true}, "read_failed": {"const": false}}}
+        },
+        {
+          "if": {"properties": {"capture_disposition": {"const": "forced_close_without_eof"}}, "required": ["capture_disposition"]},
+          "then": {"properties": {"parent_descriptor_existed": {"const": true}, "eof_observed": {"const": false}, "capture_complete": {"const": false}, "read_failed": {"const": false}}}
+        },
+        {
+          "if": {"properties": {"capture_disposition": {"const": "read_failed"}}, "required": ["capture_disposition"]},
+          "then": {"properties": {"parent_descriptor_existed": {"const": true}, "capture_complete": {"const": false}, "read_failed": {"const": true}}}
+        }
+      ]
+    },
+    "attemptStreamsV2": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["stdout", "stderr"],
+      "properties": {
+        "stdout": {"$ref": "#/$defs/streamEvidenceV2"},
+        "stderr": {"$ref": "#/$defs/streamEvidenceV2"}
+      }
+    },
+    "terminationDispositionV2": {
+      "enum": ["not_started", "running_anchored", "final_group_quiescence_sigkill_sent", "final_group_quiescence_sigkill_sent_no_signalable_member", "sigterm_sent", "sigterm_sent_no_signalable_member", "sigkill_sent", "sigkill_sent_no_signalable_member"]
+    },
+    "attemptProcessV2": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["process_started", "pid", "intended_process_group_id", "observed_process_group_id", "observed_session_id", "returncode", "leader_reaped", "leader_identity_anchor_released", "termination_disposition", "original_group_action_disposition", "stdin_enqueued_bytes", "stdin_fully_enqueued", "stdin_parent_descriptor_closed"],
+      "properties": {
+        "process_started": {"type": "boolean"},
+        "pid": {"$ref": "#/$defs/nullablePositiveInteger"},
+        "intended_process_group_id": {"$ref": "#/$defs/nullablePositiveInteger"},
+        "observed_process_group_id": {"$ref": "#/$defs/nullablePositiveInteger"},
+        "observed_session_id": {"$ref": "#/$defs/nullablePositiveInteger"},
+        "returncode": {"$ref": "#/$defs/nullableInteger"},
+        "leader_reaped": {"type": "boolean"},
+        "leader_identity_anchor_released": {"type": "boolean"},
+        "termination_disposition": {"$ref": "#/$defs/terminationDispositionV2"},
+        "original_group_action_disposition": {"$ref": "#/$defs/terminationDispositionV2"},
+        "stdin_enqueued_bytes": {"$ref": "#/$defs/nonnegativeInteger"},
+        "stdin_fully_enqueued": {"type": "boolean"},
+        "stdin_parent_descriptor_closed": {"type": "boolean"}
+      },
+      "allOf": [
+        {
+          "if": {"properties": {"process_started": {"const": false}}, "required": ["process_started"]},
+          "then": {"properties": {"pid": {"type": "null"}, "intended_process_group_id": {"type": "null"}, "observed_process_group_id": {"type": "null"}, "observed_session_id": {"type": "null"}, "returncode": {"type": "null"}, "leader_reaped": {"const": false}, "termination_disposition": {"const": "not_started"}, "original_group_action_disposition": {"const": "not_started"}}},
+          "else": {"properties": {"pid": {"$ref": "#/$defs/positiveInteger"}, "intended_process_group_id": {"$ref": "#/$defs/positiveInteger"}}}
+        }
+      ]
+    },
+    "attemptTimingV2": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["clock", "deadline_scope", "hard_kernel_preemption", "overrun_detected_after_blocking_call_returns", "record_serialization_after_evidence_seal_excluded", "call_started_ns", "spawn_started_ns", "spawn_completed_ns", "execution_deadline_ns", "cleanup_io_deadline_ns", "total_deadline_ns", "evidence_sealed_ns", "leader_reaped_ns", "last_original_group_operation_ns", "total_elapsed_ns", "deadline_overrun_ns"],
+      "properties": {
+        "clock": {"const": "time.monotonic_ns"},
+        "deadline_scope": {"const": "parent_observed_operational_work_through_stream_evidence_seal"},
+        "hard_kernel_preemption": {"const": false},
+        "overrun_detected_after_blocking_call_returns": {"const": true},
+        "record_serialization_after_evidence_seal_excluded": {"const": true},
+        "call_started_ns": {"$ref": "#/$defs/nonnegativeInteger"},
+        "spawn_started_ns": {"$ref": "#/$defs/nullableNonnegativeInteger"},
+        "spawn_completed_ns": {"$ref": "#/$defs/nullableNonnegativeInteger"},
+        "execution_deadline_ns": {"$ref": "#/$defs/positiveInteger"},
+        "cleanup_io_deadline_ns": {"$ref": "#/$defs/positiveInteger"},
+        "total_deadline_ns": {"$ref": "#/$defs/positiveInteger"},
+        "evidence_sealed_ns": {"$ref": "#/$defs/nonnegativeInteger"},
+        "leader_reaped_ns": {"$ref": "#/$defs/nullableNonnegativeInteger"},
+        "last_original_group_operation_ns": {"$ref": "#/$defs/nullableNonnegativeInteger"},
+        "total_elapsed_ns": {"$ref": "#/$defs/nonnegativeInteger"},
+        "deadline_overrun_ns": {"$ref": "#/$defs/nonnegativeInteger"}
+      }
+    },
+    "resourceObservationV2": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["wait4_accounted_user_cpu_ns", "wait4_accounted_system_cpu_ns", "wait4_ru_maxrss_raw", "wait4_ru_maxrss_unit", "wait4_ru_maxrss_normalized_bytes", "wait4_accounting_scope", "wait4_threshold_semantics", "group_threshold_semantics"],
+      "properties": {
+        "wait4_accounted_user_cpu_ns": {"$ref": "#/$defs/nullableNonnegativeInteger"},
+        "wait4_accounted_system_cpu_ns": {"$ref": "#/$defs/nullableNonnegativeInteger"},
+        "wait4_ru_maxrss_raw": {"$ref": "#/$defs/nullableNonnegativeInteger"},
+        "wait4_ru_maxrss_unit": {"oneOf": [{"enum": ["bytes", "kibibytes", "unknown"]}, {"type": "null"}]},
+        "wait4_ru_maxrss_normalized_bytes": {"$ref": "#/$defs/nullableNonnegativeInteger"},
+        "wait4_accounting_scope": {"const": "target_pid_wait4_accounting_platform_defined_may_include_descendant_accrual"},
+        "wait4_threshold_semantics": {"const": "post_exit_acceptance_only_not_runtime_enforcement"},
+        "group_threshold_semantics": {"const": "sample_triggered_best_effort_termination_not_hard_ceiling"}
+      }
+    },
+    "samplingPolicyV2": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["mode", "required", "interval_ns", "attempt_timeout_ns", "cleanup_reserve_ns", "stdout_limit_bytes", "stderr_limit_bytes", "maximum_attempts", "reject_if_observed_members_above", "reject_if_observed_rss_bytes_above"],
+      "properties": {
+        "mode": {"enum": ["disabled", "posix_ps"]},
+        "required": {"type": "boolean"},
+        "interval_ns": {"$ref": "#/$defs/positiveInteger"},
+        "attempt_timeout_ns": {"$ref": "#/$defs/positiveInteger"},
+        "cleanup_reserve_ns": {"$ref": "#/$defs/positiveInteger"},
+        "stdout_limit_bytes": {"$ref": "#/$defs/positiveInteger"},
+        "stderr_limit_bytes": {"$ref": "#/$defs/positiveInteger"},
+        "maximum_attempts": {"$ref": "#/$defs/positiveInteger"},
+        "reject_if_observed_members_above": {"$ref": "#/$defs/nullablePositiveInteger"},
+        "reject_if_observed_rss_bytes_above": {"$ref": "#/$defs/nullablePositiveInteger"}
+      },
+      "allOf": [
+        {
+          "if": {"properties": {"mode": {"const": "disabled"}}, "required": ["mode"]},
+          "then": {"properties": {"required": {"const": false}, "reject_if_observed_members_above": {"type": "null"}, "reject_if_observed_rss_bytes_above": {"type": "null"}}}
+        }
+      ]
+    },
+    "samplingEvidenceV2": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["policy", "group_sample_count", "peak_observed_sampled_original_group_members", "peak_observed_sampled_original_group_zombie_members", "peak_observed_sampled_original_group_rss_bytes", "sampler_processes_started", "sampler_processes_reaped", "measurement_scope"],
+      "properties": {
+        "policy": {"$ref": "#/$defs/samplingPolicyV2"},
+        "group_sample_count": {"$ref": "#/$defs/nonnegativeInteger"},
+        "peak_observed_sampled_original_group_members": {"$ref": "#/$defs/nullableNonnegativeInteger"},
+        "peak_observed_sampled_original_group_zombie_members": {"$ref": "#/$defs/nullableNonnegativeInteger"},
+        "peak_observed_sampled_original_group_rss_bytes": {"$ref": "#/$defs/nullableNonnegativeInteger"},
+        "sampler_processes_started": {"$ref": "#/$defs/nonnegativeInteger"},
+        "sampler_processes_reaped": {"$ref": "#/$defs/nonnegativeInteger"},
+        "measurement_scope": {"const": "sampled_original_process_group_not_hard_supremum"}
+      },
+      "allOf": [
+        {
+          "if": {"properties": {"group_sample_count": {"const": 0}}, "required": ["group_sample_count"]},
+          "then": {"properties": {"peak_observed_sampled_original_group_members": {"type": "null"}, "peak_observed_sampled_original_group_zombie_members": {"type": "null"}, "peak_observed_sampled_original_group_rss_bytes": {"type": "null"}}},
+          "else": {"properties": {"peak_observed_sampled_original_group_members": {"$ref": "#/$defs/nonnegativeInteger"}, "peak_observed_sampled_original_group_zombie_members": {"$ref": "#/$defs/nonnegativeInteger"}, "peak_observed_sampled_original_group_rss_bytes": {"$ref": "#/$defs/nonnegativeInteger"}}}
+        }
+      ]
+    },
+    "failureVariantV2": {
+      "oneOf": [
+        {"properties": {"category": {"const": "cleanup"}, "stage": {"const": "descriptor_cleanup"}, "reason_code": {"enum": ["selector_close_failed", "selector_map_failed", "stderr_close_failed", "stderr_close_unverified", "stderr_selector_unregister_failed", "stdin_close_failed", "stdin_close_unverified", "stdin_selector_unregister_failed", "stdout_close_failed", "stdout_close_unverified", "stdout_selector_unregister_failed"]}}, "required": ["category", "stage", "reason_code"]},
+        {"properties": {"category": {"const": "cleanup"}, "stage": {"const": "host_control_cleanup"}, "reason_code": {"const": "cleanup_host_exception_suppressed"}}, "required": ["category", "stage", "reason_code"]},
+        {"properties": {"category": {"const": "cleanup"}, "stage": {"const": "process_cleanup"}, "reason_code": {"enum": ["original_group_signal_failed", "post_reap_original_group_operation_blocked"]}}, "required": ["category", "stage", "reason_code"]},
+        {"properties": {"category": {"const": "cleanup"}, "stage": {"const": "process_wait"}, "reason_code": {"enum": ["direct_child_not_reaped_before_cleanup_deadline", "direct_child_wait_failed", "leader_ownership_lost", "leader_reap_before_group_actions_finalized_blocked"]}}, "required": ["category", "stage", "reason_code"]},
+        {"properties": {"category": {"const": "cleanup"}, "stage": {"const": "sampling"}, "reason_code": {"enum": ["post_reap_original_group_sampling_blocked", "sampler_not_reaped", "sampler_process_reap_count_mismatch"]}}, "required": ["category", "stage", "reason_code"]},
+        {"properties": {"category": {"const": "diagnostic"}, "stage": {"const": "process_cleanup"}, "reason_code": {"const": "final_group_no_signalable_member"}}, "required": ["category", "stage", "reason_code"]},
+        {"properties": {"category": {"const": "diagnostic"}, "stage": {"const": "sampling"}, "reason_code": {"enum": ["sampler_budget_unavailable", "sampler_cleanup_select_failed", "sampler_cleanup_wait_failed", "sampler_deadline_exhausted", "sampler_descriptor_close_failed", "sampler_exit_nonzero", "sampler_launch_failed", "sampler_not_reaped_before_deadline", "sampler_read_failed", "sampler_select_failed", "sampler_selector_close_failed", "sampler_sigkill_failed", "sampler_wait_failed"]}}, "required": ["category", "stage", "reason_code"]},
+        {"properties": {"category": {"const": "diagnostic"}, "stage": {"const": "supervisor"}, "reason_code": {"const": "diagnostic_ledger_capacity_exhausted"}}, "required": ["category", "stage", "reason_code"]},
+        {"properties": {"category": {"const": "operational"}, "stage": {"const": "evidence_seal"}, "reason_code": {"const": "total_deadline_overrun_detected"}}, "required": ["category", "stage", "reason_code"]},
+        {"properties": {"category": {"const": "operational"}, "stage": {"const": "execution"}, "reason_code": {"enum": ["execution_deadline_exhausted", "execution_ended_without_both_output_eofs"]}}, "required": ["category", "stage", "reason_code"]},
+        {"properties": {"category": {"const": "operational"}, "stage": {"const": "launch"}, "reason_code": {"enum": ["launch_consumed_execution_deadline", "pipe_creation_failed", "process_launch_failed"]}}, "required": ["category", "stage", "reason_code"]},
+        {"properties": {"category": {"const": "operational"}, "stage": {"const": "launch_setup"}, "reason_code": {"enum": ["fresh_session_observation_mismatch", "selector_setup_failed", "session_observation_failed", "session_observation_unavailable"]}}, "required": ["category", "stage", "reason_code"]},
+        {"properties": {"category": {"const": "operational"}, "stage": {"const": "prelaunch"}, "reason_code": {"enum": ["request_preparation_consumed_execution_deadline", "sampling_executable_unavailable", "unsupported_platform"]}}, "required": ["category", "stage", "reason_code"]},
+        {"properties": {"category": {"const": "operational"}, "stage": {"const": "process_wait"}, "reason_code": {"const": "direct_child_not_reaped"}}, "required": ["category", "stage", "reason_code"]},
+        {"properties": {"category": {"const": "operational"}, "stage": {"const": "sampling"}, "reason_code": {"enum": ["required_sampling_observation_missing", "sampler_budget_unavailable", "sampler_cleanup_select_failed", "sampler_cleanup_wait_failed", "sampler_deadline_exhausted", "sampler_descriptor_close_failed", "sampler_exit_nonzero", "sampler_launch_failed", "sampler_not_reaped_before_deadline", "sampler_read_failed", "sampler_result_missing", "sampler_select_failed", "sampler_selector_close_failed", "sampler_sigkill_failed", "sampler_wait_failed"]}}, "required": ["category", "stage", "reason_code"]},
+        {"properties": {"category": {"const": "operational"}, "stage": {"const": "selector"}, "reason_code": {"enum": ["selector_map_failed", "selector_select_failed"]}}, "required": ["category", "stage", "reason_code"]},
+        {"properties": {"category": {"const": "operational"}, "stage": {"const": "supervisor"}, "reason_code": {"enum": ["failure_ledger_capacity_exhausted", "supervisor_internal_exception"]}}, "required": ["category", "stage", "reason_code"]},
+        {"properties": {"category": {"const": "operational"}, "stage": {"const": "transport"}, "reason_code": {"enum": ["stderr_read_failed", "stdin_incomplete", "stdin_write_failed", "stdout_read_failed"]}}, "required": ["category", "stage", "reason_code"]},
+        {"properties": {"category": {"const": "policy"}, "stage": {"const": "prelaunch"}, "reason_code": {"const": "input_limit_exceeded"}}, "required": ["category", "stage", "reason_code"]},
+        {"properties": {"category": {"const": "policy"}, "stage": {"const": "resource_observation"}, "reason_code": {"enum": ["observed_wait4_cpu_threshold_exceeded", "observed_wait4_normalized_maxrss_threshold_exceeded"]}}, "required": ["category", "stage", "reason_code"]},
+        {"properties": {"category": {"const": "policy"}, "stage": {"const": "sampling"}, "reason_code": {"enum": ["sampled_original_group_member_threshold_exceeded", "sampled_original_group_rss_threshold_exceeded"]}}, "required": ["category", "stage", "reason_code"]},
+        {"properties": {"category": {"const": "policy"}, "stage": {"const": "transport"}, "reason_code": {"enum": ["stderr_limit_exceeded", "stdout_limit_exceeded"]}}, "required": ["category", "stage", "reason_code"]},
+        {"properties": {"category": {"const": "worker"}, "stage": {"const": "process_exit"}, "reason_code": {"const": "worker_exit_nonzero"}}, "required": ["category", "stage", "reason_code"]}
+      ]
+    },
+    "failureEventV2": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["ordinal", "category", "stage", "reason_code", "message", "message_sha256", "message_truncated"],
+      "properties": {
+        "ordinal": {"$ref": "#/$defs/nonnegativeInteger"},
+        "category": {"enum": ["cleanup", "diagnostic", "operational", "policy", "worker"]},
+        "stage": {"type": "string", "minLength": 1},
+        "reason_code": {"type": "string", "pattern": "^[a-z][a-z0-9_]{0,126}$"},
+        "message": {"type": "string", "minLength": 1, "maxLength": 4096},
+        "message_sha256": {"$ref": "#/$defs/digest"},
+        "message_truncated": {"type": "boolean"}
+      },
+      "allOf": [{"$ref": "#/$defs/failureVariantV2"}]
+    },
+    "fatalFailureEventV2": {"allOf": [{"$ref": "#/$defs/failureEventV2"}, {"properties": {"category": {"enum": ["cleanup", "operational", "policy", "worker"]}}}]},
+    "cleanupFailureEventV2": {"allOf": [{"$ref": "#/$defs/failureEventV2"}, {"properties": {"category": {"const": "cleanup"}}}]},
+    "diagnosticFailureEventV2": {"allOf": [{"$ref": "#/$defs/failureEventV2"}, {"properties": {"category": {"const": "diagnostic"}}}]},
+    "supervisionLimitsV2": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["total_deadline_ns", "cleanup_reserve_ns", "termination_grace_ns", "evidence_seal_reserve_ns", "stdin_limit_bytes", "stdout_limit_bytes", "stderr_limit_bytes", "stdout_retained_tail_bytes", "stderr_retained_tail_bytes", "sampling", "reject_if_observed_wait4_cpu_ns_above", "reject_if_observed_wait4_normalized_maxrss_bytes_above"],
+      "properties": {
+        "total_deadline_ns": {"$ref": "#/$defs/positiveInteger"},
+        "cleanup_reserve_ns": {"$ref": "#/$defs/positiveInteger"},
+        "termination_grace_ns": {"$ref": "#/$defs/nonnegativeInteger"},
+        "evidence_seal_reserve_ns": {"$ref": "#/$defs/positiveInteger"},
+        "stdin_limit_bytes": {"$ref": "#/$defs/positiveInteger"},
+        "stdout_limit_bytes": {"$ref": "#/$defs/nullablePositiveInteger"},
+        "stderr_limit_bytes": {"$ref": "#/$defs/nullablePositiveInteger"},
+        "stdout_retained_tail_bytes": {"$ref": "#/$defs/positiveInteger"},
+        "stderr_retained_tail_bytes": {"$ref": "#/$defs/positiveInteger"},
+        "sampling": {"$ref": "#/$defs/samplingPolicyV2"},
+        "reject_if_observed_wait4_cpu_ns_above": {"$ref": "#/$defs/nullablePositiveInteger"},
+        "reject_if_observed_wait4_normalized_maxrss_bytes_above": {"$ref": "#/$defs/nullablePositiveInteger"}
+      }
+    },
+    "containmentV2": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["mode", "trusted_worker_required", "fresh_posix_session_requested", "unreaped_leader_is_numeric_pgid_identity_anchor", "all_original_group_operations_must_precede_leader_reap", "original_process_group_cleanup_scope", "hard_descendant_containment", "escaped_descendants_unobservable", "short_lived_descendants_between_samples_unobservable", "filesystem_isolation", "network_isolation", "uid_isolation", "cryptographic_authenticity"],
+      "properties": {
+        "mode": {"const": "trusted_worker_posix_anchored_process_group_observation"},
+        "trusted_worker_required": {"const": true},
+        "fresh_posix_session_requested": {"const": true},
+        "unreaped_leader_is_numeric_pgid_identity_anchor": {"const": true},
+        "all_original_group_operations_must_precede_leader_reap": {"const": true},
+        "original_process_group_cleanup_scope": {"const": true},
+        "hard_descendant_containment": {"const": false},
+        "escaped_descendants_unobservable": {"const": true},
+        "short_lived_descendants_between_samples_unobservable": {"const": true},
+        "filesystem_isolation": {"const": "unavailable"},
+        "network_isolation": {"const": "unavailable"},
+        "uid_isolation": {"const": "unavailable"},
+        "cryptographic_authenticity": {"const": false}
+      }
+    },
+    "attemptAuthorityBoundariesV2": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["semantic_authority", "scientific_authority", "truth_authority", "proof_authority", "experiment_value_authority", "physics_authority", "cryptographic_authenticity", "authority_boundary"],
+      "properties": {
+        "semantic_authority": {"const": false},
+        "scientific_authority": {"const": false},
+        "truth_authority": {"const": false},
+        "proof_authority": {"const": false},
+        "experiment_value_authority": {"const": false},
+        "physics_authority": {"const": false},
+        "cryptographic_authenticity": {"const": false},
+        "authority_boundary": {"const": "operational_process_evidence_only_no_semantic_scientific_truth_proof_experiment_value_or_physics_authority"}
+      }
+    },
+    "attemptInvariantOutcomeV2": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "process_started", "returncode", "stdin_fully_enqueued", "stdout_captured_bytes", "stdout_captured_sha256", "stdout_eof_observed", "stderr_captured_bytes", "stderr_captured_sha256", "stderr_eof_observed", "failure_reason_codes", "cleanup_reason_codes"],
+      "properties": {
+        "status": {"enum": ["succeeded", "input_exhausted", "unsupported_platform", "launch_failed", "resource_or_output_exhausted", "deadline_exhausted", "worker_failed", "operational_failure"]},
+        "process_started": {"type": "boolean"},
+        "returncode": {"$ref": "#/$defs/nullableInteger"},
+        "stdin_fully_enqueued": {"type": "boolean"},
+        "stdout_captured_bytes": {"$ref": "#/$defs/nonnegativeInteger"},
+        "stdout_captured_sha256": {"$ref": "#/$defs/digest"},
+        "stdout_eof_observed": {"type": "boolean"},
+        "stderr_captured_bytes": {"$ref": "#/$defs/nonnegativeInteger"},
+        "stderr_captured_sha256": {"$ref": "#/$defs/digest"},
+        "stderr_eof_observed": {"type": "boolean"},
+        "failure_reason_codes": {"type": "array", "maxItems": 128, "items": {"type": "string", "pattern": "^[a-z][a-z0-9_]{0,126}$"}},
+        "cleanup_reason_codes": {"type": "array", "maxItems": 128, "items": {"type": "string", "pattern": "^[a-z][a-z0-9_]{0,126}$"}}
+      }
+    },
+    "attemptInvariantProjectionV2": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["schema_version", "attempt_kind", "request", "outcome", "containment", "authority_boundaries", "projection_digest"],
+      "properties": {
+        "schema_version": {"const": "2.0.0"},
+        "attempt_kind": {"const": "trusted_local_protocol_process_attempt"},
+        "request": {"$ref": "#/$defs/processRequestBindingV2"},
+        "outcome": {"$ref": "#/$defs/attemptInvariantOutcomeV2"},
+        "containment": {"$ref": "#/$defs/containmentV2"},
+        "authority_boundaries": {"$ref": "#/$defs/attemptAuthorityBoundariesV2"},
+        "projection_digest": {"$ref": "#/$defs/digest"}
+      }
+    },
+    "resourceExecScopeV2": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["address_space", "cpu", "file_size", "hard_aggregate_disk_limit", "hard_group_cpu_limit", "hard_group_rss_limit"],
+      "properties": {
+        "address_space": {"const": "inherited_per_process_virtual_address_space_not_group_rss"},
+        "cpu": {"const": "inherited_per_process_integer_second_cpu_limit"},
+        "file_size": {"const": "inherited_per_file_size_limit_not_aggregate_workspace_quota"},
+        "hard_aggregate_disk_limit": {"const": false},
+        "hard_group_cpu_limit": {"const": false},
+        "hard_group_rss_limit": {"const": false}
+      }
+    },
+    "resourceExecPlanV2": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["schema_version", "plan_kind", "platform_system", "logical_argv_digest", "cwd", "environment_digest", "supervision_environment_digest", "declared_limits", "kernel_limits", "scope"],
+      "properties": {
+        "schema_version": {"const": "2.0.0"},
+        "plan_kind": {"const": "trusted_local_resource_limit_exec"},
+        "platform_system": {"enum": ["Darwin", "Linux"]},
+        "logical_argv_digest": {"$ref": "#/$defs/digest"},
+        "cwd": {"type": "string", "minLength": 1},
+        "environment_digest": {"$ref": "#/$defs/digest"},
+        "supervision_environment_digest": {"$ref": "#/$defs/digest"},
+        "declared_limits": {
+          "type": "object", "additionalProperties": false,
+          "required": ["remaining_cpu_ns", "cpu_grace_ns", "workspace_disk_bytes", "process_memory_bytes"],
+          "properties": {"remaining_cpu_ns": {"$ref": "#/$defs/positiveInteger"}, "cpu_grace_ns": {"$ref": "#/$defs/nonnegativeInteger"}, "workspace_disk_bytes": {"$ref": "#/$defs/nonnegativeInteger"}, "process_memory_bytes": {"$ref": "#/$defs/positiveInteger"}}
+        },
+        "kernel_limits": {
+          "type": "object", "additionalProperties": false,
+          "required": ["rlimit_cpu_soft_seconds", "rlimit_cpu_hard_seconds", "rlimit_fsize_bytes", "rlimit_as_bytes"],
+          "properties": {"rlimit_cpu_soft_seconds": {"$ref": "#/$defs/positiveInteger"}, "rlimit_cpu_hard_seconds": {"$ref": "#/$defs/positiveInteger"}, "rlimit_fsize_bytes": {"$ref": "#/$defs/nonnegativeInteger"}, "rlimit_as_bytes": {"$ref": "#/$defs/nullablePositiveInteger"}}
+        },
+        "scope": {"$ref": "#/$defs/resourceExecScopeV2"}
+      },
+      "allOf": [
+        {"if": {"properties": {"platform_system": {"const": "Darwin"}}, "required": ["platform_system"]}, "then": {"properties": {"kernel_limits": {"properties": {"rlimit_as_bytes": {"type": "null"}}}}}, "else": {"properties": {"kernel_limits": {"properties": {"rlimit_as_bytes": {"$ref": "#/$defs/positiveInteger"}}}}}}
+      ]
+    },
+    "supervisionAttemptV2": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["schema_version", "attempt_kind", "attempt_id", "status", "request", "streams", "process", "timing", "resource_observation", "sampling", "failure_events", "primary_failure", "cleanup_failures", "nonfatal_diagnostics", "limits", "containment", "authority_boundaries", "invariant_projection", "attempt_digest"],
+      "properties": {
+        "schema_version": {"const": "2.0.0"},
+        "attempt_kind": {"const": "trusted_local_protocol_process_attempt"},
+        "attempt_id": {"type": "string", "pattern": "^process-attempt\\.[a-f0-9]{32}$"},
+        "status": {"enum": ["succeeded", "input_exhausted", "unsupported_platform", "launch_failed", "resource_or_output_exhausted", "deadline_exhausted", "worker_failed", "operational_failure"]},
+        "request": {"$ref": "#/$defs/processRequestBindingV2"},
+        "streams": {"$ref": "#/$defs/attemptStreamsV2"},
+        "process": {"$ref": "#/$defs/attemptProcessV2"},
+        "timing": {"$ref": "#/$defs/attemptTimingV2"},
+        "resource_observation": {"$ref": "#/$defs/resourceObservationV2"},
+        "sampling": {"$ref": "#/$defs/samplingEvidenceV2"},
+        "failure_events": {"type": "array", "maxItems": 128, "items": {"$ref": "#/$defs/fatalFailureEventV2"}},
+        "primary_failure": {"oneOf": [{"$ref": "#/$defs/fatalFailureEventV2"}, {"type": "null"}]},
+        "cleanup_failures": {"type": "array", "maxItems": 128, "items": {"$ref": "#/$defs/cleanupFailureEventV2"}},
+        "nonfatal_diagnostics": {"type": "array", "maxItems": 128, "items": {"$ref": "#/$defs/diagnosticFailureEventV2"}},
+        "limits": {"$ref": "#/$defs/supervisionLimitsV2"},
+        "containment": {"$ref": "#/$defs/containmentV2"},
+        "authority_boundaries": {"$ref": "#/$defs/attemptAuthorityBoundariesV2"},
+        "invariant_projection": {"$ref": "#/$defs/attemptInvariantProjectionV2"},
+        "attempt_digest": {"$ref": "#/$defs/digest"}
+      },
+      "allOf": [
+        {
+          "if": {"properties": {"status": {"const": "succeeded"}}, "required": ["status"]},
+          "then": {
+            "properties": {
+              "process": {
+                "properties": {"process_started": {"const": true}, "returncode": {"const": 0}, "leader_reaped": {"const": true}, "leader_identity_anchor_released": {"const": true}, "stdin_fully_enqueued": {"const": true}, "stdin_parent_descriptor_closed": {"const": true}},
+                "oneOf": [
+                  {"properties": {"termination_disposition": {"const": "final_group_quiescence_sigkill_sent"}, "original_group_action_disposition": {"const": "final_group_quiescence_sigkill_sent"}}},
+                  {"properties": {"termination_disposition": {"const": "final_group_quiescence_sigkill_sent_no_signalable_member"}, "original_group_action_disposition": {"const": "final_group_quiescence_sigkill_sent_no_signalable_member"}}}
+                ]
+              },
+              "streams": {"properties": {"stdout": {"properties": {"capture_complete": {"const": true}, "ceiling_exceeded": {"const": false}, "parent_descriptor_closed": {"const": true}}}, "stderr": {"properties": {"capture_complete": {"const": true}, "ceiling_exceeded": {"const": false}, "parent_descriptor_closed": {"const": true}}}}},
+              "timing": {"properties": {"deadline_overrun_ns": {"const": 0}}},
+              "failure_events": {"maxItems": 0},
+              "primary_failure": {"type": "null"},
+              "cleanup_failures": {"maxItems": 0}
+            }
+          }
+        }
+      ]
+    }
+  }
+}

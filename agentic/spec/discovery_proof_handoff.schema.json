@@ -1,0 +1,280 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://abducer.local/spec/discovery_proof_handoff.schema.json",
+  "title": "Current post-commit claim-and-action-bound discovery proof handoff v3",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "contract_version", "handoff_id", "content_digest",
+    "formal_claim_authority_id", "formal_claim_authority_digest",
+    "theory_authorization_digest", "theory_authorization_basis_digest", "literature_authority_basis_digest",
+    "source_commit_generation", "source_commit_id", "source_manifest_digest", "source_state_file_digest", "source_state_semantic_digest",
+    "schedule_id", "schedule_digest", "scheduled_action_id", "scheduled_action_digest", "scheduled_action",
+    "formal_claim_schedule_binding", "formal_claim_schedule_binding_digest", "formal_claim_schedule_join", "formal_claim_schedule_join_digest",
+    "producer_operator_id", "producer_request_id", "producer_request_digest", "producer_receipt_id", "producer_receipt_digest",
+    "producer_output_id", "producer_output_digest", "producer_output_path", "producer_output_file_digest", "semantic_consumer_event_id", "semantic_consumer_event_hash",
+    "target_id", "run_id", "cycle_id", "branch_id", "origin_prior_state_version", "theory_generation",
+    "concept_id", "conceptual_system_ids", "hypothesis_id", "conjecture_id", "obligation_id", "supersedes_obligation_id",
+    "display_statement", "statement_authority", "formal_claim", "formal_claim_digest",
+    "literature_authority", "literature_consume_before", "theory_ancestry", "proof_adapter", "execution_plan", "execution_plan_digest",
+    "origin_receipts", "return_to_theory_programme_id", "resource_budget", "execution_policy", "runtime_contract",
+    "projection_only", "postcommit_reopen_required", "authority_nulls", "authorized_at"
+  ],
+  "properties": {
+    "schema_version": {"const": 3},
+    "contract_version": {"const": "discovery-proof-handoff/3.0.0"},
+    "handoff_id": {"type": "string", "minLength": 1},
+    "content_digest": {"$ref": "#/$defs/digest"},
+    "formal_claim_authority_id": {"$ref": "#/$defs/identifier"},
+    "formal_claim_authority_digest": {"$ref": "#/$defs/digest"},
+    "theory_authorization_digest": {"$ref": "#/$defs/digest"},
+    "theory_authorization_basis_digest": {"$ref": "#/$defs/digest"},
+    "literature_authority_basis_digest": {"$ref": "#/$defs/digest"},
+    "source_commit_generation": {"type": "integer", "minimum": 1},
+    "source_commit_id": {"$ref": "#/$defs/identifier"},
+    "source_manifest_digest": {"$ref": "#/$defs/digest"},
+    "source_state_file_digest": {"$ref": "#/$defs/digest"},
+    "source_state_semantic_digest": {"$ref": "#/$defs/digest"},
+    "schedule_id": {"$ref": "#/$defs/identifier"},
+    "schedule_digest": {"$ref": "#/$defs/digest"},
+    "scheduled_action_id": {"$ref": "#/$defs/identifier"},
+    "scheduled_action_digest": {"$ref": "#/$defs/digest"},
+    "scheduled_action": {"$ref": "#/$defs/scheduledAction"},
+    "formal_claim_schedule_binding": {"$ref": "./discovery_formal_claim_schedule_binding_v1.schema.json"},
+    "formal_claim_schedule_binding_digest": {"$ref": "#/$defs/digest"},
+    "formal_claim_schedule_join": {"$ref": "#/$defs/formalClaimScheduleJoin"},
+    "formal_claim_schedule_join_digest": {"$ref": "#/$defs/digest"},
+    "producer_operator_id": {"const": "formal-claim-producer"},
+    "producer_request_id": {"$ref": "#/$defs/identifier"},
+    "producer_request_digest": {"$ref": "#/$defs/digest"},
+    "producer_receipt_id": {"$ref": "#/$defs/identifier"},
+    "producer_receipt_digest": {"$ref": "#/$defs/digest"},
+    "producer_output_id": {"$ref": "#/$defs/identifier"},
+    "producer_output_digest": {"$ref": "#/$defs/digest"},
+    "producer_output_path": {"$ref": "#/$defs/safePath"},
+    "producer_output_file_digest": {"$ref": "#/$defs/digest"},
+    "semantic_consumer_event_id": {"$ref": "#/$defs/identifier"},
+    "semantic_consumer_event_hash": {"$ref": "#/$defs/digest"},
+    "target_id": {"$ref": "#/$defs/identifier"},
+    "run_id": {"$ref": "#/$defs/identifier"},
+    "cycle_id": {"$ref": "#/$defs/identifier"},
+    "branch_id": {"$ref": "#/$defs/identifier"},
+    "origin_prior_state_version": {"type": "integer", "minimum": 0},
+    "theory_generation": {"type": "integer", "minimum": 1},
+    "concept_id": {"$ref": "#/$defs/identifier"},
+    "conceptual_system_ids": {"type": "array", "minItems": 1, "maxItems": 1, "uniqueItems": true, "items": {"$ref": "#/$defs/identifier"}},
+    "hypothesis_id": {"$ref": "#/$defs/identifier"},
+    "conjecture_id": {"$ref": "#/$defs/identifier"},
+    "obligation_id": {"$ref": "#/$defs/identifier"},
+    "supersedes_obligation_id": {"oneOf": [{"$ref": "#/$defs/identifier"}, {"type": "null"}]},
+    "display_statement": {"type": "string", "minLength": 1},
+    "statement_authority": {"const": "display_only_formal_claim_is_the_sole_proof_semantic_authority"},
+    "formal_claim": {"$ref": "#/$defs/formalClaim"},
+    "formal_claim_digest": {"$ref": "#/$defs/digest"},
+    "literature_authority": {"$ref": "#/$defs/literatureAuthority"},
+    "literature_consume_before": {"type": "string", "format": "date-time"},
+    "theory_ancestry": {"$ref": "#/$defs/theoryAncestry"},
+    "proof_adapter": {"enum": ["exact", "finite_model", "lean", "command"]},
+    "execution_plan": {"$ref": "#/$defs/executionPlan"},
+    "execution_plan_digest": {"$ref": "#/$defs/digest"},
+    "origin_receipts": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"$ref": "#/$defs/originReceipt"}},
+    "return_to_theory_programme_id": {"$ref": "#/$defs/identifier"},
+    "resource_budget": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/resourceBudget"},
+    "execution_policy": {"$ref": "#/$defs/executionPolicy"},
+    "runtime_contract": {"$ref": "#/$defs/runtimeContract"},
+    "projection_only": {"const": true},
+    "postcommit_reopen_required": {"const": true},
+    "authority_nulls": {"$ref": "#/$defs/authorityNulls"},
+    "authorized_at": {"type": "string", "format": "date-time"}
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"proof_adapter": {"const": "exact"}}, "required": ["proof_adapter"]},
+      "then": {
+        "properties": {
+          "formal_claim": {"oneOf": [{"$ref": "#/$defs/exactEqualityClaim"}, {"$ref": "#/$defs/exactIntegerPredicateClaim"}]},
+          "execution_plan": {"$ref": "#/$defs/builtinWorkerPlan"}
+        }
+      }
+    },
+    {
+      "if": {"properties": {"proof_adapter": {"const": "finite_model"}}, "required": ["proof_adapter"]},
+      "then": {"properties": {"formal_claim": {"$ref": "#/$defs/finiteModelClaim"}, "execution_plan": {"$ref": "#/$defs/builtinWorkerPlan"}}}
+    },
+    {
+      "if": {"properties": {"proof_adapter": {"const": "lean"}}, "required": ["proof_adapter"]},
+      "then": {"properties": {"formal_claim": {"$ref": "#/$defs/leanPropositionClaim"}, "execution_plan": {"$ref": "#/$defs/leanPlan"}}}
+    },
+    {
+      "if": {"properties": {"proof_adapter": {"const": "command"}}, "required": ["proof_adapter"]},
+      "then": {"properties": {"formal_claim": {"$ref": "#/$defs/externalCheckerClaim"}, "execution_plan": {"$ref": "#/$defs/externalCheckerPlan"}}}
+    }
+  ],
+  "$defs": {
+    "digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "identifier": {"type": "string", "minLength": 1},
+    "safePath": {"type": "string", "minLength": 1, "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))(?!.*(?:^|/)latest(?:/|$)).+$"},
+    "jsonValue": {"oneOf": [{"type": "null"}, {"type": "boolean"}, {"type": "number"}, {"type": "string"}, {"type": "array", "items": {"$ref": "#/$defs/jsonValue"}}, {"type": "object", "additionalProperties": {"$ref": "#/$defs/jsonValue"}}]},
+    "scheduledAction": {
+      "type": "object", "additionalProperties": false,
+      "required": ["action_id", "kind", "target_id", "state_version", "branch_ids", "depends_on", "rationale", "priority_class", "restrictions", "payload", "status", "consumed_at", "consumer_receipt_id"],
+      "properties": {
+        "action_id": {"$ref": "#/$defs/identifier"}, "kind": {"const": "prove"}, "target_id": {"$ref": "#/$defs/identifier"},
+        "state_version": {"type": "integer", "minimum": 0},
+        "branch_ids": {"type": "array", "minItems": 1, "maxItems": 1, "items": {"$ref": "#/$defs/identifier"}},
+        "depends_on": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/identifier"}},
+        "rationale": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
+        "priority_class": {"const": "registered_formal_claim_continuation"},
+        "restrictions": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+        "payload": {"type": "object"}, "status": {"const": "pending"}, "consumed_at": {"type": "null"}, "consumer_receipt_id": {"type": "null"}
+      }
+    },
+    "formalClaimScheduleJoin": {
+      "type": "object", "additionalProperties": false,
+      "required": ["schema_version", "join_kind", "status", "output_id", "producer_receipt_id", "action_id", "binding_digest", "authority_nulls", "join_digest"],
+      "properties": {
+        "schema_version": {"const": 1}, "join_kind": {"const": "gate_replayed_formal_claim_schedule"}, "status": {"const": "ready_prove_pending"},
+        "output_id": {"$ref": "#/$defs/identifier"}, "producer_receipt_id": {"$ref": "#/$defs/identifier"}, "action_id": {"$ref": "#/$defs/identifier"},
+        "binding_digest": {"$ref": "#/$defs/digest"}, "join_digest": {"$ref": "#/$defs/digest"},
+        "authority_nulls": {
+          "type": "object", "additionalProperties": false,
+          "required": ["claim_truth", "checker_soundness", "theorem_status", "physics_value"],
+          "properties": {"claim_truth": {"const": false}, "checker_soundness": {"const": false}, "theorem_status": {"const": false}, "physics_value": {"const": false}}
+        }
+      }
+    },
+    "exactEqualityClaim": {
+      "type": "object", "additionalProperties": false,
+      "required": ["claim_kind", "operation", "left", "right"],
+      "properties": {"claim_kind": {"const": "exact_equality"}, "operation": {"const": "equality"}, "left": {"type": "string", "minLength": 1}, "right": {"type": "string", "minLength": 1}}
+    },
+    "exactIntegerPredicateClaim": {
+      "type": "object", "additionalProperties": false,
+      "required": ["claim_kind", "operation", "variables", "predicate"],
+      "properties": {"claim_kind": {"const": "exact_integer_predicate"}, "operation": {"const": "integer_predicate"}, "variables": {"type": "object", "minProperties": 1, "additionalProperties": {"type": "integer"}}, "predicate": {"type": "string", "minLength": 1}}
+    },
+    "finiteModelClaim": {
+      "type": "object", "additionalProperties": false,
+      "required": ["claim_kind", "variables", "predicate", "quantifier"],
+      "properties": {
+        "claim_kind": {"const": "finite_model"},
+        "variables": {"type": "object", "minProperties": 1, "additionalProperties": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/jsonValue"}}},
+        "predicate": {"type": "string", "minLength": 1},
+        "quantifier": {"enum": ["forall", "exists"]},
+        "max_states": {"type": "integer", "minimum": 1}
+      }
+    },
+    "leanPropositionClaim": {
+      "type": "object", "additionalProperties": false,
+      "required": ["claim_kind", "imports", "proposition", "proof_term", "axiom_policy"],
+      "properties": {
+        "claim_kind": {"const": "lean_proposition"},
+        "imports": {"type": "array", "uniqueItems": true, "items": {"type": "string", "pattern": "^[A-Za-z0-9_.]+$"}},
+        "proposition": {"type": "string", "minLength": 1},
+        "proof_term": {"type": "string", "minLength": 1},
+        "axiom_policy": {"enum": ["no_nonstandard_axioms", "declared_axioms_only"]}
+      }
+    },
+    "externalCheckerClaim": {
+      "type": "object", "additionalProperties": false,
+      "required": ["claim_kind", "claim_id", "claim_payload"],
+      "properties": {"claim_kind": {"const": "external_checker_claim"}, "claim_id": {"$ref": "#/$defs/identifier"}, "claim_payload": {"type": "object", "additionalProperties": {"$ref": "#/$defs/jsonValue"}}}
+    },
+    "formalClaim": {"oneOf": [{"$ref": "#/$defs/exactEqualityClaim"}, {"$ref": "#/$defs/exactIntegerPredicateClaim"}, {"$ref": "#/$defs/finiteModelClaim"}, {"$ref": "#/$defs/leanPropositionClaim"}, {"$ref": "#/$defs/externalCheckerClaim"}]},
+    "builtinWorkerPlan": {
+      "type": "object", "additionalProperties": false,
+      "required": ["kind"], "properties": {"kind": {"const": "builtin_worker"}}
+    },
+    "leanPlan": {
+      "type": "object", "additionalProperties": false,
+      "required": ["kind", "executable"],
+      "properties": {"kind": {"const": "lean"}, "executable": {"type": "string", "minLength": 1}}
+    },
+    "externalCheckerPlan": {
+      "type": "object", "additionalProperties": false,
+      "required": ["kind", "command", "checker_identity", "checker_version", "protocol_version", "artifact_policy", "controlled_output_path"],
+      "properties": {
+        "kind": {"const": "external_checker"},
+        "command": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
+        "checker_identity": {"type": "string", "minLength": 1},
+        "checker_version": {"type": "string", "minLength": 1},
+        "protocol_version": {"const": "claim-bound-checker-result/1.0.0"},
+        "artifact_policy": {"enum": ["none", "optional_new_regular_file", "required_new_regular_file"]},
+        "controlled_output_path": {"oneOf": [{"type": "string", "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$)).+$"}, {"type": "null"}]}
+      }
+    },
+    "notReadyPlan": {
+      "type": "object", "additionalProperties": false,
+      "required": ["kind", "reason"],
+      "properties": {"kind": {"const": "not_ready"}, "reason": {"type": "string", "minLength": 1}}
+    },
+    "executionPlan": {"oneOf": [{"$ref": "#/$defs/builtinWorkerPlan"}, {"$ref": "#/$defs/leanPlan"}, {"$ref": "#/$defs/externalCheckerPlan"}, {"$ref": "#/$defs/notReadyPlan"}]},
+    "literatureAuthority": {
+      "type": "object", "additionalProperties": false,
+      "required": ["authority_kind", "snapshot_id", "snapshot_digest", "literature_production_projection_digest", "source_routing_pre_map_policy_digest", "source_routing_realization_digest", "basis_status", "consume_before", "present_use_evaluated_at", "present_use_reason"],
+      "properties": {
+        "authority_kind": {"const": "validated_target_scoped_literature_snapshot"},
+        "snapshot_id": {"$ref": "#/$defs/identifier"},
+        "snapshot_digest": {"$ref": "#/$defs/digest"},
+        "literature_production_projection_digest": {"$ref": "#/$defs/digest"},
+        "source_routing_pre_map_policy_digest": {"$ref": "#/$defs/digest"},
+        "source_routing_realization_digest": {"$ref": "#/$defs/digest"},
+        "basis_status": {"enum": ["current", "superseded", "missing"]},
+        "consume_before": {"type": "string", "format": "date-time"},
+        "present_use_evaluated_at": {"type": "string", "format": "date-time"},
+        "present_use_reason": {"type": "string", "minLength": 1}
+      }
+    },
+    "theoryAncestry": {
+      "type": "object", "additionalProperties": false,
+      "required": ["operator_evidence_digest", "conceptual_authority_digest", "parent_adjudication_evidence_digest", "synthesis_adjudication_evidence_digest", "preferred_system_ids"],
+      "properties": {
+        "operator_evidence_digest": {"$ref": "#/$defs/digest"},
+        "conceptual_authority_digest": {"$ref": "#/$defs/digest"},
+        "parent_adjudication_evidence_digest": {"$ref": "#/$defs/digest"},
+        "synthesis_adjudication_evidence_digest": {"$ref": "#/$defs/digest"},
+        "preferred_system_ids": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"$ref": "#/$defs/identifier"}}
+      }
+    },
+    "originReceipt": {
+      "type": "object", "additionalProperties": false,
+      "required": ["receipt_id", "receipt_digest", "semantic_role", "output_path", "output_digest"],
+      "properties": {
+        "receipt_id": {"$ref": "#/$defs/identifier"},
+        "receipt_digest": {"$ref": "#/$defs/digest"},
+        "semantic_role": {"type": "string", "minLength": 1},
+        "output_path": {"type": "string", "minLength": 1},
+        "output_digest": {"$ref": "#/$defs/digest"}
+      }
+    },
+    "executionPolicy": {
+      "type": "object", "additionalProperties": false,
+      "required": ["replacement_environment_policy", "input_limit_bytes", "stdout_limit_bytes", "stderr_limit_bytes", "filesystem_isolation", "network_isolation", "trusted_local_worker_required"],
+      "properties": {
+        "replacement_environment_policy": {"const": "minimal_exact_v1"},
+        "input_limit_bytes": {"type": "integer", "minimum": 1},
+        "stdout_limit_bytes": {"type": "integer", "minimum": 1},
+        "stderr_limit_bytes": {"type": "integer", "minimum": 1},
+        "filesystem_isolation": {"const": "unavailable"},
+        "network_isolation": {"const": "unavailable"},
+        "trusted_local_worker_required": {"const": true}
+      }
+    },
+    "runtimeContract": {
+      "type": "object", "additionalProperties": false,
+      "required": ["runtime_id", "runtime_version", "worker_protocol", "execution_claim_protocol", "runtime_root_mode", "generic_callback_allowed", "live_execution_claim_required", "same_cycle_theory_mutation"],
+      "properties": {
+        "runtime_id": {"const": "canonical-formal-proof-runtime"}, "runtime_version": {"const": "3.0.0"},
+        "worker_protocol": {"const": "discovery-proof-worker-protocol/1.0.0"},
+        "execution_claim_protocol": {"const": "coordination-proof-execution-claim/1.0.0"},
+        "runtime_root_mode": {"const": "derived_from_one_shot_execution_claim"},
+        "generic_callback_allowed": {"const": false}, "live_execution_claim_required": {"const": true}, "same_cycle_theory_mutation": {"const": false}
+      }
+    },
+    "authorityNulls": {
+      "type": "object", "additionalProperties": false,
+      "required": ["truth_authority", "checker_soundness_authority", "theorem_authority", "physics_authority", "theory_selection_authority", "same_cycle_theory_mutation", "serialized_execution_authority", "cryptographic_authenticity"],
+      "properties": {"truth_authority": {"const": false}, "checker_soundness_authority": {"const": false}, "theorem_authority": {"const": false}, "physics_authority": {"const": false}, "theory_selection_authority": {"const": false}, "same_cycle_theory_mutation": {"const": false}, "serialized_execution_authority": {"const": false}, "cryptographic_authenticity": {"const": false}}
+    }
+  }
+}

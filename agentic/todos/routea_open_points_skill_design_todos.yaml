@@ -1,0 +1,590 @@
+# SPDX-FileCopyrightText: © 2026 Idiap Research Institute <contact@idiap.ch>
+#
+# SPDX-FileContributor: Andre Freitas <andre.freitas@idiap.ch>
+# Neuro-symbolic AI Group
+#
+# SPDX-FileContributor: Danilo Gusicuma <danilo.gusicuma@idiap.ch>
+# Neuro-symbolic AI Group
+#
+# SPDX-License-Identifier: MIT
+schema: abducer.routea_open_points_skill_design_todos.v1
+created_at: "2026-07-10"
+scope: >
+  Second-wave skill design for the open mathematical points left by the Route A
+  SU(2) Wilson-block paper after the paper-attack pass. These TODOs do not
+  change discovery-marathon workflows. They define focused manuscript-result
+  skills and deterministic support artifacts for the remaining collar,
+  normalization, margin, endpoint, finite-evaluation, and continuum-handoff
+  obligations.
+source_artifacts:
+  current_paper_tex: agentic/reports/results_ellaboration/a-finite-schur-feshbach-test-for-reflected-wilson-blocks-an-explicit-four-dimens/finite_wilson_os_routeA_SU2_attack_integrated.tex
+  current_paper_pdf: agentic/reports/results_ellaboration/a-finite-schur-feshbach-test-for-reflected-wilson-blocks-an-explicit-four-dimens/attack_integrated_compile/finite_wilson_os_routeA_SU2_attack_integrated.pdf
+  completion_json: agentic/reports/results_ellaboration/a-finite-schur-feshbach-test-for-reflected-wilson-blocks-an-explicit-four-dimens/routea_paper_attack_completion.json
+  prior_todos: agentic/todos/routea_paper_attack_todos.yaml
+implementation_status:
+  status: completed
+  completed_at: "2026-07-10"
+  implemented_skill_folders:
+    - skills/results_ellaboration/routea-open-point-orchestrator
+    - skills/results_ellaboration/routea-collar-redesign-forger
+    - skills/results_ellaboration/routea-same-theory-factorization-hunter
+    - skills/results_ellaboration/routea-finite-margin-evaluator
+    - skills/results_ellaboration/routea-endpoint-local-integral-calculator
+    - skills/results_ellaboration/routea-endpoint-error-budget-certifier
+    - skills/results_ellaboration/routea-second-wave-manuscript-integrator
+  implemented_scripts:
+    - skills/results_ellaboration/results-elaboration-workflow-orchestrator/scripts/validate_routea_edge_paths.py
+    - skills/results_ellaboration/results-elaboration-workflow-orchestrator/scripts/render_routea_path_diagram.py
+    - skills/results_ellaboration/results-elaboration-workflow-orchestrator/scripts/check_schur_factor_candidates.py
+    - skills/results_ellaboration/results-elaboration-workflow-orchestrator/scripts/evaluate_routea_finite_margins.py
+    - skills/results_ellaboration/results-elaboration-workflow-orchestrator/scripts/derive_routea_endpoint_incidence.py
+    - skills/results_ellaboration/results-elaboration-workflow-orchestrator/scripts/certify_routea_endpoint_error_budget.py
+    - skills/results_ellaboration/results-elaboration-workflow-orchestrator/scripts/integrate_routea_second_wave_results.py
+  validation_artifacts:
+    - agentic/reports/results_ellaboration/a-finite-schur-feshbach-test-for-reflected-wilson-blocks-an-explicit-four-dimens/routea_path_validation_example.report.json
+    - agentic/reports/results_ellaboration/a-finite-schur-feshbach-test-for-reflected-wilson-blocks-an-explicit-four-dimens/routea_path_validation_example.svg
+    - agentic/reports/results_ellaboration/a-finite-schur-feshbach-test-for-reflected-wilson-blocks-an-explicit-four-dimens/routea_schur_factor_check.json
+    - agentic/reports/results_ellaboration/a-finite-schur-feshbach-test-for-reflected-wilson-blocks-an-explicit-four-dimens/routea_finite_margin_certificate.json
+    - agentic/reports/results_ellaboration/a-finite-schur-feshbach-test-for-reflected-wilson-blocks-an-explicit-four-dimens/routea_endpoint_incidence_example.json
+    - agentic/reports/results_ellaboration/a-finite-schur-feshbach-test-for-reflected-wilson-blocks-an-explicit-four-dimens/routea_endpoint_error_positive.json
+    - agentic/reports/results_ellaboration/a-finite-schur-feshbach-test-for-reflected-wilson-blocks-an-explicit-four-dimens/routea_endpoint_error_negative.json
+    - agentic/reports/results_ellaboration/a-finite-schur-feshbach-test-for-reflected-wilson-blocks-an-explicit-four-dimens/routea_endpoint_error_inconclusive.json
+    - agentic/reports/results_ellaboration/a-finite-schur-feshbach-test-for-reflected-wilson-blocks-an-explicit-four-dimens/routea_second_wave_nochange.manifest.json
+diagnosis:
+  answer: yes
+  summary: >
+    New skills are useful for the remaining open points. The existing Route A
+    skills correctly established the paper claim boundary and demoted unsupported
+    upgrades, but several next obligations now require narrower capabilities:
+    alternative collar geometry synthesis, edge-list validation, same-theory
+    factorization search, finite margin computation, heat-kernel endpoint
+    derivation, two-sided tail/error bounding, and result-safe manuscript
+    revision. Keeping these as one broad "paper attack" skill would blur
+    deterministic and generative regimes and would make it too easy to restate
+    obligations instead of producing calculations.
+design_principles:
+  - Keep every skill under `skills/results_ellaboration/`; this remains an independent paper-result workflow, not a discovery-marathon hook.
+  - Each skill must declare whether it produces a theorem/proposition/lemma, a finite certificate, a counterexample, an obstruction remark, or a no-change decision.
+  - Every mathematical promotion must include definitions, assumptions, validity regime, and a paper insertion target.
+  - Deterministic checks must be scripts or validators; generative reasoning must state the physics/mathematics interpretation and the demotion condition.
+  - The finite source-collision theorem remains the current paper claim until a new same-theory object is actually constructed or computed.
+skill_gap_map:
+  geometric_collar:
+    existing_skill: routea-geometric-collar-builder
+    gap: >
+      It can check a proposed collar, but after the current obstruction we need
+      a stronger skill that systematically searches alternative central-channel
+      and common-footprint designs rather than only varying the transverse width.
+  path_validation:
+    existing_skill: routea-geometric-collar-builder
+    gap: >
+      Edge-list support, reflection, footprint, collapse, and diagram checks
+      should be deterministic support code so failed geometries are reproducible.
+  normalization:
+    existing_skill: routea-same-theory-normalization-certifier
+    gap: >
+      The gate is stated, but a dedicated factorization hunter is needed to
+      search whether pair-dependent factors have Schur-positive or reflected-Gram
+      realizations.
+  coefficients:
+    existing_skill: routea-geometric-coefficient-extractor
+    gap: >
+      It needs a concrete collar before it can extract H_k,K_k; no new skill is
+      needed yet, but it should receive outputs from the collar redesign and
+      normalization-factorization skills.
+  finite_margins:
+    existing_skill: routea-margin-endpoint-certifier
+    gap: >
+      Strict margin discussion is too broad. The next manuscript checklist asks
+      for an actual finite lattice evaluation of sigma and tau with certified
+      uncertainties.
+  endpoint_integrals:
+    existing_skill: routea-margin-endpoint-certifier
+    gap: >
+      Endpoint derivation requires local heat-kernel/character expansion and
+      color-singlet calculation support, separate from high-level endpoint
+      certificate logic.
+  tail_errors:
+    existing_skill: routea-margin-endpoint-certifier
+    gap: >
+      Two-sided error bounds need their own stencil/tail/error-budget skill, so
+      one-sided positivity evidence cannot be mistaken for a negative
+      obstruction.
+  continuum_gap:
+    existing_skill: routea-continuum-gap-gatekeeper
+    gap: >
+      The current gatekeeper is sufficient for blocking overclaims. A new
+      positive transfer-builder skill should be deferred until G1-G4/E1-E2
+      produce uniform same-theory estimates.
+todos:
+  - id: ROUTEA-OPEN-SKILL-001
+    type: planning_todo
+    phase: open-point-skill-architecture
+    owner: skills/results_ellaboration
+    priority: critical
+    risk_class: broad-skill-restates-obligations
+    title: Create a Route A open-point orchestrator for second-wave manuscript results
+    intent: >
+      Add a focused coordinator that reads the attack-integrated paper,
+      completion JSON, and these TODOs, then chooses the next specialized
+      result skill without routing into discovery-marathon workflows.
+    why_needed: >
+      After the paper-attack pass, the open points are no longer generic markers.
+      They are concrete mathematical debts with different regimes. The
+      orchestrator must prevent premature endpoint, margin, or continuum work
+      from running before the geometric object exists, while still allowing
+      finite source-collision computations that do not depend on a collar.
+    use_skills:
+      - routea-paper-attack-orchestrator
+      - routea-paper-result-integrator
+      - results-critical-self-refiner
+    required_artifact:
+      - skills/results_ellaboration/routea-open-point-orchestrator/SKILL.md
+      - skills/results_ellaboration/routea-open-point-orchestrator/agents/openai.yaml
+      - agentic/reports/results_ellaboration/a-finite-schur-feshbach-test-for-reflected-wilson-blocks-an-explicit-four-dimens/routea_open_point_skill_plan.md
+    implementation_steps:
+      - Define the state machine: current finite result, collar redesign candidates, normalization factorization, coefficient extraction, margin certification, endpoint derivation, endpoint error, continuum handoff, manuscript integration.
+      - Encode dependency gates: G3 requires a concrete G1/G2 object; E1 requires actual paths; E2 requires an endpoint estimator; M1/M2 are blocked from promotion until uniform same-theory estimates exist.
+      - Add a decision vocabulary: attempt, promote, demote, quarantine, defer, integrate_no_claim_change.
+      - Require every selected step to emit a paper-native result form and a validation command.
+    deterministic_regime:
+      - Parse completion JSON and TODO statuses.
+      - Check that expected skill folders and scripts exist.
+      - Confirm no discovery-marathon files are modified by this workflow.
+    generative_regime:
+      - Interpret which open point is scientifically highest leverage.
+      - Decide whether a failed construction is a real obstruction, a design flaw, or a reason to branch to a finite computation.
+    acceptance_criteria:
+      - The orchestrator can rank the next valid step from the current paper state.
+      - It refuses continuum/gap promotion before same-theory uniform estimates.
+      - It names the exact next paper section affected by each possible outcome.
+    blocked_by: []
+    evidence:
+      - file:agentic/reports/results_ellaboration/a-finite-schur-feshbach-test-for-reflected-wilson-blocks-an-explicit-four-dimens/routea_paper_attack_completion.json
+      - file:agentic/reports/results_ellaboration/a-finite-schur-feshbach-test-for-reflected-wilson-blocks-an-explicit-four-dimens/finite_wilson_os_routeA_SU2_attack_integrated.tex
+    validation:
+      - rg -n "discovery_marathon|active_run|run_discovery_marathon" skills/results_ellaboration/routea-open-point-orchestrator || true
+      - python -m py_compile skills/results_ellaboration/results-elaboration-workflow-orchestrator/scripts/implement_routea_paper_attack_todos.py
+    failure_modes:
+      - The skill becomes a new discovery loop instead of a paper-result coordinator.
+      - It allows endpoint or spectral work to bypass the missing collar object.
+      - It emits vague "next steps" without a paper-native result target.
+    status: resolved
+
+  - id: ROUTEA-OPEN-SKILL-002
+    type: workflow_todo
+    phase: geometric-collar-redesign
+    owner: skills/results_ellaboration
+    priority: critical
+    risk_class: current-collar-obstruction-not-addressed
+    title: Design a collar-redesign forger that searches alternative geometric families
+    intent: >
+      Build a generative skill that responds directly to the current obstruction:
+      the transverse channels collapse to the base loop while the temporal
+      channel remains a different detour.
+    why_needed: >
+      The existing collar builder can verify a candidate, but the next
+      mathematical move is creative geometry design. We need systematic
+      exploration of central-channel replacements, common-footprint collars,
+      symmetric tripods, nested detours, and small plaquette collars that make
+      all three normalized observables approach the same limiting object.
+    use_skills:
+      - routea-geometric-collar-builder
+      - routea-paper-result-integrator
+    required_artifact:
+      - skills/results_ellaboration/routea-collar-redesign-forger/SKILL.md
+      - skills/results_ellaboration/routea-collar-redesign-forger/agents/openai.yaml
+      - skills/results_ellaboration/routea-collar-redesign-forger/references/collar-design-patterns.md
+    implementation_steps:
+      - State the obstruction as an input invariant, not as background prose.
+      - Define candidate classes: symmetric transverse triplet, temporal-transverse hybrid with collapsing central channel, common-base plaquette collar, paired lollipop collars, and quotient-observable collar.
+      - For each class, require edge-list sketches, common limiting loop, reflection action, positive-time support, footprint condition, and scaling regime.
+      - Rank candidates by likelihood of producing a same-theory normalized reflected Gram block.
+      - Emit either one best candidate for deterministic validation or a proof that a candidate class cannot solve the obstruction.
+    deterministic_regime:
+      - Consume edge-list validator output from ROUTEA-OPEN-SKILL-003.
+      - Check that each candidate has all required fields before interpretation.
+    generative_regime:
+      - Invent and compare geometric alternatives while preserving the finite lattice and reflection conventions.
+      - Explain in physics language what the collar is meant to probe: local deformation of Wilson support rather than artificial source collision.
+    acceptance_criteria:
+      - At least three nontrivial candidate classes are formulated with explicit failure conditions.
+      - The top candidate has enough structure for deterministic edge-list validation.
+      - The skill can demote a class with a precise geometric obstruction rather than a generic "does not work."
+    blocked_by:
+      - ROUTEA-OPEN-SKILL-001
+    evidence:
+      - paper_label:rem:current-hairpin-collar-obstruction
+      - paper_lines: current paper section "Cutoff trajectory and geometric collision"
+    validation:
+      - Skill body names the current obstruction explicitly.
+      - Skill body rejects reusing source-amplitude H,K as geometric data.
+    failure_modes:
+      - It only proposes changing s to m_k(delta), reproducing the known failure.
+      - It invents continuum curves without cutoff-indexed lattice paths.
+      - It ignores the positive-time algebra or reflection pairing.
+    status: resolved
+
+  - id: ROUTEA-OPEN-SKILL-003
+    type: test_todo
+    phase: geometric-collar-validation
+    owner: skills/results_ellaboration
+    priority: critical
+    risk_class: geometry-claims-not-reproducible
+    title: Add deterministic edge-list validation and diagram generation for Route A paths
+    intent: >
+      Provide reproducible checks for candidate collar geometries: support,
+      reflection pairing, common footprint, limiting collision, and edge/path
+      diagrams.
+    why_needed: >
+      Generative geometry is only useful if every candidate can be mechanically
+      checked. This prevents a visually plausible collar from silently leaving
+      the positive algebra, changing boundary footprint, or failing to converge
+      to a common limiting loop.
+    use_skills:
+      - routea-geometric-collar-builder
+      - routea-collar-redesign-forger
+    required_artifact:
+      - skills/results_ellaboration/results-elaboration-workflow-orchestrator/scripts/validate_routea_edge_paths.py
+      - skills/results_ellaboration/results-elaboration-workflow-orchestrator/scripts/render_routea_path_diagram.py
+      - agentic/spec/routea_edge_path_candidate.schema.json
+      - agentic/reports/results_ellaboration/a-finite-schur-feshbach-test-for-reflected-wilson-blocks-an-explicit-four-dimens/routea_path_validation_example.json
+    implementation_steps:
+      - Define a JSON schema for vertices, directed edges, channel labels, reflection maps, base paths, scaling variables, and claimed limits.
+      - Implement positive-time support checks for every non-reflected observable edge.
+      - Implement spatial reflection checks by mapping every edge under rho and comparing channel paths up to orientation conventions.
+      - Implement footprint checks against the reflection boundary or declared common support surface.
+      - Implement limiting-loop checks by evaluating symbolic or parameterized collapse maps.
+      - Render a simple SVG or TeX/TikZ path diagram for manuscript inspection.
+    deterministic_regime:
+      - Pure parser and checker over JSON path candidates.
+      - No model calls; all pass/fail results cite exact failing edges or vertices.
+    generative_regime:
+      - None inside the script; interpretation belongs to the collar-redesign skill.
+    acceptance_criteria:
+      - A known current transverse-width candidate fails with the documented central-channel obstruction.
+      - A trivial support violation fails with exact edge coordinates.
+      - A reflected pair mismatch fails with exact source and image edge.
+      - Diagram output is usable as a manuscript figure draft or appendix diagnostic.
+    blocked_by:
+      - ROUTEA-OPEN-SKILL-002
+    evidence:
+      - file:skills/results_ellaboration/routea-geometric-collar-builder/SKILL.md
+      - paper_label:eq:eta-plus
+      - paper_label:eq:eta-minus
+      - paper_label:eq:eta-zero
+    validation:
+      - python -m py_compile skills/results_ellaboration/results-elaboration-workflow-orchestrator/scripts/validate_routea_edge_paths.py
+      - python -m py_compile skills/results_ellaboration/results-elaboration-workflow-orchestrator/scripts/render_routea_path_diagram.py
+      - .venv-pmp/bin/python skills/results_ellaboration/results-elaboration-workflow-orchestrator/scripts/validate_routea_edge_paths.py agentic/reports/results_ellaboration/a-finite-schur-feshbach-test-for-reflected-wilson-blocks-an-explicit-four-dimens/routea_path_validation_example.json
+    failure_modes:
+      - The checker accepts prose descriptions instead of explicit edge lists.
+      - It checks reflection but not limiting collision.
+      - It produces a diagram that cannot be traced back to validated edges.
+    status: resolved
+
+  - id: ROUTEA-OPEN-SKILL-004
+    type: workflow_todo
+    phase: same-theory-normalization-search
+    owner: skills/results_ellaboration
+    priority: high
+    risk_class: pair-dependent-quotient-smuggled-in
+    title: Build a same-theory factorization hunter for normalization factors
+    intent: >
+      Extend the normalization gate into an active search for positive-kernel,
+      reflected-Gram, congruence, or observable-rescaling realizations of
+      normalization factors.
+    why_needed: >
+      The paper now states the admissibility condition, but proving a future
+      collar theorem requires finding whether concrete pair-dependent factors are
+      legal in the same theory. This is a separate mathematical search problem.
+    use_skills:
+      - routea-same-theory-normalization-certifier
+      - routea-paper-result-integrator
+    required_artifact:
+      - skills/results_ellaboration/routea-same-theory-factorization-hunter/SKILL.md
+      - skills/results_ellaboration/routea-same-theory-factorization-hunter/agents/openai.yaml
+      - skills/results_ellaboration/results-elaboration-workflow-orchestrator/scripts/check_schur_factor_candidates.py
+    implementation_steps:
+      - Define factor classes: diagonal one-body, block congruence, Schur-positive kernel, reflected-Gram kernel, entrywise quotient, and illegal quotient.
+      - Implement finite PSD and entrywise inverse tests for symbolic or numeric candidate matrices.
+      - Require a same-theory realization argument for any positive kernel, not merely PSD.
+      - Produce a factorization certificate or an inadmissibility lemma.
+    deterministic_regime:
+      - Matrix PSD checks, Schur-product checks, and finite counterexample search.
+      - Artifact schema for candidate factors and certificates.
+    generative_regime:
+      - Try to interpret a factor as an observable rescaling, auxiliary reflected observable, or character-expansion kernel.
+      - Decide whether an inadmissible factor suggests changing the collar geometry.
+    acceptance_criteria:
+      - The skill refuses "positive denominator implies positive inverse" reasoning.
+      - It emits either a paper proposition candidate or a precise obstruction.
+      - It can consume a future collar candidate from ROUTEA-OPEN-SKILL-002.
+    blocked_by:
+      - ROUTEA-OPEN-SKILL-002
+    evidence:
+      - paper_label:prop:collar-normalization-gate
+      - paper_label:app:normalization
+    validation:
+      - python -m py_compile skills/results_ellaboration/results-elaboration-workflow-orchestrator/scripts/check_schur_factor_candidates.py
+      - Include a test where a PSD denominator has a non-PSD entrywise inverse.
+    failure_modes:
+      - Treats finite PSD as same-theory realization without proof.
+      - Allows pair-dependent division without a positivity-preserving certificate.
+    status: resolved
+
+  - id: ROUTEA-OPEN-SKILL-005
+    type: workflow_todo
+    phase: finite-margin-certification
+    owner: skills/results_ellaboration
+    priority: high
+    risk_class: margin-claim-without-certified-evaluation
+    title: Build a finite source-collision margin evaluator for sigma and tau
+    intent: >
+      Implement the manuscript checklist item requiring at least one finite
+      lattice evaluation of sigma and tau with certified uncertainties.
+    why_needed: >
+      The current theorem is exact but conditional on finite nondegeneracy
+      \(\sigma>0,\tau>0\). A certified finite example would strengthen the
+      paper as a concrete calculation without pretending to prove continuum
+      nonvanishing.
+    use_skills:
+      - routea-margin-endpoint-certifier
+      - routea-paper-result-integrator
+    required_artifact:
+      - skills/results_ellaboration/routea-finite-margin-evaluator/SKILL.md
+      - skills/results_ellaboration/routea-finite-margin-evaluator/agents/openai.yaml
+      - skills/results_ellaboration/results-elaboration-workflow-orchestrator/scripts/evaluate_routea_finite_margins.py
+      - agentic/reports/results_ellaboration/a-finite-schur-feshbach-test-for-reflected-wilson-blocks-an-explicit-four-dimens/routea_finite_margin_certificate.json
+    implementation_steps:
+      - Choose a deliberately tiny finite lattice and path parameters that fit without wraparound.
+      - Define sigma and tau from the paper's exact Wilson observables, not from a proxy matrix.
+      - Select an evaluation route: exact finite integration where feasible, character-truncated heat-kernel expansion with tail bounds, or certified numerical quadrature.
+      - State all uncertainty sources: truncation, integration, floating arithmetic, and finite-volume/path choices.
+      - Emit a paper-safe finite certificate or an honest infeasibility report.
+    deterministic_regime:
+      - Parameter validation, reproducible computation, interval arithmetic or explicit error budget.
+      - JSON certificate with lattice, action, paths, sigma interval, tau interval, and limitations.
+    generative_regime:
+      - Decide the cheapest finite case that still illustrates the theorem.
+      - Explain what the finite margins show and what they do not show.
+    acceptance_criteria:
+      - The certificate states whether sigma and tau intervals are strictly positive, inconclusive, or negative/impossible.
+      - The paper integration is a finite-example proposition or appendix calculation only.
+      - It does not claim cutoff-uniform lower bounds.
+    blocked_by:
+      - ROUTEA-OPEN-SKILL-001
+    evidence:
+      - paper_label:eq:sigma-integral
+      - paper_label:eq:tau-integral
+      - paper_label:cor:implemented-route-a
+      - paper_label:app:checklist
+    validation:
+      - python -m py_compile skills/results_ellaboration/results-elaboration-workflow-orchestrator/scripts/evaluate_routea_finite_margins.py
+      - The output JSON validates against an explicit certificate schema.
+    failure_modes:
+      - Computes margins for a surrogate matrix rather than Wilson observables.
+      - Gives point estimates without uncertainty.
+      - Uses finite positivity as evidence for continuum nonvanishing.
+    status: resolved
+
+  - id: ROUTEA-OPEN-SKILL-006
+    type: workflow_todo
+    phase: endpoint-local-integral-derivation
+    owner: skills/results_ellaboration
+    priority: high
+    risk_class: endpoint-formula-remains-schematic
+    title: Build a heat-kernel endpoint local integral calculator
+    intent: >
+      Create a skill that derives endpoint cumulant ingredients from the actual
+      heat-kernel \(SU(2)\) regulator, local path incidence, and color-singlet
+      projection.
+    why_needed: >
+      The current endpoint expression is deliberately schematic. To move it into
+      paper content, the calculation must define endpoint boxes, source
+      variables, color normalization, and local Wilson incidence from the chosen
+      paths.
+    use_skills:
+      - routea-margin-endpoint-certifier
+      - routea-paper-result-integrator
+    required_artifact:
+      - skills/results_ellaboration/routea-endpoint-local-integral-calculator/SKILL.md
+      - skills/results_ellaboration/routea-endpoint-local-integral-calculator/agents/openai.yaml
+      - skills/results_ellaboration/results-elaboration-workflow-orchestrator/scripts/derive_routea_endpoint_incidence.py
+    implementation_steps:
+      - Define endpoint boxes for either the finite source-collision paths or a validated future collar.
+      - Build the incidence tensor mapping path pairs to endpoint source variables.
+      - State the \(SU(2)\) trace and singlet projection conventions.
+      - Derive the local fourth-cumulant expression or produce a minimal obstruction explaining which local integral is missing.
+      - Keep finite source-collision endpoint bookkeeping separate from geometric-collar endpoint claims.
+    deterministic_regime:
+      - Path incidence extraction from validated edge lists.
+      - Symbolic assembly of null-channel incidence weights and zero-diagonal checks.
+    generative_regime:
+      - Derive the local heat-kernel/color interpretation and decide whether character expansion, local Gaussianization, or exact group integration is appropriate.
+    acceptance_criteria:
+      - The output identifies all endpoint variables and color factors.
+      - The null-channel weights \(2,-4,-4\) are derived from the normalized block conditions, not asserted.
+      - The skill refuses to claim an endpoint sign before E2 error control.
+    blocked_by:
+      - ROUTEA-OPEN-SKILL-003
+    evidence:
+      - paper_label:eq:offdiag-null-identity
+      - paper_label:eq:endpoint-estimator-template
+      - paper_label:rem:endpoint-estimator-status
+    validation:
+      - python -m py_compile skills/results_ellaboration/results-elaboration-workflow-orchestrator/scripts/derive_routea_endpoint_incidence.py
+      - Run a fixture confirming diagonal coefficient cancellation after normalization.
+    failure_modes:
+      - Reuses schematic endpoint notation without deriving local variables.
+      - Omits color normalization.
+      - Mixes source-collision and geometric-collar endpoint claims.
+    status: resolved
+
+  - id: ROUTEA-OPEN-SKILL-007
+    type: workflow_todo
+    phase: endpoint-two-sided-error
+    owner: skills/results_ellaboration
+    priority: high
+    risk_class: one-sided-bound-treated-as-negative-certificate
+    title: Build an endpoint error-budget certifier for two-sided bounds
+    intent: >
+      Separate endpoint estimator derivation from the proof of two-sided errors,
+      including finite-difference stencil constants, sixth-derivative bounds,
+      truncation/tail terms, and certificate classification.
+    why_needed: >
+      The paper already states the logic of positive and negative endpoint
+      certificates. The missing skill is the analytic accountant that can decide
+      whether a concrete endpoint estimator has enough two-sided control to be
+      inserted as a result.
+    use_skills:
+      - routea-margin-endpoint-certifier
+      - routea-endpoint-local-integral-calculator
+      - routea-paper-result-integrator
+    required_artifact:
+      - skills/results_ellaboration/routea-endpoint-error-budget-certifier/SKILL.md
+      - skills/results_ellaboration/routea-endpoint-error-budget-certifier/agents/openai.yaml
+      - skills/results_ellaboration/results-elaboration-workflow-orchestrator/scripts/certify_routea_endpoint_error_budget.py
+    implementation_steps:
+      - Define the input estimator \(\widehat R_{\mathrm{end}}\), source domain, finite-difference stencil, and all residual terms.
+      - Compute or bound the sixth-derivative constant for the stencil.
+      - Bound endpoint, corner, inter-box, and far-tail contributions on both sides.
+      - Classify the final certificate as positive, negative, or inconclusive using the paper's inequalities.
+      - Emit a manuscript lemma/proposition only when all constants are present.
+    deterministic_regime:
+      - Error-budget arithmetic, interval propagation, and certificate classification.
+      - Refuse missing constants and one-sided-only budgets.
+    generative_regime:
+      - Choose which analytic estimate is plausible for each error source and state the weakest sufficient bound.
+    acceptance_criteria:
+      - Negative certificates require an upper error side.
+      - Positive certificates use \(M_G+\widehat R_{\mathrm{end}}-\Delta_{\mathrm{end}}>0\).
+      - Inconclusive outputs are represented as such, not as failures to be hidden.
+    blocked_by:
+      - ROUTEA-OPEN-SKILL-006
+    evidence:
+      - paper_label:eq:two-sided-endpoint-error
+      - paper_label:lem:endpoint-certificates
+      - paper_label:prop:two-sided-endpoint-logic
+    validation:
+      - python -m py_compile skills/results_ellaboration/results-elaboration-workflow-orchestrator/scripts/certify_routea_endpoint_error_budget.py
+      - Include fixtures for positive, negative, inconclusive, and invalid one-sided cases.
+    failure_modes:
+      - Treats a lower bound as a negative obstruction.
+      - Omits one tail class from the error budget.
+      - Emits a theorem without constants.
+    status: resolved
+
+  - id: ROUTEA-OPEN-SKILL-008
+    type: workflow_todo
+    phase: manuscript-result-integration
+    owner: skills/results_ellaboration
+    priority: medium
+    risk_class: result-artifacts-not-entering-paper-cleanly
+    title: Add a second-wave manuscript revision controller for open-point results
+    intent: >
+      Ensure outputs from the new open-point skills enter the paper as clean
+      mathematical content, update the checklist/status table, and never leak
+      planning or skill language into the manuscript.
+    why_needed: >
+      As more focused skills produce artifacts, the paper needs a controlled
+      revision surface that decides whether the abstract, introduction, status
+      table, open module section, appendix checklist, or conclusion changes.
+    use_skills:
+      - routea-paper-result-integrator
+      - results-expansion-validator
+    required_artifact:
+      - skills/results_ellaboration/routea-second-wave-manuscript-integrator/SKILL.md
+      - skills/results_ellaboration/routea-second-wave-manuscript-integrator/agents/openai.yaml
+      - skills/results_ellaboration/results-elaboration-workflow-orchestrator/scripts/integrate_routea_second_wave_results.py
+    implementation_steps:
+      - Define an input result schema: source skill, result type, theorem/proposition/lemma text, assumptions, limitations, affected paper labels, and claim-change flag.
+      - Implement forbidden-language and overclaim scans over the exported TeX.
+      - Update the status table and appendix checklist when a result resolves or sharpens an item.
+      - Compile TeX and store a revision manifest.
+    deterministic_regime:
+      - TeX patch application, forbidden-language scan, label/ref scan, compile passes.
+    generative_regime:
+      - Decide the smallest honest paper form and revise explanatory prose in physics language.
+    acceptance_criteria:
+      - Every integrated result has a source artifact and claim boundary.
+      - The paper compiles with no unresolved references introduced by the patch.
+      - The exported paper contains no process-management language.
+    blocked_by:
+      - ROUTEA-OPEN-SKILL-001
+    evidence:
+      - file:skills/results_ellaboration/routea-paper-result-integrator/SKILL.md
+      - file:agentic/reports/results_ellaboration/a-finite-schur-feshbach-test-for-reflected-wilson-blocks-an-explicit-four-dimens/finite_wilson_os_routeA_SU2_attack_integrated.tex
+    validation:
+      - python -m py_compile skills/results_ellaboration/results-elaboration-workflow-orchestrator/scripts/integrate_routea_second_wave_results.py
+      - pdflatex -interaction=nonstopmode -halt-on-error -output-directory <build-dir> <integrated-tex>
+      - rg -n "pipeline|workflow|TODO|todo|result-elaboration|implementation packet|agent|skill|queue" <integrated-tex> || true
+    failure_modes:
+      - Writes a paper section about the work process instead of mathematics.
+      - Strengthens the abstract without a theorem-level result.
+      - Leaves stale checklist items after resolving a result.
+    status: resolved
+
+  - id: ROUTEA-OPEN-SKILL-009
+    type: planning_todo
+    phase: continuum-handoff-deferral
+    owner: skills/results_ellaboration
+    priority: medium
+    risk_class: continuum-skill-prematurely-overclaims
+    title: Defer positive continuum-transfer skill until uniform same-theory estimates exist
+    intent: >
+      Record that no new positive continuum/spectral skill should be built yet
+      beyond the existing gatekeeper; only a future transfer-builder is
+      justified after G1-G4/E1-E2 produce uniform same-theory estimates.
+    why_needed: >
+      A continuum-transfer builder would be dangerous now because it could
+      invite a mass-gap narrative before the paper has a geometric collar,
+      uniform margins, endpoint errors, or continuum Schwinger functions.
+    use_skills:
+      - routea-continuum-gap-gatekeeper
+    required_artifact:
+      - agentic/reports/results_ellaboration/a-finite-schur-feshbach-test-for-reflected-wilson-blocks-an-explicit-four-dimens/routea_continuum_transfer_deferral.md
+    implementation_steps:
+      - State the prerequisite artifacts that would license a future transfer-builder skill.
+      - Keep M1/M2 as gatekeeper-only until those artifacts exist.
+      - Define the future skill boundary without implementing it now.
+    deterministic_regime:
+      - Check whether prerequisite artifacts exist.
+    generative_regime:
+      - Explain why finite reflection positivity is a necessary condition but not a continuum construction.
+    acceptance_criteria:
+      - The deferral note lists exact prerequisites: geometric collar, same-theory normalization, coefficient/remainder theorem, uniform lower margins, endpoint error bounds if used, and cited OS reconstruction handoff.
+      - The current skill registry does not add a positive mass-gap transfer skill prematurely.
+    blocked_by:
+      - ROUTEA-OPEN-SKILL-004
+      - ROUTEA-OPEN-SKILL-005
+      - ROUTEA-OPEN-SKILL-007
+    evidence:
+      - paper_label:rem:finite-positivity-not-reconstruction
+      - paper_label:rem:no-gap-from-finite-block
+    validation:
+      - rg -n "mass gap|spectral gap|OS reconstruction" skills/results_ellaboration/routea-continuum-gap-gatekeeper/SKILL.md
+    failure_modes:
+      - A new skill encourages spectral claims before reconstruction.
+      - The deferral note is vague and lacks prerequisite artifact names.
+    status: resolved

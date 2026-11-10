@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://abducer.local/spec/dynamic_experiment_compact_evidence_ref_v3.schema.json",
+  "title": "Compact exact-file evidence reference for causal materialization v3",
+  "description": "References one bounded, singly linked regular file below the materializer workspace. Runtime replay must reopen the path component-wise without following links and recompute size and digest from the same descriptor.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["path", "sha256", "size_bytes", "namespace", "media_type"],
+  "properties": {
+    "path": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 512,
+      "pattern": "^(?!/)(?!.*\\\\)(?!.*(?:^|/)(?:\\.|\\.\\.|latest|current)(?:/|$)).+$"
+    },
+    "sha256": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/digest"},
+    "size_bytes": {"type": "integer", "minimum": 1, "maximum": 16777216},
+    "namespace": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["target_id", "run_id", "branch_id", "state_version"],
+      "properties": {
+        "target_id": {"type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]*$"},
+        "run_id": {"type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]*$"},
+        "branch_id": {"type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]*$"},
+        "state_version": {"type": "integer", "minimum": 0}
+      }
+    },
+    "media_type": {"const": "application/json"}
+  }
+}

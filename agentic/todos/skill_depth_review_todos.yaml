@@ -1,0 +1,685 @@
+[
+  {
+    "id": "SDR-001",
+    "type": "planning_todo",
+    "phase": "rubric",
+    "owner": "agentic/spec",
+    "priority": "critical",
+    "risk_class": "skill-quality",
+    "title": "Define the skill-depth rubric as a schema-backed contract",
+    "intent": "Turn the mathematician and epistemologist review into an explicit contract that can classify each skill by role and required depth signals.",
+    "conceptual_model": "A deep skill is not merely a trigger plus prose. It must state its mathematical object, epistemic status discipline, execution protocol, output contract, and demotion or falsification behavior when those apply to its role.",
+    "use_skills": [
+      "looper-workflow-contract-governor",
+      "review-reasoner-epistemologist",
+      "review-reasoner-fields-medalist"
+    ],
+    "implementation_steps": [
+      "Create `agentic/spec/skill_depth_review_schema.json` with role families, required sections, required signals, and allowed severity levels.",
+      "Encode role-specific requirements for control-plane, ingest, reasoning, discovery, evaluation, orchestration, reporting, and review skills.",
+      "Represent at least these signals: guardrails, output contract, mathematical object/invariant, epistemic status, evidence citation, disconfirmation or demotion, Codex exec/script protocol, and validation handoff.",
+      "Document which signals are mandatory, role-conditional, or optional."
+    ],
+    "validation_commands": [
+      "python -m json.tool agentic/spec/skill_depth_review_schema.json"
+    ],
+    "required_artifact": [
+      "agentic/spec/skill_depth_review_schema.json"
+    ],
+    "acceptance_criteria": [
+      "The schema is JSON-valid and names all eight thematic skill folders.",
+      "The schema distinguishes mathematical-depth requirements from epistemic-depth requirements.",
+      "The schema states which sections are mandatory for all skills and which are mandatory only for specific role families.",
+      "The schema is self-contained enough that a validator can run without hard-coded role rules."
+    ],
+    "blocked_by": [],
+    "evidence": [
+      "file:agentic/reports/skill_depth_persona_review.md",
+      "file:registry/skill_projections/abducer_skill_projections.json",
+      "file:agentic/registries/skill_quality_registry.yaml",
+      "file:agentic/spec/skill_depth_review_schema.json",
+      "cmd:python -m json.tool agentic/spec/skill_depth_review_schema.json",
+      "cmd:python agentic/scripts/validate_skill_depth.py",
+      "cmd:python agentic/scripts/validate_target_relevance.py",
+      "cmd:python agentic/scripts/generate_skill_taxonomy_projections.py",
+      "cmd:python agentic/scripts/validate_skill_taxonomy_projections.py"
+    ],
+    "review_date": "2026-08-08",
+    "failure_modes": [
+      "The rubric remains prose-only and cannot drive validation.",
+      "The rubric treats every skill identically and misses role-specific depth requirements.",
+      "The rubric conflates mathematical validity with epistemic caution."
+    ],
+    "exit_criteria": [
+      "A future validator can load the schema and know what to check for each skill family."
+    ],
+    "status": "resolved",
+    "completed_utc": "2026-07-08T00:00:00Z",
+    "resolution_summary": "Implemented with schema-backed validators, repo-local skill-depth contracts, target relevance ledgers, forward-test fixtures, and generated registry evidence."
+  },
+  {
+    "id": "SDR-002",
+    "type": "test_todo",
+    "phase": "skill-depth-validation",
+    "owner": "agentic/scripts",
+    "priority": "critical",
+    "risk_class": "skill-quality",
+    "title": "Implement a skill-depth validator and machine-readable audit report",
+    "intent": "Detect shallow skills directly from their `SKILL.md` bodies instead of relying on generic registry quality cards.",
+    "conceptual_model": "The validator should not prove a skill is excellent. It should prove the minimum contract is present and produce actionable findings when the skill lacks mathematical or epistemic depth.",
+    "implementation_steps": [
+      "Create `agentic/scripts/validate_skill_depth.py` that loads `agentic/spec/skill_depth_review_schema.json`.",
+      "Scan every `skills/*/*/SKILL.md` file and classify it by thematic folder plus generated workflow role.",
+      "Check for required sections and signals using conservative text patterns and frontmatter metadata.",
+      "Write `agentic/reports/skill_depth/latest.json` and `agentic/reports/skill_depth/latest.md` with per-skill findings.",
+      "Return non-zero only for critical missing contract elements; record medium/low findings as warnings in the report.",
+      "Add the validator to `agentic/scripts/agentic_check.py` after skill projection validation."
+    ],
+    "validation_commands": [
+      "python agentic/scripts/validate_skill_depth.py",
+      "python agentic/scripts/agentic_check.py"
+    ],
+    "use_skills": [
+      "looper-workflow-contract-governor",
+      "review-reasoner-epistemologist",
+      "review-reasoner-fields-medalist"
+    ],
+    "required_artifact": [
+      "agentic/scripts/validate_skill_depth.py",
+      "agentic/reports/skill_depth/latest.json",
+      "agentic/reports/skill_depth/latest.md",
+      "agentic/scripts/agentic_check.py"
+    ],
+    "acceptance_criteria": [
+      "The validator reports all 61 repo-local skills.",
+      "The report separates mathematician findings from epistemologist findings.",
+      "The report lists missing guardrails, output contracts, epistemic status, invariant discipline, and exec protocol per skill.",
+      "The validator is included in the full `agentic_check.py` path.",
+      "The validator output is deterministic across two consecutive runs."
+    ],
+    "blocked_by": [
+      "SDR-001"
+    ],
+    "evidence": [
+      "file:agentic/reports/skill_depth_persona_review.md",
+      "file:agentic/todos/skill_depth_review_todos.yaml",
+      "file:agentic/scripts/validate_skill_depth.py",
+      "file:agentic/reports/skill_depth/latest.json",
+      "file:agentic/reports/skill_depth/latest.md",
+      "file:agentic/scripts/agentic_check.py",
+      "cmd:python -m json.tool agentic/spec/skill_depth_review_schema.json",
+      "cmd:python agentic/scripts/validate_skill_depth.py",
+      "cmd:python agentic/scripts/validate_target_relevance.py",
+      "cmd:python agentic/scripts/generate_skill_taxonomy_projections.py",
+      "cmd:python agentic/scripts/validate_skill_taxonomy_projections.py"
+    ],
+    "review_date": "2026-08-08",
+    "failure_modes": [
+      "Validator checks only frontmatter shape.",
+      "Validator cannot explain why a skill failed.",
+      "Validator blocks on medium findings and becomes too noisy to use."
+    ],
+    "exit_criteria": [
+      "The repository has an executable, report-producing depth check that can guide subsequent skill edits."
+    ],
+    "status": "resolved",
+    "completed_utc": "2026-07-08T00:00:00Z",
+    "resolution_summary": "Implemented with schema-backed validators, repo-local skill-depth contracts, target relevance ledgers, forward-test fixtures, and generated registry evidence."
+  },
+  {
+    "id": "SDR-003",
+    "type": "documentation_todo",
+    "phase": "execution-protocol",
+    "owner": "docs",
+    "priority": "critical",
+    "risk_class": "shallow-determinism",
+    "title": "Write the Codex exec plus generative interpretation protocol",
+    "intent": "Give script-backed skills a standard workflow that combines deterministic execution with mathematical and epistemic interpretation.",
+    "conceptual_model": "Codex exec is the grounding move; generative interpretation is the research move. A deep skill should use both when scripts exist: run the tool, inspect outputs, then reason about proof relevance, uncertainty, and next actions.",
+    "implementation_steps": [
+      "Create `docs/reference/codex-exec-skill-protocol.md`.",
+      "Define the five-step protocol: context check, deterministic run, artifact inspection, generative mathematical/epistemic interpretation, typed next action.",
+      "List when not to run scripts, such as missing inputs, unsafe writes, stale artifacts, or user requesting analysis only.",
+      "Define required output fields: executed commands, produced artifacts, mathematical consequence, epistemic status, unresolved obligations, next action.",
+      "Add examples for a discovery skill, an evaluation skill, and a reporting skill."
+    ],
+    "validation_commands": [
+      "test -f docs/reference/codex-exec-skill-protocol.md",
+      "rg -n \"deterministic run|artifact inspection|epistemic status|next action\" docs/reference/codex-exec-skill-protocol.md"
+    ],
+    "use_skills": [
+      "kb-discovery-cycle",
+      "kb-prove-cycle",
+      "kb-coherence-evaluator",
+      "work"
+    ],
+    "required_artifact": [
+      "docs/reference/codex-exec-skill-protocol.md"
+    ],
+    "acceptance_criteria": [
+      "The protocol distinguishes deterministic artifacts from interpreted mathematical conclusions.",
+      "The protocol requires explicit commands and artifact paths when a script is run.",
+      "The protocol requires uncertainty and next-action reporting after execution.",
+      "The protocol includes examples from at least three skill families."
+    ],
+    "blocked_by": [
+      "SDR-001"
+    ],
+    "evidence": [
+      "file:agentic/reports/skill_depth_persona_review.md",
+      "file:docs/reference/codex-exec-skill-protocol.md",
+      "cmd:python -m json.tool agentic/spec/skill_depth_review_schema.json",
+      "cmd:python agentic/scripts/validate_skill_depth.py",
+      "cmd:python agentic/scripts/validate_target_relevance.py",
+      "cmd:python agentic/scripts/generate_skill_taxonomy_projections.py",
+      "cmd:python agentic/scripts/validate_skill_taxonomy_projections.py"
+    ],
+    "review_date": "2026-08-08",
+    "failure_modes": [
+      "Skills become deterministic artifact factories.",
+      "Codex skips available scripts and produces ungrounded prose.",
+      "Script output is treated as proof progress without interpretation."
+    ],
+    "exit_criteria": [
+      "A skill author can link to the protocol and know exactly how to combine execution with generative reasoning."
+    ],
+    "status": "resolved",
+    "completed_utc": "2026-07-08T00:00:00Z",
+    "resolution_summary": "Implemented with schema-backed validators, repo-local skill-depth contracts, target relevance ledgers, forward-test fixtures, and generated registry evidence."
+  },
+  {
+    "id": "SDR-004",
+    "type": "documentation_todo",
+    "phase": "control-plane-skill-upgrade",
+    "owner": "skills/control-plane",
+    "priority": "critical",
+    "risk_class": "control-plane-overclaim",
+    "title": "Upgrade control-plane skills with anti-overclaim contracts",
+    "intent": "Prevent Looper/control-plane skills from treating artifact presence, workflow validity, or release evidence as mathematical progress.",
+    "conceptual_model": "Control-plane skills govern evidence flow and lifecycle state. They may promote a workflow slice, but they must not promote a theorem claim unless proof-specific evidence exists.",
+    "implementation_steps": [
+      "Edit each listed control-plane `SKILL.md` to add `Guardrails`, `Output Contract`, and `Codex Exec Protocol` sections.",
+      "Require every control-plane claim to cite target packet IDs, dependency graph nodes, artifact paths, or explicit unknowns.",
+      "Add an anti-overclaim rule: workflow validity is not theorem validity.",
+      "Add a release decision output shape: decision, evidence, unresolved mathematical debt, rollback/quarantine condition.",
+      "Link to `docs/reference/codex-exec-skill-protocol.md` after SDR-003 exists."
+    ],
+    "validation_commands": [
+      "python agentic/scripts/validate_skill_depth.py",
+      "python agentic/scripts/validate_skill_taxonomy_projections.py"
+    ],
+    "use_skills": [
+      "looper-hook-policy-maintainer",
+      "looper-target-dependency-cartographer",
+      "looper-workflow-contract-governor",
+      "looper-release-promoter"
+    ],
+    "required_artifact": [
+      "skills/control-plane/looper-hook-policy-maintainer/SKILL.md",
+      "skills/control-plane/looper-target-dependency-cartographer/SKILL.md",
+      "skills/control-plane/looper-workflow-contract-governor/SKILL.md",
+      "skills/control-plane/looper-release-promoter/SKILL.md"
+    ],
+    "acceptance_criteria": [
+      "Each target skill has `Guardrails`, `Output Contract`, and `Codex Exec Protocol` sections.",
+      "Each target skill states that control-plane promotion is not proof of the mathematical target.",
+      "Each target skill requires evidence paths or explicit unknowns for route/governance claims.",
+      "Skill-depth validator reports no critical control-plane findings for these skills."
+    ],
+    "blocked_by": [
+      "SDR-002",
+      "SDR-003"
+    ],
+    "evidence": [
+      "file:agentic/reports/skill_depth_persona_review.md",
+      "file:skills/control-plane/looper-workflow-contract-governor/SKILL.md",
+      "file:skills/control-plane/looper-hook-policy-maintainer/SKILL.md",
+      "file:skills/control-plane/looper-target-dependency-cartographer/SKILL.md",
+      "file:skills/control-plane/looper-release-promoter/SKILL.md",
+      "cmd:python -m json.tool agentic/spec/skill_depth_review_schema.json",
+      "cmd:python agentic/scripts/validate_skill_depth.py",
+      "cmd:python agentic/scripts/validate_target_relevance.py",
+      "cmd:python agentic/scripts/generate_skill_taxonomy_projections.py",
+      "cmd:python agentic/scripts/validate_skill_taxonomy_projections.py"
+    ],
+    "review_date": "2026-08-08",
+    "failure_modes": [
+      "Release promotion overstates mathematical significance.",
+      "Hook/workflow checks become shallow deterministic ceremony.",
+      "Control-plane skills hide unresolved theorem debt."
+    ],
+    "exit_criteria": [
+      "The control plane can remain deterministic without becoming epistemically overconfident."
+    ],
+    "status": "resolved",
+    "completed_utc": "2026-07-08T00:00:00Z",
+    "resolution_summary": "Implemented with schema-backed validators, repo-local skill-depth contracts, target relevance ledgers, forward-test fixtures, and generated registry evidence."
+  },
+  {
+    "id": "SDR-005",
+    "type": "documentation_todo",
+    "phase": "evaluation-skill-upgrade",
+    "owner": "skills/evaluation",
+    "priority": "critical",
+    "risk_class": "mathematical-validity",
+    "title": "Upgrade evaluation skills with invariant, edge-case, and demotion contracts",
+    "intent": "Make evaluation skills mathematically deep by forcing definitions, preserved invariants, assumptions, edge cases, counterexamples, and proof obligations into their outputs.",
+    "conceptual_model": "Evaluation is not labeling. It is a controlled attempt to preserve or break a mathematical route by testing definitions, invariants, regimes, assumptions, and counterexamples.",
+    "implementation_steps": [
+      "Edit each listed evaluation skill to add `Mathematical Invariants`, `Epistemic Discipline`, `Output Contract`, and `Failure/Demotion` sections.",
+      "Require output to name the mathematical objects compared or audited.",
+      "Require preserved and broken invariants to be listed separately.",
+      "Require at least one edge case, counterexample class, or boundary regime when applicable.",
+      "Require proof obligations or demotion reasons rather than bare scores."
+    ],
+    "validation_commands": [
+      "python agentic/scripts/validate_skill_depth.py",
+      "rg -n \"Mathematical Invariants|Epistemic Discipline|Failure/Demotion\" skills/evaluation"
+    ],
+    "use_skills": [
+      "bridge-object-equivalence-checker",
+      "counterfactual-route-prober",
+      "entailment-gap-auditor",
+      "premise-completeness-prober",
+      "regime-shift-auditor",
+      "kb-end-to-end-proof-critic"
+    ],
+    "required_artifact": [
+      "skills/evaluation/bridge-object-equivalence-checker/SKILL.md",
+      "skills/evaluation/counterfactual-route-prober/SKILL.md",
+      "skills/evaluation/entailment-gap-auditor/SKILL.md",
+      "skills/evaluation/premise-completeness-prober/SKILL.md",
+      "skills/evaluation/regime-shift-auditor/SKILL.md",
+      "skills/evaluation/kb-end-to-end-proof-critic/SKILL.md"
+    ],
+    "acceptance_criteria": [
+      "Each target skill names objects, assumptions, preserved invariants, broken invariants, and edge cases in its output contract.",
+      "Each target skill requires uncertainty, falsification, or demotion reasons.",
+      "Each target skill distinguishes a mathematical witness from a narrative rationale.",
+      "Skill-depth validator reports no critical evaluation findings for these skills."
+    ],
+    "blocked_by": [
+      "SDR-002"
+    ],
+    "evidence": [
+      "file:agentic/reports/skill_depth_persona_review.md",
+      "file:skills/evaluation/bridge-object-equivalence-checker/SKILL.md",
+      "file:skills/evaluation/counterfactual-route-prober/SKILL.md",
+      "file:skills/evaluation/entailment-gap-auditor/SKILL.md",
+      "file:skills/evaluation/premise-completeness-prober/SKILL.md",
+      "file:skills/evaluation/regime-shift-auditor/SKILL.md",
+      "file:skills/evaluation/kb-end-to-end-proof-critic/SKILL.md",
+      "cmd:python -m json.tool agentic/spec/skill_depth_review_schema.json",
+      "cmd:python agentic/scripts/validate_skill_depth.py",
+      "cmd:python agentic/scripts/validate_target_relevance.py",
+      "cmd:python agentic/scripts/generate_skill_taxonomy_projections.py",
+      "cmd:python agentic/scripts/validate_skill_taxonomy_projections.py"
+    ],
+    "review_date": "2026-08-08",
+    "failure_modes": [
+      "Evaluation skills produce labels without mathematical witnesses.",
+      "Counterfactual or entailment checks miss regime shifts and hidden assumptions.",
+      "A route survives evaluation because no explicit falsifier was requested."
+    ],
+    "exit_criteria": [
+      "Evaluation skills can actively protect the proof search from invalid abstraction, regime drift, and hidden premise shifts."
+    ],
+    "status": "resolved",
+    "completed_utc": "2026-07-08T00:00:00Z",
+    "resolution_summary": "Implemented with schema-backed validators, repo-local skill-depth contracts, target relevance ledgers, forward-test fixtures, and generated registry evidence."
+  },
+  {
+    "id": "SDR-006",
+    "type": "documentation_todo",
+    "phase": "discovery-reporting-skill-upgrade",
+    "owner": "skills",
+    "priority": "critical",
+    "risk_class": "epistemic-overreach",
+    "title": "Upgrade discovery and reporting skills with epistemic status and falsification discipline",
+    "intent": "Ensure generative discovery/reporting skills separate conjecture, evidence, proof obligation, unsupported speculation, and rejected routes.",
+    "conceptual_model": "Generative discovery should widen the hypothesis space, but epistemic discipline decides which generated routes deserve attention. Reporting should preserve this status rather than laundering conjecture into conclusion.",
+    "implementation_steps": [
+      "Edit each listed discovery/reporting skill to add `Epistemic Discipline` and `Output Contract` sections.",
+      "Require generated hypotheses to carry status labels such as conjectural, evidence-backed, proof-obligation, blocked, refuted, or promoted.",
+      "Require disconfirming observations and demotion triggers for generated routes.",
+      "Require reporting skills to preserve epistemic status from source artifacts.",
+      "Require source artifact paths, KB IDs, or explicit unknowns for all substantive claims."
+    ],
+    "validation_commands": [
+      "python agentic/scripts/validate_skill_depth.py",
+      "rg -n \"Epistemic Discipline|disconfirm|demot|conjectural|proof-obligation\" skills/discovery skills/reporting"
+    ],
+    "use_skills": [
+      "kb-entrypoint-finder",
+      "kb-proof-connector",
+      "kb-concept-bridge-planner",
+      "kb-gap-abstraction-conjecturer",
+      "kb-promising-direction-assessor",
+      "kb-expert-paper-generator",
+      "expert-handoff"
+    ],
+    "required_artifact": [
+      "skills/discovery/kb-entrypoint-finder/SKILL.md",
+      "skills/discovery/kb-proof-connector/SKILL.md",
+      "skills/discovery/kb-concept-bridge-planner/SKILL.md",
+      "skills/discovery/kb-gap-abstraction-conjecturer/SKILL.md",
+      "skills/discovery/kb-promising-direction-assessor/SKILL.md",
+      "skills/reporting/kb-expert-paper-generator/SKILL.md",
+      "skills/reporting/expert-handoff/SKILL.md"
+    ],
+    "acceptance_criteria": [
+      "Each target discovery skill requires status labels and disconfirming observations for generated routes.",
+      "Each target reporting skill preserves uncertainty and blocked status from source artifacts.",
+      "Each target skill states what would falsify or demote a generated route.",
+      "Skill-depth validator reports no critical discovery/reporting findings for these skills."
+    ],
+    "blocked_by": [
+      "SDR-002"
+    ],
+    "evidence": [
+      "file:agentic/reports/skill_depth_persona_review.md",
+      "file:skills/discovery/kb-entrypoint-finder/SKILL.md",
+      "file:skills/discovery/kb-proof-connector/SKILL.md",
+      "file:skills/discovery/kb-concept-bridge-planner/SKILL.md",
+      "file:skills/discovery/kb-gap-abstraction-conjecturer/SKILL.md",
+      "file:skills/discovery/kb-promising-direction-assessor/SKILL.md",
+      "file:skills/reporting/kb-expert-paper-generator/SKILL.md",
+      "file:skills/reporting/expert-handoff/SKILL.md",
+      "cmd:python -m json.tool agentic/spec/skill_depth_review_schema.json",
+      "cmd:python agentic/scripts/validate_skill_depth.py",
+      "cmd:python agentic/scripts/validate_target_relevance.py",
+      "cmd:python agentic/scripts/generate_skill_taxonomy_projections.py",
+      "cmd:python agentic/scripts/validate_skill_taxonomy_projections.py"
+    ],
+    "review_date": "2026-08-08",
+    "failure_modes": [
+      "Generative reports smooth over uncertainty.",
+      "Attractive hypotheses survive without disconfirming observations.",
+      "Reporting converts conjectural routes into authoritative conclusions."
+    ],
+    "exit_criteria": [
+      "Discovery can remain imaginative while reporting and prioritization preserve claim-to-evidence discipline."
+    ],
+    "status": "resolved",
+    "completed_utc": "2026-07-08T00:00:00Z",
+    "resolution_summary": "Implemented with schema-backed validators, repo-local skill-depth contracts, target relevance ledgers, forward-test fixtures, and generated registry evidence."
+  },
+  {
+    "id": "SDR-007",
+    "type": "workflow_todo",
+    "phase": "script-backed-skill-upgrade",
+    "owner": "skills",
+    "priority": "high",
+    "risk_class": "shallow-determinism",
+    "title": "Link script-backed skills to the Codex exec protocol",
+    "intent": "Make script-backed skills run deterministic tools when useful, inspect artifacts, and then perform mathematical and epistemic interpretation rather than stopping at raw reports.",
+    "conceptual_model": "A script-backed skill should be a hybrid instrument: deterministic computation creates evidence, while Codex interprets its mathematical and epistemic meaning under the skill contract.",
+    "implementation_steps": [
+      "Identify at least ten skills with `scripts/` directories.",
+      "Add a short `Codex Exec Protocol` section to each selected skill.",
+      "For each skill, name its main executable script and expected output artifacts.",
+      "Require post-exec interpretation: mathematical consequence, epistemic status, unresolved obligations, and next action.",
+      "Link each updated skill to `docs/reference/codex-exec-skill-protocol.md`."
+    ],
+    "validation_commands": [
+      "python agentic/scripts/validate_skill_depth.py",
+      "rg -n \"Codex Exec Protocol\" skills | wc -l"
+    ],
+    "use_skills": [
+      "kb-discovery-cycle",
+      "kb-prove-cycle",
+      "kb-coherence-evaluator",
+      "kb-framework-state-formalizer",
+      "kb-macro-proof-paper-writer",
+      "work"
+    ],
+    "required_artifact": [
+      "docs/reference/codex-exec-skill-protocol.md",
+      "skills/discovery/kb-discovery-cycle/SKILL.md",
+      "skills/discovery/kb-prove-cycle/SKILL.md",
+      "skills/discovery/kb-coherence-evaluator/SKILL.md",
+      "skills/discovery/kb-framework-state-formalizer/SKILL.md",
+      "skills/reporting/kb-macro-proof-paper-writer/SKILL.md",
+      "skills/orchestration/work/SKILL.md"
+    ],
+    "acceptance_criteria": [
+      "At least ten script-backed skills include a `Codex Exec Protocol` section.",
+      "Each updated skill names the script or validator to run and the output artifacts to inspect.",
+      "Each updated skill requires a generative interpretation after script execution.",
+      "Skill-depth validator reports fewer script-protocol findings after the update."
+    ],
+    "blocked_by": [
+      "SDR-003"
+    ],
+    "evidence": [
+      "file:agentic/reports/skill_depth_persona_review.md",
+      "file:docs/reference/codex-exec-skill-protocol.md",
+      "cmd:rg -n \"Codex Exec Protocol\" skills | wc -l",
+      "cmd:python -m json.tool agentic/spec/skill_depth_review_schema.json",
+      "cmd:python agentic/scripts/validate_skill_depth.py",
+      "cmd:python agentic/scripts/validate_target_relevance.py",
+      "cmd:python agentic/scripts/generate_skill_taxonomy_projections.py",
+      "cmd:python agentic/scripts/validate_skill_taxonomy_projections.py"
+    ],
+    "review_date": "2026-08-08",
+    "failure_modes": [
+      "Codex skips available scripts and produces ungrounded prose.",
+      "Scripts run successfully but the result is not interpreted as mathematical evidence.",
+      "Generated JSON/Markdown is mistaken for proof progress."
+    ],
+    "exit_criteria": [
+      "Script-backed skills visibly combine deterministic execution with generative interpretation."
+    ],
+    "status": "resolved",
+    "completed_utc": "2026-07-08T00:00:00Z",
+    "resolution_summary": "Implemented with schema-backed validators, repo-local skill-depth contracts, target relevance ledgers, forward-test fixtures, and generated registry evidence."
+  },
+  {
+    "id": "SDR-008",
+    "type": "workflow_todo",
+    "phase": "target-control",
+    "owner": "agentic/spec",
+    "priority": "critical",
+    "risk_class": "long-horizon-drift",
+    "title": "Add essential target ledger and target-relevance gates",
+    "intent": "Ensure discovery and evaluation skills preserve essential target commitments over long-horizon exploration rather than drifting to low-value hypotheses.",
+    "conceptual_model": "Long-horizon creativity needs a stable target spine. Hypotheses can be speculative and disposable, but target commitments must remain explicit, scored, and protected by drift gates.",
+    "implementation_steps": [
+      "Create `agentic/spec/essential_target_ledger.schema.json`.",
+      "Create `agentic/scripts/validate_target_relevance.py`.",
+      "Create or scaffold `skills/orchestration/long-horizon-route-portfolio-manager/SKILL.md`.",
+      "Represent essential commitments, accepted weakenings, forbidden drift patterns, active route families, and route budgets.",
+      "Add Yang-Mills target commitments from `KB/yang-mills-existence-and-mass-gap.kb.md` to a fixture or target packet.",
+      "Require hypothesis/candidate rankings to include target-relevance and drift-risk fields before promotion."
+    ],
+    "validation_commands": [
+      "python -m json.tool agentic/spec/essential_target_ledger.schema.json",
+      "python agentic/scripts/validate_target_relevance.py"
+    ],
+    "use_skills": [
+      "looper-target-goal-enricher",
+      "abducer-refinement-route-ranker",
+      "kb-promising-direction-assessor",
+      "work"
+    ],
+    "required_artifact": [
+      "agentic/spec/essential_target_ledger.schema.json",
+      "agentic/scripts/validate_target_relevance.py",
+      "skills/orchestration/long-horizon-route-portfolio-manager/SKILL.md",
+      "tests/fixtures/skill-depth/yang_mills_target_case.json"
+    ],
+    "acceptance_criteria": [
+      "Essential target commitments can be cited by skill outputs and candidate rankings.",
+      "Candidate rankings include target-relevance and drift-risk fields.",
+      "Low-value but valid hypotheses route to watch/archive rather than active proof or discovery branches.",
+      "Yang-Mills commitments include existence, nontriviality, OS/Wightman adequacy, continuum limit, and positive mass gap."
+    ],
+    "blocked_by": [
+      "SDR-002"
+    ],
+    "evidence": [
+      "file:KB/yang-mills-existence-and-mass-gap.kb.md",
+      "file:artifacts/hegelian/hypothesis_exploration_map.json",
+      "file:agentic/spec/essential_target_ledger.schema.json",
+      "file:agentic/scripts/validate_target_relevance.py",
+      "file:skills/orchestration/long-horizon-route-portfolio-manager/SKILL.md",
+      "file:agentic/state/essential_target_ledgers/yang-mills-existence-and-mass-gap.json",
+      "file:tests/fixtures/skill-depth/yang_mills_target_case.json",
+      "cmd:python -m json.tool agentic/spec/skill_depth_review_schema.json",
+      "cmd:python agentic/scripts/validate_skill_depth.py",
+      "cmd:python agentic/scripts/validate_target_relevance.py",
+      "cmd:python agentic/scripts/generate_skill_taxonomy_projections.py",
+      "cmd:python agentic/scripts/validate_skill_taxonomy_projections.py"
+    ],
+    "review_date": "2026-08-08",
+    "failure_modes": [
+      "A valid but low-value branch consumes long-horizon attention.",
+      "Target relevance is asserted qualitatively but not validated.",
+      "Yang-Mills routes drift into generic mathematical physics without preserving the Clay target."
+    ],
+    "exit_criteria": [
+      "Long-horizon exploration has an explicit target spine and a validator that can block low-value drift."
+    ],
+    "status": "resolved",
+    "completed_utc": "2026-07-08T00:00:00Z",
+    "resolution_summary": "Implemented with schema-backed validators, repo-local skill-depth contracts, target relevance ledgers, forward-test fixtures, and generated registry evidence."
+  },
+  {
+    "id": "SDR-009",
+    "type": "test_todo",
+    "phase": "forward-validation",
+    "owner": "tests/generative",
+    "priority": "high",
+    "risk_class": "generative-validation",
+    "title": "Add forward tests for representative skill families on P vs NP and Yang-Mills",
+    "intent": "Validate that skills produce deep mathematical and epistemic outputs on realistic Abducer tasks rather than only satisfying static section checks.",
+    "conceptual_model": "Static skill-depth validation proves the instructions contain the right discipline. Forward tests prove the instructions can drive good behavior on real mathematical artifacts.",
+    "implementation_steps": [
+      "Create `tests/generative/test_skill_depth_mathematician_review.md`.",
+      "Create `tests/generative/test_skill_depth_epistemologist_review.md`.",
+      "Create `tests/fixtures/skill-depth/yang_mills_target_case.json` from the Yang-Mills KB commitments.",
+      "Create `tests/fixtures/skill-depth/p_vs_np_route_case.json` from the current hypothesis exploration map.",
+      "Probe at least one control-plane, discovery, evaluation, orchestration, and reporting skill.",
+      "Require each probe to check invariant preservation, evidence citation, uncertainty, falsification, and next-action quality."
+    ],
+    "validation_commands": [
+      "test -f tests/generative/test_skill_depth_mathematician_review.md",
+      "test -f tests/generative/test_skill_depth_epistemologist_review.md",
+      "python -m json.tool tests/fixtures/skill-depth/yang_mills_target_case.json",
+      "python -m json.tool tests/fixtures/skill-depth/p_vs_np_route_case.json"
+    ],
+    "use_skills": [
+      "review-reasoner-fields-medalist",
+      "review-reasoner-epistemologist",
+      "kb-concept-bridge-planner",
+      "abducer-mediation-candidate-generator"
+    ],
+    "required_artifact": [
+      "tests/generative/test_skill_depth_mathematician_review.md",
+      "tests/generative/test_skill_depth_epistemologist_review.md",
+      "tests/fixtures/skill-depth/yang_mills_target_case.json",
+      "tests/fixtures/skill-depth/p_vs_np_route_case.json"
+    ],
+    "acceptance_criteria": [
+      "Forward tests cover at least five representative skill families.",
+      "Forward tests include Yang-Mills and P vs NP fixtures.",
+      "Forward tests define what counts as shallow output and how to create a follow-up TODO from it.",
+      "Forward tests require mathematical and epistemic quality criteria, not only artifact presence."
+    ],
+    "blocked_by": [
+      "SDR-004",
+      "SDR-005",
+      "SDR-006",
+      "SDR-007",
+      "SDR-008"
+    ],
+    "evidence": [
+      "file:KB/yang-mills-existence-and-mass-gap.kb.md",
+      "file:agentic/reports/skill_depth_persona_review.md",
+      "file:tests/generative/test_skill_depth_mathematician_review.md",
+      "file:tests/generative/test_skill_depth_epistemologist_review.md",
+      "file:tests/fixtures/skill-depth/yang_mills_target_case.json",
+      "file:tests/fixtures/skill-depth/p_vs_np_route_case.json",
+      "cmd:python -m json.tool agentic/spec/skill_depth_review_schema.json",
+      "cmd:python agentic/scripts/validate_skill_depth.py",
+      "cmd:python agentic/scripts/validate_target_relevance.py",
+      "cmd:python agentic/scripts/generate_skill_taxonomy_projections.py",
+      "cmd:python agentic/scripts/validate_skill_taxonomy_projections.py"
+    ],
+    "review_date": "2026-08-08",
+    "failure_modes": [
+      "Skills validate syntactically but fail on real mathematical content.",
+      "The skill pack remains tuned to P vs NP and weak under Yang-Mills transfer.",
+      "Forward tests accept fluent but ungrounded outputs."
+    ],
+    "exit_criteria": [
+      "Skill depth is validated against realistic mathematical tasks, not just text patterns."
+    ],
+    "status": "resolved",
+    "completed_utc": "2026-07-08T00:00:00Z",
+    "resolution_summary": "Implemented with schema-backed validators, repo-local skill-depth contracts, target relevance ledgers, forward-test fixtures, and generated registry evidence."
+  },
+  {
+    "id": "SDR-010",
+    "type": "test_todo",
+    "phase": "registry-quality",
+    "owner": "agentic/scripts",
+    "priority": "medium",
+    "risk_class": "registry-overgeneralization",
+    "title": "Make skill quality registry evidence-specific",
+    "intent": "Prevent generated quality cards from masking shallow individual skill instructions.",
+    "conceptual_model": "A registry should summarize observed evidence from the skill body and validators. It should not give every skill the same promoted quality language independent of local depth.",
+    "implementation_steps": [
+      "Update `agentic/scripts/generate_skill_taxonomy_projections.py` to read skill-depth report data when present.",
+      "Populate `agentic/registries/skill_quality_registry.yaml` with per-skill evidence snippets or finding counts.",
+      "Record missing guardrails, output contracts, epistemic status, or exec protocol as quality risks.",
+      "Avoid overwriting unresolved critical findings with generic promoted language.",
+      "Add validation assertions to ensure at least one field differs based on per-skill depth evidence."
+    ],
+    "validation_commands": [
+      "python agentic/scripts/generate_skill_taxonomy_projections.py",
+      "python agentic/scripts/validate_skill_taxonomy_projections.py",
+      "rg -n \"skill_depth|missing|finding|evidence\" agentic/registries/skill_quality_registry.yaml"
+    ],
+    "use_skills": [
+      "looper-workflow-contract-governor"
+    ],
+    "required_artifact": [
+      "agentic/scripts/generate_skill_taxonomy_projections.py",
+      "agentic/registries/skill_quality_registry.yaml",
+      "agentic/reports/skill_depth/latest.json"
+    ],
+    "acceptance_criteria": [
+      "Quality cards cite per-skill evidence from the skill body or skill-depth validator.",
+      "Quality cards record unresolved missing depth signals as risks.",
+      "Projection generation remains deterministic.",
+      "The registry no longer makes all skills look equally mature."
+    ],
+    "blocked_by": [
+      "SDR-002"
+    ],
+    "evidence": [
+      "file:agentic/registries/skill_quality_registry.yaml",
+      "file:agentic/reports/skill_depth_persona_review.md",
+      "file:agentic/scripts/generate_skill_taxonomy_projections.py",
+      "file:registry/skill_projections/abducer_skill_projections.json",
+      "cmd:python -m json.tool agentic/spec/skill_depth_review_schema.json",
+      "cmd:python agentic/scripts/validate_skill_depth.py",
+      "cmd:python agentic/scripts/validate_target_relevance.py",
+      "cmd:python agentic/scripts/generate_skill_taxonomy_projections.py",
+      "cmd:python agentic/scripts/validate_skill_taxonomy_projections.py"
+    ],
+    "review_date": "2026-08-08",
+    "failure_modes": [
+      "All skills receive identical quality cards.",
+      "A shallow SKILL.md receives a promoted quality card with no local evidence.",
+      "Generated registry output overwrites depth findings."
+    ],
+    "exit_criteria": [
+      "The registry becomes an evidence-bearing summary of skill depth rather than a generic aspiration layer."
+    ],
+    "status": "resolved",
+    "completed_utc": "2026-07-08T00:00:00Z",
+    "resolution_summary": "Implemented with schema-backed validators, repo-local skill-depth contracts, target relevance ledgers, forward-test fixtures, and generated registry evidence."
+  }
+]

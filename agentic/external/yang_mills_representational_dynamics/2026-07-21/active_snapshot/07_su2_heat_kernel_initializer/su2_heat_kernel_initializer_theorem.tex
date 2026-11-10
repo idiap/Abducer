@@ -1,0 +1,480 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools,bm}
+\usepackage{booktabs,longtable,array}
+\usepackage[dvipsnames]{xcolor}
+\usepackage[colorlinks=true,linkcolor=MidnightBlue,citecolor=BrickRed,urlcolor=MidnightBlue]{hyperref}
+\usepackage{microtype}
+
+\hypersetup{
+  pdftitle={Explicit SU(2) Heat-Kernel Initialization},
+  pdfauthor={},
+  pdfsubject={One-plaquette derivative and exceptional-event certificates},
+  pdfkeywords={Yang--Mills, SU(2), heat kernel, Poisson summation, large fields}
+}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+
+\newcommand{\R}{\mathbb R}
+\newcommand{\Id}{\mathrm I}
+\newcommand{\SU}{\mathrm{SU}(2)}
+\newcommand{\statusproved}{\textcolor{ForestGreen}{\textsc{proved}}}
+\newcommand{\statusnumeric}{\textcolor{RoyalBlue}{\textsc{computed}}}
+\newcommand{\statusopen}{\textcolor{BrickRed}{\textsc{open}}}
+
+\title{Explicit \texorpdfstring{$SU(2)$}{SU(2)} Heat-Kernel Initialization\\
+\large Local derivative budgets, image-tail control, and a gauge-invariant exceptional event}
+\author{Research dossier---one-plaquette theorem and block-interface audit}
+\date{20 July 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+The preceding one-step effective-action theorem propagates five declared
+derivative budgets but does not initialize them for the exact nonlinear gauge
+action.  This paper removes the existential constant from the radial
+one-plaquette part of that problem.  With $SU(2)$ identified with the unit
+three-sphere and heat generator $\frac12\Delta$, the character and
+Poisson-image representations are matched exactly.  Pairing positive and
+negative images yields explicit uniform bounds on the first four derivatives
+of the image correction, including an analytic omitted-image tail.  For
+$0<t\le0.2$ and class angle $\theta\le1$, the resulting logarithmic-curvature
+certificate is
+\[
+ t\left\|\nabla^2\left(-\log p_t-\frac{\theta^2}{2t}\right)\right\|
+ \le0.0824566,
+ \qquad
+ t\left\|D^3\left(-\log p_t-\frac{\theta^2}{2t}\right)\right\|
+ \le0.149094.
+\]
+The event $\theta(U_p)\ge\rho$ is conjugation invariant.  Its one-plaquette
+probability is enclosed by an analytically integrated character series with a
+geometric truncation bound and explicit floating-roundoff allowance.  A
+\statusproved\ chain-rule theorem transports the radial constants through any
+curvature chart whose first three derivative norms are supplied.  Establishing
+those norms on the full $2^4$ quotient chart and converting plaquette tails
+into dependent block-polymer activities remain \statusopen.
+\end{abstract}
+
+\tableofcontents
+
+\section{Target, normalization, and scope}
+
+The one-step theorem of the preceding stage is exact but typed: it accepts
+numbers such as $\varepsilon_F,\varepsilon_X,\varepsilon_Y,\tau_F,\tau_X$ and
+returns a generated-action certificate.  The earliest missing implication is
+to obtain such numbers from the nonlinear gauge action.  This stage isolates
+the first factor in that implication:
+\[
+ \text{exact radial heat-kernel action}
+ \longrightarrow
+ \text{curvature-coordinate derivative budgets}.
+\]
+The heat-kernel lattice action follows Menotti and Onofri
+\cite{MenottiOnofri}.  Explicit heat-kernel eigenfunction and image
+representations on homogeneous spaces are part of the harmonic-analysis
+framework developed by Camporesi \cite{Camporesi}.
+
+Identify $SU(2)$ with the unit sphere $S^3$.  Every conjugacy class has a
+representative
+\[
+ U(\theta)=\operatorname{diag}(e^{i\theta},e^{-i\theta}),
+ \qquad 0\le\theta\le\pi.
+\]
+Haar probability has radial density
+\begin{equation}\label{eq:haar}
+ d\mu_{\mathrm{rad}}(\theta)=\frac{2}{\pi}\sin^2\theta\,d\theta.
+\end{equation}
+We fix heat generator $\frac12\Delta_{S^3}$.  The eigenvalue in the
+$(n+1)$-dimensional irreducible representation is $n(n+2)$, so the central
+heat kernel is
+\begin{equation}\label{eq:character}
+ p_t(\theta)=\sum_{n=0}^{\infty}(n+1)e^{-n(n+2)t/2}
+ \frac{\sin((n+1)\theta)}{\sin\theta}.
+\end{equation}
+This convention fixes the principal local action as $\theta^2/(2t)$.  Changing
+the metric or Laplacian convention changes every numerical time value and must
+be performed before comparison with another regulator.
+
+The target is one plaquette and one logarithmic curvature chart strictly
+inside the cut locus.  The result is C2: a rigorous restricted theorem.  It is
+not a full block theorem, a large-field polymer theorem, or a mass-generation
+result.  The Clay target remains the continuum construction and Hamiltonian
+gap described by Jaffe and Witten \cite{JaffeWitten}.
+
+\section{Poisson-image representation}
+
+Set $m=n+1$ in \eqref{eq:character}.  Since $n(n+2)=m^2-1$,
+\[
+ p_t(\theta)=\frac{e^{t/2}}{\sin\theta}
+ \sum_{m=1}^{\infty}m e^{-m^2t/2}\sin(m\theta).
+\]
+Poisson summation of the periodic Gaussian, followed by differentiation in
+$\theta$, gives
+\begin{equation}\label{eq:image}
+ p_t(\theta)=C(t)\frac{1}{\sin\theta}
+ \sum_{k\in\mathbb Z}(\theta+2\pi k)
+ \exp\left[-\frac{(\theta+2\pi k)^2}{2t}\right],
+ \qquad
+ C(t)=\frac{e^{t/2}\sqrt{2\pi}}{2t^{3/2}}.
+\end{equation}
+
+Factor the principal image:
+\begin{equation}\label{eq:q-def}
+ \sum_{k\in\mathbb Z}(\theta+2\pi k)e^{-(\theta+2\pi k)^2/(2t)}
+ =\theta e^{-\theta^2/(2t)}(1+q_t(\theta)).
+\end{equation}
+Pairing $k$ with $-k$, and writing $a_k=2\pi k$, yields the analytic even
+function
+\begin{equation}\label{eq:q-pair}
+ q_t(\theta)=2\sum_{k=1}^{\infty}e^{-a_k^2/(2t)}
+ \left[
+ \cosh\left(\frac{a_k\theta}{t}\right)
+ -\frac{a_k}{\theta}\sinh\left(\frac{a_k\theta}{t}\right)
+ \right].
+\end{equation}
+The apparent singularity at $\theta=0$ is removable.  Indeed,
+\begin{equation}\label{eq:sinh-integral}
+ \frac{a_k}{\theta}\sinh\left(\frac{a_k\theta}{t}\right)
+ =\frac{a_k^2}{t}\int_0^1
+ \cosh\left(\frac{s a_k\theta}{t}\right)ds.
+\end{equation}
+
+\section{Explicit image derivative bounds}
+
+Fix $0<\rho<\pi/2$ and $0<t\le t_0$.  For $j=0,1,2,3$, define
+\begin{equation}\label{eq:Qj}
+ Q_j(t_0,\rho):=
+ 2\sum_{k=1}^{\infty}
+ e^{-a_k^2/(2t_0)+a_k\rho/t_0}
+ \left(\frac{a_k}{t_0}\right)^j
+ \left(1+\frac{a_k^2}{t_0(j+1)}\right).
+\end{equation}
+
+\begin{lemma}[Uniform image bound, \statusproved]\label{lem:image-bound}
+Let
+\begin{equation}\label{eq:time-condition}
+ t_0\le \frac{(2\pi)^2-4\pi\rho}{8}.
+\end{equation}
+Then
+\[
+ \sup_{0<t\le t_0}\sup_{0\le\theta\le\rho}
+ |q_t^{(j)}(\theta)|\le Q_j(t_0,\rho),
+ \qquad j=0,1,2,3.
+\]
+After retaining images $1\le k\le K$, the omitted series is bounded by the
+first omitted term divided by $1-r_{j,K}$, where
+\begin{equation}\label{eq:image-ratio}
+ r_{j,K}=\left(\frac{K+2}{K+1}\right)^{j+2}
+ \exp\left[-\frac{(2\pi)^2(2K+3)}{2t_0}
+ +\frac{2\pi\rho}{t_0}\right]<1.
+\end{equation}
+\end{lemma}
+\begin{proof}
+Differentiate \eqref{eq:q-pair} and use
+\eqref{eq:sinh-integral}.  The $j$th derivative introduces
+$(a_k/t)^j$ and $s^j$ under the integral.  Bounding hyperbolic sine and cosine
+by $e^{a_k\rho/t}$ and integrating $s^j$ gives the $k$th summand of
+\eqref{eq:Qj}.  Each summand has the form $t^{-p}e^{-c_k/t}$ with
+$p\le j+1\le4$.  Condition \eqref{eq:time-condition}, using the first image,
+makes it increasing on $(0,t_0]$, so $t=t_0$ is the uniform endpoint.  The
+polynomial ratio between consecutive $k$ terms is at most
+$((k+1)/k)^{j+2}$; the Gaussian ratio gives \eqref{eq:image-ratio}, which
+decreases with $k$.  Geometric summation proves the tail bound.
+\end{proof}
+
+Write
+\begin{equation}\label{eq:action-factor}
+ s_t(\theta):=-\log p_t(\theta)
+ =\frac{\theta^2}{2t}+a(\theta)+b_t(\theta)+c(t),
+\end{equation}
+where
+\[
+ a(\theta)=\log\frac{\sin\theta}{\theta},
+ \qquad b_t(\theta)=-\log(1+q_t(\theta)).
+\]
+If $Q_0<1$, direct differentiation gives
+\begin{align}
+ B_2&:=\sup|b_t''|
+ \le \frac{Q_2}{1-Q_0}+\frac{Q_1^2}{(1-Q_0)^2},\label{eq:B2}\\
+ B_3&:=\sup|b_t'''|
+ \le \frac{Q_3}{1-Q_0}
+ +\frac{3Q_1Q_2}{(1-Q_0)^2}
+ +\frac{2Q_1^3}{(1-Q_0)^3}.\label{eq:B3}
+\end{align}
+
+The geometric term has
+\begin{equation}\label{eq:A23}
+ A_2(\rho):=\sup_{[0,\rho]}|a''|
+ =\csc^2\rho-\rho^{-2},
+ \qquad
+ A_3(\rho):=\sup_{[0,\rho]}|a'''|
+ =2\rho^{-3}-\frac{2\cos\rho}{\sin^3\rho}.
+\end{equation}
+The equalities follow from the positive-coefficient expansions of
+$\csc^2\theta-\theta^{-2}$ and its derivative on this interval.
+
+\section{Local curvature-action certificate}
+
+Let $X\in\mathfrak{su}(2)\cong\R^3$ and $\theta=\|X\|$.  A radial function
+$u(\theta)$ has Hessian eigenvalues $u''(\theta)$ in the radial direction and
+$u'(\theta)/\theta$ in the two tangential directions.
+
+\begin{theorem}[Explicit local heat-kernel initializer, \statusproved]
+\label{thm:initializer}
+Assume Lemma~\ref{lem:image-bound}, $Q_0<1$, and $\|X\|\le\rho$.  Then for all
+$0<t\le t_0$,
+\begin{equation}\label{eq:epsilon-hk}
+ t\left\|\nabla_X^2s_t(X)-\Id/t\right\|
+ \le \varepsilon_{\mathrm{HK}}
+ :=t_0(A_2+B_2).
+\end{equation}
+Moreover,
+\begin{equation}\label{eq:gradient-hk}
+ t\left\|\nabla_X\left(s_t(X)-\frac{\|X\|^2}{2t}\right)\right\|
+ \le g_{\mathrm{HK}}:=\rho\varepsilon_{\mathrm{HK}},
+\end{equation}
+and
+\begin{equation}\label{eq:tau-hk}
+ t\left\|D_X^3\left(s_t(X)-\frac{\|X\|^2}{2t}\right)\right\|
+ \le\tau_{\mathrm{HK}}:=4t_0(A_3+B_3).
+\end{equation}
+\end{theorem}
+\begin{proof}
+Apply \eqref{eq:B2} and \eqref{eq:A23} to the radial Hessian.  Since the
+remainder derivative vanishes at zero, the mean-value theorem bounds the
+tangential eigenvalue and gives \eqref{eq:gradient-hk}.  For a radial $C^3$
+function $u$, set
+\[
+ \beta=\frac{u''}{\theta}-\frac{u'}{\theta^2}.
+\]
+If $M_3=\sup|u'''|$, integration gives $|\beta|\le M_3/2$.  The Euclidean
+third derivative tensor is the sum of a radial tensor with coefficient
+$u'''-3\beta$ and three mixed tensors with coefficient $\beta$.  Its operator
+norm is therefore at most $|u'''-3\beta|+3|\beta|\le4M_3$, proving
+\eqref{eq:tau-hk}.
+\end{proof}
+
+For $(t_0,\rho)=(0.2,1)$ the analytic quantities are
+\begin{center}
+\begin{tabular}{@{}lr@{}}
+\toprule
+Quantity & Value\\
+\midrule
+$A_2$ & $0.4122829274$\\
+$A_3$ & $0.1863671214$\\
+$Q_0$ & $2.3943\times10^{-27}$\\
+$Q_3$ & $1.8840\times10^{-23}$\\
+$\varepsilon_{\mathrm{HK}}$ & $0.08245658549$\\
+$\tau_{\mathrm{HK}}$ & $0.1490936971$\\
+\bottomrule
+\end{tabular}
+\end{center}
+The image contribution is much smaller than the group-Jacobian correction in
+this window; the implementation nevertheless retains its analytic tail.
+
+\section{Composition with a curvature chart}
+
+Let $X(A)$ be a declared plaquette-log map on a link-coordinate chart.  Write
+$D_0=DX(0)$ and suppose
+\begin{equation}\label{eq:chart-norms}
+ \|D_0\|\le M_0,\quad \|DX\|\le M_1,\quad
+ \|DX-D_0\|\le\delta_1,\quad
+ \|D^2X\|\le M_2,\quad \|D^3X\|\le M_3.
+\end{equation}
+
+\begin{proposition}[Chart propagation, \statusproved]\label{prop:chart}
+On a region where $\|X(A)\|\le\rho$, the Hessian remainder of
+$s_t\circ X$ relative to $D_0^*D_0/t$ is bounded by
+\begin{equation}\label{eq:chart-epsilon}
+ \varepsilon_{\mathrm{chart}}
+ =\delta_1(M_1+M_0)
+ +\varepsilon_{\mathrm{HK}}M_1^2
+ +(\rho+g_{\mathrm{HK}})M_2.
+\end{equation}
+Its scaled third derivative is bounded by
+\begin{equation}\label{eq:chart-tau}
+ \tau_{\mathrm{chart}}
+ =\tau_{\mathrm{HK}}M_1^3
+ +3(1+\varepsilon_{\mathrm{HK}})M_1M_2
+ +(\rho+g_{\mathrm{HK}})M_3.
+\end{equation}
+\end{proposition}
+\begin{proof}
+Use
+\[
+ D^2(s_t\circ X)=DX^*(D^2s_t)DX+\langle Ds_t,D^2X\rangle
+\]
+and
+$\|DX^*DX-D_0^*D_0\|\le\delta_1(M_1+M_0)$ to obtain
+\eqref{eq:chart-epsilon}.  The third-order chain rule is
+\[
+ D^3(s_t\circ X)=D^3s_t[DX]^3
+ +3D^2s_t[D^2X,DX]+Ds_t[D^3X].
+\]
+Theorem~\ref{thm:initializer} gives
+$t\|D^2s_t\|\le1+\varepsilon_{\mathrm{HK}}$ and
+$t\|Ds_t\|\le\rho+g_{\mathrm{HK}}$, proving
+\eqref{eq:chart-tau}.
+\end{proof}
+
+For the identity curvature chart, these formulas return exactly
+$\varepsilon_{\mathrm{HK}}$ and $\tau_{\mathrm{HK}}$.  For a block, a declared
+aggregation operator norm must multiply the per-plaquette bounds.  It cannot
+be silently replaced by either independence or raw plaquette count.  A stress
+example with $(M_0,M_1,\delta_1,M_2,M_3)=(1,1.1,0.1,0.2,0.3)$ and aggregation
+factor $6$ gives Hessian budget $3.16>2$.  Those chart values are illustrative,
+not certified BCH constants; the failure demonstrates why their sharp
+derivation is the next proof obligation.
+
+\section{Gauge-invariant exceptional probability}
+
+Define the one-plaquette exceptional event
+\begin{equation}\label{eq:event}
+ E_{\rho,p}=\{U_p:\theta(U_p)\ge\rho\}.
+\end{equation}
+Since class angle is invariant under $U_p\mapsto gU_pg^{-1}$, this event is
+gauge invariant.
+
+Combining \eqref{eq:character} and \eqref{eq:haar} gives
+\begin{equation}\label{eq:probability}
+ \mathbb P_t(E_{\rho,p})
+ =\frac{2}{\pi}\sum_{n=0}^{\infty}(n+1)e^{-n(n+2)t/2}I_{n+1}(\rho),
+\end{equation}
+where
+\begin{align}
+ I_1(\rho)&=\frac{\pi-\rho}{2}+\frac{\sin2\rho}{4},\label{eq:I1}\\
+ I_m(\rho)&=-\frac12\left(
+ \frac{\sin((m-1)\rho)}{m-1}
+ -\frac{\sin((m+1)\rho)}{m+1}
+ \right),\qquad m\ne1.\label{eq:Im}
+\end{align}
+
+\begin{proposition}[Character-tail enclosure, \statusproved]
+\label{prop:probability}
+After summing $0\le n\le N$, the absolute omitted tail in
+\eqref{eq:probability} is at most
+\begin{equation}\label{eq:char-tail}
+ R_N(t)=\frac{2(N+2)e^{-(N+1)(N+3)t/2}}{1-r_N(t)},
+ \qquad
+ r_N(t)=\frac{N+3}{N+2}e^{-(2N+5)t/2},
+\end{equation}
+provided $r_N(t)<1$.
+\end{proposition}
+\begin{proof}
+Equations \eqref{eq:I1}--\eqref{eq:Im} are the elementary integrals of
+$\sin(m\theta)\sin\theta$ over $[\rho,\pi]$.  Their absolute values are at most
+$\pi$, so the omitted $n$th contribution is at most
+$2(n+1)e^{-n(n+2)t/2}$.  The ratio of consecutive majorants decreases with
+$n$ and equals $r_N(t)$ at the first omitted index.  Sum the geometric
+majorant.
+\end{proof}
+
+At $\rho=1$ and $N=80$, the analytic truncation is far below the explicitly
+recorded floating-roundoff allowance:
+\begin{center}
+\begin{tabular}{@{}lrr@{}}
+\toprule
+$t$ & $\mathbb P_t(\theta\ge1)$ & analytic series tail\\
+\midrule
+$0.20$ & $0.1474007238$ & $1.74\times10^{-290}$\\
+$0.10$ & $0.01580367907$ & $1.69\times10^{-144}$\\
+$0.05$ & $0.0001437428033$ & $1.70\times10^{-71}$\\
+\bottomrule
+\end{tabular}
+\end{center}
+The code reports an interval rather than the midpoint alone.  The probability
+is a genuine one-plaquette large-field datum.  Neighboring plaquettes share
+links; therefore these numbers cannot be tensorized into a block or polymer
+activity without a dependence theorem.
+
+\section{Executable verification}
+
+The implementation performs fourteen positive and hostile checks:
+\begin{itemize}
+\item character and Poisson-image ratios agree to floating precision at three
+nonzero class angles;
+\item omitted image tails remain positive even below the ordinary floating
+range, with their logarithmic bounds retained;
+\item decreasing $t_0$ improves both local derivative budgets;
+\item the character probability interval contains a longer-series reference;
+\item probability is normalized at $\rho=0$ and decreases with the calibrated
+radius;
+\item the identity chart preserves the radial budgets exactly;
+\item cut-locus radii, excessive time ranges, invalid chart norms, and
+nonpositive aggregation factors fail closed.
+\end{itemize}
+
+This is executable analytic bookkeeping rather than formal proof-assistant
+verification.  Image and character truncation errors are bounded analytically;
+the partial sums use double precision with a separately recorded roundoff
+allowance.
+
+\section{Frontier audit and next theorem}
+
+\begin{longtable}{@{}p{0.08\textwidth}p{0.65\textwidth}p{0.14\textwidth}@{}}
+\toprule
+ID & Required implication & Status\\
+\midrule
+\endhead
+H1 & Exact radial heat-kernel derivative initializer and one-plaquette exceptional probability & \statusproved\\
+F1 & Explicit transported plaquette-log, Coulomb-slice, retained/fiber projection, and overlap constants on the full $2^4$ block & \statusopen\\
+F2 & Sharp block incidence aggregation preserving the Stage-06 fiber margin & \statusopen\\
+F3 & Dependent gauge-invariant bad-block polymer estimate, including center flux, holonomy, exceptional orbits, boundaries, and topology & \statusopen\\
+F4 & Initialization of all five Stage-06 components for generated localized interactions & \statusopen\\
+F5 & Cutoff-uniform repeated RG closure and retained-base massive crossover & \statusopen\\
+F6 & Nontrivial regulator-independent OS continuum theory and Hamiltonian mass gap & \statusopen\\
+\bottomrule
+\end{longtable}
+
+The result changes the location of the first missing implication.  The radial
+heat kernel itself no longer contributes an existential $C_B$: its geometric
+and image corrections are explicit.  The main local uncertainty is now the
+representation map from 216 noncommuting plaquette holonomies, through a gauge
+slice and coarse retained data, into the $51+357$ quotient/fiber coordinates.
+The next bounded theorem should derive those block constants using the exact
+$SU(2)$ quaternion product and logarithm, rather than a formal BCH remainder.
+It should then insert the resulting numbers into the Stage-06 inequalities.
+
+Even if that local block closes, the one-plaquette tail must still be replaced
+by a dependent polymer activity.  Large fields, topology, repeated scales,
+infrared crossover, continuum existence, reflection positivity, observable
+density, and spectral transfer remain indispensable before any mass-gap claim.
+
+\begin{thebibliography}{9}
+\bibitem{MenottiOnofri}
+P.~Menotti and E.~Onofri,
+\emph{The action of $SU(N)$ lattice gauge theory in terms of the heat kernel on
+the group manifold},
+Nucl. Phys. B \textbf{190} (1981), 288--300,
+\url{https://doi.org/10.1016/0550-3213(81)90560-5}.
+
+\bibitem{Camporesi}
+R.~Camporesi,
+\emph{Harmonic analysis and propagators on homogeneous spaces},
+Phys. Rep. \textbf{196} (1990), 1--134,
+\url{https://doi.org/10.1016/0370-1573(90)90120-Q}.
+
+\bibitem{Balaban1987}
+T.~Balaban,
+\emph{Renormalization group approach to lattice gauge field theories: I.
+Generation of effective actions in a small field approximation and a coupling
+constant renormalization in four dimensions},
+Commun. Math. Phys. \textbf{109} (1987), 249--301,
+\url{https://doi.org/10.1007/BF01215223}.
+
+\bibitem{JaffeWitten}
+A.~Jaffe and E.~Witten,
+\emph{Quantum Yang--Mills Theory}, Clay Mathematics Institute Millennium
+Problem description,
+\url{https://www.claymath.org/wp-content/uploads/2022/06/yangmills.pdf}.
+\end{thebibliography}
+
+\end{document}

@@ -1,0 +1,618 @@
+# SPDX-FileCopyrightText: © 2026 Idiap Research Institute <contact@idiap.ch>
+#
+# SPDX-FileContributor: Danilo Gusicuma <danilo.gusicuma@idiap.ch>
+# Neuro-symbolic AI Group
+#
+# SPDX-License-Identifier: MIT
+# REUSE-IgnoreStart
+schema_version: workflow-skill/v1
+namespace: abducer
+id: evidence_to_proof_route_onramp_workflow
+version: 1.0.0
+kind: workflow
+description: Draft interface projection of evidence_to_proof_route_onramp; native execution and authority
+  remain unchanged.
+aliases:
+- evidence_to_proof_route_onramp
+- evidence-to-proof-route-onramp
+- kb-route-onramp
+lifecycle: draft
+activation:
+  mode: explicit
+  prerequisites: []
+types:
+  EntrypointCandidates:
+    schema: ../../../../agentic/spec/named_workflow_artifacts.schema.json
+    representation: value
+  ExpertRouteDossier:
+    schema: ../../../../agentic/spec/named_workflow_artifacts.schema.json
+    representation: value
+  FalsificationPacket:
+    schema: ../../../../agentic/spec/named_workflow_artifacts.schema.json
+    representation: value
+  GroundedConjecture:
+    schema: ../../../../agentic/spec/named_workflow_artifacts.schema.json
+    representation: value
+  HubBiasAudit:
+    schema: ../../../../agentic/spec/named_workflow_artifacts.schema.json
+    representation: value
+  HypothesisAssessment:
+    schema: ../../../../agentic/spec/named_workflow_artifacts.schema.json
+    representation: value
+  IngestedKnowledgeBase:
+    schema: ../../../../agentic/spec/named_workflow_artifacts.schema.json
+    representation: value
+  NormalizedTheoremCorpus:
+    schema: ../../../../agentic/spec/named_workflow_artifacts.schema.json
+    representation: value
+  ParsedKnowledgeBase:
+    schema: ../../../../agentic/spec/named_workflow_artifacts.schema.json
+    representation: value
+  ProofConnectionGraph:
+    schema: ../../../../agentic/spec/named_workflow_artifacts.schema.json
+    representation: value
+  ProofRouteCandidates:
+    schema: ../../../../agentic/spec/named_workflow_artifacts.schema.json
+    representation: value
+  RegimeShiftAudit:
+    schema: ../../../../agentic/spec/named_workflow_artifacts.schema.json
+    representation: value
+  SourceBundle:
+    schema: ../../../../agentic/spec/named_workflow_artifacts.schema.json
+    representation: value
+  TargetLiteratureNarrative:
+    schema: ../../../../agentic/spec/named_workflow_artifacts.schema.json
+    representation: value
+inputs:
+  request:
+    type: SourceBundle
+outputs:
+  result:
+    type: ExpertRouteDossier
+    value:
+      ref: steps.native.outputs.result
+operations:
+  native_workflow:
+    inputs:
+      request:
+        type: SourceBundle
+    outputs:
+      result:
+        type: ExpertRouteDossier
+    execution:
+      mode: specification_only
+      reason: No workflow-skill/v1 host adapter is supplied. Native skill/hook/CLI interfaces exist, but
+        payload materialization, guard evidence, execution effects and receipt translation are not qualified
+        for this format.
+  step_ingest:
+    inputs:
+      SourceBundle:
+        type: SourceBundle
+    outputs:
+      IngestedKnowledgeBase:
+        type: IngestedKnowledgeBase
+    execution:
+      mode: specification_only
+      reason: Native skill exists at skills/ingest/latex-kb-ingest/SKILL.md; no typed v1 adapter. Source
+        guards, role and failure remain in native_contract.
+  step_parse_pvsnp:
+    inputs:
+      IngestedKnowledgeBase:
+        type: IngestedKnowledgeBase
+    outputs:
+      ParsedKnowledgeBase:
+        type: ParsedKnowledgeBase
+    execution:
+      mode: specification_only
+      reason: Native skill exists at skills/ingest/pvsnp-kb-parser/SKILL.md; no typed v1 adapter. Source
+        guards, role and failure remain in native_contract.
+  step_normalize_theorems:
+    inputs:
+      IngestedKnowledgeBase:
+        type: IngestedKnowledgeBase
+      ParsedKnowledgeBase:
+        type: ParsedKnowledgeBase
+    outputs:
+      NormalizedTheoremCorpus:
+        type: NormalizedTheoremCorpus
+    execution:
+      mode: specification_only
+      reason: Native skill exists at skills/ingest/theorem-body-normalizer/SKILL.md; no typed v1 adapter.
+        Source guards, role and failure remain in native_contract.
+  step_ground_conjecture:
+    inputs:
+      NormalizedTheoremCorpus:
+        type: NormalizedTheoremCorpus
+    outputs:
+      GroundedConjecture:
+        type: GroundedConjecture
+    execution:
+      mode: specification_only
+      reason: Native skill exists at skills/discovery/kb-main-conjecture-grounder/SKILL.md; no typed v1
+        adapter. Source guards, role and failure remain in native_contract.
+  step_narrate_literature_evolution:
+    inputs:
+      GroundedConjecture:
+        type: GroundedConjecture
+      SourceBundle:
+        type: SourceBundle
+    outputs:
+      TargetLiteratureNarrative:
+        type: TargetLiteratureNarrative
+    execution:
+      mode: specification_only
+      reason: Native skill exists at skills/reporting/target-literature-evolution-narrator/SKILL.md; no
+        typed v1 adapter. Source guards, role and failure remain in native_contract.
+  step_connect_proof:
+    inputs:
+      GroundedConjecture:
+        type: GroundedConjecture
+    outputs:
+      ProofConnectionGraph:
+        type: ProofConnectionGraph
+    execution:
+      mode: specification_only
+      reason: Native skill exists at skills/discovery/kb-proof-connector/SKILL.md; no typed v1 adapter.
+        Source guards, role and failure remain in native_contract.
+  step_evaluate_hypotheses:
+    inputs:
+      ProofConnectionGraph:
+        type: ProofConnectionGraph
+    outputs:
+      HypothesisAssessment:
+        type: HypothesisAssessment
+    execution:
+      mode: specification_only
+      reason: Native skill exists at skills/evaluation/kb-hypothesis-evaluator/SKILL.md; no typed v1 adapter.
+        Source guards, role and failure remain in native_contract.
+  step_audit_hubs:
+    inputs:
+      ProofConnectionGraph:
+        type: ProofConnectionGraph
+    outputs:
+      HubBiasAudit:
+        type: HubBiasAudit
+    execution:
+      mode: specification_only
+      reason: Native skill exists at skills/evaluation/hub-bias-auditor/SKILL.md; no typed v1 adapter.
+        Source guards, role and failure remain in native_contract.
+  step_find_entrypoint:
+    inputs:
+      ProofConnectionGraph:
+        type: ProofConnectionGraph
+      HubBiasAudit:
+        type: HubBiasAudit
+    outputs:
+      EntrypointCandidates:
+        type: EntrypointCandidates
+    execution:
+      mode: specification_only
+      reason: Native skill exists at skills/discovery/kb-entrypoint-finder/SKILL.md; no typed v1 adapter.
+        Source guards, role and failure remain in native_contract.
+  step_pathfind:
+    inputs:
+      EntrypointCandidates:
+        type: EntrypointCandidates
+    outputs:
+      ProofRouteCandidates:
+        type: ProofRouteCandidates
+    execution:
+      mode: specification_only
+      reason: Native skill exists at skills/discovery/kb-entrypoint-pathfinder/SKILL.md; no typed v1 adapter.
+        Source guards, role and failure remain in native_contract.
+  step_audit_regime_shift:
+    inputs:
+      ProofRouteCandidates:
+        type: ProofRouteCandidates
+    outputs:
+      RegimeShiftAudit:
+        type: RegimeShiftAudit
+    execution:
+      mode: specification_only
+      reason: Native skill exists at skills/evaluation/regime-shift-auditor/SKILL.md; no typed v1 adapter.
+        Source guards, role and failure remain in native_contract.
+  step_hunt_counterexamples:
+    inputs:
+      ProofRouteCandidates:
+        type: ProofRouteCandidates
+    outputs:
+      FalsificationPacket:
+        type: FalsificationPacket
+    execution:
+      mode: specification_only
+      reason: Native skill exists at skills/evaluation/counterexample-hunter/SKILL.md; no typed v1 adapter.
+        Source guards, role and failure remain in native_contract.
+  step_expert_handoff:
+    inputs:
+      ProofRouteCandidates:
+        type: ProofRouteCandidates
+      FalsificationPacket:
+        type: FalsificationPacket
+    outputs:
+      ExpertRouteDossier:
+        type: ExpertRouteDossier
+    execution:
+      mode: specification_only
+      reason: Native skill exists at skills/reporting/expert-handoff/SKILL.md; no typed v1 adapter. Source
+        guards, role and failure remain in native_contract.
+flow:
+  kind: sequence
+  steps:
+  - id: native
+    kind: call
+    operation: native_workflow
+    description: Opaque native workflow boundary; internal ordering, guards and handoffs are retained
+      in abducer.native_contract.
+    arguments:
+      request:
+        ref: inputs.request
+    on_failure: blocked
+policy:
+  effects:
+    filesystem:
+      read:
+      - native_sources
+      - inputs
+      write: []
+    network: []
+    external_write: []
+  authority:
+    allowed:
+    - describe_native_interface
+    forbidden:
+    - execute_scientific_workflow
+    - approve
+    - prove
+    - publish
+    - promote
+  limits:
+    wall_time_seconds: 1800
+    max_operation_calls: 1
+  failure:
+    default: blocked
+    retry:
+      max_attempts: 1
+      retryable_codes: []
+  resume:
+    mode: none
+    require_matching_definition_and_inputs: true
+  claim_ceiling: Interface description only; no proof, scientific validity, runtime qualification, promotion
+    or approval.
+observability:
+  receipts: required
+  artifact_digests: sha256
+  provenance: required
+  events:
+  - workflow_started
+  - step_failed
+  - workflow_completed
+provenance:
+  coverage: interface_only
+  sources:
+  - path: agentic/registries/named_workflow_contracts.yaml
+    digest: sha256:a467750a969715f742cc330f21fef37f4004b76924650fd9a027c47af9447d77
+  - path: skills/discovery/kb-entrypoint-pathfinder/SKILL.md
+    digest: sha256:3932b9ae170b22317f5825986d097e347ecaa862873773a0ab10dd465608c041
+  - path: hooks/workflow_local/hook_utils.py
+    digest: sha256:65cb3615d064ab6307b1117d493af57331cfd6ef0157ef7b8e733d96d748578c
+  - path: hooks/workflow_local/user_prompt_submit_intake.py
+    digest: sha256:14f6c15eac450b918ce56b290a5a30052ec4c08052b73663aeab5230338ccb11
+  - path: hooks/workflow_local/pre_skill_use_policy.py
+    digest: sha256:2140beff9c300564dedf1b0b8b00bc59cf78ef066f184bc8cbc992670ee0f489
+  - path: hooks/workflow_local/post_skill_use_review.py
+    digest: sha256:0187d1cc3e942aebf6aa4c6874cd23f5661ce6a6dd9f6de9f74703a26a83e296
+  - path: hooks/workflow_local/pre_tool_use_policy.py
+    digest: sha256:916b7acb61078b55f56b13b922ce2b9123fa06184e61fc275a8e80b3f7f30e60
+  - path: hooks/workflow_local/stop_artifact_check.py
+    digest: sha256:d9e526e86cec17c4d74a5a67a9cbeb08766aabe7f1c844ffc71cfef6384145af
+  - path: skills/ingest/latex-kb-ingest/SKILL.md
+    digest: sha256:6984e30324d63ef602d14625d5dee9445dda514e9dffc812a13c5f5ae6f3c0e3
+  - path: skills/ingest/pvsnp-kb-parser/SKILL.md
+    digest: sha256:f227b90ef8f198bdb246965a688b5f8b78828550feef7a13a03516e2cf56067d
+  - path: skills/ingest/theorem-body-normalizer/SKILL.md
+    digest: sha256:6718bb4e901d1bdb0ce7b86225bcac3c82deb5cdf0f238fd5a1d1809d24a7993
+  - path: skills/discovery/kb-main-conjecture-grounder/SKILL.md
+    digest: sha256:e51b76d9f8a1b2ef136a23707ea588cf9e03fd899182868acb7f3cf4f68b4623
+  - path: skills/reporting/target-literature-evolution-narrator/SKILL.md
+    digest: sha256:1bfa9f864ba675f4fcb72ef0de254b25eae28f9e7aed1de230a1560e11d6ebb6
+  - path: skills/discovery/kb-proof-connector/SKILL.md
+    digest: sha256:22e473d66e9ed1d9f88c25739785f75b2c65f1c65e603bdce2701a0a69536089
+  - path: skills/evaluation/kb-hypothesis-evaluator/SKILL.md
+    digest: sha256:a8d70a8597905c027a8d79e4189c477c62f9860938de648303e19bb65ce5c0bd
+  - path: skills/evaluation/hub-bias-auditor/SKILL.md
+    digest: sha256:01103d7dad929b747ba09973b15d9b3b57c740eff63f8be54fe17b3dca26cad0
+  - path: skills/discovery/kb-entrypoint-finder/SKILL.md
+    digest: sha256:aa5b49d28b2e97ab529d60d7d29a1dab8aa34d2530ec3d94e939def1b3f30b5f
+  - path: skills/evaluation/regime-shift-auditor/SKILL.md
+    digest: sha256:fac015ab0db01b45273c1e17f2e9a2bc4936d2c57f99af39a45163efd8822b92
+  - path: skills/evaluation/counterexample-hunter/SKILL.md
+    digest: sha256:413eb19c3dcdc59f53bac734b6a9864e1252095063f1cbb3674dcab3445c748d
+  - path: skills/reporting/expert-handoff/SKILL.md
+    digest: sha256:058d8965cc706da9efb6a341cac99503e02dcab11d48d789b98c2759e632edfd
+  - path: agentic/registries/skill_registry.yaml
+    digest: sha256:15076ed8d1bd4c10895060ab485353fe520421c44e1fc6f506508d2d566eacf0
+  - path: pyproject.toml
+    digest: sha256:69325c4805f66033ce7f7e0e68f4a0996913728c6041bb3cee656571693b2f1e
+  - path: uv.lock
+    digest: sha256:a6c77e5d86a93915eeb0f129f80bc8c45d572be387872e3ace7460a3d6ada9ae
+  - path: prism_me/shared/references/codex-control-stack.md
+    digest: sha256:4e8e7a5cdbc0572cf9b0d4ffc4a41c8f4f9c9a304fae3bcee99d8af3553be30e
+  gaps:
+  - No workflow-skill/v1 host adapter is supplied. Native skill/hook/CLI interfaces exist, but payload
+    materialization, guard evidence, execution effects and receipt translation are not qualified for this
+    format.
+  - Native control flow remains opaque; coverage is interface_only, not source-equivalence certification.
+  - Named payload schemas validate the common envelope only; nominal artifact payloads and artifact_type
+    discriminators are not refined by that schema.
+  - Conditional/advisory skips, repeated ReviewFindingSet aggregation, exit obligations and handoff adapters
+    are preserved verbatim, not executable v1 dataflow.
+extensions:
+  abducer.owner:
+    path: skills/discovery/kb-entrypoint-pathfinder/SKILL.md
+  abducer.native_identity:
+    id: evidence_to_proof_route_onramp
+  abducer.native_contract:
+    id: evidence_to_proof_route_onramp
+    version: 1.0.0
+    visible_name: Evidence to Proof Route Onramp
+    aliases:
+    - evidence-to-proof-route-onramp
+    - kb-route-onramp
+    activation: opt_in
+    owner_skill: kb-entrypoint-pathfinder
+    target_scope:
+    - mathematical
+    - p-vs-np
+    trigger:
+      all_of:
+      - source_bundle_present
+      any_of:
+      - external_mathematical_source
+      - missing_or_stale_kb
+      - entrypoint_or_proof_route_requested
+      none_of:
+      - untrusted_source_without_provenance
+    input_artifact:
+      type: SourceBundle
+      schema: agentic/spec/named_workflow_artifacts.schema.json
+    steps:
+    - id: ingest
+      order: 10
+      skill: latex-kb-ingest
+      mode: required
+      when: null
+      consumes:
+      - SourceBundle
+      produces:
+      - IngestedKnowledgeBase
+      on_failure: stop
+    - id: parse_pvsnp
+      order: 20
+      skill: pvsnp-kb-parser
+      mode: conditional
+      when: target == 'p-vs-np' and source_format == 'latex'
+      consumes:
+      - IngestedKnowledgeBase
+      produces:
+      - ParsedKnowledgeBase
+      on_failure: quarantine
+    - id: normalize_theorems
+      order: 30
+      skill: theorem-body-normalizer
+      mode: required
+      when: null
+      consumes:
+      - IngestedKnowledgeBase
+      - ParsedKnowledgeBase
+      produces:
+      - NormalizedTheoremCorpus
+      on_failure: stop
+    - id: ground_conjecture
+      order: 40
+      skill: kb-main-conjecture-grounder
+      mode: required
+      when: null
+      consumes:
+      - NormalizedTheoremCorpus
+      produces:
+      - GroundedConjecture
+      on_failure: stop
+    - id: narrate_literature_evolution
+      order: 45
+      skill: target-literature-evolution-narrator
+      mode: conditional
+      when: source_bundle_contains_literature_history
+      consumes:
+      - GroundedConjecture
+      - SourceBundle
+      produces:
+      - TargetLiteratureNarrative
+      on_failure: quarantine
+    - id: connect_proof
+      order: 50
+      skill: kb-proof-connector
+      mode: required
+      when: null
+      consumes:
+      - GroundedConjecture
+      produces:
+      - ProofConnectionGraph
+      on_failure: quarantine
+    - id: evaluate_hypotheses
+      order: 60
+      skill: kb-hypothesis-evaluator
+      mode: conditional
+      when: hypotheses_present
+      consumes:
+      - ProofConnectionGraph
+      produces:
+      - HypothesisAssessment
+      on_failure: quarantine
+    - id: audit_hubs
+      order: 70
+      skill: hub-bias-auditor
+      mode: required
+      when: null
+      consumes:
+      - ProofConnectionGraph
+      produces:
+      - HubBiasAudit
+      on_failure: stop
+    - id: find_entrypoint
+      order: 80
+      skill: kb-entrypoint-finder
+      mode: required
+      when: null
+      consumes:
+      - ProofConnectionGraph
+      - HubBiasAudit
+      produces:
+      - EntrypointCandidates
+      on_failure: stop
+    - id: pathfind
+      order: 90
+      skill: kb-entrypoint-pathfinder
+      mode: required
+      when: null
+      consumes:
+      - EntrypointCandidates
+      produces:
+      - ProofRouteCandidates
+      on_failure: stop
+    - id: audit_regime_shift
+      order: 100
+      skill: regime-shift-auditor
+      mode: conditional
+      when: route_crosses_regime_or_model
+      consumes:
+      - ProofRouteCandidates
+      produces:
+      - RegimeShiftAudit
+      on_failure: quarantine
+    - id: hunt_counterexamples
+      order: 110
+      skill: counterexample-hunter
+      mode: required
+      when: null
+      consumes:
+      - ProofRouteCandidates
+      produces:
+      - FalsificationPacket
+      on_failure: stop
+    - id: expert_handoff
+      order: 120
+      skill: expert-handoff
+      mode: required
+      when: null
+      consumes:
+      - ProofRouteCandidates
+      - FalsificationPacket
+      produces:
+      - ExpertRouteDossier
+      on_failure: stop
+    hooks:
+    - hook_id: named-workflow-router
+      event: UserPromptSubmit
+      phase: activation
+      condition: trigger matches
+      required_inputs:
+      - prompt
+      - target
+      decision: recommend
+      emitted_artifact: WorkflowRecommendation
+    - hook_id: workflow-membership-policy
+      event: PreSkillUse
+      phase: steps
+      condition: active workflow and step membership validate
+      required_inputs:
+      - workflow_id
+      - workflow_version
+      - target
+      - step_id
+      - skill
+      - conditional_evidence
+      decision: block
+      emitted_artifact: SkillAuthorization
+    - hook_id: typed-output-policy
+      event: PostSkillUse
+      phase: steps
+      condition: declared output and receipt validate
+      required_inputs:
+      - workflow_id
+      - step_id
+      - artifact_type
+      - epistemic_status
+      - receipt
+      decision: block
+      emitted_artifact: SkillReceipt
+    - hook_id: workflow-tool-policy
+      event: PreToolUse
+      phase: steps
+      condition: path safety mutation and budget validate
+      required_inputs:
+      - workflow_id
+      - step_id
+      - tool
+      - target_path
+      - mutation_class
+      decision: block
+      emitted_artifact: ToolAuthorization
+    - hook_id: workflow-exit-policy
+      event: Stop
+      phase: exit
+      condition: exit artifacts and obligations validate
+      required_inputs:
+      - workflow_id
+      - exit_artifacts
+      - open_obligations
+      decision: block
+      emitted_artifact: WorkflowExitReceipt
+    exit_gate:
+      validator: agentic/scripts/validate_workflow_contracts.py
+      consumes: ExpertRouteDossier
+      allowed:
+      - validated
+      - quarantined
+      required_artifacts:
+      - ExpertRouteDossier
+      - FalsificationPacket
+      - HubBiasAudit
+      open_obligations_policy: allow_declared
+    handoffs:
+    - when: output_is_theorem_shaped
+      workflow: theorem_proof_delivery
+      artifact_type: ProofQueueItem
+      adapter: expert_dossier_to_proof_queue
+    - when: output_requires_conceptual_refinement
+      workflow: conceptual_hypothesis_exploration_loop
+      artifact_type: ExpertRouteDossier
+      adapter: expert_dossier_to_legacy_conceptual_input
+    prohibitions:
+    - No assertion without provenance and assertion license
+    - No route promotion without a falsifier or stop condition
+    cost_profile: bounded
+  abducer.environment:
+    python: pyproject.toml
+    lock: uv.lock
+    native_controls: .codex/config.toml
+    native_controls_optional: true
+    control_policy: prism_me/shared/references/codex-control-stack.md
+  abducer.execution_boundary:
+    status: specification_only
+    notes: Source inspection only. Effects above deny native execution until a separately reviewed adapter
+      exists.
+  abducer.step_interfaces:
+    ingest: step_ingest
+    parse_pvsnp: step_parse_pvsnp
+    normalize_theorems: step_normalize_theorems
+    ground_conjecture: step_ground_conjecture
+    narrate_literature_evolution: step_narrate_literature_evolution
+    connect_proof: step_connect_proof
+    evaluate_hypotheses: step_evaluate_hypotheses
+    audit_hubs: step_audit_hubs
+    find_entrypoint: step_find_entrypoint
+    pathfind: step_pathfind
+    audit_regime_shift: step_audit_regime_shift
+    hunt_counterexamples: step_hunt_counterexamples
+    expert_handoff: step_expert_handoff
+# REUSE-IgnoreEnd

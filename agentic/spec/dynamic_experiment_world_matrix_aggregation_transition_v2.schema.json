@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://abducer.local/spec/dynamic_experiment_world_matrix_aggregation_transition_v2.schema.json",
+  "title": "Thin canonical aggregation-only five-world transition v2",
+  "description": "The aggregation transition owns only the new certificate and aggregation-producer-binding objects, new producer evidence, and the exact ordered anchor/five-observation references.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "transition_kind", "programme_id", "target_id", "run_id",
+    "anchor_commit", "parent_commit", "observation_commits", "expected_commit_generation",
+    "commission_id", "commission_digest", "world_ids", "observation_count",
+    "new_observation_count", "status", "certificate_object", "aggregation_input_manifest",
+    "aggregation_producer_binding_object",
+    "prior_state_semantic_digest", "next_state_semantic_digest", "changed_state_paths",
+    "theory_state_changed", "frozen_theory_state_projection_digest",
+    "commit_local_evidence_manifest", "authority_boundary", "transition_digest"
+  ],
+  "properties": {
+    "schema_version": {"const": "2.0.0"},
+    "transition_kind": {"const": "world_matrix_aggregation"},
+    "programme_id": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/identifier"},
+    "target_id": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/identifier"},
+    "run_id": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/identifier"},
+    "anchor_commit": {"$ref": "./discovery_commit_reference.schema.json"},
+    "parent_commit": {"$ref": "./discovery_commit_reference.schema.json"},
+    "observation_commits": {
+      "type": "array", "minItems": 5, "maxItems": 5,
+      "items": {"$ref": "./discovery_commit_reference.schema.json"}
+    },
+    "expected_commit_generation": {"type": "integer", "minimum": 8},
+    "commission_id": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/identifier"},
+    "commission_digest": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/digest"},
+    "world_ids": {"const": ["no_probe", "neutral_inconclusive", "misleading_toy_positive", "registered_premise_falsifier", "operational_failure"]},
+    "observation_count": {"const": 5},
+    "new_observation_count": {"const": 0},
+    "status": {"const": "complete"},
+    "certificate_object": {"$ref": "./dynamic_experiment_committed_object_descriptor_v1.schema.json"},
+    "aggregation_input_manifest": {"$ref": "./dynamic_experiment_world_matrix_aggregation_input_v1.schema.json"},
+    "aggregation_producer_binding_object": {"$ref": "./dynamic_experiment_committed_object_descriptor_v1.schema.json"},
+    "prior_state_semantic_digest": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/digest"},
+    "next_state_semantic_digest": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/digest"},
+    "changed_state_paths": {"const": ["/generation"]},
+    "theory_state_changed": {"const": false},
+    "frozen_theory_state_projection_digest": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/digest"},
+    "commit_local_evidence_manifest": {"$ref": "./dynamic_experiment_world_matrix_anchor_transition_v2.schema.json#/$defs/evidenceManifest"},
+    "authority_boundary": {"$ref": "./dynamic_experiment_world_matrix_anchor_transition_v2.schema.json#/$defs/authorityBoundary"},
+    "transition_digest": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/digest"}
+  }
+}

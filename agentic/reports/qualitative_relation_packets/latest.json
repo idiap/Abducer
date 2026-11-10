@@ -1,0 +1,405 @@
+{
+  "packets": [
+    {
+      "concrete_probes": [
+        {
+          "description": "Compute a finite Wilson hairpin Schur quotient and determinant to test whether pairwise damping implies finite-family positivity.",
+          "probe_id": "probe.three-hairpin-schur",
+          "transfer_scope": "Calibrates the qualitative phase obstruction; it is not theorem progress without same-theory realization."
+        }
+      ],
+      "created_utc": "2026-07-21T14:37:31+00:00",
+      "epistemic_status": "conjectural",
+      "falsifiers": [
+        "Noncommuting cutoff and volume limits change the qualitative conclusion.",
+        "A relation holds only for a proxy observable or fixed regulator.",
+        "A finite-family determinant or phase obstruction reverses a proposed positivity transfer."
+      ],
+      "packet_id": "qpr.packet.111d3ba7f5fd",
+      "regimes": [
+        {
+          "boundary_conditions": "lattice or regulated boundary",
+          "finite_or_continuum_status": "finite regulator",
+          "id": "reg.fixed_cutoff",
+          "limit_order": "no continuum limit yet",
+          "name": "fixed cutoff and finite volume",
+          "perturbative_status": "mixed",
+          "scale_range": "a > 0 and L < infinity",
+          "transition_conditions": "invalid as final target without transfer"
+        },
+        {
+          "boundary_conditions": "continuum positive-time observables",
+          "finite_or_continuum_status": "continuum candidate",
+          "id": "reg.continuum_transfer",
+          "limit_order": "cutoff and volume limits must be certified",
+          "name": "continuum transfer regime",
+          "perturbative_status": "nonperturbative",
+          "scale_range": "a -> 0 and L -> infinity with uniform control",
+          "transition_conditions": "requires tightness, positivity closure, and observable survival"
+        },
+        {
+          "boundary_conditions": "positive-time gauge-invariant observables",
+          "finite_or_continuum_status": "continuum Hilbert sector",
+          "id": "reg.long_time_spectral",
+          "limit_order": "OS reconstruction before spectral interpretation",
+          "name": "long Euclidean time spectral readout",
+          "perturbative_status": "nonperturbative",
+          "scale_range": "t -> infinity",
+          "transition_conditions": "requires dense observable sector and positive Hamiltonian"
+        },
+        {
+          "boundary_conditions": "Wilson hairpin collars",
+          "finite_or_continuum_status": "finite-family probe",
+          "id": "reg.collar_collapse",
+          "limit_order": "collar limit after fixed-family construction",
+          "name": "reflection-plane collar collapse",
+          "perturbative_status": "boundary-sensitive",
+          "scale_range": "delta -> 0 after finite-family positivity is controlled",
+          "transition_conditions": "phase or determinant obstruction may appear"
+        }
+      ],
+      "relations": [
+        {
+          "assumptions": [
+            "Regulated reflection positivity holds for every fixed cutoff.",
+            "The topology controls finite reflected observable families."
+          ],
+          "convergence_behavior": "may converge to a positive Gram matrix only in the closed reflected-probe topology",
+          "convexity_or_curvature": "not established",
+          "direction": "smaller cutoff should preserve positivity only if the positivity cone is closed",
+          "epistemic_status": "proof_obligation",
+          "evidence_paths": [
+            "agentic/runs/discovery_marathons/yang-mills-smoke-marathon/cycles/cycle-0345.json",
+            "agentic/runs/discovery_marathons/yang-mills-smoke-marathon/cycles/cycle-0346.json",
+            "agentic/runs/discovery_marathons/yang-mills-smoke-marathon/cycles/cycle-0347.json",
+            "agentic/runs/discovery_marathons/yang-mills-smoke-marathon/cycles/cycle-0348.json",
+            "agentic/runs/discovery_marathons/yang-mills-smoke-marathon/cycles/cycle-0349.json",
+            "agentic/runs/discovery_marathons/yang-mills-smoke-marathon/cycles/cycle-0350.json",
+            "agentic/runs/discovery_marathons/yang-mills-smoke-marathon/cycles/cycle-0351.json",
+            "agentic/runs/discovery_marathons/yang-mills-smoke-marathon/cycles/cycle-0352.json"
+          ],
+          "failure_modes": [
+            "Reflection positivity leaks under cutoff removal.",
+            "The limiting topology is too weak for positivity closure."
+          ],
+          "id": "rel.cutoff-to-gram-positivity",
+          "monotonicity": "conditional",
+          "qualitative_rate": "not monotone without uniform topology",
+          "relation_kind": "constrains",
+          "source_variable": "var.cutoff_a",
+          "target_variable": "var.reflection_gram_N",
+          "valid_regime_ids": [
+            "reg.fixed_cutoff",
+            "reg.continuum_transfer"
+          ]
+        },
+        {
+          "assumptions": [
+            "The correlator has a positive spectral representation.",
+            "The observable belongs to the reconstructed gauge-invariant algebra."
+          ],
+          "convergence_behavior": "decay rate witnesses spectral support only after OS reconstruction and observable density",
+          "convexity_or_curvature": "not established",
+          "direction": "larger Euclidean time suppresses spectral components above the lower support",
+          "epistemic_status": "conjectural",
+          "evidence_paths": [
+            "agentic/runs/discovery_marathons/yang-mills-smoke-marathon/cycles/cycle-0345.json",
+            "agentic/runs/discovery_marathons/yang-mills-smoke-marathon/cycles/cycle-0346.json",
+            "agentic/runs/discovery_marathons/yang-mills-smoke-marathon/cycles/cycle-0347.json",
+            "agentic/runs/discovery_marathons/yang-mills-smoke-marathon/cycles/cycle-0348.json",
+            "agentic/runs/discovery_marathons/yang-mills-smoke-marathon/cycles/cycle-0349.json",
+            "agentic/runs/discovery_marathons/yang-mills-smoke-marathon/cycles/cycle-0350.json",
+            "agentic/runs/discovery_marathons/yang-mills-smoke-marathon/cycles/cycle-0351.json",
+            "agentic/runs/discovery_marathons/yang-mills-smoke-marathon/cycles/cycle-0352.json"
+          ],
+          "failure_modes": [
+            "Decay is only fixed-regulator.",
+            "The observable sector is not dense or misses low-energy states."
+          ],
+          "id": "rel.euclidean-decay-to-gap",
+          "monotonicity": "monotone for positive spectral measures after vacuum subtraction",
+          "qualitative_rate": "exponential when a positive spectral threshold is present",
+          "relation_kind": "decreases",
+          "source_variable": "var.euclidean_time_t",
+          "target_variable": "var.correlation_C",
+          "valid_regime_ids": [
+            "reg.long_time_spectral"
+          ]
+        },
+        {
+          "assumptions": [
+            "A positive Hamiltonian and spectral measure are already constructed.",
+            "Vacuum contribution is removed."
+          ],
+          "convergence_behavior": "C(t) is bounded by exp(-m t) times the observable norm when the spectral measure avoids (0,m)",
+          "convexity_or_curvature": "not established",
+          "direction": "larger mass scale gives faster long-time decay",
+          "epistemic_status": "established",
+          "evidence_paths": [
+            "agentic/runs/discovery_marathons/yang-mills-smoke-marathon/cycles/cycle-0345.json",
+            "agentic/runs/discovery_marathons/yang-mills-smoke-marathon/cycles/cycle-0346.json",
+            "agentic/runs/discovery_marathons/yang-mills-smoke-marathon/cycles/cycle-0347.json",
+            "agentic/runs/discovery_marathons/yang-mills-smoke-marathon/cycles/cycle-0348.json",
+            "agentic/runs/discovery_marathons/yang-mills-smoke-marathon/cycles/cycle-0349.json",
+            "agentic/runs/discovery_marathons/yang-mills-smoke-marathon/cycles/cycle-0350.json",
+            "agentic/runs/discovery_marathons/yang-mills-smoke-marathon/cycles/cycle-0351.json",
+            "agentic/runs/discovery_marathons/yang-mills-smoke-marathon/cycles/cycle-0352.json"
+          ],
+          "failure_modes": [
+            "The spectral measure has arbitrarily small non-vacuum support.",
+            "The correlator does not see the full excitation sector."
+          ],
+          "id": "rel.spectral-gap-controls-correlator",
+          "monotonicity": "locally monotone in the lower spectral threshold",
+          "qualitative_rate": "exponential in t with rate bounded by m",
+          "relation_kind": "decreases",
+          "source_variable": "var.spectral_gap_m",
+          "target_variable": "var.correlation_C",
+          "valid_regime_ids": [
+            "reg.long_time_spectral"
+          ]
+        },
+        {
+          "assumptions": [
+            "The Wilson hairpin collars share a reflection-plane footprint.",
+            "The normalized quotient is computed within the same finite family."
+          ],
+          "convergence_behavior": "phase behavior must be computed before Schur quotient positivity can be trusted",
+          "convexity_or_curvature": "not established",
+          "direction": "boundary OPE factors can introduce phase structure in normalized quotients",
+          "epistemic_status": "validated_probe",
+          "evidence_paths": [
+            "agentic/runs/discovery_marathons/yang-mills-smoke-marathon/cycles/cycle-0345.json",
+            "agentic/runs/discovery_marathons/yang-mills-smoke-marathon/cycles/cycle-0346.json",
+            "agentic/runs/discovery_marathons/yang-mills-smoke-marathon/cycles/cycle-0347.json",
+            "agentic/runs/discovery_marathons/yang-mills-smoke-marathon/cycles/cycle-0348.json",
+            "agentic/runs/discovery_marathons/yang-mills-smoke-marathon/cycles/cycle-0349.json",
+            "agentic/runs/discovery_marathons/yang-mills-smoke-marathon/cycles/cycle-0350.json",
+            "agentic/runs/discovery_marathons/yang-mills-smoke-marathon/cycles/cycle-0351.json",
+            "agentic/runs/discovery_marathons/yang-mills-smoke-marathon/cycles/cycle-0352.json"
+          ],
+          "failure_modes": [
+            "A nonzero quotient holonomy makes pairwise positivity insufficient.",
+            "A negative determinant falsifies the proposed positivity bridge."
+          ],
+          "id": "rel-boundary-factor-to-phase",
+          "monotonicity": "not globally monotone",
+          "qualitative_rate": "finite-family and phase-sensitive",
+          "relation_kind": "enables",
+          "source_variable": "var.boundary_factor_B",
+          "target_variable": "var.quotient_phase_phi",
+          "valid_regime_ids": [
+            "reg.collar_collapse"
+          ]
+        },
+        {
+          "assumptions": [
+            "The finite Wilson family is realized in the same reflected observable algebra."
+          ],
+          "convergence_behavior": "the branch must backtrack or quarantine if the finite-family determinant is negative",
+          "convexity_or_curvature": "not established",
+          "direction": "nonzero holonomy or negative normalized determinant blocks naive positivity transfer",
+          "epistemic_status": "conjectural",
+          "evidence_paths": [
+            "agentic/runs/discovery_marathons/yang-mills-smoke-marathon/cycles/cycle-0345.json",
+            "agentic/runs/discovery_marathons/yang-mills-smoke-marathon/cycles/cycle-0346.json",
+            "agentic/runs/discovery_marathons/yang-mills-smoke-marathon/cycles/cycle-0347.json",
+            "agentic/runs/discovery_marathons/yang-mills-smoke-marathon/cycles/cycle-0348.json",
+            "agentic/runs/discovery_marathons/yang-mills-smoke-marathon/cycles/cycle-0349.json",
+            "agentic/runs/discovery_marathons/yang-mills-smoke-marathon/cycles/cycle-0350.json",
+            "agentic/runs/discovery_marathons/yang-mills-smoke-marathon/cycles/cycle-0351.json",
+            "agentic/runs/discovery_marathons/yang-mills-smoke-marathon/cycles/cycle-0352.json"
+          ],
+          "failure_modes": [
+            "The phase obstruction is an artifact of a proxy model.",
+            "The determinant test is not realized by Yang-Mills observables."
+          ],
+          "id": "rel-phase-falsifies-gram-transfer",
+          "monotonicity": "not monotone",
+          "qualitative_rate": "threshold-like",
+          "relation_kind": "falsifies",
+          "source_variable": "var.quotient_phase_phi",
+          "target_variable": "var.reflection_gram_N",
+          "valid_regime_ids": [
+            "reg.collar_collapse"
+          ]
+        }
+      ],
+      "source_artifacts": [
+        "agentic/runs/discovery_marathons/yang-mills-smoke-marathon/cycles/cycle-0345.json",
+        "agentic/runs/discovery_marathons/yang-mills-smoke-marathon/cycles/cycle-0346.json",
+        "agentic/runs/discovery_marathons/yang-mills-smoke-marathon/cycles/cycle-0347.json",
+        "agentic/runs/discovery_marathons/yang-mills-smoke-marathon/cycles/cycle-0348.json",
+        "agentic/runs/discovery_marathons/yang-mills-smoke-marathon/cycles/cycle-0349.json",
+        "agentic/runs/discovery_marathons/yang-mills-smoke-marathon/cycles/cycle-0350.json",
+        "agentic/runs/discovery_marathons/yang-mills-smoke-marathon/cycles/cycle-0351.json",
+        "agentic/runs/discovery_marathons/yang-mills-smoke-marathon/cycles/cycle-0352.json"
+      ],
+      "target_id": "yang-mills-existence-and-mass-gap-target",
+      "validation_handoff": "python agentic/scripts/validate_qualitative_relation_packets.py",
+      "variables": [
+        {
+          "control_status": "control knob before continuum limit",
+          "domain": "regulated gauge-field construction",
+          "id": "var.cutoff_a",
+          "independent_or_dependent": "independent",
+          "name": "lattice spacing / cutoff a",
+          "physical_role": "regulator controlling UV resolution",
+          "quantity_type": "scale",
+          "source_artifacts": [
+            "agentic/runs/discovery_marathons/yang-mills-smoke-marathon/cycles/cycle-0345.json",
+            "agentic/runs/discovery_marathons/yang-mills-smoke-marathon/cycles/cycle-0346.json",
+            "agentic/runs/discovery_marathons/yang-mills-smoke-marathon/cycles/cycle-0347.json",
+            "agentic/runs/discovery_marathons/yang-mills-smoke-marathon/cycles/cycle-0348.json",
+            "agentic/runs/discovery_marathons/yang-mills-smoke-marathon/cycles/cycle-0349.json",
+            "agentic/runs/discovery_marathons/yang-mills-smoke-marathon/cycles/cycle-0350.json",
+            "agentic/runs/discovery_marathons/yang-mills-smoke-marathon/cycles/cycle-0351.json",
+            "agentic/runs/discovery_marathons/yang-mills-smoke-marathon/cycles/cycle-0352.json"
+          ],
+          "units_or_dimension": "length"
+        },
+        {
+          "control_status": "control knob before infinite-volume limit",
+          "domain": "regulated gauge-field construction",
+          "id": "var.volume_L",
+          "independent_or_dependent": "independent",
+          "name": "volume L",
+          "physical_role": "IR box size controlling finite-volume effects",
+          "quantity_type": "scale",
+          "source_artifacts": [
+            "agentic/runs/discovery_marathons/yang-mills-smoke-marathon/cycles/cycle-0345.json",
+            "agentic/runs/discovery_marathons/yang-mills-smoke-marathon/cycles/cycle-0346.json",
+            "agentic/runs/discovery_marathons/yang-mills-smoke-marathon/cycles/cycle-0347.json",
+            "agentic/runs/discovery_marathons/yang-mills-smoke-marathon/cycles/cycle-0348.json",
+            "agentic/runs/discovery_marathons/yang-mills-smoke-marathon/cycles/cycle-0349.json",
+            "agentic/runs/discovery_marathons/yang-mills-smoke-marathon/cycles/cycle-0350.json",
+            "agentic/runs/discovery_marathons/yang-mills-smoke-marathon/cycles/cycle-0351.json",
+            "agentic/runs/discovery_marathons/yang-mills-smoke-marathon/cycles/cycle-0352.json"
+          ],
+          "units_or_dimension": "length"
+        },
+        {
+          "control_status": "observable probe variable",
+          "domain": "Schwinger function probe",
+          "id": "var.euclidean_time_t",
+          "independent_or_dependent": "independent",
+          "name": "Euclidean time separation t",
+          "physical_role": "separation used to read spectral decay",
+          "quantity_type": "scale",
+          "source_artifacts": [
+            "agentic/runs/discovery_marathons/yang-mills-smoke-marathon/cycles/cycle-0345.json",
+            "agentic/runs/discovery_marathons/yang-mills-smoke-marathon/cycles/cycle-0346.json",
+            "agentic/runs/discovery_marathons/yang-mills-smoke-marathon/cycles/cycle-0347.json",
+            "agentic/runs/discovery_marathons/yang-mills-smoke-marathon/cycles/cycle-0348.json",
+            "agentic/runs/discovery_marathons/yang-mills-smoke-marathon/cycles/cycle-0349.json",
+            "agentic/runs/discovery_marathons/yang-mills-smoke-marathon/cycles/cycle-0350.json",
+            "agentic/runs/discovery_marathons/yang-mills-smoke-marathon/cycles/cycle-0351.json",
+            "agentic/runs/discovery_marathons/yang-mills-smoke-marathon/cycles/cycle-0352.json"
+          ],
+          "units_or_dimension": "time/length"
+        },
+        {
+          "control_status": "measured response",
+          "domain": "Euclidean continuum candidate",
+          "id": "var.correlation_C",
+          "independent_or_dependent": "dependent",
+          "name": "connected correlator C(t)",
+          "physical_role": "gauge-invariant observable correlation",
+          "quantity_type": "observable",
+          "source_artifacts": [
+            "agentic/runs/discovery_marathons/yang-mills-smoke-marathon/cycles/cycle-0345.json",
+            "agentic/runs/discovery_marathons/yang-mills-smoke-marathon/cycles/cycle-0346.json",
+            "agentic/runs/discovery_marathons/yang-mills-smoke-marathon/cycles/cycle-0347.json",
+            "agentic/runs/discovery_marathons/yang-mills-smoke-marathon/cycles/cycle-0348.json",
+            "agentic/runs/discovery_marathons/yang-mills-smoke-marathon/cycles/cycle-0349.json",
+            "agentic/runs/discovery_marathons/yang-mills-smoke-marathon/cycles/cycle-0350.json",
+            "agentic/runs/discovery_marathons/yang-mills-smoke-marathon/cycles/cycle-0351.json",
+            "agentic/runs/discovery_marathons/yang-mills-smoke-marathon/cycles/cycle-0352.json"
+          ],
+          "units_or_dimension": "observable squared"
+        },
+        {
+          "control_status": "target witness",
+          "domain": "OS-reconstructed Hilbert space",
+          "id": "var.spectral_gap_m",
+          "independent_or_dependent": "dependent",
+          "name": "spectral mass scale m",
+          "physical_role": "candidate lower support of Hamiltonian spectrum",
+          "quantity_type": "scale",
+          "source_artifacts": [
+            "agentic/runs/discovery_marathons/yang-mills-smoke-marathon/cycles/cycle-0345.json",
+            "agentic/runs/discovery_marathons/yang-mills-smoke-marathon/cycles/cycle-0346.json",
+            "agentic/runs/discovery_marathons/yang-mills-smoke-marathon/cycles/cycle-0347.json",
+            "agentic/runs/discovery_marathons/yang-mills-smoke-marathon/cycles/cycle-0348.json",
+            "agentic/runs/discovery_marathons/yang-mills-smoke-marathon/cycles/cycle-0349.json",
+            "agentic/runs/discovery_marathons/yang-mills-smoke-marathon/cycles/cycle-0350.json",
+            "agentic/runs/discovery_marathons/yang-mills-smoke-marathon/cycles/cycle-0351.json",
+            "agentic/runs/discovery_marathons/yang-mills-smoke-marathon/cycles/cycle-0352.json"
+          ],
+          "units_or_dimension": "inverse length"
+        },
+        {
+          "control_status": "positivity witness",
+          "domain": "OS reflection-positive sector",
+          "id": "var.reflection_gram_N",
+          "independent_or_dependent": "dependent",
+          "name": "reflection Gram matrix N",
+          "physical_role": "finite-family positivity carrier",
+          "quantity_type": "matrix",
+          "source_artifacts": [
+            "agentic/runs/discovery_marathons/yang-mills-smoke-marathon/cycles/cycle-0345.json",
+            "agentic/runs/discovery_marathons/yang-mills-smoke-marathon/cycles/cycle-0346.json",
+            "agentic/runs/discovery_marathons/yang-mills-smoke-marathon/cycles/cycle-0347.json",
+            "agentic/runs/discovery_marathons/yang-mills-smoke-marathon/cycles/cycle-0348.json",
+            "agentic/runs/discovery_marathons/yang-mills-smoke-marathon/cycles/cycle-0349.json",
+            "agentic/runs/discovery_marathons/yang-mills-smoke-marathon/cycles/cycle-0350.json",
+            "agentic/runs/discovery_marathons/yang-mills-smoke-marathon/cycles/cycle-0351.json",
+            "agentic/runs/discovery_marathons/yang-mills-smoke-marathon/cycles/cycle-0352.json"
+          ],
+          "units_or_dimension": "dimensionless"
+        },
+        {
+          "control_status": "mechanism candidate",
+          "domain": "collar-collapse probe",
+          "id": "var.boundary_factor_B",
+          "independent_or_dependent": "dependent",
+          "name": "boundary OPE factor B",
+          "physical_role": "short-distance collar contribution",
+          "quantity_type": "matrix",
+          "source_artifacts": [
+            "agentic/runs/discovery_marathons/yang-mills-smoke-marathon/cycles/cycle-0345.json",
+            "agentic/runs/discovery_marathons/yang-mills-smoke-marathon/cycles/cycle-0346.json",
+            "agentic/runs/discovery_marathons/yang-mills-smoke-marathon/cycles/cycle-0347.json",
+            "agentic/runs/discovery_marathons/yang-mills-smoke-marathon/cycles/cycle-0348.json",
+            "agentic/runs/discovery_marathons/yang-mills-smoke-marathon/cycles/cycle-0349.json",
+            "agentic/runs/discovery_marathons/yang-mills-smoke-marathon/cycles/cycle-0350.json",
+            "agentic/runs/discovery_marathons/yang-mills-smoke-marathon/cycles/cycle-0351.json",
+            "agentic/runs/discovery_marathons/yang-mills-smoke-marathon/cycles/cycle-0352.json"
+          ],
+          "units_or_dimension": "dimensionless"
+        },
+        {
+          "control_status": "falsifier variable",
+          "domain": "finite Wilson hairpin probe",
+          "id": "var.quotient_phase_phi",
+          "independent_or_dependent": "dependent",
+          "name": "quotient holonomy Phi",
+          "physical_role": "phase obstruction in normalized Schur quotient",
+          "quantity_type": "phase",
+          "source_artifacts": [
+            "agentic/runs/discovery_marathons/yang-mills-smoke-marathon/cycles/cycle-0345.json",
+            "agentic/runs/discovery_marathons/yang-mills-smoke-marathon/cycles/cycle-0346.json",
+            "agentic/runs/discovery_marathons/yang-mills-smoke-marathon/cycles/cycle-0347.json",
+            "agentic/runs/discovery_marathons/yang-mills-smoke-marathon/cycles/cycle-0348.json",
+            "agentic/runs/discovery_marathons/yang-mills-smoke-marathon/cycles/cycle-0349.json",
+            "agentic/runs/discovery_marathons/yang-mills-smoke-marathon/cycles/cycle-0350.json",
+            "agentic/runs/discovery_marathons/yang-mills-smoke-marathon/cycles/cycle-0351.json",
+            "agentic/runs/discovery_marathons/yang-mills-smoke-marathon/cycles/cycle-0352.json"
+          ],
+          "units_or_dimension": "angle"
+        }
+      ]
+    }
+  ],
+  "version": 1
+}

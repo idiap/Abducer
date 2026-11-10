@@ -1,0 +1,68 @@
+\section{The minimum-spill quadratic form and its exact evaluation}
+\label{app:spill}
+
+\subsection{Abstract form}
+
+Let $R:X\to V$ and $B:X\to W$ be linear maps of finite-dimensional real
+inner-product spaces.  For $y\in\im R$, define
+\[
+ h(y)=\min_{Rx=y}\norm{Bx}^2.
+\]
+The minimum exists: after quotienting the affine fiber by
+$\ker R\cap\ker B$, the objective is coercive on a complementary subspace.
+If $x_y$ and $x_z$ are minimizers, the polarization of
+$\ip{Bx_y}{Bx_z}$ is independent of their choices, because two minimizers for
+the same datum differ by a vector whose $B$-image vanishes after orthogonal
+projection onto $B(\ker R)^\perp$.  Hence $h$ is a positive semidefinite
+quadratic form.  It vanishes precisely when its defining affine fiber meets
+$\ker B$.  This proves Proposition~\ref{prop:general-spill}; the automorphism
+statement follows by conjugating $R$ and $B$ with the induced isometries.
+
+Equivalently, a minimizing lift and multiplier satisfy the KKT equations
+\begin{equation}
+\label{eq:kkt-general}
+ B^\mathsf TBx=R^\mathsf T\lambda,
+ \qquad Rx=y.
+\end{equation}
+Because the objective is convex and the constraint affine, these equations
+are sufficient even when $B^\mathsf TB$ is singular.
+
+\subsection{Rational block certificate}
+
+Write a centered star vector as $y=Zu$ with the matrix $Z$ of
+Section~\ref{sec:spill}.  Let $A=A_6/6$ be the rational matrix satisfying
+$Ax=u$, and let $B$ select the $210$ external plaquette curvatures.  The exact
+solver produces five columns $X$ and multipliers $\Lambda$ satisfying
+\begin{equation}
+\label{eq:kkt-certificate}
+ AX=I_5,
+ \qquad B^\mathsf TBX=A^\mathsf T\Lambda.
+\end{equation}
+It then forms $H=X^\mathsf TB^\mathsf TBX$.  For a canonical link,
+\begin{equation}
+\label{eq:spill-H}
+ H=\frac1{7887}
+ \begin{pmatrix}
+21746&10873&8843&12903&10873\\
+10873&21746&8843&10873&12903\\
+8843&8843&17686&8843&8843\\
+12903&10873&8843&21746&10873\\
+10873&12903&8843&10873&21746
+ \end{pmatrix}.
+\end{equation}
+Direct rational expansion gives
+\begin{equation}
+\label{eq:spill-poly}
+ \det(\lambda G-H)
+ =6\left(\lambda-\frac{37}{33}\right)^3
+   \left(\lambda-\frac{391}{239}\right)^2.
+\end{equation}
+Equations~\eqref{eq:kkt-certificate} prove that $H$ is the minimum cost, not
+merely the cost of a trial lift, and \eqref{eq:spill-poly} proves the spectrum.
+The same exact calculation succeeds for all eight interior links.
+
+The KKT matrix is singular: its exact rank is $140$.  Floating QR pivoting is
+used only to locate a $140\times140$ nonsingular minor.  Fraction-free Bareiss
+elimination solves that minor, and substitution into the complete
+$220\times220$ integer KKT system verifies every omitted equation exactly.
+Thus pivot selection may affect runtime but cannot affect a certified result.

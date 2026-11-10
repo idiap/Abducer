@@ -1,0 +1,64 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://abducer.local/spec/public_reasoning_trace_pdf_manifest.schema.json",
+  "title": "Public reasoning trace PDF reproducibility manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "identity", "bindings", "renderer", "compiler", "pdf", "semantic_inventory", "manifest_digest"],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "identity": {
+      "type": "object", "additionalProperties": false,
+      "required": ["trace_id", "workflow_id", "profile_id", "run_id"],
+      "properties": {
+        "trace_id": {"type": "string", "minLength": 1}, "workflow_id": {"type": "string", "minLength": 1},
+        "profile_id": {"type": "string"}, "run_id": {"type": "string", "minLength": 1}
+      }
+    },
+    "bindings": {
+      "type": "object", "additionalProperties": false,
+      "required": ["packet_sha256", "inventory_sha256", "lens_sha256", "tex_sha256", "pdf_sha256", "template_sha256"],
+      "properties": {
+        "packet_sha256": {"$ref": "#/$defs/digest"}, "inventory_sha256": {"$ref": "#/$defs/digest"},
+        "lens_sha256": {"$ref": "#/$defs/digest"}, "tex_sha256": {"$ref": "#/$defs/digest"},
+        "pdf_sha256": {"$ref": "#/$defs/digest"}, "template_sha256": {"$ref": "#/$defs/digest"}
+      }
+    },
+    "renderer": {
+      "type": "object", "additionalProperties": false, "required": ["name", "version"],
+      "properties": {"name": {"type": "string", "minLength": 1}, "version": {"type": "string", "minLength": 1}}
+    },
+    "compiler": {
+      "type": "object", "additionalProperties": false,
+      "required": ["disposition", "engine", "engine_version", "arguments", "passes", "duration_seconds", "source_date_epoch", "warnings", "diagnostics"],
+      "properties": {
+        "disposition": {"enum": ["compiled", "compiler_unavailable", "structural_only"]},
+        "engine": {"type": ["string", "null"]}, "engine_version": {"type": ["string", "null"]},
+        "arguments": {"type": "array", "items": {"type": "string"}}, "passes": {"type": "integer", "minimum": 0},
+        "duration_seconds": {"type": "number", "minimum": 0},
+        "source_date_epoch": {"type": "integer", "minimum": 0}, "warnings": {"type": "array", "maxItems": 100, "items": {"type": "string", "maxLength": 1000}},
+        "diagnostics": {"type": "string", "maxLength": 12000}
+      }
+    },
+    "pdf": {
+      "type": "object", "additionalProperties": false, "required": ["page_count", "byte_reproducibility", "semantic_reproducibility"],
+      "properties": {
+        "page_count": {"type": "integer", "minimum": 0},
+        "byte_reproducibility": {"const": "pinned_environment"},
+        "semantic_reproducibility": {"const": "normalized_metadata_and_extracted_text"}
+      }
+    },
+    "semantic_inventory": {
+      "type": "object", "additionalProperties": false,
+      "required": ["ids", "counts", "truncations", "split_volumes"],
+      "properties": {
+        "ids": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+        "counts": {"type": "object", "additionalProperties": {"type": "integer", "minimum": 0}},
+        "truncations": {"type": "array", "items": {"type": "object"}},
+        "split_volumes": {"type": "array", "items": {"type": "object"}}
+      }
+    },
+    "manifest_digest": {"$ref": "#/$defs/digest"}
+  },
+  "$defs": {"digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"}}
+}

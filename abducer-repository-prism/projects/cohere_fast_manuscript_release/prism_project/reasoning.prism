@@ -1,0 +1,33 @@
+# Function: produce a presentation bounded by an independent audit and decide whether to release it.
+# Input: IndependentAuditPacket supplies the audited authority boundary.
+# Types: ClaimBoundedPresentation links the presentation to its source audit and claim ceiling.
+# Output: ManuscriptReleaseDisposition is Accepted or Stopped.
+# Boundary: presentation never increases the authority of its source claims.
+# Layer: high-level epistemic topology only.
+# Metadata: workflows/manifest.json (`cohere_fast_manuscript_release`).
+
+from types import (
+    IndependentAuditPacket,
+    ClaimBoundedPresentation,
+    ManuscriptReleaseDisposition,
+)
+
+from occurrences import (
+    UnresolvedClaimBoundedPresentationProjection,
+    EvidentialManuscriptReleaseDispositionAssessment,
+)
+
+from relations import (
+    ClaimBoundedPresentationEnablesRelease,
+)
+
+reasoning CohereFastManuscriptRelease(
+    independent_audit: IndependentAuditPacket,
+) -> Generated[ManuscriptReleaseDisposition]:
+    sequence:
+        # Presentation construction preserves source audit identity and claim ceiling.
+        [claim_bounded_presentation: UnresolvedClaimBoundedPresentationProjection(independent_audit)]
+        # Release evaluates the bounded presentation without increasing claim authority.
+        [release_disposition: EvidentialManuscriptReleaseDispositionAssessment(claim_bounded_presentation.value)] by ClaimBoundedPresentationEnablesRelease
+
+    return release_disposition

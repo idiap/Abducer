@@ -1,0 +1,332 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://abducer.local/schemas/conceptual_ancestry_literature_bundle_v3.schema.json",
+  "title": "Byte-retained bounded current literature bundle for conceptual ancestry v3",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "artifact_kind",
+    "bundle_id",
+    "target_id",
+    "run_id",
+    "state_version",
+    "capture_descriptor",
+    "capture",
+    "adjacent_abstraction_method_lane",
+    "manifest",
+    "currentness",
+    "authority_nulls",
+    "authority_boundary",
+    "content_digest"
+  ],
+  "properties": {
+    "schema_version": {"const": "3.0.0"},
+    "artifact_kind": {"const": "bounded_current_literature_bundle_v3"},
+    "bundle_id": {"$ref": "#/$defs/identifier"},
+    "target_id": {"$ref": "#/$defs/identifier"},
+    "run_id": {"$ref": "#/$defs/identifier"},
+    "state_version": {"type": "integer", "minimum": 0},
+    "capture_descriptor": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "capture_id",
+        "media_type",
+        "sha256",
+        "byte_length",
+        "retained_utf8"
+      ],
+      "properties": {
+        "capture_id": {"$ref": "#/$defs/identifier"},
+        "media_type": {"const": "application/json; charset=utf-8"},
+        "sha256": {"$ref": "#/$defs/digest"},
+        "byte_length": {"type": "integer", "minimum": 1},
+        "retained_utf8": {"type": "string", "minLength": 1}
+      }
+    },
+    "capture": {"$ref": "#/$defs/capture"},
+    "adjacent_abstraction_method_lane": {
+      "oneOf": [
+        {"$ref": "./adjacent_abstraction_method_literature_lane.schema.json"},
+        {"type": "null"}
+      ]
+    },
+    "manifest": {"$ref": "#/$defs/manifest"},
+    "currentness": {"$ref": "#/$defs/currentness"},
+    "authority_nulls": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "clock_attestation_authority",
+        "global_latestness_authority",
+        "exhaustiveness_authority",
+        "source_truth_authority",
+        "peer_validation_authority",
+        "literature_benefit_authority",
+        "proof_authority",
+        "publication_authority",
+        "world_authority"
+      ],
+      "properties": {
+        "clock_attestation_authority": {"type": "null"},
+        "global_latestness_authority": {"type": "null"},
+        "exhaustiveness_authority": {"type": "null"},
+        "source_truth_authority": {"type": "null"},
+        "peer_validation_authority": {"type": "null"},
+        "literature_benefit_authority": {"type": "null"},
+        "proof_authority": {"type": "null"},
+        "publication_authority": {"type": "null"},
+        "world_authority": {"type": "null"}
+      }
+    },
+    "authority_boundary": {"type": "string", "minLength": 240},
+    "content_digest": {"$ref": "#/$defs/digest"}
+  },
+  "$defs": {
+    "identifier": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"
+    },
+    "digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "nonemptyStrings": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"type": "string", "minLength": 1}
+    },
+    "capture": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "capture_id",
+        "target_id",
+        "capture_started_at",
+        "capture_completed_at",
+        "coverage_cutoff",
+        "capture_mode",
+        "provider",
+        "lanes",
+        "raw_results",
+        "inclusion_policy",
+        "exclusion_policy",
+        "coverage_limits",
+        "exhaustive_coverage_claim",
+        "source_correctness_claim",
+        "peer_validation_claim"
+      ],
+      "properties": {
+        "schema_version": {"const": "1.0"},
+        "capture_id": {"$ref": "#/$defs/identifier"},
+        "target_id": {"$ref": "#/$defs/identifier"},
+        "capture_started_at": {"type": "string", "format": "date-time"},
+        "capture_completed_at": {"type": "string", "format": "date-time"},
+        "coverage_cutoff": {"type": "string", "format": "date-time"},
+        "capture_mode": {"const": "live_external_web_search_frozen_for_replay"},
+        "provider": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "provider_id",
+            "name",
+            "index",
+            "execution_boundary",
+            "raw_payload_retention",
+            "receipt_status",
+            "executable_replay_status"
+          ],
+          "properties": {
+            "provider_id": {"type": "string", "minLength": 1},
+            "name": {"type": "string", "minLength": 1},
+            "index": {"type": "string", "minLength": 1},
+            "execution_boundary": {"type": "string", "minLength": 1},
+            "raw_payload_retention": {"type": "string", "minLength": 1},
+            "receipt_status": {"const": "externally_executed_then_frozen"},
+            "executable_replay_status": {"const": "frozen_response_adapter_only"}
+          }
+        },
+        "lanes": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"$ref": "#/$defs/captureLane"}
+        },
+        "raw_results": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"$ref": "#/$defs/captureResult"}
+        },
+        "inclusion_policy": {"type": "string", "minLength": 1},
+        "exclusion_policy": {"type": "string", "minLength": 1},
+        "coverage_limits": {"$ref": "#/$defs/nonemptyStrings"},
+        "exhaustive_coverage_claim": {"const": false},
+        "source_correctness_claim": {"const": false},
+        "peer_validation_claim": {"const": false}
+      }
+    },
+    "captureLane": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "lane_id",
+        "lane_type",
+        "queries",
+        "query_policy",
+        "status",
+        "raw_result_ids"
+      ],
+      "properties": {
+        "lane_id": {"$ref": "#/$defs/identifier"},
+        "lane_type": {"type": "string", "minLength": 1},
+        "queries": {"$ref": "#/$defs/nonemptyStrings"},
+        "query_policy": {"type": "string", "minLength": 1},
+        "status": {"const": "completed"},
+        "raw_result_ids": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/identifier"}
+        }
+      }
+    },
+    "captureResult": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "result_id",
+        "source_id",
+        "title",
+        "url",
+        "retrieval_status",
+        "disposition",
+        "reason",
+        "claim_status"
+      ],
+      "properties": {
+        "result_id": {"$ref": "#/$defs/identifier"},
+        "source_id": {"$ref": "#/$defs/identifier"},
+        "title": {"type": "string", "minLength": 1},
+        "url": {"type": "string", "minLength": 1},
+        "retrieval_status": {"type": "string", "minLength": 1},
+        "disposition": {"type": "string", "minLength": 1},
+        "reason": {"type": "string", "minLength": 1},
+        "claim_status": {"type": "string", "minLength": 1}
+      }
+    },
+    "manifest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "manifest_id",
+        "ordered_entry_ids",
+        "entries",
+        "producer_limitations",
+        "manifest_digest"
+      ],
+      "properties": {
+        "manifest_id": {"$ref": "#/$defs/identifier"},
+        "ordered_entry_ids": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 2,
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "target_current_capture",
+              "adjacent_abstraction_method_lane"
+            ]
+          }
+        },
+        "entries": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 2,
+          "items": {"$ref": "#/$defs/manifestEntry"}
+        },
+        "producer_limitations": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "network_execution",
+            "local_replay",
+            "provider_ranking_payload",
+            "complete_result_html",
+            "global_latestness",
+            "exhaustive_coverage",
+            "source_correctness",
+            "peer_validation"
+          ],
+          "properties": {
+            "network_execution": {"const": "externally_executed_then_frozen"},
+            "local_replay": {"const": "exact_retained_utf8_and_normalized_metadata_only"},
+            "provider_ranking_payload": {"const": "unavailable"},
+            "complete_result_html": {"const": "unavailable"},
+            "global_latestness": {"const": "unavailable"},
+            "exhaustive_coverage": {"const": "unavailable"},
+            "source_correctness": {"const": "unavailable"},
+            "peer_validation": {"const": "unavailable"}
+          }
+        },
+        "manifest_digest": {"$ref": "#/$defs/digest"}
+      }
+    },
+    "manifestEntry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "entry_id",
+        "artifact_kind",
+        "artifact_id",
+        "artifact_digest",
+        "byte_length",
+        "coverage_cutoff",
+        "authority_scope"
+      ],
+      "properties": {
+        "entry_id": {
+          "enum": [
+            "target_current_capture",
+            "adjacent_abstraction_method_lane"
+          ]
+        },
+        "artifact_kind": {"type": "string", "minLength": 1},
+        "artifact_id": {"$ref": "#/$defs/identifier"},
+        "artifact_digest": {"$ref": "#/$defs/digest"},
+        "byte_length": {
+          "oneOf": [
+            {"type": "integer", "minimum": 1},
+            {"type": "null"}
+          ]
+        },
+        "coverage_cutoff": {"type": "string", "format": "date-time"},
+        "authority_scope": {"type": "string", "minLength": 1}
+      }
+    },
+    "currentness": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "policy",
+        "latest_allowed_capture_date",
+        "capture_completed_at",
+        "coverage_cutoff",
+        "max_age_seconds",
+        "consume_before",
+        "present_use_at",
+        "status"
+      ],
+      "properties": {
+        "policy": {"const": "capture_completion_bounded_consumption_v3"},
+        "latest_allowed_capture_date": {"type": "string", "format": "date"},
+        "capture_completed_at": {"type": "string", "format": "date-time"},
+        "coverage_cutoff": {"type": "string", "format": "date-time"},
+        "max_age_seconds": {"type": "integer", "minimum": 1},
+        "consume_before": {"type": "string", "format": "date-time"},
+        "present_use_at": {"type": "string", "format": "date-time"},
+        "status": {"const": "current_inside_bounded_window"}
+      }
+    }
+  }
+}

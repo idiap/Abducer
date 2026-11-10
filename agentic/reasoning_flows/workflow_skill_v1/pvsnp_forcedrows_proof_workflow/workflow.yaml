@@ -1,0 +1,310 @@
+# SPDX-FileCopyrightText: © 2026 Idiap Research Institute <contact@idiap.ch>
+#
+# SPDX-FileContributor: Danilo Gusicuma <danilo.gusicuma@idiap.ch>
+# Neuro-symbolic AI Group
+#
+# SPDX-License-Identifier: MIT
+# REUSE-IgnoreStart
+schema_version: workflow-skill/v1
+namespace: abducer
+id: pvsnp_forcedrows_proof_workflow
+version: 1.0.0
+kind: workflow
+description: Draft interface projection of pvsnp-forcedrows-proof-workflow; native execution and authority
+  remain unchanged.
+aliases:
+- pvsnp-forcedrows-proof-workflow
+lifecycle: draft
+activation:
+  mode: explicit
+  prerequisites: []
+types:
+  NativeRequest:
+    schema:
+      type: object
+      description: Skill-defined request; consult preserved source text for inputs and conditions.
+    representation: value
+  NativeResult:
+    schema:
+      type: object
+      description: Skill-defined durable artifact bundle; no invented runtime output shape.
+    representation: value
+inputs:
+  request:
+    type: NativeRequest
+outputs:
+  result:
+    type: NativeResult
+    value:
+      ref: steps.native.outputs.result
+operations:
+  native_workflow:
+    inputs:
+      request:
+        type: NativeRequest
+    outputs:
+      result:
+        type: NativeResult
+    execution:
+      mode: specification_only
+      reason: No workflow-skill/v1 host adapter is supplied. Native skill/hook/CLI interfaces exist, but
+        payload materialization, guard evidence, execution effects and receipt translation are not qualified
+        for this format.
+flow:
+  kind: sequence
+  steps:
+  - id: native
+    kind: call
+    operation: native_workflow
+    description: Opaque native workflow boundary; internal ordering, guards and handoffs are retained
+      in abducer.native_contract.
+    arguments:
+      request:
+        ref: inputs.request
+    on_failure: blocked
+policy:
+  effects:
+    filesystem:
+      read:
+      - native_sources
+      - inputs
+      write: []
+    network: []
+    external_write: []
+  authority:
+    allowed:
+    - describe_native_interface
+    forbidden:
+    - execute_scientific_workflow
+    - approve
+    - prove
+    - publish
+    - promote
+  limits:
+    wall_time_seconds: 1800
+    max_operation_calls: 1
+  failure:
+    default: blocked
+    retry:
+      max_attempts: 1
+      retryable_codes: []
+  resume:
+    mode: none
+    require_matching_definition_and_inputs: true
+  claim_ceiling: Interface description only; no proof, scientific validity, runtime qualification, promotion
+    or approval.
+observability:
+  receipts: required
+  artifact_digests: sha256
+  provenance: required
+  events:
+  - workflow_started
+  - step_failed
+  - workflow_completed
+provenance:
+  coverage: interface_only
+  sources:
+  - path: skills/proof_delivery/pvsnp-forcedrows-proof-workflow/SKILL.md
+    digest: sha256:cd4be51821e5d0ac1a068dfe4d41c8212492029fa67738dbcbffcddf9a34c5e9
+  - path: agentic/registries/skill_registry.yaml
+    digest: sha256:15076ed8d1bd4c10895060ab485353fe520421c44e1fc6f506508d2d566eacf0
+  - path: pyproject.toml
+    digest: sha256:69325c4805f66033ce7f7e0e68f4a0996913728c6041bb3cee656571693b2f1e
+  - path: uv.lock
+    digest: sha256:a6c77e5d86a93915eeb0f129f80bc8c45d572be387872e3ace7460a3d6ada9ae
+  - path: prism_me/shared/references/codex-control-stack.md
+    digest: sha256:4e8e7a5cdbc0572cf9b0d4ffc4a41c8f4f9c9a304fae3bcee99d8af3553be30e
+  gaps:
+  - No workflow-skill/v1 host adapter is supplied. Native skill/hook/CLI interfaces exist, but payload
+    materialization, guard evidence, execution effects and receipt translation are not qualified for this
+    format.
+  - Native control flow remains opaque; coverage is interface_only, not source-equivalence certification.
+  - One or more native payloads have no exact JSON Schema; object-only types remain explicitly underspecified.
+extensions:
+  abducer.owner:
+    path: skills/proof_delivery/pvsnp-forcedrows-proof-workflow/SKILL.md
+  abducer.native_identity:
+    id: pvsnp-forcedrows-proof-workflow
+  abducer.native_contract:
+    source_skill: skills/proof_delivery/pvsnp-forcedrows-proof-workflow/SKILL.md
+    source_text: '---
+
+      name: pvsnp-forcedrows-proof-workflow
+
+      description: Deliver the P vs NP EF+SAT_U occurrence-row ForcedRows proof packet. Use when the highest-priority
+      P vs NP queue item asks to formalize Psys=EF+SAT_U^{occ}, extract Q_pi from a proof transcript,
+      define ForcedRows(Q_pi), prove acceptance transcript invariance under private occurrence-label perturbations
+      A_Q, and decide whether the beta-zero XOR row-forcing obstruction becomes a scoped no-go theorem
+      or a blocked extraction obligation for full EF+SAT_U.
+
+      ---
+
+
+      # P vs NP ForcedRows Proof Workflow
+
+
+      ## Role
+
+
+      Use this domain-specific proof workflow for the current P vs NP decisive subgoal. It consumes the
+      proof-delivery queue item, not a broad discovery branch.
+
+
+      ## Mathematical Invariants
+
+
+      Preserve the P vs NP mathematical object throughout the proof: EF+\(SAT_U^{occ}\), beta-zero XOR
+      carrier, occurrence labels, proof transcript \(\pi\), parser/extractor \(Q_\pi\), `ForcedRows(Q_pi)`,
+      private perturbation \(A_Q\), sparse-row patch circuit, and threshold \(N^{1+\epsilon-o(1)}\). The
+      invariant is occurrence-locality: no step may silently replace occurrence labels with full SAT semantics
+      or use full EF+\(SAT_U\) power without an explicit extraction lemma.
+
+
+      Every edge case and counterexample must be checked against the same asymptotic and nonuniformity
+      regime. Advice leakage, hidden semantic support, parser nonuniformity, row-completion failure, or
+      sparse-patch parameter loss blocks promotion.
+
+
+      ## Epistemic Discipline
+
+
+      Classify the theorem packet with an epistemic status: `scoped_no_go_ready`, `blocked_at_extraction`,
+      `countermodel_found`, or `quarantine`. Cite evidence source artifacts, KB IDs, proof-delivery queue
+      entries, prior cycle IDs, and validator outputs; if the full EF+\(SAT_U\) escape boundary lacks
+      evidence, record it as an explicit unknown.
+
+
+      The validation handoff must include the P vs NP inference-quality, reduction-consistency, quantifier-uniformity,
+      barrier-specificity, proof-complexity-transfer, and proof-quality reviewers. Demote if disconfirming
+      evidence shows the result is definitional, target-equivalent, prior-art-colliding, or advertised
+      as progress on \(P \ne NP\) rather than a route-specific no-go/extraction theorem.
+
+
+      ## Target Theorem Shape
+
+
+      Work toward this scoped statement:
+
+
+      For the beta-zero XOR carrier
+
+
+      \[
+
+      H_N^{SAT}(x)=\bigoplus_{j\le M_N} SAT(G_N(x,j)),
+
+      \]
+
+
+      an occurrence-local EF+SAT_U certificate that treats generated SAT instances as independent occurrence
+      labels cannot certify a source lower bound \(N^{1+\epsilon-o(1)}\) unless the extracted query/row
+      object \(Q_\pi\) forces at least \(N^{\epsilon-o(1)}\) complete rows. Otherwise a private occurrence-label
+      perturbation \(A_Q\) preserves the accepted transcript while giving a sparse-row patch circuit below
+      the claimed threshold.
+
+
+      ## Required Definitions
+
+
+      Define:
+
+
+      - \(Psys=EF+SAT_U^{occ}\)
+
+      - beta-zero XOR carrier \(H_N^{SAT}\)
+
+      - generator \(G_N\), row universe, occurrence labels, and complete row
+
+      - proof transcript \(\pi\)
+
+      - parser/extractor \(Q_\pi\)
+
+      - `ForcedRows(Q_pi)`
+
+      - private perturbation \(A_Q\)
+
+      - sparse-row patch circuit and threshold \(N^{1+\epsilon-o(1)}\)
+
+
+      ## Lemma Chain
+
+
+      1. **Parser Lemma.** From an accepted occurrence-local proof transcript \(\pi\), extract \(Q_\pi\),
+      touched occurrences, and candidate forced rows.
+
+      2. **Transcript Invariance Lemma.** If a row is not forced by \(Q_\pi\), perturbing its private
+      occurrence labels by \(A_Q\) preserves the verifier transcript.
+
+      3. **Sparse Patch Lemma.** If \(|ForcedRows(Q_\pi)|<N^{\epsilon-o(1)}\), build a circuit for \(H_N^{A_Q}\)
+      or the spoofed carrier below \(N^{1+\epsilon-o(1)}\).
+
+      4. **Row-Forcing Obstruction Theorem.** Any occurrence-local certificate sound for the claimed source
+      lower bound must force at least \(N^{\epsilon-o(1)}\) complete rows.
+
+      5. **Full EF+SAT_U Boundary Lemma.** State exactly why full EF+SAT_U may escape: real formula syntax
+      may constrain unmentioned generated instances. This becomes an extraction theorem obligation, not
+      a proved no-go.
+
+
+      ## Mandatory Reviewers
+
+
+      After the lemma chain, invoke or emulate the criteria of:
+
+
+      - `pvsnp-inference-quality-controller`
+
+      - `pvsnp-reduction-consistency-reviewer`
+
+      - `pvsnp-quantifier-uniformity-reviewer`
+
+      - `pvsnp-barrier-specificity-reviewer`
+
+      - `pvsnp-proof-complexity-transfer-reviewer`
+
+      - `proof-quality-gatekeeper`
+
+
+      ## Output Contract
+
+
+      Return:
+
+
+      1. `ForcedRows Theorem Statement`
+
+      2. `Definition Ledger`
+
+      3. `Lemma Chain`
+
+      4. `Proof Attempt`
+
+      5. `Full EF+SAT_U Escape Boundary`
+
+      6. `Inference-Quality Packet`
+
+      7. `Paper Insertion Target`
+
+      8. `Disposition`: `scoped_no_go_ready`, `blocked_at_extraction`, `countermodel_found`, or `quarantine`.
+
+
+      ## Failure/Demotion
+
+
+      Demote if the proof treats occurrence labels as real SAT semantics without proving extraction, if
+      it ignores advice/nonuniformity, if `ForcedRows` is undefined, if the sparse patch bound is not
+      compared to \(N^{1+\epsilon-o(1)}\), or if the result is advertised as progress on P != NP rather
+      than a route-specific no-go/extraction theorem.
+
+      '
+  abducer.environment:
+    python: pyproject.toml
+    lock: uv.lock
+    native_controls: .codex/config.toml
+    native_controls_optional: true
+    control_policy: prism_me/shared/references/codex-control-stack.md
+  abducer.execution_boundary:
+    status: specification_only
+    notes: Source inspection only. Effects above deny native execution until a separately reviewed adapter
+      exists.
+# REUSE-IgnoreEnd

@@ -1,0 +1,474 @@
+# SPDX-FileCopyrightText: © 2026 Idiap Research Institute <contact@idiap.ch>
+#
+# SPDX-FileContributor: Danilo Gusicuma <danilo.gusicuma@idiap.ch>
+# Neuro-symbolic AI Group
+#
+# SPDX-License-Identifier: MIT
+# REUSE-IgnoreStart
+schema_version: workflow-skill/v1
+namespace: abducer
+id: scientific_contribution_cultivation_workflow
+version: 1.0.0
+kind: workflow
+description: Draft interface projection of scientific_contribution_cultivation; native execution and authority
+  remain unchanged.
+aliases:
+- scientific_contribution_cultivation
+- scientific-contribution-cultivation
+- contribution-cultivation
+lifecycle: draft
+activation:
+  mode: explicit
+  prerequisites: []
+types:
+  ContributionCandidate:
+    schema: ../../../../agentic/spec/named_workflow_artifacts.schema.json
+    representation: value
+  ContributionSubgoalPacket:
+    schema: ../../../../agentic/spec/named_workflow_artifacts.schema.json
+    representation: value
+  ContributionValueAssessment:
+    schema: ../../../../agentic/spec/named_workflow_artifacts.schema.json
+    representation: value
+  EnablementAudit:
+    schema: ../../../../agentic/spec/named_workflow_artifacts.schema.json
+    representation: value
+  EnablementHandoff:
+    schema: ../../../../agentic/spec/named_workflow_artifacts.schema.json
+    representation: value
+  MainProblemAlignmentAudit:
+    schema: ../../../../agentic/spec/named_workflow_artifacts.schema.json
+    representation: value
+  PaperArgumentHandoff:
+    schema: ../../../../agentic/spec/named_workflow_artifacts.schema.json
+    representation: value
+  ResultAtlasSlice:
+    schema: ../../../../agentic/spec/named_workflow_artifacts.schema.json
+    representation: value
+  UpdatedResultAtlas:
+    schema: ../../../../agentic/spec/named_workflow_artifacts.schema.json
+    representation: value
+inputs:
+  request:
+    type: ResultAtlasSlice
+outputs:
+  result:
+    type: EnablementAudit
+    value:
+      ref: steps.native.outputs.result
+operations:
+  native_workflow:
+    inputs:
+      request:
+        type: ResultAtlasSlice
+    outputs:
+      result:
+        type: EnablementAudit
+    execution:
+      mode: specification_only
+      reason: No workflow-skill/v1 host adapter is supplied. Native skill/hook/CLI interfaces exist, but
+        payload materialization, guard evidence, execution effects and receipt translation are not qualified
+        for this format.
+  step_maintain_atlas:
+    inputs:
+      ResultAtlasSlice:
+        type: ResultAtlasSlice
+    outputs:
+      UpdatedResultAtlas:
+        type: UpdatedResultAtlas
+    execution:
+      mode: specification_only
+      reason: Native skill exists at skills/orchestration/result-atlas-maintainer/SKILL.md; no typed v1
+        adapter. Source guards, role and failure remain in native_contract.
+  step_manage_subgoal:
+    inputs:
+      UpdatedResultAtlas:
+        type: UpdatedResultAtlas
+    outputs:
+      ContributionSubgoalPacket:
+        type: ContributionSubgoalPacket
+    execution:
+      mode: specification_only
+      reason: Native skill exists at skills/orchestration/contribution-oriented-subgoal-manager/SKILL.md;
+        no typed v1 adapter. Source guards, role and failure remain in native_contract.
+  step_detect_contribution:
+    inputs:
+      ContributionSubgoalPacket:
+        type: ContributionSubgoalPacket
+    outputs:
+      ContributionCandidate:
+        type: ContributionCandidate
+    execution:
+      mode: specification_only
+      reason: Native skill exists at skills/evaluation/scientific-contribution-detector/SKILL.md; no typed
+        v1 adapter. Source guards, role and failure remain in native_contract.
+  step_assess_value:
+    inputs:
+      ContributionCandidate:
+        type: ContributionCandidate
+    outputs:
+      ContributionValueAssessment:
+        type: ContributionValueAssessment
+    execution:
+      mode: specification_only
+      reason: Native skill exists at skills/evaluation/contribution-value-assessor/SKILL.md; no typed
+        v1 adapter. Source guards, role and failure remain in native_contract.
+  step_audit_alignment:
+    inputs:
+      ContributionValueAssessment:
+        type: ContributionValueAssessment
+    outputs:
+      MainProblemAlignmentAudit:
+        type: MainProblemAlignmentAudit
+    execution:
+      mode: specification_only
+      reason: Native skill exists at skills/evaluation/main-problem-alignment-auditor/SKILL.md; no typed
+        v1 adapter. Source guards, role and failure remain in native_contract.
+  step_audit_enablement:
+    inputs:
+      ContributionValueAssessment:
+        type: ContributionValueAssessment
+    outputs:
+      EnablementAudit:
+        type: EnablementAudit
+    execution:
+      mode: specification_only
+      reason: Native skill exists at skills/evaluation/completed-subgoal-enablement-auditor/SKILL.md;
+        no typed v1 adapter. Source guards, role and failure remain in native_contract.
+  step_package_enablement:
+    inputs:
+      EnablementAudit:
+        type: EnablementAudit
+    outputs:
+      EnablementHandoff:
+        type: EnablementHandoff
+    execution:
+      mode: specification_only
+      reason: Native skill exists at skills/reporting/subgoal-enablement-handoff-packager/SKILL.md; no
+        typed v1 adapter. Source guards, role and failure remain in native_contract.
+  step_paper_handoff:
+    inputs:
+      ContributionValueAssessment:
+        type: ContributionValueAssessment
+      MainProblemAlignmentAudit:
+        type: MainProblemAlignmentAudit
+    outputs:
+      PaperArgumentHandoff:
+        type: PaperArgumentHandoff
+    execution:
+      mode: specification_only
+      reason: Native skill exists at skills/reporting/scientific-contribution-paper-handoff/SKILL.md;
+        no typed v1 adapter. Source guards, role and failure remain in native_contract.
+flow:
+  kind: sequence
+  steps:
+  - id: native
+    kind: call
+    operation: native_workflow
+    description: Opaque native workflow boundary; internal ordering, guards and handoffs are retained
+      in abducer.native_contract.
+    arguments:
+      request:
+        ref: inputs.request
+    on_failure: blocked
+policy:
+  effects:
+    filesystem:
+      read:
+      - native_sources
+      - inputs
+      write: []
+    network: []
+    external_write: []
+  authority:
+    allowed:
+    - describe_native_interface
+    forbidden:
+    - execute_scientific_workflow
+    - approve
+    - prove
+    - publish
+    - promote
+  limits:
+    wall_time_seconds: 1800
+    max_operation_calls: 1
+  failure:
+    default: blocked
+    retry:
+      max_attempts: 1
+      retryable_codes: []
+  resume:
+    mode: none
+    require_matching_definition_and_inputs: true
+  claim_ceiling: Interface description only; no proof, scientific validity, runtime qualification, promotion
+    or approval.
+observability:
+  receipts: required
+  artifact_digests: sha256
+  provenance: required
+  events:
+  - workflow_started
+  - step_failed
+  - workflow_completed
+provenance:
+  coverage: interface_only
+  sources:
+  - path: agentic/registries/named_workflow_contracts.yaml
+    digest: sha256:a467750a969715f742cc330f21fef37f4004b76924650fd9a027c47af9447d77
+  - path: skills/evaluation/scientific-contribution-detector/SKILL.md
+    digest: sha256:c330a0fa808788a848289c150a8f55c8214c8b66e1b80c0626b19c2e52ccf060
+  - path: hooks/workflow_local/hook_utils.py
+    digest: sha256:65cb3615d064ab6307b1117d493af57331cfd6ef0157ef7b8e733d96d748578c
+  - path: hooks/workflow_local/user_prompt_submit_intake.py
+    digest: sha256:14f6c15eac450b918ce56b290a5a30052ec4c08052b73663aeab5230338ccb11
+  - path: hooks/workflow_local/pre_skill_use_policy.py
+    digest: sha256:2140beff9c300564dedf1b0b8b00bc59cf78ef066f184bc8cbc992670ee0f489
+  - path: hooks/workflow_local/post_skill_use_review.py
+    digest: sha256:0187d1cc3e942aebf6aa4c6874cd23f5661ce6a6dd9f6de9f74703a26a83e296
+  - path: hooks/workflow_local/pre_tool_use_policy.py
+    digest: sha256:916b7acb61078b55f56b13b922ce2b9123fa06184e61fc275a8e80b3f7f30e60
+  - path: hooks/workflow_local/stop_artifact_check.py
+    digest: sha256:d9e526e86cec17c4d74a5a67a9cbeb08766aabe7f1c844ffc71cfef6384145af
+  - path: skills/orchestration/result-atlas-maintainer/SKILL.md
+    digest: sha256:8e2a307061f2fb112a42abc90b1c2c704b26e11073bb73fc5f915ae6798b3cfe
+  - path: skills/orchestration/contribution-oriented-subgoal-manager/SKILL.md
+    digest: sha256:926ac1e06a6f3593ea18f948ac4b36e2c81665031261b6addb094792e002fa41
+  - path: skills/evaluation/contribution-value-assessor/SKILL.md
+    digest: sha256:8d9bb6b65fa82e4614e7b5d6e422cc36483c089073c4dc419713e1c3e149b8eb
+  - path: skills/evaluation/main-problem-alignment-auditor/SKILL.md
+    digest: sha256:d7f23b014f9a29e08cfdf3bff3d4fa9ac3d124d2f84ef63ad03c7182c8a7d2bf
+  - path: skills/evaluation/completed-subgoal-enablement-auditor/SKILL.md
+    digest: sha256:16f53de29a28abb2f358a87d1e249483994b9bb2210bd0f9179f3b18eec410b5
+  - path: skills/reporting/subgoal-enablement-handoff-packager/SKILL.md
+    digest: sha256:8bae4d40505a5e0b4cf4383c4f0187f44b07de2c4b97d49164f64a63772177b3
+  - path: skills/reporting/scientific-contribution-paper-handoff/SKILL.md
+    digest: sha256:8645f1cea55f78bb5e5f7858dd6afb19de38613826437c6156007e3c39e1b70b
+  - path: agentic/registries/skill_registry.yaml
+    digest: sha256:15076ed8d1bd4c10895060ab485353fe520421c44e1fc6f506508d2d566eacf0
+  - path: pyproject.toml
+    digest: sha256:69325c4805f66033ce7f7e0e68f4a0996913728c6041bb3cee656571693b2f1e
+  - path: uv.lock
+    digest: sha256:a6c77e5d86a93915eeb0f129f80bc8c45d572be387872e3ace7460a3d6ada9ae
+  - path: prism_me/shared/references/codex-control-stack.md
+    digest: sha256:4e8e7a5cdbc0572cf9b0d4ffc4a41c8f4f9c9a304fae3bcee99d8af3553be30e
+  gaps:
+  - No workflow-skill/v1 host adapter is supplied. Native skill/hook/CLI interfaces exist, but payload
+    materialization, guard evidence, execution effects and receipt translation are not qualified for this
+    format.
+  - Native control flow remains opaque; coverage is interface_only, not source-equivalence certification.
+  - Named payload schemas validate the common envelope only; nominal artifact payloads and artifact_type
+    discriminators are not refined by that schema.
+  - Conditional/advisory skips, repeated ReviewFindingSet aggregation, exit obligations and handoff adapters
+    are preserved verbatim, not executable v1 dataflow.
+extensions:
+  abducer.owner:
+    path: skills/evaluation/scientific-contribution-detector/SKILL.md
+  abducer.native_identity:
+    id: scientific_contribution_cultivation
+  abducer.native_contract:
+    id: scientific_contribution_cultivation
+    version: 1.0.0
+    visible_name: Scientific Contribution Cultivation
+    aliases:
+    - scientific-contribution-cultivation
+    - contribution-cultivation
+    activation: conditional
+    owner_skill: scientific-contribution-detector
+    target_scope:
+    - mathematical
+    - scientific
+    - manuscript
+    trigger:
+      all_of:
+      - result_atlas_slice_present
+      any_of:
+      - result_atlas_changed
+      - subgoal_handoff_ready
+      - contribution_checkpoint
+      - paper_readiness_requested
+      none_of:
+      - unsupported_result
+    input_artifact:
+      type: ResultAtlasSlice
+      schema: agentic/spec/named_workflow_artifacts.schema.json
+    steps:
+    - id: maintain_atlas
+      order: 10
+      skill: result-atlas-maintainer
+      mode: required
+      when: null
+      consumes:
+      - ResultAtlasSlice
+      produces:
+      - UpdatedResultAtlas
+      on_failure: stop
+    - id: manage_subgoal
+      order: 20
+      skill: contribution-oriented-subgoal-manager
+      mode: required
+      when: null
+      consumes:
+      - UpdatedResultAtlas
+      produces:
+      - ContributionSubgoalPacket
+      on_failure: stop
+    - id: detect_contribution
+      order: 30
+      skill: scientific-contribution-detector
+      mode: required
+      when: null
+      consumes:
+      - ContributionSubgoalPacket
+      produces:
+      - ContributionCandidate
+      on_failure: stop
+    - id: assess_value
+      order: 40
+      skill: contribution-value-assessor
+      mode: required
+      when: null
+      consumes:
+      - ContributionCandidate
+      produces:
+      - ContributionValueAssessment
+      on_failure: stop
+    - id: audit_alignment
+      order: 50
+      skill: main-problem-alignment-auditor
+      mode: validator_only
+      when: null
+      consumes:
+      - ContributionValueAssessment
+      produces:
+      - MainProblemAlignmentAudit
+      on_failure: stop
+    - id: audit_enablement
+      order: 60
+      skill: completed-subgoal-enablement-auditor
+      mode: required
+      when: null
+      consumes:
+      - ContributionValueAssessment
+      produces:
+      - EnablementAudit
+      on_failure: quarantine
+    - id: package_enablement
+      order: 70
+      skill: subgoal-enablement-handoff-packager
+      mode: conditional
+      when: enablement_non_empty
+      consumes:
+      - EnablementAudit
+      produces:
+      - EnablementHandoff
+      on_failure: quarantine
+    - id: paper_handoff
+      order: 80
+      skill: scientific-contribution-paper-handoff
+      mode: conditional
+      when: contribution_paper_ready
+      consumes:
+      - ContributionValueAssessment
+      - MainProblemAlignmentAudit
+      produces:
+      - PaperArgumentHandoff
+      on_failure: quarantine
+    hooks:
+    - hook_id: named-workflow-router
+      event: UserPromptSubmit
+      phase: activation
+      condition: contribution trigger matches
+      required_inputs:
+      - prompt
+      - target
+      decision: recommend
+      emitted_artifact: WorkflowRecommendation
+    - hook_id: workflow-membership-policy
+      event: PreSkillUse
+      phase: steps
+      condition: active workflow and step membership validate
+      required_inputs:
+      - workflow_id
+      - workflow_version
+      - target
+      - step_id
+      - skill
+      - conditional_evidence
+      decision: block
+      emitted_artifact: SkillAuthorization
+    - hook_id: typed-output-policy
+      event: PostSkillUse
+      phase: steps
+      condition: declared output and receipt validate
+      required_inputs:
+      - workflow_id
+      - step_id
+      - artifact_type
+      - epistemic_status
+      - receipt
+      decision: block
+      emitted_artifact: SkillReceipt
+    - hook_id: workflow-tool-policy
+      event: PreToolUse
+      phase: steps
+      condition: path safety mutation and budget validate
+      required_inputs:
+      - workflow_id
+      - step_id
+      - tool
+      - target_path
+      - mutation_class
+      decision: block
+      emitted_artifact: ToolAuthorization
+    - hook_id: workflow-exit-policy
+      event: Stop
+      phase: exit
+      condition: claim and evidence exit requirements validate
+      required_inputs:
+      - workflow_id
+      - exit_artifacts
+      - open_obligations
+      decision: block
+      emitted_artifact: WorkflowExitReceipt
+    exit_gate:
+      validator: agentic/scripts/validate_workflow_contracts.py
+      consumes: EnablementAudit
+      allowed:
+      - validated
+      - quarantined
+      - archived
+      required_artifacts:
+      - ContributionValueAssessment
+      - MainProblemAlignmentAudit
+      - EnablementAudit
+      open_obligations_policy: allow_declared
+    handoffs:
+    - when: paper_ready
+      workflow: manuscript_result_elaboration
+      artifact_type: PaperArgumentHandoff
+      adapter: paper_argument_to_draft
+    prohibitions:
+    - No novelty inflation
+    - No support-only result promoted as a main result
+    - No paper claim without mechanism evidence
+    cost_profile: lightweight
+  abducer.environment:
+    python: pyproject.toml
+    lock: uv.lock
+    native_controls: .codex/config.toml
+    native_controls_optional: true
+    control_policy: prism_me/shared/references/codex-control-stack.md
+  abducer.execution_boundary:
+    status: specification_only
+    notes: Source inspection only. Effects above deny native execution until a separately reviewed adapter
+      exists.
+  abducer.step_interfaces:
+    maintain_atlas: step_maintain_atlas
+    manage_subgoal: step_manage_subgoal
+    detect_contribution: step_detect_contribution
+    assess_value: step_assess_value
+    audit_alignment: step_audit_alignment
+    audit_enablement: step_audit_enablement
+    package_enablement: step_package_enablement
+    paper_handoff: step_paper_handoff
+# REUSE-IgnoreEnd

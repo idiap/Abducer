@@ -1,0 +1,65 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:abducer:framework-paper:repository-evidence-index:1",
+  "title": "RepositoryEvidenceIndex",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "parser_version", "repository", "source_policy", "records", "conflicts", "warnings", "index_digest"],
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "parser_version": {"type": "string", "minLength": 1},
+    "repository": {
+      "type": "object", "additionalProperties": false,
+      "required": ["revision", "git_available", "dirty"],
+      "properties": {
+        "revision": {"type": ["string", "null"]},
+        "git_available": {"type": "boolean"},
+        "dirty": {"type": ["boolean", "null"]}
+      }
+    },
+    "source_policy": {
+      "type": "object", "additionalProperties": false,
+      "required": ["max_files", "max_file_bytes", "max_total_bytes", "allowed_suffixes", "excluded_components"],
+      "properties": {
+        "max_files": {"type": "integer", "minimum": 1},
+        "max_file_bytes": {"type": "integer", "minimum": 1},
+        "max_total_bytes": {"type": "integer", "minimum": 1},
+        "allowed_suffixes": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+        "excluded_components": {"type": "array", "items": {"type": "string", "minLength": 1}, "uniqueItems": true}
+      }
+    },
+    "records": {"type": "array", "items": {"$ref": "#/$defs/evidenceRecord"}},
+    "conflicts": {"type": "array", "items": {"$ref": "#/$defs/conflict"}},
+    "warnings": {"type": "array", "items": {"type": "string"}},
+    "index_digest": {"$ref": "#/$defs/digest"}
+  },
+  "$defs": {
+    "digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "evidenceKind": {"enum": ["contract", "implementation", "artifact", "execution_receipt", "test", "documentation", "history", "interpretation"]},
+    "posture": {"enum": ["declared", "observed", "replayed", "inferred", "verified", "unknown", "contested"]},
+    "evidenceRecord": {
+      "type": "object", "additionalProperties": false,
+      "required": ["evidence_id", "path", "kind", "authority", "posture", "digest", "bytes", "freshness"],
+      "properties": {
+        "evidence_id": {"type": "string", "pattern": "^EV-[0-9a-f]{16}$"},
+        "path": {"type": "string", "minLength": 1, "not": {"pattern": "^(?:/|[A-Za-z]:[\\\\/])"}},
+        "kind": {"$ref": "#/$defs/evidenceKind"},
+        "authority": {"enum": ["normative", "implementation", "verification", "explanatory", "historical", "derived"]},
+        "posture": {"$ref": "#/$defs/posture"},
+        "digest": {"$ref": "#/$defs/digest"},
+        "bytes": {"type": "integer", "minimum": 0},
+        "freshness": {"enum": ["current", "stale", "unknown"]}
+      }
+    },
+    "conflict": {
+      "type": "object", "additionalProperties": false,
+      "required": ["conflict_id", "evidence_ids", "summary", "resolution_status"],
+      "properties": {
+        "conflict_id": {"type": "string", "minLength": 1},
+        "evidence_ids": {"type": "array", "minItems": 2, "uniqueItems": true, "items": {"type": "string"}},
+        "summary": {"type": "string", "minLength": 1},
+        "resolution_status": {"enum": ["unresolved", "resolved", "accepted_divergence"]}
+      }
+    }
+  }
+}

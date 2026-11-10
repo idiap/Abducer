@@ -1,0 +1,39 @@
+# SPDX-FileCopyrightText: © 2026 Idiap Research Institute <contact@idiap.ch>
+#
+# SPDX-FileContributor: Andre Freitas <andre.freitas@idiap.ch>
+# Neuro-symbolic AI Group
+#
+# SPDX-FileContributor: Danilo Gusicuma <danilo.gusicuma@idiap.ch>
+# Neuro-symbolic AI Group
+#
+# SPDX-License-Identifier: MIT
+# Function: decide whether an evidence-backed release proposal may be promoted.
+# Input: PromotionEvidencePacket identifies the run and its evidence source.
+# Types: ClaimBoundedReleaseProposal preserves that evidence boundary without adding warrant.
+# Output: ReleasePromotionDisposition selects promotion, target repair, concept repair, or rejection.
+# Layer: high-level epistemic topology only.
+# Metadata: workflows/manifest.json (`release_promotion_loop`).
+
+from workflows.release_promotion_loop.types import (
+    ClaimBoundedReleaseProposal,
+    ReleasePromotionDisposition,
+    PromotionEvidencePacket,
+)
+
+from workflows.release_promotion_loop.occurrences import (
+    UnresolvedReleaseProposalProjection,
+    EvidentialReleasePromotionDispositionAssessment,
+)
+
+from workflows.release_promotion_loop.relations import (
+    ReleaseProposalEnablesPromotionDisposition,
+)
+
+reasoning ReleasePromotionLoop(promotion_evidence: PromotionEvidencePacket) -> Generated[ReleasePromotionDisposition]:
+    sequence:
+        # Proposal formation is claim-conserving and adds no epistemic warrant.
+        [release_proposal: UnresolvedReleaseProposalProjection(promotion_evidence)]
+        # The gate evaluates the bounded proposal and emits the cross-workflow route.
+        [promotion_disposition: EvidentialReleasePromotionDispositionAssessment(release_proposal.value)] by ReleaseProposalEnablesPromotionDisposition
+
+    return promotion_disposition

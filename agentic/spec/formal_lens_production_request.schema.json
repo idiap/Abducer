@@ -1,0 +1,436 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://abducer.local/spec/formal_lens_production_request.schema.json",
+  "title": "Conditional formal-lens production request",
+  "description": "Exact central-creativity, current-literature, task-relation, and domain-decision input for the production Category/HoTT composition. The request declares a decision rule, not its counterfactual result or physics value.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "formal_request_id",
+    "identity",
+    "task_case",
+    "task_case_digest",
+    "central_creativity_input",
+    "current_literature_projection",
+    "frozen_task_semantic_ancestor",
+    "domain_decision_rule",
+    "domain_decision_rule_precommit",
+    "lens_policy",
+    "experiment_policy",
+    "request_digest"
+  ],
+  "$defs": {
+    "text": {"type": "string", "minLength": 1},
+    "id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 180,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$"
+    },
+    "digest": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
+    "stringList": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {"$ref": "#/$defs/text"}
+    },
+    "idList": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {"$ref": "#/$defs/id"}
+    },
+    "namespace": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["target_id", "run_id", "branch_id", "state_version"],
+      "properties": {
+        "target_id": {"$ref": "#/$defs/id"},
+        "run_id": {"$ref": "#/$defs/id"},
+        "branch_id": {"$ref": "#/$defs/id"},
+        "state_version": {"type": "integer", "minimum": 0}
+      }
+    },
+    "decision": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["decision_id", "decision_kind", "action", "target_burden_id"],
+      "properties": {
+        "decision_id": {"$ref": "#/$defs/id"},
+        "decision_kind": {
+          "enum": [
+            "continue_route",
+            "compare_route_order",
+            "construct_mediator",
+            "require_coherence",
+            "split_route",
+            "run_secondary_falsifier",
+            "revise_translation",
+            "quarantine_route"
+          ]
+        },
+        "action": {"$ref": "#/$defs/text"},
+        "target_burden_id": {"$ref": "#/$defs/id"}
+      }
+    },
+    "candidateDecision": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "decision_id",
+        "decision_kind",
+        "action",
+        "target_burden_id",
+        "trigger_relation_id"
+      ],
+      "properties": {
+        "decision_id": {"$ref": "#/$defs/id"},
+        "decision_kind": {
+          "enum": [
+            "continue_route",
+            "compare_route_order",
+            "construct_mediator",
+            "require_coherence",
+            "split_route",
+            "run_secondary_falsifier",
+            "revise_translation",
+            "quarantine_route"
+          ]
+        },
+        "action": {"$ref": "#/$defs/text"},
+        "target_burden_id": {"$ref": "#/$defs/id"},
+        "trigger_relation_id": {"$ref": "#/$defs/id"}
+      }
+    },
+    "relation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["relation_id", "relation_kind", "statement", "source_anchor", "target_anchor"],
+      "properties": {
+        "relation_id": {"$ref": "#/$defs/id"},
+        "relation_kind": {
+          "enum": [
+            "noncommuting_composition",
+            "mediating_factorization",
+            "functorial_transfer",
+            "identity_transport",
+            "equivalence_coherence",
+            "path_independence",
+            "descent_coherence"
+          ]
+        },
+        "statement": {"$ref": "#/$defs/text"},
+        "source_anchor": {"$ref": "#/$defs/text"},
+        "target_anchor": {"$ref": "#/$defs/text"}
+      }
+    },
+    "taskSemantics": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "pressure",
+        "formal_pressure",
+        "protected_invariants",
+        "incumbent_primitives",
+        "physical_carrier",
+        "regime",
+        "quantifiers",
+        "falsifier",
+        "correction",
+        "untouched_physics_gates",
+        "task_relations",
+        "incumbent_decision",
+        "lens_decisions"
+      ],
+      "properties": {
+        "pressure": {"$ref": "#/$defs/text"},
+        "formal_pressure": {"$ref": "#/$defs/text"},
+        "protected_invariants": {
+          "type": "array",
+          "minItems": 2,
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/text"}
+        },
+        "incumbent_primitives": {
+          "type": "array",
+          "minItems": 2,
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/text"}
+        },
+        "physical_carrier": {
+          "anyOf": [{"$ref": "#/$defs/text"}, {"type": "null"}]
+        },
+        "regime": {"$ref": "#/$defs/text"},
+        "quantifiers": {"$ref": "#/$defs/stringList"},
+        "falsifier": {"$ref": "#/$defs/text"},
+        "correction": {"$ref": "#/$defs/text"},
+        "untouched_physics_gates": {"$ref": "#/$defs/stringList"},
+        "task_relations": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"$ref": "#/$defs/relation"}
+        },
+        "incumbent_decision": {
+          "anyOf": [{"$ref": "#/$defs/decision"}, {"type": "null"}]
+        },
+        "lens_decisions": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["categorical", "hott"],
+          "properties": {
+            "categorical": {"$ref": "#/$defs/candidateDecision"},
+            "hott": {"$ref": "#/$defs/candidateDecision"}
+          }
+        }
+      }
+    },
+    "ruleCondition": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["predicate_id", "equals"],
+      "properties": {
+        "predicate_id": {"$ref": "#/$defs/id"},
+        "equals": {"type": "boolean"}
+      }
+    },
+    "ruleEvaluationDecision": {"$ref": "#/$defs/decision"}
+  },
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "formal_request_id": {"$ref": "#/$defs/id"},
+    "identity": {"$ref": "#/$defs/namespace"},
+    "task_case": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["case_id", "target_id", "obligation_id", "task_semantics"],
+      "properties": {
+        "case_id": {"$ref": "#/$defs/id"},
+        "target_id": {"$ref": "#/$defs/id"},
+        "obligation_id": {"$ref": "#/$defs/id"},
+        "preferred_lens": {"enum": ["categorical", "hott"]},
+        "task_semantics": {"$ref": "#/$defs/taskSemantics"}
+      }
+    },
+    "task_case_digest": {"$ref": "#/$defs/digest"},
+    "central_creativity_input": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["role", "packet_id", "packet_digest", "content"],
+      "properties": {
+        "role": {"const": "central_reflective_conceptual_creativity"},
+        "packet_id": {"$ref": "#/$defs/id"},
+        "packet_digest": {"$ref": "#/$defs/digest"},
+        "content": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "conceptual_pressure",
+            "high_risk_hypotheses",
+            "reflective_questions",
+            "convergence_criteria"
+          ],
+          "properties": {
+            "conceptual_pressure": {"$ref": "#/$defs/text"},
+            "high_risk_hypotheses": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["hypothesis_id", "statement", "relevance_bridge", "failure_condition"],
+                "properties": {
+                  "hypothesis_id": {"$ref": "#/$defs/id"},
+                  "statement": {"$ref": "#/$defs/text"},
+                  "relevance_bridge": {"$ref": "#/$defs/text"},
+                  "failure_condition": {"$ref": "#/$defs/text"}
+                }
+              }
+            },
+            "reflective_questions": {"$ref": "#/$defs/stringList"},
+            "convergence_criteria": {"$ref": "#/$defs/stringList"}
+          }
+        }
+      }
+    },
+    "current_literature_projection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["role", "projection_id", "projection_digest", "content"],
+      "properties": {
+        "role": {"const": "committed_current_literature_projection"},
+        "projection_id": {"$ref": "#/$defs/id"},
+        "projection_digest": {"$ref": "#/$defs/digest"},
+        "content": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "projection_cutoff",
+            "source_receipt_ids",
+            "committed_event_ids",
+            "pressure_updates",
+            "explicit_unknowns"
+          ],
+          "properties": {
+            "projection_cutoff": {"type": "string", "format": "date-time"},
+            "source_receipt_ids": {"$ref": "#/$defs/idList"},
+            "committed_event_ids": {"$ref": "#/$defs/idList"},
+            "pressure_updates": {"$ref": "#/$defs/stringList"},
+            "explicit_unknowns": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {"$ref": "#/$defs/text"}
+            }
+          }
+        }
+      }
+    },
+    "frozen_task_semantic_ancestor": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "ancestor_id",
+        "state_generation",
+        "task_case_digest",
+        "central_creativity_packet_digest",
+        "current_literature_projection_digest",
+        "domain_decision_rule_digest",
+        "ancestor_digest"
+      ],
+      "properties": {
+        "ancestor_id": {"$ref": "#/$defs/id"},
+        "state_generation": {"type": "integer", "minimum": 0},
+        "task_case_digest": {"$ref": "#/$defs/digest"},
+        "central_creativity_packet_digest": {"$ref": "#/$defs/digest"},
+        "current_literature_projection_digest": {"$ref": "#/$defs/digest"},
+        "domain_decision_rule_digest": {"$ref": "#/$defs/digest"},
+        "ancestor_digest": {"$ref": "#/$defs/digest"}
+      }
+    },
+    "domain_decision_rule": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "rule_id",
+        "rule_kind",
+        "predicates",
+        "obstruction_bindings",
+        "clauses",
+        "default_decision",
+        "rule_digest"
+      ],
+      "properties": {
+        "rule_id": {"$ref": "#/$defs/id"},
+        "rule_kind": {"const": "ordered_first_match_boolean.v1"},
+        "predicates": {
+          "type": "array",
+          "minItems": 2,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["predicate_id", "baseline_value", "statement"],
+            "properties": {
+              "predicate_id": {"$ref": "#/$defs/id"},
+              "baseline_value": {"type": "boolean"},
+              "statement": {"$ref": "#/$defs/text"}
+            }
+          }
+        },
+        "obstruction_bindings": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["categorical", "hott"],
+          "properties": {
+            "categorical": {"$ref": "#/$defs/idList"},
+            "hott": {"$ref": "#/$defs/idList"}
+          }
+        },
+        "clauses": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["clause_id", "priority", "all_of", "decision"],
+            "properties": {
+              "clause_id": {"$ref": "#/$defs/id"},
+              "priority": {"type": "integer", "minimum": 0},
+              "all_of": {
+                "type": "array",
+                "minItems": 1,
+                "items": {"$ref": "#/$defs/ruleCondition"}
+              },
+              "decision": {"$ref": "#/$defs/ruleEvaluationDecision"}
+            }
+          }
+        },
+        "default_decision": {"$ref": "#/$defs/ruleEvaluationDecision"},
+        "rule_digest": {"$ref": "#/$defs/digest"}
+      }
+    },
+    "domain_decision_rule_precommit": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "precommit_id",
+        "rule_id",
+        "rule_digest",
+        "authority_class",
+        "committed_before_formal_routes",
+        "precommit_digest"
+      ],
+      "properties": {
+        "precommit_id": {"$ref": "#/$defs/id"},
+        "rule_id": {"$ref": "#/$defs/id"},
+        "rule_digest": {"$ref": "#/$defs/digest"},
+        "authority_class": {"const": "separate_local_protocol_precommit_only"},
+        "committed_before_formal_routes": {"const": true},
+        "precommit_digest": {"$ref": "#/$defs/digest"}
+      }
+    },
+    "lens_policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "conditional_parallel_lenses",
+        "combined_requires_all",
+        "always_parallel_controls",
+        "inapplicable_lenses_are_not_executed",
+        "construction_modes"
+      ],
+      "properties": {
+        "conditional_parallel_lenses": {"const": ["categorical", "hott"]},
+        "combined_requires_all": {"const": ["categorical", "hott"]},
+        "always_parallel_controls": {"const": ["capable_nonformal"]},
+        "inapplicable_lenses_are_not_executed": {"const": true},
+        "construction_modes": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["categorical", "hott"],
+          "properties": {
+            "categorical": {
+              "enum": [
+                "constructive_finite_completion",
+                "unavailable_assumption_away_only"
+              ]
+            },
+            "hott": {
+              "enum": [
+                "constructive_finite_completion",
+                "unavailable_assumption_away_only"
+              ]
+            }
+          }
+        }
+      }
+    },
+    "experiment_policy": {
+      "const": {
+        "role": "secondary_theory_requested_falsifier_only",
+        "automatic_theory_selection": false,
+        "retroactive_theory_selection": false
+      }
+    },
+    "request_digest": {"$ref": "#/$defs/digest"}
+  }
+}

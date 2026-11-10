@@ -1,0 +1,29 @@
+# Relation layer for abducer_work_loop.
+# Owns edge/certificate contracts only; builders belong to future materialization.
+
+type ProofRouteClaimAssumption[SourceValue, TargetValue]:
+    source: SourceValue
+    target: Generated[TargetValue]
+
+type ProofRouteClaimTest[SourceValue, TargetValue]:
+    source: SourceValue
+    target: Generated[TargetValue]
+
+type ProofWorkRoutingCalibration[SourceValue, TargetValue]:
+    source: SourceValue
+    target: Generated[TargetValue]
+
+relation TreatsProofRouteAsClaimPremise[SourceValue, TargetValue](
+    source: SourceValue,
+    target: Generated[TargetValue],
+) -> ProofRouteClaimAssumption[SourceValue, TargetValue]
+
+relation TestsProofRouteDerivedClaim[SourceValue, TargetValue](
+    source: SourceValue,
+    target: Generated[TargetValue],
+) -> ProofRouteClaimTest[SourceValue, TargetValue]
+
+relation CalibratesProofWorkRouting[SourceValue, TargetValue](
+    source: SourceValue,
+    target: Generated[TargetValue],
+) -> ProofWorkRoutingCalibration[SourceValue, TargetValue]

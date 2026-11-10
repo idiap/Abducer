@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "framework_paper_literature_snapshot.schema.json",
+  "title": "Framework Paper Literature Snapshot",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "snapshot_id", "status", "created_at", "query_protocol", "records", "content_digest"],
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "snapshot_id": {"type": "string", "minLength": 1},
+    "status": {"enum": ["draft", "valid", "frozen", "superseded"]},
+    "created_at": {"type": "string", "format": "date-time"},
+    "query_protocol": {"type": "string", "minLength": 1},
+    "content_digest": {"$ref": "#/$defs/digest"},
+    "records": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/record"}
+    }
+  },
+  "$defs": {
+    "digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "record": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["citation_key", "title", "authors", "year", "source_version", "provenance", "content_digest", "correction_state", "conflict_state"],
+      "properties": {
+        "citation_key": {"type": "string", "pattern": "^[A-Za-z][A-Za-z0-9:_-]*$"},
+        "title": {"type": "string", "minLength": 1},
+        "authors": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
+        "year": {"type": "integer", "minimum": 1900, "maximum": 2200},
+        "doi": {"type": "string", "minLength": 1},
+        "arxiv_id": {"type": "string", "minLength": 1},
+        "publisher_url": {"type": "string", "format": "uri"},
+        "source_version": {"type": "string", "minLength": 1},
+        "provenance": {"type": "string", "minLength": 1},
+        "content_digest": {"$ref": "#/$defs/digest"},
+        "correction_state": {"enum": ["none_known", "corrected", "retracted", "unknown"]},
+        "conflict_state": {"enum": ["none_known", "conflicting", "unknown"]}
+      },
+      "anyOf": [{"required": ["doi"]}, {"required": ["arxiv_id"]}, {"required": ["publisher_url"]}]
+    }
+  }
+}

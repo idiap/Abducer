@@ -1,0 +1,65 @@
+\section{Exact cubical and spectral certificate}\label{app:linear-algebra}
+
+We spell out enough of the matrix construction to make the executable input
+independent of implementation conventions.  Vertices are tuples
+$x=(x_1,x_2,x_3,x_4)\in\{0,1,2\}^4$, ordered lexicographically.  A positive
+link is $(x,\mu)$ with $x_\mu<2$.  A positive plaquette is
+$(x;\mu,\nu)$ with $\mu<\nu$ and $x_\mu,x_\nu<2$.  The incidence entries are
+\begin{align*}
+ (d_0)_{(x,\mu),v}
+ &=\mathbf1_{v=x+\hat\mu}-\mathbf1_{v=x},\\
+ (d_1)_{(x;\mu,\nu),e}
+ &=\mathbf1_{e=(x,\mu)}+\mathbf1_{e=(x+\hat\mu,\nu)}
+  -\mathbf1_{e=(x+\hat\nu,\mu)}-\mathbf1_{e=(x,\nu)}.
+\end{align*}
+These formulas determine integer matrices and make $d_1d_0=0$ an exact
+entrywise identity.
+
+The lexicographic tree is the set of edges accepted by union--find when the
+positive links are scanned in their declared order.  It has $80$ edges.
+Deleting its columns from $d_1$ gives $D\in\mathbb Z^{216\times136}$.  The
+matrix $H=D^{\mathsf T}D$ is therefore positive semidefinite over the rationals
+before any spectral computation.
+
+\subsection{The retained rank}
+
+For each of six coordinate planes and four choices of transverse boundary,
+the corresponding row of $C$ is the sum of four plaquette rows of $d_1$.
+Discrete Stokes also gives $C=d_1^{\mathrm{coarse}}P$, where $P$ sums the
+fine boundary links into the links of one coarse four-cube.  The coarse cube
+has $16$ vertices and $32$ links, so contractibility gives
+\[
+ \rank d_1^{\mathrm{coarse}}=32-(16-1)=17.
+\]
+Thus $\rank C\le17$.  Exact elimination on the row set
+\eqref{eq:selected-rows} after deleting the tree columns yields seventeen
+pivots, proving equality.  Since $C$ kills $\operatorname{im}d_0$, passing to
+the tree representative cannot lower its quotient rank.
+
+\subsection{The rational spectral floor}
+
+The primary verifier applies the recursion
+\begin{align*}
+ L_{ij}&=\frac{1}{D_j}\left(K_{ij}-\sum_{k<j}L_{ik}L_{jk}D_k\right),
+ \qquad j<i,\\
+ D_i&=K_{ii}-\sum_{k<i}L_{ik}^2D_k,
+\end{align*}
+to $K=H-\frac1{25}\Id$, with $L_{ii}=1$.  All operations use
+arbitrary-precision fractions.  Every $D_i$ is strictly positive, so
+$K=LDL^{\mathsf T}$ is positive definite.
+
+The independent verifier instead forms the integer matrix $\widehat K=25H-
+\Id$ and uses Bareiss elimination without row exchanges.  The recursion
+\[
+ a_{ij}^{(k+1)}=
+ \frac{a_{kk}^{(k)}a_{ij}^{(k)}-a_{ik}^{(k)}a_{kj}^{(k)}}
+      {a_{k-1,k-1}^{(k-1)}}
+\]
+is exact over $\mathbb Z$; its diagonal pivots are the successive leading
+principal minors.  All are positive, independently proving Sylvester
+positivity.  Modular rank computations at three primes cross-check the
+dimension statements.
+
+Reversing the edge scan produces another tree for which the primary rational
+factorization again proves the $1/25$ floor.  Reorienting any cotree link
+conjugates $H$ by a diagonal sign matrix and therefore preserves the bound.

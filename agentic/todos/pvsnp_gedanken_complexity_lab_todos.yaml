@@ -1,0 +1,156 @@
+# SPDX-FileCopyrightText: © 2026 Idiap Research Institute <contact@idiap.ch>
+#
+# SPDX-FileContributor: Andre Freitas <andre.freitas@idiap.ch>
+# Neuro-symbolic AI Group
+#
+# SPDX-FileContributor: Danilo Gusicuma <danilo.gusicuma@idiap.ch>
+# Neuro-symbolic AI Group
+#
+# SPDX-License-Identifier: MIT
+version: 1
+target_id: p-vs-np-target
+created_at: "2026-07-11"
+source_artifacts:
+  pressure_bridges: agentic/reports/pvsnp_pressure_bridges/latest.json
+  general_gedanken_skill: skills/reasoning/gedanken-situation-designer/SKILL.md
+  pvsnp_bridge_skill: skills/reasoning/pvsnp-pressure-bridge-forger/SKILL.md
+implementation_status:
+  status: completed
+  completed_at: "2026-07-11"
+todos:
+  - id: pvsnp-gedanken-001
+    type: workflow_todo
+    phase: pvsnp-gedanken-complexity-lab
+    owner: skills/reasoning/pvsnp-gedanken-complexity-lab
+    priority: critical
+    risk_class: shallow_analogy_risk
+    title: Create a P vs NP-specific Gedanken experiment skill.
+    intent: >
+      Provide the P vs NP equivalent of Gedanken experiments: small concrete
+      complexity-theory worlds that isolate a branch pressure, vary one
+      decisive condition, and extract essential conclusions for follow-up
+      cycles.
+    use_skills:
+      - pvsnp-gedanken-complexity-lab
+      - pvsnp-pressure-bridge-forger
+      - gedanken-situation-designer
+    required_artifact:
+      - skills/reasoning/pvsnp-gedanken-complexity-lab/SKILL.md
+      - skills/reasoning/pvsnp-gedanken-complexity-lab/agents/openai.yaml
+    acceptance_criteria:
+      - The skill is explicitly about P vs NP and complexity-theoretic situations.
+      - It requires controlled contrasts such as beta>0 versus beta=0, advice versus searchability, dense versus sparse property, fixed exponent versus all-exponent family, and semantic versus syntactic proof certificates.
+      - It requires essential conclusions, transfer scope, and follow-up tasks.
+    blocked_by: []
+    evidence:
+      - skills/reasoning/pvsnp-gedanken-complexity-lab/SKILL.md
+      - skills/reasoning/pvsnp-gedanken-complexity-lab/agents/openai.yaml
+    review_date: "2026-07-11"
+    failure_modes:
+      - Thought experiments become analogies rather than controlled complexity-theory worlds.
+      - The output sets up a case but does not extract route-control conclusions.
+      - The skill promotes intuition as proof progress.
+    status: resolved
+  - id: pvsnp-gedanken-002
+    type: workflow_todo
+    phase: pvsnp-gedanken-complexity-lab
+    owner: skills/reasoning/pvsnp-gedanken-complexity-lab/scripts/build_pvsnp_gedanken_packets.py
+    priority: critical
+    risk_class: missing_conclusion_extraction
+    title: Generate P vs NP Gedanken packets with essential conclusions.
+    intent: >
+      Build executable packet generation from the P vs NP pressure-bridge
+      report, covering oracle substitution, searchable certificates,
+      naturalness, all-exponent quantifiers, and proof-complexity carriers.
+    use_skills:
+      - pvsnp-gedanken-complexity-lab
+      - pvsnp-symbolic-complexity-auditor
+      - pvsnp-impossibility-theorem-forger
+    required_artifact:
+      - skills/reasoning/pvsnp-gedanken-complexity-lab/scripts/build_pvsnp_gedanken_packets.py
+      - agentic/reports/pvsnp_gedanken_experiments/latest.json
+      - agentic/reports/pvsnp_gedanken_experiments/latest.md
+    acceptance_criteria:
+      - The script emits at least five P vs NP packets.
+      - Every packet includes `essential_conclusions` with decisive intuition, formal lesson, route-control consequence, and next action.
+      - Packets stay at `needs_certificate` transfer status and do not overclaim theorem progress.
+    blocked_by:
+      - pvsnp-gedanken-001
+    evidence:
+      - skills/reasoning/pvsnp-gedanken-complexity-lab/scripts/build_pvsnp_gedanken_packets.py
+      - command: .venv-pmp/bin/python skills/reasoning/pvsnp-gedanken-complexity-lab/scripts/build_pvsnp_gedanken_packets.py --write-general
+    review_date: "2026-07-11"
+    failure_modes:
+      - The packets are generic SAT examples.
+      - The essential conclusions are slogans rather than operational next moves.
+      - Follow-up tasks do not invoke P vs NP skills.
+    status: resolved
+  - id: pvsnp-gedanken-003
+    type: test_todo
+    phase: pvsnp-gedanken-complexity-lab
+    owner: agentic/scripts/validate_pvsnp_gedanken_conclusions.py
+    priority: high
+    risk_class: validation_control
+    title: Validate P vs NP Gedanken conclusions.
+    intent: >
+      Add a validator that checks P vs NP domain specificity, essential
+      conclusion completeness, operational next actions, diagnostic variants,
+      follow-up skills, and conservative transfer status.
+    use_skills:
+      - pvsnp-gedanken-complexity-lab
+    required_artifact:
+      - agentic/scripts/validate_pvsnp_gedanken_conclusions.py
+    acceptance_criteria:
+      - The validator requires all expected P vs NP pressure families.
+      - The validator requires essential conclusions in every packet.
+      - The validator rejects packets without operational next actions.
+    blocked_by:
+      - pvsnp-gedanken-002
+    evidence:
+      - agentic/scripts/validate_pvsnp_gedanken_conclusions.py
+      - command: .venv-pmp/bin/python agentic/scripts/validate_pvsnp_gedanken_conclusions.py
+    review_date: "2026-07-11"
+    failure_modes:
+      - Generic Gedanken packets pass as P vs NP-specific.
+      - Packets omit conclusions and only describe situations.
+      - Transfer status is promoted too early.
+    status: resolved
+  - id: pvsnp-gedanken-004
+    type: hook_todo
+    phase: pvsnp-gedanken-complexity-lab
+    owner: agentic/scripts/build_gedanken_experiment_packets.py
+    priority: high
+    risk_class: workflow_integration
+    title: Route active P vs NP Gedanken generation through the complexity lab.
+    intent: >
+      Make the general Gedanken packet builder target-aware so active P vs NP
+      runs use complexity-theoretic packets rather than Yang-Mills-style
+      packets, and wire the skill into dispatch and checks.
+    use_skills:
+      - pvsnp-gedanken-complexity-lab
+      - gedanken-situation-designer
+      - pvsnp-pressure-bridge-forger
+    required_artifact:
+      - agentic/scripts/build_gedanken_experiment_packets.py
+      - agentic/scripts/agentic_check.py
+      - agentic/scripts/discovery_marathon_common.py
+      - agentic/registries/discovery_marathon_skill_dispatch.yaml
+    acceptance_criteria:
+      - No-argument Gedanken generation uses the active target.
+      - "`--target p-vs-np-target` generates P vs NP packets."
+      - The P vs NP skill appears in marathon dispatch for Gedanken design.
+      - The full Abducer check runs the P vs NP Gedanken builder and validator.
+    blocked_by:
+      - pvsnp-gedanken-002
+      - pvsnp-gedanken-003
+    evidence:
+      - agentic/scripts/build_gedanken_experiment_packets.py
+      - agentic/scripts/agentic_check.py
+      - agentic/scripts/discovery_marathon_common.py
+      - agentic/registries/discovery_marathon_skill_dispatch.yaml
+    review_date: "2026-07-11"
+    failure_modes:
+      - P vs NP runs keep receiving physics-style Gedanken packets.
+      - The skill exists but is not visible in dispatch traces.
+      - Validation does not catch missing essential conclusions.
+    status: resolved

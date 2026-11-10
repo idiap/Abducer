@@ -1,0 +1,73 @@
+# Function: convert source evidence into a falsification-aware proof-route dossier.
+# Input: ProofRouteSourceBundle establishes source identity and evidence grounding.
+# Types: route and consequence types develop the idea; entrypoint and falsification types make it actionable and testable.
+# Output: ProofRouteReadinessAssessment returns disposition, dossier, falsification, and hub-bias audit together.
+# Routing: route-ready continues to theorem proof; conceptual gaps return to refinement; refutation stops.
+# Boundary: this onramp proposes a route and never accepts a proof.
+# Layer: high-level epistemic topology only.
+# Metadata: workflows/manifest.json (`evidence_to_proof_route_onramp`).
+
+from types import (
+    ProofRouteReadinessAssessment,
+    ProofRouteConsequenceAssessment,
+    ProofObligationEntrypointHypothesis,
+    ExpertRouteDossier,
+    EntrypointFalsificationAssessment,
+    ProofRouteEvidenceGround,
+    HubBiasAudit,
+    ProofRouteHypothesis,
+    ProofRouteDerivedConsequence,
+    ProofRouteDisposition,
+    ProofRouteSourceBundle,
+)
+
+from occurrences import (
+    AbductiveProofRouteHypothesisFormation,
+    EvidentialProofRouteConsequenceAssessment,
+    EvidentialProofRouteReadinessAssessment,
+    DeductiveProofRouteConsequenceDerivation,
+    EvidentialProofRouteGrounding,
+    AbductiveProofObligationEntrypointRevision,
+    ProofRouteReadinessInput,
+    RefutationalProofEntrypointAssessment,
+)
+
+from relations import (
+    TreatsRouteAsConsequencePremise,
+    CalibratesProofRouteAssessment,
+    GroundsProofRouteSearch,
+    RevisesProofObligationEntrypoint,
+    TestsProofEntrypoint,
+)
+
+reasoning EvidenceToProofRouteOnramp(
+    source: ProofRouteSourceBundle,
+) -> Generated[ProofRouteReadinessAssessment]:
+    sequence:
+        # Grounding and abduction create a source-constrained route hypothesis.
+        [e0: EvidentialProofRouteGrounding(source)]
+        [a0: AbductiveProofRouteHypothesisFormation(e0.value)] by GroundsProofRouteSearch
+        # Deduction and evidence assessment make the route's consequences inspectable.
+        [d0: DeductiveProofRouteConsequenceDerivation(a0.value)] by TreatsRouteAsConsequencePremise
+        [e1: EvidentialProofRouteConsequenceAssessment(d0.value)] by CalibratesProofRouteAssessment
+        # Revision selects a proof entrypoint; refutation then challenges that entry.
+        [a1: AbductiveProofObligationEntrypointRevision(e1.value)] by RevisesProofObligationEntrypoint
+        [r0: RefutationalProofEntrypointAssessment(a1.value)] by TestsProofEntrypoint
+        # The final join preserves both the proposed entrypoint and its falsification record.
+        [e2: EvidentialProofRouteReadinessAssessment(ProofRouteReadinessInput(
+            proof_entrypoint = a1.value,
+            falsification_assessment = r0.value,
+        ))] by CalibratesProofRouteAssessment
+
+    return e2
+
+# HANDOFF (non-executable): when e2 is theorem-shaped and route-ready, adapt
+# the dossier to ProofQueueItem and offer it to theorem_proof_delivery. When
+# conceptual refinement is required, pass the dossier through the declared
+# legacy conceptual-input adapter. A handoff transports provenance, claim
+# ceilings, taints, and open obligations; it adds no proof or truth warrant.
+# ACCEPT (non-executable): this onramp has no local terminal accept transition;
+# route_ready is a handoff condition, not proof acceptance.
+# STOP (non-executable): a refuted r0 stops this route. Contract failures stop
+# or quarantine as declared; exit requires ExpertRouteDossier,
+# EntrypointFalsificationAssessment, and HubBiasAudit, with open obligations declared.

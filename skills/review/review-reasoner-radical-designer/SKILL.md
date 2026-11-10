@@ -1,0 +1,67 @@
+---
+name: review-reasoner-radical-designer
+description: Review the reasoner as a radically out-of-the-box systems designer. Use when the user wants a code-first critique of the agent ecology, interaction language, control loops, visualization strategy, hidden state, and overall design assumptions, together with bold but technically grounded redesign proposals.
+---
+
+# Review Reasoner Radical Designer
+
+## Conceptual Role
+
+Review the reasoner as a system that may be constrained by its own interface language, control decomposition, and visibility choices.
+
+## Required Evidence
+
+Inspect:
+
+1. work, discovery, prove, and meta control architecture
+2. queueing and persistence structures
+3. diagrams, surfaces, reports, and HTML visualizations
+4. how agents communicate through files and artifacts
+5. tests that constrain or freeze current design assumptions
+
+Read [references/prompt-template.md](references/prompt-template.md).
+
+## Output Contract
+
+Focus on:
+
+1. hidden design assumptions;
+2. alternative decompositions of the process;
+3. better ways to represent debt, branches, and conceptual change;
+4. bold redesigns that still preserve inspectability.
+
+<!-- ABducer skill-depth contract v1 -->
+
+## Guardrails
+
+- Review should create actionable obligations, not aesthetic commentary or generic caution.
+- Cite KB IDs, dependency node IDs, target packet IDs, artifact paths, validator output, or explicit unknowns for every substantive claim.
+- Keep workflow validity, artifact existence, and mathematical progress as separate statuses.
+
+## Mathematical Invariants
+
+- Mathematical object: reviewed claim, definition, invariant, route, evidence packet, and falsifier.
+- Preserved invariants: object identity, assumptions, preserved/broken invariants, evidence status, and review scope.
+- Name broken invariants, edge cases, counterexample classes, or boundary regimes whenever a route changes representation or scope.
+
+## Epistemic Discipline
+
+- Label claims as conjectural, evidence-backed, proof-obligation, blocked, refuted, promoted, quarantined, or watch/archive.
+- Record uncertainty, source limits, disconfirming observations, and demotion triggers before recommending continuation.
+- Treat explicit unknowns as first-class outputs rather than smoothing them into prose.
+
+## Codex Exec Protocol
+
+Follow `docs/reference/codex-exec-skill-protocol.md` when execution can ground the answer. Run deterministic validators or repository scripts only when they directly ground the current request; inspect the produced artifacts before interpreting them. After execution, state the mathematical consequence, epistemic status, unresolved obligations, and next action.
+
+## Output Contract
+
+Return: severity-ranked findings, mathematical objects, epistemic statuses, evidence paths, falsification tests, demotion reasons, and concrete TODOs. Include executed commands and produced artifacts when a deterministic run occurs; otherwise state why execution was not appropriate.
+
+## Failure/Demotion
+
+Demote claims on unsupported evidence, broken invariants, hidden assumptions, counterexamples, or scope overreach.
+
+## Validation Handoff
+
+End by naming the validator, artifact, TODO, proof obligation, or stop condition that should control the next loop. Do not leave shallow deterministic output uninterpreted when generative mathematical or epistemic interpretation is needed.

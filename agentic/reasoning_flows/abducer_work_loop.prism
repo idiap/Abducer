@@ -1,0 +1,12 @@
+erfl 0.2
+reasoning abducer_work_loop {
+  goal "advance or close the active proof obligation" -> work_status
+  steps a0:A[proof_gap->route] -assume> ...
+        d0:D[route->claim] -test> ...
+        r0:R[claim->verdict] -calibrate> ...
+        e0:E[claim,verdict->work_status]
+  on e0.release_candidate => switch @release_promotion_loop
+  on e0.reframe => switch @conceptual_hypothesis_exploration_loop
+  on e0.retarget => switch @target_navigation_loop
+  on r0.refuted => stop
+}

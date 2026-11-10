@@ -1,0 +1,861 @@
+% SPDX-FileCopyrightText: © 2026 Idiap Research Institute <contact@idiap.ch>
+%
+% SPDX-FileContributor: Andre Freitas <andre.freitas@idiap.ch>
+% Neuro-symbolic AI Group
+%
+% SPDX-FileContributor: Danilo Gusicuma <danilo.gusicuma@idiap.ch>
+% Neuro-symbolic AI Group
+%
+% SPDX-License-Identifier: MIT
+\clearpage
+\section{Supporting inferential calculus and workflow abstractions}
+\label{app:supporting-calculus}
+This appendix retains the local inference vocabulary, motifs, typed interfaces
+and conditional domain examples. It is a supporting projection of inquiry, not
+the conceptual organization of the main argument. In particular, operation
+labels do not establish the source, relevance or resolution of a tension.
+The narrow status-only model is distinguished from richer native evidential
+grounding and reflective comparison. No expressive completeness, monotonic
+conceptual progress or automatic workflow implementation is asserted.
+
+\subsection{From Workflow Descriptions to a Reasoning Calculus}
+
+A workflow name tells us where a process sits, but not what reasoning happens
+inside it. Two stages may perform the same epistemic operation under different
+names, while one stage may combine several operations with sharply different
+logical roles. For the limited purpose of interface analysis, this appendix represents
+selected local moves as \emph{occurrences of reasoning types}. This projection
+does not replace the conceptual situation described in the main text.
+
+\subsubsection{Epistemic handles and occurrences}
+
+Let $\Handles$ be a set of named epistemic handles. A handle may denote a
+problem state, gap, hypothesis, pattern, bridge, claim, model result,
+counterfactual contrast, verdict, obligation set, or calibrated status.
+Handles are typed by a map
+\[
+  \theta:\Handles\longrightarrow\mathcal{K},
+\]
+where $\mathcal{K}$ is a semantic kind system. The type of a handle constrains
+which reasoning occurrence may consume it and what kind of output may be
+produced.
+
+\begin{definition}[Reasoning occurrence]
+A reasoning occurrence is a tuple
+\[
+  o=(\alpha,\tau,X,Y),
+\]
+where $\alpha$ is a unique occurrence identifier, $\tau\in\Types$ is a
+reasoning type, $X\subseteq\Handles$ is a finite input interface, and
+$Y\subseteq\Handles$ is a finite output interface. Repeated uses of the same
+reasoning type are distinct occurrences.
+\end{definition}
+
+The type alphabet is
+\[
+  \Types=\{\mathsf{D},\mathsf{A},\mathsf{I},\mathsf{T},
+  \mathsf{C},\mathsf{M},\mathsf{R},\mathsf{E}\}.
+\]
+Table~\ref{tab:types} gives their scientific roles.
+
+\begin{table}[t]
+\centering
+\caption{Primitive reasoning types.}\label{tab:types}
+\begin{tabularx}{\textwidth}{@{}c l X@{}}
+\toprule
+Symbol & Name & Core transformation \\
+\midrule
+$\mathsf{D}$ & Deduction &
+  explicit premises $\mapsto$ a consequence entailed if those premises hold \\
+$\mathsf{A}$ & Abduction &
+  an explanatory or structural gap $\mapsto$ a candidate hypothesis \\
+$\mathsf{I}$ & Induction &
+  cases or regularities $\mapsto$ a scoped provisional generalization \\
+$\mathsf{T}$ & Structural transfer &
+  a source structure and target context $\mapsto$ a candidate bridge \\
+$\mathsf{C}$ & Contrastive reasoning &
+  a candidate and relevant alternative $\mapsto$ a discriminating contrast \\
+$\mathsf{M}$ & Model-based reasoning &
+  a candidate under a model $\mapsto$ predicted or simulated behavior \\
+$\mathsf{R}$ & Refutational testing &
+  a claim, consequence, or route $\mapsto$ a critical verdict \\
+$\mathsf{E}$ & Evidential calibration &
+  claims, findings and context $\mapsto$ a source-bounded assessment \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+These symbols are primitive relative to the language, not claims about the
+ultimate cognitive primitives of human or machine thought. Their value is
+analytic: each denotes a different inferential responsibility.
+Some displays below project assessment onto its status annotation. That restricted
+$\mathsf{E}_{\mathrm{status}}$ view does not describe every grounding, selection
+or reconstruction occurrence bearing an evidential label.
+
+\subsubsection{Relations as licenses}
+
+Occurrences are not composed by temporal adjacency alone. An explicit relation
+states why an output may feed a later operation. Let
+\[
+  \Rel=\{\mathsf{requires},\mathsf{assume},\mathsf{test},
+  \mathsf{calibrate},\mathsf{constrain},\mathsf{generalize},
+  \mathsf{transfer},\mathsf{probe},\mathsf{revise},\mathsf{preserve}\}.
+\]
+The relation $\mathsf{requires}$ records structural dependency but supplies no
+epistemic warrant. The remaining relations state an epistemically meaningful
+use of one occurrence by another: a hypothesis is retained as a premise, a
+claim becomes the object of testing, a verdict informs calibration, an adverse
+status narrows future candidates, cases support a bounded generalization, a
+structure is transferred, a candidate is probed, or a failed state starts a
+revision.
+
+\begin{definition}[Reasoning flow]
+A reasoning flow is a tuple
+\[
+  \Flow=(g,O,L,B,\chi),
+\]
+where $g$ is a goal, $O$ is a finite set of reasoning occurrences, $L\subseteq
+O\times\Rel\times O$ is a labeled composition graph, $B$ is a set of branch,
+join, alternative, and bounded-repeat constructors, and $\chi$ maps calibrated
+status predicates to acceptance, stopping, or transition into another flow.
+\end{definition}
+
+\begin{definition}[Relational coherence]
+A flow is relationally coherent when every edge
+$(o_i,\rho,o_j)\in L$ conserves at least one named claim or epistemic-state
+handle from the output interface of $o_i$ to the input interface of $o_j$, and
+the label $\rho$ states the intended license for that use.
+\end{definition}
+
+Relational coherence guards against a common failure in informal reasoning: a
+concept changes meaning between steps while the prose suggests continuity. It
+makes such drift detectable at the interfaces. It also distinguishes mere
+sequence from justification. An operation may be required before another
+without warranting its conclusion.
+
+\subsubsection{Calibration and path closure}
+
+For the calculus, we impose the path-closure condition that every complete
+reasoning path ends in an occurrence of type $\mathsf{E}$. Write
+\[
+  \mathsf{E}:(c,v,\gamma)\longmapsto s\in\Statuses,
+\]
+where $c$ is the claim or candidate under consideration, $v$ is the available
+verdict or finding, $\gamma$ is the relevant epistemic context, and $s$ is a
+status such as conditional, refuted, unresolved, formal-ready, or accepted
+within a stated scope.
+
+\begin{proposition}[Terminal transparency]
+In a calculus flow satisfying the path-closure condition, no complete path reaches an epistemic terminal
+disposition without producing a named calibrated status.
+\end{proposition}
+
+\begin{proof}
+By the path-closure condition, each complete path terminates in an
+$\mathsf{E}$ occurrence. Acceptance, stopping, and cross-flow transition are
+predicated on the output of that occurrence. Therefore the terminal
+disposition is mediated by an explicit status rather than inferred from the
+mere fact that execution ended.
+\end{proof}
+
+This is a requirement of the calculus, not a claim that every original workflow obeys it: an original refuted-stop clause may end a path before a separate calibration occurrence. Such a path requires an explicit status interpretation to satisfy the closure condition.
+
+This property does not make the calibration correct. It makes the location and
+content of the epistemic judgment explicit.
+
+\subsection{Functional groups in the local inference vocabulary}
+
+The eight primitive types form four overlapping functional layers. The layers
+are not additional primitives; they explain the role each operation plays in a
+larger reasoning cycle.
+
+\begin{enumerate}[leftmargin=*,itemsep=0.35em]
+\item \textbf{Candidate expansion} uses abduction, induction, and structural
+  transfer to enlarge the space of live explanations, regularities, and
+  bridges:
+  \[
+    \mathcal{X}_{t}\xrightarrow{\{\mathsf{A},\mathsf{I},\mathsf{T}\}}
+    \mathcal{H}_{t}.
+  \]
+\item \textbf{Consequence and behavior exposure} uses deduction and
+  model-based reasoning to make candidates answerable to something beyond
+  their initial plausibility:
+  \[
+    \mathcal{H}_{t}\xrightarrow{\{\mathsf{D},\mathsf{M}\}}
+    \mathcal{Q}_{t}.
+  \]
+\item \textbf{Discrimination} uses contrastive and refutational reasoning to
+  separate candidates that would otherwise fit the same local evidence:
+  \[
+    \mathcal{Q}_{t}\xrightarrow{\{\mathsf{C},\mathsf{R}\}}
+    \mathcal{V}_{t}.
+  \]
+\item \textbf{Calibration} maps candidates and verdicts into statuses that can
+  guide the next cycle:
+  \[
+    (\mathcal{H}_{t},\mathcal{V}_{t})
+    \xrightarrow{\mathsf{E}}\mathcal{S}_{t}.
+  \]
+\end{enumerate}
+
+The architecture is deliberately asymmetric. Expansion can create new
+scientific content in the form of hypotheses or generalizations. Deduction can
+create new consequences relative to premises. Refutation can defeat content.
+Calibration, however, only classifies what the preceding operations support.
+
+The cycle can be summarized as
+\[
+  \text{expand}\;\longrightarrow\;\text{expose}\;\longrightarrow\;
+  \text{discriminate}\;\longrightarrow\;\text{calibrate}\;
+  \longrightarrow\;\text{revise or continue}.
+\]
+This is not a claim that every inquiry follows exactly four temporal stages.
+It is a functional decomposition: one physical stage may contain several
+layers, and parallel branches may instantiate them concurrently.
+
+\subsection{Canonical Motifs of Composite Reasoning}
+
+The nineteen canonical flow interfaces share recurring compositions. These
+motifs organize the types of epistemic work; they do not exhaust the mechanisms
+inside an occurrence. The source-procedure supplement in Appendix~\ref{sec:mechanism-depth} explains candidate
+construction, opposed reflection, plural comparison and feedback that a short
+motif formula suppresses.
+
+\subsubsection{The core abductive cycle}
+
+One local discovery motif begins with a gap $g$, forms a hypothesis $h$,
+derives a consequence $c$ under that hypothesis, tests the consequence, and
+calibrates the result:
+\[
+  g\xrightarrow{\mathsf{A}}h
+  \xRightarrow{\mathsf{assume}}
+  \mathsf{D}(h)=c
+  \xRightarrow{\mathsf{test}}
+  \mathsf{R}(c)=v
+  \xRightarrow{\mathsf{calibrate}}
+  \mathsf{E}(c,v)=s.
+\]
+At the level of occurrence types, the motif is
+\[
+  \mathcal{C}_{\mathrm{abd}}
+  =\mathsf{E}\circ\mathsf{R}_{\mathrm{ctx}}\circ\mathsf{D}\circ\mathsf{A},
+\]
+where $\mathsf{R}_{\mathrm{ctx}}(c)=(c,\mathsf{R}(c))$ retains the tested claim. Here the payload-level display suppresses successful-result wrappers; Appendix~\ref{app:native-workflow} makes those adapters explicit. The other motif formulas below are occurrence-composition shorthand with retained handles and relation licenses, not ordinary function compositions that discard their context. The labeled relations are essential. The arrow from abduction to deduction
+is \emph{assumption}, not validation. Deduction tells us what follows if the
+hypothesis holds; refutation asks whether the exposed consequence survives;
+calibration decides what status is justified.
+
+\begin{proposition}[Conditionality preservation]
+An $\mathsf{assume}$ edge does not discharge the hypothesis it carries. A
+conclusion whose justification still depends on that hypothesis must retain the
+dependence unless the premise is established or a derivation establishes the
+conclusion without it.
+\end{proposition}
+
+\begin{proof}
+The $\mathsf{assume}$ relation records premise use rather than evidence of premise
+truth. An entailment from that premise therefore supplies no unconditional warrant
+while the dependence remains undischarged. A conclusion can nevertheless be proved
+independently of an unused assumption; consuming a handle alone does not establish
+logical dependence. Neither absence of a counterexample nor a favorable status
+discharges a dependence that the actual justification still requires.
+\end{proof}
+
+\subsubsection{Plural discovery}
+
+A richer discovery process forms hypotheses and patterns in parallel, then
+examines them through both models and counterfactual contrasts:
+\[
+  \mathcal{C}_{\mathrm{plural}}
+  =\mathsf{E}_{1}\circ\mathsf{R}\circ
+  (\mathsf{M}\times\mathsf{C})\circ
+  (\mathsf{A}\times\mathsf{I})\circ\mathsf{E}_{0}.
+\]
+The initial calibration $\mathsf{E}_{0}$ fixes the active scope. Abduction
+produces explanatory candidates while induction extracts a pattern from the
+same scope. Model-based and contrastive branches are both required before
+refutational testing. This matters because model fit and alternative
+discrimination answer different questions. A candidate may reproduce observed
+behavior yet fail to differ from a strong alternative.
+
+Parallel composition is not decorative concurrency. For a join
+$o_1\,\&\,o_2$, both contributions are epistemically required. Omitting one
+branch changes the reasoning claim made by the flow.
+
+\subsubsection{Conceptual mediation through transfer}
+
+When direct abduction repeatedly encounters the same structural obstruction,
+the inquiry may need a bridge rather than another premise. A representative
+motif is
+\[
+  \mathcal{C}_{\mathrm{med}}
+  =\mathsf{E}_{1}\circ\mathsf{R}\circ\mathsf{D}\circ
+  \mathsf{T}\circ\mathsf{A}\circ\mathsf{E}_{0}.
+\]
+Here $\mathsf{E}_{0}$ turns the failure state into a constrained pressure;
+$\mathsf{A}$ proposes a candidate response; $\mathsf{T}$ makes an explicit
+structural transfer into a bridge; $\mathsf{D}$ exposes the consequence of
+assuming that bridge; $\mathsf{R}$ tests it; and $\mathsf{E}_{1}$ determines
+whether the bridge is work-ready, refuted, or still conceptually incomplete.
+
+This motif separates two moves that are often conflated. Abduction proposes an
+object that could explain the gap. Structural transfer supplies the
+relation-preserving correspondence by which the source object could function
+in the target setting. Without the second move, analogy is only resemblance.
+
+\subsubsection{Route refinement}
+
+Evidence-to-proof reasoning is not a single leap from grounded material to a
+theorem. It is a two-stage abductive process:
+\[
+  \mathcal{C}_{\mathrm{route}}
+  =\mathsf{E}_{2}\circ\mathsf{R}\circ\mathsf{A}_{1}\circ
+  \mathsf{E}_{1}\circ\mathsf{D}\circ\mathsf{A}_{0}\circ
+  \mathsf{E}_{0}.
+\]
+The first abduction proposes a route. Deduction exposes a consequence of that
+route. Intermediate calibration identifies what the route has and has not
+established. Revision then starts a second abductive occurrence that proposes
+a precise proof entry point. Only after the entry point is tested does final
+calibration decide whether exact theorem work is ready to begin.
+
+The intermediate $\mathsf{E}_{1}$ is important. It prevents a promising route
+from being silently reinterpreted as a proof plan. The second abduction is
+conditioned by what the first cycle learned.
+
+\subsubsection{Proof closure}
+
+Once premises and a target claim are exact, the reasoning core becomes
+smaller:
+\[
+  \mathcal{C}_{\mathrm{proof}}
+  =\mathsf{E}\circ\mathsf{R}\circ\mathsf{D}.
+\]
+Deduction constructs the claimed consequence from explicit premises;
+refutational testing searches for a failed step, counterexample, or unmet
+obligation; and calibration distinguishes proof accepted, failure certificate,
+and unresolved status. The absence of abduction in this motif is substantive:
+the route is no longer searching for an explanation but testing whether an
+exact entailment closes.
+
+\subsubsection{Reflective repair and meta-reasoning}
+
+A reflective episode can sometimes be encoded with the existing operation
+alphabet when an explicit decomposition is supplied. For example, a source-level
+review can reconstruct a state, propose repairs, challenge it, and compare the
+results. A schematic projection is
+\[
+  \mathcal{C}_{\mathrm{reflect}}
+  =\mathsf{E}_{1}\circ(\mathsf{R}\times\mathsf{A})\circ\mathsf{E}_{0}.
+\]
+Here the evidential grounding and comparison labels can summarize substantive
+content reconstruction; they are not restricted to the status-only operation
+defined below. This projection describes selected interfaces. It does not explain
+which identity condition reflection changes, which tension it resolves, or why
+a proposed repair deepens understanding.
+
+\begin{proposition}[Conditional higher-order encoding]
+If a reflective procedure has an explicit, interface-compatible decomposition
+into the chosen operation types, and its objects are represented by suitable
+typed handles, that decomposition can use the same operation alphabet.
+\end{proposition}
+\begin{proof}
+Represent the inputs and outputs of each supplied component by its stated
+handles and retain the component's assumed operation type. Interface compatibility
+permits the stipulated composition. No new symbol is required for this already
+decomposed procedure.
+\end{proof}
+The decomposition is an assumption, not a consequence of naming a trace as a
+handle. The proposition establishes no expressive completeness for reflection
+and no reduction of conceptual change to a fixed list of inferential mechanisms.
+
+\subsubsection{Boundary and gap-bearing motifs}
+
+Some canonical flows intentionally contain an unresolved occurrence
+$\mathsf{\_}$:
+\[
+  x\xrightarrow{\mathsf{\_}}y
+  \xRightarrow{\mathsf{requires}}\mathsf{E}(y)=s.
+\]
+This form records that a transformation exists in the source workflow while
+refusing to guess which reasoning type it instantiates. Such a flow is a
+boundary description, not an executable reasoning derivation. The underscore
+is therefore scientifically useful negative space: it distinguishes an
+unrepresented reasoning type from the absence of reasoning. Linked skill
+instructions may still prescribe how to perform that work; those procedures
+require a separate account rather than being erased by the underscore.
+
+\subsection{Named Workflows as Reasoning Regimes}
+
+Appendix~\ref{app:granular-prism-workflows} expands every named workflow into its declared Prism occurrences, typed dependencies, relation licenses and concrete example. This section explains the regimes they form; the appendix shows how each declared mechanism changes what can be inferred and where the source leaves a transformation unresolved.
+
+The motifs become operationally intelligible when attached to the canonical
+workflow names. A named workflow is not merely a container for tasks. It
+selects an inferential question, a characteristic composition of operations,
+and a family of statuses that determine what kind of reasoning should follow.
+Table~\ref{tab:regimes} gives the central correspondences.
+
+\begin{table}[t]
+\centering
+\small
+\caption{Principal named workflows as reasoning regimes.}\label{tab:regimes}
+\begin{tabularx}{\textwidth}{@{}>{\raggedright\arraybackslash}p{0.29\textwidth}
+  >{\raggedright\arraybackslash}p{0.21\textwidth}
+  >{\raggedright\arraybackslash}X@{}}
+\toprule
+Named workflow & Core composition & Inferential question \\
+\midrule
+\path{target_navigation_loop} & orientation $\rightarrow\mathsf{E}$ &
+  What exact target and dependency frontier should organize the next attempt? \\
+\path{discovery_marathon_loop} &
+  $\mathsf{E}(\mathsf{A}\!\times\!\mathsf{I})
+   (\mathsf{M}\!\times\!\mathsf{C})\mathsf{R}\mathsf{E}$ &
+  Which candidate survives both behavioral probing and discriminating contrast? \\
+\path{abducer_work_loop} &
+  $\mathsf{A}\mathsf{D}\mathsf{R}\mathsf{E}$ &
+  Can a local proof gap be advanced, refuted, or reframed by one explicit hypothesis? \\
+\path{conceptual_hypothesis_exploration_loop} &
+  $\mathsf{E}\mathsf{A}\mathsf{T}\mathsf{D}\mathsf{R}\mathsf{E}$ &
+  Does a new conceptual bridge preserve the structure required by the target? \\
+\path{conceptual_frontier_deepening} &
+  calibrated proposal, attack, transfer, and deduction &
+  Which deeper concept remains discriminating and formalizable after rival tests? \\
+\path{evidence_to_proof_route_onramp} &
+  two-stage abductive refinement &
+  What exact lemma replaces an attractive but underlicensed proof route? \\
+\path{theorem_proof_delivery} &
+  $\mathsf{D}\mathsf{R}\mathsf{E}$ &
+  Do explicit premises entail the target, or should a failure certificate be issued? \\
+\path{deep_review_and_reorientation} &
+  $\mathsf{E}(\mathsf{R}\!\times\!\mathsf{A})\mathsf{E}$ &
+  Is the obstruction locally repairable, conceptually structural, or unresolved? \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsubsection{From target navigation to plural discovery}
+
+The \path{target_navigation_loop} is the orientation regime. It starts from a
+broad desired result and constructs a work frontier: the immediate gap, its
+dependencies, and the conditions under which local work would bear on the
+target. Because the internal construction is unresolved in the canonical
+descriptor, the formal account does not invent a primitive for it. The linked
+dependency-cartographer procedure supplies a separate account of frontier
+construction, described in Appendix~\ref{app:granular-prism-workflows}. What is
+typed is the terminal calibration that distinguishes a work-ready frontier, a
+bounded result that should be consolidated, and a stalled target for which no
+defensible bridge has been identified.
+
+When navigation identifies a tractable exploratory question,
+\path{discovery_marathon_loop} expands the inquiry plurally. Its abductive
+branch proposes a mechanism while its inductive branch extracts a regularity.
+The two are probed by a model and a counterfactual contrast before refutation.
+Thus the workflow does not ask only whether a candidate fits observations; it
+asks whether the candidate makes a distinctive prediction relative to a live
+alternative. A status such as \emph{reorient} or \emph{target reset} then
+selects conceptual repair or renewed navigation.
+
+\subsubsection{From a proof gap to an exact theorem obligation}
+
+The \path{abducer_work_loop} is the local engine of hypothesis-driven work. It
+turns one proof gap into a candidate premise, exposes the premise's deductive
+consequence, attacks that consequence, and calibrates the surviving fragment.
+Its output need not be success. A counterexample can yield a more exact domain
+of validity; a failed observable can reveal that the target requires a broader
+state class; and a repeated obstruction can trigger
+\path{conceptual_hypothesis_exploration_loop}.
+
+Conceptual exploration changes the representation of the problem. The
+workflow first calibrates the failure, abducts a replacement concept, and then
+uses structural transfer to state how that concept could bear on the original
+target.\ \path{conceptual_frontier_deepening} extends the same pattern by
+comparing deeper organizing concepts and attacking them in related regimes.
+Its native linear projection then constructs a bridge and formal claim; the
+linked conceptual procedures also retain immature or plural alternatives for
+further reflection without requiring immediate formalization. In this motif,
+$\mathsf{T}$ names the explicit bridge correspondence after $\mathsf{A}$ proposes
+a response. This local assignment is not a universal partition of conceptual work.
+
+The \path{evidence_to_proof_route_onramp} performs a different refinement. It
+first exposes the consequence of a broad route, calibrates the missing link,
+and then abducts a narrower entry lemma. Only the revised entry point is sent
+to \path{theorem_proof_delivery}, whose $\mathsf{D}$--$\mathsf{R}$--$\mathsf{E}$
+core retains the exact theorem obligation: it can report acceptance under stated
+premises, an exact failure certificate, or quarantine rather than invent a new
+target to secure success.
+
+\subsubsection{Reflection and domain-specialized composition}
+
+The \path{deep_review_and_reorientation} workflow applies refutation and
+abduction to the current reasoning state itself. A failed proof is not
+automatically routed back to the same search. Review may assign a local repair
+to \path{target_navigation_loop}, send a structural obstruction to
+\path{conceptual_hypothesis_exploration_loop}, or preserve an unresolved
+disagreement as a stopping state. The workflow therefore represents selected
+reflective decisions about the level at which revision should occur; the typed
+decision alone does not implement the richer reflective procedure.
+
+The domain-specific \path{cohere_fast} family makes this division of labor
+particularly explicit. Its named stages separate four responsibilities:
+\begin{itemize}[leftmargin=*,itemsep=0.15em,topsep=0.25em]
+\item scope formation in \path{cohere_fast_scope_and_ground};
+\item candidate comparison in \path{cohere_fast_adaptive_frontier};
+\item conditional derivation in \path{cohere_fast_derivation_and_proof}; and
+\item adversarial closure in \path{cohere_fast_independent_audit}.
+\end{itemize}
+The
+\path{ym-representational-dynamics-overlay} is a complementary conceptual
+regime for testing whether a gauge-invariant representation changes the route
+to a spectral statement. These workflows contain unresolved domain reasoning
+where the source descriptors do not type it, even though linked domain skills
+state substantive construction and proof obligations. Their contribution to the present
+calculus is the explicit separation of inferential responsibilities and the
+calibrated transitions among them.
+
+\subsection{A bounded workflow-control abstraction}
+
+Local motifs explain how one candidate is formed and tested. Scientific inquiry
+also needs an account of how calibrated results change the active kind of
+reasoning.
+
+For a selected control abstraction, let the projected inquiry state be
+\[
+  q_t=(p_t,x_t,\mathcal{H}_t,\mathcal{O}_t,s_t),
+\]
+where $p_t$ is the current reasoning phase, $x_t$ the active problem state,
+$\mathcal{H}_t$ the live candidate set, $\mathcal{O}_t$ the open obligations,
+and $s_t$ the latest calibrated status. A status-sensitive transition function
+\[
+  q_{t+1}=\delta(q_t,s_t)
+\]
+selects the next flow. The principal phases are:
+
+\begin{enumerate}[leftmargin=*,itemsep=0.3em]
+\item \textbf{Orientation}: identify the target, gap, and dependency frontier.
+\item \textbf{Expansion}: generate hypotheses, patterns, representations, and
+  bridge candidates.
+\item \textbf{Derivation}: expose exact consequences and proof obligations.
+\item \textbf{Discrimination}: search models, contrasts, defeaters, and
+  counterexamples.
+\item \textbf{Calibration}: assign status to the surviving candidate and its
+  obligations.
+\item \textbf{Reflection}: revise the target, representation, or strategy when
+  the current route stalls.
+\item \textbf{Consolidation}: articulate what has actually been established
+  without changing its epistemic status.
+\end{enumerate}
+
+The global process is not a pipeline. It contains three major feedback loops.
+
+\paragraph{Conceptual feedback.}
+A refuted consequence or failure certificate returns the inquiry from
+\path{theorem_proof_delivery} or \path{abducer_work_loop} to
+\path{conceptual_hypothesis_exploration_loop}. The next cycle changes the
+candidate space, not merely the wording of the failed claim.
+
+\paragraph{Target feedback.}
+A calibrated mismatch between the active target and its dependency frontier
+returns \path{discovery_marathon_loop} or a local work loop to
+\path{target_navigation_loop}. This prevents repeated local work on a
+mis-specified goal.
+
+\paragraph{Proof feedback.}
+Elaborating a scientific contribution may expose an exact theorem obligation
+that returns \path{manuscript_result_elaboration} to
+\path{theorem_proof_delivery}. Conversely, a proof failure can return exact
+derivation to conceptual bridge formation.
+
+When candidate identity and the comparison universe are held fixed, this
+topology permits an \emph{expansion/compression oscillation}. Conceptual changes
+that split, merge or redefine candidate families need not fit that fixed-universe
+model. Under an explicit retain-then-filter policy, formation keeps the prior
+candidates while adding proposals, and subsequent selection retains a subset of
+that expanded set. Assessment informs the next expansion. If $\mathcal{H}_t$
+denotes the retained candidate set, this policy gives
+\[
+  |\mathcal{H}_{t}^{+}|\geq|\mathcal{H}_{t}|,
+  \qquad
+  |\mathcal{H}_{t+1}|\leq|\mathcal{H}_{t}^{+}|,
+\]
+where $\mathcal{H}_{t}^{+}$ is the expanded set and the second inequality
+reflects discrimination and calibration. Neither candidate counts nor obligation counts establish scientific progress.
+Conceptual development can introduce valuable new questions and obligations, as
+shown by the dynamics-descent burden in Section~\ref{sec:conceptual-case}. The
+cardinality inequalities apply only to this bounded selection picture.
+
+\subsubsection{Bounded iteration and progress}
+
+A local loop may use a declared bound and task-specific progress criterion.
+For a proof-debt reduction task, let $\mu(q)$ measure unresolved obligation burden.
+This is not a universal measure of conceptual development. A bounded cycle
+\[
+  q_{t+1}=\delta(q_t,s_t),\qquad 1\leq t\leq n,
+\]
+is goal-directed when continuation requires
+\[
+  \mu(q_{t+1})<\mu(q_t)
+\]
+or another explicitly stated discriminating improvement. This condition does
+not guarantee discovery, but it distinguishes refinement from unproductive
+repetition.
+
+\subsection{Worked Yang\textendash{}Mills Inference Across Named Workflows}
+
+We now instantiate the calculus with a composite thought experiment drawn from
+the maintained Yang\textendash{}Mills workflow examples. The source examples are
+independent illustrations; here their common assumptions are restated so that
+their reasoning roles can be read as one bounded episode. Nothing below claims
+a proof, a numerical finding, or a new physical result.
+
+Fix four-dimensional $SU(3)$ lattice Yang\textendash{}Mills theory with Wilson action
+\[
+  S_W[U]
+  =\beta\sum_p\left(1-\frac{1}{3}\operatorname{ReTr}U_p\right)
+\]
+on a finite spatial lattice of size $L$ and temporal lattice spacing $a_t$.
+Assume only where explicitly stated that reflection positivity yields a
+positive self-adjoint transfer operator $T_{a,L}$ on a gauge-invariant physical
+Hilbert space. If $\lambda_0$ and $\lambda_1$ are the leading vacuum and
+vacuum-orthogonal eigenvalues, define the vacuum-normalized operator
+$\widehat{T}_{a,L}=\lambda_0^{-1}T_{a,L}$. The finite-regulator spectral
+quantity is
+\[
+  \Delta(a,L)
+  =-a_t^{-1}\log\!\left(\frac{\lambda_1}{\lambda_0}\right).
+\]
+The distant target is a positive physical gap after the required volume and
+cutoff limits and continuum reconstruction. The workflows reason about the
+route to that target; they do not collapse these distinct obligations.
+
+\subsubsection{Navigation: turning a grand target into local obligations}
+
+In \path{target_navigation_loop}, the phrase ``prove the Yang\textendash{}Mills mass
+gap'' is replaced by a dependency frontier. A useful schematic decomposition
+is
+\[
+  G_{\mathrm{YM}}
+  \Longleftarrow
+  O_{\mathrm{recon}}\wedge O_{a\downarrow0}
+  \wedge O_{L\uparrow\infty}\wedge O_{\mathrm{spec}}
+  \wedge O_{T},
+\]
+where $O_T$ constructs the physical transfer operator for the specified
+action, $O_{\mathrm{spec}}$ states the finite-regulator spectral estimate,
+$O_{L\uparrow\infty}$ and $O_{a\downarrow0}$ demand the relevant uniform
+control, and $O_{\mathrm{recon}}$ reconstructs the continuum theory. The
+immediate work item is not $G_{\mathrm{YM}}$ itself. It is a precisely scoped
+question such as whether a norm-controlled correlation estimate can yield a
+contraction bound on the vacuum-orthogonal physical sector.
+
+The navigation status is \emph{work-ready} only after the gauge group, action,
+physical sector, boundary conditions, energy normalization, limiting
+trajectory, and reconstruction obligation have been fixed. A finite-lattice
+bound may instead be calibrated as a bounded result. If no bridge from fixed
+lattice spacing to uniform control is even formulated, the correct status is
+\emph{stalled}, not an invitation to treat numerical decay as a theorem.
+
+\subsubsection{Discovery: a mechanism must make a discriminating prediction}
+
+The \path{discovery_marathon_loop} asks a different question: which candidate
+mechanism predicts the decay of specified gauge-invariant connected
+correlators? Its plural branches can be made concrete as follows.
+
+\begin{enumerate}[leftmargin=*,itemsep=0.35em]
+\item Abduction proposes a center-vortex or disorder mechanism $h_v$, while
+  induction estimates the scaling of a correlation length $\xi(a,L)$ across
+  declared ensembles.
+\item Model-based reasoning uses a reduced $Z_3$ gauge model to produce a
+  correlation curve predicted by $h_v$.
+\item Contrastive reasoning considers an intervention that suppresses vortex
+  density while holding the coupling and volume fixed, then predicts how the
+  same observables should change.
+\item Refutation compares both predictions with Wilson-loop behavior and with
+  energies extracted from a gauge-invariant time-correlator matrix.
+\end{enumerate}
+
+Suppose the candidate reproduces the Wilson-loop observable but fails the
+predeclared prediction for the time-correlator energies. The calibrated result
+is then \emph{reorient}: the candidate may still illuminate string tension, but
+it has not supplied the required spectral mechanism. If all live mechanisms
+agree on the coarse observables, the ambiguity is preserved rather than
+converted into a forced winner. This is the concrete value of the
+$\mathsf{M}\times\mathsf{C}$ join: fit and discrimination remain different
+inferential burdens.
+
+\subsubsection{Conceptual repair: area law is not spectral closure}
+
+A recurring failed route is
+\[
+  \text{Wilson-loop area law}
+  \;\nRightarrow\;
+  \text{local time-correlation decay}
+  \;\nRightarrow\;
+  \text{physical spectral gap}.
+\]
+The first statement controls an external-probe free energy. By itself it does
+not give decay for a sufficiently comprehensive class of time-separated local
+gauge-invariant observables. The \path{evidence_to_proof_route_onramp}
+calibrates this as an underlicensed middle arrow and replaces the broad route
+with a candidate entry lemma.
+
+\begin{sloppypar}
+In \path{conceptual_hypothesis_exploration_loop}, abduction proposes a
+reflection-positive correlation-decay certificate. Structural transfer then
+attempts the Euclidean-correlator-to-transfer-operator bridge. A representative
+conditional premise is that for a norm-dense set $\mathcal{D}$ in the
+vacuum-orthogonal physical sector,
+\end{sloppypar}
+\[
+  \left|\langle\psi,\widehat{T}_{a,L}^{\,n}\psi\rangle\right|
+  \leq C(a,L)e^{-m(a,L)na_t}\lVert\psi\rVert^2,
+  \qquad \psi\in\mathcal{D},\quad n\geq0,
+  \tag{1}\label{eq:ym-correlation}
+\]
+with the operator channel, norm, boundary conditions, and required uniformity
+of $C(a,L)$ and $m(a,L)$ made explicit. Reflection positivity and density are
+not rhetorical context: they are premises needed to transfer the quadratic
+form estimate into a statement about $\widehat{T}_{a,L}$.
+
+The conceptual workflows therefore separate two claims. Abduction says that
+Eq.~\eqref{eq:ym-correlation} could bridge the gap. Structural transfer says
+which correspondence would make it relevant to the spectrum.
+\path{conceptual_frontier_deepening} may compare this certificate with
+center-symmetry, disorder-operator, or gauge-invariant observable-algebra
+formulations, but advances one only when the observable class, operator
+channel, quantifiers, and uniformity obligations are formalizable. If a
+proposed action lacks reflection positivity, the bridge is refuted even though
+the desired spectral conclusion is not thereby disproved.
+
+\subsubsection{Theorem delivery: a conditional implication with exact scope}
+
+Once the entry lemma is exact, \path{theorem_proof_delivery} attempts a
+deductive implication. Under positivity and density assumptions, a bound of
+the form in Eq.~\eqref{eq:ym-correlation} can support an operator contraction
+on the stated sector and hence a fixed-cutoff sectoral spectral estimate. The
+reasoning claim has the form
+\[
+  \bigl(O_T\wedge O_{\mathrm{dense}}\wedge
+        O_{\mathrm{decay}}(a,L)\bigr)
+  \xRightarrow{\mathsf{D}}
+  \Delta(a,L)\geq m(a,L),
+\]
+subject to the exact normalization and hypotheses of the theorem candidate.
+This conclusion is conditional and indexed by $(a,L)$. It becomes relevant to
+the distant target only through additional control such as
+\[
+  \inf_{(a,L)\in\Gamma}m(a,L)>0
+\]
+along a declared limiting trajectory $\Gamma$, together with the required
+reconstruction result.
+
+Refutational testing now checks quantifiers rather than general plausibility.
+If the proof treats $C(a,L)$ as volume-independent although it was established
+only for each fixed $L$, or if the dense observable class does not cover the
+claimed physical sector, \path{theorem_proof_delivery} returns a failure
+certificate. The fixed-volume fragment can remain correct while the uniform
+route fails.
+
+\subsubsection{The cohere-fast chain: candidates, derivation, and attack}
+
+The named \path{cohere_fast} stages expose the same reasoning at finer domain
+resolution.
+
+\begin{enumerate}[leftmargin=*,itemsep=0.4em]
+\item \path{cohere_fast_scope_and_ground} freezes four-dimensional $SU(3)$,
+  the Wilson action, and a named family of Wilson-loop and time-correlator
+  observables. It blocks an attempted use of $SU(2)$ numerical input for an
+  $SU(3)$ theorem target unless a transfer argument is supplied.
+
+\item \path{cohere_fast_adaptive_frontier} compares character-expansion bounds
+  for the Wilson plaquette weight, gauge-covariant block-spin maps, and a
+  gauge-invariant observable-algebra route. A heat-kernel lattice action is
+  kept regulator-specific until a universality bridge is proved; a block-spin
+  map that breaks gauge covariance at the coarse boundary is quarantined.
+
+\item \path{cohere_fast_derivation_and_proof} derives a finite-block
+  character-expansion or correlation estimate with every premise visible. A
+  constant that secretly depends on lattice volume cannot be presented as a
+  uniform estimate.
+
+\item \path{cohere_fast_independent_audit} attacks the packet with
+  rough-plaquette configurations, boundary conditions, explicitly defined
+  admissible-sector boundaries, and scaling in $L$ and $a$. If an adversarial
+  family violates the estimate outside a weak-field chart, calibration may
+  return
+  \[
+    s_{\mathrm{audit}}
+    =\text{``restricted finite-volume fragment retained;
+      uniform route quarantined''}.
+  \]
+\end{enumerate}
+
+The audit does more than reject. It identifies which quantifier failed and
+which fragment survives.\ \path{deep_review_and_reorientation} can then split
+the programme into two explicit fronts: construction of continuum,
+infinite-volume Schwinger functions with the required reconstruction
+properties, and a physical-sector spectral estimate uniform in volume and
+cutoff. Alternatively, \path{ym-representational-dynamics-overlay} can test a
+gauge-invariant observable-algebra representation, provided it does not assume
+the continuum measure whose construction is itself at issue.
+
+The resulting inference is scientifically useful even when it ends without a
+proof. The workflows have transformed a grand target into exact obligations,
+distinguished a mechanism indicator from a spectral theorem, isolated the
+missing transfer, constructed a conditional implication, and localized a
+uniformity failure. That sequence is the practical meaning of typed epistemic
+composition.
+
+\subsection{Formal Consequences of the Architecture}
+
+The typed account yields several useful consequences beyond the individual
+motifs.
+
+\subsubsection{Status assignment supplies no new scientific warrant}
+
+\begin{proposition}[Scope of a status-only abstraction]
+Define $\mathsf{E}_{\mathrm{status}}$ to retain supplied claim content and return
+only a status annotation. It does not construct a new substantive claim.
+\end{proposition}
+\begin{proof}
+This follows from the stipulated output boundary: substantive claim content
+is retained, while the only new output is its annotation.
+\end{proof}
+This is a property of a deliberately restricted model, not a theorem about every
+native evidential occurrence or about reflective judgment. Native grounding,
+selection and assessment can carry richer outputs, including a reconstructed
+frontier or a new question. Such changes need their own source-backed explanation.
+The useful epistemic constraint is that a positive status alone supplies no
+missing scientific warrant. A newly synthesized theory must be assessed on its
+own content; approval of its predecessors is insufficient.
+
+\subsubsection{Reasoning can be non-monotonic at system scale}
+
+Classical deductive consequence is monotonic under adding premises, but a global
+inquiry need not preserve its live commitments. Refutation can remove a candidate; calibration can demote it;
+revision can change the representation; and target feedback can replace the
+goal. Thus the set of live claims and premises may shrink or change between
+cycles even when each deductive occurrence is locally valid.
+
+\subsubsection{Plural branches preserve distinct burdens}
+
+A parallel composition
+\[
+  (o_1\,\&\,o_2)\xrightarrow{\rho}o_3
+\]
+states that both branch outputs are required by $o_3$. This is stronger than
+saying that two methods were run. It means that the downstream status depends
+on two distinct epistemic contributions. In plural discovery, for example,
+model behavior cannot substitute for contrast against alternatives.
+
+\subsubsection{Failure has positive structure}
+
+A failed route can output a verdict, an obstruction, and a residual claim that
+survives within a narrower scope. A richer reconstruction and assessment can convert failure
+into a more informative input state; this is not the status-only operator:
+\[
+  (\text{candidate},\text{defeater})
+  \xrightarrow{\text{reconstruct and assess}}
+  (\text{retained fragment},\text{new constraint},\text{open obligation}).
+\]
+This is why feedback is part of reasoning rather than merely recovery from an
+operational error.

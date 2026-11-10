@@ -1,0 +1,250 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://abducer.local/spec/resource_governor_process_event_v2.schema.json",
+  "title": "Current governed process event v2",
+  "$ref": "#/$defs/processEventV2",
+  "$defs": {
+    "digest": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
+    "processStatus": {"enum": ["succeeded", "deadline_exhausted", "cpu_exhausted", "out_of_memory", "disk_exhausted", "network_exhausted", "token_exhausted", "request_exhausted", "spend_exhausted", "input_exhausted", "output_exhausted", "worker_failed", "report_failed", "cancelled"]},
+    "reportedDimension": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "enforced", "reason"],
+      "properties": {
+        "status": {"enum": ["externally_reported", "unavailable"]},
+        "enforced": {"type": "boolean"},
+        "reason": {"type": "string", "minLength": 1}
+      }
+    },
+    "wallDimensionV2": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "enforced", "scope", "hard_kernel_preemption", "blocking_call_overrun_detected_after_return"],
+      "properties": {
+        "status": {"const": "parent_monotonic_deadline"},
+        "enforced": {"const": true},
+        "scope": {"const": "execution_deadline_plus_bounded_cleanup_and_acceptance"},
+        "hard_kernel_preemption": {"const": false},
+        "blocking_call_overrun_detected_after_return": {"const": true}
+      }
+    },
+    "cpuDimensionV2": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "enforced", "kernel_limit", "post_exit_acceptance", "full_process_group_coverage"],
+      "properties": {
+        "status": {"const": "target_pid_wait4_accounting"},
+        "enforced": {"const": true},
+        "kernel_limit": {"const": "inherited_per_process_integer_second_rlimit_cpu"},
+        "post_exit_acceptance": {"const": "exact_nanosecond_wait4_threshold"},
+        "full_process_group_coverage": {"const": false}
+      }
+    },
+    "memoryDimensionV2": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "enforced", "kernel_limit", "hard_group_rss_limit", "sampling_misses_between_observations"],
+      "properties": {
+        "status": {"const": "wait4_maxrss_plus_sampled_original_group_rss"},
+        "enforced": {"const": true},
+        "kernel_limit": {"enum": ["linux_inherited_per_process_virtual_address_space_rlimit", "unavailable_on_darwin"]},
+        "hard_group_rss_limit": {"const": false},
+        "sampling_misses_between_observations": {"const": true}
+      }
+    },
+    "diskDimensionV2": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "enforced", "kernel_limit", "hard_aggregate_workspace_quota", "accounting_root", "sample_interval_seconds", "limitation"],
+      "properties": {
+        "status": {"enum": ["post_exit_positive_growth_high_water", "unavailable"]},
+        "enforced": {"type": "boolean"},
+        "kernel_limit": {"enum": ["inherited_per_file_rlimit_fsize", "unavailable"]},
+        "hard_aggregate_workspace_quota": {"const": false},
+        "accounting_root": {"oneOf": [{"type": "string", "minLength": 1}, {"type": "null"}]},
+        "sample_interval_seconds": {"oneOf": [{"type": "number", "exclusiveMinimum": 0}, {"type": "null"}]},
+        "limitation": {"type": "string", "minLength": 1}
+      }
+    },
+    "measurementV2": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["measurement_schema_version", "wall_time_seconds", "cpu_seconds", "peak_memory_bytes", "disk_bytes", "network_bytes", "token_count", "request_count", "cost_usd"],
+      "properties": {
+        "measurement_schema_version": {"const": 2},
+        "wall_time_seconds": {"$ref": "#/$defs/wallDimensionV2"},
+        "cpu_seconds": {"$ref": "#/$defs/cpuDimensionV2"},
+        "peak_memory_bytes": {"$ref": "#/$defs/memoryDimensionV2"},
+        "disk_bytes": {"$ref": "#/$defs/diskDimensionV2"},
+        "network_bytes": {"$ref": "#/$defs/reportedDimension"},
+        "token_count": {"$ref": "#/$defs/reportedDimension"},
+        "request_count": {"$ref": "#/$defs/reportedDimension"},
+        "cost_usd": {"$ref": "#/$defs/reportedDimension"}
+      }
+    },
+    "supervisionAttemptV2": {"$ref": "process_supervision_attempt.schema.json#/$defs/supervisionAttemptV2"},
+    "resourceExecPlanV2": {"$ref": "process_supervision_attempt.schema.json#/$defs/resourceExecPlanV2"},
+    "sealedFileObservation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "sha256", "size_bytes", "device", "inode", "mode", "mtime_ns", "ctime_ns", "executable_required", "executable_observed"],
+      "properties": {
+        "path": {"type": "string", "minLength": 1},
+        "sha256": {"$ref": "#/$defs/digest"},
+        "size_bytes": {"type": "integer", "minimum": 0},
+        "device": {"type": "integer", "minimum": 0},
+        "inode": {"type": "integer", "minimum": 0},
+        "mode": {"type": "integer", "minimum": 0},
+        "mtime_ns": {"type": "integer"},
+        "ctime_ns": {"type": "integer"},
+        "executable_required": {"type": "boolean"},
+        "executable_observed": {"type": "boolean"}
+      }
+    },
+    "resourceExecObservation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["python_executable", "resource_exec_launcher"],
+      "properties": {
+        "python_executable": {"allOf": [{"$ref": "#/$defs/sealedFileObservation"}, {"properties": {"executable_required": {"const": true}, "executable_observed": {"const": true}}}]},
+        "resource_exec_launcher": {"$ref": "#/$defs/sealedFileObservation"}
+      }
+    },
+    "resourceLimitExecutionV2": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["schema_version", "authority_kind", "logical_argv_digest", "transport_argv_digest", "supervised_request_digest", "supervised_transport_exact", "replacement_environment_used", "environment_digest", "capture_limit_bytes", "resource_exec_plan", "resource_exec_plan_digest", "pre_execution_observation", "post_execution_observation", "observation_status", "observation_error", "cryptographic_authenticity", "authority_boundary"],
+      "properties": {
+        "schema_version": {"const": "2.0.0"},
+        "authority_kind": {"const": "trusted_local_resource_limit_execution"},
+        "logical_argv_digest": {"$ref": "#/$defs/digest"},
+        "transport_argv_digest": {"$ref": "#/$defs/digest"},
+        "supervised_request_digest": {"$ref": "#/$defs/digest"},
+        "supervised_transport_exact": {"type": "boolean"},
+        "replacement_environment_used": {"const": true},
+        "environment_digest": {"$ref": "#/$defs/digest"},
+        "capture_limit_bytes": {"type": "integer", "minimum": 1},
+        "resource_exec_plan": {"$ref": "#/$defs/resourceExecPlanV2"},
+        "resource_exec_plan_digest": {"$ref": "#/$defs/digest"},
+        "pre_execution_observation": {"$ref": "#/$defs/resourceExecObservation"},
+        "post_execution_observation": {"oneOf": [{"$ref": "#/$defs/resourceExecObservation"}, {"type": "null"}]},
+        "observation_status": {"enum": ["exact_match", "mismatch"]},
+        "observation_error": {"oneOf": [{"type": "string", "minLength": 1}, {"type": "null"}]},
+        "cryptographic_authenticity": {"const": false},
+        "authority_boundary": {"const": "exact_local_bytes_and_request_binding_only_no_semantic_scientific_truth_experiment_value_or_physics_authority"}
+      },
+      "allOf": [
+        {
+          "if": {"properties": {"observation_status": {"const": "exact_match"}}, "required": ["observation_status"]},
+          "then": {"properties": {"post_execution_observation": {"$ref": "#/$defs/resourceExecObservation"}, "observation_error": {"type": "null"}}}
+        },
+        {
+          "if": {"properties": {"post_execution_observation": {"type": "null"}}, "required": ["post_execution_observation"]},
+          "then": {"properties": {"observation_status": {"const": "mismatch"}, "observation_error": {"type": "string", "minLength": 1}}}
+        }
+      ]
+    },
+    "postSupervisionAcceptanceV2": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "disk_snapshot_bytes", "disk_limit_bytes", "disk_limit_exceeded", "continuous_disk_observation", "snapshot_error", "acceptance_deadline_overrun"],
+      "properties": {
+        "status": {"enum": ["not_run", "accepted", "rejected", "snapshot_failed", "deadline_overrun"]},
+        "disk_snapshot_bytes": {"type": "integer", "minimum": 0},
+        "disk_limit_bytes": {"type": "integer", "minimum": 0},
+        "disk_limit_exceeded": {"type": "boolean"},
+        "continuous_disk_observation": {"const": false},
+        "snapshot_error": {"oneOf": [{"type": "string", "minLength": 1}, {"type": "null"}]},
+        "acceptance_deadline_overrun": {"type": "boolean"}
+      },
+      "oneOf": [
+        {"properties": {"status": {"const": "not_run"}, "snapshot_error": {"type": "null"}, "acceptance_deadline_overrun": {"const": false}}},
+        {"properties": {"status": {"const": "accepted"}, "disk_limit_exceeded": {"const": false}, "snapshot_error": {"type": "null"}, "acceptance_deadline_overrun": {"const": false}}},
+        {"properties": {"status": {"const": "rejected"}, "disk_limit_exceeded": {"const": true}, "snapshot_error": {"type": "null"}, "acceptance_deadline_overrun": {"const": false}}},
+        {"properties": {"status": {"const": "deadline_overrun"}, "snapshot_error": {"type": "null"}, "acceptance_deadline_overrun": {"const": true}}},
+        {"properties": {"status": {"const": "snapshot_failed"}, "snapshot_error": {"type": "string", "minLength": 1}}}
+      ]
+    },
+    "processEventV2": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["event_schema_version", "event", "role", "command", "pid", "started_at", "completed_at", "elapsed_seconds", "returncode", "status", "terminal_dimension", "terminal_used", "terminal_limit", "termination", "stdin_bytes", "stdin_sha256", "stdin_limit_bytes", "stdin_written_bytes", "stdin_write_incomplete", "stdin_write_error", "stdout", "stderr", "stdout_bytes", "stderr_bytes", "stdout_retained_bytes", "stderr_retained_bytes", "stdout_sha256", "stderr_sha256", "stdout_utf8_valid", "stderr_utf8_valid", "stdout_truncated", "stderr_truncated", "stdout_drain_incomplete", "stderr_drain_incomplete", "stdout_limit_bytes", "stderr_limit_bytes", "descendant_leak_detected", "capture_limit_bytes", "resource_measurement", "supervision_attempt", "resource_limit_execution", "post_supervision_acceptance", "epistemic_effect"],
+      "properties": {
+        "event_schema_version": {"const": 2},
+        "event": {"const": "process_terminal"},
+        "role": {"enum": ["worker", "solver", "report_builder", "benchmark_runner", "human_evidence_verifier"]},
+        "command": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
+        "pid": {"oneOf": [{"type": "integer", "minimum": 1}, {"type": "null"}]},
+        "started_at": {"type": "string", "minLength": 1},
+        "completed_at": {"type": "string", "minLength": 1},
+        "elapsed_seconds": {"type": "number", "minimum": 0},
+        "returncode": {"oneOf": [{"type": "integer"}, {"type": "null"}]},
+        "status": {"$ref": "#/$defs/processStatus"},
+        "terminal_dimension": {"oneOf": [{"type": "string", "minLength": 1}, {"type": "null"}]},
+        "terminal_used": {"oneOf": [{"type": "number", "minimum": 0}, {"type": "null"}]},
+        "terminal_limit": {"oneOf": [{"type": "number", "minimum": 0}, {"type": "null"}]},
+        "termination": {"oneOf": [{"type": "string", "minLength": 1}, {"type": "null"}]},
+        "stdin_bytes": {"type": "integer", "minimum": 0},
+        "stdin_sha256": {"$ref": "#/$defs/digest"},
+        "stdin_limit_bytes": {"type": "integer", "minimum": 1},
+        "stdin_written_bytes": {"type": "integer", "minimum": 0},
+        "stdin_write_incomplete": {"type": "boolean"},
+        "stdin_write_error": {"oneOf": [{"type": "string", "minLength": 1}, {"type": "null"}]},
+        "stdout": {"type": "string"},
+        "stderr": {"type": "string"},
+        "stdout_bytes": {"type": "integer", "minimum": 0},
+        "stderr_bytes": {"type": "integer", "minimum": 0},
+        "stdout_retained_bytes": {"type": "integer", "minimum": 0},
+        "stderr_retained_bytes": {"type": "integer", "minimum": 0},
+        "stdout_sha256": {"$ref": "#/$defs/digest"},
+        "stderr_sha256": {"$ref": "#/$defs/digest"},
+        "stdout_utf8_valid": {"type": "boolean"},
+        "stderr_utf8_valid": {"type": "boolean"},
+        "stdout_truncated": {"type": "boolean"},
+        "stderr_truncated": {"type": "boolean"},
+        "stdout_drain_incomplete": {"type": "boolean"},
+        "stderr_drain_incomplete": {"type": "boolean"},
+        "stdout_limit_bytes": {"oneOf": [{"type": "integer", "minimum": 1}, {"type": "null"}]},
+        "stderr_limit_bytes": {"oneOf": [{"type": "integer", "minimum": 1}, {"type": "null"}]},
+        "descendant_leak_detected": {"type": "boolean"},
+        "capture_limit_bytes": {"type": "integer", "minimum": 1},
+        "resource_measurement": {"$ref": "#/$defs/measurementV2"},
+        "supervision_attempt": {"oneOf": [{"$ref": "#/$defs/supervisionAttemptV2"}, {"type": "null"}]},
+        "resource_limit_execution": {"oneOf": [{"$ref": "#/$defs/resourceLimitExecutionV2"}, {"type": "null"}]},
+        "post_supervision_acceptance": {"$ref": "#/$defs/postSupervisionAcceptanceV2"},
+        "epistemic_effect": {"enum": ["awaiting_output_validation", "none_operational_outcome_only"]}
+      },
+      "allOf": [
+        {
+          "oneOf": [
+            {
+              "properties": {
+                "pid": {"type": "null"},
+                "returncode": {"type": "null"},
+                "termination": {"const": "not_started"},
+                "supervision_attempt": {"type": "null"},
+                "resource_limit_execution": {"type": "null"},
+                "post_supervision_acceptance": {"properties": {"status": {"const": "not_run"}}},
+                "epistemic_effect": {"const": "none_operational_outcome_only"}
+              }
+            },
+            {
+              "properties": {
+                "pid": {"type": "integer", "minimum": 1},
+                "supervision_attempt": {"$ref": "#/$defs/supervisionAttemptV2"},
+                "resource_limit_execution": {"$ref": "#/$defs/resourceLimitExecutionV2"},
+                "post_supervision_acceptance": {"properties": {"status": {"enum": ["accepted", "rejected", "snapshot_failed", "deadline_overrun"]}}},
+                "termination": {"oneOf": [{"enum": ["terminated", "killed"]}, {"type": "null"}]}
+              }
+            }
+          ]
+        },
+        {
+          "if": {"properties": {"status": {"const": "succeeded"}}, "required": ["status"]},
+          "then": {"properties": {"epistemic_effect": {"const": "awaiting_output_validation"}}},
+          "else": {"properties": {"epistemic_effect": {"const": "none_operational_outcome_only"}}}
+        }
+      ]
+    }
+  }
+}

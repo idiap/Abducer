@@ -1,0 +1,42 @@
+# SPDX-FileCopyrightText: © 2026 Idiap Research Institute <contact@idiap.ch>
+#
+# SPDX-FileContributor: Andre Freitas <andre.freitas@idiap.ch>
+# Neuro-symbolic AI Group
+#
+# SPDX-FileContributor: Danilo Gusicuma <danilo.gusicuma@idiap.ch>
+# Neuro-symbolic AI Group
+#
+# SPDX-License-Identifier: MIT
+# Function: form a claim-bounded domain frontier and decide whether it can support derivation.
+# Input: DomainScopeGrounding carries the target and claim ceiling.
+# Types: BoundedDomainFrontier preserves that ceiling while naming the research frontier.
+# Output: FrontierReadinessDisposition is Accepted or Quarantined.
+# Routing: Accepted continues to derivation-and-proof; Quarantined stops.
+# Layer: high-level epistemic topology only.
+# Metadata: workflows/manifest.json (`cohere_fast_adaptive_frontier`).
+
+from workflows.cohere_fast_adaptive_frontier.types import (
+    BoundedDomainFrontier,
+    FrontierReadinessDisposition,
+    DomainScopeGrounding,
+)
+
+from workflows.cohere_fast_adaptive_frontier.occurrences import (
+    UnresolvedDomainFrontierProjection,
+    EvidentialFrontierReadinessAssessment,
+)
+
+from workflows.cohere_fast_adaptive_frontier.relations import (
+    DomainFrontierEnablesReadinessAssessment,
+)
+
+reasoning CohereFastAdaptiveFrontier(
+    scope_grounding: DomainScopeGrounding,
+) -> Generated[FrontierReadinessDisposition]:
+    sequence:
+        # Frontier construction must preserve the grounding's domain and claim ceiling.
+        [bounded_frontier: UnresolvedDomainFrontierProjection(scope_grounding)]
+        # Readiness gates use of the bounded frontier; they do not promote its claims.
+        [frontier_readiness: EvidentialFrontierReadinessAssessment(bounded_frontier.value)] by DomainFrontierEnablesReadinessAssessment
+
+    return frontier_readiness

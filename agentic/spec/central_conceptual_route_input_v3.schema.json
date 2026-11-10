@@ -1,0 +1,316 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://abducer.local/spec/central_conceptual_route_input_v3.schema.json",
+  "title": "Plan-free committed input for five central conceptual authors v3",
+  "description": "A current-literature, ancestry-bound conceptual core plus a carrier-specific decision rule and blind set-valued adjudication rule. It is committed before route identities or plans are authored and grants no truth, theorem, continuum, conceptual-merit, physics-value, or Yang-Mills authority.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "input_id",
+    "target_id",
+    "run_id",
+    "source_cycle_id",
+    "conceptual_core",
+    "literature_projection",
+    "conceptual_ancestry_digest",
+    "physics_decision_rule",
+    "adjudication_rule",
+    "authority_boundary",
+    "content_digest"
+  ],
+  "$defs": {
+    "id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 192,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$"
+    },
+    "text": {"type": "string", "minLength": 1},
+    "digest": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
+    "decision": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["decision_id", "action", "target_burden_id"],
+      "properties": {
+        "decision_id": {"$ref": "#/$defs/id"},
+        "action": {"$ref": "#/$defs/text"},
+        "target_burden_id": {"$ref": "#/$defs/id"}
+      }
+    },
+    "physicsDecisionRule": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "rule_id",
+        "target_id",
+        "obligation_id",
+        "physical_carrier",
+        "regime",
+        "quantifiers",
+        "protected_successes",
+        "incumbent_decision",
+        "eligible_decision",
+        "explanatory_dependency",
+        "changed_burden_template",
+        "correction",
+        "falsifier",
+        "physics_next_action",
+        "untouched_physics_gates",
+        "carrier_predicate",
+        "entailment_table",
+        "decision_rule_digest"
+      ],
+      "properties": {
+        "rule_id": {"$ref": "#/$defs/id"},
+        "target_id": {"$ref": "#/$defs/id"},
+        "obligation_id": {"$ref": "#/$defs/id"},
+        "physical_carrier": {"$ref": "#/$defs/text"},
+        "regime": {"$ref": "#/$defs/text"},
+        "quantifiers": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/text"}
+        },
+        "protected_successes": {
+          "type": "array",
+          "minItems": 2,
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/text"}
+        },
+        "incumbent_decision": {"$ref": "#/$defs/decision"},
+        "eligible_decision": {"$ref": "#/$defs/decision"},
+        "explanatory_dependency": {"$ref": "#/$defs/text"},
+        "changed_burden_template": {"$ref": "#/$defs/text"},
+        "correction": {"$ref": "#/$defs/text"},
+        "falsifier": {"$ref": "#/$defs/text"},
+        "physics_next_action": {"$ref": "#/$defs/text"},
+        "untouched_physics_gates": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/text"}
+        },
+        "carrier_predicate": {"$ref": "#/$defs/carrierPredicate"},
+        "entailment_table": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 2,
+          "prefixItems": [
+            {
+              "allOf": [
+                {"$ref": "#/$defs/entailmentRow"},
+                {
+                  "type": "object",
+                  "properties": {
+                    "outcome": {"const": "predicate_failed"},
+                    "predicate_value": {"const": false},
+                    "action_kind": {"const": "retain_incumbent"}
+                  }
+                }
+              ]
+            },
+            {
+              "allOf": [
+                {"$ref": "#/$defs/entailmentRow"},
+                {
+                  "type": "object",
+                  "properties": {
+                    "outcome": {"const": "predicate_satisfied"},
+                    "predicate_value": {"const": true},
+                    "action_kind": {"const": "inspect_witnessed_finite_carrier_delta"}
+                  }
+                }
+              ]
+            }
+          ],
+          "items": false
+        },
+        "decision_rule_digest": {"$ref": "#/$defs/digest"}
+      }
+    },
+    "carrierPredicate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "predicate_id",
+        "predicate_kind",
+        "before_core_digest",
+        "target_burden_id",
+        "protected_observable_digests",
+        "require_exact_carrier_regime_quantifiers",
+        "require_changed_core",
+        "require_changed_burden",
+        "require_finite_relation_witness",
+        "nontriviality_contract",
+        "counterexample_policy",
+        "predicate_digest"
+      ],
+      "properties": {
+        "predicate_id": {"$ref": "#/$defs/id"},
+        "predicate_kind": {
+          "const": "finite_carrier_nontriviality_conservativity_and_obstruction_predicate"
+        },
+        "before_core_digest": {"$ref": "#/$defs/digest"},
+        "target_burden_id": {"$ref": "#/$defs/id"},
+        "protected_observable_digests": {
+          "type": "array",
+          "minItems": 2,
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/digest"}
+        },
+        "require_exact_carrier_regime_quantifiers": {"const": true},
+        "require_changed_core": {"const": true},
+        "require_changed_burden": {"const": true},
+        "require_finite_relation_witness": {"const": true},
+        "nontriviality_contract": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "identity_only_policy",
+            "mere_relabeling_policy",
+            "copied_interface_mediator_policy",
+            "vacuous_equivalence_or_coherence_policy",
+            "protected_observable_conservativity_required",
+            "carrier_semantics_or_countermodel_required",
+            "finite_hott_scope_replay_required",
+            "physically_inert_formal_completion_policy",
+            "conditioned_order_comparison_stage",
+            "comparative_value_authorized",
+            "physics_value_authorized"
+          ],
+          "properties": {
+            "identity_only_policy": {"const": "reject"},
+            "mere_relabeling_policy": {"const": "reject"},
+            "copied_interface_mediator_policy": {"const": "reject"},
+            "vacuous_equivalence_or_coherence_policy": {"const": "reject"},
+            "protected_observable_conservativity_required": {"const": true},
+            "carrier_semantics_or_countermodel_required": {"const": true},
+            "finite_hott_scope_replay_required": {"const": true},
+            "physically_inert_formal_completion_policy": {"const": "quarantine"},
+            "conditioned_order_comparison_stage": {
+              "const": "parent_after_both_independently_conditioned_routes_terminal"
+            },
+            "comparative_value_authorized": {"const": false},
+            "physics_value_authorized": {"const": false}
+          }
+        },
+        "counterexample_policy": {
+          "const": "any_protected_observable_or_member_value_change_fails"
+        },
+        "predicate_digest": {"$ref": "#/$defs/digest"}
+      }
+    },
+    "entailmentRow": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "outcome",
+        "predicate_value",
+        "decision_id",
+        "action_kind",
+        "target_burden_id"
+      ],
+      "properties": {
+        "outcome": {
+          "enum": ["predicate_failed", "predicate_satisfied"]
+        },
+        "predicate_value": {"type": "boolean"},
+        "decision_id": {"$ref": "#/$defs/id"},
+        "action_kind": {
+          "enum": [
+            "retain_incumbent",
+            "inspect_witnessed_finite_carrier_delta"
+          ]
+        },
+        "target_burden_id": {"$ref": "#/$defs/id"}
+      }
+    },
+    "adjudicationRule": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "rule_id",
+        "judge_rule",
+        "route_labels_visible",
+        "formal_vocabulary_bonus",
+        "capable_nonformal_eligible",
+        "content_digest"
+      ],
+      "properties": {
+        "rule_id": {"$ref": "#/$defs/id"},
+        "judge_rule": {
+          "$ref": "blind_conceptual_judge_input_v3.schema.json#/$defs/adjudicationRule"
+        },
+        "route_labels_visible": {"const": false},
+        "formal_vocabulary_bonus": {"const": false},
+        "capable_nonformal_eligible": {"const": true},
+        "content_digest": {"$ref": "#/$defs/digest"}
+      }
+    },
+    "authorityBoundary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "theory_first",
+        "experiments_secondary_theory_requested_falsifiers_only",
+        "caller_authored_route_plans_authorized",
+        "same_cycle_experiment_authority",
+        "truth_authorized",
+        "conceptual_merit_authorized",
+        "physics_value_authorized",
+        "theorem_authorized",
+        "continuum_authorized",
+        "yang_mills_authorized"
+      ],
+      "properties": {
+        "theory_first": {"const": true},
+        "experiments_secondary_theory_requested_falsifiers_only": {"const": true},
+        "caller_authored_route_plans_authorized": {"const": false},
+        "same_cycle_experiment_authority": {"const": false},
+        "truth_authorized": {"const": false},
+        "conceptual_merit_authorized": {"const": false},
+        "physics_value_authorized": {"const": false},
+        "theorem_authorized": {"const": false},
+        "continuum_authorized": {"const": false},
+        "yang_mills_authorized": {"const": false}
+      }
+    }
+  },
+  "properties": {
+    "schema_version": {"const": "3.0.0"},
+    "input_id": {"$ref": "#/$defs/id"},
+    "target_id": {"$ref": "#/$defs/id"},
+    "run_id": {"$ref": "#/$defs/id"},
+    "source_cycle_id": {"$ref": "#/$defs/id"},
+    "conceptual_core": {
+      "$ref": "./formal_conceptual_delta_v2.schema.json#/$defs/core"
+    },
+    "literature_projection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "snapshot_id",
+        "snapshot_digest",
+        "production_projection_digest",
+        "consume_before",
+        "present_use_evaluated_at",
+        "present_use_reason"
+      ],
+      "properties": {
+        "snapshot_id": {"$ref": "#/$defs/text"},
+        "snapshot_digest": {"$ref": "#/$defs/digest"},
+        "production_projection_digest": {"$ref": "#/$defs/digest"},
+        "consume_before": {"type": "string", "format": "date-time"},
+        "present_use_evaluated_at": {"type": "string", "format": "date-time"},
+        "present_use_reason": {"$ref": "#/$defs/text"}
+      }
+    },
+    "conceptual_ancestry_digest": {"$ref": "#/$defs/digest"},
+    "physics_decision_rule": {"$ref": "#/$defs/physicsDecisionRule"},
+    "adjudication_rule": {"$ref": "#/$defs/adjudicationRule"},
+    "authority_boundary": {"$ref": "#/$defs/authorityBoundary"},
+    "content_digest": {"$ref": "#/$defs/digest"}
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema", "$id": "urn:abducer:framework-paper:framework-abstraction-model:1",
+  "title": "FrameworkAbstractionModel", "type": "object", "additionalProperties": false,
+  "required": ["schema_version", "model_id", "input_digests", "constructs", "state_space", "operators", "control_model", "epistemic_semantics", "persistence_model", "governance_model", "evaluation_status", "limitations", "trace_links", "model_digest"],
+  "properties": {
+    "schema_version": {"const": "1.0.0"}, "model_id": {"type": "string", "minLength": 1}, "input_digests": {"$ref": "#/$defs/nonemptyDigests"},
+    "constructs": {"type": "array", "items": {"type": "object", "additionalProperties": false, "required": ["construct_id", "name", "definition", "retained_invariants", "omitted_details", "generalization_conditions", "failure_conditions", "evidence_ids"], "properties": {"construct_id": {"type": "string", "minLength": 1}, "name": {"type": "string", "minLength": 1}, "definition": {"type": "string", "minLength": 1}, "retained_invariants": {"$ref": "#/$defs/strings"}, "omitted_details": {"$ref": "#/$defs/strings"}, "generalization_conditions": {"$ref": "#/$defs/strings"}, "failure_conditions": {"$ref": "#/$defs/strings"}, "evidence_ids": {"$ref": "#/$defs/nonemptyStrings"}}}},
+    "state_space": {"$ref": "#/$defs/strings"}, "operators": {"$ref": "#/$defs/strings"}, "control_model": {"type": "string"}, "epistemic_semantics": {"type": "string"}, "persistence_model": {"type": "string"}, "governance_model": {"type": "string"}, "evaluation_status": {"type": "string"}, "limitations": {"$ref": "#/$defs/strings"},
+    "trace_links": {"type": "array", "items": {"type": "object", "additionalProperties": false, "required": ["construct_id", "concrete_ids", "evidence_ids"], "properties": {"construct_id": {"type": "string"}, "concrete_ids": {"$ref": "#/$defs/nonemptyStrings"}, "evidence_ids": {"$ref": "#/$defs/nonemptyStrings"}}}}, "model_digest": {"$ref": "#/$defs/digest"}
+  },
+  "$defs": {"digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"}, "strings": {"type": "array", "items": {"type": "string"}, "uniqueItems": true}, "nonemptyStrings": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}, "uniqueItems": true}, "nonemptyDigests": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/digest"}, "uniqueItems": true}}
+}

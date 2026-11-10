@@ -1,0 +1,24 @@
+# SPDX-FileCopyrightText: © 2026 Idiap Research Institute <contact@idiap.ch>
+#
+# SPDX-FileContributor: Andre Freitas <andre.freitas@idiap.ch>
+# Neuro-symbolic AI Group
+#
+# SPDX-FileContributor: Danilo Gusicuma <danilo.gusicuma@idiap.ch>
+# Neuro-symbolic AI Group
+#
+# SPDX-License-Identifier: MIT
+# Fixture-backed typed smoke entrypoint for abducer_work_loop.
+# Routing comments and linked validators remain outside this executable boundary.
+from workflows.abducer_work_loop.materialization import converted_reasoning
+from workflows.abducer_work_loop.reasoning import AbducerWorkLoop
+from workflows.abducer_work_loop.types import ActiveProofGap, ProofWorkRoutingAssessment
+
+def main(
+    model_access: ModelGenerate,
+    disclosure: ContextDisclose,
+) -> Result[Generated[ProofWorkRoutingAssessment], ModelFailure] ! {AI.Generate, Context.Disclose}:
+    proof_gap = ActiveProofGap(
+        obligation = "fixture:abducer_work_loop:proof_gap.obligation",
+    )
+    flow = converted_reasoning(proof_gap)
+    return solve AbducerWorkLoop(proof_gap) using flow

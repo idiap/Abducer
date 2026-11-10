@@ -1,0 +1,71 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://abducer.local/spec/ym_canonical_publication_status.schema.json",
+  "title": "Atomic-last Yang--Mills canonical-cycle publication status",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "publication_id",
+    "status",
+    "target_id",
+    "run_id",
+    "cycle_id",
+    "commit_id",
+    "manifest_digest",
+    "state_digest",
+    "core_validation_authorization_basis_digest",
+    "core_validation_present_decision_digest",
+    "files",
+    "written_atomically_last",
+    "authority_boundary",
+    "content_digest"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "publication_id": {"type": "string", "pattern": "^ympub\\.[0-9a-f]{24}$"},
+    "status": {"const": "complete"},
+    "target_id": {"type": "string", "minLength": 1},
+    "run_id": {"type": "string", "minLength": 1},
+    "cycle_id": {"type": "string", "minLength": 1},
+    "commit_id": {"type": "string", "minLength": 1},
+    "manifest_digest": {"$ref": "#/$defs/digest"},
+    "state_digest": {"$ref": "#/$defs/digest"},
+    "core_validation_authorization_basis_digest": {"$ref": "#/$defs/digest"},
+    "core_validation_present_decision_digest": {"$ref": "#/$defs/digest"},
+    "files": {
+      "type": "array",
+      "minItems": 13,
+      "uniqueItems": true,
+      "items": {"$ref": "#/$defs/file"}
+    },
+    "written_atomically_last": {"const": true},
+    "authority_boundary": {"type": "string", "minLength": 1},
+    "content_digest": {"$ref": "#/$defs/digest"}
+  },
+  "$defs": {
+    "digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "file": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "sha256", "size_bytes", "role"],
+      "properties": {
+        "path": {"type": "string", "minLength": 1},
+        "sha256": {"$ref": "#/$defs/digest"},
+        "size_bytes": {"type": "integer", "minimum": 0},
+        "role": {
+          "enum": [
+            "canonical_core",
+            "operator_index",
+            "role_index",
+            "frozen_provenance",
+            "causal_trace",
+            "conceptual_evidence",
+            "refinement_evidence",
+            "acceptance_report"
+          ]
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,198 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://abducer.local/spec/literature_production_input_bundle.schema.json",
+  "title": "Portable committed literature-production input bundle",
+  "description": "Exact canonical production-manifest bytes represented as their canonical JSON value, the replayed commitment receipt, and bounded semantic stage values for theory-generation consumption. All truth, merit, publication, experiment, and world authority remains explicitly null or false.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "bundle_kind",
+    "bundle_id",
+    "target_id",
+    "producer_run_id",
+    "state_version",
+    "production_manifest_descriptor",
+    "production_manifest",
+    "commitment_receipt",
+    "semantic_consumer_projection",
+    "validation_scope",
+    "publication_enabled",
+    "world_commissioning_authorized",
+    "authority_boundary",
+    "bundle_digest"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "bundle_kind": {"const": "portable_literature_production_theory_input"},
+    "bundle_id": {"$ref": "#/$defs/identifier"},
+    "target_id": {"$ref": "#/$defs/identifier"},
+    "producer_run_id": {"$ref": "#/$defs/identifier"},
+    "state_version": {"type": "integer", "minimum": 0},
+    "production_manifest_descriptor": {"$ref": "./literature_production_manifest_commitment.schema.json#/$defs/manifestDescriptor"},
+    "production_manifest": {"$ref": "./literature_production_chain_manifest.schema.json"},
+    "commitment_receipt": {"$ref": "./literature_production_manifest_commitment.schema.json"},
+    "semantic_consumer_projection": {"$ref": "#/$defs/semanticConsumerProjection"},
+    "validation_scope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "exact_canonical_manifest_bytes_embedded",
+        "commitment_receipt_replayed_from_embedded_bytes",
+        "semantic_stage_values_derived_from_manifest",
+        "source_bundle_reexecution_performed",
+        "code_dependency_reexecution_performed",
+        "runtime_root_persisted"
+      ],
+      "properties": {
+        "exact_canonical_manifest_bytes_embedded": {"const": true},
+        "commitment_receipt_replayed_from_embedded_bytes": {"const": true},
+        "semantic_stage_values_derived_from_manifest": {"const": true},
+        "source_bundle_reexecution_performed": {"const": false},
+        "code_dependency_reexecution_performed": {"const": false},
+        "runtime_root_persisted": {"const": false}
+      }
+    },
+    "publication_enabled": {"const": false},
+    "world_commissioning_authorized": {"const": false},
+    "authority_boundary": {"type": "string", "minLength": 120},
+    "bundle_digest": {"$ref": "#/$defs/digest"}
+  },
+  "$defs": {
+    "identifier": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,255}$"
+    },
+    "digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "authorityNulls": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_truth_authority",
+        "global_latestness_authority",
+        "exhaustiveness_authority",
+        "literature_benefit_authority",
+        "external_preference_authority",
+        "independent_preference_authority",
+        "creativity_authority",
+        "philosophical_depth_authority",
+        "physics_value_authority",
+        "theorem_authority",
+        "experiment_authority",
+        "publication_authority",
+        "world_authority"
+      ],
+      "properties": {
+        "source_truth_authority": {"type": "null"},
+        "global_latestness_authority": {"type": "null"},
+        "exhaustiveness_authority": {"type": "null"},
+        "literature_benefit_authority": {"type": "null"},
+        "external_preference_authority": {"type": "null"},
+        "independent_preference_authority": {"type": "null"},
+        "creativity_authority": {"type": "null"},
+        "philosophical_depth_authority": {"type": "null"},
+        "physics_value_authority": {"type": "null"},
+        "theorem_authority": {"type": "null"},
+        "experiment_authority": {"type": "null"},
+        "publication_authority": {"type": "null"},
+        "world_authority": {"type": "null"}
+      }
+    },
+    "semanticRole": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "semantic_role",
+        "role_index",
+        "production_stage_id",
+        "production_request_id",
+        "production_receipt_id",
+        "content_digest",
+        "value"
+      ],
+      "properties": {
+        "semantic_role": {
+          "enum": [
+            "high_risk_portfolio",
+            "reflective_packets",
+            "parent_conceptual_adjudication",
+            "synthesis_conceptual_adjudication"
+          ]
+        },
+        "role_index": {"type": "integer", "minimum": 0},
+        "production_stage_id": {
+          "enum": [
+            "high_risk_input",
+            "parent_reflection",
+            "parent_conceptual_adjudication",
+            "theory_only_synthesis",
+            "synthesis_conceptual_adjudication"
+          ]
+        },
+        "production_request_id": {"$ref": "#/$defs/identifier"},
+        "production_receipt_id": {"$ref": "#/$defs/identifier"},
+        "content_digest": {"$ref": "#/$defs/digest"},
+        "value": {"type": "object"}
+      }
+    },
+    "semanticConsumerProjection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "projection_kind",
+        "input_role",
+        "target_id",
+        "producer_run_id",
+        "state_version",
+        "manifest_id",
+        "manifest_digest",
+        "chain_order_digest",
+        "commitment_receipt_id",
+        "commitment_receipt_digest",
+        "bounded_consumer_projection",
+        "semantic_roles",
+        "authority_nulls",
+        "publication_enabled",
+        "world_commissioning_authorized",
+        "authority_boundary",
+        "projection_digest"
+      ],
+      "properties": {
+        "schema_version": {"const": "1.0.0"},
+        "projection_kind": {"const": "bounded_literature_production_semantic_input"},
+        "input_role": {"const": "canonical_theory_generation_input"},
+        "target_id": {"$ref": "#/$defs/identifier"},
+        "producer_run_id": {"$ref": "#/$defs/identifier"},
+        "state_version": {"type": "integer", "minimum": 0},
+        "manifest_id": {"$ref": "#/$defs/identifier"},
+        "manifest_digest": {"$ref": "#/$defs/digest"},
+        "chain_order_digest": {"$ref": "#/$defs/digest"},
+        "commitment_receipt_id": {"$ref": "#/$defs/identifier"},
+        "commitment_receipt_digest": {"$ref": "#/$defs/digest"},
+        "bounded_consumer_projection": {"$ref": "./literature_production_manifest_commitment.schema.json#/$defs/consumerProjection"},
+        "semantic_roles": {
+          "type": "array",
+          "minItems": 5,
+          "maxItems": 5,
+          "prefixItems": [
+            {"allOf": [{"$ref": "#/$defs/semanticRole"}, {"properties": {"semantic_role": {"const": "high_risk_portfolio"}, "role_index": {"const": 0}, "production_stage_id": {"const": "high_risk_input"}, "value": {"$ref": "./high_risk_hypothesis_portfolio.schema.json"}}}]},
+            {"allOf": [{"$ref": "#/$defs/semanticRole"}, {"properties": {"semantic_role": {"const": "reflective_packets"}, "role_index": {"const": 0}, "production_stage_id": {"const": "parent_reflection"}, "value": {"$ref": "./reflective_conceptual_discovery_packet.schema.json"}}}]},
+            {"allOf": [{"$ref": "#/$defs/semanticRole"}, {"properties": {"semantic_role": {"const": "parent_conceptual_adjudication"}, "role_index": {"const": 0}, "production_stage_id": {"const": "parent_conceptual_adjudication"}, "value": {"$ref": "./conceptual_adjudication_evidence.schema.json"}}}]},
+            {"allOf": [{"$ref": "#/$defs/semanticRole"}, {"properties": {"semantic_role": {"const": "reflective_packets"}, "role_index": {"const": 1}, "production_stage_id": {"const": "theory_only_synthesis"}, "value": {"$ref": "./reflective_conceptual_discovery_packet.schema.json"}}}]},
+            {"allOf": [{"$ref": "#/$defs/semanticRole"}, {"properties": {"semantic_role": {"const": "synthesis_conceptual_adjudication"}, "role_index": {"const": 0}, "production_stage_id": {"const": "synthesis_conceptual_adjudication"}, "value": {"$ref": "./conceptual_adjudication_evidence.schema.json"}}}]}
+          ],
+          "items": false
+        },
+        "authority_nulls": {"$ref": "#/$defs/authorityNulls"},
+        "publication_enabled": {"const": false},
+        "world_commissioning_authorized": {"const": false},
+        "authority_boundary": {"type": "string", "minLength": 120},
+        "projection_digest": {"$ref": "#/$defs/digest"}
+      }
+    }
+  }
+}

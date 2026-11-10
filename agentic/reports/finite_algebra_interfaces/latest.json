@@ -1,0 +1,220 @@
+{
+  "generated_utc": "2026-07-21T14:37:29+00:00",
+  "packets": [
+    {
+      "analytic_obligations": [
+        {
+          "class": "same_theory_realization",
+          "id": "obl.same-theory-observable-realization",
+          "source_formula_id": "id.det-normalized-hermitian-3x3",
+          "target_relevance": "prevents the finite matrix from being a proxy"
+        },
+        {
+          "class": "phase_coboundary_control",
+          "id": "obl.quotient-phase-coboundary-control",
+          "source_formula_id": "id.rephasing-holonomy",
+          "target_relevance": "decides whether holonomy blocks positivity transfer"
+        },
+        {
+          "class": "boundary_ope_estimate",
+          "id": "obl.boundary-ope-factor-extraction",
+          "source_formula_id": "id.det-normalized-hermitian-3x3",
+          "target_relevance": "connects collar-collapse data to quotient entries"
+        },
+        {
+          "class": "contact_control",
+          "id": "obl.additive-contact-control",
+          "source_formula_id": "id.det-normalized-hermitian-3x3",
+          "target_relevance": "prevents contact terms from changing determinant sign"
+        },
+        {
+          "class": "modulus_psd_control",
+          "id": "obl.modulus-quotient-psd",
+          "source_formula_id": "id.principal-minors",
+          "target_relevance": "tests whether modulus-only transfer is enough"
+        }
+      ],
+      "carrier": {
+        "id": "carrier.quotient_3x3",
+        "mathematical_type": "finite 3x3 Hermitian matrix interface",
+        "name": "normalized Hermitian three-observable quotient matrix",
+        "scope": "finite reflected observable family before continuum or spectral promotion",
+        "validity_boundary": "The carrier is finite algebra only; it becomes Yang-Mills-relevant only through same-theory observable realization and continuum-uniform analytic estimates."
+      },
+      "created_utc": "2026-07-21T14:37:29+00:00",
+      "epistemic_status": "equational_interface",
+      "exact_identities": [
+        {
+          "derivation_method": "SymPy unavailable or unsuitable; used exact known three-by-three Hermitian determinant formula (No module named 'sympy').",
+          "epistemic_status": "symbolic_formula",
+          "formula": "det(Q)=1-rho12^2-rho23^2-rho13^2+2*rho12*rho23*rho13*cos(Phi)",
+          "id": "id.det-normalized-hermitian-3x3",
+          "latex": "\\det Q = 1-\\rho_{12}^{2}-\\rho_{23}^{2}-\\rho_{13}^{2}+2\\rho_{12}\\rho_{23}\\rho_{13}\\cos\\Phi",
+          "name": "normalized Hermitian three-by-three determinant",
+          "symbolic_backend": "manual_fallback",
+          "valid_when": "Q is a normalized Hermitian 3x3 quotient matrix, 0 <= rho_ij <= 1, and Phi is the gauge-invariant cycle phase arg(Q_12 Q_23 Q_31)."
+        },
+        {
+          "derivation_method": "principal minor expansion",
+          "epistemic_status": "symbolic_formula",
+          "formula": "rho_ij <= 1 for every pair",
+          "id": "id.principal-minors",
+          "latex": "1-\\rho_{ij}^{2}\\ge 0\\quad(1\\le i<j\\le3)",
+          "name": "pairwise minor constraints",
+          "symbolic_backend": "manual_fallback",
+          "valid_when": "Each two-by-two principal minor of Q is required to be nonnegative."
+        },
+        {
+          "derivation_method": "cycle-product invariance under vertex phase cancellation",
+          "epistemic_status": "symbolic_formula",
+          "formula": "Phi=theta12+theta23+theta31 modulo 2*pi",
+          "id": "id.rephasing-holonomy",
+          "latex": "\\Phi=\\arg(Q_{12}Q_{23}Q_{31})",
+          "name": "diagonal rephasing invariant",
+          "symbolic_backend": "manual_fallback",
+          "valid_when": "Q is compared modulo diagonal unitary rephasings DQD*."
+        }
+      ],
+      "falsifier_templates": [
+        {
+          "branch_control_effect": "Demote any route claiming pairwise quotient damping implies finite-family positivity.",
+          "changed_condition": "Phi or the three moduli make det(Q)<0",
+          "disconfirming_observation": "pairwise minors pass while the 3x3 determinant is negative",
+          "epistemic_status": "falsifier_shape",
+          "id": "fals.det-negative-pairwise-pass",
+          "numeric_search_allowed": "only as bounded falsifier selection after the symbolic formula is recorded",
+          "preserved_assumptions": [
+            "Q=Q*",
+            "Q_ii=1",
+            "0 <= rho_ij <= 1"
+          ]
+        },
+        {
+          "branch_control_effect": "Require a phase-control lemma before Schur quotient positivity transfer.",
+          "changed_condition": "cycle product phase is not a coboundary",
+          "disconfirming_observation": "no diagonal D removes all quotient phases on the support graph",
+          "epistemic_status": "falsifier_shape",
+          "id": "fals.nonzero-cycle-holonomy",
+          "numeric_search_allowed": "not needed for the algebraic coboundary obstruction",
+          "preserved_assumptions": [
+            "same support graph",
+            "diagonal unitary rephasing allowed"
+          ]
+        },
+        {
+          "branch_control_effect": "Backtrack from modulus-only positivity transfer to analytic PSD estimates.",
+          "changed_condition": "a higher principal minor of the modulus quotient is negative",
+          "disconfirming_observation": "real pairwise bounds do not produce PSD modulus quotient",
+          "epistemic_status": "falsifier_shape",
+          "id": "fals.modulus-quotient-minor-negative",
+          "numeric_search_allowed": "bounded search allowed only to rank which minor/family is sharpest",
+          "preserved_assumptions": [
+            "phase removed or ignored",
+            "real modulus quotient formed"
+          ]
+        },
+        {
+          "branch_control_effect": "Route next work to contact-control estimates rather than determinant algebra.",
+          "changed_condition": "additive contact term C_ij survives normalization",
+          "disconfirming_observation": "the quotient identity fails to represent the continuum carrier without extra contact terms",
+          "epistemic_status": "falsifier_shape",
+          "id": "fals.additive-contact-nonzero",
+          "numeric_search_allowed": "no; this is an analytic same-theory estimate obligation",
+          "preserved_assumptions": [
+            "finite reflected observable family",
+            "collar-collapse setup"
+          ]
+        }
+      ],
+      "non_claims": [
+        "This packet is not Lean checked.",
+        "This packet is not theorem-prover output.",
+        "This packet is not continuum Yang-Mills proof progress.",
+        "This packet is not a simulation.",
+        "This packet does not prove a mass gap."
+      ],
+      "packet_id": "esr.interface.2cf225a1bb1a",
+      "side_conditions": [
+        {
+          "condition": "Q=Q*",
+          "failure_effect": "The determinant formula no longer licenses positivity conclusions.",
+          "id": "side.hermitian",
+          "why_needed": "PSD and principal minors are Hermitian matrix notions."
+        },
+        {
+          "condition": "Q_ii=1",
+          "failure_effect": "Additional scale factors enter all minors and quotient comparisons.",
+          "id": "side.normalized-diagonal",
+          "why_needed": "The determinant formula is normalized by the diagonal Gram entries."
+        },
+        {
+          "condition": "quotient denominators are nonzero",
+          "failure_effect": "The interface must backtrack to support-restricted or regularized quotient definitions.",
+          "id": "side.nonzero-quotient-entries",
+          "why_needed": "Schur/Hadamard quotient and phase variables must be defined."
+        },
+        {
+          "condition": "Phi=arg(Q_12 Q_23 Q_31) modulo diagonal rephasing",
+          "failure_effect": "A coordinate phase may be mistaken for a real obstruction.",
+          "id": "side.phase-convention",
+          "why_needed": "Only the cycle product phase is invariant under local diagonal phase choices."
+        },
+        {
+          "condition": "all entries come from one finite reflected observable family",
+          "failure_effect": "The packet is quarantined as proxy algebra.",
+          "id": "side.finite-family-scope",
+          "why_needed": "Mixing carriers would turn the determinant test into an analogy."
+        }
+      ],
+      "source_cycle_ids": [
+        "cycle-0198",
+        "cycle-0199",
+        "cycle-0200",
+        "cycle-0201",
+        "cycle-0202",
+        "cycle-0203",
+        "cycle-0204",
+        "cycle-0205"
+      ],
+      "target_id": "yang-mills-existence-and-mass-gap-target",
+      "validation_handoff": "python agentic/scripts/validate_finite_algebra_interfaces.py",
+      "variables": [
+        {
+          "domain": "Hermitian 3x3 matrices with diagonal one",
+          "held_fixed_or_varied": "carrier",
+          "meaning": "normalized quotient Gram matrix",
+          "symbol": "Q"
+        },
+        {
+          "domain": "0 <= rho_ij <= 1 when 2x2 minors are nonnegative",
+          "held_fixed_or_varied": "varied",
+          "meaning": "modulus of Q_ij",
+          "symbol": "rho_ij"
+        },
+        {
+          "domain": "R / 2*pi Z",
+          "held_fixed_or_varied": "varied",
+          "meaning": "cycle holonomy arg(Q_12 Q_23 Q_31)",
+          "symbol": "Phi"
+        },
+        {
+          "domain": "U(1)^3 modulo global phase",
+          "held_fixed_or_varied": "gauge freedom",
+          "meaning": "diagonal unitary rephasing",
+          "symbol": "D"
+        }
+      ]
+    }
+  ],
+  "status": "ready",
+  "summary": {
+    "analytic_obligation_count": 5,
+    "falsifier_template_count": 4,
+    "identity_count": 3,
+    "packet_count": 1,
+    "proof_safe": true,
+    "side_condition_count": 5
+  },
+  "validation_handoff": "python agentic/scripts/validate_finite_algebra_interfaces.py",
+  "version": 1
+}

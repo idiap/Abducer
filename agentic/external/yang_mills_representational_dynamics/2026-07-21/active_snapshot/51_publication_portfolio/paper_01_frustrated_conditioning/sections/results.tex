@@ -1,0 +1,209 @@
+\section{Central frustration and conditional concentration}
+\label{sec:main-results}
+
+Throughout this section, $d\geq2$, $m=2(d-1)$, and $e$ is the full-degree
+link fixed in Section~\ref{sec:setup}.  Let $z\in\cZ(G)\setminus\{\one\}$ and
+write
+\begin{equation}\label{eq:L-bstar}
+  L=\dist(\one,z),\qquad b_*=\frac{m-1}{m}L.
+\end{equation}
+
+\subsection{Exact realization by opposite links}
+
+\begin{lemma}[Private opposite links]\label{lem:private-opposites}
+For every plaquette $p$ incident to $e$, the edge of $p$ opposite and parallel
+to $e$ belongs to no other plaquette incident to $e$.  These $m$ opposite
+links are pairwise distinct.
+\end{lemma}
+
+\begin{proof}
+An incident plaquette is determined by a transverse direction
+$\nu\in\{2,\ldots,d\}$ and a sign $\sigma\in\{-1,+1\}$.  Its opposite edge
+is parallel to direction $1$ and translated from $e$ by
+$\sigma\mathbf e_\nu$.  Distinct pairs $(\nu,\sigma)$ give distinct
+translations.  A translated direction-$1$ edge can share a unit square with
+$e$ only in the translation direction and with the specified sign.  Hence it
+belongs to exactly one member of the incident family.
+\end{proof}
+
+\begin{proposition}[Central staple surjectivity]\label{prop:central-surjectivity}
+For any prescribed tuple $(z_p)_{p\ni e}\in\cZ(G)^m$, there is a
+center-valued assignment of all links other than $e$ such that
+$S_p=z_p$ for every $p\ni e$.
+\end{proposition}
+
+\begin{proof}
+Set all nonselected links initially to $\one$.  For each incident plaquette,
+change only its private opposite link from Lemma~\ref{lem:private-opposites}.
+Choose $z_p$ or $z_p^{-1}$ according to the orientation with which that link
+enters the staple.  Centrality makes cyclic ordering irrelevant, and the
+private-link property prevents the change from altering another incident
+staple.  The resulting staple tuple is the prescribed one.
+\end{proof}
+
+The proposition is an analytic incidence proof.  Appendix~\ref{app:incidence}
+records an independent exact matrix certificate: after deleting the selected
+edge column, the $m$ opposite-edge columns form an identity matrix over every
+coefficient ring, and in particular over $\mathbb F_2$ for $G=\SUtwo$.
+
+\subsection{The conditional kernel}
+
+Choose a target plaquette $q\ni e$.  Apply
+Proposition~\ref{prop:central-surjectivity} with
+\begin{equation}\label{eq:one-frustrated-pattern}
+ S_p=\one\quad(p\neq q),\qquad S_q=z^{-1}.
+\end{equation}
+The inverse is a convention chosen so that the target holonomy is
+$z^{-1}U$; replacing $z$ by $z^{-1}$ gives the alternative orientation.
+
+\begin{proposition}[One-link conditional law]\label{prop:conditional-law}
+At the boundary assignment \eqref{eq:one-frustrated-pattern}, the continuous
+conditional kernel of $U_e$ is
+\begin{equation}\label{eq:conditional-law}
+ \gamma_t^z(\dd U)=Z_t(z)^{-1}
+ p_t(U)^{m-1}p_t(z^{-1}U)\,\Haar,
+\qquad
+ Z_t(z)=\int_Gp_t(U)^{m-1}p_t(z^{-1}U)\,\Haar.
+\end{equation}
+The target plaquette is good exactly on
+\begin{equation}\label{eq:target-good}
+  \mathcal G_\rho^z=\{U:\dist(z,U)<\rho\}.
+\end{equation}
+\end{proposition}
+
+\begin{proof}
+Every plaquette factor not incident to $e$ is constant under the
+conditioning and cancels between numerator and normalization.  The incident
+factors have the staple form \eqref{eq:staple-form}.  Substitution of
+\eqref{eq:one-frustrated-pattern}, centrality, and inversion symmetry of
+$p_t$ give the integrand in \eqref{eq:conditional-law}.  Bi-invariance gives
+$\dist(\one,z^{-1}U)=\dist(z,U)$, proving \eqref{eq:target-good}.  A fully
+oriented derivation appears in Appendix~\ref{app:conditional-kernel}.
+\end{proof}
+
+\subsection{Heat-kernel Laplace principle}
+
+We use the following standard logarithmic form of the small-time heat-kernel
+asymptotic.  The inclusion of the cut locus is essential here.
+
+\begin{lemma}[Uniform Varadhan asymptotic]\label{lem:varadhan}
+For the heat kernel of $\tfrac12\Delta$ on compact $G$,
+\begin{equation}\label{eq:uniform-varadhan}
+ \lim_{t\downarrow0}\sup_{U\in G}
+ \left|2t\log p_t(U)+\dist(\one,U)^2\right|=0.
+\end{equation}
+Consequently, for fixed staples $s=(s_1,\ldots,s_m)$, the normalized measures
+with density proportional to $\prod_{i=1}^m p_t(Us_i)$ satisfy a large
+deviation principle at speed $(2t)^{-1}$ and rate
+\begin{equation}\label{eq:generic-staple-energy}
+ F_s(U)-\min_VF_s(V),qquad
+ F_s(U)=\sum_{i=1}^m\dist(\one,Us_i)^2.
+\end{equation}
+The estimates are uniform when $s$ ranges over a compact set.
+\end{lemma}
+
+The logarithmic heat-kernel limit is due to Varadhan
+\cite{Varadhan1967Fundamental,Varadhan1967Diffusion}.  The normalized product
+form follows from a compact-space Laplace argument; details, including the
+uniform parameter statement, are given in Appendix~\ref{app:laplace}.
+
+For \eqref{eq:conditional-law}, the unnormalized energy is
+\begin{equation}\label{eq:Fz}
+  F_z(U)=(m-1)\dist(\one,U)^2+\dist(z,U)^2.
+\end{equation}
+Its minimizers can be described without coordinates.
+
+\begin{lemma}[Two-point metric barycenter]\label{lem:metric-barycenter}
+The minimum of \eqref{eq:Fz} is
+\begin{equation}\label{eq:Fz-min}
+  \min_UF_z(U)=\frac{m-1}{m}L^2.
+\end{equation}
+Its complete minimizing set is
+\begin{equation}\label{eq:minimizer-set}
+ \mathcal M_z=
+ \left\{U:\dist(\one,U)=\frac Lm,
+              \ \dist(z,U)=\frac{m-1}{m}L\right\}.
+\end{equation}
+Equivalently, $\mathcal M_z$ consists of the points at arclength $L/m$ on
+all minimizing geodesics from $\one$ to $z$.
+\end{lemma}
+
+\begin{proof}
+Put $a=\dist(\one,U)$ and $b=\dist(z,U)$.  The triangle inequality gives
+$a+b\geq L$, while the exact identity
+\begin{equation}\label{eq:weighted-square}
+ (m-1)a^2+b^2
+ =\frac{m-1}{m}(a+b)^2
+  +\frac1m\bigl((m-1)a-b\bigr)^2
+\end{equation}
+gives the lower bound in \eqref{eq:Fz-min}.  Equality holds precisely when
+$a+b=L$ and $b=(m-1)a$, hence at the distances in
+\eqref{eq:minimizer-set}.  Compactness gives a minimizing geodesic from
+$\one$ to $z$, and its point at arclength $L/m$ realizes equality.  Equality
+in the triangle inequality characterizes membership in a minimizing
+geodesic.
+\end{proof}
+
+\subsection{Main obstruction theorem}
+
+\begin{theorem}[Central-frustration obstruction]\label{thm:central-obstruction}
+Let $G$, $z$, $d$, $m$, and $L$ be as above.  On $B_d$ there is an admissible
+center-valued assignment of all links other than $e$ for which the
+conditional law is \eqref{eq:conditional-law}.  The family
+$(\gamma_t^z)_{t>0}$ satisfies a large deviation principle with rate
+\begin{equation}\label{eq:normalized-rate}
+  I_z(U)=F_z(U)-\frac{m-1}{m}L^2,
+\end{equation}
+and concentrates on $\mathcal M_z$.
+
+For every $0<\rho<b_*=(m-1)L/m$,
+\begin{equation}\label{eq:exact-good-rate}
+ \lim_{t\downarrow0}2t\log\gamma_t^z(\mathcal G_\rho^z)
+ =-m(b_*-\rho)^2<0.
+\end{equation}
+In particular,
+\begin{equation}\label{eq:bad-limit}
+ \lim_{t\downarrow0}
+ \sup_{\omega}
+ \gamma_{e,t}^{\omega}
+ \bigl(\mathcal G_{q,\rho}(\omega)^c\bigr)=1.
+\end{equation}
+Thus no estimate of the form \eqref{eq:uniform-quantifier} can hold.
+\end{theorem}
+
+\begin{proof}
+The construction and the conditional density follow from
+Propositions~\ref{prop:central-surjectivity} and
+\ref{prop:conditional-law}.  Lemma~\ref{lem:varadhan} gives the large
+deviation principle, and Lemma~\ref{lem:metric-barycenter} gives its
+normalization and zero set.
+
+It remains to compute the cost of the good event.  For $U$ with
+$b=\dist(z,U)\leq\rho$, the triangle inequality gives
+$\dist(\one,U)\geq L-b$, hence
+\begin{align}
+ F_z(U)
+ &\geq (m-1)(L-b)^2+b^2 \notag\\
+ &=\frac{m-1}{m}L^2+m(b-b_*)^2.\label{eq:good-lower-bound}
+\end{align}
+Because $\rho<b_*$, the right side decreases as $b$ increases through
+$[0,\rho]$.  A minimizing geodesic from $\one$ to $z$ contains points with
+$b$ arbitrarily close to $\rho$ from below, so
+\begin{equation}\label{eq:good-infima}
+ \inf_{\mathcal G_\rho^z}F_z
+ =\inf_{\closure{\mathcal G_\rho^z}}F_z
+ =\frac{m-1}{m}L^2+m(b_*-\rho)^2.
+\end{equation}
+The large-deviation lower bound on the open set and upper bound on its
+closure coincide, proving \eqref{eq:exact-good-rate}.  Hence the good
+probability tends to zero and the bad probability under the constructed
+boundary tends to one.  The supremum in \eqref{eq:bad-limit} is at least this
+value and at most one.
+\end{proof}
+
+\begin{remark}[What is and is not unique]\label{rem:nonunique-minimizers}
+The distance pair in \eqref{eq:minimizer-set} is unique.  The group element
+need not be.  In $\SUtwo$ with $z=-\one$, the endpoint is at the cut locus
+and $\mathcal M_z$ is a conjugacy two-sphere.  No step of the proof selects a
+geodesic or assumes an injectivity-radius condition.
+\end{remark}

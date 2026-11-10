@@ -1,0 +1,33 @@
+# Function: bind a target to its domain, sources, and maximum claim scope.
+# Input: DomainScopeGroundingRequest supplies domain, target, and source references.
+# Types: DomainScopeGrounding adds the explicit claim ceiling without adding object-level warrant.
+# Output: ScopeGroundingDisposition is Accepted or Blocked.
+# Routing: Accepted continues to adaptive-frontier formation; Blocked stops.
+# Layer: high-level epistemic topology only.
+# Metadata: workflows/manifest.json (`cohere_fast_scope_and_ground`).
+
+from types import (
+    DomainScopeGroundingRequest,
+    DomainScopeGrounding,
+    ScopeGroundingDisposition,
+)
+
+from occurrences import (
+    EvidentialScopeGroundingDispositionAssessment,
+    UnresolvedDomainScopeGroundingProjection,
+)
+
+from relations import (
+    DomainScopeGroundingEnablesDisposition,
+)
+
+reasoning CohereFastScopeAndGround(
+    grounding_request: DomainScopeGroundingRequest,
+) -> Generated[ScopeGroundingDisposition]:
+    sequence:
+        # Grounding establishes scope and provenance but creates no scientific warrant.
+        [scope_grounding: UnresolvedDomainScopeGroundingProjection(grounding_request)]
+        # The disposition checks whether the bounded grounding can support the next lane.
+        [grounding_disposition: EvidentialScopeGroundingDispositionAssessment(scope_grounding.value)] by DomainScopeGroundingEnablesDisposition
+
+    return grounding_disposition

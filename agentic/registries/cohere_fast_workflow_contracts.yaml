@@ -1,0 +1,17 @@
+{
+  "schema_version": "1.0.0",
+  "workflow": {
+    "id": "cohere_fast", "version": "1.0.0", "public_alias": "cohere-fast", "activation": "explicit_only",
+    "domain_binding_required": true, "owner_skill": "cohere-fast-orchestrator",
+    "input_type": "DomainRunRequest", "return_type": "CohereFastRunPacket",
+    "artifact_namespace": "cohere-fast/{domain_id}/{run_id}/", "canonical_authority": "abducer",
+    "children": ["scope-and-ground", "adaptive-frontier", "derivation-and-proof", "independent-audit", "manuscript-release"],
+    "transitions": [
+      {"from":"created", "to":"scope-and-ground"}, {"from":"scope-and-ground", "to":"adaptive-frontier"},
+      {"from":"adaptive-frontier", "to":"derivation-and-proof"}, {"from":"derivation-and-proof", "to":"independent-audit"},
+      {"from":"independent-audit", "to":"manuscript-release", "when":"audit accepted"},
+      {"from":"independent-audit", "to":"quarantined", "when":"audit failed"}
+    ],
+    "prohibitions": ["implicit activation", "cross-workflow handoff", "source runtime authority", "writes outside isolated root"]
+  }
+}

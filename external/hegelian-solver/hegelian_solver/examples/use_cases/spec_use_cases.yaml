@@ -1,0 +1,1120 @@
+# SPDX-FileCopyrightText: Copyright © 2026 Idiap Research Institute <contact@idiap.ch>
+#
+# SPDX-FileContributor: Andre Freitas <andre.freitas@idiap.ch>
+# Neuro-symbolic AI Group
+#
+# SPDX-FileContributor: Danilo Gusicuma <danilo.gusicuma@idiap.ch>
+# Neuro-symbolic AI Group
+#
+# SPDX-License-Identifier: MIT
+use_cases:
+  - id: math_number_systems
+    name: NumberSystemsClosureSolvabilityCompletion
+    domain: mathematical_concept
+    role: Number domains develop by closure, solvability, and completion pressure.
+    source_refs: ["refined:10.1", "spec:10"]
+    signature: {sorts: [Number], operations: {add: "N x N -> N", sub: "N x N -> N?", div: "Z x Z -> Z?", limit: "Cauchy(Q) -> Q?"}}
+    tasks: [{name: total_arithmetic, kind: construct, goal: "make subtraction, division, limits, and algebraic roots explicit where required"}]
+    examples: ["N under addition", "Z under subtraction", "Q under division", "R as completion"]
+    reported_failures:
+      - {label: NonClosure, failed_obligation: "3 - 5 not in Nat", witness: {value: "3 - 5"}, repair_target: [GroupCompletion], severity: high}
+    preservation: ["old arithmetic laws", "canonical embeddings"]
+    formal_analysis: {trigger: closure_failure, operator: GroupCompletion, obligations: [embedding, preservation, totality, noncollapse]}
+    material_analysis: {practice: arithmetic domains, stakes: "operations users expect become total only after explicit enrichment", residual_limits: ["later division, completion, and algebraic closure remain open"]}
+    epistemic_profile: {knowns: ["counterexample is constructive"], assumptions: ["arithmetic operations model intended tasks"], uncertainty: low, falsifiers: ["embedding collapses distinct naturals"]}
+
+  - id: math_functions
+    name: FunctionsFormulaMappingMorphismFunctor
+    domain: mathematical_concept
+    role: Function concepts develop from formulas to mappings, morphisms, and functors.
+    source_refs: ["refined:10.2"]
+    signature: {sorts: [Domain, Codomain], operations: {formula: "Term -> Value", map: "X -> Y", morphism: "StructuredX -> StructuredY"}}
+    tasks: [{name: represent_non_formula_maps, kind: abstract, goal: support maps and structure-preserving transformations beyond formulas}]
+    examples: ["polynomial formula", "arbitrary set map", "group homomorphism", "functor between categories"]
+    reported_failures:
+      - {label: NonRepresentability, failed_obligation: "formula-only function concept cannot express all maps", witness: {value: "non-elementary mapping"}, repair_target: [Mapify], severity: medium}
+    preservation: ["formula functions remain special cases"]
+    formal_analysis: {trigger: expressivity_failure, operator: Mapify, obligations: [coverage, preservation, compositionality]}
+    material_analysis: {practice: "mathematical modeling and software interfaces", stakes: "prevents overfitting function meaning to syntax", residual_limits: ["arbitrary maps may forget structure"]}
+    epistemic_profile: {knowns: ["formulas instantiate maps"], assumptions: ["task requires extensional behavior"], uncertainty: medium, counterfactual_checks: ["if all tasks are syntactic, formula view may suffice"]}
+
+  - id: math_equality
+    name: EqualityIsomorphismEquivalence
+    domain: mathematical_concept
+    role: Sameness develops from strict identity to task-relative equivalence.
+    source_refs: ["refined:10.3"]
+    signature: {relations: {eq: "A x A -> Prop", iso: "Obj x Obj -> Prop", equiv: "Obj x Obj -> Prop"}}
+    tasks: [{name: classify_structures, kind: classify, goal: classify objects up to the appropriate sameness relation}]
+    examples: ["isomorphic groups", "equivalent categories", "homotopy equivalent spaces"]
+    reported_failures:
+      - {label: Rigidity, failed_obligation: "strict equality blocks structural classification", witness: {value: "same group structure on different carriers"}, repair_target: [WeakenEquivalence], severity: high}
+    preservation: ["protected distinctions remain distinct under weaker sameness"]
+    formal_analysis: {trigger: rigidity, operator: WeakenEquivalence, obligations: [equivalence_relation, invariant_theorems, noncollapse]}
+    material_analysis: {practice: classification, stakes: "distinguishes representation artifacts from invariant structure", residual_limits: ["weaker sameness can hide intensional differences"]}
+    epistemic_profile: {knowns: ["isomorphism preserves structure"], assumptions: ["task is structural classification"], uncertainty: medium, risks: ["over-quotienting"]}
+
+  - id: math_geometry
+    name: GeometryEuclideanToManifold
+    domain: mathematical_concept
+    role: Geometry develops from global Euclidean assumptions to local models and manifolds.
+    source_refs: ["refined:10.4"]
+    signature: {sorts: [Space], predicates: {locally_euclidean: "Space -> Prop", chart_compatible: "Atlas -> Prop"}}
+    tasks: [{name: model_curved_spaces, kind: construct, goal: preserve Euclidean local reasoning while allowing non-Euclidean global structure}]
+    examples: ["Euclidean plane", "sphere", "smooth manifold atlas"]
+    reported_failures:
+      - {label: NonRepresentability, failed_obligation: "global Euclidean structure cannot express curved manifolds", witness: {value: "sphere not globally Euclidean"}, repair_target: [ManifoldLocalize], severity: high}
+    preservation: ["Euclidean geometry as local chart behavior"]
+    formal_analysis: {trigger: global_to_local_shift, operator: ManifoldLocalize, obligations: [local_recovery, chart_compatibility, noncollapse]}
+    material_analysis: {practice: geometry and physics, stakes: "supports curved spaces without discarding local measurement", residual_limits: ["global topology still needs invariants"]}
+    epistemic_profile: {knowns: ["charts mediate local Euclidean reasoning"], assumptions: ["locality is adequate for target phenomena"], uncertainty: medium}
+
+  - id: math_linear_algebra
+    name: LinearAlgebraCoordinatesToTensors
+    domain: mathematical_concept
+    role: Linear algebra develops from coordinates to invariant vector spaces, maps, and tensors.
+    source_refs: ["refined:10.5", "refined:21"]
+    signature: {sorts: [VectorSpace, Basis, Tensor], operations: {change_basis: "Basis x Basis -> Matrix"}}
+    tasks: [{name: remove_coordinate_dependence, kind: transfer, goal: make constructions invariant under basis change}]
+    examples: ["coordinate tuple", "linear map", "tensor contraction"]
+    reported_failures:
+      - {label: NonInvariance, failed_obligation: "matrix entries change under basis transformation", witness: {value: "A -> P^-1 A P"}, repair_target: [Tensorize], severity: high}
+    preservation: ["coordinate calculations as representations"]
+    formal_analysis: {trigger: coordinate_dependence, operator: Tensorize, obligations: [basis_independence, representation_map, protected_distinctions]}
+    material_analysis: {practice: geometry, mechanics, ML representations, stakes: "separates object from coordinate artifact", residual_limits: ["computations still need coordinates"]}
+    epistemic_profile: {knowns: ["change-of-basis laws are explicit"], assumptions: ["invariance is task-relevant"], uncertainty: medium}
+
+  - id: math_group_discovery
+    name: AbstractAlgebraGroupDiscovery
+    domain: mathematical_concept
+    role: Group is discovered as a shared interface across examples.
+    source_refs: ["refined:10.6", "refined:19"]
+    signature: {operations: {op: "G x G -> G", identity: G, inverse: "G -> G"}}
+    tasks: [{name: compress_group_proofs, kind: abstract, goal: prove common theorems once and transfer}]
+    examples: ["integers under addition", "permutations", "invertible matrices", "polygon symmetries"]
+    preservation: ["example-specific operations instantiate group operations"]
+    formal_analysis: {trigger: SharedInterface, operator: AbstractInterface, obligations: [coverage, minimality, transfer, non_vacuity]}
+    material_analysis: {practice: abstract algebra, stakes: "compresses repeated proof work", residual_limits: ["forgets extra ring/vector-space structure"]}
+    epistemic_profile: {knowns: ["examples share operation, identity, inverse"], assumptions: ["shared laws are explanatory"], uncertainty: low, overfit_checks: ["independent nontrivial models"]}
+
+  - id: math_rings_fields_modules
+    name: RingsFieldsModulesParameterizedAbstraction
+    domain: mathematical_concept
+    role: Algebraic concepts refine by weakening and parameterizing assumptions.
+    source_refs: ["refined:10.7"]
+    signature: {sorts: [Ring, Field, Module], operations: {scalar_action: "R x M -> M"}}
+    tasks: [{name: find_minimal_axioms, kind: abstract, goal: locate the weakest structure supporting a theorem}]
+    examples: ["vector spaces over fields", "modules over rings", "ideals as modules"]
+    reported_failures:
+      - {label: OverstrongAxiom, failed_obligation: "theorem uses ring axioms but assumes field", witness: {value: "proof dependency subset"}, repair_target: [ModuleGeneralize], severity: medium}
+    preservation: ["field vector spaces instantiate modules"]
+    formal_analysis: {trigger: axiom_dependency_minimization, operator: ModuleGeneralize, obligations: [weaker_proof, example_instantiation, transfer]}
+    material_analysis: {practice: algebraic reuse, stakes: "prevents unnecessarily narrow theorems", residual_limits: ["weaker structures lose division"]}
+    epistemic_profile: {knowns: ["proof dependencies can be audited"], assumptions: ["weaker theorem remains useful"], uncertainty: medium}
+
+  - id: math_topology
+    name: TopologyMetricToOpenSets
+    domain: mathematical_concept
+    role: Topology abstracts continuity from metrics to open-set structure.
+    source_refs: ["refined:10.8", "refined:22"]
+    signature: {predicates: {Open: "Set(X) -> Prop"}}
+    tasks: [{name: define_continuity_without_metric, kind: abstract, goal: characterize continuity by preimages of opens}]
+    examples: ["metric-induced topology", "discrete topology", "indiscrete topology"]
+    invariants: ["open-set lattice", "homeomorphism"]
+    preservation: ["metric continuity theorems using opens"]
+    formal_analysis: {trigger: InvariantPattern, operator: OpenSetAbstract, obligations: [metric_induces_topology, continuity_transfer, adequacy]}
+    material_analysis: {practice: topology and analysis, stakes: "keeps continuity while forgetting distances", residual_limits: ["distance magnitude is lost"]}
+    epistemic_profile: {knowns: ["metrics generate opens"], assumptions: ["target tasks use opens only"], uncertainty: medium}
+
+  - id: math_set_theory
+    name: NaiveSetTheoryToStratifiedTheory
+    domain: mathematical_concept
+    role: Foundations develop by restricting comprehension to block paradox.
+    source_refs: ["refined:10.9", "refined:23"]
+    signature: {predicates: {member: "Obj x Set -> Prop", comprehension: "Predicate -> Set"}}
+    tasks: [{name: safe_comprehension, kind: prove, goal: allow useful set construction without contradiction}]
+    examples: ["restricted separation", "typed comprehension"]
+    reported_failures:
+      - {label: Inconsistency, failed_obligation: "unrestricted comprehension yields Russell-style paradox", witness: {value: "R = {x | x notin x}"}, repair_target: [TypeStratify], severity: high}
+    preservation: ["safe constructions remain available"]
+    formal_analysis: {trigger: inconsistency, operator: TypeStratify, obligations: [paradox_blocked, conservativity, non_vacuity]}
+    material_analysis: {practice: foundations, stakes: "keeps mathematical construction usable without explosion", residual_limits: ["some naive constructions rejected"]}
+    epistemic_profile: {knowns: ["paradox witness is explicit"], assumptions: ["typed/restricted discipline is acceptable"], uncertainty: low}
+
+  - id: math_calculus
+    name: CalculusInfinitesimalToEpsilonDelta
+    domain: mathematical_concept
+    role: Calculus develops from infinitesimal intuition to rigorous limits and smooth structures.
+    source_refs: ["refined:10.10"]
+    signature: {operations: {limit: "Sequence -> Value", derivative: "Function -> Function"}}
+    tasks: [{name: justify_limit_reasoning, kind: prove, goal: make continuity and derivative claims checkable}]
+    examples: ["intuitive infinitesimal derivative", "epsilon-delta limit", "smooth map"]
+    reported_failures:
+      - {label: NonRepresentability, failed_obligation: "informal infinitesimals lack explicit validity rules", witness: {value: "ambiguous infinitesimal manipulation"}, repair_target: [EpsilonDeltaRigorize], severity: medium}
+    preservation: ["calculus computations as justified limits"]
+    formal_analysis: {trigger: rigor_gap, operator: EpsilonDeltaRigorize, obligations: [definition_equivalence, theorem_recovery, residual_limits]}
+    material_analysis: {practice: analysis and modeling, stakes: "keeps intuition but makes claims auditable", residual_limits: ["nonstandard and synthetic alternatives branch"]}
+    epistemic_profile: {knowns: ["epsilon-delta proofs certify many limits"], assumptions: ["standard analysis is target foundation"], uncertainty: medium}
+
+  - id: math_algebraic_topology
+    name: AlgebraicTopologyHolesByFunctorialInvariants
+    domain: mathematical_concept
+    role: Holes become reasoned about by functorial invariants.
+    source_refs: ["refined:10.11"]
+    signature: {operations: {H_n: "TopologicalSpace -> Group", induced_map: "ContinuousMap -> Homomorphism"}}
+    tasks: [{name: detect_holes_functorially, kind: classify, goal: assign invariants that preserve maps and composition}]
+    examples: ["circle has H1", "sphere homology", "continuous maps induce homomorphisms"]
+    reported_failures:
+      - {label: NonRepresentability, failed_obligation: "geometric hole intuition lacks computable invariant", witness: {value: "same-looking spaces need invariant distinction"}, repair_target: [HomologyFunctor], severity: medium}
+    preservation: ["homeomorphism-invariant classification"]
+    formal_analysis: {trigger: functoriality_detection, operator: HomologyFunctor, obligations: [identity, composition, invariant_distinction]}
+    material_analysis: {practice: topological classification, stakes: "turns qualitative holes into algebraic witnesses", residual_limits: ["invariants may be incomplete"]}
+    epistemic_profile: {knowns: ["functorial maps preserve composition"], assumptions: ["selected invariant is adequate for task"], uncertainty: medium}
+
+  - id: math_category_theory
+    name: CategoryTheoryStructureOfStructure
+    domain: mathematical_concept
+    role: Category theory discovers common structure in structures and transformations.
+    source_refs: ["refined:10.12"]
+    signature: {sorts: [Object, Morphism], operations: {compose: "Mor(B,C) x Mor(A,B) -> Mor(A,C)", id: "Obj -> Mor"}}
+    tasks: [{name: compare_structural_theories, kind: abstract, goal: reason about objects through morphisms and universal properties}]
+    examples: ["sets and functions", "groups and homomorphisms", "topological spaces and continuous maps"]
+    reported_failures:
+      - {label: NonCompositionality, failed_obligation: "object-only view misses maps between structures", witness: {value: "structure-preserving transformations compose"}, repair_target: [Categorify], severity: medium}
+    preservation: ["ordinary structures become category objects"]
+    formal_analysis: {trigger: compositionality, operator: Categorify, obligations: [identity_laws, associativity, universal_properties]}
+    material_analysis: {practice: unification across mathematics, stakes: "exposes recurring diagrams and universal constructions", residual_limits: ["abstraction may hide element-level data"]}
+    epistemic_profile: {knowns: ["many theories have objects and morphisms"], assumptions: ["morphism-centric view is explanatory"], uncertainty: medium}
+
+  - id: phys_newtonian_to_sr
+    name: NewtonianMechanicsToSpecialRelativity
+    domain: physical_concept
+    role: Kinematics develops under invariant light-speed and noncovariance pressure.
+    source_refs: ["physics:9.1", "physics:19"]
+    state_space: "positions, velocities, inertial frames"
+    observables: [position, velocity, time_interval]
+    dynamics: {equations: ["F = m a"]}
+    symmetries: {spacetime: [Galilean]}
+    measurement_model: {maps: ["rulers and clocks"]}
+    regime: {valid_when: ["v/c << 1"], invalid_when: ["v comparable to c"]}
+    tasks: [{name: lorentz_covariant_kinematics, kind: check_invariance, goal: recover low-v Newtonian predictions while respecting invariant light speed}]
+    reported_failures:
+      - {label: NonCovariance, failed_obligation: "Galilean velocity addition conflicts with invariant light speed", witness: {value: "light-speed thought experiment"}, repair_target: [InvariantizeKinematics], severity: high}
+    preservation: ["Newtonian limit as v/c -> 0"]
+    formal_analysis: {trigger: noncovariance, operator: InvariantizeKinematics, obligations: [Lorentz_covariance, low_velocity_limit]}
+    material_analysis: {phenomena: "high-speed motion and electrodynamics", evidence: "invariant light-speed pressure", residual_limits: ["gravity absent"]}
+    epistemic_profile: {knowns: ["low-v predictions preserved"], assumptions: ["inertial frame regime"], uncertainty: low}
+
+  - id: phys_newtonian_gravity_to_gr
+    name: NewtonianGravityToGeneralRelativity
+    domain: physical_concept
+    role: Gravity develops from force law to spacetime geometry.
+    source_refs: ["physics:9.2"]
+    state_space: "masses in spacetime"
+    observables: [trajectories, redshift, precession]
+    dynamics: {equations: ["F = G m1 m2 / r^2"]}
+    symmetries: {spacetime: [Galilean], target: [diffeomorphism_covariance]}
+    measurement_model: {maps: ["orbital observations", "clock rates"]}
+    regime: {valid_when: ["weak field", "slow motion"], invalid_when: ["strong curvature"]}
+    tasks: [{name: geometrize_gravity, kind: explain, goal: recover Newtonian gravity in weak-field slow-motion limit}]
+    reported_failures:
+      - {label: NonCovariance, failed_obligation: "Newtonian gravity lacks relativistic covariance", witness: {value: "instantaneous action at distance"}, repair_target: [GeometrizeInteraction], severity: high}
+    preservation: ["Poisson/Newtonian limit"]
+    formal_analysis: {trigger: geometric_pattern, operator: GeometrizeInteraction, obligations: [limit_recovery, covariance, measurement_interface]}
+    material_analysis: {phenomena: "gravity, precession, lensing", evidence: "relativistic compatibility", residual_limits: ["quantum gravity unresolved"]}
+    epistemic_profile: {knowns: ["weak-field limit constrains successor"], assumptions: ["geometry encodes gravity"], uncertainty: medium}
+
+  - id: phys_classical_radiation_to_quantum
+    name: ClassicalRadiationToQuantumEnergyExchange
+    domain: physical_concept
+    role: Radiation develops by quantization pressure from spectrum and stability failures.
+    source_refs: ["physics:9.3"]
+    state_space: "classical radiation modes"
+    observables: [spectrum, energy_density]
+    dynamics: {equations: ["classical equipartition"]}
+    symmetries: {spacetime: [classical]}
+    measurement_model: {maps: ["spectral intensity measurements"]}
+    regime: {valid_when: ["low-frequency classical approximation"], invalid_when: ["blackbody UV regime"]}
+    tasks: [{name: remove_uv_catastrophe, kind: predict, goal: fit observed spectrum without divergence}]
+    reported_failures:
+      - {label: UVFailure, failed_obligation: "classical radiation diverges at high frequency", witness: {value: "ultraviolet catastrophe"}, repair_target: [QuantizeObservableAlgebra], severity: high}
+    preservation: ["classical limit for large occupation"]
+    formal_analysis: {trigger: quantization_pressure, operator: QuantizeObservableAlgebra, obligations: [finite_spectrum, classical_limit]}
+    material_analysis: {phenomena: "blackbody radiation", evidence: "spectral residuals", residual_limits: ["full quantum field theory later"]}
+    epistemic_profile: {knowns: ["divergence is formal and empirical"], assumptions: ["energy exchange is discrete"], uncertainty: low}
+
+  - id: phys_classical_to_quantum_mechanics
+    name: ClassicalMechanicsToQuantumMechanics
+    domain: physical_concept
+    role: Mechanics develops by noncommutative observables and probabilistic measurement.
+    source_refs: ["physics:9.4"]
+    state_space: "phase space"
+    observables: [position, momentum, spectra]
+    dynamics: {equations: ["Hamilton equations"]}
+    symmetries: {canonical: [symplectic]}
+    measurement_model: {maps: ["operator expectation to measurement distribution"]}
+    regime: {valid_when: ["macroscopic action"], invalid_when: ["atomic scale"]}
+    tasks: [{name: explain_atomic_stability, kind: explain, goal: account for discrete spectra and stability}]
+    reported_failures:
+      - {label: Instability, failed_obligation: "classical atoms unstable and spectra continuous", witness: {value: "atomic spectra"}, repair_target: [QuantizeObservableAlgebra], severity: high}
+    preservation: ["classical limit h -> 0"]
+    formal_analysis: {trigger: quantization_pressure, operator: QuantizeObservableAlgebra, obligations: [unitarity, classical_limit, measurement_model]}
+    material_analysis: {phenomena: "atomic spectra and stability", evidence: "spectral lines", residual_limits: ["relativistic field effects"]}
+    epistemic_profile: {knowns: ["classical limit required"], assumptions: ["observables become operators"], uncertainty: medium}
+
+  - id: phys_particles_to_qft
+    name: ParticleMechanicsToQuantumFieldTheory
+    domain: physical_concept
+    role: Particle ontology develops into fields under relativity and creation-annihilation pressure.
+    source_refs: ["physics:9.5"]
+    state_space: "particle Hilbert spaces"
+    observables: [particle_number, scattering]
+    dynamics: {equations: ["relativistic quantum dynamics"]}
+    symmetries: {spacetime: [Poincare]}
+    measurement_model: {maps: ["detector events"]}
+    regime: {valid_when: ["fixed particle number approximation"], invalid_when: ["relativistic interactions with creation"]}
+    tasks: [{name: model_creation_annihilation, kind: explain, goal: support variable particle number and locality}]
+    reported_failures:
+      - {label: NonRepresentability, failed_obligation: "fixed-particle mechanics cannot model creation and annihilation", witness: {value: "relativistic scattering"}, repair_target: [FieldifyActionAtDistance], severity: high}
+    preservation: ["single-particle sector"]
+    formal_analysis: {trigger: field_pattern, operator: FieldifyActionAtDistance, obligations: [locality, particle_sector_recovery]}
+    material_analysis: {phenomena: "scattering and particle creation", evidence: "detector events", residual_limits: ["renormalization needed"]}
+    epistemic_profile: {knowns: ["particle sectors are recoverable"], assumptions: ["fields are primary variables"], uncertainty: medium}
+
+  - id: phys_gauge_redundancy_em
+    name: GaugeRedundancyInElectromagnetism
+    domain: physical_concept
+    role: Electromagnetic potentials develop into gauge equivalence classes.
+    source_refs: ["physics:9.6", "physics:22"]
+    state_space: "vector potentials"
+    observables: [electric_field, magnetic_field]
+    dynamics: {equations: ["Maxwell equations"]}
+    symmetries: {gauge: ["A -> A + d lambda"]}
+    measurement_model: {maps: ["field strengths to forces"]}
+    regime: {valid_when: ["classical electromagnetism"]}
+    tasks: [{name: quotient_gauge_artifacts, kind: check_invariance, goal: "ensure predictions depend on fields, not gauge choice"}]
+    reported_failures:
+      - {label: RepresentationDependence, failed_obligation: "potential representation is gauge redundant", witness: {value: "A and A + d lambda same fields"}, repair_target: [GaugeQuotient], severity: high}
+    preservation: ["field strengths and charges"]
+    formal_analysis: {trigger: gauge_redundancy, operator: GaugeQuotient, obligations: [equivalence_relation, observable_invariance, noncollapse]}
+    material_analysis: {phenomena: "electromagnetic measurement", evidence: "same fields under gauge transformation", residual_limits: ["global/topological effects need care"]}
+    epistemic_profile: {knowns: ["observables invariant"], assumptions: ["gauge potentials are representational"], uncertainty: medium}
+
+  - id: phys_global_to_gauge_interaction
+    name: GlobalSymmetryToGaugeInteraction
+    domain: physical_concept
+    role: Global symmetry develops into local gauge interaction with compensating fields.
+    source_refs: ["physics:9.7"]
+    state_space: "matter fields with symmetry"
+    observables: [currents, interactions]
+    dynamics: {equations: ["global symmetry action"]}
+    symmetries: {internal: [global], target: [local_gauge]}
+    measurement_model: {maps: ["couplings to scattering signatures"]}
+    regime: {valid_when: ["field-theoretic interaction regime"]}
+    tasks: [{name: localize_symmetry, kind: unify, goal: make local symmetry compatible with dynamics}]
+    reported_failures:
+      - {label: SymmetryMismatch, failed_obligation: "global symmetry cannot vary locally without new connection", witness: {value: "derivative not covariant"}, repair_target: [LocalizeSymmetry], severity: medium}
+    preservation: ["global symmetry as constant gauge transformations"]
+    formal_analysis: {trigger: local_symmetry_pressure, operator: LocalizeSymmetry, obligations: [covariant_derivative, gauge_field_measurement]}
+    material_analysis: {phenomena: "interaction carriers", evidence: "symmetry-guided couplings", residual_limits: ["not every gauge theory is physically realized"]}
+    epistemic_profile: {knowns: ["localization forces connection term"], assumptions: ["symmetry principle is explanatory"], uncertainty: medium}
+
+  - id: phys_fermi_to_electroweak
+    name: FermiWeakInteractionToElectroweakTheory
+    domain: physical_concept
+    role: Effective weak interaction develops into mediated electroweak theory.
+    source_refs: ["physics:9.8"]
+    state_space: "four-fermion interaction"
+    observables: [decay_rates, scattering_cross_sections]
+    dynamics: {equations: ["Fermi contact interaction"]}
+    symmetries: {internal: [weak_isospin_candidate]}
+    measurement_model: {maps: ["decay products and cross sections"]}
+    regime: {valid_when: ["low energy"], invalid_when: ["high energy"]}
+    tasks: [{name: restore_high_energy_control, kind: predict, goal: treat Fermi theory as low-energy limit}]
+    reported_failures:
+      - {label: NonRenormalizability, failed_obligation: "contact weak theory loses predictive control at high energy", witness: {value: "cross-section growth"}, repair_target: [LocalizeSymmetry], severity: high}
+    preservation: ["low-energy Fermi limit"]
+    formal_analysis: {trigger: uv_completion_pressure, operator: LocalizeSymmetry, obligations: [low_energy_limit, gauge_consistency]}
+    material_analysis: {phenomena: "weak decays and scattering", evidence: "energy-dependent breakdown", residual_limits: ["parameter fitting and symmetry breaking"]}
+    epistemic_profile: {knowns: ["effective limit constrains successor"], assumptions: ["mediator fields explain contact law"], uncertainty: medium}
+
+  - id: phys_beta_decay_latent_carrier
+    name: BetaDecayLatentCarrier
+    domain: physical_concept
+    role: Apparent conservation failure motivates a constrained latent carrier.
+    source_refs: ["physics:9.9", "physics:20"]
+    state_space: "nuclear beta decay events"
+    observables: [energy, momentum, spin]
+    dynamics: {equations: ["decay conservation bookkeeping"]}
+    symmetries: {conservation: [energy, momentum, angular_momentum]}
+    measurement_model: {maps: ["decay spectra"]}
+    regime: {valid_when: ["weak decay"]}
+    tasks: [{name: repair_conservation, kind: discover, goal: explain missing energy and momentum with testable carrier}]
+    reported_failures:
+      - {label: ConservationViolation, failed_obligation: "observed beta spectrum appears to violate conservation", witness: {value: "continuous beta spectrum"}, repair_target: [IntroduceLatentCarrier], severity: high}
+    preservation: ["conservation laws"]
+    formal_analysis: {trigger: latent_carrier, operator: IntroduceLatentCarrier, obligations: [constrained_properties, new_tests, conservation_repair]}
+    material_analysis: {phenomena: "beta decay", evidence: "missing energy pattern", residual_limits: ["latent carrier must not be ad hoc"]}
+    epistemic_profile: {knowns: ["multiple conservation constraints"], assumptions: ["unseen carrier is preferable to abandoning conservation"], uncertainty: high, anti_ad_hoc_checks: ["independent detection consequences"]}
+
+  - id: phys_thermo_to_stat_mech
+    name: ThermodynamicsToStatisticalMechanics
+    domain: physical_concept
+    role: Macroscopic thermodynamics develops from microscopic statistical mechanics.
+    source_refs: ["physics:9.10", "physics:21"]
+    state_space: "macroscopic variables"
+    observables: [temperature, pressure, entropy]
+    dynamics: {equations: ["thermodynamic laws"]}
+    symmetries: {scale: [thermodynamic_limit]}
+    measurement_model: {maps: ["thermometer and pressure readings"]}
+    regime: {valid_when: ["large N near equilibrium"]}
+    tasks: [{name: derive_macro_from_micro, kind: coarse_grain, goal: recover thermodynamic laws from ensembles}]
+    reported_failures:
+      - {label: ScaleMismatch, failed_obligation: "macroscopic laws lack microscopic account", witness: {value: "entropy and temperature need statistical interpretation"}, repair_target: [CoarseGrain], severity: medium}
+    preservation: ["thermodynamic laws in thermodynamic limit"]
+    formal_analysis: {trigger: scale_mismatch, operator: CoarseGrain, obligations: [limit_recovery, measurement_map, residual_fluctuations]}
+    material_analysis: {phenomena: "heat, pressure, entropy", evidence: "many-particle behavior", residual_limits: ["nonequilibrium remains difficult"]}
+    epistemic_profile: {knowns: ["large-N limit mediates levels"], assumptions: ["ensemble idealization adequate"], uncertainty: medium}
+
+  - id: phys_kinetic_to_hydrodynamics
+    name: KineticTheoryToHydrodynamics
+    domain: physical_concept
+    role: Kinetic descriptions coarse-grain into fluid variables.
+    source_refs: ["physics:9.11"]
+    state_space: "particle distribution function"
+    observables: [density, velocity_field, pressure]
+    dynamics: {equations: ["Boltzmann equation"]}
+    symmetries: {scale: [long_wavelength]}
+    measurement_model: {maps: ["flow and density measurements"]}
+    regime: {valid_when: ["near local equilibrium", "long wavelength"]}
+    tasks: [{name: derive_fluid_equations, kind: coarse_grain, goal: recover hydrodynamic variables and equations}]
+    reported_failures:
+      - {label: ScaleMismatch, failed_obligation: "microscopic distribution too detailed for fluid-scale laws", witness: {value: "many microstates same macrostate"}, repair_target: [CoarseGrain], severity: medium}
+    preservation: ["conserved quantities"]
+    formal_analysis: {trigger: effective_variable_discovery, operator: CoarseGrain, obligations: [moment_closure, conservation_transfer]}
+    material_analysis: {phenomena: "fluids", evidence: "macro flow regularities", residual_limits: ["turbulence and far-from-equilibrium regimes"]}
+    epistemic_profile: {knowns: ["moments define macro variables"], assumptions: ["closure approximation valid"], uncertainty: medium}
+
+  - id: phys_critical_rg
+    name: CriticalPhenomenaRenormalizationGroup
+    domain: physical_concept
+    role: Critical phenomena develop by scale transformations and universality.
+    source_refs: ["physics:9.12"]
+    state_space: "statistical systems near criticality"
+    observables: [critical_exponents, correlation_length]
+    dynamics: {equations: ["scale flow"]}
+    symmetries: {scale: [renormalization]}
+    measurement_model: {maps: ["critical exponent measurements"]}
+    regime: {valid_when: ["near critical point"]}
+    tasks: [{name: explain_universality, kind: classify, goal: classify systems by fixed points and relevant variables}]
+    reported_failures:
+      - {label: ScaleMismatch, failed_obligation: "microscopic details fail to explain shared exponents", witness: {value: "universality classes"}, repair_target: [Renormalize], severity: high}
+    preservation: ["observed scaling laws"]
+    formal_analysis: {trigger: scale_universality, operator: Renormalize, obligations: [fixed_point, irrelevant_variables, predictive_exponents]}
+    material_analysis: {phenomena: "critical points", evidence: "shared exponents across materials", residual_limits: ["finite-size effects"]}
+    epistemic_profile: {knowns: ["scale transformations compress many systems"], assumptions: ["fixed points organize behavior"], uncertainty: medium}
+
+  - id: phys_qft_renormalization
+    name: RenormalizationInQuantumFieldTheory
+    domain: physical_concept
+    role: QFT develops predictive control through renormalization and effective scale dependence.
+    source_refs: ["physics:9.13"]
+    state_space: "quantum fields with cutoff"
+    observables: [scattering_amplitudes, running_couplings]
+    dynamics: {equations: ["bare Lagrangian with divergences"]}
+    symmetries: {scale: [renormalization_flow]}
+    measurement_model: {maps: ["cross-section measurements"]}
+    regime: {valid_when: ["target energy below cutoff or within renormalizable regime"]}
+    tasks: [{name: remove_cutoff_dependence, kind: renormalize, goal: express predictions in measured parameters}]
+    reported_failures:
+      - {label: UVFailure, failed_obligation: "bare perturbation integrals diverge", witness: {value: "UV divergent loop integral"}, repair_target: [Renormalize], severity: high}
+    preservation: ["finite measured predictions"]
+    formal_analysis: {trigger: uv_failure, operator: Renormalize, obligations: [cutoff_independence, running_parameters, regime_declaration]}
+    material_analysis: {phenomena: "high-energy scattering", evidence: "regularized divergences", residual_limits: ["UV completion may be needed"]}
+    epistemic_profile: {knowns: ["renormalized predictions are scale-indexed"], assumptions: ["EFT control accepted"], uncertainty: medium}
+
+  - id: phys_classical_field_to_gauge_field
+    name: ClassicalFieldToGaugeFieldConcept
+    domain: physical_concept
+    role: Field concept develops by distinguishing physical fields from gauge connections.
+    source_refs: ["physics:9.14"]
+    state_space: "field configurations"
+    observables: [field_strength, holonomy]
+    dynamics: {equations: ["field equations"]}
+    symmetries: {gauge: [local_redundancy]}
+    measurement_model: {maps: ["gauge-invariant observables"]}
+    regime: {valid_when: ["gauge field theory"]}
+    tasks: [{name: define_gauge_connection, kind: check_invariance, goal: identify connection and curvature with gauge redundancy}]
+    reported_failures:
+      - {label: RepresentationDependence, failed_obligation: "field variable includes unphysical gauge degrees", witness: {value: "connection transforms under gauge"}, repair_target: [GaugeQuotient], severity: medium}
+    preservation: ["field strengths"]
+    formal_analysis: {trigger: gauge_field_concept, operator: GaugeQuotient, obligations: [connection_transformation, curvature_invariance]}
+    material_analysis: {phenomena: "gauge interactions", evidence: "observable equivalence classes", residual_limits: ["global bundles add topology"]}
+    epistemic_profile: {knowns: ["gauge transformations preserve observables"], assumptions: ["redundancy is representational"], uncertainty: medium}
+
+  - id: phys_superconductivity_order_parameter
+    name: SuperconductivityOrderParameterDiscovery
+    domain: physical_concept
+    role: Superconductivity motivates collective order parameter ontology.
+    source_refs: ["physics:9.15", "physics:23"]
+    state_space: "electronic material states"
+    observables: [resistance, magnetic_flux, gap]
+    dynamics: {equations: ["effective condensate dynamics"]}
+    symmetries: {broken: [phase_symmetry]}
+    measurement_model: {maps: ["resistance and magnetic response"]}
+    regime: {valid_when: ["low temperature superconducting phase"]}
+    tasks: [{name: discover_order_parameter, kind: discover, goal: explain phase with collective variable}]
+    reported_failures:
+      - {label: IRFailure, failed_obligation: "normal conductor variables fail to characterize superconducting phase", witness: {value: "zero resistance and Meissner effect"}, repair_target: [IntroduceOrderParameter], severity: high}
+    preservation: ["normal phase as comparison regime"]
+    formal_analysis: {trigger: order_parameter_pattern, operator: IntroduceOrderParameter, obligations: [phase_classification, measurement_consequence, non_ad_hoc]}
+    material_analysis: {phenomena: "superconductivity", evidence: "gap and magnetic response", residual_limits: ["microscopic derivation may branch"]}
+    epistemic_profile: {knowns: ["collective variable organizes observations"], assumptions: ["symmetry breaking explanatory"], uncertainty: medium}
+
+  - id: phys_wave_particle_duality
+    name: WaveParticleDualityAsDualDescriptionPressure
+    domain: physical_concept
+    role: Conflicting wave and particle descriptions motivate a deeper quantum formalism.
+    source_refs: ["physics:9.16"]
+    state_space: "classical wave or particle states"
+    observables: [interference, localized_detection]
+    dynamics: {equations: ["wave equation", "particle trajectories"]}
+    symmetries: {description: [dual]}
+    measurement_model: {maps: ["screen detections", "interference fringes"]}
+    regime: {valid_when: ["quantum scale"]}
+    tasks: [{name: reconcile_dual_evidence, kind: explain, goal: represent interference and localized detection in one formalism}]
+    reported_failures:
+      - {label: DualDescriptionPressure, failed_obligation: "wave-only and particle-only pictures each fail part of evidence", witness: {value: "double-slit pattern with point detections"}, repair_target: [QuantizeObservableAlgebra], severity: high}
+    preservation: ["wave and particle limits as measurement regimes"]
+    formal_analysis: {trigger: dual_description_pressure, operator: QuantizeObservableAlgebra, obligations: [Born_rule, interference, detection_statistics]}
+    material_analysis: {phenomena: "quantum experiments", evidence: "interference plus localized clicks", residual_limits: ["interpretational questions remain"]}
+    epistemic_profile: {knowns: ["both descriptions capture partial evidence"], assumptions: ["probabilistic formalism mediates them"], uncertainty: medium}
+
+  - id: phys_noether_discovery
+    name: ConservationLawsNoetherDiscovery
+    domain: physical_concept
+    role: Conservation laws are discovered as consequences of symmetry.
+    source_refs: ["physics:9.17"]
+    state_space: "variational systems"
+    observables: [energy, momentum, charge]
+    dynamics: {action: "S[q]"}
+    symmetries: {continuous: [time_translation, space_translation, phase_rotation]}
+    measurement_model: {maps: ["conserved quantities to repeated measurements"]}
+    regime: {valid_when: ["variational dynamics with continuous symmetry"]}
+    tasks: [{name: compress_conservation_laws, kind: discover, goal: derive conservation from symmetry}]
+    examples: ["time translation -> energy", "space translation -> momentum", "phase symmetry -> charge"]
+    preservation: ["existing conservation laws"]
+    formal_analysis: {trigger: VariationalCompression, operator: FormalizeOperation, obligations: [symmetry_action, conserved_current]}
+    material_analysis: {phenomena: "conserved quantities", evidence: "many conservation laws share symmetry structure", residual_limits: ["dissipative/open systems need extensions"]}
+    epistemic_profile: {knowns: ["symmetry-conservation correspondence"], assumptions: ["action principle applies"], uncertainty: medium}
+
+  - id: phys_force_to_variational
+    name: ForceLawsToVariationalMechanics
+    domain: physical_concept
+    role: Force laws develop into variational principles that compress dynamics.
+    source_refs: ["physics:9.18"]
+    state_space: "configuration paths"
+    observables: [trajectory, action]
+    dynamics: {equations: ["Newton equations", "Euler-Lagrange equations"]}
+    symmetries: {variational: [stationary_action]}
+    measurement_model: {maps: ["trajectory observations"]}
+    regime: {valid_when: ["classical mechanics"]}
+    tasks: [{name: variational_compression, kind: explain, goal: derive equations from action}]
+    examples: ["harmonic oscillator", "central force motion"]
+    preservation: ["Newtonian equations as Euler-Lagrange equations"]
+    formal_analysis: {trigger: variational_compression, operator: FormalizeOperation, obligations: [equation_recovery, boundary_conditions]}
+    material_analysis: {phenomena: "mechanical trajectories", evidence: "many equations share action form", residual_limits: ["nonconservative forces require care"]}
+    epistemic_profile: {knowns: ["Euler-Lagrange recovers many force laws"], assumptions: ["action principle is explanatory"], uncertainty: medium}
+
+  - id: phys_equation_state_universality
+    name: EquationOfStateToUniversalityClass
+    domain: physical_concept
+    role: Equation-of-state fitting develops into universality class reasoning.
+    source_refs: ["physics:9.19"]
+    state_space: "thermodynamic systems"
+    observables: [pressure, temperature, critical_exponents]
+    dynamics: {equations: ["equation of state"]}
+    symmetries: {scale: [critical_scaling]}
+    measurement_model: {maps: ["thermodynamic measurements"]}
+    regime: {valid_when: ["near phase transitions"]}
+    tasks: [{name: classify_universality, kind: classify, goal: group systems by critical behavior rather than microscopic equation}]
+    reported_failures:
+      - {label: ParameterAdHocness, failed_obligation: "fitted equation of state misses cross-system universality", witness: {value: "same exponents across materials"}, repair_target: [Renormalize], severity: medium}
+    preservation: ["equation-of-state fits within regimes"]
+    formal_analysis: {trigger: universality_detection, operator: Renormalize, obligations: [class_coverage, predictive_exponents]}
+    material_analysis: {phenomena: "phase transitions", evidence: "shared critical exponents", residual_limits: ["non-universal amplitudes remain"]}
+    epistemic_profile: {knowns: ["universality compresses examples"], assumptions: ["scaling limit is relevant"], uncertainty: medium}
+
+  - id: phys_effective_theories
+    name: EffectiveTheoriesAsLegitimateConcepts
+    domain: physical_concept
+    role: Theories refine by declaring validity domains rather than pretending finality.
+    source_refs: ["physics:9.20"]
+    state_space: "scale-indexed theory space"
+    observables: [low_energy_observables]
+    dynamics: {equations: ["effective Lagrangian"]}
+    symmetries: {scale: [EFT_cutoff]}
+    measurement_model: {maps: ["observables below cutoff"]}
+    regime: {valid_when: ["below cutoff"], invalid_when: ["UV completion scale"]}
+    tasks: [{name: declare_effective_status, kind: classify, goal: preserve predictive utility with explicit breakdown conditions}]
+    reported_failures:
+      - {label: Overextension, failed_obligation: "theory fails outside target scale", witness: {value: "cutoff sensitivity"}, repair_target: [RestrictRegime], severity: medium}
+    preservation: ["validated low-energy predictions"]
+    formal_analysis: {trigger: regime_declaration, operator: RestrictRegime, obligations: [validity_bounds, residual_limits, measurement_scope]}
+    material_analysis: {phenomena: "scale-limited prediction", evidence: "robust low-energy fits", residual_limits: ["UV ontology open"]}
+    epistemic_profile: {knowns: ["domain declarations prevent false refutation"], assumptions: ["effective status is acceptable"], uncertainty: medium}
+
+  - id: lm_ngrams_to_neural_lm
+    name: NgramsToNeuralProbabilisticLM
+    domain: language_model_concept
+    role: Language modeling develops from sparse counts to learned distributed prediction.
+    source_refs: ["lm:10.1"]
+    representation: {tokens: ngrams}
+    architecture: {model: count_table}
+    interaction: {mode: next_token_prediction}
+    evaluation: {signals: [perplexity, generalization]}
+    tasks: [{name: handle_sparsity, kind: predict, goal: generalize beyond observed n-grams}]
+    reported_failures:
+      - {label: SparseData, failed_obligation: "n-gram table cannot generalize across sparse contexts", witness: {value: "unseen context"}, repair_target: [Pretrain], severity: medium}
+    preservation: ["probabilistic next-token interface"]
+    formal_analysis: {trigger: sparse_data, operator: Pretrain, obligations: [probability_normalization, generalization_test]}
+    material_analysis: {practice: language modeling, evidence: "sparse counts", residual_limits: ["learned models lose direct count interpretability"]}
+    epistemic_profile: {knowns: ["sparsity is measurable"], assumptions: ["distributed parameters support transfer"], uncertainty: medium}
+
+  - id: lm_one_hot_to_embeddings
+    name: OneHotWordsToDistributedEmbeddings
+    domain: language_model_concept
+    role: Symbolic tokens develop into vector geometry.
+    source_refs: ["lm:10.2"]
+    representation: {tokens: one_hot}
+    architecture: {embedding_layer: absent}
+    interaction: {mode: language_modeling}
+    evaluation: {signals: [similarity, analogy, downstream_transfer]}
+    tasks: [{name: learn_similarity_geometry, kind: abstract, goal: represent semantic similarity}]
+    reported_failures:
+      - {label: NoSimilarity, failed_obligation: "one-hot words encode no graded similarity", witness: {value: "orthogonal all token pairs"}, repair_target: [Embed], severity: medium}
+    preservation: ["token identity"]
+    formal_analysis: {trigger: representation_failure, operator: Embed, obligations: [identity_preservation, similarity_geometry]}
+    material_analysis: {practice: NLP representation, evidence: "distributional similarity", residual_limits: ["static embeddings miss context"]}
+    epistemic_profile: {knowns: ["one-hot geometry is degenerate"], assumptions: ["distributional geometry is useful"], uncertainty: medium}
+
+  - id: lm_static_to_contextual
+    name: StaticEmbeddingsToContextualRepresentations
+    domain: language_model_concept
+    role: Word meaning develops from one vector per type to context-sensitive representations.
+    source_refs: ["lm:10.3"]
+    representation: {embedding: static}
+    architecture: {context_encoder: absent}
+    interaction: {mode: sequence_encoding}
+    evaluation: {signals: [word_sense_disambiguation]}
+    tasks: [{name: contextualize_meaning, kind: predict, goal: represent token meaning by context}]
+    reported_failures:
+      - {label: StaticMeaning, failed_obligation: "one vector cannot represent contextual senses", witness: {value: "bank river vs bank finance"}, repair_target: [Contextualize], severity: medium}
+    preservation: ["lexical identity as input"]
+    formal_analysis: {trigger: contextuality_pressure, operator: Contextualize, obligations: [context_dependence, transfer]}
+    material_analysis: {practice: language understanding, evidence: "polysemy", residual_limits: ["long context remains costly"]}
+    epistemic_profile: {knowns: ["sense varies by context"], assumptions: ["context encoder captures relevant cues"], uncertainty: medium}
+
+  - id: lm_recurrence_to_transformer
+    name: RecurrenceToSelfAttentionTransformers
+    domain: language_model_concept
+    role: Sequence modeling develops from serial recurrence to parallel attention.
+    source_refs: ["lm:10.4"]
+    representation: {sequence: contextual}
+    architecture: {model: recurrent}
+    interaction: {mode: sequence_modeling}
+    evaluation: {signals: [long_range_dependency, throughput]}
+    tasks: [{name: reduce_sequential_bottleneck, kind: compute, goal: model long-range dependencies efficiently}]
+    reported_failures:
+      - {label: SequentialBottleneck, failed_obligation: "recurrent serial dependence limits scaling and long-range access", witness: {value: "long dependency path"}, repair_target: [SelfAttend], severity: high}
+    preservation: ["sequence-conditioned prediction"]
+    formal_analysis: {trigger: architecture_bottleneck, operator: SelfAttend, obligations: [contextual_dependency, efficiency_tradeoff]}
+    material_analysis: {practice: scalable training, evidence: "parallelizable attention", residual_limits: ["attention cost grows with context"]}
+    epistemic_profile: {knowns: ["dependency path shortened"], assumptions: ["attention can learn relevant relations"], uncertainty: medium}
+
+  - id: lm_task_specific_to_pretrained
+    name: TaskSpecificModelsToPretrainedTransfer
+    domain: language_model_concept
+    role: Task-specific systems develop into reusable pretrained models.
+    source_refs: ["lm:10.5"]
+    representation: {model: task_specific}
+    architecture: {shared_backbone: absent}
+    interaction: {mode: supervised_task}
+    evaluation: {signals: [transfer, label_efficiency]}
+    tasks: [{name: support_transfer, kind: abstract, goal: reuse learned representations across tasks}]
+    reported_failures:
+      - {label: TaskFragmentation, failed_obligation: "separate models duplicate learning across tasks", witness: {value: "many task-specific systems"}, repair_target: [Pretrain], severity: medium}
+    preservation: ["task performance as downstream objective"]
+    formal_analysis: {trigger: proof_compression_analogue, operator: Pretrain, obligations: [pretraining_objective, downstream_transfer]}
+    material_analysis: {practice: ML development, evidence: "reuse across tasks", residual_limits: ["pretraining objective mismatch"]}
+    epistemic_profile: {knowns: ["representations transfer"], assumptions: ["shared corpus supports tasks"], uncertainty: medium}
+
+  - id: lm_roles_family
+    name: EncoderDecoderAutoregressiveRoleFamily
+    domain: language_model_concept
+    role: Language models differentiate into role-specific families.
+    source_refs: ["lm:10.6"]
+    representation: {roles: [encoder, decoder, seq2seq]}
+    architecture: {families: [bidirectional_encoder, autoregressive_decoder]}
+    interaction: {mode: task_role}
+    evaluation: {signals: [task_fit]}
+    tasks: [{name: choose_model_role, kind: classify, goal: select architecture role by task interface}]
+    reported_failures:
+      - {label: ObjectiveInterfaceMismatch, failed_obligation: "one LM role is not optimal for every task interface", witness: {value: "encoding vs generation tasks"}, repair_target: [RoleSpecialize], severity: medium}
+    preservation: ["language representation core"]
+    formal_analysis: {trigger: interface_specialization, operator: RoleSpecialize, obligations: [task_fit, transfer_boundaries]}
+    material_analysis: {practice: model selection, evidence: "different tasks prefer different objectives", residual_limits: ["family boundaries blur"]}
+    epistemic_profile: {knowns: ["interface changes task behavior"], assumptions: ["role taxonomy is useful"], uncertainty: medium}
+
+  - id: lm_zero_few_shot
+    name: GenerativePretrainingToFewShotTransfer
+    domain: language_model_concept
+    role: Pretraining develops into prompt-conditioned task transfer.
+    source_refs: ["lm:10.7"]
+    representation: {context: examples_as_prompt}
+    architecture: {model: generative_pretrained}
+    interaction: {mode: prompt_conditioning}
+    evaluation: {signals: [zero_shot, few_shot]}
+    tasks: [{name: infer_task_from_context, kind: predict, goal: perform tasks from instructions/examples without weight update}]
+    reported_failures:
+      - {label: ObjectiveInterfaceMismatch, failed_obligation: "pretrained next-token objective lacks explicit task interface", witness: {value: "task described in prompt"}, repair_target: [FewShotTransfer], severity: medium}
+    preservation: ["generative prediction"]
+    formal_analysis: {trigger: prompt_interface_discovery, operator: FewShotTransfer, obligations: [context_conditioning, task_generalization]}
+    material_analysis: {practice: prompt-based use, evidence: "few-shot examples", residual_limits: ["prompt sensitivity"]}
+    epistemic_profile: {knowns: ["context can specify tasks"], assumptions: ["model internalizes patterns"], uncertainty: high}
+
+  - id: lm_scale_instrument
+    name: ScaleAsConceptualInstrument
+    domain: language_model_concept
+    role: Scale becomes an instrument for probing capability emergence.
+    source_refs: ["lm:10.8"]
+    representation: {parameters_data_compute: scale_axes}
+    architecture: {model: dense_transformer}
+    interaction: {mode: broad_task_prediction}
+    evaluation: {signals: [scaling_laws, emergence]}
+    tasks: [{name: use_scale_as_probe, kind: predict, goal: forecast capabilities and limits from scale trends}]
+    reported_failures:
+      - {label: ScaleImbalance, failed_obligation: "engineering scale lacks conceptual control without scaling law", witness: {value: "data/model/compute mismatch"}, repair_target: [ScaleInstrumentalize], severity: medium}
+    preservation: ["base model objective"]
+    formal_analysis: {trigger: scale_to_structure, operator: ScaleInstrumentalize, obligations: [scaling_curve, compute_optimality, residual_risk]}
+    material_analysis: {practice: model development, evidence: "scaling laws", residual_limits: ["scale does not solve all failures"]}
+    epistemic_profile: {knowns: ["scaling trends are empirical"], assumptions: ["trend extrapolation valid locally"], uncertainty: high}
+
+  - id: lm_base_to_instruction_assistant
+    name: BaseModelToInstructionAssistant
+    domain: language_model_concept
+    role: Base model develops into instruction-following assistant.
+    source_refs: ["lm:10.9"]
+    representation: {model: base_lm}
+    architecture: {chat_interface: absent}
+    interaction: {mode: raw_completion}
+    evaluation: {signals: [instruction_following]}
+    tasks: [{name: follow_user_intent, kind: predict, goal: respond to instructions instead of merely continuing text}]
+    reported_failures:
+      - {label: ObjectiveInterfaceMismatch, failed_obligation: "completion objective misaligns with instruction-following role", witness: {value: "continues prompt instead of obeying"}, repair_target: [InstructionTune], severity: high}
+    preservation: ["language fluency"]
+    formal_analysis: {trigger: objective_interface_mismatch, operator: InstructionTune, obligations: [instruction_following, capability_preservation]}
+    material_analysis: {practice: assistant UX, evidence: "instruction examples", residual_limits: ["preference and safety unresolved"]}
+    epistemic_profile: {knowns: ["instruction data changes interface behavior"], assumptions: ["demonstrations cover intended tasks"], uncertainty: medium}
+
+  - id: lm_instruction_to_preference
+    name: InstructionTuningToPreferenceOptimization
+    domain: language_model_concept
+    role: Instruction-following develops through preference and feedback optimization.
+    source_refs: ["lm:10.10"]
+    representation: {assistant_policy: supervised}
+    architecture: {feedback_model: optional}
+    interaction: {mode: assistant_response}
+    evaluation: {signals: [helpfulness, harmlessness, honesty]}
+    tasks: [{name: optimize_preferences, kind: classify, goal: choose better responses under human or constitutional preferences}]
+    reported_failures:
+      - {label: PreferenceAmbiguity, failed_obligation: "demonstrations underdetermine response quality tradeoffs", witness: {value: "multiple plausible answers"}, repair_target: [PreferenceOptimize], severity: high}
+    preservation: ["instruction-following"]
+    formal_analysis: {trigger: preference_ambiguity, operator: PreferenceOptimize, obligations: [preference_consistency, refusal_calibration, noncollapse]}
+    material_analysis: {practice: assistant alignment, evidence: "preference comparisons", residual_limits: ["preferences are plural and contextual"]}
+    epistemic_profile: {knowns: ["preference data ranks outputs"], assumptions: ["ranking represents desired behavior"], uncertainty: high}
+
+  - id: lm_parametric_to_rag
+    name: ParametricMemoryToRetrievalAugmentedGeneration
+    domain: language_model_concept
+    role: Parametric memory develops into external evidence-grounded generation.
+    source_refs: ["lm:10.11"]
+    representation: {memory: parametric}
+    architecture: {retriever: absent}
+    interaction: {mode: answer_generation}
+    evaluation: {signals: [source_support, freshness]}
+    tasks: [{name: ground_claims, kind: predict, goal: use retrieved evidence for claims}]
+    reported_failures:
+      - {label: NoProvenance, failed_obligation: "answer lacks source support or freshness", witness: {value: "unsupported factual claim"}, repair_target: [Retrieve], severity: high}
+    preservation: ["generative fluency"]
+    formal_analysis: {trigger: evidence_gap, operator: Retrieve, obligations: [source_support, citation_accuracy, injection_resistance]}
+    material_analysis: {practice: knowledge QA, evidence: "retrieved documents", residual_limits: ["retrieval can be wrong or stale"]}
+    epistemic_profile: {knowns: ["external source can be inspected"], assumptions: ["retrieval corpus is trustworthy enough"], uncertainty: medium}
+
+  - id: lm_generation_to_tools
+    name: LanguageGenerationToToolUse
+    domain: language_model_concept
+    role: Language generation develops into typed external action through tools.
+    source_refs: ["lm:10.12"]
+    representation: {actions: text_only}
+    architecture: {tools: []}
+    interaction: {mode: text_response}
+    evaluation: {signals: [exactness, side_effect_safety]}
+    tasks: [{name: call_exact_tools, kind: compute, goal: use typed tools for exact or external operations}]
+    reported_failures:
+      - {label: ArithmeticWeakness, failed_obligation: "model generation is unreliable for exact computation", witness: {value: "wrong arithmetic answer"}, repair_target: [Toolify], severity: high}
+    preservation: ["natural-language interface"]
+    formal_analysis: {trigger: action_space_extension, operator: Toolify, obligations: [schema_validity, tool_selection, observation_use, side_effect_safety]}
+    material_analysis: {practice: assistants and agents, evidence: "calculator/API outputs", residual_limits: ["tool misuse and security risks"]}
+    epistemic_profile: {knowns: ["tools can verify exact operations"], assumptions: ["tool schemas are valid"], uncertainty: medium}
+
+  - id: lm_tools_to_agents
+    name: ToolUseToAgenticSystems
+    domain: language_model_concept
+    role: Tool-using systems develop into bounded agents with state and planning.
+    source_refs: ["lm:10.13"]
+    representation: {state: ephemeral}
+    architecture: {tools: [available], planner: absent}
+    interaction: {mode: multi_step_task}
+    evaluation: {signals: [task_completion, boundedness]}
+    tasks: [{name: complete_long_horizon_tasks, kind: construct, goal: "plan, act, observe, and terminate safely"}]
+    reported_failures:
+      - {label: PlanningMyopia, failed_obligation: "single-step tool use fails long-horizon task", witness: {value: "needs plan and state"}, repair_target: [Agentify], severity: high}
+    preservation: ["tool-use competence"]
+    formal_analysis: {trigger: planning_state_pressure, operator: Agentify, obligations: [state_tracking, termination, approval_gates]}
+    material_analysis: {practice: coding and workflow agents, evidence: "multi-step task traces", residual_limits: ["runaway loops and unsafe actions"]}
+    epistemic_profile: {knowns: ["state and tools extend capabilities"], assumptions: ["bounded controller mitigates risk"], uncertainty: high}
+
+  - id: lm_dense_to_moe
+    name: DenseScalingToSparseMixtureOfExperts
+    domain: language_model_concept
+    role: Dense scaling develops into sparse conditional computation.
+    source_refs: ["lm:10.14"]
+    representation: {parameters: dense}
+    architecture: {routing: absent}
+    interaction: {mode: generation}
+    evaluation: {signals: [cost, capacity]}
+    tasks: [{name: improve_capacity_cost, kind: compute, goal: increase capacity without proportional inference cost}]
+    reported_failures:
+      - {label: CapacityCost, failed_obligation: "dense scaling is expensive at inference", witness: {value: "all parameters active"}, repair_target: [Sparsify], severity: medium}
+    preservation: ["model quality"]
+    formal_analysis: {trigger: efficiency_pressure, operator: Sparsify, obligations: [routing_validity, quality_preservation, latency_cost_fit]}
+    material_analysis: {practice: deployment efficiency, evidence: "conditional computation", residual_limits: ["routing instability"]}
+    epistemic_profile: {knowns: ["conditional activation reduces cost"], assumptions: ["experts specialize usefully"], uncertainty: medium}
+
+  - id: lm_text_to_multimodal
+    name: TextOnlyToMultimodalModels
+    domain: language_model_concept
+    role: Text-only modeling develops into multimodal document and world representation.
+    source_refs: ["lm:10.15", "lm:25"]
+    representation: {modalities: [text]}
+    architecture: {vision_encoder: absent}
+    interaction: {mode: text_chat}
+    evaluation: {signals: [image_doc_understanding]}
+    tasks: [{name: analyze_multimodal_inputs, kind: classify, goal: "reason over images, layout, and text"}]
+    reported_failures:
+      - {label: ModalityLimit, failed_obligation: "text-only model cannot inspect image or layout evidence", witness: {value: "document screenshot"}, repair_target: [Multimodalize], severity: high}
+    preservation: ["text reasoning"]
+    formal_analysis: {trigger: modality_limit, operator: Multimodalize, obligations: [modality_alignment, text_preservation, safety]}
+    material_analysis: {practice: document analysis, evidence: "visual/layout inputs", residual_limits: ["cross-modal hallucination risk"]}
+    epistemic_profile: {knowns: ["visual evidence adds information"], assumptions: ["alignment maps modalities faithfully"], uncertainty: high}
+
+  - id: lm_reasoning_time_compute
+    name: DirectGenerationToReasoningTimeCompute
+    domain: language_model_concept
+    role: Direct generation develops into controlled inference-time search or deliberation.
+    source_refs: ["lm:10.16", "lm:16.6"]
+    representation: {inference: direct}
+    architecture: {deliberation: absent}
+    interaction: {mode: answer_generation}
+    evaluation: {signals: [hard_problem_accuracy, cost]}
+    tasks: [{name: allocate_reasoning_compute, kind: compute, goal: spend more inference effort when tasks require it}]
+    reported_failures:
+      - {label: ArithmeticWeakness, failed_obligation: "direct generation fails multi-step reasoning", witness: {value: "complex proof or arithmetic task"}, repair_target: [ReasonAtInference], severity: high}
+    preservation: ["fast direct generation when sufficient"]
+    formal_analysis: {trigger: reasoning_time_pressure, operator: ReasonAtInference, obligations: [accuracy_gain, cost_bound, trace_evaluation]}
+    material_analysis: {practice: reasoning models, evidence: "hard task improvements", residual_limits: ["latency/cost and faithfulness"]}
+    epistemic_profile: {knowns: ["extra compute can improve some tasks"], assumptions: ["search process is controlled"], uncertainty: high}
+
+  - id: lm_static_to_living_eval
+    name: StaticBenchmarksToLivingHolisticEvaluation
+    domain: language_model_concept
+    role: Evaluation develops from static benchmarks to living multidimensional validation.
+    source_refs: ["lm:10.17"]
+    representation: {evaluation: static_benchmark}
+    architecture: {monitoring: absent}
+    interaction: {mode: deployment_eval}
+    evaluation: {signals: [drift, saturation, red_team]}
+    tasks: [{name: avoid_benchmark_saturation, kind: classify, goal: "evaluate capability, safety, reliability, and drift over time"}]
+    reported_failures:
+      - {label: EvaluationSaturation, failed_obligation: "static benchmark no longer measures deployed behavior", witness: {value: "benchmark overfitting"}, repair_target: [EvaluateContinuously], severity: high}
+    preservation: ["historical benchmark comparability"]
+    formal_analysis: {trigger: evaluation_drift, operator: EvaluateContinuously, obligations: [coverage, drift_detection, governance]}
+    material_analysis: {practice: model evaluation, evidence: "benchmark saturation", residual_limits: ["evaluation remains incomplete"]}
+    epistemic_profile: {knowns: ["benchmarks can saturate"], assumptions: ["living eval better tracks risk"], uncertainty: medium}
+
+  - id: lm_release_to_governed_deployment
+    name: ModelReleaseToGovernedDeployment
+    domain: language_model_concept
+    role: Model release develops into governed model-system deployment.
+    source_refs: ["lm:10.18", "lm:16.7"]
+    representation: {model: weights_plus_system}
+    architecture: {deployment_stack: [model, tools, policy, monitoring]}
+    interaction: {mode: public_assistant}
+    evaluation: {signals: [incidents, misuse, drift]}
+    tasks: [{name: govern_deployment, kind: classify, goal: "bound risk through monitoring, policy, incident response, and documentation"}]
+    reported_failures:
+      - {label: GovernanceGap, failed_obligation: "release lacks monitoring and response controls", witness: {value: "unmonitored deployment incident"}, repair_target: [Govern], severity: high}
+    preservation: ["useful model capability"]
+    formal_analysis: {trigger: capability_control_tension, operator: Govern, obligations: [monitoring, incident_response, rights_controls, transparency]}
+    material_analysis: {practice: deployed AI systems, evidence: "operational incidents", residual_limits: ["governance cannot prove absence of misuse"]}
+    epistemic_profile: {knowns: ["deployment changes risk surface"], assumptions: ["controls reduce risk"], uncertainty: high}
+
+  - id: lm_prompt_injection_failure
+    name: PromptInjectionInRAGToolSystems
+    domain: language_model_concept
+    role: RAG/tool systems need hierarchy and taint tracking.
+    source_refs: ["lm:15.1"]
+    representation: {context: trusted_and_untrusted_text}
+    architecture: {tools: [retrieval, action_api]}
+    interaction: {mode: tool_augmented}
+    evaluation: {signals: [injection_resistance]}
+    tasks: [{name: resist_prompt_injection, kind: simulate, goal: prevent untrusted text from controlling tool actions}]
+    reported_failures:
+      - {label: PromptInjection, failed_obligation: "retrieved untrusted content overrides instructions", witness: {value: "malicious retrieved prompt"}, repair_target: [SecureRAG, TaintTracking], severity: high}
+    preservation: ["retrieval utility"]
+    formal_analysis: {trigger: instruction_hierarchy_failure, operator: SecureRAG, obligations: [taint_tracking, hierarchy_enforcement, side_effect_safety]}
+    material_analysis: {practice: secure RAG, evidence: "red-team prompt", residual_limits: ["new attacks possible"]}
+    epistemic_profile: {knowns: ["untrusted text can affect model behavior"], assumptions: ["taint policy is enforceable"], uncertainty: high}
+
+  - id: lm_over_refusal_failure
+    name: OverRefusalAfterSafetyTuning
+    domain: language_model_concept
+    role: Safety tuning needs calibrated refusal boundaries.
+    source_refs: ["lm:15.2"]
+    representation: {policy: conservative_refusal}
+    architecture: {safety_layer: active}
+    interaction: {mode: assistant}
+    evaluation: {signals: [false_refusal, safety_violation]}
+    tasks: [{name: calibrate_refusal, kind: classify, goal: refuse harmful requests while answering benign ones}]
+    reported_failures:
+      - {label: OverRefusal, failed_obligation: "benign request refused as unsafe", witness: {value: "safe educational request"}, repair_target: [CalibrateSafetyPolicy], severity: medium}
+    preservation: ["harmful request refusal"]
+    formal_analysis: {trigger: policy_boundary_error, operator: CalibrateSafetyPolicy, obligations: [false_positive_reduction, safety_preservation]}
+    material_analysis: {practice: assistant safety, evidence: "benign refusal cases", residual_limits: ["boundary cases remain"]}
+    epistemic_profile: {knowns: ["safety labels can be overbroad"], assumptions: ["calibration data representative"], uncertainty: medium}
+
+  - id: lm_hallucinated_citation_failure
+    name: HallucinatedCitationScholarlyQA
+    domain: language_model_concept
+    role: Scholarly QA requires provenance-bound answers.
+    source_refs: ["lm:15.3", "lm:23"]
+    representation: {memory: parametric}
+    architecture: {retriever: absent}
+    interaction: {mode: scholarly_answer}
+    evaluation: {signals: [citation_accuracy]}
+    tasks: [{name: cite_verifiably, kind: predict, goal: answer only with source-supported citations}]
+    reported_failures:
+      - {label: NoProvenance, failed_obligation: "citation is hallucinated or unsupported", witness: {value: "invented paper citation"}, repair_target: [Retrieve, Verify], severity: high}
+    preservation: ["helpful scholarly synthesis"]
+    formal_analysis: {trigger: provenance_failure, operator: Retrieve, obligations: [source_support, citation_accuracy, uncertainty_calibration]}
+    material_analysis: {practice: scholarly assistant, evidence: "citation audit", residual_limits: ["retrieval corpus coverage"]}
+    epistemic_profile: {knowns: ["citation can be checked"], assumptions: ["sources are accessible"], uncertainty: medium}
+
+  - id: lm_arithmetic_failure
+    name: ArithmeticFailureToolRepair
+    domain: language_model_concept
+    role: Exact arithmetic should move from generation to verified tool use.
+    source_refs: ["lm:15.4"]
+    representation: {calculation: generated_text}
+    architecture: {calculator: absent}
+    interaction: {mode: answer_generation}
+    evaluation: {signals: [exactness]}
+    tasks: [{name: compute_exactly, kind: compute, goal: use calculator or verifier for arithmetic}]
+    reported_failures:
+      - {label: ArithmeticWeakness, failed_obligation: "generated arithmetic answer is wrong", witness: {value: "multi-digit calculation error"}, repair_target: [Toolify, Verify], severity: high}
+    preservation: ["explanatory answer"]
+    formal_analysis: {trigger: exactness_failure, operator: Toolify, obligations: [tool_selection, result_verification]}
+    material_analysis: {practice: calculation assistance, evidence: "tool result", residual_limits: ["tool availability and parsing"]}
+    epistemic_profile: {knowns: ["calculator output can verify"], assumptions: ["tool is trusted"], uncertainty: low}
+
+  - id: lm_agent_loop_runaway
+    name: AgentLoopRunaway
+    domain: language_model_concept
+    role: Agent loops need bounded state machines and termination checks.
+    source_refs: ["lm:15.5"]
+    representation: {agent_loop: unbounded}
+    architecture: {planner: recursive, stop_condition: weak}
+    interaction: {mode: autonomous_task}
+    evaluation: {signals: [termination, cost]}
+    tasks: [{name: bound_agent_loop, kind: simulate, goal: terminate safely under resource and goal constraints}]
+    reported_failures:
+      - {label: RunawayLoop, failed_obligation: "agent loops without termination", witness: {value: "repeated tool calls"}, repair_target: [AddState, Govern], severity: high}
+    preservation: ["multi-step task capability"]
+    formal_analysis: {trigger: control_failure, operator: AddState, obligations: [termination_metric, budget_limit, approval_gate]}
+    material_analysis: {practice: autonomous agents, evidence: "tool-call trace", residual_limits: ["new planning failures possible"]}
+    epistemic_profile: {knowns: ["loop trace records failure"], assumptions: ["bounded controller enforces stop"], uncertainty: high}
+
+  - id: lm_prompt_interface_discovery
+    name: DiscoverPromptAsProgrammableInterface
+    domain: language_model_concept
+    role: Prompt is discovered as a programmable task interface.
+    source_refs: ["lm:16.1"]
+    representation: {context: prompt_text}
+    architecture: {instruction_following: partial}
+    interaction: {mode: prompt_programming}
+    evaluation: {signals: [prompt_sensitivity, task_transfer]}
+    tasks: [{name: characterize_prompt_interface, kind: discover, goal: "explain how prompts specify roles, tasks, and constraints"}]
+    examples: ["instruction prompt", "few-shot prompt", "system prompt"]
+    preservation: ["text-conditioned generation"]
+    formal_analysis: {trigger: SharedInterface, operator: FormalizeOperation, obligations: [interface_fields, constraint_hierarchy]}
+    material_analysis: {practice: prompt engineering, evidence: "prompt variants alter behavior", residual_limits: ["brittleness and injection"]}
+    epistemic_profile: {knowns: ["prompts causally shape outputs"], assumptions: ["interface can be typed"], uncertainty: high}
+
+  - id: lm_context_window_memory
+    name: DiscoverContextWindowAsWorkingMemory
+    domain: language_model_concept
+    role: Context window is discovered as bounded working memory.
+    source_refs: ["lm:16.2"]
+    representation: {context_window: finite}
+    architecture: {attention: context_limited}
+    interaction: {mode: dialogue}
+    evaluation: {signals: [context_overflow, retention]}
+    tasks: [{name: manage_context_memory, kind: discover, goal: reason about constraints and loss from finite context}]
+    reported_failures:
+      - {label: ContextOverflow, failed_obligation: "important prior context is lost", witness: {value: "long dialogue overflow"}, repair_target: [AddState], severity: medium}
+    preservation: ["local context conditioning"]
+    formal_analysis: {trigger: memory_bound, operator: AddState, obligations: [state_summary, retrieval_boundary]}
+    material_analysis: {practice: chat systems, evidence: "context truncation", residual_limits: ["summaries may lose detail"]}
+    epistemic_profile: {knowns: ["window size is finite"], assumptions: ["external state can preserve salient facts"], uncertainty: medium}
+
+  - id: lm_alignment_interface
+    name: DiscoverAlignmentAsInterfaceTransformation
+    domain: language_model_concept
+    role: Alignment is modeled as an interface transformation between capability and acceptable behavior.
+    source_refs: ["lm:16.3"]
+    representation: {policy: base_capability_plus_constraints}
+    architecture: {alignment_layer: preference_policy}
+    interaction: {mode: assistant}
+    evaluation: {signals: [helpfulness, harmlessness, honesty]}
+    tasks: [{name: formalize_alignment_interface, kind: abstract, goal: represent alignment as transformation with tradeoffs}]
+    examples: ["instruction tuning", "RLHF", "constitutional feedback"]
+    preservation: ["core capabilities"]
+    formal_analysis: {trigger: capability_control_tension, operator: PreferenceOptimize, obligations: [capability_preservation, risk_bound, refusal_calibration]}
+    material_analysis: {practice: deployed assistants, evidence: "preference and policy feedback", residual_limits: ["value pluralism"]}
+    epistemic_profile: {knowns: ["post-training changes behavior"], assumptions: ["feedback captures desired norms"], uncertainty: high}
+
+  - id: lm_external_memory_discovery
+    name: DiscoverExternalMemory
+    domain: language_model_concept
+    role: External memory is discovered as a repair to staleness and context limits.
+    source_refs: ["lm:16.4"]
+    representation: {memory: parametric_and_contextual}
+    architecture: {external_store: candidate}
+    interaction: {mode: retrieval_augmented}
+    evaluation: {signals: [freshness, recall]}
+    tasks: [{name: add_external_memory, kind: discover, goal: decide when external memory improves epistemic status}]
+    reported_failures:
+      - {label: KnowledgeStaleness, failed_obligation: "parametric memory lacks current information", witness: {value: "post-training fact"}, repair_target: [Retrieve], severity: medium}
+    preservation: ["model synthesis"]
+    formal_analysis: {trigger: memory_externalization, operator: Retrieve, obligations: [source_freshness, provenance, privacy]}
+    material_analysis: {practice: knowledge systems, evidence: "updated documents", residual_limits: ["retrieval quality"]}
+    epistemic_profile: {knowns: ["external source date can be checked"], assumptions: ["store is curated"], uncertainty: medium}
+
+  - id: lm_tool_api_discovery
+    name: DiscoverToolAPIsAsActionSpace
+    domain: language_model_concept
+    role: Tool APIs are discovered as typed extensions of the action space.
+    source_refs: ["lm:16.5"]
+    representation: {actions: text_or_tool_call}
+    architecture: {tool_router: candidate}
+    interaction: {mode: tool_calling}
+    evaluation: {signals: [schema_validity, action_success]}
+    tasks: [{name: type_action_space, kind: discover, goal: identify when tool calls are safer or more exact than text}]
+    examples: ["calculator", "search", "file edit"]
+    preservation: ["natural language planning"]
+    formal_analysis: {trigger: action_space_discovery, operator: Toolify, obligations: [schema_types, approval_policy, observation_grounding]}
+    material_analysis: {practice: tool-using assistants, evidence: "API success/failure logs", residual_limits: ["side effects and injection"]}
+    epistemic_profile: {knowns: ["tool results are distinct evidence type"], assumptions: ["API contract reliable"], uncertainty: medium}
+
+  - id: lm_reasoning_compute_discovery
+    name: DiscoverReasoningTimeCompute
+    domain: language_model_concept
+    role: Inference-time compute is discovered as a controllable reasoning resource.
+    source_refs: ["lm:16.6"]
+    representation: {compute_policy: adaptive}
+    architecture: {deliberation_controller: candidate}
+    interaction: {mode: hard_task_answering}
+    evaluation: {signals: [accuracy_cost_curve]}
+    tasks: [{name: decide_compute_budget, kind: discover, goal: allocate reasoning effort by task difficulty}]
+    examples: ["proof search", "multi-step arithmetic", "planning"]
+    preservation: ["fast response path"]
+    formal_analysis: {trigger: compute_allocation, operator: ReasonAtInference, obligations: [cost_bound, accuracy_curve, stopping_rule]}
+    material_analysis: {practice: reasoning systems, evidence: "accuracy improves with compute on hard tasks", residual_limits: ["faithfulness of reasoning traces"]}
+    epistemic_profile: {knowns: ["compute changes outcomes"], assumptions: ["budget policy can be calibrated"], uncertainty: high}
+
+  - id: lm_governance_discovery
+    name: DiscoverModelSystemGovernance
+    domain: language_model_concept
+    role: Governance is discovered as a necessary layer of deployed model systems.
+    source_refs: ["lm:16.7"]
+    representation: {system: model_plus_controls}
+    architecture: {monitoring: candidate}
+    interaction: {mode: deployed_use}
+    evaluation: {signals: [incidents, misuse, drift]}
+    tasks: [{name: discover_governance_layer, kind: discover, goal: identify controls required by deployment risk}]
+    examples: ["model card", "monitoring", "incident response"]
+    preservation: ["useful access"]
+    formal_analysis: {trigger: deployment_risk, operator: Govern, obligations: [monitoring, documentation, escalation]}
+    material_analysis: {practice: responsible deployment, evidence: "operational incidents", residual_limits: ["unknown misuse modes"]}
+    epistemic_profile: {knowns: ["deployment is a system property"], assumptions: ["governance controls reduce harm"], uncertainty: high}
+
+  - id: lm_scholarly_assistant_trace
+    name: ScholarlyAssistantEndToEndTrace
+    domain: language_model_concept
+    role: End-to-end trace from citation hallucination to grounded assistant.
+    source_refs: ["lm:23"]
+    representation: {assistant: scholarly}
+    architecture: {retriever: absent, verifier: absent}
+    interaction: {mode: scholarly_qa}
+    evaluation: {signals: [citation_accuracy, source_support]}
+    tasks: [{name: answer_with_verified_sources, kind: predict, goal: produce source-supported scholarly answer}]
+    reported_failures:
+      - {label: NoProvenance, failed_obligation: "assistant hallucinated citation", witness: {value: "invented citation trace"}, repair_target: [Retrieve, Verify], severity: high}
+    preservation: ["scholarly synthesis"]
+    formal_analysis: {trigger: end_to_end_repair, operator: Retrieve, obligations: [source_support, verification, uncertainty_reporting]}
+    material_analysis: {practice: scholarly QA, evidence: "trace with citation failure", residual_limits: ["source corpus scope"]}
+    epistemic_profile: {knowns: ["citation audit can falsify output"], assumptions: ["retrieval improves grounding"], uncertainty: medium}
+
+  - id: lm_assistant_to_coding_agent_trace
+    name: AssistantToCodingAgentEndToEndTrace
+    domain: language_model_concept
+    role: End-to-end trace from assistant to coding agent under long-horizon task pressure.
+    source_refs: ["lm:24"]
+    representation: {assistant: conversational}
+    architecture: {tools: [shell, filesystem], planner: weak}
+    interaction: {mode: coding_task}
+    evaluation: {signals: [repo_changes, tests, safety]}
+    tasks: [{name: complete_coding_task, kind: construct, goal: "plan edits, use tools, run tests, and report outcome"}]
+    reported_failures:
+      - {label: PlanningMyopia, failed_obligation: "assistant cannot maintain repo-state task over multiple steps", witness: {value: "coding task requires plan/tool/state"}, repair_target: [Agentify, AddState], severity: high}
+    preservation: ["helpful dialogue"]
+    formal_analysis: {trigger: agentic_shape, operator: Agentify, obligations: [state, tools, validation, rollback_safety]}
+    material_analysis: {practice: coding agent, evidence: "repo task traces", residual_limits: ["tool side effects and hidden state"]}
+    epistemic_profile: {knowns: ["tests verify code behavior"], assumptions: ["sandbox and planning controls are adequate"], uncertainty: high}
+
+  - id: lm_multimodal_document_trace
+    name: TextModelToMultimodalDocumentAnalystTrace
+    domain: language_model_concept
+    role: End-to-end trace from text-only assistant to multimodal document analyst.
+    source_refs: ["lm:25"]
+    representation: {modalities: [text]}
+    architecture: {vision_layout_encoder: absent}
+    interaction: {mode: document_analysis}
+    evaluation: {signals: [layout_understanding, citation_to_region]}
+    tasks: [{name: analyze_document_image, kind: classify, goal: use visual layout and text evidence together}]
+    reported_failures:
+      - {label: ModalityLimit, failed_obligation: "text-only assistant cannot inspect document image/layout", witness: {value: "scanned table and layout"}, repair_target: [Multimodalize], severity: high}
+    preservation: ["textual reasoning and summarization"]
+    formal_analysis: {trigger: modality_extension, operator: Multimodalize, obligations: [visual_grounding, text_preservation, uncertainty_reporting]}
+    material_analysis: {practice: document analysis, evidence: "image/layout artifacts", residual_limits: ["OCR and vision errors"]}
+    epistemic_profile: {knowns: ["image carries non-text evidence"], assumptions: ["multimodal encoder grounds regions"], uncertainty: high}

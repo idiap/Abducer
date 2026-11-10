@@ -1,0 +1,74 @@
+{
+  "schema_version": 1,
+  "provider": "opencode",
+  "profile_version": "2026-08-19",
+  "retrieved_at": "2026-08-19",
+  "sources": [
+    {"title": "OpenCode configuration", "url": "https://opencode.ai/docs/config/"},
+    {"title": "OpenCode plugins", "url": "https://opencode.ai/docs/plugins/"},
+    {"title": "OpenCode agents", "url": "https://opencode.ai/docs/agents/"},
+    {"title": "OpenCode commands", "url": "https://opencode.ai/docs/commands/"},
+    {"title": "OpenCode agent skills", "url": "https://opencode.ai/docs/skills/"},
+    {"title": "OpenCode MCP servers", "url": "https://opencode.ai/docs/mcp-servers/"},
+    {"title": "OpenCode tools", "url": "https://opencode.ai/docs/tools/"}
+  ],
+  "project_markers": ["opencode.json", "opencode.jsonc", ".opencode", ".opencode/plugins", ".opencode/skills", ".opencode/agents"],
+  "artifact_rules": [
+    {"id": "configuration", "kind": "configuration", "globs": ["opencode.json", "opencode.jsonc"], "priority": 110},
+    {"id": "instructions", "kind": "instructions", "globs": ["AGENTS.md", "**/AGENTS.md", "CLAUDE.md", "**/CLAUDE.md"], "priority": 60},
+    {"id": "plugins", "kind": "executable_plugin", "globs": [".opencode/plugins/*.js", ".opencode/plugins/*.ts", ".opencode/plugins/**/*.js", ".opencode/plugins/**/*.ts", ".opencode/plugin/*.js", ".opencode/plugin/*.ts"], "priority": 110},
+    {"id": "agents", "kind": "agent", "globs": [".opencode/agents/*.md", ".opencode/agents/**/*.md", ".opencode/agent/*.md", ".opencode/agent/**/*.md"], "priority": 100},
+    {"id": "commands", "kind": "command", "globs": [".opencode/commands/*.md", ".opencode/commands/**/*.md", ".opencode/command/*.md", ".opencode/command/**/*.md"], "priority": 100},
+    {"id": "tools", "kind": "executable_tool", "globs": [".opencode/tools/*.js", ".opencode/tools/*.ts", ".opencode/tools/**/*.js", ".opencode/tools/**/*.ts", ".opencode/tool/*.js", ".opencode/tool/*.ts"], "priority": 100},
+    {"id": "skills", "kind": "skill", "globs": [".opencode/skills/*/SKILL.md", ".opencode/skills/**/SKILL.md"], "priority": 100},
+    {"id": "skill_resources", "kind": "skill_resource", "globs": [".opencode/skills/*/assets/**", ".opencode/skills/*/references/**", ".opencode/skills/*/scripts/**"], "priority": 90},
+    {"id": "claude_compatible_skills", "kind": "skill", "globs": [".claude/skills/*/SKILL.md", ".claude/skills/**/SKILL.md"], "priority": 70},
+    {"id": "agent_compatible_skills", "kind": "skill", "globs": [".agents/skills/*/SKILL.md", ".agents/skills/**/SKILL.md"], "priority": 70}
+  ],
+  "hooks": {
+    "contract": "javascript_or_typescript_plugin_callbacks",
+    "configuration_globs": [".opencode/plugins/*.js", ".opencode/plugins/*.ts", ".opencode/plugin/*.js", ".opencode/plugin/*.ts"],
+    "events": {
+      "command.executed": {"matcher": null, "guard_role": "none"},
+      "file.edited": {"matcher": null, "guard_role": "post_generation"},
+      "file.watcher.updated": {"matcher": null, "guard_role": "none"},
+      "installation.updated": {"matcher": null, "guard_role": "none"},
+      "lsp.client.diagnostics": {"matcher": null, "guard_role": "none"},
+      "lsp.updated": {"matcher": null, "guard_role": "none"},
+      "message.part.removed": {"matcher": null, "guard_role": "none"},
+      "message.part.updated": {"matcher": null, "guard_role": "none"},
+      "message.removed": {"matcher": null, "guard_role": "none"},
+      "message.updated": {"matcher": null, "guard_role": "none"},
+      "permission.asked": {"matcher": null, "guard_role": "execution"},
+      "permission.replied": {"matcher": null, "guard_role": "none"},
+      "server.connected": {"matcher": null, "guard_role": "none"},
+      "session.created": {"matcher": null, "guard_role": "context"},
+      "session.compacted": {"matcher": null, "guard_role": "none"},
+      "session.deleted": {"matcher": null, "guard_role": "checkpoint_advisory"},
+      "session.diff": {"matcher": null, "guard_role": "none"},
+      "session.error": {"matcher": null, "guard_role": "checkpoint_advisory"},
+      "session.idle": {"matcher": null, "guard_role": "completion"},
+      "session.status": {"matcher": null, "guard_role": "none"},
+      "session.updated": {"matcher": null, "guard_role": "none"},
+      "todo.updated": {"matcher": null, "guard_role": "none"},
+      "shell.env": {"matcher": null, "guard_role": "secret"},
+      "tool.execute.after": {"matcher": "input.tool", "guard_role": "post_generation"},
+      "tool.execute.before": {"matcher": "input.tool", "guard_role": "source_write_execution_secret"},
+      "tui.prompt.append": {"matcher": null, "guard_role": "none"},
+      "tui.command.execute": {"matcher": null, "guard_role": "execution"},
+      "tui.toast.show": {"matcher": null, "guard_role": "none"}
+    },
+    "handler_types": {
+      "plugin_callback": {"status": "executed"},
+      "event_subscriber": {"status": "executed"}
+    },
+    "unknown_event": "opaque_executable"
+  },
+  "limitations": [
+    "OpenCode hooks are executable plugin callbacks, not a declarative hooks.json contract.",
+    "Plugin discovery must inventory JavaScript and TypeScript without importing or executing them.",
+    "Static event-name extraction is evidence only; computed keys and arbitrary plugin behavior remain opaque executable logic.",
+    "OpenCode compatibility discovery of .claude/skills and .agents/skills creates intentional mixed-provider ownership.",
+    "No native Prism Hooks[OpenCode] type or OpenCode model adapter is available in the current Prism execution path."
+  ]
+}

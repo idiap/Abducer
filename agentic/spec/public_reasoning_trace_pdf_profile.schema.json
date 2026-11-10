@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "agentic/spec/public_reasoning_trace_pdf_profile.schema.json",
+  "title": "Public reasoning trace PDF projection profile",
+  "type": "object",
+  "required": ["version", "fallback", "profiles"],
+  "properties": {
+    "version": {"const": 1},
+    "fallback": {"$ref": "#/$defs/profile"},
+    "profiles": {"type": "object", "additionalProperties": {"$ref": "#/$defs/profile"}}
+  },
+  "$defs": {
+    "profile": {
+      "type": "object",
+      "required": ["visible_name", "focus_question", "spine_label", "required_contrasts", "topology_mode"],
+      "properties": {
+        "visible_name": {"type": "string"},
+        "focus_question": {"type": "string"},
+        "spine_label": {"type": "string"},
+        "required_contrasts": {"type": "array", "items": {"type": "string"}},
+        "topology_mode": {"enum": ["linear", "dag", "fork_join", "neutral"]},
+        "body_sections": {"type": "array", "items": {"type": "string"}},
+        "appendix_sections": {"type": "array", "items": {"type": "string"}}
+      },
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,602 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools,bm,booktabs,longtable,array}
+\usepackage{xcolor}
+\usepackage[hidelinks]{hyperref}
+\usepackage{microtype}
+
+\hypersetup{
+  pdftitle={A Four-Dimensional SU(2) Quotient-Fiber Block Theorem},
+  pdfauthor={Research dossier},
+  pdfsubject={Finite-block coercivity and local heat-kernel stability},
+  pdfkeywords={Yang--Mills, SU(2), heat kernel, gauge quotient, renormalization group}
+}
+
+\definecolor{provedgreen}{RGB}{20,105,55}
+\definecolor{conditionalblue}{RGB}{25,65,145}
+\definecolor{openred}{RGB}{150,25,25}
+\newcommand{\proved}{\textcolor{provedgreen}{\textsc{proved}}}
+\newcommand{\conditional}{\textcolor{conditionalblue}{\textsc{conditional}}}
+\newcommand{\open}{\textcolor{openred}{\textsc{open}}}
+\newcommand{\R}{\mathbb R}
+\newcommand{\E}{\mathbb E}
+\newcommand{\Cov}{\operatorname{Cov}}
+\newcommand{\rank}{\operatorname{rank}}
+\newcommand{\im}{\operatorname{im}}
+\newcommand{\spec}{\operatorname{spec}}
+\newcommand{\su}{\mathfrak{su}(2)}
+\newcommand{\W}{W_2}
+\newcommand{\ind}{\mathbf 1}
+
+\newtheorem{definition}{Definition}[section]
+\newtheorem{theorem}[definition]{Theorem}
+\newtheorem{proposition}[definition]{Proposition}
+\newtheorem{lemma}[definition]{Lemma}
+\newtheorem{corollary}[definition]{Corollary}
+\theoremstyle{remark}
+\newtheorem{remark}[definition]{Remark}
+\newtheorem{obligation}[definition]{Open obligation}
+
+\title{A Four-Dimensional $SU(2)$ Quotient--Fiber Block Theorem\\
+\large From Gauge-Zero-Mode Removal to Local Heat-Kernel Transport}
+\author{Research dossier---finite theorem, nonlinear local stability, and frontier audit}
+\date{20 July 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We construct an explicit four-dimensional $2^4$ cubical block for the tangent
+theory of $SU(2)$ lattice gauge fields and separate infinitesimal gauge modes,
+retained coarse curvature data, and eliminated conditional-fiber variables.
+The scalar block has $81$ vertices, $216$ links, and $216$ plaquettes.  After
+removing gauge directions its physical tangent space has dimension $136$; the
+$24$ displayed coarse boundary-face fluxes have exact rank $17$, leaving a
+$119$-dimensional scalar fiber.  Tensoring with $\su$ gives dimensions $408$,
+$51$, and $357$.  A product-Hodge calculation proves
+$\|d_1A\|^2\ge2\|A\|^2$ on the gauge-orthogonal quotient and hence on the
+fiber.  Gaussian conditioning changes only the transported mean; the centered
+fiber covariance is exactly independent of retained data.  We then prove a
+finite-dimensional nonlinear stability theorem: explicit Hessian and
+centered cross-gradient bounds for the local $SU(2)$ heat-kernel action imply
+strong convexity and a Wasserstein fiber coefficient below one.  Heat-kernel
+asymptotics and BCH analyticity ensure such bounds on a sufficiently small
+local tube, but no explicit cutoff-uniform tube, global orbit atlas, defect
+polymer estimate, multiscale iteration, or infrared crossover is proved.
+\end{abstract}
+
+\begin{center}
+\fbox{\parbox{0.92\textwidth}{\textbf{Claim level.}
+The cubical, Hodge, rank, and Gaussian results are \proved\ restricted
+finite-block theorems.  The nonlinear transport implication is \proved\ from
+explicit derivative bounds; its local heat-kernel realization has existential
+finite-block constants.  Full-measure RG iteration, crossover, continuum
+existence, and the Clay mass gap remain \open.}}
+\end{center}
+
+\tableofcontents
+
+\section{Why this is the next target}
+
+The exact Clay problem asks for a nontrivial axiomatic pure Yang--Mills theory
+on $\R^4$ with a positive Hamiltonian gap for every compact simple gauge group
+\cite{JaffeWitten}.  Earlier stages of the present programme established two
+diagnostic facts.  First, translated concentrated heat kernels have
+total-variation distance tending to one, so a worst-case microscopic TV basin
+cannot be cutoff uniform.  Second, a block variable can respond to boundary
+data because it transports a retained coarse mode even when its centered
+fluctuation is independent of that data.  The local object to control is thus
+the conditional fiber after gauge and retained modes have been removed.
+
+This paper moves that idea from a two-variable abelian calibration to an
+explicit four-dimensional cubical gauge complex with $\su$ color.  It does not
+attempt the ultraviolet-to-infrared crossover.  The target is the finite local
+theorem that must precede such an iteration.
+
+We use the heat-kernel plaquette action because it is an exact class-function
+regulator with transparent weak-field asymptotics and a long-standing role as
+an alternative lattice action \cite{MenottiOnofri}.  Background minimizers and
+gauge-covariant expansions are central in Balaban's RG analysis
+\cite{BalabanBackground,BalabanPropagators}; our local centering is designed to
+be compatible with that architecture.
+
+\section{The frozen cubical block}
+
+Let $I_2$ be the cellular interval with vertices $\{0,1,2\}$ and two positively
+oriented edges.  The block is
+\[
+ B=I_2^4.
+\]
+Let $C^q(B;\R)$ be the real cellular $q$-cochains with the standard Euclidean
+inner product.  The first two coboundaries are
+\[
+ d_0:C^0(B;\R)\longrightarrow C^1(B;\R),
+ \qquad
+ d_1:C^1(B;\R)\longrightarrow C^2(B;\R),
+\]
+with $d_1d_0=0$.
+
+\begin{proposition}[Cell counts and exactness, \proved]\label{prop:counts}
+The block has
+\[
+ |B_0|=81,\qquad |B_1|=216,\qquad |B_2|=216.
+\]
+Moreover,
+\[
+ \rank d_0=80,
+ \qquad \rank d_1=136,
+ \qquad \ker d_1=\im d_0.
+\]
+\end{proposition}
+\begin{proof}
+Product counting gives
+\[
+ |B_0|=3^4,
+ \quad |B_1|=4\cdot2\cdot3^3,
+ \quad |B_2|=\binom42 2^2 3^2.
+\]
+The one-skeleton is connected, so $\ker d_0$ consists of constants and
+$\rank d_0=81-1=80$.  The cubical block is contractible, hence
+$H^1(B;\R)=0$ and $\ker d_1=\im d_0$.  Rank--nullity then gives
+$\rank d_1=216-80=136$.
+\end{proof}
+
+The infinitesimal link field for $SU(2)$ is
+\[
+ \mathcal A=C^1(B;\R)\otimes\su.
+\]
+The infinitesimal gauge directions are $\im d_0\otimes\su$.  We represent the
+quotient by the orthogonal Coulomb slice
+\begin{equation}\label{eq:H}
+ \mathcal H=\ker d_0^*\otimes\su.
+\end{equation}
+This is a local tangent representation, not a global gauge fixing.
+
+\begin{corollary}[Physical tangent dimension, \proved]
+The scalar quotient $\ker d_0^*$ has dimension $136$.  The $\su$-valued
+physical tangent space $\mathcal H$ has dimension $408$, while the gauge
+subspace has dimension $240$.
+\end{corollary}
+
+\section{Retained coarse curvature and the conditional fiber}
+
+For every coordinate pair $\mu<\nu$ and every choice of the remaining two
+coordinates in $\{0,2\}$, sum $d_1A$ over the four fine plaquettes in that
+$2\times2$ boundary face.  This defines
+\[
+ C:C^1(B;\R)\longrightarrow\R^{24}.
+\]
+It is invariant under linearized gauge transformations because $Cd_0=0$.
+
+\begin{theorem}[Exact retained rank, \proved]\label{thm:rank}
+The $24$ displayed coarse face fluxes have rank $17$.  Their restriction to
+$\ker d_0^*$ also has rank $17$.
+\end{theorem}
+\begin{proof}
+Let $P:C^1(I_2^4)\to C^1(I_1^4)$ sum each pair of fine boundary links into a
+coarse link.  Discrete Stokes gives
+$C=d_{1,\mathrm{coarse}}P$.  The map $P$ is onto.  The single coarse
+hypercube has $16$ vertices and $32$ links and is contractible, so
+\[
+ \rank d_{1,\mathrm{coarse}}=32-(16-1)=17.
+\]
+Therefore $\rank C=17$.  Since $C$ vanishes on $\im d_0$ and
+$C^1=\im d_0\oplus\ker d_0^*$, its restriction to the orthogonal quotient has
+the same rank.  The accompanying exact rational elimination independently
+certifies the rank.
+\end{proof}
+
+Choose an orthonormal identification of the image of $C|_{\ker d_0^*}$ with
+$\R^{17}$ and denote the resulting independent retained map by
+\[
+ \overline C:\ker d_0^*\to\R^{17}.
+\]
+Define the scalar fiber and the $\su$ fiber by
+\begin{equation}\label{eq:fiber}
+ F=\ker d_0^*\cap\ker C,
+ \qquad \mathcal F=F\otimes\su.
+\end{equation}
+
+\begin{corollary}[Base and fiber dimensions, \proved]
+The scalar base and fiber dimensions are $17$ and $119$.  Their $\su$
+counterparts have dimensions
+\[
+ \dim\mathcal Y=51,
+ \qquad \dim\mathcal F=357.
+\]
+\end{corollary}
+
+The seven dependencies among the $24$ displayed fluxes are structural coarse
+Bianchi/boundary relations.  Treating all $24$ as independent would make the
+conditional problem ill-typed.
+
+\section{Certified quotient-fiber coercivity}
+
+The tangent Yang--Mills quadratic form is
+\[
+ Q_t(A)=\frac1{2t}\|d_1A\|^2,
+ \qquad A\in\ker d_0^*.
+\]
+
+\begin{theorem}[Product-Hodge coercivity, \proved]\label{thm:hodge}
+For the block $I_2^4$,
+\begin{equation}\label{eq:coercivity}
+ \|d_1A\|^2\ge2\|A\|^2
+ \qquad(A\in\ker d_0^*).
+\end{equation}
+Consequently the same inequality holds for $A\in F$ and componentwise on
+$\mathcal F$.
+\end{theorem}
+\begin{proof}
+On the interval $I_2$, the nonzero spectra of the vertex and edge Laplacians
+are
+\[
+ \spec(d_0^*d_0)=\{0,1,3\},
+ \qquad \spec(d_0d_0^*)=\{1,3\}.
+\]
+The Hodge Laplacian on product one-cochains is the tensor sum of one edge
+Laplacian and three vertex Laplacians.  Its eigenvalue-one sector uses the
+edge eigenvalue $1$ and three constant vertex modes.  These modes are exact:
+they are gradients of the corresponding vertex eigenfunctions.  Hence they
+are orthogonal to $\ker d_0^*$.  The next possible tensor-sum eigenvalue is
+$1+1=2$.  On $\ker d_0^*$,
+\[
+ \Delta_1=d_0d_0^*+d_1^*d_1=d_1^*d_1,
+\]
+which proves \eqref{eq:coercivity}.  Restriction to $F$ can only increase the
+Rayleigh minimum, and tensoring with $\su$ repeats each scalar eigenvalue three
+times.
+\end{proof}
+
+The executable spectral calculation gives
+\[
+ \lambda_{\min}(d_1^*d_1|_{\ker d_0^*})=2,
+ \qquad
+ \lambda_{\min}(d_1^*d_1|_F)\approx3.438447187.
+\]
+The theorem uses the analytic lower bound $2$; the sharper number is a
+floating-point calibration.
+
+\section{Exact Gaussian conditional-fiber theorem}
+
+Let $L=d_1^*d_1|_{\ker d_0^*}$ and choose independent base coordinates so
+that $B:\ker d_0^*\to\R^{17}$ has full row rank.  Consider the centered
+Gaussian tangent measure with precision $L/t$, conditioned on $BA=y$.
+
+\begin{theorem}[Transported mean and invariant centered fiber, \proved]
+\label{thm:gaussian}
+Let
+\[
+ G=BL^{-1}B^*,
+ \qquad M=L^{-1}B^*G^{-1}.
+\]
+Then
+\begin{align}
+ \E[A\mid BA=y]&=My,\label{eq:mean}\\
+ \operatorname{Cov}(A\mid BA=y)
+ &=t\bigl[L^{-1}-L^{-1}B^*G^{-1}BL^{-1}\bigr].\label{eq:cov}
+\end{align}
+In particular, the centered conditional variable
+$Z=A-My$ has a law independent of $y$ and is supported on $F$.  Its centered
+base-response coefficient is exactly zero.
+\end{theorem}
+\begin{proof}
+The matrix $G$ is positive definite because $B$ has full row rank and $L>0$.
+The standard constrained-Gaussian completion of the square gives
+\eqref{eq:mean}--\eqref{eq:cov}.  Neither the covariance nor its support
+depends on $y$.  Subtracting $My$ therefore produces the same fiber law for
+every retained value.
+\end{proof}
+
+The computed Euclidean operator norm of $M$ is approximately $0.393174006$.
+This number depends on the normalization of base coordinates and is not a
+physical invariant.  The exact zero after centering is the invariant content.
+
+\section{Local nonlinear \texorpdfstring{$SU(2)$}{SU(2)} heat-kernel stability}
+
+Let $p_t$ be the $SU(2)$ heat kernel and let $U_e=\exp A_e$ in a sufficiently
+small logarithmic chart.  The local block density, including the logarithmic
+Haar Jacobian $J(A)$, has action
+\begin{equation}\label{eq:action}
+ S_t(A)=-\sum_{p\subset B}\log p_t(U_p(A))-\log J(A).
+\end{equation}
+On a local Coulomb slice, parallel transport all coarse boundary-face
+holonomies to a fixed root and take logarithms.  At the trivial connection the
+differential of this displayed retained map is $C\otimes I_{\su}$ and has rank
+$51$.  Choose $51$ fixed independent linear combinations whose differential
+is surjective.  The submersion theorem then gives local coordinates
+\[
+ A=\Phi(y,z),qquad y\in\R^{51},\quad z\in\R^{357},
+\]
+in which $y$ is retained and $z$ parameterizes the conditional fiber.
+
+\begin{lemma}[Finite-block heat-kernel expansion, \proved\ (local)]\label{lem:hk}
+There exist $t_0,\rho_0,C_B,c_B>0$ such that, for
+$0<t\le t_0$ and $\|\Phi(y,z)\|_\infty\le\rho\le\rho_0$,
+\begin{equation}\label{eq:hessian-remainder}
+ \left\|t\nabla_z^2S_t(\Phi(y,z))-L_F\otimes I_{\su}\right\|
+ \le C_B\bigl(\rho+t+e^{-c_B/t}\bigr),
+\end{equation}
+after a fixed bounded normalization of the local coordinates.  Here
+$L_F=d_1^*d_1|_F$ at the origin.
+\end{lemma}
+\begin{proof}
+On a compact logarithmic ball strictly inside the cut locus, the heat-kernel
+parametrix and all of its required derivatives have the form
+\[
+ -\log p_t(\exp X)=\frac{\|X\|^2}{2t}+a_0(X)+O(e^{-c/t}),
+\]
+after reducing $c$ if derivatives contribute polynomial powers of $t^{-1}$.
+The functions $a_0$ and the logarithmic Haar Jacobian have bounded derivatives.
+The plaquette BCH expansion is
+\[
+ \log U_p(A)=d_1A|_p+O(\|A\|^2),
+\]
+with bounded derivatives on the fixed finite block.  Differentiating twice
+shows that the difference from $t^{-1}d_1^*d_1$ is
+$O(\rho/t)+O(1)+O(e^{-c/t}/t)$.  Multiplication by $t$ yields
+\eqref{eq:hessian-remainder}.  The local coordinate map and its inverse have
+bounded derivatives after shrinking $\rho_0$.
+\end{proof}
+
+\begin{theorem}[Nonlinear fiber coercivity, \proved]\label{thm:nonlinear}
+Set
+\[
+ \eta=C_B\bigl(\rho+t+e^{-c_B/t}\bigr).
+\]
+Whenever $\eta<2$, the local nonlinear fiber potential is strongly convex
+with
+\begin{equation}\label{eq:alpha}
+ \nabla_z^2S_t(\Phi(y,z))\ge\frac{2-\eta}{t}I.
+\end{equation}
+It consequently has a unique conditional minimizer in every convex local
+fiber domain on which the bound holds.
+\end{theorem}
+\begin{proof}
+Theorem~\ref{thm:hodge} gives
+$L_F\otimes I_{\su}\ge2I$.  Apply the operator-norm perturbation bound
+\eqref{eq:hessian-remainder}.  Strong convexity gives uniqueness.
+\end{proof}
+
+This is a genuine local nonlinear statement, but the constants are
+existential finite-block constants.  A multiscale theorem requires explicit
+values in an effective-action norm.
+
+\section{Centered transport from derivative certificates}
+
+Let $z_t^\star(y)$ be the conditional minimizer and recenter the common convex
+fiber chart $D\subset\R^{357}$ by $w=z-z_t^\star(y)$.  Write the centered
+potential as $V_y(w)$ and the normalized measure as
+\[
+ \widetilde\nu_y(dw)=Z_y^{-1}e^{-V_y(w)}\ind_D(w)\,dw.
+\]
+
+\begin{lemma}[Strong-convexity transport, \proved]\label{lem:transport}
+Suppose $\nabla^2V_y\ge\alpha I$ on the same convex domain $D$ for all $y$, and
+\[
+ \sup_{w\in D}\|\nabla V_y(w)-\nabla V_{y'}(w)\|
+ \le L\,d_Y(y,y').
+\]
+Then
+\begin{equation}\label{eq:w2}
+ W_2(\widetilde\nu_y,\widetilde\nu_{y'})
+ \le\frac{L}{\alpha}d_Y(y,y').
+\end{equation}
+\end{lemma}
+\begin{proof}
+Strong convexity on a convex domain gives the logarithmic Sobolev inequality
+with constant $1/\alpha$.  Applied to the density ratio, it bounds relative
+entropy by $1/(2\alpha)$ times relative Fisher information.  The gradient
+hypothesis bounds that Fisher information by $L^2d_Y(y,y')^2$.  The
+logarithmic Sobolev inequality implies the quadratic transport inequality
+\cite{OttoVillani}, yielding \eqref{eq:w2}.
+\end{proof}
+
+For the quadratic tangent action, centering makes $L=0$.
+
+\begin{lemma}[Centered cross-gradient cancellation, \proved\ (local)]
+\label{lem:cross}
+The local coordinates may be chosen so that their tangent splitting at the
+origin is the Gaussian conditional-mean direction plus the fiber $\mathcal F$.
+There then exist $C'_B,t_1,\rho_1>0$ such that, after centering at the nonlinear
+conditional minimizer and restricting to a common convex fiber ball,
+\begin{equation}\label{eq:cross}
+ t\sup_{w\in D}
+ \|\nabla V_y(w)-\nabla V_{y'}(w)\|
+ \le \chi\,d_Y(y,y'),
+ \qquad \chi\le C'_B\rho.
+\end{equation}
+for $0<t\le t_1$ and a sufficiently small tube of radius $\rho\le\rho_1$.
+\end{lemma}
+\begin{proof}
+Choose the horizontal derivative of $\Phi$ at the origin to be the
+$L$-orthogonal conditional-mean map $M$ from
+Theorem~\ref{thm:gaussian}; choose its vertical derivative to identify
+$\R^{357}$ with $\mathcal F$.  The mixed base--fiber Hessian of the leading
+quadratic action then vanishes.  Centering at the nonlinear minimizer also
+makes the fiber gradient vanish at $w=0$.  After subtracting the quadratic
+heat-kernel term, the map
+\[
+ (t,y,w)\longmapsto t\nabla_wV_y(w)
+\]
+has uniformly bounded derivatives on a smaller local tube by the same
+parametrix and BCH argument as Lemma~\ref{lem:hk}; exponentially small image
+terms are absorbed by decreasing $t_1$.  Its base derivative at the origin is
+zero.  The mean-value theorem therefore bounds its base derivative by
+$C'_B\rho$, proving \eqref{eq:cross}.
+\end{proof}
+
+The factor $\rho$ records that the leading Gaussian cross-response has been
+removed; what remains begins with nonlinear commutator and coordinate terms.
+
+\begin{corollary}[Local centered-fiber contraction, \proved\ (local)]
+If \eqref{eq:hessian-remainder} and \eqref{eq:cross} hold with
+\[
+ K_{\mathrm{fiber}}:=\frac{\chi}{2-\eta}<1,
+\]
+then
+\[
+ W_2(\widetilde\nu_y,\widetilde\nu_{y'})
+ \le K_{\mathrm{fiber}}d_Y(y,y').
+\]
+For the fixed block, sufficiently small $\rho$ and $t$ make this inequality
+true with existential constants.
+\end{corollary}
+\begin{proof}
+Use $\alpha=(2-\eta)/t$ from Theorem~\ref{thm:nonlinear} and
+$L=\chi/t$ from Lemma~\ref{lem:cross} in Lemma~\ref{lem:transport}.  Since
+$\eta\to0$ and $\chi\to0$ as $(\rho,t)\to(0,0)$ inside the local tube, shrink
+the tube until $\chi/(2-\eta)<1$.
+\end{proof}
+
+The common-domain restriction is deliberate.  The probability that leaves
+this good tube belongs to the defect channel; it cannot be discarded.
+
+\section{Executable calibration and hostile tests}
+
+The accompanying implementation constructs $d_0,d_1,C$, uses exact rational
+elimination for the retained rank, and computes orthogonal quotient and fiber
+bases numerically.  Its output is:
+
+\begin{center}
+\begin{tabular}{@{}lr@{}}
+\toprule
+Quantity & Value\\
+\midrule
+scalar gauge rank & $80$\\
+scalar physical dimension & $136$\\
+displayed / independent coarse fluxes & $24/17$\\
+scalar fiber dimension & $119$\\
+$\su$ physical / base / fiber dimensions & $408/51/357$\\
+physical eigenvalue range & $[2,12]$\\
+fiber eigenvalue range & $[3.438447187,12]$\\
+minimum nonzero coarse singular value & $2.828427125$\\
+full conditional-mean response norm & $0.393174006$\\
+centered Gaussian response & $0$\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Eleven automated tests include four hostile checks:
+\begin{enumerate}
+\item without quotienting, the quadratic Hessian has exactly $80$ scalar
+      gauge zero modes;
+\item the $24$ displayed retained fluxes are not falsely treated as
+      independent;
+\item invalid geometries and base dimensions fail closed;
+\item a nonlinear remainder that exhausts the certified margin is rejected.
+\end{enumerate}
+
+The numerical eigenvalue and response norm calibrate the theorem; only the
+analytic lower bound $2$, exact ranks, and Gaussian identities enter proved
+claims.
+
+\section{RG certificate and large-field ledger}
+
+A complete block morphism would transport
+\[
+ (\mu_k,S_k,\mathcal O_k,\ell_k)
+ \longmapsto
+ (\mu_{k+1},S_{k+1},\mathcal O_{k+1},b\ell_k)
+\]
+together with the retained map, conditional fiber, local interaction norm,
+running coupling, reconstruction error, and positivity certificate.  The
+present package supplies only the finite local tangent and good-tube entries.
+
+\begin{longtable}{@{}p{0.08\textwidth}p{0.62\textwidth}p{0.18\textwidth}@{}}
+\toprule
+ID & Required result & Status\\
+\midrule
+\endhead
+F1 & Replace the local Coulomb/constant-rank chart by an exact gauge-covariant
+nonlinear disintegration, with orbit-atlas overlaps and stabilizers. & \open\\
+F2 & Derive explicit $C_B,C'_B,\rho_0,t_0$ and prove stability for the full
+generated effective-action class under one RG step. & \open\\
+F3 & Bound the complement of the good tube by a dependent polymer norm,
+including cut-locus configurations, reducible orbits, center flux, global
+holonomy, and topological sectors. & \open\\
+F4 & Iterate through $k(a)\sim\log_b(\ell_*/a)\to\infty$ ultraviolet steps
+with summable errors and controlled observable support. & \open\\
+F5 & Prove that the retained base crosses into a massive basin at a finite
+physical scale. & \open\\
+F6 & Construct nontrivial regulator-independent continuum Schwinger functions,
+verify the OS hypotheses and observable density, and transfer decay to the
+Hamiltonian spectrum. & \open\\
+\bottomrule
+\end{longtable}
+
+Reflection positivity need not be manifest in every intermediate coordinate
+system if the RG integration is exact and the original regulated observables
+are transported without error; otherwise it requires a quantitative recovery
+certificate.  No such multiscale certificate is supplied here.
+
+\section{What has and has not advanced}
+
+The result establishes that the retained/fiber distinction survives the first
+genuinely four-dimensional nonabelian-compatible test.  Gauge directions are
+removed exactly at tangent level, retained curvature data have the correct
+rank, the fiber has a certified coercivity margin, and nonlinear heat-kernel
+geometry preserves that margin locally.  The centered transport coefficient
+is therefore a mathematically viable local target rather than a purely
+ontological proposal.
+
+The result does not generate infrared mass.  Fiber contraction controls the
+degrees of freedom discarded by blocking; the retained base can still carry
+massless long-wavelength modes.  The central Yang--Mills problem is now located
+more sharply in F4--F5: control a diverging RG trajectory and prove a
+nonperturbative crossover of the base into a massive regime.  The local theorem
+is an input to that task, not its conclusion.
+
+\section{Immediate next theorem}
+
+The next bounded theorem should attach the certificate to a Balaban-type
+effective-action norm.  For one exact RG step, prove
+\[
+ t_k\|\nabla_F^2(S_k-Q_k)\|\le\eta_k<2,
+ \qquad
+ t_k\|\nabla_FV_{k,y}-\nabla_FV_{k,y'}\|
+ \le\chi_k d_Y(y,y'),
+\]
+with
+\[
+ \frac{\chi_k}{2-\eta_k}<1,
+\]
+and a gauge-invariant defect activity satisfying a declared polymer norm.
+Every constant must be expressed in variables propagated by the RG map.  A
+failure of this inequality would identify whether the obstruction lies in the
+chosen retained data, the orbit chart, or the generated interactions.
+
+\begin{thebibliography}{9}
+\bibitem{JaffeWitten}
+A.~Jaffe and E.~Witten,
+\emph{Quantum Yang--Mills Theory}, Clay Mathematics Institute Millennium
+Problem description,
+\url{https://www.claymath.org/wp-content/uploads/2022/06/yangmills.pdf}.
+
+\bibitem{MenottiOnofri}
+P.~Menotti and E.~Onofri,
+``The action of $SU(N)$ lattice gauge theory in terms of the heat kernel on the
+group manifold,'' \emph{Nuclear Physics B} \textbf{190} (1981), 288--300,
+doi:10.1016/0550-3213(81)90560-5.
+
+\bibitem{BalabanBackground}
+T.~Balaban,
+``The variational problem and background fields in renormalization group
+method for lattice gauge theories,''
+\emph{Communications in Mathematical Physics} \textbf{102} (1985), 277--309,
+doi:10.1007/BF01229381.
+
+\bibitem{BalabanPropagators}
+T.~Balaban,
+``Propagators and renormalization transformations for lattice gauge theories
+I,'' \emph{Communications in Mathematical Physics} \textbf{95} (1984), 17--40,
+doi:10.1007/BF01215753.
+
+\bibitem{OttoVillani}
+F.~Otto and C.~Villani,
+``Generalization of an inequality by Talagrand and links with the logarithmic
+Sobolev inequality,'' \emph{Journal of Functional Analysis} \textbf{173}
+(2000), 361--400, doi:10.1006/jfan.1999.3557.
+\end{thebibliography}
+
+\end{document}

@@ -1,0 +1,437 @@
+# SPDX-FileCopyrightText: © 2026 Idiap Research Institute <contact@idiap.ch>
+#
+# SPDX-FileContributor: Andre Freitas <andre.freitas@idiap.ch>
+# Neuro-symbolic AI Group
+#
+# SPDX-FileContributor: Danilo Gusicuma <danilo.gusicuma@idiap.ch>
+# Neuro-symbolic AI Group
+#
+# SPDX-License-Identifier: MIT
+schema: abducer.literature_gap_precheck_todos.v1
+created_at: "2026-07-21"
+purpose: >
+  Add a pre-investment literature-gap gate so new proof or discovery avenues
+  receive ordinary API marathon budget only when a cited, target-relevant, and
+  publication-weighted research gap has been established.
+source_artifacts:
+  plan: docs/research-methods/literature-gap-preinvestment-gate-plan.md
+  target_literature_builder: agentic/scripts/build_target_literature_evolution.py
+  target_literature_validator: agentic/scripts/validate_target_literature_evolution.py
+  dispatch_matrix: agentic/registries/discovery_marathon_skill_dispatch.yaml
+  ym_report: agentic/reports/discovery_marathon/targets/yang-mills-existence-and-mass-gap-target/latest.json
+implementation_status:
+  status: implemented
+  completed_at: "2026-07-21"
+implementation_evidence:
+  schema: agentic/spec/avenue_literature_gap_warrant.schema.json
+  helper: agentic/scripts/avenue_literature_gap.py
+  builder: agentic/scripts/build_avenue_literature_gap_warrant.py
+  validator: agentic/scripts/validate_avenue_literature_gap_warrant.py
+  skill: skills/evaluation/literature-gap-relevance-auditor/SKILL.md
+  dispatch_matrix: agentic/registries/discovery_marathon_skill_dispatch.yaml
+  scheduler: agentic/scripts/discovery_marathon_scheduler.py
+  marathon_runner: agentic/scripts/run_discovery_marathon.py
+  report_builder: agentic/scripts/build_discovery_marathon_report.py
+  html_generator: agentic/scripts/generate_discovery_marathon_html.py
+  report_validator: agentic/scripts/validate_discovery_marathon_report.py
+  agentic_check: agentic/scripts/agentic_check.py
+  ym_warrants: agentic/reports/avenue_literature_gap_warrants/targets/yang-mills-existence-and-mass-gap-target/latest.json
+  pvsnp_warrants: agentic/reports/avenue_literature_gap_warrants/targets/p-vs-np-target/latest.json
+  fixture_dir: tests/fixtures/avenue_literature_gap
+  validation:
+    - python3 agentic/scripts/validate_avenue_literature_gap_warrant.py
+    - python3 agentic/scripts/validate_discovery_marathon_report.py
+    - python3 agentic/scripts/validate_discovery_marathon_skill_dispatch.py
+    - .venv-pmp/bin/python /Users/afreitas/.codex/skills/.system/skill-creator/scripts/quick_validate.py skills/evaluation/literature-gap-relevance-auditor
+global_controls:
+  preinvestment_policy: >
+    A new avenue may not enter broad branch exploration, proof lock-in, or a
+    long API marathon until it has an avenue_literature_gap_warrant with cited
+    closest-known-work, a specific gap statement, target relevance, disqualifier
+    checks, and an investment decision.
+  gap_relevance_policy: >
+    A literature gap is relevant enough only when it touches a named target
+    commitment and has conceptual depth, explanatory power, unification power,
+    route-decision value, novelty boundary, and a finite validation action.
+  default_demote_policy: >
+    If the gap is vague, uncited, already covered by prior art, physically
+    support-only, or not publication-weighted, route the avenue to reframe,
+    artifact_sprint_only, do_not_invest_prior_art_collision, or quarantine
+    instead of ordinary proof search.
+todos:
+  - id: LGP-001
+    type: planning_todo
+    phase: literature-gap-contract
+    owner: agentic/spec
+    priority: critical
+    risk_class: unsupported_gap_investment
+    title: Define the avenue literature-gap warrant schema
+    intent: >
+      Create a typed warrant packet that decides whether a new avenue has a
+      cited, specific, and relevant enough research gap before proof-search
+      budget is spent.
+    use_skills:
+      - target-literature-source-curator
+      - prior-art-importer
+      - kb-prior-art-pass
+      - paper-contribution-readiness-judge
+      - physical-relevance-impact-auditor
+    required_artifact:
+      - agentic/spec/avenue_literature_gap_warrant.schema.json
+      - docs/research-methods/literature-gap-preinvestment-gate-plan.md
+    acceptance_criteria:
+      - The schema records target_id, avenue_id, smallest_honest_claim, mathematical_or_physical_object, target_commitments_touched, closest_known_results, source_search_provenance, gap_statement, why_not_already_known, relevance_threshold, physics_or_field_impact, unification_power, route_decision_power, novelty_boundary, disqualifier_matrix, explicit_unknowns, allowed_next_modes, investment_decision, and validation_handoff.
+      - Allowed investment decisions are invest_in_avenue, artifact_sprint_only, reframe_gap_before_investment, do_not_invest_prior_art_collision, and quarantine_low_relevance.
+      - The schema separates source-search provenance from the gap claim so absence of found literature is never treated as proof of novelty.
+      - The schema can represent both Yang-Mills physical relevance gaps and P vs NP barrier/transfer gaps without target contamination.
+    blocked_by: []
+    evidence:
+      - docs/research-methods/literature-gap-preinvestment-gate-plan.md
+      - agentic/scripts/validate_target_literature_evolution.py
+    review_date: "2026-07-21"
+    failure_modes:
+      - The warrant becomes a bibliography summary rather than an investment decision.
+      - The schema permits vague claims such as "no one has tried this".
+      - The schema omits explicit prior-art collision and low-relevance decisions.
+      - The schema cannot express target-specific relevance such as YM physical carrier or P vs NP barrier status.
+    status: resolved
+
+  - id: LGP-002
+    type: workflow_todo
+    phase: literature-gap-skill-contract
+    owner: skills/evaluation
+    priority: critical
+    risk_class: hidden_or_generic_literature_gate
+    title: Create the literature-gap relevance auditor skill
+    intent: >
+      Add a visible skill that turns prior-art search, source curation, and
+      contribution relevance criteria into a pre-investment avenue decision.
+    use_skills:
+      - skill-creator
+      - target-literature-source-curator
+      - prior-art-importer
+      - kb-prior-art-pass
+      - results-prior-art-disqualifier-auditor
+      - paper-contribution-readiness-judge
+    required_artifact:
+      - skills/evaluation/literature-gap-relevance-auditor/SKILL.md
+      - skills/evaluation/literature-gap-relevance-auditor/agents/openai.yaml
+      - docs/reference/skills.md
+    acceptance_criteria:
+      - The skill description triggers for new avenues, branch selection, visual-analogy-inspired hypotheses, failure-archaeology pivots, paper-readiness checks, and long API marathon preflight.
+      - The workflow requires closest known results, exact gap statement, novelty boundary, relevance threshold, disqualifier matrix, and investment decision.
+      - The skill explicitly says that "not found in the literature" is not sufficient novelty evidence.
+      - The output contract matches the avenue_literature_gap_warrant schema.
+      - The skill catalog lists the skill and includes major output fields.
+    blocked_by:
+      - LGP-001
+    evidence:
+      - skills/ingest/target-literature-source-curator/SKILL.md
+      - skills/ingest/prior-art-importer/SKILL.md
+      - skills/discovery/kb-prior-art-pass/SKILL.md
+      - skills/results_ellaboration/results-prior-art-disqualifier-auditor/SKILL.md
+    review_date: "2026-07-21"
+    failure_modes:
+      - The skill repeats existing prior-art skills without making an investment decision.
+      - The skill uses generic paper-value language instead of target-specific gap relevance.
+      - The skill is created but not visible in docs/reference/skills.md or agents/openai.yaml.
+      - The skill allows ordinary proof search when the warrant says reframe or quarantine.
+    status: resolved
+
+  - id: LGP-003
+    type: workflow_todo
+    phase: literature-gap-report-builder
+    owner: agentic/scripts
+    priority: critical
+    risk_class: unvalidated_gap_claim
+    title: Build target-scoped avenue literature-gap warrant reports
+    intent: >
+      Generate persistent JSON and Markdown warrants for proposed avenues,
+      grounded in target literature, prior-art passes, branch packets, and
+      explicit unknowns.
+    use_skills:
+      - literature-gap-relevance-auditor
+      - target-literature-source-curator
+      - prior-art-importer
+      - kb-prior-art-pass
+      - scientific-contribution-detector
+      - physical-relevance-impact-auditor
+    required_artifact:
+      - agentic/scripts/build_avenue_literature_gap_warrant.py
+      - agentic/reports/avenue_literature_gap_warrants/targets/yang-mills-existence-and-mass-gap-target/latest.json
+      - agentic/reports/avenue_literature_gap_warrants/targets/yang-mills-existence-and-mass-gap-target/latest.md
+      - agentic/reports/avenue_literature_gap_warrants/targets/p-vs-np-target/latest.json
+      - agentic/reports/avenue_literature_gap_warrants/targets/p-vs-np-target/latest.md
+    acceptance_criteria:
+      - The builder accepts a target id and avenue descriptor and emits a target-scoped warrant.
+      - Each warrant cites target literature, prior-art/import records, cycle ids, report artifacts, or explicit unknowns for every substantive gap claim.
+      - The report includes closest-known-work, exact gap statement, relevance threshold, novelty boundary, disqualifier matrix, investment decision, and allowed next modes.
+      - YM warrants must state physical carrier, Clay gate touched, physics conceptual reward, unification power, and why the gap is not merely an incremental finite calculation.
+      - P vs NP warrants must state source carrier/language, target class, model, transfer inequality or barrier status, quantifier/advice discipline, and why the gap is not just a renamed barrier.
+    blocked_by:
+      - LGP-001
+      - LGP-002
+    evidence:
+      - agentic/scripts/build_target_literature_evolution.py
+      - agentic/scripts/build_discovery_marathon_report.py
+      - agentic/reports/discovery_marathon/targets/yang-mills-existence-and-mass-gap-target/latest.json
+    review_date: "2026-07-21"
+    failure_modes:
+      - The builder emits a target-level history instead of avenue-specific gap evidence.
+      - The report lacks cited closest-known-work or explicit unknowns.
+      - The report gives a positive investment decision without disqualifier checks.
+      - The report overwrites cross-target outputs or mixes YM and P vs NP terms.
+    status: resolved
+
+  - id: LGP-004
+    type: test_todo
+    phase: literature-gap-validation
+    owner: agentic/scripts
+    priority: critical
+    risk_class: validator_permits_unsupported_gap
+    title: Add validators and fixtures for avenue gap warrants
+    intent: >
+      Prevent vague, uncited, low-relevance, or already-known avenue claims from
+      passing the literature-gap preinvestment gate.
+    use_skills:
+      - literature-gap-relevance-auditor
+      - results-prior-art-disqualifier-auditor
+      - paper-contribution-readiness-judge
+      - physical-relevance-impact-auditor
+    required_artifact:
+      - agentic/scripts/validate_avenue_literature_gap_warrant.py
+      - tests/fixtures/avenue_literature_gap/ym_valid_high_relevance_gap.json
+      - tests/fixtures/avenue_literature_gap/ym_low_physics_reward_reject.json
+      - tests/fixtures/avenue_literature_gap/prior_art_collision_reject.json
+      - tests/fixtures/avenue_literature_gap/vague_gap_reject.json
+      - tests/fixtures/avenue_literature_gap/artifact_sprint_only_accept.json
+    acceptance_criteria:
+      - The valid YM fixture passes only when it has cited closest-known-work, a physical carrier, a Clay gate, unification power, and a finite validation action.
+      - The prior-art collision fixture fails unless the investment decision is do_not_invest_prior_art_collision.
+      - The vague gap fixture fails when closest-known-work, source provenance, or disqualifier matrix is missing.
+      - The low-relevance fixture fails if it asks for broad proof search instead of quarantine_low_relevance or reframe_gap_before_investment.
+      - The artifact-sprint fixture passes only when allowed_next_modes excludes broad branch exploration.
+    blocked_by:
+      - LGP-001
+      - LGP-003
+    evidence:
+      - agentic/scripts/validate_target_literature_evolution.py
+      - agentic/todos/todo_schema.yaml
+    review_date: "2026-07-21"
+    failure_modes:
+      - The validator checks only field presence and not the investment decision semantics.
+      - Fixtures are so generic that they cannot catch YM physical-relevance drift.
+      - A warrant with no citations or only explicit unknowns is allowed to invest.
+      - Cross-target terms pass unnoticed.
+    status: resolved
+
+  - id: LGP-005
+    type: workflow_todo
+    phase: scheduler-preflight-integration
+    owner: agentic/scripts
+    priority: critical
+    risk_class: avenue_enters_search_without_gap
+    title: Block broad branch exploration for avenues without a literature-gap warrant
+    intent: >
+      Integrate the warrant into branch selection and marathon preflight so new
+      avenues cannot consume ordinary API cycles before their research gap and
+      relevance threshold are justified.
+    use_skills:
+      - long-horizon-route-portfolio-manager
+      - abducer-refinement-route-ranker
+      - next-experiment-queue-ranker
+      - literature-gap-relevance-auditor
+      - kb-discovery-governor
+    required_artifact:
+      - agentic/scripts/discovery_marathon_scheduler.py
+      - agentic/scripts/run_discovery_marathon.py
+      - agentic/registries/discovery_marathon_skill_dispatch.yaml
+      - agentic/runs/discovery_marathons/active_targets/yang-mills-existence-and-mass-gap-target.json
+    acceptance_criteria:
+      - A new avenue selected by branch_selection requires a current avenue_literature_gap_warrant before branch_exploration.
+      - Broad API marathon preflight fails or switches to literature-gap mode when all selected branches lack invest_in_avenue warrants.
+      - artifact_sprint_only warrants permit only named artifact or falsifier sprints.
+      - reframe_gap_before_investment, do_not_invest_prior_art_collision, and quarantine_low_relevance warrants block ordinary proof search.
+      - Existing active branches can continue only if their next major avenue change receives a new warrant.
+    blocked_by:
+      - LGP-003
+      - LGP-004
+    evidence:
+      - agentic/scripts/discovery_marathon_scheduler.py
+      - agentic/scripts/run_discovery_marathon.py
+      - agentic/registries/discovery_marathon_skill_dispatch.yaml
+    review_date: "2026-07-21"
+    failure_modes:
+      - The scheduler logs a missing warrant but still selects broad branch exploration.
+      - Every branch is forced through full literature review even for small local repairs.
+      - Artifact-sprint-only branches are accidentally promoted to proof search.
+      - The rule prevents post-quarantine conceptual exploration from forming a new warrant.
+    status: resolved
+
+  - id: LGP-006
+    type: hook_todo
+    phase: skill-dispatch-integration
+    owner: agentic/registries
+    priority: high
+    risk_class: literature_gate_not_invoked
+    title: Add an avenue literature-gap precheck phase to skill dispatch
+    intent: >
+      Make literature-gap checking visible as a required phase before avenue
+      investment rather than hiding it inside evidence acquisition.
+    use_skills:
+      - literature-gap-relevance-auditor
+      - target-literature-source-curator
+      - prior-art-importer
+      - kb-prior-art-pass
+      - results-prior-art-disqualifier-auditor
+    required_artifact:
+      - agentic/registries/discovery_marathon_skill_dispatch.yaml
+      - agentic/scripts/validate_discovery_marathon_skill_dispatch.py
+      - docs/operations/discovery-marathon-operations.md
+    acceptance_criteria:
+      - The dispatch matrix has an avenue_literature_gap_precheck phase before branch_exploration or ordinary proof-search investment.
+      - The phase requires literature-gap-relevance-auditor and conditionally routes to target-literature-source-curator, prior-art-importer, kb-prior-art-pass, and results-prior-art-disqualifier-auditor.
+      - Future cycles after the introduction boundary expose the phase in skill_dispatch_trace when a new avenue is proposed.
+      - Historical cycles remain valid before the introduction boundary.
+    blocked_by:
+      - LGP-002
+      - LGP-005
+    evidence:
+      - agentic/registries/discovery_marathon_skill_dispatch.yaml
+      - agentic/scripts/validate_discovery_marathon_skill_dispatch.py
+      - docs/operations/discovery-marathon-operations.md
+    review_date: "2026-07-21"
+    failure_modes:
+      - Literature-gap checking remains buried in evidence_acquisition after branch exploration.
+      - The dispatch trace names the phase but does not require an investment decision.
+      - Historical cycles are retroactively invalidated.
+      - The report cannot show whether the phase ran.
+    status: resolved
+
+  - id: LGP-007
+    type: report_todo
+    phase: report-surface
+    owner: agentic/reports
+    priority: high
+    risk_class: invisible_gap_warrant
+    title: Surface avenue literature-gap warrants in discovery reports
+    intent: >
+      Let readers see which avenues passed, failed, or were limited by the
+      literature-gap gate before interpreting later proof-search cycles.
+    use_skills:
+      - literature-gap-relevance-auditor
+      - timeline-report-evidence-ingestor
+      - prior-art-positioning-packager
+      - target-literature-evolution-narrator
+    required_artifact:
+      - agentic/scripts/build_discovery_marathon_report.py
+      - agentic/scripts/generate_discovery_marathon_html.py
+      - agentic/reports/discovery_marathon/targets/yang-mills-existence-and-mass-gap-target/latest.json
+      - agentic/reports/discovery_marathon/targets/yang-mills-existence-and-mass-gap-target/latest.html
+      - agentic/reports/discovery_marathon/targets/yang-mills-existence-and-mass-gap-target/full_timeline.html
+    acceptance_criteria:
+      - Report JSON includes avenue_literature_gap_warrants and a summary of investment decisions.
+      - Markdown and HTML reports show the warrant decision, closest-known-work, gap statement, relevance threshold, disqualifiers, and allowed next modes.
+      - The full timeline marks cycles that started from an invest_in_avenue warrant versus artifact_sprint_only or quarantine decisions.
+      - Report validators reject stale reports that omit the warrant summary after the gate introduction boundary.
+    blocked_by:
+      - LGP-003
+      - LGP-004
+      - LGP-005
+    evidence:
+      - agentic/scripts/build_discovery_marathon_report.py
+      - agentic/scripts/generate_discovery_marathon_html.py
+      - agentic/scripts/validate_discovery_marathon_report.py
+    review_date: "2026-07-21"
+    failure_modes:
+      - The warrant exists only as raw JSON and is not visible in the HTML report.
+      - The report shows citations but hides the investment decision.
+      - The timeline cannot distinguish literature-authorized avenues from legacy branches.
+      - Target-specific reports overwrite each other.
+    status: resolved
+
+  - id: LGP-008
+    type: workflow_todo
+    phase: ym-avenue-application
+    owner: agentic/reports
+    priority: high
+    risk_class: ym_low_relevance_avenue_drift
+    title: Apply the literature-gap gate to the current Yang-Mills avenue set
+    intent: >
+      Produce initial warrants for the active YM avenue families so future
+      marathons invest only in routes with cited, relevant, and publication-
+      weighted research gaps.
+    use_skills:
+      - literature-gap-relevance-auditor
+      - target-literature-source-curator
+      - kb-prior-art-pass
+      - physical-relevance-impact-auditor
+      - paper-contribution-readiness-judge
+    required_artifact:
+      - agentic/reports/avenue_literature_gap_warrants/targets/yang-mills-existence-and-mass-gap-target/routea_endpoint_warrant.json
+      - agentic/reports/avenue_literature_gap_warrants/targets/yang-mills-existence-and-mass-gap-target/representational_dynamics_warrant.json
+      - agentic/reports/avenue_literature_gap_warrants/targets/yang-mills-existence-and-mass-gap-target/visual_conceptualization_warrant.json
+    acceptance_criteria:
+      - Route A endpoint warrant states whether the finite reflected-Wilson endpoint table gap is novel and relevant enough, or only an artifact sprint.
+      - Representational dynamics warrant states which gap in the existing constructive/RG/OS literature it claims to address and why it is not just a renamed program.
+      - Visual conceptualization warrant prevents analogy-inspired hypotheses from entering proof search unless a cited gap and property-preserving route consequence are present.
+      - Each warrant names physical carrier, Clay gate, unification power, general impact, prior-art disqualifiers, and allowed next mode.
+    blocked_by:
+      - LGP-003
+      - LGP-004
+      - LGP-007
+    evidence:
+      - agentic/reports/discovery_marathon/targets/yang-mills-existence-and-mass-gap-target/latest.json
+      - agentic/reports/visual_conceptualization/targets/yang-mills-existence-and-mass-gap-target/latest.json
+      - agentic/reports/target_literature_evolution/latest.json
+    review_date: "2026-07-21"
+    failure_modes:
+      - Warrants assert novelty without comparing closest known constructive, lattice, OS, RG, or Wilson-loop literature.
+      - A finite calculation is promoted as physics progress without same-theory and continuum relevance.
+      - An analogy-inspired route bypasses literature and disqualifier checks.
+      - The warrant cannot decide whether the next move is invest_in_avenue, artifact_sprint_only, reframe, collision, or quarantine.
+    status: resolved
+
+  - id: LGP-009
+    type: test_todo
+    phase: end-to-end-validation
+    owner: agentic/scripts
+    priority: high
+    risk_class: untested_preinvestment_gate
+    title: Add the literature-gap gate to the repository validation path
+    intent: >
+      Ensure the new preinvestment gate remains synchronized across schema,
+      skills, scheduler, reports, TODOs, and target-scoped artifacts.
+    use_skills:
+      - literature-gap-relevance-auditor
+      - skill-creator
+      - looper-workflow-contract-governor
+      - review-reasoner-epistemologist
+    required_artifact:
+      - agentic/scripts/agentic_check.py
+      - agentic/scripts/validate_avenue_literature_gap_warrant.py
+      - agentic/scripts/validate_discovery_marathon_report.py
+      - agentic/scripts/validate_todos.py
+    acceptance_criteria:
+      - agentic_check.py or the local validation bundle runs the avenue warrant validator.
+      - validate_discovery_marathon_report.py requires warrant summaries after the gate introduction boundary.
+      - validate_todos.py passes for the literature_gap_precheck_todos file.
+      - py_compile passes for new and changed scripts.
+      - Skill frontmatter validation is attempted, with a fallback frontmatter check if PyYAML is unavailable.
+    blocked_by:
+      - LGP-004
+      - LGP-005
+      - LGP-006
+      - LGP-007
+      - LGP-008
+    evidence:
+      - agentic/scripts/agentic_check.py
+      - agentic/scripts/validate_todos.py
+      - docs/research-methods/literature-gap-preinvestment-gate-plan.md
+    review_date: "2026-07-21"
+    failure_modes:
+      - The new gate can regress without any validator noticing.
+      - Report validation accepts stale artifacts after the gate introduction.
+      - TODO cards are present but not self-contained.
+      - Skill frontmatter remains malformed or undiscoverable.
+    status: resolved

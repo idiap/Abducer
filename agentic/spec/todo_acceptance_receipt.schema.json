@@ -1,0 +1,65 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://abducer.local/schemas/todo_acceptance_receipt.schema.json",
+  "title": "Fresh machine-checkable TODO acceptance receipt",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "receipt_id", "todo_id", "todo_file",
+    "todo_definition_digest", "toolchain_digest", "implementation_surface_digest", "started_at", "completed_at",
+    "validation_results", "artifact_results", "overall_status", "receipt_digest"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "receipt_id": {"$ref": "#/$defs/id"},
+    "todo_id": {"$ref": "#/$defs/id"},
+    "todo_file": {"$ref": "#/$defs/path"},
+    "todo_definition_digest": {"$ref": "#/$defs/digest"},
+    "toolchain_digest": {"$ref": "#/$defs/digest"},
+    "implementation_surface_digest": {"$ref": "#/$defs/digest"},
+    "started_at": {"type": "string", "format": "date-time"},
+    "completed_at": {"type": "string", "format": "date-time"},
+    "validation_results": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["command", "argv", "exit_code", "status", "stdout_digest", "stderr_digest"],
+        "properties": {
+          "command": {"type": "string", "minLength": 1},
+          "argv": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
+          "exit_code": {"type": "integer"},
+          "status": {"enum": ["passed", "failed", "timed_out"]},
+          "stdout_digest": {"$ref": "#/$defs/digest"},
+          "stderr_digest": {"$ref": "#/$defs/digest"},
+          "stdout_tail": {"type": "string"},
+          "stderr_tail": {"type": "string"}
+        }
+      }
+    },
+    "artifact_results": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["path", "kind", "exists", "content_digest"],
+        "properties": {
+          "path": {"$ref": "#/$defs/path"},
+          "kind": {"enum": ["file", "directory", "missing"]},
+          "exists": {"type": "boolean"},
+          "content_digest": {"$ref": "#/$defs/digest"},
+          "file_count": {"type": "integer", "minimum": 0}
+        }
+      }
+    },
+    "overall_status": {"enum": ["passed", "failed"]},
+    "receipt_digest": {"$ref": "#/$defs/digest"}
+  },
+  "$defs": {
+    "id": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{1,127}$"},
+    "path": {"type": "string", "minLength": 1, "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$)).+$"},
+    "digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"}
+  }
+}

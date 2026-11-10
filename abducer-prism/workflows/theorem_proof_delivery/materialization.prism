@@ -1,0 +1,76 @@
+# SPDX-FileCopyrightText: © 2026 Idiap Research Institute <contact@idiap.ch>
+#
+# SPDX-FileContributor: Andre Freitas <andre.freitas@idiap.ch>
+# Neuro-symbolic AI Group
+#
+# SPDX-FileContributor: Danilo Gusicuma <danilo.gusicuma@idiap.ch>
+# Neuro-symbolic AI Group
+#
+# SPDX-License-Identifier: MIT
+# Materialization layer for theorem_proof_delivery.
+# Compiled modules snapshot current linked skill bytes without writing source trees;
+# the manifest records paths/hashes. Fake execution proves typed integration only.
+from workflows.theorem_proof_delivery.types import (
+    ExactClaimRefutationAssessment,
+    ExactTheoremClaim,
+    ExplicitPremises,
+    TheoremProofDispositionAssessment,
+)
+from workflows.theorem_proof_delivery.occurrences import (
+    TheoremProofDispositionInput,
+)
+from workflows.theorem_proof_delivery.reasoning import TheoremProofDelivery
+from workflows.theorem_proof_delivery.relations import (
+    ExactTheoremClaimTest,
+    TheoremProofDispositionCalibration,
+)
+from workflows.theorem_proof_delivery.generated.d0_reasoning_skill_1 import kb_deduce_skill as d0_reasoning_skill_1
+from workflows.theorem_proof_delivery.generated.r0_reasoning_skill_1 import counterexample_hunter_skill as r0_reasoning_skill_1
+from workflows.theorem_proof_delivery.generated.e0_reasoning_skill_1 import epistemic_status_ledger_skill as e0_reasoning_skill_1
+
+def r0_reasoning_relation_builder[SourceValue, TargetValue](
+    source: SourceValue,
+    target: Generated[TargetValue],
+) -> ExactTheoremClaimTest[SourceValue, TargetValue]:
+    return ExactTheoremClaimTest(source = source, target = target)
+
+def e0_reasoning_relation_builder[SourceValue, TargetValue](
+    source: SourceValue,
+    target: Generated[TargetValue],
+) -> TheoremProofDispositionCalibration[SourceValue, TargetValue]:
+    return TheoremProofDispositionCalibration(source = source, target = target)
+
+# DeductiveExactTheoremClaimDerivation performs the reviewed derive boundary.
+# Granularity: The source exposes DeriveExactClaim as a separately consumed typed result in the theorem_proof_delivery occurrence graph.
+# Linked source skill: skills/reasoning/kb-deduce/SKILL.md (sha256:375666867a794a5f949ffc364920dc2f954a021a587df98538a0c8fe6a0f2ddc).
+agent d0_reasoning_agent(
+    task: ExplicitPremises,
+) -> Result[Generated[ExactTheoremClaim], ModelFailure]
+    ! {AI.Generate, Context.Disclose}:
+    skills: Skills[ExplicitPremises] = [d0_reasoning_skill_1]
+
+# RefutationalExactTheoremClaimAssessment performs the reviewed refute boundary.
+# Granularity: The source exposes TestExactClaim as a separately consumed typed result in the theorem_proof_delivery occurrence graph.
+# Linked source skill: skills/evaluation/counterexample-hunter/SKILL.md (sha256:413eb19c3dcdc59f53bac734b6a9864e1252095063f1cbb3674dcab3445c748d).
+agent r0_reasoning_agent(
+    task: ExactTheoremClaim,
+) -> Result[Generated[ExactClaimRefutationAssessment], ModelFailure]
+    ! {AI.Generate, Context.Disclose}:
+    skills: Skills[ExactTheoremClaim] = [r0_reasoning_skill_1]
+
+# EvidentialTheoremProofDispositionAssessment performs the reviewed calibrate boundary.
+# Granularity: The source exposes CalibrateProofStatus as a separately consumed typed result in the theorem_proof_delivery occurrence graph.
+# Linked source skill: skills/evaluation/epistemic-status-ledger/SKILL.md (sha256:980ad92b1f190316a941b8124eaffc6c414680666d2960ebcc8bd21444b4d454).
+agent e0_reasoning_agent(
+    task: TheoremProofDispositionInput,
+) -> Result[Generated[TheoremProofDispositionAssessment], ModelFailure]
+    ! {AI.Generate, Context.Disclose}:
+    skills: Skills[TheoremProofDispositionInput] = [e0_reasoning_skill_1]
+
+converted_reasoning = TheoremProofDelivery(
+    d0 = d0_reasoning_agent,
+    r0 = r0_reasoning_agent,
+    r0_by = r0_reasoning_relation_builder,
+    e0 = e0_reasoning_agent,
+    e0_by = e0_reasoning_relation_builder,
+)

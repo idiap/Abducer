@@ -1,0 +1,326 @@
+# SPDX-FileCopyrightText: © 2026 Idiap Research Institute <contact@idiap.ch>
+#
+# SPDX-FileContributor: Andre Freitas <andre.freitas@idiap.ch>
+# Neuro-symbolic AI Group
+#
+# SPDX-FileContributor: Danilo Gusicuma <danilo.gusicuma@idiap.ch>
+# Neuro-symbolic AI Group
+#
+# SPDX-License-Identifier: MIT
+schema: abducer.visual_conceptualizer_reflection_todos.v1
+created_at: "2026-07-21"
+implementation_status:
+  status: implemented
+  completed_at: "2026-07-21"
+purpose: >
+  Add a deep-reflection visual conceptualizer to theorem and concept analysis.
+  The goal is not decorative illustration: every visual metaphor must name the
+  formal objects it represents, the properties it preserves, the properties it
+  distorts, and the new hypotheses or counterfactual tests it makes available.
+diagnosis: >
+  The current workflow has analogy_transport as a conceptual creativity
+  operation, but it does not yet force theorem-level visual analogies to preserve
+  invariants, symmetries, limiting behavior, physical carriers, or proof
+  obligations. A disciplined visual conceptualizer can help if it behaves like a
+  representation-change probe: it must expose hidden tensions and generate
+  testable route variants, not merely explain the existing proof in friendlier
+  language.
+target_skill_candidates:
+  visual_conceptualizer: skills/evaluation/visual-theorem-conceptualizer/SKILL.md
+  preservation_auditor: skills/evaluation/visual-analogy-preservation-auditor/SKILL.md
+  packet_schema: agentic/spec/visual_conceptualization_packet.schema.json
+  builder: agentic/scripts/build_visual_conceptualization_packet.py
+  validator: agentic/scripts/validate_visual_conceptualization_packet.py
+todos:
+  - id: VCR-001
+    type: planning_todo
+    phase: visual-conceptualization-contract
+    owner: agentic/spec
+    priority: critical
+    risk_class: decorative_or_misleading_analogy
+    title: Define the visual conceptualization packet contract
+    intent: >
+      Specify the JSON/Markdown object that every deep-reflection visual
+      conceptualization must emit for a theorem, concept, obstruction, or proof
+      route.
+    use_skills:
+      - skill-creator
+      - visual-theorem-conceptualizer
+      - visual-analogy-preservation-auditor
+    required_artifact:
+      - agentic/spec/visual_conceptualization_packet.schema.json
+      - agentic/scripts/validate_visual_conceptualization_packet.py
+    acceptance_criteria:
+      - The packet records the formal statement or concept, main objects, key properties, visual metaphor, property-preservation table, distortion ledger, non-claim boundary, and hypothesis-inspiration output.
+      - The preservation table explicitly covers invariants, symmetries, locality/globality, order or monotonicity, positivity or sign structure, limiting behavior, physical carrier, and proof-obligation correspondence when applicable.
+      - The validator rejects packets whose visual analogy lacks a formal property mapping or whose inspired hypotheses do not name a concrete route, artifact, falsifier, or counterfactual variant.
+    blocked_by: []
+    evidence:
+      - agentic/spec/visual_conceptualization_packet.schema.json
+      - agentic/scripts/validate_visual_conceptualization_packet.py
+    review_date: "2026-07-21"
+    failure_modes:
+      - The visual metaphor becomes an explanatory cartoon with no preservation audit.
+      - The analogy hides a proxy shift by making a harder target look like an easier source domain.
+      - The packet inspires vague ideas without route-state consequences.
+    status: resolved
+
+  - id: VCR-002
+    type: workflow_todo
+    phase: skill-design
+    owner: skills/evaluation
+    priority: critical
+    risk_class: shallow_visual_reflection
+    title: Create the visual theorem conceptualizer skill
+    intent: >
+      Build a repo-local skill that explains theorems and core concepts through
+      property-preserving visual metaphors, while preserving mathematical and
+      physical commitments.
+    use_skills:
+      - skill-creator
+      - visual-theorem-conceptualizer
+    required_artifact:
+      - skills/evaluation/visual-theorem-conceptualizer/SKILL.md
+      - skills/evaluation/visual-theorem-conceptualizer/agents/openai.yaml
+    acceptance_criteria:
+      - The skill requires the agent to identify the theorem's objects, maps, invariants, obstructions, proof pressure, physical interpretation, and non-claim boundary before proposing a metaphor.
+      - The skill offers reusable visual metaphor families such as landscape, tension field, flow, bridge, lens, fiber, scaffold, basin, bottleneck, and resonance only when their preserved properties are explicit.
+      - The skill states that analogies are not evidence unless they generate a testable hypothesis, a missing artifact, a falsifier, or a representation-change obligation.
+    blocked_by:
+      - VCR-001
+    evidence:
+      - skills/evaluation/visual-theorem-conceptualizer/SKILL.md
+      - skills/evaluation/visual-theorem-conceptualizer/agents/openai.yaml
+    review_date: "2026-07-21"
+    failure_modes:
+      - The skill optimizes for memorable imagery instead of property preservation.
+      - The skill explains known concepts but does not expose new proof route options.
+      - The skill collapses physics meaning into purely formal diagram language.
+    status: resolved
+
+  - id: VCR-003
+    type: workflow_todo
+    phase: analogy-preservation-audit
+    owner: skills/evaluation
+    priority: critical
+    risk_class: property_mismatch_in_analogy
+    title: Create the visual analogy preservation auditor skill
+    intent: >
+      Add a second skill that critiques visual analogies before they can influence
+      branch selection or hypothesis promotion.
+    use_skills:
+      - skill-creator
+      - visual-analogy-preservation-auditor
+      - proof-transfer-substance-auditor
+      - physical-relevance-impact-auditor
+    required_artifact:
+      - skills/evaluation/visual-analogy-preservation-auditor/SKILL.md
+      - skills/evaluation/visual-analogy-preservation-auditor/agents/openai.yaml
+    acceptance_criteria:
+      - The auditor checks preserved properties, distorted properties, false friends, missing physical carriers, noncommuting limits, and hidden definitional transfer.
+      - The auditor assigns a disposition: usable_for_explanation, usable_for_hypothesis_generation, needs_revision, quarantine, or reject.
+      - A visual analogy can affect future cycles only if the auditor records at least one property-preserving route mutation or one concrete falsifier.
+    blocked_by:
+      - VCR-001
+    evidence:
+      - skills/evaluation/visual-analogy-preservation-auditor/SKILL.md
+      - skills/evaluation/visual-analogy-preservation-auditor/agents/openai.yaml
+    review_date: "2026-07-21"
+    failure_modes:
+      - The auditor rubber-stamps analogies because they are intuitive.
+      - The auditor does not distinguish explanatory value from proof-search value.
+      - The auditor misses a source-target mismatch that recreates proxy shift.
+    status: resolved
+
+  - id: VCR-004
+    type: hook_todo
+    phase: deep-reflection-cycle-integration
+    owner: agentic/registries
+    priority: high
+    risk_class: hidden_uninvoked_visual_skill
+    title: Add visual conceptualization to the deep reflection cycle
+    intent: >
+      Integrate visual conceptualization after failure archaeology or conceptual
+      abstraction revision, and before renewed branch selection, so visual
+      metaphors become controlled reflection artifacts.
+    use_skills:
+      - visual-theorem-conceptualizer
+      - visual-analogy-preservation-auditor
+      - failure-archaeology-explainer
+      - mathematical-concept-gap-revisitor
+    required_artifact:
+      - agentic/registries/discovery_marathon_skill_dispatch.yaml
+      - agentic/scripts/discovery_marathon_common.py
+      - agentic/scripts/validate_discovery_marathon_skill_dispatch.py
+    acceptance_criteria:
+      - A deep_reflection_visual_conceptualization phase exists in the dispatch matrix.
+      - The phase is triggered for failed major cycle sets, conceptual plateaus, low explanatory-power routes, and theorem statements whose key mechanism is opaque.
+      - The phase must output either a route mutation, a falsifier, a missing artifact, a representation requirement, or a no-investment verdict.
+    blocked_by:
+      - VCR-002
+      - VCR-003
+    evidence:
+      - agentic/registries/discovery_marathon_skill_dispatch.yaml
+      - agentic/scripts/discovery_marathon_common.py
+      - agentic/scripts/validate_discovery_marathon_skill_dispatch.py
+      - agentic/scripts/run_discovery_marathon.py
+    review_date: "2026-07-21"
+    failure_modes:
+      - The phase runs but only appends prose to reports.
+      - The phase creates new branches without passing preservation audit.
+      - The phase delays publication consolidation through unbounded analogy exploration.
+    status: resolved
+
+  - id: VCR-005
+    type: workflow_todo
+    phase: deterministic-builder-and-validator
+    owner: agentic/scripts
+    priority: high
+    risk_class: unverifiable_visual_reasoning
+    title: Build and validate visual conceptualization packets
+    intent: >
+      Provide deterministic scripts that produce, store, and validate
+      target-scoped visual conceptualization packets from theorem/concept
+      entries and cycle outputs.
+    use_skills:
+      - visual-theorem-conceptualizer
+      - visual-analogy-preservation-auditor
+    required_artifact:
+      - agentic/scripts/build_visual_conceptualization_packet.py
+      - agentic/scripts/validate_visual_conceptualization_packet.py
+      - agentic/reports/visual_conceptualization/targets/yang-mills-existence-and-mass-gap-target/latest.json
+      - agentic/reports/visual_conceptualization/targets/yang-mills-existence-and-mass-gap-target/latest.md
+    acceptance_criteria:
+      - The builder accepts a target id, source cycle or report path, theorem or concept selector, and output directory.
+      - The validator checks required fields, property-preservation coverage, distortion ledger, hypothesis-inspiration quality, and absence of API key or authorization material.
+      - Generated packets are target-scoped so visual conceptualizations for YM, P vs NP, and other themes cannot overwrite each other.
+    blocked_by:
+      - VCR-001
+      - VCR-002
+      - VCR-003
+    evidence:
+      - agentic/scripts/visual_conceptualization.py
+      - agentic/scripts/build_visual_conceptualization_packet.py
+      - agentic/scripts/validate_visual_conceptualization_packet.py
+      - agentic/reports/visual_conceptualization/targets/yang-mills-existence-and-mass-gap-target/latest.json
+      - agentic/reports/visual_conceptualization/targets/yang-mills-existence-and-mass-gap-target/latest.md
+    review_date: "2026-07-21"
+    failure_modes:
+      - Packets cannot be regenerated from source artifacts.
+      - The validator accepts beautiful but mathematically empty analogies.
+      - Cross-theme reports overwrite each other.
+    status: resolved
+
+  - id: VCR-006
+    type: target_todo
+    phase: yang-mills-pilot
+    owner: agentic/reports
+    priority: high
+    risk_class: physics_irrelevant_visualization
+    title: Pilot property-preserving visual conceptualization on YM concepts
+    intent: >
+      Test the visual conceptualizer on YM concepts where analogy failure would
+      be informative: Wilson loops, reflection positivity, Schur/Feshbach
+      compression, cutoff-uniform tails, OS reconstruction, and mass-gap
+      spectral carriers.
+    use_skills:
+      - visual-theorem-conceptualizer
+      - visual-analogy-preservation-auditor
+      - physical-relevance-impact-auditor
+      - qualitative-variable-isolator
+    required_artifact:
+      - agentic/reports/visual_conceptualization/targets/yang-mills-existence-and-mass-gap-target/latest.json
+      - agentic/reports/visual_conceptualization/targets/yang-mills-existence-and-mass-gap-target/latest.md
+    acceptance_criteria:
+      - Each YM visual analogy names the physical carrier and explains which gauge-invariant or OS/spectral property the image preserves.
+      - At least one analogy is rejected or quarantined to prove the audit is not decorative.
+      - Any inspired hypothesis names a concrete next artifact, such as an endpoint source table, uniform tail bound ledger, same-theory carrier certificate, or order-of-limits falsifier.
+    blocked_by:
+      - VCR-004
+      - VCR-005
+    evidence:
+      - agentic/reports/visual_conceptualization/targets/yang-mills-existence-and-mass-gap-target/latest.json
+      - agentic/reports/visual_conceptualization/targets/yang-mills-existence-and-mass-gap-target/latest.md
+    review_date: "2026-07-21"
+    failure_modes:
+      - The pilot produces attractive explanations but no new route constraints.
+      - The pilot suggests hypotheses that are physically irrelevant or publication-light.
+      - The pilot hides the finite-to-global gap behind an intuitive picture.
+    status: resolved
+
+  - id: VCR-007
+    type: report_todo
+    phase: report-and-html-surface
+    owner: agentic/reports
+    priority: medium
+    risk_class: visual_insight_not_visible
+    title: Surface visual conceptualization in reports and timeline HTML
+    intent: >
+      Make property-preserving metaphors inspectable in the discovery reports
+      without turning them into unreviewed proof evidence.
+    use_skills:
+      - visual-theorem-conceptualizer
+      - timeline-contribution-explainer
+    required_artifact:
+      - agentic/scripts/build_discovery_marathon_report.py
+      - agentic/scripts/generate_discovery_marathon_html.py
+      - agentic/reports/discovery_marathon/targets/yang-mills-existence-and-mass-gap-target/latest.html
+      - agentic/reports/discovery_marathon/targets/yang-mills-existence-and-mass-gap-target/full_timeline.html
+    acceptance_criteria:
+      - Reports include a visual conceptualization summary with metaphor, preserved properties, distorted properties, and hypothesis outputs.
+      - HTML renders the analogy as structured cards or diagrams without MathJax input errors.
+      - The report labels visual analogies as reflection artifacts unless a validator-promoted hypothesis or proof obligation exists.
+    blocked_by:
+      - VCR-005
+      - VCR-006
+    evidence:
+      - agentic/scripts/build_discovery_marathon_report.py
+      - agentic/scripts/generate_discovery_marathon_html.py
+      - agentic/reports/discovery_marathon/targets/yang-mills-existence-and-mass-gap-target/latest.html
+      - agentic/reports/discovery_marathon/targets/yang-mills-existence-and-mass-gap-target/full_timeline.html
+    review_date: "2026-07-21"
+    failure_modes:
+      - Visual summaries are hidden in raw JSON only.
+      - HTML presentation makes analogy look like theorem evidence.
+      - Formula rendering breaks in visual metaphor captions or property tables.
+    status: resolved
+
+  - id: VCR-008
+    type: test_todo
+    phase: validation-and-regression
+    owner: agentic/scripts
+    priority: high
+    risk_class: unbounded_or_unchecked_visual_analogy_cycle
+    title: Validate the visual conceptualizer against shallow analogy failure
+    intent: >
+      Add regression checks that prevent visual conceptualization from becoming
+      an infinite interpretive loop or a source of low-reward speculative
+      branches.
+    use_skills:
+      - visual-theorem-conceptualizer
+      - visual-analogy-preservation-auditor
+      - proof-depth-release-gate
+      - physical-relevance-impact-auditor
+    required_artifact:
+      - agentic/scripts/validate_visual_conceptualization_packet.py
+      - agentic/scripts/validate_discovery_marathon_report.py
+      - agentic/scripts/validate_todos.py
+    acceptance_criteria:
+      - Validation rejects analogies with no preserved-property table, no distortion ledger, no physical relevance assessment for YM, or no route consequence.
+      - The workflow caps visual conceptualization to one reflection pass per failed major cycle set unless a promoted route mutation names a new artifact or falsifier.
+      - validate_todos.py and the visual packet validator pass after implementation.
+    blocked_by:
+      - VCR-004
+      - VCR-005
+      - VCR-006
+      - VCR-007
+    evidence:
+      - agentic/scripts/validate_visual_conceptualization_packet.py
+      - agentic/scripts/validate_discovery_marathon_report.py
+      - agentic/scripts/validate_todos.py
+    review_date: "2026-07-21"
+    failure_modes:
+      - Visual reflection recurses indefinitely because every metaphor suggests another metaphor.
+      - Low-physics-reward analogies create new branches.
+      - The validator checks only schema shape and misses conceptual shallowness.
+    status: resolved

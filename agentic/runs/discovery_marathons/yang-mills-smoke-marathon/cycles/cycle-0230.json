@@ -1,0 +1,543 @@
+{
+  "branch_execution_records": [
+    {
+      "api_attempt": "primary",
+      "api_key_config": {
+        "active_provider": "azure_openai",
+        "configured_keys": [
+          "AZURE_OPENAI_API_KEY",
+          "AZURE_OPENAI_ENDPOINT",
+          "AZURE_OPENAI_MODEL",
+          "AZURE_OPENAI_REASONING_EFFORT",
+          "AZURE_OPENAI_RESPONSES_ENDPOINT",
+          "OPENAI_BASE_URL",
+          "OPENAI_MODEL",
+          "OPENAI_REASONING_EFFORT"
+        ],
+        "has_openai_api_key": true,
+        "source": "config/api_keys.json"
+      },
+      "api_timeout_seconds": 1740,
+      "branch_id": "marathon.branch.2943978bc7b2",
+      "elapsed_seconds": 160.897,
+      "engine": "azure_responses_api",
+      "http_status": 200,
+      "max_output_tokens": 12000,
+      "model": "gpt-5.5",
+      "output_schema": "agentic/spec/discovery_marathon_codex_branch_output.schema.json",
+      "prior_attempt_errors": [],
+      "reasoning_effort": "high",
+      "response_id": "resp_001c3ce88ae63912006a4fd71ed7f88195bf886d73a591ac39",
+      "status": "complete"
+    }
+  ],
+  "branch_outputs": [
+    {
+      "attempted_derivation": {
+        "blocking_gap": "The finite-dimensional Feshbach theorem is valid, but Yang-Mills still lacks the needed reflected Wilson boundary OPE with multiplicative quotient form, Hermitian coefficients H,K,..., and uniform remainders for locked gauge-invariant hairpin blocks.",
+        "derivation_id": "cycle230.derivation.finite_block_feshbach",
+        "steps": [
+          "Lock a finite positive-time Wilson family F_1,...,F_n and replace it by collars T_delta F_i so the regulated reflection-positive cone gives N_delta>=0 after RG convergence.",
+          "Assume the same-theory boundary OPE separates the collar matrix as N_delta=B_delta circ M_delta plus a small remainder, with B_delta containing only allowed boundary factors.",
+          "Remove diagonal one-body Wilson factors by congruence and form q_delta=widehat N_delta oslash widehat B_delta; this is the intended normalized OS matrix if the same-theory condition is true.",
+          "For hairpin-style collar collapse q_delta approaches J=11^*, so decompose C^n=C e plus e^perp and take the Schur complement of the positive vacuum direction.",
+          "The expansion of the Schur complement gives the invariant first test PHP and the corrected second test P(K-n^{-1}Hee^*H)P; the correction cannot be omitted because the vacuum direction couples at order tau.",
+          "If PHP has a positive gap, finite-block positivity follows by norm domination. If PHP has null directions, apply the Feshbach map recursively; the first negative reduced coefficient constructs a vector c_tau with c_tau^*q_tau c_tau<0.",
+          "This produces a normalization-safe falsifier: one-body renormalizations cancel under P, while mixed reflected boundary OPE data survive in the reduced coefficients."
+        ],
+        "why_not_yet_a_proof": "Closed-cone positivity proves collar matrices, not the uncollared Wilson matrices. The bridge still depends on an unproved same-theory trace theorem at the reflection plane and on excluding pair-dependent boundary counterterms or nonmultiplicative contacts."
+      },
+      "branch_id": "marathon.branch.2943978bc7b2",
+      "branch_title": "Reflection-Positivity Closed-Cone Topology: Wilson collar Feshbach quotient test",
+      "candidate_lemmas": [
+        {
+          "assumptions": [
+            "Regulated reflection positivity holds for each collar-separated block and RG convergence is valid for every reflected matrix entry.",
+            "The collar maps T_delta F converge to F in the locked cutoff-removal topology and preserve the gauge-invariant test algebra.",
+            "After additive contacts are eliminated by diagonal trace continuity, the remaining boundary anomaly has the form N_delta=B_delta circ M_delta plus a uniform finite-block remainder.",
+            "All entries of B_delta used in the quotient are nonzero and the normalized intended quotient q_delta has a Hermitian expansion q_tau=J+tau H+tau^2 K+... with tau(delta)->0.",
+            "The recursive Feshbach reductions are computed with remainders small compared with the first nonzero reduced coefficient on each null sector."
+          ],
+          "definitions": [
+            "source object: regulated reflection-positive Schwinger functionals S_{a,L} on a locked gauge-invariant positive-time test algebra, plus finite Wilson collar blocks T_delta F_i.",
+            "target object: continuum OS quadratic forms S(Theta F_i,F_j) on the uncollared locked gauge-invariant Wilson observables.",
+            "controlled interface: finite reflected OS matrices, diagonal normalizations, and the Schur quotient q_delta obtained by dividing out only boundary factors already present in the same theory.",
+            "same-theory condition: collar collapse may use diagonal congruences and fixed observable embeddings only; no pair-dependent counterterm, boundary algebra enlargement, or changed Wilson renormalization is allowed."
+          ],
+          "equations": [
+            {
+              "label": "collar OS matrix",
+              "latex": "N_\\delta(i,j)=S(\\Theta T_\\delta F_i,T_\\delta F_j)\\ge0",
+              "valid_when": "T_delta F_i are supported a positive distance from the reflection plane and the RG-to-OS convergence controls these reflected probes."
+            },
+            {
+              "label": "same-theory quotient",
+              "latex": "q_\\delta=\\widehat M_\\delta=\\widehat N_\\delta\\oslash\\widehat B_\\delta,\\qquad N_\\delta=B_\\delta\\circ M_\\delta+o(\\tau^m)",
+              "valid_when": "The boundary OPE is multiplicative on the finite block and diagonal normalization is a same-theory congruence."
+            },
+            {
+              "label": "vacuum Schur complement",
+              "latex": "q_\\tau=J+\\tau H+\\tau^2K+O(\\tau^3),\\quad e=n^{-1/2}{\\bf 1},\\quad P=I-ee^*,\\quad T_\\tau=Pq_\\tau P-Pq_\\tau e(e^*q_\\tau e)^{-1}e^*q_\\tau P",
+              "valid_when": "q_tau is close to the rank-one vacuum matrix J={\\bf 1}{\\bf 1}^* and e^*q_tau e remains strictly positive."
+            },
+            {
+              "label": "second coefficient after vacuum removal",
+              "latex": "T_\\tau=\\tau PHP+\\tau^2P(K-n^{-1}Hee^*H)P+O(\\tau^3)",
+              "valid_when": "The expansion is C^2 in tau with uniform finite-block remainder; the correction is forced by the large rank-one OS direction."
+            },
+            {
+              "label": "recursive Feshbach reduction",
+              "latex": "\\mathfrak F_\\Pi(A(\\tau))=\\Pi A(\\tau)\\Pi-\\Pi A(\\tau)R(RA(\\tau)R)^{-1}RA(\\tau)\\Pi",
+              "valid_when": "R projects onto the positive spectral subspace already certified and Pi projects onto its null sector."
+            }
+          ],
+          "failure_test": "Find a finite Wilson hairpin block and a null-sector vector for which PHP is negative, or PHP>=0 but the first nonzero Feshbach-reduced coefficient is negative.",
+          "lemma_id": "cycle230.lemma.vacuum_feshbach_quotient_bridge",
+          "proof_role": "Turns the Wilson boundary obstruction from informal anomaly language into a finite-dimensional tangent-cone certificate for passing collar positivity to the same continuum theory.",
+          "statement": "For any finite reflected Wilson collar block whose same-theory boundary anomaly is multiplicative and whose normalized Schur quotient tends to the vacuum matrix, OS positivity of the intended boundary block is equivalent, up to the proven OPE order, to positivity of the recursive Feshbach reduced coefficients after removing the vacuum direction. The first negative reduced coefficient is a valid same-theory falsifier."
+        },
+        {
+          "assumptions": [
+            "q_tau is Hermitian and q_tau=J+tau H+O(tau^2) in operator norm on the finite block.",
+            "e^*q_tau e>=n/2 for small tau.",
+            "The O(tau^2) remainder in the vacuum Schur complement is bounded by gamma tau/2 on 1^perp."
+          ],
+          "definitions": [
+            "Wilson block: a finite family of locked positive-time Wilson observables whose collar supports avoid the reflection plane before taking delta to zero.",
+            "first reduced kernel: the coefficient PHP in the vacuum Schur complement of q_tau=J+tau H+O(tau^2).",
+            "uniform gap: a bound PHP>=gamma P with gamma>0 independent of sufficiently small delta for the chosen block."
+          ],
+          "equations": [
+            {
+              "label": "gap domination",
+              "latex": "PHP\\ge \\gamma P,\\qquad \\|T_\\tau-\\tau PHP\\|\\le (\\gamma/2)\\tau\\ \\Longrightarrow\\ T_\\tau\\ge (\\gamma/2)\\tau P",
+              "valid_when": "The first reduced kernel has a finite-block spectral gap and the boundary OPE remainder is uniform."
+            },
+            {
+              "label": "block positivity recovery",
+              "latex": "e^*q_\\tau e>0,\\quad T_\\tau\\ge0\\quad\\Longleftrightarrow\\quad q_\\tau\\ge0",
+              "valid_when": "Schur complement is taken with respect to the vacuum direction e."
+            }
+          ],
+          "failure_test": "The test fails exactly when PHP has a zero or negative direction; zero directions force the higher Feshbach hierarchy.",
+          "lemma_id": "cycle230.lemma.first_order_gap_promotion",
+          "proof_role": "Gives a promotion criterion: a positive definite first boundary kernel proves the finite Wilson block without computing second or higher Feshbach terms.",
+          "statement": "If the first reduced Wilson boundary kernel PHP is strictly positive on 1^perp for a finite collar block, then that block needs no higher anomaly analysis: the normalized quotient q_tau is PSD for all sufficiently small collars, hence the same-theory OS matrix is positive for that block."
+        }
+      ],
+      "control_decision": {
+        "decision": "persist_adapt",
+        "pivot_test": "Pivot if no locked Wilson collar family admits a multiplicative boundary quotient with uniform OPE remainder, or if the cutoff topology cannot see reflected hairpin blocks.",
+        "promotion_test": "Promote when a dense Wilson core has a proved boundary OPE whose Feshbach reduced coefficients are PSD at the first nonzero level for every finite block.",
+        "reason": "The branch is still learning: it replaced the previous second-order slogan by a full finite-matrix Feshbach hierarchy and separated promotion cases from falsifier cases."
+      },
+      "dependency_updates": [
+        {
+          "dependency_id": "RG-to-OS Continuum Passage Bridge Lemma",
+          "description": "The closed-cone step is now separated from the boundary trace step: RG convergence must control collar matrices, while Feshbach tests control uncollared Wilson quotient positivity.",
+          "kind": "refined",
+          "status": "conditional_valid"
+        },
+        {
+          "dependency_id": "choice of gauge-invariant test algebra",
+          "description": "The same-theory condition now forbids pair-dependent boundary renormalizations; only diagonal congruences and fixed collar embeddings are allowed.",
+          "kind": "tightened",
+          "status": "open"
+        },
+        {
+          "dependency_id": "cutoff-removal topology",
+          "description": "Topology must give uniform reflected finite-block OPE remainders near the reflection plane, not merely distributional convergence away from it.",
+          "kind": "strengthened_obligation",
+          "status": "blocked_on_estimates"
+        },
+        {
+          "dependency_id": "reflected Wilson boundary OPE",
+          "description": "Need Hermitian finite-block coefficients H,K,... and a multiplicative anomaly B_delta for hairpin collars with controlled remainder.",
+          "kind": "new_dependency",
+          "status": "missing"
+        }
+      ],
+      "falsifiers": [
+        "A finite reflected Wilson hairpin block has a zero-sum vector v with v^*PHP v<0; this is an immediate first-order falsifier.",
+        "PHP is PSD, but on ker(PHP) the corrected form P(K-n^{-1}Hee^*H)P is negative.",
+        "A higher Feshbach reduction is negative after coupling to a positive earlier sector, showing that raw PKP or PLP gave a misleading test.",
+        "The boundary OPE contains an additive contact whose diagonal does not vanish under the same collar trace, contradicting the multiplicative quotient setup.",
+        "The quotient B_delta requires pair-dependent Wilson renormalization or a boundary observable not in the locked algebra, so the positivity bridge proves a different theory.",
+        "The RG cutoff-removal topology controls separated collars but gives no uniform remainder as reflected Wilson supports collide with the reflection plane."
+      ],
+      "generated_by": "azure_responses_api",
+      "mathematical_learning": "Cycle 230 turns the Wilson obstruction into a precise tangent-cone algorithm. The valid test is Schur complement of the vacuum direction followed by recursive Feshbach reductions on null sectors. A positive first reduced kernel promotes a finite block; the first negative reduced coefficient is a genuine mixed-boundary same-theory falsifier. The remaining work is no longer abstract reflection positivity but a concrete reflected Wilson boundary OPE with uniform remainders.",
+      "next_experiment": "Compute the leading H and corrected K for a three-hairpin reflected Wilson block with common boundary footprint; test PHP on 1^perp and, if null, evaluate P(K-n^{-1}Hee^*H)P on the null sector."
+    }
+  ],
+  "completed_utc": "2026-07-09T17:30:10+00:00",
+  "created_utc": "2026-07-09T17:15:10+00:00",
+  "cycle_id": "cycle-0230",
+  "cycle_index": 230,
+  "cycle_learning": "This research cycle converted active route pressure into typed branch lemmas. The main mathematical change is that each branch now names a source object, target object, equation, validity condition, falsifier, and next experiment. Only research-mode cycles with elapsed-time and branch-engine evidence count as genuine long-horizon research progress.",
+  "execution_mode": "research",
+  "next_cycle_queue": [
+    "Compute the leading H and corrected K for a three-hairpin reflected Wilson block with common boundary footprint; test PHP on 1^perp and, if null, evaluate P(K-n^{-1}Hee^*H)P on the null sector."
+  ],
+  "research_seconds_elapsed": 900.017,
+  "research_seconds_target": 900,
+  "run_id": "yang-mills-smoke-marathon",
+  "scheduler_decisions": [
+    {
+      "branch_id": "marathon.branch.2943978bc7b2",
+      "branch_title": "Reflection-Positivity Closed-Cone Topology",
+      "controlled_interface": "regulated reflection-positive Schwinger forms -> OS-positive continuum Schwinger functions",
+      "reason": "The branch remains target-linked and has not exhausted its certification tests.",
+      "recommended_move": "persist_adapt"
+    }
+  ],
+  "selected_branch_ids": [
+    "marathon.branch.2943978bc7b2"
+  ],
+  "skill_dispatch_trace": [
+    {
+      "cycle_id": "cycle-0230",
+      "input_artifacts": [
+        "agentic/state/current_target.json",
+        "agentic/reports/discovery_stretch/latest.json",
+        "agentic/registries/discovery_marathon_skill_dispatch.yaml"
+      ],
+      "invoked_skills": [
+        "looper-target-goal-enricher",
+        "looper-target-dependency-cartographer",
+        "looper-workflow-contract-governor",
+        "looper-hook-policy-maintainer"
+      ],
+      "missing_required_skills": [],
+      "output_artifacts": [
+        "cycle:cycle-0230",
+        "branch:marathon.branch.2943978bc7b2"
+      ],
+      "phase": "preflight_target_navigation",
+      "queued_conditional_skills": [
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "kb-orchestrator"
+        }
+      ],
+      "skipped_skills_with_reason": [],
+      "validation_handoff": "preflight_target_navigation used 4 required skills while exploring Reflection-Positivity Closed-Cone Topology."
+    },
+    {
+      "cycle_id": "cycle-0230",
+      "input_artifacts": [
+        "agentic/state/current_target.json",
+        "agentic/reports/discovery_stretch/latest.json",
+        "agentic/registries/discovery_marathon_skill_dispatch.yaml"
+      ],
+      "invoked_skills": [
+        "long-horizon-route-portfolio-manager",
+        "abducer-refinement-route-ranker",
+        "next-experiment-queue-ranker",
+        "kb-discovery-governor"
+      ],
+      "missing_required_skills": [],
+      "output_artifacts": [
+        "cycle:cycle-0230",
+        "branch:marathon.branch.2943978bc7b2"
+      ],
+      "phase": "branch_selection",
+      "queued_conditional_skills": [
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "kb-promising-direction-assessor"
+        }
+      ],
+      "skipped_skills_with_reason": [],
+      "validation_handoff": "branch_selection used 4 required skills while exploring Reflection-Positivity Closed-Cone Topology."
+    },
+    {
+      "cycle_id": "cycle-0230",
+      "input_artifacts": [
+        "agentic/state/current_target.json",
+        "agentic/reports/discovery_stretch/latest.json",
+        "agentic/registries/discovery_marathon_skill_dispatch.yaml"
+      ],
+      "invoked_skills": [
+        "kb-abduce",
+        "kb-deduce",
+        "kb-induce",
+        "kb-concept-bridge-planner",
+        "kb-gap-abstraction-conjecturer"
+      ],
+      "missing_required_skills": [],
+      "output_artifacts": [
+        "cycle:cycle-0230",
+        "branch:marathon.branch.2943978bc7b2"
+      ],
+      "phase": "branch_exploration",
+      "queued_conditional_skills": [
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "kb-proof-sketcher"
+        },
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "kb-proof-connector"
+        }
+      ],
+      "skipped_skills_with_reason": [],
+      "validation_handoff": "branch_exploration used 5 required skills while exploring Reflection-Positivity Closed-Cone Topology."
+    },
+    {
+      "cycle_id": "cycle-0230",
+      "input_artifacts": [
+        "agentic/state/current_target.json",
+        "agentic/reports/discovery_stretch/latest.json",
+        "agentic/registries/discovery_marathon_skill_dispatch.yaml"
+      ],
+      "invoked_skills": [
+        "qualitative-variable-isolator",
+        "physics-regime-map-builder",
+        "monotonicity-sensitivity-prober",
+        "limit-convergence-behavior-auditor",
+        "qualitative-toy-model-builder",
+        "qualitative-physics-falsifier"
+      ],
+      "missing_required_skills": [],
+      "output_artifacts": [
+        "cycle:cycle-0230",
+        "branch:marathon.branch.2943978bc7b2"
+      ],
+      "phase": "qualitative_physics_reasoning",
+      "queued_conditional_skills": [
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "dimensional-symmetry-constraint-checker"
+        },
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "scale-asymptotic-reasoner"
+        }
+      ],
+      "skipped_skills_with_reason": [],
+      "validation_handoff": "qualitative_physics_reasoning used 6 required skills while exploring Reflection-Positivity Closed-Cone Topology."
+    },
+    {
+      "cycle_id": "cycle-0230",
+      "input_artifacts": [
+        "agentic/state/current_target.json",
+        "agentic/reports/discovery_stretch/latest.json",
+        "agentic/registries/discovery_marathon_skill_dispatch.yaml"
+      ],
+      "invoked_skills": [
+        "gedanken-need-assessor"
+      ],
+      "missing_required_skills": [],
+      "output_artifacts": [
+        "cycle:cycle-0230",
+        "branch:marathon.branch.2943978bc7b2"
+      ],
+      "phase": "gedanken_experiment_design",
+      "queued_conditional_skills": [
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "gedanken-situation-designer"
+        },
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "gedanken-counterfactual-variant-builder"
+        },
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "gedanken-transfer-guard"
+        },
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "gedanken-followup-planner"
+        },
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "qualitative-toy-model-builder"
+        }
+      ],
+      "skipped_skills_with_reason": [],
+      "validation_handoff": "gedanken_experiment_design used 1 required skills while exploring Reflection-Positivity Closed-Cone Topology."
+    },
+    {
+      "cycle_id": "cycle-0230",
+      "input_artifacts": [
+        "agentic/state/current_target.json",
+        "agentic/reports/discovery_stretch/latest.json",
+        "agentic/registries/discovery_marathon_skill_dispatch.yaml"
+      ],
+      "invoked_skills": [
+        "kb-contradiction-strategist",
+        "contradiction-route-auditor",
+        "kb-hypothesis-refutation-loop"
+      ],
+      "missing_required_skills": [],
+      "output_artifacts": [
+        "cycle:cycle-0230",
+        "branch:marathon.branch.2943978bc7b2"
+      ],
+      "phase": "contradiction_and_falsifier_generation",
+      "queued_conditional_skills": [
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "kb-novel-proof-strategist"
+        }
+      ],
+      "skipped_skills_with_reason": [],
+      "validation_handoff": "contradiction_and_falsifier_generation used 3 required skills while exploring Reflection-Positivity Closed-Cone Topology."
+    },
+    {
+      "cycle_id": "cycle-0230",
+      "input_artifacts": [
+        "agentic/state/current_target.json",
+        "agentic/reports/discovery_stretch/latest.json",
+        "agentic/registries/discovery_marathon_skill_dispatch.yaml"
+      ],
+      "invoked_skills": [
+        "evidence-acquisition-planner",
+        "prior-art-importer",
+        "kb-prior-art-pass"
+      ],
+      "missing_required_skills": [],
+      "output_artifacts": [
+        "cycle:cycle-0230",
+        "branch:marathon.branch.2943978bc7b2"
+      ],
+      "phase": "evidence_acquisition",
+      "queued_conditional_skills": [
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "kb-epistemic-hardness"
+        }
+      ],
+      "skipped_skills_with_reason": [],
+      "validation_handoff": "evidence_acquisition used 3 required skills while exploring Reflection-Positivity Closed-Cone Topology."
+    },
+    {
+      "cycle_id": "cycle-0230",
+      "input_artifacts": [
+        "agentic/state/current_target.json",
+        "agentic/reports/discovery_stretch/latest.json",
+        "agentic/registries/discovery_marathon_skill_dispatch.yaml"
+      ],
+      "invoked_skills": [
+        "abducer-obligation-gatekeeper",
+        "entailment-gap-auditor",
+        "kb-end-to-end-proof-critic"
+      ],
+      "missing_required_skills": [],
+      "output_artifacts": [
+        "cycle:cycle-0230",
+        "branch:marathon.branch.2943978bc7b2"
+      ],
+      "phase": "obligation_gating",
+      "queued_conditional_skills": [
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "kb-coherence-evaluator"
+        }
+      ],
+      "skipped_skills_with_reason": [],
+      "validation_handoff": "obligation_gating used 3 required skills while exploring Reflection-Positivity Closed-Cone Topology."
+    },
+    {
+      "cycle_id": "cycle-0230",
+      "input_artifacts": [
+        "agentic/state/current_target.json",
+        "agentic/reports/discovery_stretch/latest.json",
+        "agentic/registries/discovery_marathon_skill_dispatch.yaml"
+      ],
+      "invoked_skills": [
+        "review-reasoner",
+        "review-reasoner-epistemologist",
+        "review-reasoner-discovery-scientist",
+        "kb-discovery-breakthrough-profiler"
+      ],
+      "missing_required_skills": [],
+      "output_artifacts": [
+        "cycle:cycle-0230",
+        "branch:marathon.branch.2943978bc7b2"
+      ],
+      "phase": "review_and_synthesis",
+      "queued_conditional_skills": [
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "review-reasoner-fields-medalist"
+        },
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "review-reasoner-concept-logician"
+        }
+      ],
+      "skipped_skills_with_reason": [],
+      "validation_handoff": "review_and_synthesis used 4 required skills while exploring Reflection-Positivity Closed-Cone Topology."
+    },
+    {
+      "cycle_id": "cycle-0230",
+      "input_artifacts": [
+        "agentic/state/current_target.json",
+        "agentic/reports/discovery_stretch/latest.json",
+        "agentic/registries/discovery_marathon_skill_dispatch.yaml"
+      ],
+      "invoked_skills": [
+        "show-reasoning",
+        "kb-explain"
+      ],
+      "missing_required_skills": [],
+      "output_artifacts": [
+        "cycle:cycle-0230",
+        "branch:marathon.branch.2943978bc7b2"
+      ],
+      "phase": "report_rendering",
+      "queued_conditional_skills": [
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "kb-expert-paper-generator"
+        },
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "kb-macro-proof-paper-writer"
+        }
+      ],
+      "skipped_skills_with_reason": [],
+      "validation_handoff": "report_rendering used 2 required skills while exploring Reflection-Positivity Closed-Cone Topology."
+    },
+    {
+      "cycle_id": "cycle-0230",
+      "input_artifacts": [
+        "agentic/state/current_target.json",
+        "agentic/reports/discovery_stretch/latest.json",
+        "agentic/registries/discovery_marathon_skill_dispatch.yaml"
+      ],
+      "invoked_skills": [
+        "looper-release-promoter",
+        "looper-workflow-contract-governor"
+      ],
+      "missing_required_skills": [],
+      "output_artifacts": [
+        "cycle:cycle-0230",
+        "branch:marathon.branch.2943978bc7b2"
+      ],
+      "phase": "release_promotion",
+      "queued_conditional_skills": [
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "looper-hook-policy-maintainer"
+        }
+      ],
+      "skipped_skills_with_reason": [],
+      "validation_handoff": "release_promotion used 2 required skills while exploring Reflection-Positivity Closed-Cone Topology."
+    }
+  ],
+  "target_id": "yang-mills-existence-and-mass-gap-target",
+  "timing_validation": {
+    "reason": "Elapsed 900.017 seconds against target 900 seconds.",
+    "status": "research"
+  },
+  "valid_as_research_cycle": true,
+  "validation_handoff": [
+    "agentic/scripts/validate_discovery_marathon_cycle.py",
+    "agentic/scripts/validate_discovery_marathon_skill_dispatch.py"
+  ],
+  "version": 1
+}

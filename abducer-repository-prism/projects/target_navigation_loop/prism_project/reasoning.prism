@@ -1,0 +1,30 @@
+# Function: map a research target's dependency frontier and choose its next route.
+# Input: UnscopedResearchTarget supplies target identity.
+# Types: TargetDependencyFrontier adds the dependency map without adding epistemic warrant.
+# Output: TargetNavigationDisposition selects work, release promotion, or stall.
+# Layer: high-level epistemic topology only.
+# Metadata: workflows/manifest.json (`target_navigation_loop`).
+
+from types import (
+    TargetDependencyFrontier,
+    UnscopedResearchTarget,
+    TargetNavigationDisposition,
+)
+
+from occurrences import (
+    UnresolvedTargetDependencyProjection,
+    EvidentialTargetNavigationDispositionAssessment,
+)
+
+from relations import (
+    DependencyFrontierEnablesTargetDisposition,
+)
+
+reasoning TargetNavigationLoop(unscoped_target: UnscopedResearchTarget) -> Generated[TargetNavigationDisposition]:
+    sequence:
+        # The unresolved projection maps dependencies but adds no warrant to the target.
+        [dependency_frontier: UnresolvedTargetDependencyProjection(unscoped_target)]
+        # Disposition assessment turns the mapped frontier into the next workflow route.
+        [target_disposition: EvidentialTargetNavigationDispositionAssessment(dependency_frontier.value)] by DependencyFrontierEnablesTargetDisposition
+
+    return target_disposition

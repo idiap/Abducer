@@ -1,0 +1,322 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://abducer.local/schemas/open_world_maturation_portfolio.schema.json",
+  "title": "Open-world isolated maturation portfolio",
+  "description": "Binds frozen inventions to branch-local execution evidence, relation-bearing semantic cores, six deep reflection lenses, and pairwise content nonredundancy.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "artifact_kind", "portfolio_id", "target_id", "freeze_id",
+    "freeze_digest", "classification_id", "classification_digest", "phase_order",
+    "matured_inventions", "pairwise_nonredundancy", "branch_execution_records",
+    "parallel_barrier_receipt", "branch_separation", "authority_nulls", "content_digest"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "artifact_kind": {"const": "open_world_maturation_portfolio"},
+    "portfolio_id": {"$ref": "#/$defs/id"},
+    "target_id": {"$ref": "#/$defs/id"},
+    "freeze_id": {"$ref": "#/$defs/id"},
+    "freeze_digest": {"$ref": "#/$defs/digest"},
+    "classification_id": {"$ref": "#/$defs/id"},
+    "classification_digest": {"$ref": "#/$defs/digest"},
+    "phase_order": {
+      "type": "array",
+      "prefixItems": [
+        {"const": "pre_taxonomy_frozen"},
+        {"const": "post_freeze_classified"},
+        {"const": "isolated_parallel_maturation"},
+        {"const": "content_nonredundancy_checked"},
+        {"const": "deep_reflection_completed"},
+        {"const": "terminal_barrier_closed"}
+      ],
+      "items": false
+    },
+    "matured_inventions": {"type": "array", "minItems": 3, "items": {"$ref": "#/$defs/matured"}},
+    "pairwise_nonredundancy": {"type": "array", "minItems": 3, "items": {"$ref": "#/$defs/pair"}},
+    "branch_execution_records": {"type": "array", "minItems": 3, "items": {"$ref": "#/$defs/branchRecord"}},
+    "parallel_barrier_receipt": {"$ref": "#/$defs/barrierReceipt"},
+    "branch_separation": {
+      "type": "object", "additionalProperties": false,
+      "required": ["status", "authority_scope", "workspace_refs"],
+      "properties": {
+        "status": {"const": "terminal_barrier_and_namespace_separation_validated"},
+        "authority_scope": {"const": "sealed_declared_channels_and_exact_byte_bindings_only"},
+        "workspace_refs": {"type": "array", "minItems": 3, "uniqueItems": true, "items": {"type": "string", "minLength": 3}}
+      }
+    },
+    "authority_nulls": {
+      "type": "object", "additionalProperties": false,
+      "required": ["hidden_input_independence", "cognitive_independence", "semantic_independence", "external_creativity_authority", "truth_authority", "physics_value_authority"],
+      "properties": {
+        "hidden_input_independence": {"const": "unavailable"},
+        "cognitive_independence": {"const": "unavailable"},
+        "semantic_independence": {"const": "unavailable"},
+        "external_creativity_authority": {"const": "unavailable"},
+        "truth_authority": {"const": "unavailable"},
+        "physics_value_authority": {"const": "unavailable"}
+      }
+    },
+    "content_digest": {"$ref": "#/$defs/digest"}
+  },
+  "$defs": {
+    "id": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"},
+    "digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "text": {"type": "string", "minLength": 1},
+    "textList": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"$ref": "#/$defs/text"}},
+    "relation": {
+      "type": "object", "additionalProperties": false,
+      "required": ["source", "polarity", "target"],
+      "properties": {"source": {"$ref": "#/$defs/text"}, "polarity": {"$ref": "#/$defs/text"}, "target": {"$ref": "#/$defs/text"}}
+    },
+    "semanticCore": {
+      "type": "object", "additionalProperties": false,
+      "required": ["primitives", "relations", "mechanism_steps", "protected_differences", "boundary_regimes", "counterfactual_consequence", "falsifier", "correction_condition"],
+      "properties": {
+        "primitives": {"$ref": "#/$defs/textList"},
+        "relations": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/relation"}},
+        "mechanism_steps": {"$ref": "#/$defs/textList"},
+        "protected_differences": {"$ref": "#/$defs/textList"},
+        "boundary_regimes": {"$ref": "#/$defs/textList"},
+        "counterfactual_consequence": {"$ref": "#/$defs/text"},
+        "falsifier": {"$ref": "#/$defs/text"},
+        "correction_condition": {"$ref": "#/$defs/text"}
+      }
+    },
+    "lens": {
+      "type": "object", "additionalProperties": false,
+      "required": ["named_relation", "relation_before", "relation_operation", "mutation_status", "relation_after", "exposed_assumption", "strongest_opposition", "conceptual_mutation", "consequence", "boundary_or_correction", "semantic_core_correction_link", "physics_handback_link"],
+      "properties": {
+        "named_relation": {"$ref": "#/$defs/text"},
+        "relation_before": {"$ref": "#/$defs/relation"},
+        "relation_operation": {"enum": ["retype_source", "retype_target", "invert_dependence", "negate_relation", "reverse_relation", "sublate_opposition", "trace_origin", "expose_contingency", "replace_inheritance", "vary_modality", "separate_necessity_sufficiency", "counterfactualize_relation", "factor_common_structure", "preserve_difference", "expose_unification_cost", "identify_physical_carrier", "separate_model_reality", "locate_explanatory_commitment"]},
+        "mutation_status": {"enum": ["changed", "challenged"]},
+        "relation_after": {"oneOf": [{"$ref": "#/$defs/relation"}, {"type": "null"}]},
+        "exposed_assumption": {"$ref": "#/$defs/text"},
+        "strongest_opposition": {"$ref": "#/$defs/text"},
+        "conceptual_mutation": {"$ref": "#/$defs/text"},
+        "consequence": {"$ref": "#/$defs/text"},
+        "boundary_or_correction": {"$ref": "#/$defs/text"},
+        "semantic_core_correction_link": {"$ref": "#/$defs/text"},
+        "physics_handback_link": {"$ref": "#/$defs/text"}
+      }
+    },
+    "deepReflection": {
+      "type": "object", "additionalProperties": false,
+      "required": ["ontological", "dialectical", "genealogical", "modal_explanatory", "unification", "philosophy_of_physics"],
+      "properties": {
+        "ontological": {"$ref": "#/$defs/lens"},
+        "dialectical": {"$ref": "#/$defs/lens"},
+        "genealogical": {"$ref": "#/$defs/lens"},
+        "modal_explanatory": {"$ref": "#/$defs/lens"},
+        "unification": {"$ref": "#/$defs/lens"},
+        "philosophy_of_physics": {"$ref": "#/$defs/lens"}
+      }
+    },
+    "riskReward": {
+      "type": "object", "additionalProperties": false,
+      "required": ["risk_case", "high_upside_case", "learning_if_false", "cost_of_unification", "wildcard_reason"],
+      "properties": {
+        "risk_case": {"$ref": "#/$defs/text"},
+        "high_upside_case": {"$ref": "#/$defs/text"},
+        "learning_if_false": {"$ref": "#/$defs/text"},
+        "cost_of_unification": {"$ref": "#/$defs/text"},
+        "wildcard_reason": {"oneOf": [{"$ref": "#/$defs/text"}, {"type": "null"}]}
+      }
+    },
+    "physicsHandback": {
+      "type": "object", "additionalProperties": false,
+      "required": ["status", "physical_carrier", "regime_and_quantifiers", "decision_before", "proposed_next_decision", "decision_rationale", "untouched_physics_gates", "correction_or_falsifier"],
+      "properties": {
+        "status": {"enum": ["decision_changed", "quarantined_no_physics_delta"]},
+        "physical_carrier": {"type": ["string", "null"]},
+        "regime_and_quantifiers": {"type": ["string", "null"]},
+        "decision_before": {"type": ["string", "null"]},
+        "proposed_next_decision": {"type": ["string", "null"]},
+        "decision_rationale": {"$ref": "#/$defs/text"},
+        "untouched_physics_gates": {"$ref": "#/$defs/textList"},
+        "correction_or_falsifier": {"$ref": "#/$defs/text"}
+      }
+    },
+    "matured": {
+      "type": "object", "additionalProperties": false,
+      "required": ["invention_id", "branch_id", "exploration_role", "statement", "semantic_core", "deep_reflection", "risk_reward", "physics_handback", "semantic_core_digest", "content_digest", "worker_response_sha256", "branch_record_digest", "barrier_receipt_digest"],
+      "properties": {
+        "invention_id": {"$ref": "#/$defs/id"},
+        "branch_id": {"$ref": "#/$defs/id"},
+        "exploration_role": {"enum": ["candidate", "wildcard"]},
+        "statement": {"$ref": "#/$defs/text"},
+        "semantic_core": {"$ref": "#/$defs/semanticCore"},
+        "deep_reflection": {"$ref": "#/$defs/deepReflection"},
+        "risk_reward": {"$ref": "#/$defs/riskReward"},
+        "physics_handback": {"$ref": "#/$defs/physicsHandback"},
+        "semantic_core_digest": {"$ref": "#/$defs/digest"},
+        "content_digest": {"$ref": "#/$defs/digest"},
+        "worker_response_sha256": {"$ref": "#/$defs/digest"},
+        "branch_record_digest": {"$ref": "#/$defs/digest"},
+        "barrier_receipt_digest": {"$ref": "#/$defs/digest"}
+      }
+    },
+    "pair": {
+      "type": "object", "additionalProperties": false,
+      "required": ["left_invention_id", "right_invention_id", "left_semantic_core_digest", "right_semantic_core_digest", "differing_semantic_components", "status"],
+      "properties": {
+        "left_invention_id": {"$ref": "#/$defs/id"},
+        "right_invention_id": {"$ref": "#/$defs/id"},
+        "left_semantic_core_digest": {"$ref": "#/$defs/digest"},
+        "right_semantic_core_digest": {"$ref": "#/$defs/digest"},
+        "differing_semantic_components": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string"}},
+        "status": {"const": "content_nonredundant"}
+      }
+    },
+    "isolationRequirement": {
+      "type": "object", "additionalProperties": false,
+      "required": ["schema_version", "kernel_isolation_required", "minimum_accepted_status", "selected_backend", "selected_backend_probe_status", "content_digest"],
+      "properties": {
+        "schema_version": {"const": 1},
+        "kernel_isolation_required": {"type": "boolean"},
+        "minimum_accepted_status": {"enum": ["kernel_policy_enforced", "strongest_available"]},
+        "selected_backend": {"enum": ["macos_sandbox_exec", "linux_bubblewrap", "process_group_only"]},
+        "selected_backend_probe_status": {"enum": ["passed", "unavailable", "failed"]},
+        "content_digest": {"$ref": "#/$defs/digest"}
+      }
+    },
+    "intent": {
+      "type": "object", "additionalProperties": false,
+      "required": ["intent_id", "branch_id", "invention_id", "own_raw_invention_digest", "maturation_question", "allowed_input_digests", "intent_digest"],
+      "properties": {
+        "intent_id": {"$ref": "#/$defs/id"}, "branch_id": {"$ref": "#/$defs/id"}, "invention_id": {"$ref": "#/$defs/id"},
+        "own_raw_invention_digest": {"$ref": "#/$defs/digest"}, "maturation_question": {"$ref": "#/$defs/text"},
+        "allowed_input_digests": {"type": "array", "minItems": 3, "uniqueItems": true, "items": {"$ref": "#/$defs/digest"}},
+        "intent_digest": {"$ref": "#/$defs/digest"}
+      }
+    },
+    "manifest": {
+      "type": "object", "additionalProperties": false,
+      "required": ["manifest_id", "branch_id", "intent_digest", "workspace_ref", "allowed_input_digests", "forbidden_sibling_invention_digests", "isolation_requirement", "manifest_digest"],
+      "properties": {
+        "manifest_id": {"$ref": "#/$defs/id"}, "branch_id": {"$ref": "#/$defs/id"}, "intent_digest": {"$ref": "#/$defs/digest"},
+        "workspace_ref": {"type": "string", "minLength": 3},
+        "allowed_input_digests": {"type": "array", "minItems": 3, "uniqueItems": true, "items": {"$ref": "#/$defs/digest"}},
+        "forbidden_sibling_invention_digests": {"type": "array", "minItems": 2, "uniqueItems": true, "items": {"$ref": "#/$defs/digest"}},
+        "isolation_requirement": {"$ref": "#/$defs/isolationRequirement"}, "manifest_digest": {"$ref": "#/$defs/digest"}
+      }
+    },
+    "evidenceFile": {
+      "type": "object", "additionalProperties": false,
+      "required": ["ref", "sha256", "byte_length"],
+      "properties": {
+        "ref": {"type": "string", "pattern": "^evidence/high_risk/research-worker-invocation\\.[a-f0-9]{24}/(request|response)\\.json$"},
+        "sha256": {"$ref": "#/$defs/digest"},
+        "byte_length": {"type": "integer", "minimum": 1}
+      }
+    },
+    "terminalReceipt": {
+      "type": "object", "additionalProperties": false,
+      "required": [
+        "worker_receipt_id", "worker_receipt_ref", "worker_receipt_digest",
+        "worker_receipt_file_sha256", "worker_receipt_byte_length", "run_directory",
+        "registered_workspace_ref", "role", "operation", "process_status",
+        "protocol_status", "outcome_status", "process_started_at", "process_completed_at",
+        "process_group_status", "isolation_status", "isolation_backend",
+        "network_policy_status", "workspace_policy_status", "sibling_read_policy_status",
+        "sibling_write_policy_status", "request_evidence", "response_evidence",
+        "request_sha256", "request_byte_length", "response_sha256", "response_byte_length",
+        "branch_request_sha256", "branch_request_byte_length", "matured_response_sha256",
+        "matured_response_byte_length", "branch_intent_digest", "branch_manifest_digest"
+      ],
+      "properties": {
+        "worker_receipt_id": {"type": "string", "pattern": "^research-worker-receipt\\.[a-f0-9]{24}$"},
+        "worker_receipt_ref": {"type": "string", "pattern": "^receipts/high_risk/research-worker-receipt\\.[a-f0-9]{24}\\.json$"},
+        "worker_receipt_digest": {"$ref": "#/$defs/digest"}, "worker_receipt_file_sha256": {"$ref": "#/$defs/digest"},
+        "worker_receipt_byte_length": {"type": "integer", "minimum": 1},
+        "run_directory": {"type": "string", "minLength": 1},
+        "registered_workspace_ref": {"type": "string", "pattern": "^workspaces/high_risk/research-worker-invocation\\.[a-f0-9]{24}$"},
+        "role": {"const": "high_risk"}, "operation": {"const": "parallel_maturation"},
+        "process_status": {"const": "succeeded"}, "protocol_status": {"const": "accepted"},
+        "outcome_status": {"const": "accepted"},
+        "process_started_at": {"type": "string", "minLength": 1},
+        "process_completed_at": {"type": "string", "minLength": 1},
+        "process_group_status": {"const": "terminal_no_descendants"},
+        "isolation_status": {"enum": ["kernel_policy_enforced", "process_only_strongest_available"]},
+        "isolation_backend": {"enum": ["macos_sandbox_exec", "linux_bubblewrap", "process_group_only"]},
+        "network_policy_status": {"enum": ["kernel_denied", "not_kernel_denied"]},
+        "workspace_policy_status": {"enum": ["kernel_write_confined", "protocol_only_not_kernel_confined"]},
+        "sibling_read_policy_status": {"enum": ["kernel_run_sibling_read_denied", "not_kernel_denied"]},
+        "sibling_write_policy_status": {"enum": ["kernel_run_sibling_write_denied", "protocol_only_not_kernel_denied"]},
+        "request_evidence": {"$ref": "#/$defs/evidenceFile"},
+        "response_evidence": {"$ref": "#/$defs/evidenceFile"},
+        "request_sha256": {"$ref": "#/$defs/digest"}, "request_byte_length": {"type": "integer", "minimum": 1},
+        "response_sha256": {"$ref": "#/$defs/digest"}, "response_byte_length": {"type": "integer", "minimum": 1},
+        "branch_request_sha256": {"$ref": "#/$defs/digest"}, "branch_request_byte_length": {"type": "integer", "minimum": 1},
+        "matured_response_sha256": {"$ref": "#/$defs/digest"}, "matured_response_byte_length": {"type": "integer", "minimum": 1},
+        "branch_intent_digest": {"$ref": "#/$defs/digest"}, "branch_manifest_digest": {"$ref": "#/$defs/digest"}
+      }
+    },
+    "branchRecord": {
+      "type": "object", "additionalProperties": false,
+      "required": ["branch_id", "invention_id", "intent", "manifest", "worker_request", "worker_response", "terminal_receipt", "execution_authority_scope", "record_digest"],
+      "properties": {
+        "branch_id": {"$ref": "#/$defs/id"}, "invention_id": {"$ref": "#/$defs/id"}, "intent": {"$ref": "#/$defs/intent"},
+        "manifest": {"$ref": "#/$defs/manifest"},
+        "worker_request": {
+          "type": "object", "additionalProperties": false, "required": ["intent", "manifest"],
+          "properties": {"intent": {"$ref": "#/$defs/intent"}, "manifest": {"$ref": "#/$defs/manifest"}}
+        },
+        "worker_response": {"$ref": "#/$defs/maturedResponse"},
+        "terminal_receipt": {"$ref": "#/$defs/terminalReceipt"},
+        "execution_authority_scope": {"const": "registered_subprocess_exact_byte_and_namespace_integrity_only"}, "record_digest": {"$ref": "#/$defs/digest"}
+      }
+    },
+    "maturedResponse": {
+      "type": "object", "additionalProperties": false,
+      "required": ["invention_id", "branch_id", "exploration_role", "statement", "semantic_core", "deep_reflection", "risk_reward", "physics_handback"],
+      "properties": {
+        "invention_id": {"$ref": "#/$defs/id"}, "branch_id": {"$ref": "#/$defs/id"},
+        "exploration_role": {"enum": ["candidate", "wildcard"]}, "statement": {"$ref": "#/$defs/text"},
+        "semantic_core": {"$ref": "#/$defs/semanticCore"}, "deep_reflection": {"$ref": "#/$defs/deepReflection"},
+        "risk_reward": {"$ref": "#/$defs/riskReward"}, "physics_handback": {"$ref": "#/$defs/physicsHandback"}
+      }
+    },
+    "maturedContent": {
+      "type": "object", "additionalProperties": false,
+      "required": ["statement", "semantic_core", "deep_reflection", "risk_reward", "physics_handback"],
+      "properties": {
+        "statement": {"$ref": "#/$defs/text"},
+        "semantic_core": {"$ref": "#/$defs/semanticCore"},
+        "deep_reflection": {"$ref": "#/$defs/deepReflection"},
+        "risk_reward": {"$ref": "#/$defs/riskReward"},
+        "physics_handback": {"$ref": "#/$defs/physicsHandback"}
+      }
+    },
+    "barrierMember": {
+      "type": "object", "additionalProperties": false,
+      "required": ["branch_id", "invention_id", "record_digest", "worker_receipt_digest", "worker_receipt_file_sha256", "registered_response_sha256", "matured_response_sha256", "process_completed_at"],
+      "properties": {
+        "branch_id": {"$ref": "#/$defs/id"}, "invention_id": {"$ref": "#/$defs/id"},
+        "record_digest": {"$ref": "#/$defs/digest"}, "worker_receipt_digest": {"$ref": "#/$defs/digest"},
+        "worker_receipt_file_sha256": {"$ref": "#/$defs/digest"},
+        "registered_response_sha256": {"$ref": "#/$defs/digest"},
+        "matured_response_sha256": {"$ref": "#/$defs/digest"},
+        "process_completed_at": {"type": "string", "minLength": 1}
+      }
+    },
+    "barrierReceipt": {
+      "type": "object", "additionalProperties": false,
+      "required": ["schema_version", "artifact_kind", "barrier_id", "freeze_digest", "classification_digest", "status", "scheduled_branch_count", "terminal_branch_count", "observed_peak_parallelism", "lifecycle_verification", "terminal_members", "merge_authority", "barrier_receipt_digest", "barrier_receipt_file_sha256", "barrier_receipt_byte_length"],
+      "properties": {
+        "schema_version": {"const": "1.0.0"}, "artifact_kind": {"const": "parallel_maturation_terminal_barrier"},
+        "barrier_id": {"$ref": "#/$defs/id"}, "freeze_digest": {"$ref": "#/$defs/digest"},
+        "classification_digest": {"$ref": "#/$defs/digest"}, "status": {"const": "all_terminal_before_merge"},
+        "scheduled_branch_count": {"type": "integer", "minimum": 3},
+        "terminal_branch_count": {"type": "integer", "minimum": 3},
+        "observed_peak_parallelism": {"type": "integer", "minimum": 2},
+        "lifecycle_verification": {"const": "all_registered_process_groups_terminal_no_descendants"},
+        "terminal_members": {"type": "array", "minItems": 3, "items": {"$ref": "#/$defs/barrierMember"}},
+        "merge_authority": {"const": "local_terminal_receipt_integrity_only"},
+        "barrier_receipt_digest": {"$ref": "#/$defs/digest"}, "barrier_receipt_file_sha256": {"$ref": "#/$defs/digest"},
+        "barrier_receipt_byte_length": {"type": "integer", "minimum": 1}
+      }
+    }
+  }
+}

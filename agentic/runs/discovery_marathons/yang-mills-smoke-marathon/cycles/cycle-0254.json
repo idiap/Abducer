@@ -1,0 +1,552 @@
+{
+  "branch_execution_records": [
+    {
+      "api_attempt": "primary",
+      "api_key_config": {
+        "active_provider": "azure_openai",
+        "configured_keys": [
+          "AZURE_OPENAI_API_KEY",
+          "AZURE_OPENAI_ENDPOINT",
+          "AZURE_OPENAI_MODEL",
+          "AZURE_OPENAI_REASONING_EFFORT",
+          "AZURE_OPENAI_RESPONSES_ENDPOINT",
+          "OPENAI_BASE_URL",
+          "OPENAI_MODEL",
+          "OPENAI_REASONING_EFFORT"
+        ],
+        "has_openai_api_key": true,
+        "source": "config/api_keys.json"
+      },
+      "api_timeout_seconds": 1440,
+      "branch_id": "marathon.branch.2943978bc7b2",
+      "elapsed_seconds": 169.077,
+      "engine": "azure_responses_api",
+      "http_status": 200,
+      "max_output_tokens": 12000,
+      "model": "gpt-5.5",
+      "output_schema": "agentic/spec/discovery_marathon_codex_branch_output.schema.json",
+      "prior_attempt_errors": [],
+      "reasoning_effort": "high",
+      "response_id": "resp_03235a1b13f82f92006a502e14f7808193b3ed0ab527762e2a",
+      "status": "complete"
+    }
+  ],
+  "branch_outputs": [
+    {
+      "attempted_derivation": {
+        "blocking_gap": "The actual plaquette-sheet endpoint incidence table B_12,v,B_13,v,B_23,v and the uniform epsilon_v plus E_tail bounds have not yet been certified for the geometric three-hairpin collars.",
+        "derivation_id": "cycle-0254-R-endpoint-incidence-derivation",
+        "steps": [
+          "Start with the Schur-Feshbach-reduced null scalar S_null=M_G+z^*Rz+tails for the fixed three-hairpin block, where z=(1,1,-2).",
+          "Write z^*Rz as the weighted connected endpoint contribution with weights w_12=2, w_13=-4, w_23=-4 after diagonal normalization removes one-body Wilson factors.",
+          "Use heat-kernel plaquette-sheet localization: straight shared-boundary contractions decompose into Wick-square Gram terms plus a local C_A f f contact. The Gram part is nonnegative, and the straight f f part cancels by the null incidence identity.",
+          "The remaining local endpoint box v is described by F_v(s;b)=log Z_v(s;b). Its fourth source derivative is the singlet connected Wilson four-flux cumulant kappa_4_v(b).",
+          "Insert the compact-group small-box expansion kappa_4_v(b)=-chi_v B_v(b)+epsilon_v. Since chi_v>=0, the only negative contribution to S_null comes from endpoint boxes with D_v=2B_12,v-4B_13,v-4B_23,v positive.",
+          "This yields the valid bound S_null>=M_G-C_col sum_v chi_v[D_v]_+-remainder-tail. Equal disjoint endpoint boxes or boxes dominated by 13/23 incidence are safe rather than dangerous."
+        ],
+        "why_not_yet_a_proof": "The sign mechanism is valid, but without the real endpoint table a hidden 12-dominant corner cluster or a negative nonlocal tail could still make the certified interval negative."
+      },
+      "branch_id": "marathon.branch.2943978bc7b2",
+      "branch_title": "Endpoint kappa_4 incidence bound for the post-H,K Wilson hairpin block",
+      "candidate_lemmas": [
+        {
+          "assumptions": [
+            "The first-order PHP gate has the one-dimensional null vector z=(1,1,-2) for the fixed three-hairpin block.",
+            "Heat-kernel endpoint localization separates straight shared-boundary contacts from endpoint/corner boxes with a uniform tail estimate E_tail.",
+            "Disconnected Wick-square contractions are kept as positive Gram terms and are not counted as dangerous connected R.",
+            "The straight nonabelian C_A f f contact has the same oriented incidence on the three entries, so the z-null incidence cancels it away from endpoints.",
+            "For each endpoint box v, the singlet projected fourth cumulant has kappa_4_v(b)=-chi_v B_v(b)+epsilon_v with chi_v>=0 and certified epsilon_v."
+          ],
+          "definitions": [
+            "source object: heat-kernel plaquette-sheet regulated SU(N) Wilson endpoint boxes for the already fixed three-hairpin H,K block, with reflection collar width delta and lattice scale a.",
+            "target object: the scalar post-H,K Schur-Feshbach null-channel endpoint contribution R_null that decides whether the positive Gaussian margin survives.",
+            "controlled interface: extract R_null from diagonal-normalized reflected Wilson OS entries using connected log Z_v fourth source derivatives after Wick-square and straight f f cancellations.",
+            "same-theory condition: the same heat-kernel Wilson sheet regulator, color representation, endpoint boxes, and diagonal normalization are used for H,K,R and no boundary counterterm or algebra enlargement is introduced."
+          ],
+          "equations": [
+            {
+              "label": "null-channel weights",
+              "latex": "z=(1,1,-2),\\qquad z^{*}Rz=2R_{12}-4R_{13}-4R_{23}",
+              "valid_when": "Valid when the Schur-Feshbach null vector is the kernel direction of PHP for the fixed three-hairpin Wilson block."
+            },
+            {
+              "label": "endpoint cumulant source",
+              "latex": "\\kappa_{4,v}^{\\mathrm{sing}}(b)=\\left.\\partial_s^4\\log Z_v(s;b)\\right|_{s=0}=\\langle X_{v,b}^4\\rangle_{c,v}",
+              "valid_when": "Applies after heat-kernel plaquette-sheet localization isolates one endpoint box and the source b is gauge-singlet projected."
+            },
+            {
+              "label": "endpoint R scalar",
+              "latex": "R_{\\mathrm{null}}^{\\mathrm{end}}=C_{\\mathrm{col}}\\sum_v\\{2\\kappa_{4,v}(b_{12,v})-4\\kappa_{4,v}(b_{13,v})-4\\kappa_{4,v}(b_{23,v})\\}+E_{\\mathrm{tail}},\\quad C_{\\mathrm{col}}=\\frac{g_a^4}{24}\\left(\\frac{T_F}{N}\\right)^2",
+              "valid_when": "Requires diagonal normalization, connected logarithms, Wick-square cancellation, and null-incidence cancellation of straight nonabelian f f contacts."
+            },
+            {
+              "label": "dominance variable",
+              "latex": "\\kappa_{4,v}(b_{ij,v})=-\\chi_v B_{ij,v}+\\epsilon_{ij,v},\\qquad D_v=2B_{12,v}-4B_{13,v}-4B_{23,v}",
+              "valid_when": "Valid in the small endpoint-box heat-kernel regime where the root-Jacobian quartic term dominates the sixth-order remainder."
+            },
+            {
+              "label": "safe endpoint bound",
+              "latex": "S_{\\mathrm{null}}\\ge M_G-C_{\\mathrm{col}}\\sum_v\\chi_v[D_v]_+-C_{\\mathrm{col}}\\sum_{v,ij}|w_{ij}|\\,|\\epsilon_{ij,v}|-|E_{\\mathrm{tail}}|",
+              "valid_when": "Applies when the positive Gaussian Schur margin M_G has already been computed from H and K."
+            }
+          ],
+          "failure_test": "A certified table with C_col sum_v chi_v[D_v]_+ > M_G plus all certified errors is a same-theory OS falsifier for this block.",
+          "lemma_id": "cycle-0254-endpoint-dominance-bound",
+          "proof_role": "Reduces the post-H,K Yang-Mills input to a finite endpoint incidence table B_ij,v, a signed compact-group kappa_4 coefficient chi_v, and a tail estimate. It explains why negative local kappa_4 alone is not a falsifier.",
+          "statement": "For the fixed three-hairpin block after H,K are known, the endpoint part of the connected boundary-OPE polarization is dangerous only through a signed endpoint-incidence dominance functional. If the compact-group fourth cumulant has the heat-kernel form kappa_4_v(b)=-chi_v B_v(b)+epsilon_v with chi_v>=0, then endpoint boxes with 2B_12,v<=4B_13,v+4B_23,v cannot demote the corrected Schur-Feshbach scalar. A valid falsifier must certify net 12-endpoint dominance large enough to exceed the positive Gaussian margin and all remainder/tail bounds."
+        },
+        {
+          "assumptions": [
+            "F_v is C^8 on the source interval |s|<=3h for the finite heat-kernel box.",
+            "The source insertion is gauge-invariant after singlet projection and uses the locked Wilson representation.",
+            "The finite-difference interval remains inside the small-field chart or is evaluated directly on the compact group."
+          ],
+          "definitions": [
+            "F_v(s;b)=log Z_v(s;b) for one endpoint box and one singlet projected Wilson source direction b.",
+            "The source b_{ij,v} includes the color factor T_F, oriented plaquette-sheet incidence, and endpoint geometric corner projection.",
+            "The same endpoint finite box and heat-kernel time t_a must be used for all seven source evaluations."
+          ],
+          "equations": [
+            {
+              "label": "seven-point fourth derivative",
+              "latex": "\\widehat\\kappa_{4,v,h}(b)=\\frac{-F_v(-3h)+12F_v(-2h)-39F_v(-h)+56F_v(0)-39F_v(h)+12F_v(2h)-F_v(3h)}{6h^4}",
+              "valid_when": "Valid when the endpoint partition function is evaluated with the identical regulator and source direction at all seven points."
+            },
+            {
+              "label": "stencil remainder",
+              "latex": "|\\widehat\\kappa_{4,v,h}(b)-\\kappa_{4,v}(b)|\\le \\frac{7h^4}{240}\\sup_{|s|\\le 3h}|F_v^{(8)}(s;b)|",
+              "valid_when": "Applies when F_v has a bounded eighth derivative on the whole symmetric source interval."
+            },
+            {
+              "label": "interval sign test",
+              "latex": "I_{\\mathrm{null}}=M_G+C_{\\mathrm{col}}\\sum_v\\{2\\widehat\\kappa_{4,v,h}(b_{12,v})-4\\widehat\\kappa_{4,v,h}(b_{13,v})-4\\widehat\\kappa_{4,v,h}(b_{23,v})\\}\\pm \\mathrm{Err}_{8}\\pm |E_{\\mathrm{tail}}|",
+              "valid_when": "Requires that all endpoint boxes are enumerated and that the tail bound covers nonlocal corner interactions."
+            }
+          ],
+          "failure_test": "If the certified interval I_null lies strictly below zero, the corrected second-order OS form is negative in the realized Wilson block.",
+          "lemma_id": "cycle-0254-seven-point-kappa4-certificate",
+          "proof_role": "Provides the concrete regulator-level computation that can promote the branch or produce a certified finite-block falsifier.",
+          "statement": "The endpoint cumulant entering the dominance bound can be certified without symbolic modeling by seven same-theory source evaluations of the endpoint-box heat-kernel partition function. The stencil kills the Gaussian part and estimates the connected fourth derivative with an eighth-derivative error bound."
+        }
+      ],
+      "control_decision": {
+        "decision": "persist_compute_endpoint_incidence_table",
+        "pivot_test": "Pivot or quarantine if the endpoint geometry cannot be locked to the same Wilson regulator used for H,K, because then the R computation is not same-theory.",
+        "promotion_test": "Promote if the certified interval for S_null is nonnegative after inserting the real B_v table, kappa_4 stencil intervals, and tail bound.",
+        "reason": "The branch is not looping: the remaining contribution is a finite heat-kernel endpoint calculation with explicit color factor, geometry factor, stencil, and sign inequality."
+      },
+      "dependency_updates": [
+        {
+          "dependency_id": "endpoint-incidence-table-Bv",
+          "description": "Enumerate each endpoint box v and compute B_12,v,B_13,v,B_23,v from the singlet-projected oriented plaquette-sheet sources.",
+          "kind": "new_blocking_dependency",
+          "status": "blocking_next_cycle"
+        },
+        {
+          "dependency_id": "heat-kernel-kappa4-certificate",
+          "description": "Use the seven-point same-theory stencil for d_s^4 log Z_v with 7h^4 M_8/240 error to certify chi_v and epsilon_v.",
+          "kind": "computational_tool",
+          "status": "ready_once_Zv_evaluable"
+        },
+        {
+          "dependency_id": "straight-ff-null-cancellation",
+          "description": "Verify that the C_A f f contact has identical straight-segment incidence in the three weighted entries and only endpoint/corner residues remain.",
+          "kind": "orientation_audit",
+          "status": "conditional_valid"
+        },
+        {
+          "dependency_id": "post-HK-tail-bound",
+          "description": "Bound endpoint-to-endpoint and corner tails not captured by the finite boxes, with sign-sensitive control against M_G.",
+          "kind": "analytic_bound",
+          "status": "open"
+        },
+        {
+          "dependency_id": "OS-closed-cone-topology",
+          "description": "The closed-cone reflection-positivity passage is no longer the active bottleneck for this branch.",
+          "kind": "quarantined_formal_step",
+          "status": "valid_but_not_current_target"
+        }
+      ],
+      "falsifiers": [
+        "A regulator-level endpoint table with positive dominance C_col sum_v chi_v[D_v]_+ exceeding M_G plus all remainder and tail bounds is a concrete falsifier.",
+        "A same-theory seven-point computation of kappa_4_v that gives a larger negative value than the root-quartic bound permits would demote the expansion.",
+        "A failure of the straight C_A f f null-incidence cancellation at oriented corners would reintroduce a bulk connected R term not covered by the endpoint estimate.",
+        "A boundary counterterm or changed Wilson normalization between H,K and R would invalidate the same-theory condition even if the finite matrix stayed positive.",
+        "A tail estimate with negative sign and size comparable to M_G would prevent promotion despite safe local endpoint boxes."
+      ],
+      "generated_by": "azure_responses_api",
+      "mathematical_learning": "Cycle 254 shows that the negative compact-group endpoint kappa_4 is not automatically dangerous. In the actual null channel its pair weights are 2,-4,-4, so only certified 12-endpoint dominance can overcome the positive Schur-Feshbach margin. This is a sharper valid R/kappa_4 endpoint-box test and a concrete falsifier criterion, not another restatement of the Wilson/OS obstruction ladder.",
+      "next_experiment": "Draw the regulated three-hairpin plaquette sheets, list all endpoint boxes, compute the singlet incidence norms B_12,v,B_13,v,B_23,v, then evaluate D_+=sum_v[2B_12,v-4B_13,v-4B_23,v]_+ and the seven-point kappa_4 intervals for the boxes with D_v>0."
+    }
+  ],
+  "completed_utc": "2026-07-09T23:36:12+00:00",
+  "created_utc": "2026-07-09T23:26:12+00:00",
+  "cycle_id": "cycle-0254",
+  "cycle_index": 254,
+  "cycle_learning": "This research cycle converted active route pressure into typed branch lemmas. The main mathematical change is that each branch now names a source object, target object, equation, validity condition, falsifier, and next experiment. Only research-mode cycles with elapsed-time and branch-engine evidence count as genuine long-horizon research progress.",
+  "execution_mode": "research",
+  "next_cycle_queue": [
+    "Draw the regulated three-hairpin plaquette sheets, list all endpoint boxes, compute the singlet incidence norms B_12,v,B_13,v,B_23,v, then evaluate D_+=sum_v[2B_12,v-4B_13,v-4B_23,v]_+ and the seven-point kappa_4 intervals for the boxes with D_v>0."
+  ],
+  "research_seconds_elapsed": 600.005,
+  "research_seconds_target": 600,
+  "run_id": "yang-mills-smoke-marathon",
+  "scheduler_decisions": [
+    {
+      "branch_id": "marathon.branch.2943978bc7b2",
+      "branch_title": "Reflection-Positivity Closed-Cone Topology",
+      "controlled_interface": "regulated reflection-positive Schwinger forms -> OS-positive continuum Schwinger functions",
+      "reason": "The branch remains target-linked and has not exhausted its certification tests.",
+      "recommended_move": "persist_adapt"
+    }
+  ],
+  "selected_branch_ids": [
+    "marathon.branch.2943978bc7b2"
+  ],
+  "skill_dispatch_trace": [
+    {
+      "cycle_id": "cycle-0254",
+      "input_artifacts": [
+        "agentic/state/current_target.json",
+        "agentic/reports/discovery_stretch/latest.json",
+        "agentic/registries/discovery_marathon_skill_dispatch.yaml"
+      ],
+      "invoked_skills": [
+        "looper-target-goal-enricher",
+        "looper-target-dependency-cartographer",
+        "looper-workflow-contract-governor",
+        "looper-hook-policy-maintainer"
+      ],
+      "missing_required_skills": [],
+      "output_artifacts": [
+        "cycle:cycle-0254",
+        "branch:marathon.branch.2943978bc7b2"
+      ],
+      "phase": "preflight_target_navigation",
+      "queued_conditional_skills": [
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "kb-orchestrator"
+        }
+      ],
+      "skipped_skills_with_reason": [],
+      "validation_handoff": "preflight_target_navigation used 4 required skills while exploring Reflection-Positivity Closed-Cone Topology."
+    },
+    {
+      "cycle_id": "cycle-0254",
+      "input_artifacts": [
+        "agentic/state/current_target.json",
+        "agentic/reports/discovery_stretch/latest.json",
+        "agentic/registries/discovery_marathon_skill_dispatch.yaml"
+      ],
+      "invoked_skills": [
+        "long-horizon-route-portfolio-manager",
+        "abducer-refinement-route-ranker",
+        "next-experiment-queue-ranker",
+        "kb-discovery-governor"
+      ],
+      "missing_required_skills": [],
+      "output_artifacts": [
+        "cycle:cycle-0254",
+        "branch:marathon.branch.2943978bc7b2"
+      ],
+      "phase": "branch_selection",
+      "queued_conditional_skills": [
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "kb-promising-direction-assessor"
+        }
+      ],
+      "skipped_skills_with_reason": [],
+      "validation_handoff": "branch_selection used 4 required skills while exploring Reflection-Positivity Closed-Cone Topology."
+    },
+    {
+      "cycle_id": "cycle-0254",
+      "input_artifacts": [
+        "agentic/state/current_target.json",
+        "agentic/reports/discovery_stretch/latest.json",
+        "agentic/registries/discovery_marathon_skill_dispatch.yaml"
+      ],
+      "invoked_skills": [
+        "kb-abduce",
+        "kb-deduce",
+        "kb-induce",
+        "kb-concept-bridge-planner",
+        "kb-gap-abstraction-conjecturer"
+      ],
+      "missing_required_skills": [],
+      "output_artifacts": [
+        "cycle:cycle-0254",
+        "branch:marathon.branch.2943978bc7b2"
+      ],
+      "phase": "branch_exploration",
+      "queued_conditional_skills": [
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "kb-proof-sketcher"
+        },
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "kb-proof-connector"
+        }
+      ],
+      "skipped_skills_with_reason": [],
+      "validation_handoff": "branch_exploration used 5 required skills while exploring Reflection-Positivity Closed-Cone Topology."
+    },
+    {
+      "cycle_id": "cycle-0254",
+      "input_artifacts": [
+        "agentic/state/current_target.json",
+        "agentic/reports/discovery_stretch/latest.json",
+        "agentic/registries/discovery_marathon_skill_dispatch.yaml"
+      ],
+      "invoked_skills": [
+        "qualitative-variable-isolator",
+        "physics-regime-map-builder",
+        "monotonicity-sensitivity-prober",
+        "limit-convergence-behavior-auditor",
+        "qualitative-toy-model-builder",
+        "qualitative-physics-falsifier"
+      ],
+      "missing_required_skills": [],
+      "output_artifacts": [
+        "cycle:cycle-0254",
+        "branch:marathon.branch.2943978bc7b2"
+      ],
+      "phase": "qualitative_physics_reasoning",
+      "queued_conditional_skills": [
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "dimensional-symmetry-constraint-checker"
+        },
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "scale-asymptotic-reasoner"
+        }
+      ],
+      "skipped_skills_with_reason": [],
+      "validation_handoff": "qualitative_physics_reasoning used 6 required skills while exploring Reflection-Positivity Closed-Cone Topology."
+    },
+    {
+      "cycle_id": "cycle-0254",
+      "input_artifacts": [
+        "agentic/state/current_target.json",
+        "agentic/reports/discovery_stretch/latest.json",
+        "agentic/registries/discovery_marathon_skill_dispatch.yaml"
+      ],
+      "invoked_skills": [
+        "gedanken-need-assessor"
+      ],
+      "missing_required_skills": [],
+      "output_artifacts": [
+        "cycle:cycle-0254",
+        "branch:marathon.branch.2943978bc7b2"
+      ],
+      "phase": "gedanken_experiment_design",
+      "queued_conditional_skills": [
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "gedanken-situation-designer"
+        },
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "gedanken-counterfactual-variant-builder"
+        },
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "gedanken-transfer-guard"
+        },
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "gedanken-followup-planner"
+        },
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "qualitative-toy-model-builder"
+        }
+      ],
+      "skipped_skills_with_reason": [],
+      "validation_handoff": "gedanken_experiment_design used 1 required skills while exploring Reflection-Positivity Closed-Cone Topology."
+    },
+    {
+      "cycle_id": "cycle-0254",
+      "input_artifacts": [
+        "agentic/state/current_target.json",
+        "agentic/reports/discovery_stretch/latest.json",
+        "agentic/registries/discovery_marathon_skill_dispatch.yaml"
+      ],
+      "invoked_skills": [
+        "kb-contradiction-strategist",
+        "contradiction-route-auditor",
+        "kb-hypothesis-refutation-loop"
+      ],
+      "missing_required_skills": [],
+      "output_artifacts": [
+        "cycle:cycle-0254",
+        "branch:marathon.branch.2943978bc7b2"
+      ],
+      "phase": "contradiction_and_falsifier_generation",
+      "queued_conditional_skills": [
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "kb-novel-proof-strategist"
+        }
+      ],
+      "skipped_skills_with_reason": [],
+      "validation_handoff": "contradiction_and_falsifier_generation used 3 required skills while exploring Reflection-Positivity Closed-Cone Topology."
+    },
+    {
+      "cycle_id": "cycle-0254",
+      "input_artifacts": [
+        "agentic/state/current_target.json",
+        "agentic/reports/discovery_stretch/latest.json",
+        "agentic/registries/discovery_marathon_skill_dispatch.yaml"
+      ],
+      "invoked_skills": [
+        "evidence-acquisition-planner",
+        "prior-art-importer",
+        "kb-prior-art-pass"
+      ],
+      "missing_required_skills": [],
+      "output_artifacts": [
+        "cycle:cycle-0254",
+        "branch:marathon.branch.2943978bc7b2"
+      ],
+      "phase": "evidence_acquisition",
+      "queued_conditional_skills": [
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "kb-epistemic-hardness"
+        }
+      ],
+      "skipped_skills_with_reason": [],
+      "validation_handoff": "evidence_acquisition used 3 required skills while exploring Reflection-Positivity Closed-Cone Topology."
+    },
+    {
+      "cycle_id": "cycle-0254",
+      "input_artifacts": [
+        "agentic/state/current_target.json",
+        "agentic/reports/discovery_stretch/latest.json",
+        "agentic/registries/discovery_marathon_skill_dispatch.yaml"
+      ],
+      "invoked_skills": [
+        "abducer-obligation-gatekeeper",
+        "entailment-gap-auditor",
+        "kb-end-to-end-proof-critic"
+      ],
+      "missing_required_skills": [],
+      "output_artifacts": [
+        "cycle:cycle-0254",
+        "branch:marathon.branch.2943978bc7b2"
+      ],
+      "phase": "obligation_gating",
+      "queued_conditional_skills": [
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "kb-coherence-evaluator"
+        }
+      ],
+      "skipped_skills_with_reason": [],
+      "validation_handoff": "obligation_gating used 3 required skills while exploring Reflection-Positivity Closed-Cone Topology."
+    },
+    {
+      "cycle_id": "cycle-0254",
+      "input_artifacts": [
+        "agentic/state/current_target.json",
+        "agentic/reports/discovery_stretch/latest.json",
+        "agentic/registries/discovery_marathon_skill_dispatch.yaml"
+      ],
+      "invoked_skills": [
+        "review-reasoner",
+        "review-reasoner-epistemologist",
+        "review-reasoner-discovery-scientist",
+        "kb-discovery-breakthrough-profiler"
+      ],
+      "missing_required_skills": [],
+      "output_artifacts": [
+        "cycle:cycle-0254",
+        "branch:marathon.branch.2943978bc7b2"
+      ],
+      "phase": "review_and_synthesis",
+      "queued_conditional_skills": [
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "review-reasoner-fields-medalist"
+        },
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "review-reasoner-concept-logician"
+        }
+      ],
+      "skipped_skills_with_reason": [],
+      "validation_handoff": "review_and_synthesis used 4 required skills while exploring Reflection-Positivity Closed-Cone Topology."
+    },
+    {
+      "cycle_id": "cycle-0254",
+      "input_artifacts": [
+        "agentic/state/current_target.json",
+        "agentic/reports/discovery_stretch/latest.json",
+        "agentic/registries/discovery_marathon_skill_dispatch.yaml"
+      ],
+      "invoked_skills": [
+        "show-reasoning",
+        "kb-explain"
+      ],
+      "missing_required_skills": [],
+      "output_artifacts": [
+        "cycle:cycle-0254",
+        "branch:marathon.branch.2943978bc7b2"
+      ],
+      "phase": "report_rendering",
+      "queued_conditional_skills": [
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "kb-expert-paper-generator"
+        },
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "kb-macro-proof-paper-writer"
+        }
+      ],
+      "skipped_skills_with_reason": [],
+      "validation_handoff": "report_rendering used 2 required skills while exploring Reflection-Positivity Closed-Cone Topology."
+    },
+    {
+      "cycle_id": "cycle-0254",
+      "input_artifacts": [
+        "agentic/state/current_target.json",
+        "agentic/reports/discovery_stretch/latest.json",
+        "agentic/registries/discovery_marathon_skill_dispatch.yaml"
+      ],
+      "invoked_skills": [
+        "looper-release-promoter",
+        "looper-workflow-contract-governor"
+      ],
+      "missing_required_skills": [],
+      "output_artifacts": [
+        "cycle:cycle-0254",
+        "branch:marathon.branch.2943978bc7b2"
+      ],
+      "phase": "release_promotion",
+      "queued_conditional_skills": [
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "looper-hook-policy-maintainer"
+        }
+      ],
+      "skipped_skills_with_reason": [],
+      "validation_handoff": "release_promotion used 2 required skills while exploring Reflection-Positivity Closed-Cone Topology."
+    }
+  ],
+  "target_id": "yang-mills-existence-and-mass-gap-target",
+  "timing_validation": {
+    "reason": "Elapsed 600.005 seconds against target 600 seconds.",
+    "status": "research"
+  },
+  "valid_as_research_cycle": true,
+  "validation_handoff": [
+    "agentic/scripts/validate_discovery_marathon_cycle.py",
+    "agentic/scripts/validate_discovery_marathon_skill_dispatch.py"
+  ],
+  "version": 1
+}

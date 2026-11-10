@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://abducer.local/spec/ym_canonical_publication_failure.schema.json",
+  "title": "Immutable Yang--Mills post-commit publication failure receipt",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "failure_id",
+    "status",
+    "target_id",
+    "run_id",
+    "cycle_id",
+    "commit_id",
+    "failed_stage",
+    "error_class",
+    "error_message",
+    "canonical_result_digest",
+    "publication_status_written",
+    "retry_disposition",
+    "epistemic_effect",
+    "content_digest"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "failure_id": {"type": "string", "pattern": "^ympubfail\\.[0-9a-f]{24}$"},
+    "status": {"const": "post_commit_publication_failed"},
+    "target_id": {"type": "string", "minLength": 1},
+    "run_id": {"type": "string", "minLength": 1},
+    "cycle_id": {"type": "string", "minLength": 1},
+    "commit_id": {"type": "string", "minLength": 1},
+    "failed_stage": {
+      "enum": ["core_validation", "report_build", "report_write", "status_write", "full_validation"]
+    },
+    "error_class": {"type": "string", "minLength": 1},
+    "error_message": {"type": "string", "minLength": 1, "maxLength": 2000},
+    "canonical_result_digest": {"$ref": "#/$defs/digest"},
+    "publication_status_written": {"const": false},
+    "retry_disposition": {"const": "resume_same_committed_core"},
+    "epistemic_effect": {"const": "none_operational_outcome_only"},
+    "content_digest": {"$ref": "#/$defs/digest"}
+  },
+  "$defs": {
+    "digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"}
+  }
+}

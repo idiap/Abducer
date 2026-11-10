@@ -1,0 +1,42 @@
+# Domain layer for theorem_proof_delivery.
+# Owns nominal workflow data and closed alternatives; no operations or effects.
+
+type ExplicitPremises:
+    premise_set_id: String
+    exact_statement: String
+
+type ProofQueueItem:
+    queue_item_id: String
+    premises: ExplicitPremises
+
+type FormalProofObligations:
+    obligation_set_id: String
+    open_obligations: List[String]
+
+type ExactTheoremClaim:
+    statement: String
+    premises: ExplicitPremises
+    obligations: FormalProofObligations
+
+type ExactClaimRefutationAssessment:
+    refutation_assessment_id: String
+
+type FormalProofGateDecision:
+    proof_gate_decision_id: String
+
+type ProofFailureCertificate:
+    exact_statement: String
+    refutation_assessment: ExactClaimRefutationAssessment
+    open_obligations: List[String]
+
+type TheoremProofDisposition:
+    | ProofAccepted
+    | FailureCertificateIssued
+    | Quarantined
+
+type TheoremProofDispositionAssessment:
+    disposition: TheoremProofDisposition
+    theorem_claim: ExactTheoremClaim
+    refutation_assessment: ExactClaimRefutationAssessment
+    gate: FormalProofGateDecision
+    failure_certificate: Option[ProofFailureCertificate]

@@ -1,0 +1,247 @@
+<!--
+SPDX-FileCopyrightText: © 2026 Idiap Research Institute <contact@idiap.ch>
+
+SPDX-FileContributor: Andre Freitas <andre.freitas@idiap.ch>
+Neuro-symbolic AI Group
+
+SPDX-FileContributor: Danilo Gusicuma <danilo.gusicuma@idiap.ch>
+Neuro-symbolic AI Group
+
+SPDX-License-Identifier: MIT
+-->
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Hamiltonian Gap Derivation</title>
+  <style>
+:root {
+  color-scheme: dark;
+  --bg: #080b10;
+  --panel: #111821;
+  --panel-2: #17202b;
+  --line: #2a3544;
+  --text: #eef5f8;
+  --muted: #aeb8c5;
+  --math: #e9f7ff;
+  --accent: #70d6ff;
+  --target: #f2c94c;
+  --warn: #ffbc66;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font: 15px/1.55 ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+.shell { max-width: 1180px; margin: 0 auto; padding: 28px clamp(16px, 3vw, 36px) 44px; }
+.top {
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 18px;
+  margin-bottom: 18px;
+}
+.eyebrow {
+  color: var(--target);
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  font-size: 12px;
+  margin: 0 0 8px;
+}
+h1 { margin: 0; font-size: clamp(26px, 4vw, 42px); line-height: 1.05; letter-spacing: 0; }
+h2 { font-size: 22px; margin: 28px 0 10px; }
+h3 { font-size: 18px; margin: 22px 0 8px; }
+p { margin: 8px 0; }
+.muted { color: var(--muted); }
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 10px;
+  margin: 18px 0;
+}
+.card, .step {
+  border: 1px solid var(--line);
+  background: var(--panel);
+  border-radius: 8px;
+  padding: 14px;
+}
+.card strong { display: block; color: var(--accent); margin-bottom: 4px; }
+.step { margin: 12px 0; border-left: 4px solid var(--accent); }
+.formula {
+  margin: 12px 0;
+  padding: 14px;
+  border: 1px solid #314257;
+  background: #0b1119;
+  border-radius: 8px;
+  overflow-x: auto;
+}
+math {
+  display: block;
+  color: var(--math);
+  font-size: 1.22rem;
+  line-height: 1.7;
+  min-width: max-content;
+}
+.tex {
+  margin-top: 8px;
+  color: var(--muted);
+  font: 12px/1.4 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  white-space: pre-wrap;
+}
+.equation-context {
+  border: 1px solid #334150;
+  background: #0d141d;
+  border-radius: 8px;
+  padding: 12px 14px;
+  margin: 12px 0;
+}
+.equation-context h4 {
+  margin: 0 0 8px;
+  font-size: 14px;
+  color: var(--target);
+}
+.equation-context ul {
+  margin: 6px 0 0;
+}
+.equation-context li strong {
+  color: var(--accent);
+}
+ul { padding-left: 20px; }
+li { margin: 5px 0; }
+.progress-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 10px;
+  margin: 12px 0 18px;
+}
+.progress-card {
+  border: 1px solid var(--line);
+  background: var(--panel-2);
+  border-radius: 8px;
+  padding: 14px;
+}
+.progress-card strong {
+  display: block;
+  color: var(--target);
+  margin-bottom: 8px;
+}
+.why-label {
+  color: var(--accent);
+  font-weight: 700;
+}
+.warning {
+  border-color: var(--warn);
+  background: #1b1510;
+}
+.code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  color: var(--muted);
+  overflow-wrap: anywhere;
+}
+@media (max-width: 720px) {
+  math { font-size: 1rem; }
+  .shell { padding-top: 20px; }
+}
+</style>
+</head>
+<body>
+  <main class="shell">
+    <header class="top">
+      <p class="eyebrow">Yang-Mills Long-Horizon Reasoning</p>
+      <h1>Hamiltonian Spectral-Gap Derivation</h1>
+      <p class="muted">Target: <span class="code">yang-mills-existence-and-mass-gap-target</span></p>
+      <p>This derives the exact spectral subclaim that the Hamiltonian route must prove. It does not prove Yang-Mills; it exposes the mathematical load-bearing lemmas and the spectral-theorem consequences.</p>
+    </header>
+    <section><h2>Route candidate.7912a73ea5e8</h2><p class='code'>Use a bounded Hamiltonian spectral-gap route endpoint claim only after stating which reconstructed Yang-Mills objects and observables make it meaningful: Use the Hamiltonian formulation as the endpoint check: after the physical Hilbert space, vacuum, and time-translation generator are reconstructed from the same continuum Yang-Mills data, prove that vacuum-orthogonal excitations have energy at least a strictly positive Delta.</p><h3>Mathematical Subclaim</h3><p>Given a reconstructed Wightman/OS Yang-Mills theory with Hilbert space H_YM, vacuum Omega, strongly continuous time translations U(t), and Hamiltonian H satisfying U(t)=exp(-itH), prove that there is Delta&gt;0 with spec(H restricted to Omega^perp) subset [Delta,infty).</p><h3>Symbols</h3><div class='grid'><div class='card'><strong>Delta</strong><span>strictly positive spectral-gap constant</span></div><div class='card'><strong>E_H(B)</strong><span>spectral projection of H for Borel set B</span></div><div class='card'><strong>H</strong><span>positive self-adjoint Hamiltonian, the generator of U(t)</span></div><div class='card'><strong>H_YM</strong><span>physical Hilbert space produced by OS/Wightman reconstruction</span></div><div class='card'><strong>Omega</strong><span>vacuum vector, normalized and invariant under time translations</span></div><div class='card'><strong>P0</strong><span>orthogonal projection onto the vacuum sector C Omega</span></div><div class='card'><strong>Pperp</strong><span>I-P0, the projection onto the vacuum-orthogonal excitation sector</span></div><div class='card'><strong>U(t)</strong><span>strongly continuous unitary time-translation group</span></div></div><h3>Assumptions</h3><div class='grid'><div class='card'><strong>A1 OS/Wightman reconstruction</strong><p>OS-positive Schwinger data reconstructs (H_YM, Omega, U(t), fields).</p><p class='muted'>Source: <span class='code'>st.thm.os-reconstruction</span> · route assumption, not discharged here</p></div><div class='card'><strong>A2 Hamiltonian generation</strong><p>U(t) is strongly continuous and U(t)=e^{-itH} for a self-adjoint H.</p><p class='muted'>Source: <span class='code'>KB/stone-one-parameter-unitary-groups.kb.md::st.app.schrodinger-time-evolution</span> · functional-analytic bridge</p></div><div class='card'><strong>A3 Positive energy and vacuum</strong><p>H &gt;= 0, H Omega = 0, and P0 projects onto the vacuum sector.</p><p class='muted'>Source: <span class='code'>st.def.wightman-qft, st.def.mass-gap</span> · axiomatic target condition</p></div><div class='card'><strong>A4 Nontrivial excitation sector</strong><p>Pperp H_YM != {0}; gauge-invariant observables create non-vacuum states.</p><p class='muted'>Source: <span class='code'>st.prob.yang-mills-existence-mass-gap</span> · essential nontriviality obligation</p></div><div class='card'><strong>A5 Spectral lower bound</strong><p>there exists Delta&gt;0 such that E_H((0,Delta))Pperp = 0.</p><p class='muted'>Source: <span class='code'>st.def.mass-gap-in-hamiltonian-wightman-terms</span> · the hard lemma to prove</p></div></div><h3>Rendered Derivation</h3><section class='step'><h3>1. Construct the Hamiltonian object</h3><p>From OS/Wightman reconstruction obtain a Hilbert space H_YM, vacuum Omega, and time translations U(t). By Stone&#x27;s theorem, strong continuity of U(t) yields a self-adjoint generator H with U(t)=exp(-itH).</p><div class='equation-context'><h4>Equation Context</h4><ul><li><strong>Definition:</strong> H_YM is the Hilbert space reconstructed from OS-positive continuum Schwinger functions.</li><li><strong>Definition:</strong> U(t) is the strongly continuous unitary group implementing real-time translations on H_YM.</li><li><strong>Definition:</strong> H is the self-adjoint Stone generator of U(t), with positive energy imposed by the Wightman/OS target axioms.</li><li><strong>Assumptions used:</strong> A1, A2, A3</li><li><strong>Valid when:</strong> The Schwinger data have already passed to the continuum and satisfy OS positivity strongly enough for reconstruction.</li><li><strong>Valid when:</strong> Time translations are represented by a strongly continuous one-parameter unitary group on the reconstructed Hilbert space.</li><li><strong>Valid when:</strong> The positive-energy axiom is part of the reconstructed Yang-Mills target, not borrowed from a cutoff transfer matrix alone.</li></ul></div><div class='formula'>
+<math display="block">
+  <semantics>
+    <mrow>
+      <mi>U</mi><mo>(</mo><mi>t</mi><mo>)</mo><mo>=</mo>
+      <msup><mi>e</mi><mrow><mo>-</mo><mi>i</mi><mi>t</mi><mi>H</mi></mrow></msup>
+      <mo>,</mo><mspace width="1em"/>
+      <mi>H</mi><mo>=</mo><msup><mi>H</mi><mo>*</mo></msup>
+      <mo>,</mo><mspace width="1em"/>
+      <mi>H</mi><mo>&ge;</mo><mn>0</mn>
+    </mrow>
+    <annotation encoding="application/x-tex">U(t)=e^{-itH},\qquad H=H^*,\qquad H\ge 0.</annotation>
+  </semantics>
+</math>
+<div class='tex'>U(t)=e^{-itH},\qquad H=H^*,\qquad H\ge 0.</div></div><p class='muted'>Open obligation: Show this H is obtained after continuum/OS reconstruction, not only at fixed lattice cutoff.</p></section><section class='step'><h3>2. Separate vacuum and excitations</h3><p>Normalize the invariant vacuum Omega and set P0=|Omega&gt;&lt;Omega|, or the projection onto the full vacuum sector if vacuum uniqueness is not yet known. The excitation space is Pperp H_YM=(I-P0)H_YM.</p><div class='equation-context'><h4>Equation Context</h4><ul><li><strong>Definition:</strong> Omega is the normalized invariant vacuum vector in H_YM.</li><li><strong>Definition:</strong> P0 is the orthogonal projection onto C Omega when the vacuum is unique; otherwise it must be replaced by the projection onto the full zero-energy vacuum sector.</li><li><strong>Definition:</strong> Pperp is I-P0, the vacuum-orthogonal excitation projection.</li><li><strong>Assumptions used:</strong> A1, A3, A4</li><li><strong>Valid when:</strong> The vacuum sector has been identified inside the reconstructed continuum theory.</li><li><strong>Valid when:</strong> Either vacuum uniqueness is proved, or the formula is read with P0 as the full vacuum-sector projection.</li><li><strong>Valid when:</strong> H Omega = 0 follows from time-translation invariance of the reconstructed vacuum.</li></ul></div><div class='formula'>
+<math display="block">
+  <semantics>
+    <mrow>
+      <msub><mi>P</mi><mn>0</mn></msub><mo>=</mo><mo>|</mo><mi>&Omega;</mi><mo>&rangle;</mo><mo>&langle;</mo><mi>&Omega;</mi><mo>|</mo>
+      <mo>,</mo><mspace width="1em"/>
+      <msub><mi>P</mi><mo>&perp;</mo></msub><mo>=</mo><mi>I</mi><mo>-</mo><msub><mi>P</mi><mn>0</mn></msub>
+      <mo>,</mo><mspace width="1em"/>
+      <mi>H</mi><mi>&Omega;</mi><mo>=</mo><mn>0</mn>
+    </mrow>
+    <annotation encoding="application/x-tex">P_0=\lvert\Omega\rangle\langle\Omega\rvert,\qquad P_\perp=I-P_0,\qquad H\Omega=0.</annotation>
+  </semantics>
+</math>
+<div class='tex'>P_0=\lvert\Omega\rangle\langle\Omega\rvert,\qquad P_\perp=I-P_0,\qquad H\Omega=0.</div></div><p class='muted'>Open obligation: Prove vacuum uniqueness or explicitly work with the whole zero-energy vacuum sector.</p></section><section class='step'><h3>3. State the spectral-gap lemma</h3><p>The Hamiltonian mass-gap claim is the spectral exclusion of low positive energies. In projection form, no vacuum-orthogonal state can have spectral support in (0,Delta).</p><div class='equation-context'><h4>Equation Context</h4><ul><li><strong>Definition:</strong> E_H(B) is the spectral projection of the self-adjoint Hamiltonian H for the Borel set B.</li><li><strong>Definition:</strong> Delta is a fixed positive number, independent of removed cutoffs, proposed as the mass-gap lower bound.</li><li><strong>Definition:</strong> H restricted to Pperp H_YM means the part of H acting on the invariant vacuum-orthogonal excitation sector.</li><li><strong>Assumptions used:</strong> A2, A3, A5</li><li><strong>Valid when:</strong> Pperp commutes with H, as it does when P0 projects onto the H-invariant zero-energy vacuum sector.</li><li><strong>Valid when:</strong> The spectral theorem applies to H and the projection statement is made on the reconstructed continuum Hilbert space.</li><li><strong>Valid when:</strong> Delta is strictly positive and the interval (0, Delta) is being excluded only away from the vacuum sector.</li></ul></div><div class='formula'>
+<math display="block">
+  <semantics>
+    <mrow>
+      <msub><mi>E</mi><mi>H</mi></msub><mo>(</mo><mo>(</mo><mn>0</mn><mo>,</mo><mi>&Delta;</mi><mo>)</mo><mo>)</mo>
+      <msub><mi>P</mi><mo>&perp;</mo></msub><mo>=</mo><mn>0</mn>
+      <mspace width="1em"/><mo>&Longleftrightarrow;</mo><mspace width="1em"/>
+      <mi>spec</mi><mo>(</mo><mi>H</mi><mo>|</mo><msub><mi>P</mi><mo>&perp;</mo></msub><msub><mi>H</mi><mi>YM</mi></msub><mo>)</mo>
+      <mo>&sube;</mo><mo>[</mo><mi>&Delta;</mi><mo>,</mo><mi>&infin;</mi><mo>)</mo>
+    </mrow>
+    <annotation encoding="application/x-tex">E_H((0,\Delta))P_\perp=0\quad\Longleftrightarrow\quad \operatorname{spec}(H|_{P_\perp\mathcal H_{\mathrm{YM}}})\subset[\Delta,\infty).</annotation>
+  </semantics>
+</math>
+<div class='tex'>E_H((0,\Delta))P_\perp=0\quad\Longleftrightarrow\quad \operatorname{spec}(H|_{P_\perp\mathcal H_{\mathrm{YM}}})\subset[\Delta,\infty).</div></div><p class='muted'>Open obligation: Derive this exclusion from constructive/RG/correlator input rather than assuming it.</p></section><section class='step'><h3>4. Convert spectral exclusion to an energy inequality</h3><p>By the spectral theorem, if spectral support on Pperp H_YM lies in [Delta,infty), then every vector psi in the quadratic-form domain and orthogonal to the vacuum has energy at least Delta times its norm squared.</p><div class='equation-context'><h4>Equation Context</h4><ul><li><strong>Definition:</strong> psi is a vector in the quadratic-form domain of H and orthogonal to the vacuum sector.</li><li><strong>Definition:</strong> mu_psi(B)=&lt;psi,E_H(B)psi&gt; is the spectral measure of H associated with psi.</li><li><strong>Definition:</strong> The integral is the spectral-theorem expression for the Hamiltonian quadratic form on psi.</li><li><strong>Assumptions used:</strong> A2, A3, A5</li><li><strong>Valid when:</strong> The low-energy spectral exclusion E_H((0, Delta))Pperp=0 has been established.</li><li><strong>Valid when:</strong> psi lies in Pperp H_YM and in the form domain required for &lt;psi,H psi&gt; to be finite.</li><li><strong>Valid when:</strong> The support of mu_psi is contained in [Delta, infinity) after removal of the vacuum component.</li></ul></div><div class='formula'>
+<math display="block">
+  <semantics>
+    <mrow>
+      <mi>&psi;</mi><mo>&perp;</mo><mi>&Omega;</mi><mo>&Longrightarrow;</mo>
+      <mo>&langle;</mo><mi>&psi;</mi><mo>,</mo><mi>H</mi><mi>&psi;</mi><mo>&rangle;</mo>
+      <mo>=</mo><msubsup><mo>&int;</mo><mrow><mo>[</mo><mi>&Delta;</mi><mo>,</mo><mi>&infin;</mi><mo>)</mo></mrow><mrow></mrow></msubsup>
+      <mi>&lambda;</mi><mspace width=".2em"/><mi>d</mi><msub><mi>&mu;</mi><mi>&psi;</mi></msub><mo>(</mo><mi>&lambda;</mi><mo>)</mo>
+      <mo>&ge;</mo><mi>&Delta;</mi><msup><mrow><mo>||</mo><mi>&psi;</mi><mo>||</mo></mrow><mn>2</mn></msup>
+    </mrow>
+    <annotation encoding="application/x-tex">\psi\perp\Omega \Longrightarrow \langle\psi,H\psi\rangle=\int_{[\Delta,\infty)}\lambda\,d\mu_\psi(\lambda)\ge\Delta\|\psi\|^2.</annotation>
+  </semantics>
+</math>
+<div class='tex'>\psi\perp\Omega \Longrightarrow \langle\psi,H\psi\rangle=\int_{[\Delta,\infty)}\lambda\,d\mu_\psi(\lambda)\ge\Delta\|\psi\|^2.</div></div><p class='muted'>Open obligation: Identify a dense class of physical gauge-invariant excitation states to which this estimate applies.</p></section><section class='step'><h3>5. Convert the same gap to Euclidean decay</h3><p>For A with &lt;Omega,A Omega&gt;=0, the Euclidean two-point function has spectral representation. The lower spectral support gives exponential decay with rate at least Delta.</p><div class='equation-context'><h4>Equation Context</h4><ul><li><strong>Definition:</strong> A is a reconstructed gauge-invariant observable, vacuum-subtracted so that &lt;Omega,A Omega&gt;=0.</li><li><strong>Definition:</strong> C_A(t) is the Euclidean time two-point function produced by OS reconstruction.</li><li><strong>Definition:</strong> mu_A(B)=&lt;A Omega,E_H(B)A Omega&gt; is the spectral measure of the excitation A Omega.</li><li><strong>Assumptions used:</strong> A1, A2, A3, A5</li><li><strong>Valid when:</strong> A Omega belongs to the vacuum-orthogonal sector and to the domain needed for the Euclidean semigroup pairing.</li><li><strong>Valid when:</strong> The OS/Wightman reconstruction identifies Euclidean time translation with the semigroup exp(-tH) for t &gt;= 0.</li><li><strong>Valid when:</strong> The spectral support of A Omega lies in [Delta, infinity), so the exponential bound follows uniformly in t &gt;= 0.</li></ul></div><div class='formula'>
+<math display="block">
+  <semantics>
+    <mrow>
+      <msub><mi>C</mi><mi>A</mi></msub><mo>(</mo><mi>t</mi><mo>)</mo><mo>=</mo>
+      <mo>&langle;</mo><mi>A</mi><mi>&Omega;</mi><mo>,</mo><msup><mi>e</mi><mrow><mo>-</mo><mi>t</mi><mi>H</mi></mrow></msup><mi>A</mi><mi>&Omega;</mi><mo>&rangle;</mo>
+      <mo>=</mo><msubsup><mo>&int;</mo><mrow><mo>[</mo><mi>&Delta;</mi><mo>,</mo><mi>&infin;</mi><mo>)</mo></mrow><mrow></mrow></msubsup>
+      <msup><mi>e</mi><mrow><mo>-</mo><mi>t</mi><mi>&lambda;</mi></mrow></msup><mspace width=".2em"/><mi>d</mi><msub><mi>&mu;</mi><mi>A</mi></msub><mo>(</mo><mi>&lambda;</mi><mo>)</mo>
+      <mo>&le;</mo><msup><mi>e</mi><mrow><mo>-</mo><mi>&Delta;</mi><mi>t</mi></mrow></msup><msup><mrow><mo>||</mo><mi>A</mi><mi>&Omega;</mi><mo>||</mo></mrow><mn>2</mn></msup>
+    </mrow>
+    <annotation encoding="application/x-tex">C_A(t)=\langle A\Omega,e^{-tH}A\Omega\rangle=\int_{[\Delta,\infty)}e^{-t\lambda}\,d\mu_A(\lambda)\le e^{-\Delta t}\|A\Omega\|^2.</annotation>
+  </semantics>
+</math>
+<div class='tex'>C_A(t)=\langle A\Omega,e^{-tH}A\Omega\rangle=\int_{[\Delta,\infty)}e^{-t\lambda}\,d\mu_A(\lambda)\le e^{-\Delta t}\|A\Omega\|^2.</div></div><p class='muted'>Open obligation: Specify gauge-invariant observables A and show their reconstructed states control the physical spectrum.</p></section><section class='step'><h3>6. Use decay-to-gap only with a density hypothesis</h3><p>Conversely, exponential decay of a sufficiently rich family of vacuum-subtracted observables can imply spectral support above Delta only if the created states are dense in the excitation sector.</p><div class='equation-context'><h4>Equation Context</h4><ul><li><strong>Definition:</strong> A_ginv is the reconstructed algebra or dense test family of gauge-invariant observables.</li><li><strong>Definition:</strong> The bar denotes Hilbert-space closure in H_YM.</li><li><strong>Definition:</strong> (A-&lt;Omega,A Omega&gt;)Omega is the vacuum-subtracted excitation created by A.</li><li><strong>Assumptions used:</strong> A1, A4</li><li><strong>Valid when:</strong> The observable family A_ginv is part of the same reconstructed continuum Yang-Mills theory.</li><li><strong>Valid when:</strong> Gauge-invariant observables are rich enough to generate the physical vacuum-orthogonal excitation sector.</li><li><strong>Valid when:</strong> Null vectors from OS reconstruction have already been quotiented out, so closure is taken in the physical Hilbert space.</li></ul></div><div class='formula'>
+<math display="block">
+  <semantics>
+    <mrow>
+      <mover><mrow><mo>{</mo><mo>(</mo><mi>A</mi><mo>-</mo><mo>&langle;</mo><mi>&Omega;</mi><mo>,</mo><mi>A</mi><mi>&Omega;</mi><mo>&rangle;</mo><mo>)</mo><mi>&Omega;</mi><mo>:</mo><mi>A</mi><mo>&in;</mo><msub><mi>A</mi><mi>ginv</mi></msub><mo>}</mo></mrow><mo>&macr;</mo></mover>
+      <mo>=</mo><msub><mi>P</mi><mo>&perp;</mo></msub><msub><mi>H</mi><mi>YM</mi></msub>
+    </mrow>
+    <annotation encoding="application/x-tex">\overline{\{(A-\langle\Omega,A\Omega\rangle)\Omega:A\in\mathcal A_{\mathrm{ginv}}\}}=P_\perp\mathcal H_{\mathrm{YM}}.</annotation>
+  </semantics>
+</math>
+<div class='tex'>\overline{\{(A-\langle\Omega,A\Omega\rangle)\Omega:A\in\mathcal A_{\mathrm{ginv}}\}}=P_\perp\mathcal H_{\mathrm{YM}}.</div></div><p class='muted'>Open obligation: Prove the gauge-invariant observable family is spectrally determining after reconstruction.</p></section><section class='step'><h3>7. Attach continuum compatibility</h3><p>For lattice/regulated approximants H_a, a bound inf spec(H_a|Pperp_a)&gt;=Delta_a is useful only if liminf_{a-&gt;0}Delta_a&gt;0 and the Hilbert spaces, observables, and vacuum sectors converge to the reconstructed continuum theory.</p><div class='equation-context'><h4>Equation Context</h4><ul><li><strong>Definition:</strong> a is the ultraviolet cutoff or lattice spacing parameter being removed.</li><li><strong>Definition:</strong> H_a and Pperp,a are the regulated Hamiltonian and excitation projection before continuum passage.</li><li><strong>Definition:</strong> Delta_a is the regulated gap lower bound, and Delta is the positive lower bound surviving the limit.</li><li><strong>Assumptions used:</strong> A1, A4, A5</li><li><strong>Valid when:</strong> The regulated Hilbert spaces, observables, vacuum sectors, and Hamiltonians converge to the same OS-reconstructed continuum object.</li><li><strong>Valid when:</strong> The spectral or Euclidean decay estimate is uniform in the cutoff and does not deteriorate to zero as a -&gt; 0.</li><li><strong>Valid when:</strong> The limiting excitation sector remains nontrivial and interacting, so the bound is not for an empty or Gaussian surrogate.</li></ul></div><div class='formula'>
+<math display="block">
+  <semantics>
+    <mrow>
+      <mi>inf</mi><mi>&sigma;</mi><mo>(</mo><msub><mi>H</mi><mi>a</mi></msub><mo>|</mo><msub><mi>P</mi><mrow><mo>&perp;</mo><mo>,</mo><mi>a</mi></mrow></msub><mo>)</mo>
+      <mo>&ge;</mo><msub><mi>&Delta;</mi><mi>a</mi></msub>
+      <mo>,</mo><mspace width="1em"/>
+      <mi>liminf</mi><mspace width=".2em"/><msub><mi>&Delta;</mi><mi>a</mi></msub><mo>&ge;</mo><mi>&Delta;</mi><mo>&gt;</mo><mn>0</mn>
+    </mrow>
+    <annotation encoding="application/x-tex">\inf\sigma(H_a|_{P_{\perp,a}})\ge\Delta_a,\quad \liminf_{a\to0}\Delta_a\ge\Delta>0.</annotation>
+  </semantics>
+</math>
+<div class='tex'>\inf\sigma(H_a|_{P_{\perp,a}})\ge\Delta_a,\quad \liminf_{a\to0}\Delta_a\ge\Delta&gt;0.</div></div><p class='muted'>Open obligation: Prevent the lattice gap from collapsing in the continuum limit.</p></section><section class='card warning'><h3>Candidate Derivation</h3><p>If A1-A4 construct the physical continuum theory and A5 is proved, then the target subclaim follows: Pperp H_YM is the non-vacuum sector and the spectral theorem gives inf spec(H|Pperp H_YM)&gt;=Delta. Equivalently, H has no spectrum in (0,Delta) away from the vacuum, so the reconstructed Yang-Mills theory has a Hamiltonian mass gap.</p></section><h3>What Would Count As Progress</h3><div class='progress-list'><article class='progress-card'><strong>A precise construction of H_YM, Omega, U(t), and H from OS-positive continuum Schwinger functions.</strong><p><span class='why-label'>Why:</span> This is the mathematical bridge from Euclidean functional data to the Hamiltonian problem. Without reconstructed objects H_YM, Omega, U(t), and a self-adjoint generator H, the phrase &#x27;spectral gap&#x27; is only a desired notation, not a claim about the target continuum Yang-Mills theory.</p></article><article class='progress-card'><strong>A proof that gauge-invariant observables create a dense excitation sector.</strong><p><span class='why-label'>Why:</span> A gap detected by a narrow observable family could miss hidden low-energy states. Density is what lets decay estimates or spectral bounds for gauge-invariant observables control the whole vacuum-orthogonal physical sector P_perp H_YM.</p></article><article class='progress-card'><strong>A cutoff-uniform lower spectral bound or equivalent cutoff-uniform Euclidean decay estimate.</strong><p><span class='why-label'>Why:</span> The Clay target is a continuum problem, so a fixed-regulator lattice gap is not enough: it can collapse when the cutoff is removed. Uniformity is the mechanism that transfers a regulated spectral or decay estimate into a positive lower bound for the reconstructed continuum Hamiltonian.</p></article><article class='progress-card'><strong>A nontriviality witness showing the excitation sector belongs to an interacting Yang-Mills theory.</strong><p><span class='why-label'>Why:</span> The mass-gap statement must be about the nontrivial interacting gauge theory, not a free, Gaussian, empty, or mismatched limit. A nontriviality witness ties the excitation sector carrying the gap to the same continuum Yang-Mills object produced by the construction.</p></article></div><h3>What Does Not Count</h3><ul><li>A spectral gap for a fixed lattice spacing without continuum stability.</li><li>A heuristic or numerical lower bound not expressed as a spectral theorem statement.</li><li>A Hamiltonian defined before OS/Wightman reconstruction of the continuum target.</li><li>Decay of observables that do not determine the vacuum-orthogonal spectrum.</li></ul></section>
+  </main>
+</body>
+</html>

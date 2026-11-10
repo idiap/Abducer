@@ -1,0 +1,27 @@
+# Simulated payloads for manuscript_result_elaboration; documentary values, not execution evidence.
+from workflows.manuscript_result_elaboration.types import (
+    ManuscriptResultScope, ManuscriptExtensionHypothesis, ExtensionValidityAssessment,
+    ManuscriptReadinessAssessment, ManuscriptReadinessDisposition, IntegratedPaperDraft,
+    ExpansionValidation, PaperReadinessDecision,
+)
+
+# @sample workflow=manuscript_result_elaboration reasoning=ManuscriptResultElaboration binding=e0 occurrence=EvidentialManuscriptResultScopeAssessment output=Generated[ManuscriptResultScope] stage=1 branch=main mode=simulated example_set=finite-tree-paper-boundary projection_status=resolved
+sample_e0_value: ManuscriptResultScope = ManuscriptResultScope(scope_id = "finite-tree-result-scope")
+
+# @sample workflow=manuscript_result_elaboration reasoning=ManuscriptResultElaboration binding=a0 occurrence=AbductiveManuscriptExtensionHypothesisFormation output=Generated[ManuscriptExtensionHypothesis] stage=2 branch=main mode=simulated example_set=finite-tree-paper-boundary projection_status=resolved
+sample_a0_value: ManuscriptExtensionHypothesis = ManuscriptExtensionHypothesis(
+    extension_id = "extend-from-trees-to-connected-graphs",
+)
+
+# @sample workflow=manuscript_result_elaboration reasoning=ManuscriptResultElaboration binding=r0 occurrence=RefutationalManuscriptExtensionAssessment output=Generated[ExtensionValidityAssessment] stage=3 branch=main mode=simulated example_set=finite-tree-paper-boundary projection_status=resolved
+sample_r0_value: ExtensionValidityAssessment = ExtensionValidityAssessment(
+    validity_assessment_id = "extension-fails-without-acyclicity",
+)
+
+# @sample workflow=manuscript_result_elaboration reasoning=ManuscriptResultElaboration binding=e1 occurrence=EvidentialManuscriptReadinessAssessment output=Generated[ManuscriptReadinessAssessment] stage=4 branch=main mode=simulated example_set=finite-tree-paper-boundary projection_status=resolved
+sample_e1_value: ManuscriptReadinessAssessment = ManuscriptReadinessAssessment(
+    disposition = ProofRequired(),
+    draft = IntegratedPaperDraft(draft_id = "finite-tree-paper-draft-v2"),
+    expansion = ExpansionValidation(validation_id = "acyclicity-boundary-restored"),
+    readiness = PaperReadinessDecision(readiness_decision_id = "hold-extension-until-proof"),
+)

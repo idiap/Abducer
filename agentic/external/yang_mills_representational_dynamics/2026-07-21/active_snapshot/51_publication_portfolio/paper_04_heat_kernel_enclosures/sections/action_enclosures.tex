@@ -1,0 +1,71 @@
+\section{Logarithmic derivatives and the action Hessian}\label{sec:action}
+
+Assume $Q_0<1$ and let $\Bell_{m,\ell}$ denote the exponential partial Bell
+polynomial.  Define
+\begin{equation}\label{eq:Bm}
+ B_m=\sum_{\ell=1}^m
+ \frac{(\ell-1)!}{(1-Q_0)^\ell}
+ \Bell_{m,\ell}(Q_1,\ldots,Q_{m-\ell+1}).
+\end{equation}
+Also set
+\begin{equation}\label{eq:Gm}
+G_m(\rho)=\sum_{n\ge\lceil m/2\rceil}
+\frac{\zeta(2n)}{n\pi^{2n}}
+\frac{(2n)!}{(2n-m)!}\rho^{2n-m}.
+\end{equation}
+
+\begin{theorem}[Action derivative enclosure]\label{thm:action}
+Under the hypotheses of Theorem~\ref{thm:image-hierarchy}, if $Q_0<1$, then
+for $1\le m\le M$,
+\begin{equation}\label{eq:action-bound}
+ \sup_{0<t\le t_0}\sup_{0\le\theta\le\rho}
+ \abs{\partial_\theta^m\left(s_t(\theta)-\frac{\theta^2}{2t}\right)}
+ \le G_m(\rho)+B_m,
+ \qquad s_t=-\log p_t.
+\end{equation}
+In particular $1+q_t\ge1-Q_0>0$, so every logarithmic differentiation is
+justified by an explicit positivity floor.
+\end{theorem}
+
+\begin{proof}
+Taking the logarithm of \eqref{eq:factorization} gives
+\begin{equation}\label{eq:action-decomp}
+s_t(\theta)=\frac{\theta^2}{2t}+\log\frac{\sin\theta}{\theta}
+-\log(1+q_t(\theta))-\log C_t.
+\end{equation}
+Euler's product yields the absolutely convergent expansion
+\[
+ \log\frac{\sin\theta}{\theta}
+ =-\sum_{n\ge1}\frac{\zeta(2n)}{n\pi^{2n}}\theta^{2n},
+ \qquad \abs\theta<\pi,
+\]
+and hence \eqref{eq:Gm}.  Fa\`a di Bruno's formula for
+$\log(1+q_t)$ gives \eqref{eq:Bm} after absolute values.  See
+Appendices~\ref{app:bell} and \ref{app:geometry}.
+\end{proof}
+
+For a radial function $f(\theta)$ on the unit $S^3$, the Hessian eigenvalues
+are
+\begin{equation}\label{eq:hessian-eigs}
+ \lambda_{\mathrm{rad}}=f''(\theta),\qquad
+ \lambda_{\mathrm{tan}}=f'(\theta)\cot\theta
+ \quad\text{(multiplicity two)}.
+\end{equation}
+
+\begin{corollary}[Local convexity budget]\label{cor:convexity}
+Let $R_2=G_2+B_2$ and $0<\rho<\pi/2$.  On $0\le\theta\le\rho$,
+\begin{align}
+ \lambda_{\mathrm{rad}}(s_t)&\ge t^{-1}-R_2,\label{eq:radial-lower}\\
+ \lambda_{\mathrm{tan}}(s_t)&\ge \rho\cot\rho\,t^{-1}-R_2.
+ \label{eq:tangential-lower}
+\end{align}
+Thus the action is strictly geodesically convex wherever the displayed lower
+bounds are positive.
+\end{corollary}
+
+\begin{proof}
+The radial inequality is immediate.  If $r=s_t-\theta^2/(2t)$, evenness gives
+$r'(0)=0$, hence $|r'(\theta)|\le R_2\theta$.  Since
+$0\le\theta\cot\theta\le1$ and it decreases on $[0,\rho]$, substitution in
+\eqref{eq:hessian-eigs} proves the tangential bound.
+\end{proof}

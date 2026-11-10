@@ -1,0 +1,863 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://abducer.local/spec/formal_conceptual_delta_v2.schema.json",
+  "title": "Replayable relation-specific conceptual transformation v2",
+  "description": "A strict finite before/after conceptual delta. It records executable structural and protected-observable checks, distinguishes source-derived HoTT inhabitants from free-completion counterfactuals, and carries a non-authoritative physics handback.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "delta_id",
+    "lens",
+    "relation_hypothesis",
+    "witness",
+    "consequence_contract",
+    "before_core",
+    "after_core",
+    "construction",
+    "semantic_delta",
+    "observable_preservation",
+    "obstruction_transition",
+    "physics_handback",
+    "authority_boundary",
+    "content_digest"
+  ],
+  "$defs": {
+    "text": {"type": "string", "minLength": 1},
+    "id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 192,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$"
+    },
+    "digest": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
+    "value": {
+      "oneOf": [
+        {"type": "string"},
+        {"type": "boolean"},
+        {"type": "integer"},
+        {"type": "number"},
+        {"type": "null"}
+      ]
+    },
+    "quantifier": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["quantifier_id", "statement"],
+      "properties": {
+        "quantifier_id": {"$ref": "#/$defs/id"},
+        "statement": {"$ref": "#/$defs/text"}
+      }
+    },
+    "primitive": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["primitive_id", "statement", "member_ids"],
+      "properties": {
+        "primitive_id": {"$ref": "#/$defs/id"},
+        "statement": {"$ref": "#/$defs/text"},
+        "member_ids": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/id"}
+        }
+      }
+    },
+    "actionRow": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source_member_id", "target_member_id"],
+      "properties": {
+        "source_member_id": {"$ref": "#/$defs/id"},
+        "target_member_id": {"$ref": "#/$defs/id"}
+      }
+    },
+    "relation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "relation_id",
+        "relation_type",
+        "statement",
+        "source_primitive_id",
+        "target_primitive_id",
+        "action"
+      ],
+      "properties": {
+        "relation_id": {"$ref": "#/$defs/id"},
+        "relation_type": {"$ref": "#/$defs/id"},
+        "statement": {"$ref": "#/$defs/text"},
+        "source_primitive_id": {"$ref": "#/$defs/id"},
+        "target_primitive_id": {"$ref": "#/$defs/id"},
+        "action": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"$ref": "#/$defs/actionRow"}
+        }
+      }
+    },
+    "observableEvaluation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["member_id", "value"],
+      "properties": {
+        "member_id": {"$ref": "#/$defs/id"},
+        "value": {"$ref": "#/$defs/value"}
+      }
+    },
+    "observable": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "observable_id",
+        "carrier_primitive_id",
+        "statement",
+        "protected",
+        "evaluations"
+      ],
+      "properties": {
+        "observable_id": {"$ref": "#/$defs/id"},
+        "carrier_primitive_id": {"$ref": "#/$defs/id"},
+        "statement": {"$ref": "#/$defs/text"},
+        "protected": {"type": "boolean"},
+        "evaluations": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"$ref": "#/$defs/observableEvaluation"}
+        }
+      }
+    },
+    "inhabitant": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "inhabitant_id",
+        "level",
+        "ambient_primitive_id",
+        "source_boundary_id",
+        "target_boundary_id",
+        "derivation_rule",
+        "premise_inhabitant_ids",
+        "evidence_refs"
+      ],
+      "properties": {
+        "inhabitant_id": {"$ref": "#/$defs/id"},
+        "level": {"enum": [1, 2]},
+        "ambient_primitive_id": {"$ref": "#/$defs/id"},
+        "source_boundary_id": {"$ref": "#/$defs/id"},
+        "target_boundary_id": {"$ref": "#/$defs/id"},
+        "derivation_rule": {
+          "enum": [
+            "reflexivity",
+            "declared_domain_constructor",
+            "path_composition",
+            "declared_coherence_constructor",
+            "free_adjoinment"
+          ]
+        },
+        "premise_inhabitant_ids": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/id"}
+        },
+        "evidence_refs": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/id"}
+        }
+      }
+    },
+    "burden": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["burden_id", "statement", "status"],
+      "properties": {
+        "burden_id": {"$ref": "#/$defs/id"},
+        "statement": {"$ref": "#/$defs/text"},
+        "status": {"enum": ["open", "localized", "discharged", "quarantined"]}
+      }
+    },
+    "core": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "core_id",
+        "target_id",
+        "obligation_id",
+        "physical_carrier",
+        "regime",
+        "quantifiers",
+        "primitives",
+        "relations",
+        "observables",
+        "inhabitants",
+        "burdens",
+        "content_digest"
+      ],
+      "properties": {
+        "schema_version": {"const": "2.0.0"},
+        "core_id": {"$ref": "#/$defs/id"},
+        "target_id": {"$ref": "#/$defs/id"},
+        "obligation_id": {"$ref": "#/$defs/id"},
+        "physical_carrier": {
+          "oneOf": [{"$ref": "#/$defs/text"}, {"type": "null"}]
+        },
+        "regime": {"$ref": "#/$defs/text"},
+        "quantifiers": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"$ref": "#/$defs/quantifier"}
+        },
+        "primitives": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"$ref": "#/$defs/primitive"}
+        },
+        "relations": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"$ref": "#/$defs/relation"}
+        },
+        "observables": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"$ref": "#/$defs/observable"}
+        },
+        "inhabitants": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/inhabitant"}
+        },
+        "burdens": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"$ref": "#/$defs/burden"}
+        },
+        "content_digest": {"$ref": "#/$defs/digest"}
+      }
+    },
+    "relationHypothesis": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "relation_id",
+        "relation_kind",
+        "statement",
+        "source_primitive_id",
+        "target_primitive_id",
+        "premise_ids"
+      ],
+      "properties": {
+        "relation_id": {"$ref": "#/$defs/id"},
+        "relation_kind": {
+          "enum": [
+            "noncommuting_composition",
+            "mediating_factorization",
+            "functorial_transfer",
+            "identity_transport",
+            "equivalence_coherence",
+            "path_independence",
+            "descent_coherence"
+          ]
+        },
+        "statement": {"$ref": "#/$defs/text"},
+        "source_primitive_id": {"$ref": "#/$defs/id"},
+        "target_primitive_id": {"$ref": "#/$defs/id"},
+        "premise_ids": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/id"}
+        }
+      }
+    },
+    "leg": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["relation_id", "statement", "action"],
+      "properties": {
+        "relation_id": {"$ref": "#/$defs/id"},
+        "statement": {"$ref": "#/$defs/text"},
+        "action": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"$ref": "#/$defs/actionRow"}
+        }
+      }
+    },
+    "pathSpec": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "inhabitant_id",
+        "ambient_primitive_id",
+        "source_boundary_id",
+        "target_boundary_id"
+      ],
+      "properties": {
+        "inhabitant_id": {"$ref": "#/$defs/id"},
+        "ambient_primitive_id": {"$ref": "#/$defs/id"},
+        "source_boundary_id": {"$ref": "#/$defs/id"},
+        "target_boundary_id": {"$ref": "#/$defs/id"}
+      }
+    },
+    "cellSpec": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "inhabitant_id",
+        "ambient_primitive_id",
+        "source_boundary_id",
+        "target_boundary_id"
+      ],
+      "properties": {
+        "inhabitant_id": {"$ref": "#/$defs/id"},
+        "ambient_primitive_id": {"$ref": "#/$defs/id"},
+        "source_boundary_id": {"$ref": "#/$defs/id"},
+        "target_boundary_id": {"$ref": "#/$defs/id"}
+      }
+    },
+    "descentPair": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "pair_id",
+        "left_member_id",
+        "right_member_id",
+        "path_inhabitant_id"
+      ],
+      "properties": {
+        "pair_id": {"$ref": "#/$defs/id"},
+        "left_member_id": {"$ref": "#/$defs/id"},
+        "right_member_id": {"$ref": "#/$defs/id"},
+        "path_inhabitant_id": {"$ref": "#/$defs/id"}
+      }
+    },
+    "witness": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["witness_kind", "left_path_relation_ids", "right_path_relation_ids"],
+          "properties": {
+            "witness_kind": {"const": "noncommutativity_localization"},
+            "left_path_relation_ids": {
+              "type": "array", "minItems": 1, "uniqueItems": true,
+              "items": {"$ref": "#/$defs/id"}
+            },
+            "right_path_relation_ids": {
+              "type": "array", "minItems": 1, "uniqueItems": true,
+              "items": {"$ref": "#/$defs/id"}
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["witness_kind", "direct_relation_id", "mediator", "first_leg", "second_leg"],
+          "properties": {
+            "witness_kind": {"const": "mediator_factorization"},
+            "direct_relation_id": {"$ref": "#/$defs/id"},
+            "mediator": {"$ref": "#/$defs/primitive"},
+            "first_leg": {"$ref": "#/$defs/leg"},
+            "second_leg": {"$ref": "#/$defs/leg"}
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "witness_kind",
+            "source_relation_id",
+            "transferred_source",
+            "transferred_target",
+            "source_component",
+            "target_component",
+            "transferred_relation"
+          ],
+          "properties": {
+            "witness_kind": {"const": "functorial_transfer"},
+            "source_relation_id": {"$ref": "#/$defs/id"},
+            "transferred_source": {"$ref": "#/$defs/primitive"},
+            "transferred_target": {"$ref": "#/$defs/primitive"},
+            "source_component": {"$ref": "#/$defs/leg"},
+            "target_component": {"$ref": "#/$defs/leg"},
+            "transferred_relation": {"$ref": "#/$defs/leg"}
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "witness_kind",
+            "construction_origin",
+            "transport_relation_id",
+            "path_inhabitant_ids",
+            "adjoined_paths"
+          ],
+          "properties": {
+            "witness_kind": {"const": "identity_transport"},
+            "construction_origin": {"enum": ["derived_inhabitant", "free_completion_counterfactual"]},
+            "transport_relation_id": {"$ref": "#/$defs/id"},
+            "path_inhabitant_ids": {
+              "type": "array", "uniqueItems": true,
+              "items": {"$ref": "#/$defs/id"}
+            },
+            "adjoined_paths": {
+              "type": "array", "items": {"$ref": "#/$defs/pathSpec"}
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "witness_kind",
+            "construction_origin",
+            "forward_relation_id",
+            "inverse_relation_id",
+            "left_path_inhabitant_ids",
+            "right_path_inhabitant_ids",
+            "coherence_cell_ids",
+            "adjoined_paths",
+            "adjoined_cells"
+          ],
+          "properties": {
+            "witness_kind": {"const": "equivalence_coherence"},
+            "construction_origin": {"enum": ["derived_inhabitant", "free_completion_counterfactual"]},
+            "forward_relation_id": {"$ref": "#/$defs/id"},
+            "inverse_relation_id": {"$ref": "#/$defs/id"},
+            "left_path_inhabitant_ids": {
+              "type": "array", "uniqueItems": true,
+              "items": {"$ref": "#/$defs/id"}
+            },
+            "right_path_inhabitant_ids": {
+              "type": "array", "uniqueItems": true,
+              "items": {"$ref": "#/$defs/id"}
+            },
+            "coherence_cell_ids": {
+              "type": "array", "uniqueItems": true,
+              "items": {"$ref": "#/$defs/id"}
+            },
+            "adjoined_paths": {
+              "type": "array", "items": {"$ref": "#/$defs/pathSpec"}
+            },
+            "adjoined_cells": {
+              "type": "array", "items": {"$ref": "#/$defs/cellSpec"}
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "witness_kind",
+            "construction_origin",
+            "left_path_relation_ids",
+            "right_path_relation_ids",
+            "path_inhabitant_ids",
+            "adjoined_paths"
+          ],
+          "properties": {
+            "witness_kind": {"const": "path_independence"},
+            "construction_origin": {"enum": ["derived_inhabitant", "free_completion_counterfactual"]},
+            "left_path_relation_ids": {
+              "type": "array", "minItems": 1, "uniqueItems": true,
+              "items": {"$ref": "#/$defs/id"}
+            },
+            "right_path_relation_ids": {
+              "type": "array", "minItems": 1, "uniqueItems": true,
+              "items": {"$ref": "#/$defs/id"}
+            },
+            "path_inhabitant_ids": {
+              "type": "array", "uniqueItems": true,
+              "items": {"$ref": "#/$defs/id"}
+            },
+            "adjoined_paths": {
+              "type": "array", "items": {"$ref": "#/$defs/pathSpec"}
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "witness_kind",
+            "construction_origin",
+            "left_restriction_relation_id",
+            "right_restriction_relation_id",
+            "compatible_pairs",
+            "adjoined_paths"
+          ],
+          "properties": {
+            "witness_kind": {"const": "descent_coherence"},
+            "construction_origin": {"enum": ["derived_inhabitant", "free_completion_counterfactual"]},
+            "left_restriction_relation_id": {"$ref": "#/$defs/id"},
+            "right_restriction_relation_id": {"$ref": "#/$defs/id"},
+            "compatible_pairs": {
+              "type": "array", "minItems": 1,
+              "items": {"$ref": "#/$defs/descentPair"}
+            },
+            "adjoined_paths": {
+              "type": "array", "items": {"$ref": "#/$defs/pathSpec"}
+            }
+          }
+        }
+      ]
+    },
+    "consequenceContract": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "explanatory_gain",
+        "new_question",
+        "changed_burden",
+        "correction",
+        "falsifier",
+        "physics_next_action"
+      ],
+      "properties": {
+        "explanatory_gain": {"$ref": "#/$defs/text"},
+        "new_question": {"$ref": "#/$defs/text"},
+        "changed_burden": {"$ref": "#/$defs/text"},
+        "correction": {"$ref": "#/$defs/text"},
+        "falsifier": {"$ref": "#/$defs/text"},
+        "physics_next_action": {"$ref": "#/$defs/text"}
+      }
+    },
+    "check": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["check_id", "check_kind", "status", "statement", "evidence_digest"],
+      "properties": {
+        "check_id": {"$ref": "#/$defs/id"},
+        "check_kind": {"$ref": "#/$defs/id"},
+        "status": {"enum": ["passed", "failed"]},
+        "statement": {"$ref": "#/$defs/text"},
+        "evidence_digest": {"$ref": "#/$defs/digest"}
+      }
+    },
+    "split": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["split_id", "entity_kind", "source_id", "replacement_ids", "reason"],
+      "properties": {
+        "split_id": {"$ref": "#/$defs/id"},
+        "entity_kind": {"enum": ["primitive", "relation", "observable", "inhabitant"]},
+        "source_id": {"$ref": "#/$defs/id"},
+        "replacement_ids": {
+          "type": "array", "minItems": 2, "uniqueItems": true,
+          "items": {"$ref": "#/$defs/id"}
+        },
+        "reason": {"$ref": "#/$defs/text"}
+      }
+    },
+    "loss": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["loss_id", "statement", "protected", "disposition"],
+      "properties": {
+        "loss_id": {"$ref": "#/$defs/id"},
+        "statement": {"$ref": "#/$defs/text"},
+        "protected": {"type": "boolean"},
+        "disposition": {"enum": ["none_detected", "retained_open", "counterfactual_only", "quarantined"]}
+      }
+    },
+    "semanticDelta": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "added_primitive_ids",
+        "removed_primitive_ids",
+        "modified_primitive_ids",
+        "added_relation_ids",
+        "removed_relation_ids",
+        "modified_relation_ids",
+        "added_observable_ids",
+        "removed_observable_ids",
+        "modified_observable_ids",
+        "added_inhabitant_ids",
+        "removed_inhabitant_ids",
+        "modified_inhabitant_ids",
+        "splits",
+        "explanatory_gain",
+        "loss_ledger",
+        "new_question",
+        "changed_burden",
+        "correction",
+        "falsifier"
+      ],
+      "properties": {
+        "added_primitive_ids": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/id"}},
+        "removed_primitive_ids": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/id"}},
+        "modified_primitive_ids": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/id"}},
+        "added_relation_ids": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/id"}},
+        "removed_relation_ids": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/id"}},
+        "modified_relation_ids": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/id"}},
+        "added_observable_ids": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/id"}},
+        "removed_observable_ids": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/id"}},
+        "modified_observable_ids": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/id"}},
+        "added_inhabitant_ids": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/id"}},
+        "removed_inhabitant_ids": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/id"}},
+        "modified_inhabitant_ids": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/id"}},
+        "splits": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/split"}},
+        "explanatory_gain": {"$ref": "#/$defs/text"},
+        "loss_ledger": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/loss"}},
+        "new_question": {"$ref": "#/$defs/text"},
+        "changed_burden": {"$ref": "#/$defs/text"},
+        "correction": {"$ref": "#/$defs/text"},
+        "falsifier": {"$ref": "#/$defs/text"}
+      }
+    },
+    "preservationCounterexample": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "counterexample_id",
+        "reason_code",
+        "source_member_ids",
+        "target_member_ids",
+        "source_values",
+        "target_values"
+      ],
+      "properties": {
+        "counterexample_id": {"$ref": "#/$defs/id"},
+        "reason_code": {
+          "enum": ["protected_value_collision", "path_boundary_value_mismatch"]
+        },
+        "source_member_ids": {
+          "type": "array", "minItems": 1, "items": {"$ref": "#/$defs/id"}
+        },
+        "target_member_ids": {
+          "type": "array", "minItems": 1, "items": {"$ref": "#/$defs/id"}
+        },
+        "source_values": {
+          "type": "array", "minItems": 1, "items": {"$ref": "#/$defs/value"}
+        },
+        "target_values": {
+          "type": "array", "minItems": 1, "items": {"$ref": "#/$defs/value"}
+        }
+      }
+    },
+    "preservationReceipt": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "receipt_id",
+        "receipt_kind",
+        "source_observable_id",
+        "target_observable_id",
+        "map_or_inhabitant_id",
+        "source_primitive_id",
+        "target_primitive_id",
+        "checked_pairs",
+        "value_preserved",
+        "protected_distinctions_preserved",
+        "counterexamples",
+        "receipt_digest"
+      ],
+      "properties": {
+        "receipt_id": {"$ref": "#/$defs/id"},
+        "receipt_kind": {"enum": ["identity_retention", "relation_transport", "path_boundary"]},
+        "source_observable_id": {"$ref": "#/$defs/id"},
+        "target_observable_id": {
+          "oneOf": [{"$ref": "#/$defs/id"}, {"type": "null"}]
+        },
+        "map_or_inhabitant_id": {"$ref": "#/$defs/id"},
+        "source_primitive_id": {"$ref": "#/$defs/id"},
+        "target_primitive_id": {"$ref": "#/$defs/id"},
+        "checked_pairs": {"type": "integer", "minimum": 1},
+        "value_preserved": {"type": "boolean"},
+        "protected_distinctions_preserved": {"type": "boolean"},
+        "counterexamples": {
+          "type": "array", "items": {"$ref": "#/$defs/preservationCounterexample"}
+        },
+        "receipt_digest": {"$ref": "#/$defs/digest"}
+      }
+    },
+    "observablePreservation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "required_relation_ids",
+        "required_path_inhabitant_ids",
+        "receipts",
+        "all_source_protected_observables_retained",
+        "all_required_maps_preserve",
+        "protected_erasure_detected",
+        "counterexamples_digest"
+      ],
+      "properties": {
+        "status": {"enum": ["preserved", "quarantined_protected_erasure"]},
+        "required_relation_ids": {
+          "type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/id"}
+        },
+        "required_path_inhabitant_ids": {
+          "type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/id"}
+        },
+        "receipts": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/preservationReceipt"}},
+        "all_source_protected_observables_retained": {"type": "boolean"},
+        "all_required_maps_preserve": {"type": "boolean"},
+        "protected_erasure_detected": {"type": "boolean"},
+        "counterexamples_digest": {"$ref": "#/$defs/digest"}
+      }
+    },
+    "construction": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "construction_id",
+        "constructor_id",
+        "construction_origin",
+        "witness_digest",
+        "checks",
+        "local_authority_scope"
+      ],
+      "properties": {
+        "construction_id": {"$ref": "#/$defs/id"},
+        "constructor_id": {
+          "enum": [
+            "noncommutativity_localizer.v2",
+            "mediator_factorizer.v2",
+            "functorial_transfer_builder.v2",
+            "identity_transport_builder.v2",
+            "equivalence_coherence_builder.v2",
+            "path_independence_builder.v2",
+            "descent_coherence_builder.v2"
+          ]
+        },
+        "construction_origin": {
+          "enum": ["derived_finite_witness", "derived_inhabitant", "free_completion_counterfactual"]
+        },
+        "witness_digest": {"$ref": "#/$defs/digest"},
+        "checks": {"type": "array", "minItems": 2, "items": {"$ref": "#/$defs/check"}},
+        "local_authority_scope": {"const": "finite_relation_specific_conceptual_transformation_only"}
+      }
+    },
+    "obstructionTransition": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "before_status",
+        "after_status",
+        "removal_authorized",
+        "decision_flip_authorized",
+        "reason_code",
+        "evidence_digest"
+      ],
+      "properties": {
+        "before_status": {"const": "open"},
+        "after_status": {
+          "enum": [
+            "localized",
+            "constructively_removed",
+            "counterfactual_only",
+            "quarantined_protected_erasure"
+          ]
+        },
+        "removal_authorized": {"type": "boolean"},
+        "decision_flip_authorized": {"type": "boolean"},
+        "reason_code": {
+          "enum": [
+            "exact_obstruction_localized_not_removed",
+            "exact_relation_specific_construction",
+            "free_completion_has_no_inhabitation_authority",
+            "protected_observable_erasure"
+          ]
+        },
+        "evidence_digest": {"$ref": "#/$defs/digest"}
+      }
+    },
+    "physicsHandback": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "target_id",
+        "obligation_id",
+        "physics_applicability",
+        "physical_carrier",
+        "regime",
+        "quantifiers",
+        "abstract_change",
+        "physics_next_action",
+        "preserved_observable_ids",
+        "open_or_changed_obligations",
+        "correction",
+        "falsifier",
+        "experiment_role",
+        "physics_value_authorized",
+        "theorem_authorized",
+        "continuum_authorized",
+        "investment_authorized"
+      ],
+      "properties": {
+        "target_id": {"$ref": "#/$defs/id"},
+        "obligation_id": {"$ref": "#/$defs/id"},
+        "physics_applicability": {"enum": ["candidate_physics_handback", "not_applicable_non_physics"]},
+        "physical_carrier": {
+          "oneOf": [{"$ref": "#/$defs/text"}, {"type": "null"}]
+        },
+        "regime": {"$ref": "#/$defs/text"},
+        "quantifiers": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/quantifier"}},
+        "abstract_change": {"$ref": "#/$defs/text"},
+        "physics_next_action": {"$ref": "#/$defs/text"},
+        "preserved_observable_ids": {
+          "type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/id"}
+        },
+        "open_or_changed_obligations": {
+          "type": "array", "minItems": 1, "items": {"$ref": "#/$defs/text"}
+        },
+        "correction": {"$ref": "#/$defs/text"},
+        "falsifier": {"$ref": "#/$defs/text"},
+        "experiment_role": {"const": "secondary_theory_requested_falsifier_only"},
+        "physics_value_authorized": {"const": false},
+        "theorem_authorized": {"const": false},
+        "continuum_authorized": {"const": false},
+        "investment_authorized": {"const": false}
+      }
+    },
+    "authorityBoundary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "finite_local_only",
+        "truth_authorized",
+        "conceptual_value_authorized",
+        "physics_value_authorized",
+        "theorem_authorized",
+        "continuum_authorized",
+        "investment_authorized",
+        "experiment_selection_authorized"
+      ],
+      "properties": {
+        "finite_local_only": {"const": true},
+        "truth_authorized": {"const": false},
+        "conceptual_value_authorized": {"const": false},
+        "physics_value_authorized": {"const": false},
+        "theorem_authorized": {"const": false},
+        "continuum_authorized": {"const": false},
+        "investment_authorized": {"const": false},
+        "experiment_selection_authorized": {"const": false}
+      }
+    }
+  },
+  "properties": {
+    "schema_version": {"const": "2.0.0"},
+    "delta_id": {"$ref": "#/$defs/id"},
+    "lens": {"enum": ["categorical", "hott"]},
+    "relation_hypothesis": {"$ref": "#/$defs/relationHypothesis"},
+    "witness": {"$ref": "#/$defs/witness"},
+    "consequence_contract": {"$ref": "#/$defs/consequenceContract"},
+    "before_core": {"$ref": "#/$defs/core"},
+    "after_core": {"$ref": "#/$defs/core"},
+    "construction": {"$ref": "#/$defs/construction"},
+    "semantic_delta": {"$ref": "#/$defs/semanticDelta"},
+    "observable_preservation": {"$ref": "#/$defs/observablePreservation"},
+    "obstruction_transition": {"$ref": "#/$defs/obstructionTransition"},
+    "physics_handback": {"$ref": "#/$defs/physicsHandback"},
+    "authority_boundary": {"$ref": "#/$defs/authorityBoundary"},
+    "content_digest": {"$ref": "#/$defs/digest"}
+  }
+}

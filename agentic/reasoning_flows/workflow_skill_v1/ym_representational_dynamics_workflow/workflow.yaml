@@ -1,0 +1,149 @@
+# SPDX-FileCopyrightText: © 2026 Idiap Research Institute <contact@idiap.ch>
+#
+# SPDX-FileContributor: Danilo Gusicuma <danilo.gusicuma@idiap.ch>
+# Neuro-symbolic AI Group
+#
+# SPDX-License-Identifier: MIT
+# REUSE-IgnoreStart
+schema_version: workflow-skill/v1
+namespace: abducer
+id: ym_representational_dynamics_workflow
+version: 1.0.0
+kind: workflow
+description: Draft interface projection of ym-representational-dynamics-overlay; native execution and
+  authority remain unchanged.
+aliases:
+- ym-representational-dynamics-overlay
+lifecycle: draft
+activation:
+  mode: explicit
+  prerequisites: []
+types:
+  NativeRequest:
+    schema:
+      type: object
+      description: Source-defined invocation context.
+    representation: value
+  NativeResult:
+    schema:
+      type: object
+      description: Source-defined paper or audit result bundle.
+    representation: value
+inputs:
+  request:
+    type: NativeRequest
+outputs:
+  result:
+    type: NativeResult
+    value:
+      ref: steps.native.outputs.result
+operations:
+  native_workflow:
+    inputs:
+      request:
+        type: NativeRequest
+    outputs:
+      result:
+        type: NativeResult
+    execution:
+      mode: specification_only
+      reason: No workflow-skill/v1 host adapter is supplied. Native skill/hook/CLI interfaces exist, but
+        payload materialization, guard evidence, execution effects and receipt translation are not qualified
+        for this format.
+flow:
+  kind: sequence
+  steps:
+  - id: native
+    kind: call
+    operation: native_workflow
+    description: Opaque native workflow boundary; internal ordering, guards and handoffs are retained
+      in abducer.native_contract.
+    arguments:
+      request:
+        ref: inputs.request
+    on_failure: blocked
+policy:
+  effects:
+    filesystem:
+      read:
+      - native_sources
+      - inputs
+      write: []
+    network: []
+    external_write: []
+  authority:
+    allowed:
+    - describe_native_interface
+    forbidden:
+    - execute_scientific_workflow
+    - approve
+    - prove
+    - publish
+    - promote
+  limits:
+    wall_time_seconds: 1800
+    max_operation_calls: 1
+  failure:
+    default: blocked
+    retry:
+      max_attempts: 1
+      retryable_codes: []
+  resume:
+    mode: none
+    require_matching_definition_and_inputs: true
+  claim_ceiling: Interface description only; no proof, scientific validity, runtime qualification, promotion
+    or approval.
+observability:
+  receipts: required
+  artifact_digests: sha256
+  provenance: required
+  events:
+  - workflow_started
+  - step_failed
+  - workflow_completed
+provenance:
+  coverage: interface_only
+  sources:
+  - path: agentic/reasoning_flows/ym-representational-dynamics-overlay.prism
+    digest: sha256:ed0d1ef84119f33ca35a33bae264c9af4db1f068728d07e0bbf51f9ff57f4751
+  - path: skills/domain_specific/ym/ym-draft-representational-dynamics/SKILL.md
+    digest: sha256:e71d82653834126d1d46ff2b39860c4662c48ba5c380443d26c2d6fb7a75bee3
+  - path: agentic/registries/skill_registry.yaml
+    digest: sha256:15076ed8d1bd4c10895060ab485353fe520421c44e1fc6f506508d2d566eacf0
+  - path: pyproject.toml
+    digest: sha256:69325c4805f66033ce7f7e0e68f4a0996913728c6041bb3cee656571693b2f1e
+  - path: uv.lock
+    digest: sha256:a6c77e5d86a93915eeb0f129f80bc8c45d572be387872e3ace7460a3d6ada9ae
+  - path: prism_me/shared/references/codex-control-stack.md
+    digest: sha256:4e8e7a5cdbc0572cf9b0d4ffc4a41c8f4f9c9a304fae3bcee99d8af3553be30e
+  gaps:
+  - No workflow-skill/v1 host adapter is supplied. Native skill/hook/CLI interfaces exist, but payload
+    materialization, guard evidence, execution effects and receipt translation are not qualified for this
+    format.
+  - Native control flow remains opaque; coverage is interface_only, not source-equivalence certification.
+  - One or more native payloads have no exact JSON Schema; object-only types remain explicitly underspecified.
+extensions:
+  abducer.owner:
+    path: skills/domain_specific/ym/ym-draft-representational-dynamics/SKILL.md
+  abducer.native_identity:
+    id: ym-representational-dynamics-overlay
+  abducer.native_contract:
+    source: agentic/reasoning_flows/ym-representational-dynamics-overlay.prism
+    source_text: "erfl 0.3\n@KB kb0 connect(file(\"KB/yang-mills-existence-and-mass-gap.kb.md\"))\nreasoning\
+      \ ym-representational-dynamics-overlay {\n  goal \"return a calibrated Yang-Mills candidate without\
+      \ crossing the continuum boundary\" -> overlay_status\n  steps pre:_[kb0,target_context->audit_input]\
+      \ -requires> ...\n        audit:E[audit_input->overlay_status]\n  pre <-query- kb0\n  audit -persist->\
+      \ kb0\n  on audit.accepted => accept\n  on audit.quarantined => stop\n  on reasoning.stalled =>\
+      \ stop\n}\n"
+    owner_relation: native owning skill; source implementation or reasoning lane defines execution
+  abducer.environment:
+    python: pyproject.toml
+    lock: uv.lock
+    native_controls: .codex/config.toml
+    native_controls_optional: true
+    control_policy: prism_me/shared/references/codex-control-stack.md
+  abducer.execution_boundary:
+    status: specification_only
+    notes: Source inspection only. Effects above deny native execution until a separately reviewed adapter
+      exists.
+# REUSE-IgnoreEnd

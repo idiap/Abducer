@@ -1,0 +1,100 @@
+{
+  "concrete_probes": [
+    {
+      "description": "two point spectral measure",
+      "probe_id": "probe.spectral-measure",
+      "transfer_scope": "tests decay intuition only"
+    }
+  ],
+  "created_utc": "2026-07-09T00:00:00+00:00",
+  "epistemic_status": "validated_probe",
+  "falsifiers": [
+    "low spectral support invalidates decay witness"
+  ],
+  "packet_id": "packet.invalid_missing_regime",
+  "regimes": [
+    {
+      "boundary_conditions": "positive time observables",
+      "finite_or_continuum_status": "continuum",
+      "id": "reg.spectral",
+      "limit_order": "OS reconstruction before spectral readout",
+      "name": "long-time spectral regime",
+      "perturbative_status": "nonperturbative",
+      "scale_range": "t -> infinity",
+      "transition_conditions": "requires dense observable sector"
+    }
+  ],
+  "relations": [
+    {
+      "assumptions": [
+        "positive spectral measure",
+        "vacuum part subtracted"
+      ],
+      "convergence_behavior": "C(t) <= A exp(-m t) under spectral gap assumptions",
+      "direction": "larger m gives faster long-time decay",
+      "epistemic_status": "established",
+      "evidence_paths": [
+        "fixture"
+      ],
+      "failure_modes": [
+        "observable sector misses low states",
+        "decay only fixed cutoff"
+      ],
+      "id": "rel.m-decays-C",
+      "monotonicity": "monotone in lower spectral support",
+      "qualitative_rate": "exponential",
+      "relation_kind": "decreases",
+      "source_variable": "var.m",
+      "target_variable": "var.C",
+      "valid_regime_ids": [
+        "reg.missing"
+      ]
+    }
+  ],
+  "source_artifacts": [
+    "fixture"
+  ],
+  "target_id": "fixture-target",
+  "validation_handoff": "python agentic/scripts/validate_qualitative_relation_packets.py",
+  "variables": [
+    {
+      "control_status": "observable probe",
+      "domain": "spectral probe",
+      "id": "var.t",
+      "independent_or_dependent": "independent",
+      "name": "Euclidean time t",
+      "physical_role": "time separation",
+      "quantity_type": "scale",
+      "source_artifacts": [
+        "fixture"
+      ],
+      "units_or_dimension": "length"
+    },
+    {
+      "control_status": "measured response",
+      "domain": "Schwinger sector",
+      "id": "var.C",
+      "independent_or_dependent": "dependent",
+      "name": "connected correlator C(t)",
+      "physical_role": "observable response",
+      "quantity_type": "observable",
+      "source_artifacts": [
+        "fixture"
+      ],
+      "units_or_dimension": "observable squared"
+    },
+    {
+      "control_status": "target witness",
+      "domain": "Hamiltonian sector",
+      "id": "var.m",
+      "independent_or_dependent": "dependent",
+      "name": "mass scale m",
+      "physical_role": "spectral lower support",
+      "quantity_type": "scale",
+      "source_artifacts": [
+        "fixture"
+      ],
+      "units_or_dimension": "inverse length"
+    }
+  ]
+}

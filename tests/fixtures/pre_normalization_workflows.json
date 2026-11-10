@@ -1,0 +1,676 @@
+{
+  "baseline": "f90f0c6f",
+  "files": {
+    "agentic/registries/cohere_fast_subworkflows.yaml": "53931de5b0b89ceee22a112347d39bd453aa0fd2ba758558ffda5b55e57190e3",
+    "agentic/registries/cohere_fast_workflow_contracts.yaml": "289cf346e9e9b9e00363b0b736faa0d68e0cb843dbcae55d05c3eced65f8fd00",
+    "agentic/registries/cohere_fast_ym_workflow.yaml": "b6e96e458aa1dd23730c345ea91523a47527fa16ee8e10382bf845a6f60e5b64",
+    "agentic/registries/named_workflow_contracts.yaml": "a467750a969715f742cc330f21fef37f4004b76924650fd9a027c47af9447d77",
+    "agentic/registries/workflow_contracts.yaml": "87fa0266c714219668ece825d40a3686d3f02d68fd5bea08c9e60013d86873c7",
+    "hooks/hooks.json": "5dbd280a2b256cdd1ac2b957b7d9f22dfe3c67bf9b20ee7e7e5639fc96f03223",
+    "hooks/scripts/cohere_fast_intake.py": "a43f4a983bfc1653b7d2d3cf4551ec508eb0d68f4ffd2c3a54fb01d18831fbd5",
+    "hooks/scripts/cohere_fast_policy.py": "50514ab41d353901b7ea156806be3277779410cb085a1d15282b461708329db0",
+    "hooks/scripts/hook_utils.py": "970f7155564bc43b1903000521c9c0fd9b14d112b45e4f9c77d53c799c9fb73e",
+    "hooks/scripts/post_skill_use_review.py": "63aa5e6d371bdcf34416082e8bcc8095a4cbf31b1067da06ebcd63d5a27aa11a",
+    "hooks/scripts/pre_skill_use_policy.py": "16c2994abb9d6dd0b72b7bb3333db484bbf35069df747be33600fca50603b562",
+    "hooks/scripts/pre_tool_use_policy.py": "a673a3a2b5755d5e7cb9b60eede0779e82f09a7746fc365ab8324b6b9e5b725c",
+    "hooks/scripts/stop_artifact_check.py": "057a1a9591f1f8993985a6496febd4f1a4268f8701092f00d23561c2f6b58b4e",
+    "hooks/scripts/user_prompt_submit_intake.py": "386cd4569641cf2d504e232aa49391ff59081d9f54cdb0f1f2c1fe6c33b2ae51"
+  },
+  "task_workflows": {
+    "registry/tasks/cohere-fast/task_registry.json": [
+      {
+        "activation": "explicit_only",
+        "artifacts": [
+          "agentic/registries/cohere_fast_workflow_contracts.yaml",
+          "agentic/registries/domain_skill_bundles.yaml"
+        ],
+        "composed_skills": [
+          "cohere-fast-orchestrator"
+        ],
+        "deterministic_hooks": [
+          "cohere-fast-intake",
+          "cohere-fast-policy"
+        ],
+        "domain_id": "ym",
+        "end_to_end_function": "Run an explicitly activated, isolated, domain-bound research lifecycle.",
+        "name": "cohere_fast",
+        "validators": [
+          "agentic/scripts/validate_cohere_fast_release.py"
+        ],
+        "workflow_id": "cohere_fast",
+        "workflow_references": [
+          "cohere-fast-contract-registry"
+        ],
+        "workflow_version": "1.0.0"
+      },
+      {
+        "activation": "explicit_only",
+        "artifacts": [
+          "agentic/registries/cohere_fast_workflow_contracts.yaml",
+          "agentic/registries/domain_skill_bundles.yaml"
+        ],
+        "composed_skills": [
+          "cohere-fast-orchestrator"
+        ],
+        "deterministic_hooks": [
+          "cohere-fast-intake",
+          "cohere-fast-policy"
+        ],
+        "domain_id": "ym",
+        "end_to_end_function": "Transform DomainRunRequest into ScopeGroundPacket under the cohere-fast isolation contract.",
+        "name": "cohere_fast:scope-and-ground",
+        "parent_workflow": "cohere_fast",
+        "subworkflow_id": "scope-and-ground",
+        "validators": [
+          "agentic/scripts/validate_cohere_fast_release.py"
+        ],
+        "workflow_id": "cohere_fast:scope-and-ground",
+        "workflow_references": [
+          "cohere-fast-contract-registry"
+        ],
+        "workflow_version": "1.0.0"
+      },
+      {
+        "activation": "explicit_only",
+        "artifacts": [
+          "agentic/registries/cohere_fast_workflow_contracts.yaml",
+          "agentic/registries/domain_skill_bundles.yaml"
+        ],
+        "composed_skills": [
+          "cohere-fast-orchestrator"
+        ],
+        "deterministic_hooks": [
+          "cohere-fast-intake",
+          "cohere-fast-policy"
+        ],
+        "domain_id": "ym",
+        "end_to_end_function": "Transform ScopeGroundPacket into FrontierPacket under the cohere-fast isolation contract.",
+        "name": "cohere_fast:adaptive-frontier",
+        "parent_workflow": "cohere_fast",
+        "subworkflow_id": "adaptive-frontier",
+        "validators": [
+          "agentic/scripts/validate_cohere_fast_release.py"
+        ],
+        "workflow_id": "cohere_fast:adaptive-frontier",
+        "workflow_references": [
+          "cohere-fast-contract-registry"
+        ],
+        "workflow_version": "1.0.0"
+      },
+      {
+        "activation": "explicit_only",
+        "artifacts": [
+          "agentic/registries/cohere_fast_workflow_contracts.yaml",
+          "agentic/registries/domain_skill_bundles.yaml"
+        ],
+        "composed_skills": [
+          "cohere-fast-orchestrator"
+        ],
+        "deterministic_hooks": [
+          "cohere-fast-intake",
+          "cohere-fast-policy"
+        ],
+        "domain_id": "ym",
+        "end_to_end_function": "Transform FrontierPacket into DerivationPacket under the cohere-fast isolation contract.",
+        "name": "cohere_fast:derivation-and-proof",
+        "parent_workflow": "cohere_fast",
+        "subworkflow_id": "derivation-and-proof",
+        "validators": [
+          "agentic/scripts/validate_cohere_fast_release.py"
+        ],
+        "workflow_id": "cohere_fast:derivation-and-proof",
+        "workflow_references": [
+          "cohere-fast-contract-registry"
+        ],
+        "workflow_version": "1.0.0"
+      },
+      {
+        "activation": "explicit_only",
+        "artifacts": [
+          "agentic/registries/cohere_fast_workflow_contracts.yaml",
+          "agentic/registries/domain_skill_bundles.yaml"
+        ],
+        "composed_skills": [
+          "cohere-fast-orchestrator"
+        ],
+        "deterministic_hooks": [
+          "cohere-fast-intake",
+          "cohere-fast-policy"
+        ],
+        "domain_id": "ym",
+        "end_to_end_function": "Transform DerivationPacket into AuditPacket under the cohere-fast isolation contract.",
+        "name": "cohere_fast:independent-audit",
+        "parent_workflow": "cohere_fast",
+        "subworkflow_id": "independent-audit",
+        "validators": [
+          "agentic/scripts/validate_cohere_fast_release.py"
+        ],
+        "workflow_id": "cohere_fast:independent-audit",
+        "workflow_references": [
+          "cohere-fast-contract-registry"
+        ],
+        "workflow_version": "1.0.0"
+      },
+      {
+        "activation": "explicit_only",
+        "artifacts": [
+          "agentic/registries/cohere_fast_workflow_contracts.yaml",
+          "agentic/registries/domain_skill_bundles.yaml"
+        ],
+        "composed_skills": [
+          "cohere-fast-orchestrator"
+        ],
+        "deterministic_hooks": [
+          "cohere-fast-intake",
+          "cohere-fast-policy"
+        ],
+        "domain_id": "ym",
+        "end_to_end_function": "Transform AuditPacket into ReleasePacket under the cohere-fast isolation contract.",
+        "name": "cohere_fast:manuscript-release",
+        "parent_workflow": "cohere_fast",
+        "subworkflow_id": "manuscript-release",
+        "validators": [
+          "agentic/scripts/validate_cohere_fast_release.py"
+        ],
+        "workflow_id": "cohere_fast:manuscript-release",
+        "workflow_references": [
+          "cohere-fast-contract-registry"
+        ],
+        "workflow_version": "1.0.0"
+      }
+    ],
+    "registry/tasks/discovery-marathon/task_registry.json": [
+      {
+        "artifacts": [
+          "agentic/spec/discovery_marathon_run.schema.json",
+          "agentic/spec/discovery_marathon_cycle.schema.json",
+          "agentic/spec/discovery_branch_state.schema.json",
+          "agentic/spec/discovery_marathon_branch_output.schema.json",
+          "agentic/spec/discovery_marathon_codex_branch_output.schema.json",
+          "agentic/spec/qualitative_physics_relation_packet.schema.json",
+          "agentic/spec/qualitative_mechanistic_graph.schema.json",
+          "agentic/spec/gedanken_experiment_packet.schema.json",
+          "agentic/spec/parsimonious_probe_decision.schema.json",
+          "agentic/spec/finite_algebra_interface_packet.schema.json",
+          "agentic/spec/api_key_config.schema.json",
+          "config/README.md",
+          "requirements-pmp.txt",
+          "docs/research-methods/parsimonious-probe-policy.md",
+          "docs/research-methods/equational-symbolic-reasoning.md",
+          "config/api_keys.example.json",
+          "config/api_keys.example.env",
+          "agentic/registries/discovery_marathon_skill_dispatch.yaml",
+          "agentic/scripts/init_discovery_marathon.py",
+          "agentic/scripts/run_discovery_marathon.py",
+          "agentic/scripts/run_branch_exploration_cycle.py",
+          "agentic/scripts/discovery_marathon_scheduler.py",
+          "agentic/scripts/validate_discovery_marathon_state.py",
+          "agentic/scripts/validate_discovery_marathon_cycle.py",
+          "agentic/scripts/validate_discovery_marathon_skill_dispatch.py",
+          "agentic/scripts/build_discovery_marathon_report.py",
+          "agentic/scripts/build_qualitative_mechanistic_graph.py",
+          "agentic/scripts/build_gedanken_experiment_packets.py",
+          "agentic/scripts/build_symbolic_matrix_probe.py",
+          "agentic/scripts/build_finite_algebra_interfaces.py",
+          "agentic/scripts/build_analytic_estimate_obligations.py",
+          "agentic/scripts/run_bounded_numeric_probe.py",
+          "agentic/scripts/build_subworkflow_integration_tests.py",
+          "agentic/scripts/validate_discovery_marathon_report.py",
+          "agentic/scripts/validate_qualitative_relation_packets.py",
+          "agentic/scripts/validate_qualitative_mechanistic_graph.py",
+          "agentic/scripts/validate_gedanken_experiment_packets.py",
+          "agentic/scripts/validate_symbolic_matrix_probe.py",
+          "agentic/scripts/validate_finite_algebra_interfaces.py",
+          "agentic/scripts/validate_analytic_estimate_obligations.py",
+          "agentic/scripts/validate_bounded_numeric_probe.py",
+          "agentic/scripts/validate_parsimonious_probe_integration.py",
+          "agentic/scripts/validate_equational_symbolic_integration.py",
+          "agentic/scripts/validate_subworkflow_skill_functionality.py",
+          "skills/orchestration/next-experiment-queue-ranker/SKILL.md",
+          "skills/reasoning/qualitative-variable-isolator/SKILL.md",
+          "skills/reasoning/physics-regime-map-builder/SKILL.md",
+          "skills/reasoning/monotonicity-sensitivity-prober/SKILL.md",
+          "skills/reasoning/scale-asymptotic-reasoner/SKILL.md",
+          "skills/reasoning/qualitative-toy-model-builder/SKILL.md",
+          "skills/evaluation/dimensional-symmetry-constraint-checker/SKILL.md",
+          "skills/evaluation/limit-convergence-behavior-auditor/SKILL.md",
+          "skills/evaluation/qualitative-physics-falsifier/SKILL.md",
+          "skills/evaluation/gedanken-need-assessor/SKILL.md",
+          "skills/reasoning/gedanken-situation-designer/SKILL.md",
+          "skills/reasoning/gedanken-counterfactual-variant-builder/SKILL.md",
+          "skills/evaluation/gedanken-transfer-guard/SKILL.md",
+          "skills/orchestration/gedanken-followup-planner/SKILL.md",
+          "skills/evaluation/mathematical-concept-gap-revisitor/SKILL.md",
+          "skills/evaluation/abstraction-fit-gap-auditor/SKILL.md",
+          "skills/reasoning/efficient-representation-requirements-elicitor/SKILL.md",
+          "agentic/scripts/run_marathon_deep_review.py",
+          "agentic/scripts/validate_marathon_deep_review.py",
+          "agentic/scripts/api_key_config.py",
+          "agentic/scripts/validate_api_key_config.py",
+          "agentic/reports/discovery_marathon/latest.json",
+          "agentic/reports/discovery_marathon/latest.md",
+          "agentic/reports/qualitative_relation_packets/latest.json",
+          "agentic/reports/qualitative_mechanistic_graph/latest.md",
+          "agentic/reports/gedanken_experiments/latest.json",
+          "agentic/reports/gedanken_experiments/latest.md",
+          "agentic/reports/symbolic_matrix_probe/latest.json",
+          "agentic/reports/symbolic_matrix_probe/latest.md",
+          "agentic/reports/finite_algebra_interfaces/latest.json",
+          "agentic/reports/finite_algebra_interfaces/latest.md",
+          "agentic/reports/analytic_estimate_obligations/latest.json",
+          "agentic/reports/analytic_estimate_obligations/latest.md",
+          "agentic/reports/bounded_numeric_probe/latest.json",
+          "agentic/reports/bounded_numeric_probe/latest.md",
+          "agentic/reports/subworkflow_integration/latest.json",
+          "agentic/reports/subworkflow_integration/latest.md",
+          "agentic/state/qualitative_mechanistic_graphs/yang-mills-existence-and-mass-gap-target.json",
+          "docs/operations/discovery-marathon-operations.md",
+          "docs/research-methods/gedanken-experiment-workflow.md",
+          "tests/fixtures/parsimonious_probe/symbolic_before_numeric.json",
+          "tests/fixtures/parsimonious_probe/bounded_numeric_allowed.json",
+          "tests/fixtures/parsimonious_probe/full_simulation_rejected.json",
+          "tests/fixtures/equational_symbolic/quotient_3x3_interface_expected.json",
+          "tests/fixtures/equational_symbolic/symbolic_falsifier_shapes_expected.json",
+          "tests/generative/test_gedanken_experiment_design_quality.md",
+          "tests/generative/test_equational_symbolic_reasoning_quality.md",
+          "agentic/runs/discovery_marathons/README.md",
+          "registry/tasks/discovery-marathon/task_registry.json",
+          "docs/case-studies/yang-mills/ym-representational-dynamics-integration-todos.md",
+          "agentic/todos/ym_representational_dynamics_integration_todos.yaml",
+          "agentic/external/yang_mills_representational_dynamics/2026-07-20/source_manifest.json",
+          "agentic/external/yang_mills_representational_dynamics/2026-07-20/checksum_report.json",
+          "agentic/reports/ym_representational_dynamics_integration/source_index.json",
+          "agentic/reports/ym_representational_dynamics_integration/test_report.json",
+          "agentic/reports/ym_representational_dynamics_integration/skill_adaptation_report.md",
+          "agentic/reports/discovery_marathon/targets/yang-mills-existence-and-mass-gap-target/proof_objects/ym_representational_dynamics_objects.json",
+          "agentic/reports/ym_representational_dynamics_integration/smoke_cycle_report.md",
+          "agentic/scripts/validate_ym_workflow_integration.py"
+        ],
+        "composed_skills": [
+          "looper-target-goal-enricher",
+          "looper-target-dependency-cartographer",
+          "looper-workflow-contract-governor",
+          "looper-hook-policy-maintainer",
+          "long-horizon-route-portfolio-manager",
+          "abducer-refinement-route-ranker",
+          "next-experiment-queue-ranker",
+          "kb-discovery-governor",
+          "kb-abduce",
+          "kb-deduce",
+          "kb-induce",
+          "mathematical-concept-gap-revisitor",
+          "abstraction-fit-gap-auditor",
+          "efficient-representation-requirements-elicitor",
+          "qualitative-variable-isolator",
+          "physics-regime-map-builder",
+          "monotonicity-sensitivity-prober",
+          "limit-convergence-behavior-auditor",
+          "qualitative-toy-model-builder",
+          "qualitative-physics-falsifier",
+          "dimensional-symmetry-constraint-checker",
+          "scale-asymptotic-reasoner",
+          "gedanken-need-assessor",
+          "gedanken-situation-designer",
+          "gedanken-counterfactual-variant-builder",
+          "gedanken-transfer-guard",
+          "gedanken-followup-planner",
+          "kb-contradiction-strategist",
+          "evidence-acquisition-planner",
+          "prior-art-importer",
+          "abducer-obligation-gatekeeper",
+          "entailment-gap-auditor",
+          "kb-end-to-end-proof-critic",
+          "review-reasoner",
+          "review-reasoner-epistemologist",
+          "review-reasoner-discovery-scientist",
+          "kb-discovery-breakthrough-profiler",
+          "show-reasoning",
+          "kb-explain",
+          "looper-release-promoter",
+          "ym-freeze-clay-target",
+          "ym-build-observable-core",
+          "ym-build-representation-calculus",
+          "ym-define-relational-rigidity",
+          "ym-design-regulator-atlas",
+          "ym-build-gauge-covariant-rg",
+          "ym-design-infrared-basin",
+          "ym-control-large-fields-and-topology",
+          "ym-prove-basin-entry",
+          "ym-prove-rg-to-rigidity",
+          "ym-prove-continuum-coherence",
+          "ym-prove-rigidity-transfer",
+          "ym-reconstruct-os-gap",
+          "ym-calibrate-restricted-models",
+          "ym-mechanize-proof-core",
+          "ym-audit-frontier",
+          "ym-run-clay-program"
+        ],
+        "deterministic_hooks": [
+          "repo-hook-config"
+        ],
+        "end_to_end_function": "Run a target-linked mathematical discovery process over many cycles with durable branch memory, explicit skill dispatch, theorem-shaped branch outputs, validation gates, monitor reports, deep reviews, and controlled promotion decisions.",
+        "name": "discovery-marathon-control-loop",
+        "validators": [
+          "agentic/scripts/validate_discovery_marathon_state.py",
+          "agentic/scripts/validate_discovery_marathon_cycle.py",
+          "agentic/scripts/validate_discovery_marathon_skill_dispatch.py",
+          "agentic/scripts/validate_discovery_marathon_report.py",
+          "agentic/scripts/validate_qualitative_relation_packets.py",
+          "agentic/scripts/validate_qualitative_mechanistic_graph.py",
+          "agentic/scripts/validate_gedanken_experiment_packets.py",
+          "agentic/scripts/validate_symbolic_matrix_probe.py",
+          "agentic/scripts/validate_finite_algebra_interfaces.py",
+          "agentic/scripts/validate_analytic_estimate_obligations.py",
+          "agentic/scripts/validate_bounded_numeric_probe.py",
+          "agentic/scripts/validate_parsimonious_probe_integration.py",
+          "agentic/scripts/validate_equational_symbolic_integration.py",
+          "agentic/scripts/validate_subworkflow_skill_functionality.py",
+          "agentic/scripts/build_subworkflow_integration_tests.py",
+          "agentic/scripts/validate_marathon_deep_review.py",
+          "agentic/scripts/validate_api_key_config.py",
+          "agentic/scripts/validate_reasoning_monitor.py",
+          "agentic/scripts/validate_task_skill_registry.py",
+          "agentic/scripts/validate_workflow_contracts.py",
+          "agentic/scripts/validate_ym_workflow_integration.py"
+        ],
+        "workflow_references": [
+          "workflow-contract-registry",
+          "discovery-marathon-scripts"
+        ]
+      },
+      {
+        "artifacts": [
+          "docs/case-studies/yang-mills/ym-representational-dynamics-integration-todos.md",
+          "agentic/todos/ym_representational_dynamics_integration_todos.yaml",
+          "agentic/external/yang_mills_representational_dynamics/2026-07-20/source_manifest.json",
+          "agentic/external/yang_mills_representational_dynamics/2026-07-20/checksum_report.json",
+          "agentic/reports/ym_representational_dynamics_integration/source_index.json",
+          "agentic/reports/ym_representational_dynamics_integration/test_report.json",
+          "agentic/reports/ym_representational_dynamics_integration/skill_adaptation_report.md",
+          "agentic/reports/discovery_marathon/targets/yang-mills-existence-and-mass-gap-target/proof_objects/ym_representational_dynamics_objects.json",
+          "agentic/reports/ym_representational_dynamics_integration/smoke_cycle_report.md",
+          "agentic/scripts/validate_ym_workflow_integration.py"
+        ],
+        "composed_skills": [
+          "ym-freeze-clay-target",
+          "ym-build-observable-core",
+          "ym-build-representation-calculus",
+          "ym-define-relational-rigidity",
+          "ym-design-regulator-atlas",
+          "ym-build-gauge-covariant-rg",
+          "ym-design-infrared-basin",
+          "ym-control-large-fields-and-topology",
+          "ym-prove-basin-entry",
+          "ym-prove-rg-to-rigidity",
+          "ym-prove-continuum-coherence",
+          "ym-prove-rigidity-transfer",
+          "ym-reconstruct-os-gap",
+          "ym-calibrate-restricted-models",
+          "ym-mechanize-proof-core",
+          "ym-audit-frontier",
+          "ym-run-clay-program"
+        ],
+        "deterministic_hooks": [
+          "repo-hook-config"
+        ],
+        "end_to_end_function": "Run the Yang-Mills representational-dynamics source package and skill overlay as a target-scoped evidence, proof-object, calibration, and frontier-audit layer inside the discovery marathon.",
+        "name": "ym-representational-dynamics-overlay",
+        "validators": [
+          "agentic/scripts/validate_ym_workflow_integration.py"
+        ],
+        "workflow_references": [
+          "workflow-contract-registry",
+          "discovery-marathon-scripts",
+          "ym-representational-dynamics-overlay"
+        ]
+      }
+    ],
+    "registry/tasks/hegelian-abducer-integration/task_registry.json": [
+      {
+        "artifacts": [
+          "external/hegelian-solver",
+          "docs/integrations/hegelian-abducer-integration-plan.md",
+          "agentic/todos/hegelian_integration_todos.yaml",
+          "agentic/registries/external_framework_registry.yaml",
+          "registry/tasks/hegelian-abducer-integration/task_registry.json",
+          "artifacts/hegelian/hypothesis_exploration_map.json",
+          "agentic/reports/hegelian_conceptual_refinement_release_report.md"
+        ],
+        "composed_skills": [
+          "looper-workflow-contract-governor",
+          "looper-target-dependency-cartographer",
+          "abducer-conceptual-pressure-formalizer",
+          "abducer-failure-signal-cartographer",
+          "kb-induce",
+          "kb-abduce",
+          "kb-deduce",
+          "kb-contradiction-strategist",
+          "kb-concept-bridge-planner",
+          "kb-gap-abstraction-conjecturer",
+          "abducer-mediation-candidate-generator",
+          "kb-promising-direction-assessor",
+          "kb-discovery-cycle",
+          "kb-prove-cycle",
+          "kb-revision-loop",
+          "entailment-gap-auditor",
+          "premise-completeness-prober",
+          "contradiction-route-auditor",
+          "abducer-obligation-gatekeeper",
+          "counterfactual-route-prober",
+          "epistemic-status-ledger",
+          "kb-end-to-end-proof-critic",
+          "abducer-refinement-route-ranker",
+          "work"
+        ],
+        "deterministic_hooks": [
+          "repo-hook-config"
+        ],
+        "end_to_end_function": "Adapt Hegelian Solver's crisis, failure, discovery-signal, mediation, obligation, and bounded-refinement ideas into an Abducer-native hypothesis exploration space where creative route transformations are grounded, validated, ranked, and routed through KB, dependency graph, bridge planning, proof queue, work loop, and Looper governance artifacts.",
+        "name": "conceptual-obstruction-refinement",
+        "validators": [
+          "agentic/scripts/validate_task_skill_registry.py",
+          "agentic/scripts/validate_todos.py",
+          "agentic/scripts/validate_workflow_contracts.py",
+          "agentic/scripts/validate_hypothesis_exploration.py"
+        ],
+        "workflow_references": [
+          "workflow-contract-registry"
+        ]
+      }
+    ],
+    "registry/tasks/p-vs-np-target-navigation/task_registry.json": [
+      {
+        "artifacts": [
+          "agentic/examples/targets/p-vs-np-target.json",
+          "agentic/state/current_target.json",
+          "agentic/state/dependency_graphs/p-vs-np.json",
+          "agentic/state/dependency_frontier.json",
+          "agentic/reports/dependency_closure/p-vs-np.md",
+          "agentic/reports/compliance/latest.md",
+          "agentic/reports/drift/latest.md",
+          "agentic/reports/releases/ITER-0001.md"
+        ],
+        "composed_skills": [
+          "looper-target-goal-enricher",
+          "looper-target-dependency-cartographer",
+          "looper-workflow-contract-governor",
+          "looper-hook-policy-maintainer",
+          "looper-release-promoter",
+          "kb-orchestrator",
+          "work"
+        ],
+        "deterministic_hooks": [
+          "repo-hook-config"
+        ],
+        "end_to_end_function": "Use Looper control-plane skills and deterministic gates to navigate the P vs NP target from target packet through recursive dependency closure, workflow validation, reports, hooks, and release evidence.",
+        "name": "p-vs-np-target-navigation-run",
+        "validators": [
+          "agentic/scripts/validate_target_packets.py",
+          "agentic/scripts/validate_dependency_graph.py",
+          "agentic/scripts/validate_task_skill_registry.py",
+          "agentic/scripts/validate_workflow_contracts.py",
+          "agentic/scripts/run_hook_contract_tests.py",
+          "agentic/scripts/validate_promotion_gates.py"
+        ],
+        "workflow_references": [
+          "workflow-contract-registry"
+        ]
+      }
+    ],
+    "registry/tasks/target-navigation/task_registry.json": [
+      {
+        "artifacts": [
+          "agentic/spec/target_packet_schema.json",
+          "agentic/spec/dependency_graph_schema.json",
+          "agentic/spec/reasoning_event_log_schema.json",
+          "agentic/spec/reasoning_monitor_packet.schema.json",
+          "agentic/registries/workflow_contracts.yaml",
+          "agentic/traces/reasoning_events/ITER-0001.jsonl",
+          "agentic/reports/reasoning_progress/latest.json",
+          "agentic/reports/reasoning_progress/latest.md",
+          "agentic/reports/reasoning_monitor/latest.json",
+          "agentic/reports/reasoning_monitor/latest.html",
+          "agentic/reports/long_horizon/latest.json",
+          "agentic/reports/long_horizon/latest.md",
+          "hooks/hooks.json",
+          "registry/tasks/target-navigation/task_registry.json"
+        ],
+        "composed_skills": [
+          "looper-target-goal-enricher",
+          "looper-target-dependency-cartographer",
+          "looper-workflow-contract-governor",
+          "looper-hook-policy-maintainer",
+          "looper-release-promoter",
+          "kb-orchestrator",
+          "work"
+        ],
+        "deterministic_hooks": [
+          "repo-hook-config"
+        ],
+        "end_to_end_function": "Turn a raw mathematical target into a validated target packet, recursive dependency graph, visible workflow contract, hook-controlled skill sequence, reports, and release decision.",
+        "name": "target-navigation-control-plane",
+        "validators": [
+          "agentic/scripts/validate_target_packets.py",
+          "agentic/scripts/validate_dependency_graph.py",
+          "agentic/scripts/validate_reasoning_event_logs.py",
+          "agentic/scripts/validate_reasoning_monitor.py",
+          "agentic/scripts/validate_long_horizon_probe.py",
+          "agentic/scripts/validate_task_skill_registry.py",
+          "agentic/scripts/validate_workflow_contracts.py",
+          "agentic/scripts/run_hook_contract_tests.py"
+        ],
+        "workflow_references": [
+          "workflow-contract-registry"
+        ]
+      }
+    ],
+    "registry/tasks/timeline-paper-workflow/task_registry.json": [
+      {
+        "artifacts": [
+          "agentic/scripts/build_timeline_paper.py",
+          "agentic/scripts/validate_timeline_paper.py",
+          "agentic/scripts/build_timeline_latex_sections.py",
+          "agentic/scripts/validate_timeline_latex_sections.py",
+          "agentic/reports/discovery_marathon/latest.json",
+          "agentic/reports/discovery_marathon/full_timeline.html",
+          "agentic/reports/strategy_progression_judge/latest.json",
+          "agentic/reports/scientific_contribution_monitor/latest.json",
+          "agentic/reports/target_literature_evolution/latest.json",
+          "agentic/reports/macro_strategy/latest.json",
+          "agentic/reports/timeline_paper/latest.json",
+          "agentic/reports/timeline_paper/latest.md",
+          "agentic/reports/timeline_paper/latest.tex",
+          "agentic/reports/timeline_paper/latest.pdf",
+          "agentic/reports/timeline_latex_sections/latest.json",
+          "agentic/reports/timeline_latex_sections/latest.md",
+          "agentic/reports/timeline_latex_sections/latest.tex",
+          "skills/reporting/timeline-paper-workflow-orchestrator/SKILL.md",
+          "skills/reporting/timeline-narrative-coherence-guard/SKILL.md",
+          "skills/reporting/finite-theorem-section-packager/SKILL.md",
+          "skills/reporting/endpoint-worked-calculation-packager/SKILL.md",
+          "skills/reporting/prior-art-positioning-packager/SKILL.md",
+          "skills/reporting/timeline-report-latex-composer/SKILL.md",
+          "skills/reporting/timeline-summary-latex-translator/SKILL.md",
+          "skills/reporting/timeline-problem-literature-latex-translator/SKILL.md",
+          "skills/reporting/timeline-story-latex-translator/SKILL.md",
+          "skills/reporting/timeline-cycle-latex-translator/SKILL.md",
+          "skills/reporting/timeline-problem-space-narrator/SKILL.md",
+          "skills/reporting/timeline-contribution-stater/SKILL.md",
+          "skills/reporting/timeline-contribution-explainer/SKILL.md",
+          "skills/reporting/timeline-organizing-diagram-builder/SKILL.md",
+          "skills/reporting/timeline-reference-manager/SKILL.md",
+          "skills/reporting/timeline-formal-physics-deriver/SKILL.md",
+          "registry/tasks/timeline-paper-workflow/task_registry.json",
+          "agentic/scripts/run_timeline_paper_workflow.py",
+          "agentic/scripts/build_timeline_paper_interpretation.py",
+          "agentic/scripts/validate_timeline_paper_interpretation.py",
+          "agentic/scripts/build_timeline_paper_blueprint.py",
+          "agentic/scripts/validate_timeline_paper_blueprint.py",
+          "agentic/scripts/build_timeline_formal_derivation.py",
+          "agentic/scripts/validate_timeline_formal_derivation.py",
+          "agentic/scripts/build_timeline_paper_diagrams.py",
+          "agentic/scripts/validate_timeline_paper_diagrams.py",
+          "agentic/scripts/build_timeline_paper_sections.py",
+          "agentic/scripts/validate_timeline_paper_sections.py",
+          "agentic/scripts/validate_timeline_paper_forward_eval.py",
+          "agentic/spec/timeline_paper_interpretation.schema.json",
+          "agentic/spec/timeline_paper_blueprint.schema.json",
+          "agentic/spec/timeline_formal_derivation.schema.json",
+          "agentic/spec/timeline_paper_diagram.schema.json",
+          "agentic/spec/timeline_paper_sections.schema.json",
+          "agentic/reports/timeline_paper_interpretation/latest.json",
+          "agentic/reports/timeline_paper_blueprint/latest.json",
+          "agentic/reports/timeline_formal_derivation/latest.json",
+          "agentic/reports/timeline_paper_diagrams/latest.json",
+          "agentic/reports/timeline_paper_sections/latest.json",
+          "agentic/reports/timeline_paper_forward_eval/latest.json",
+          "agentic/evals/timeline_paper/current_yang_mills_fixture.json"
+        ],
+        "composed_skills": [
+          "timeline-paper-workflow-orchestrator",
+          "timeline-report-evidence-ingestor",
+          "timeline-narrative-coherence-guard",
+          "finite-theorem-section-packager",
+          "endpoint-worked-calculation-packager",
+          "prior-art-positioning-packager",
+          "timeline-report-latex-composer",
+          "timeline-summary-latex-translator",
+          "timeline-problem-literature-latex-translator",
+          "timeline-story-latex-translator",
+          "timeline-cycle-latex-translator",
+          "timeline-problem-space-narrator",
+          "timeline-contribution-stater",
+          "timeline-contribution-explainer",
+          "timeline-organizing-diagram-builder",
+          "timeline-reference-manager",
+          "timeline-formal-physics-deriver",
+          "timeline-paper-argument-architect",
+          "timeline-failed-route-interpreter",
+          "timeline-claim-boundary-auditor",
+          "timeline-paper-section-synthesizer",
+          "timeline-paper-cross-section-reconciler"
+        ],
+        "deterministic_hooks": [
+          "repo-hook-config"
+        ],
+        "end_to_end_function": "Parse accumulated discovery timeline elements, problem/literature reports, contribution monitors, strategy judgement, and derivation artifacts into a paper-style TeX draft and rendered PDF without invoking or modifying the main discovery loop.",
+        "name": "timeline-paper-independent-workflow",
+        "validators": [
+          "agentic/scripts/validate_timeline_paper.py",
+          "agentic/scripts/validate_skill_depth.py",
+          "agentic/scripts/validate_task_skill_registry.py",
+          "agentic/scripts/validate_skill_taxonomy_projections.py",
+          "agentic/scripts/validate_timeline_paper_interpretation.py",
+          "agentic/scripts/validate_timeline_paper_blueprint.py",
+          "agentic/scripts/validate_timeline_formal_derivation.py",
+          "agentic/scripts/validate_timeline_paper_diagrams.py",
+          "agentic/scripts/validate_timeline_paper_sections.py",
+          "agentic/scripts/validate_timeline_paper_forward_eval.py"
+        ],
+        "workflow_references": [
+          "workflow-contract-registry"
+        ]
+      }
+    ]
+  }
+}

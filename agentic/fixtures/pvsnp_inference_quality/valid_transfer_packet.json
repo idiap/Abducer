@@ -1,0 +1,73 @@
+{
+  "barrier_status": {
+    "barrier_families": [
+      "black_box"
+    ],
+    "escape_conditions": [
+      "beta = 0 interface",
+      "nonblackbox use of the SAT circuit"
+    ],
+    "status": "barrier_warning",
+    "trigger": "The transfer uses target SAT circuits only through a black-box query interface."
+  },
+  "branch_id": "pvsnp-branch-hardness-magnification",
+  "correctness_criteria": [
+    "source and target classes are named",
+    "transfer direction is target upper bound to source upper bound",
+    "beta and q are computed exactly",
+    "advice status is explicit"
+  ],
+  "decision": "accept_for_derivation",
+  "derivation_status": {
+    "blocked_obligation": "Derive whether beta can be made zero for the carrier.",
+    "status": "derivation_needed",
+    "theorem_shape": true
+  },
+  "failure_modes": [
+    "positive beta leaves only bounded-exponent exclusion",
+    "hidden advice in the source-carrier selector"
+  ],
+  "inference_id": "iq.valid.transfer.001",
+  "inference_rule": "transfer_inequality",
+  "model_context": {
+    "circuit_model": "Boolean circuits SIZE(n^c)",
+    "oracle_status": "unrelativized",
+    "proof_system": "none",
+    "reduction_type": "black_box_substitution",
+    "source_carrier": "hardness magnification source problem H_N",
+    "target_class": "NP not subset P/poly"
+  },
+  "packet_id": "pvsnp-iq-valid-transfer",
+  "parameter_map": {
+    "advice_bits": "0",
+    "beta": "1/4",
+    "input_length_map": "N = n",
+    "q": "1",
+    "transfer_formula": "If SAT has SIZE(n^c) circuits, then H_N has circuits of size N^{q+beta c+o(1)}."
+  },
+  "quantifier_context": {
+    "advice_status": "advice_free",
+    "exponent_regime": "bounded_window",
+    "length_regime": "all_sufficiently_large_lengths",
+    "uniformity": "nonuniform_circuit_family"
+  },
+  "reviewer_findings": [
+    {
+      "finding": "The transfer is directionally correct but cannot yield all-exponent separation while beta > 0.",
+      "reviewer": "pvsnp-reduction-consistency-reviewer",
+      "severity": "warning"
+    }
+  ],
+  "side_conditions": [
+    "The source carrier lower bound must be stated against the induced circuit model.",
+    "The SAT circuit is used only through target queries of length n^beta.",
+    "No advice is used in selecting source instances."
+  ],
+  "source_statement": "H_N requires source-carrier circuits of size at least N^a for the typed carrier H_N.",
+  "target_id": "p-vs-np-target",
+  "target_statement": "A target-preserving transfer would imply NP not subset P/poly only if it rules out SAT circuits of size n^c for every constant c.",
+  "validation_handoff": {
+    "next_skill": "pvsnp-proof-derivation-builder",
+    "validator": "agentic/scripts/validate_pvsnp_inference_quality.py"
+  }
+}

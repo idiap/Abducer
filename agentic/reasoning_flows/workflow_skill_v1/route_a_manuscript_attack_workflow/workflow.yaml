@@ -1,0 +1,623 @@
+# SPDX-FileCopyrightText: © 2026 Idiap Research Institute <contact@idiap.ch>
+#
+# SPDX-FileContributor: Danilo Gusicuma <danilo.gusicuma@idiap.ch>
+# Neuro-symbolic AI Group
+#
+# SPDX-License-Identifier: MIT
+# REUSE-IgnoreStart
+schema_version: workflow-skill/v1
+namespace: abducer
+id: route_a_manuscript_attack_workflow
+version: 1.0.0
+kind: workflow
+description: Draft interface projection of route_a; native execution and authority remain unchanged.
+aliases:
+- route_a
+- route-a
+- routea
+lifecycle: draft
+activation:
+  mode: explicit
+  prerequisites: []
+types:
+  IntegratedPaperDraft:
+    schema: ../../../../agentic/spec/named_workflow_artifacts.schema.json
+    representation: value
+  PaperDraft:
+    schema: ../../../../agentic/spec/named_workflow_artifacts.schema.json
+    representation: value
+  PaperReadinessDecision:
+    schema: ../../../../agentic/spec/named_workflow_artifacts.schema.json
+    representation: value
+  ResultCandidatePacket:
+    schema: ../../../../agentic/spec/named_workflow_artifacts.schema.json
+    representation: value
+  RouteAAttackPlan:
+    schema: ../../../../agentic/spec/named_workflow_artifacts.schema.json
+    representation: value
+  RouteAIntegratedResult:
+    schema: ../../../../agentic/spec/named_workflow_artifacts.schema.json
+    representation: value
+  RouteAOpenPointPlan:
+    schema: ../../../../agentic/spec/named_workflow_artifacts.schema.json
+    representation: value
+  SymbolicCASAudit:
+    schema: ../../../../agentic/spec/named_workflow_artifacts.schema.json
+    representation: value
+inputs:
+  request:
+    type: PaperDraft
+outputs:
+  result:
+    type: PaperReadinessDecision
+    value:
+      ref: steps.native.outputs.result
+operations:
+  native_workflow:
+    inputs:
+      request:
+        type: PaperDraft
+    outputs:
+      result:
+        type: PaperReadinessDecision
+    execution:
+      mode: specification_only
+      reason: No workflow-skill/v1 host adapter is supplied. Native skill/hook/CLI interfaces exist, but
+        payload materialization, guard evidence, execution effects and receipt translation are not qualified
+        for this format.
+  step_routea_attack:
+    inputs:
+      PaperDraft:
+        type: PaperDraft
+    outputs:
+      RouteAAttackPlan:
+        type: RouteAAttackPlan
+    execution:
+      mode: specification_only
+      reason: Native skill exists at skills/results_ellaboration/routea-paper-attack-orchestrator/SKILL.md;
+        no typed v1 adapter. Source guards, role and failure remain in native_contract.
+  step_routea_open_points:
+    inputs:
+      RouteAAttackPlan:
+        type: RouteAAttackPlan
+    outputs:
+      RouteAOpenPointPlan:
+        type: RouteAOpenPointPlan
+    execution:
+      mode: specification_only
+      reason: Native skill exists at skills/results_ellaboration/routea-open-point-orchestrator/SKILL.md;
+        no typed v1 adapter. Source guards, role and failure remain in native_contract.
+  step_routea_symbolic_audit:
+    inputs:
+      ResultCandidatePacket:
+        type: ResultCandidatePacket
+    outputs:
+      SymbolicCASAudit:
+        type: SymbolicCASAudit
+    execution:
+      mode: specification_only
+      reason: Native skill exists at skills/results_ellaboration/routea-symbolic-cas-auditor/SKILL.md;
+        no typed v1 adapter. Source guards, role and failure remain in native_contract.
+  step_routea_integrate_result:
+    inputs:
+      ResultCandidatePacket:
+        type: ResultCandidatePacket
+    outputs:
+      RouteAIntegratedResult:
+        type: RouteAIntegratedResult
+    execution:
+      mode: specification_only
+      reason: Native skill exists at skills/results_ellaboration/routea-paper-result-integrator/SKILL.md;
+        no typed v1 adapter. Source guards, role and failure remain in native_contract.
+  step_routea_second_wave:
+    inputs:
+      RouteAIntegratedResult:
+        type: RouteAIntegratedResult
+    outputs:
+      IntegratedPaperDraft:
+        type: IntegratedPaperDraft
+    execution:
+      mode: specification_only
+      reason: Native skill exists at skills/results_ellaboration/routea-second-wave-manuscript-integrator/SKILL.md;
+        no typed v1 adapter. Source guards, role and failure remain in native_contract.
+flow:
+  kind: sequence
+  steps:
+  - id: native
+    kind: call
+    operation: native_workflow
+    description: Opaque native workflow boundary; internal ordering, guards and handoffs are retained
+      in abducer.native_contract.
+    arguments:
+      request:
+        ref: inputs.request
+    on_failure: blocked
+policy:
+  effects:
+    filesystem:
+      read:
+      - native_sources
+      - inputs
+      write: []
+    network: []
+    external_write: []
+  authority:
+    allowed:
+    - describe_native_interface
+    forbidden:
+    - execute_scientific_workflow
+    - approve
+    - prove
+    - publish
+    - promote
+  limits:
+    wall_time_seconds: 1800
+    max_operation_calls: 1
+  failure:
+    default: blocked
+    retry:
+      max_attempts: 1
+      retryable_codes: []
+  resume:
+    mode: none
+    require_matching_definition_and_inputs: true
+  claim_ceiling: Interface description only; no proof, scientific validity, runtime qualification, promotion
+    or approval.
+observability:
+  receipts: required
+  artifact_digests: sha256
+  provenance: required
+  events:
+  - workflow_started
+  - step_failed
+  - workflow_completed
+provenance:
+  coverage: interface_only
+  sources:
+  - path: agentic/registries/named_workflow_contracts.yaml
+    digest: sha256:a467750a969715f742cc330f21fef37f4004b76924650fd9a027c47af9447d77
+  - path: skills/results_ellaboration/routea-paper-attack-orchestrator/SKILL.md
+    digest: sha256:0751c3945db3f36d4e2470db371c1bced0a06c34c4102770ebd63fc055e36431
+  - path: hooks/workflow_local/hook_utils.py
+    digest: sha256:65cb3615d064ab6307b1117d493af57331cfd6ef0157ef7b8e733d96d748578c
+  - path: hooks/workflow_local/user_prompt_submit_intake.py
+    digest: sha256:14f6c15eac450b918ce56b290a5a30052ec4c08052b73663aeab5230338ccb11
+  - path: hooks/workflow_local/pre_skill_use_policy.py
+    digest: sha256:2140beff9c300564dedf1b0b8b00bc59cf78ef066f184bc8cbc992670ee0f489
+  - path: hooks/workflow_local/post_skill_use_review.py
+    digest: sha256:0187d1cc3e942aebf6aa4c6874cd23f5661ce6a6dd9f6de9f74703a26a83e296
+  - path: hooks/workflow_local/pre_tool_use_policy.py
+    digest: sha256:916b7acb61078b55f56b13b922ce2b9123fa06184e61fc275a8e80b3f7f30e60
+  - path: hooks/workflow_local/stop_artifact_check.py
+    digest: sha256:d9e526e86cec17c4d74a5a67a9cbeb08766aabe7f1c844ffc71cfef6384145af
+  - path: skills/results_ellaboration/routea-open-point-orchestrator/SKILL.md
+    digest: sha256:4126bf32665ae5b9718ed1f4bb71fb6383e53e085439dc85a9c9187720656999
+  - path: skills/results_ellaboration/routea-symbolic-cas-auditor/SKILL.md
+    digest: sha256:eeab83070bd29bcc922f22c48df20c8ee8f646c643f601fb1f1cf2889dafe925
+  - path: skills/results_ellaboration/routea-paper-result-integrator/SKILL.md
+    digest: sha256:58f7d9e22da28055a10ba7f5f262ef2331dab89886799671d1f79961294b02b6
+  - path: skills/results_ellaboration/routea-second-wave-manuscript-integrator/SKILL.md
+    digest: sha256:398be645c0df8c03ac25db30b668ae713ba7c4033323fcdd09cdb41c8e617cfb
+  - path: agentic/registries/skill_registry.yaml
+    digest: sha256:15076ed8d1bd4c10895060ab485353fe520421c44e1fc6f506508d2d566eacf0
+  - path: pyproject.toml
+    digest: sha256:69325c4805f66033ce7f7e0e68f4a0996913728c6041bb3cee656571693b2f1e
+  - path: uv.lock
+    digest: sha256:a6c77e5d86a93915eeb0f129f80bc8c45d572be387872e3ace7460a3d6ada9ae
+  - path: prism_me/shared/references/codex-control-stack.md
+    digest: sha256:4e8e7a5cdbc0572cf9b0d4ffc4a41c8f4f9c9a304fae3bcee99d8af3553be30e
+  gaps:
+  - No workflow-skill/v1 host adapter is supplied. Native skill/hook/CLI interfaces exist, but payload
+    materialization, guard evidence, execution effects and receipt translation are not qualified for this
+    format.
+  - Native control flow remains opaque; coverage is interface_only, not source-equivalence certification.
+  - Named payload schemas validate the common envelope only; nominal artifact payloads and artifact_type
+    discriminators are not refined by that schema.
+  - Conditional/advisory skips, repeated ReviewFindingSet aggregation, exit obligations and handoff adapters
+    are preserved verbatim, not executable v1 dataflow.
+extensions:
+  abducer.owner:
+    path: skills/results_ellaboration/routea-paper-attack-orchestrator/SKILL.md
+  abducer.native_identity:
+    id: route_a
+  abducer.native_contract:
+    id: route_a
+    version: 1.0.0
+    visible_name: Route A Manuscript Attack
+    aliases:
+    - route-a
+    - routea
+    activation: opt_in
+    owner_skill: results-elaboration-workflow-orchestrator
+    target_scope:
+    - manuscript:route-a
+    trigger:
+      all_of:
+      - paper_draft_present
+      any_of:
+      - expansion_markers
+      - open_modules
+      - result_elaboration_requested
+      none_of:
+      - discovery_marathon_requested
+    input_artifact:
+      type: PaperDraft
+      schema: agentic/spec/named_workflow_artifacts.schema.json
+    steps:
+    - id: routea_attack
+      order: 10
+      skill: routea-paper-attack-orchestrator
+      mode: required
+      when: null
+      consumes:
+      - PaperDraft
+      produces:
+      - RouteAAttackPlan
+      on_failure: stop
+    - id: routea_open_points
+      order: 20
+      skill: routea-open-point-orchestrator
+      mode: required
+      when: null
+      consumes:
+      - RouteAAttackPlan
+      produces:
+      - RouteAOpenPointPlan
+      on_failure: stop
+    - id: routea_symbolic_audit
+      order: 30
+      skill: routea-symbolic-cas-auditor
+      mode: conditional
+      when: exact_algebra_required
+      consumes:
+      - ResultCandidatePacket
+      produces:
+      - SymbolicCASAudit
+      on_failure: quarantine
+    - id: routea_integrate_result
+      order: 40
+      skill: routea-paper-result-integrator
+      mode: required
+      when: null
+      consumes:
+      - ResultCandidatePacket
+      produces:
+      - RouteAIntegratedResult
+      on_failure: stop
+    - id: routea_second_wave
+      order: 50
+      skill: routea-second-wave-manuscript-integrator
+      mode: required
+      when: null
+      consumes:
+      - RouteAIntegratedResult
+      produces:
+      - IntegratedPaperDraft
+      on_failure: stop
+    hooks:
+    - hook_id: named-workflow-router
+      event: UserPromptSubmit
+      phase: activation
+      condition: manuscript trigger matches
+      required_inputs:
+      - prompt
+      - target
+      decision: recommend
+      emitted_artifact: WorkflowRecommendation
+    - hook_id: workflow-membership-policy
+      event: PreSkillUse
+      phase: steps
+      condition: active workflow and step membership validate
+      required_inputs:
+      - workflow_id
+      - workflow_version
+      - target
+      - step_id
+      - skill
+      - conditional_evidence
+      - profile
+      decision: block
+      emitted_artifact: SkillAuthorization
+    - hook_id: typed-output-policy
+      event: PostSkillUse
+      phase: steps
+      condition: declared output and receipt validate
+      required_inputs:
+      - workflow_id
+      - step_id
+      - artifact_type
+      - epistemic_status
+      - receipt
+      decision: block
+      emitted_artifact: SkillReceipt
+    - hook_id: workflow-tool-policy
+      event: PreToolUse
+      phase: steps
+      condition: path safety mutation and budget validate
+      required_inputs:
+      - workflow_id
+      - step_id
+      - tool
+      - target_path
+      - mutation_class
+      decision: block
+      emitted_artifact: ToolAuthorization
+    - hook_id: workflow-exit-policy
+      event: Stop
+      phase: exit
+      condition: marker coverage and readiness validate
+      required_inputs:
+      - workflow_id
+      - exit_artifacts
+      - open_obligations
+      decision: block
+      emitted_artifact: WorkflowExitReceipt
+    exit_gate:
+      validator: agentic/scripts/validate_workflow_contracts.py
+      consumes: PaperReadinessDecision
+      allowed:
+      - validated
+      - quarantined
+      - rejected
+      required_artifacts:
+      - IntegratedPaperDraft
+      - ExpansionValidation
+      - PaperReadinessDecision
+      open_obligations_policy: allow_declared
+    handoffs:
+    - when: new_theorem_requires_proof
+      workflow: theorem_proof_delivery
+      artifact_type: ProofQueueItem
+      adapter: paper_readiness_to_proof_queue
+    prohibitions:
+    - No discovery marathon invocation
+    - No conflation of finite asymptotic and continuum claims
+    - No unresolved marker silently removed
+    cost_profile: bounded
+    profiles:
+    - id: route_a
+      version: 1.0.0
+      visible_name: Route A Manuscript Attack
+      aliases:
+      - route-a
+      - routea
+      activation: opt_in
+      target_scope:
+      - manuscript:route-a
+      steps:
+      - id: routea_attack
+        order: 10
+        skill: routea-paper-attack-orchestrator
+        mode: required
+        when: null
+        consumes:
+        - PaperDraft
+        produces:
+        - RouteAAttackPlan
+        on_failure: stop
+      - id: routea_open_points
+        order: 20
+        skill: routea-open-point-orchestrator
+        mode: required
+        when: null
+        consumes:
+        - RouteAAttackPlan
+        produces:
+        - RouteAOpenPointPlan
+        on_failure: stop
+      - id: routea_symbolic_audit
+        order: 30
+        skill: routea-symbolic-cas-auditor
+        mode: conditional
+        when: exact_algebra_required
+        consumes:
+        - ResultCandidatePacket
+        produces:
+        - SymbolicCASAudit
+        on_failure: quarantine
+      - id: routea_integrate_result
+        order: 40
+        skill: routea-paper-result-integrator
+        mode: required
+        when: null
+        consumes:
+        - ResultCandidatePacket
+        produces:
+        - RouteAIntegratedResult
+        on_failure: stop
+      - id: routea_second_wave
+        order: 50
+        skill: routea-second-wave-manuscript-integrator
+        mode: required
+        when: null
+        consumes:
+        - RouteAIntegratedResult
+        produces:
+        - IntegratedPaperDraft
+        on_failure: stop
+      specialist_skills:
+      - routea-geometric-collar-builder
+      - routea-same-theory-normalization-certifier
+      - routea-geometric-coefficient-extractor
+      - routea-finite-margin-evaluator
+      - routea-margin-endpoint-certifier
+      - routea-endpoint-error-budget-certifier
+      - routea-endpoint-local-integral-calculator
+      - routea-same-theory-factorization-hunter
+      - routea-collar-redesign-forger
+      - routea-continuum-gap-gatekeeper
+      specialist_output: ResultCandidatePacket
+      specialist_after: routea_open_points
+      validation_tail_start: certify_scope
+      validation_tail_adapter:
+        from: ResultCandidatePacket
+        to: RefinedResultCandidates
+    specialist_skills:
+    - routea-geometric-collar-builder
+    - routea-same-theory-normalization-certifier
+    - routea-geometric-coefficient-extractor
+    - routea-finite-margin-evaluator
+    - routea-margin-endpoint-certifier
+    - routea-endpoint-error-budget-certifier
+    - routea-endpoint-local-integral-calculator
+    - routea-same-theory-factorization-hunter
+    - routea-collar-redesign-forger
+    - routea-continuum-gap-gatekeeper
+    specialist_output: ResultCandidatePacket
+    specialist_after: routea_open_points
+    validation_tail_start: certify_scope
+    validation_tail_adapter:
+      from: ResultCandidatePacket
+      to: RefinedResultCandidates
+    parent_workflow: manuscript_result_elaboration
+    parent_validation_tail:
+    - id: orchestrate_elaboration
+      order: 10
+      skill: results-elaboration-workflow-orchestrator
+      mode: required
+      when: null
+      consumes:
+      - PaperDraft
+      produces:
+      - ElaborationPlan
+      on_failure: stop
+    - id: interpret_context
+      order: 20
+      skill: results-context-interpreter
+      mode: required
+      when: null
+      consumes:
+      - ElaborationPlan
+      produces:
+      - ResultsContext
+      on_failure: stop
+    - id: extract_extensions
+      order: 30
+      skill: results-extension-need-extractor
+      mode: conditional
+      when: expansion_markers
+      consumes:
+      - ResultsContext
+      produces:
+      - ExtensionNeeds
+      on_failure: quarantine
+    - id: decompose_modules
+      order: 40
+      skill: results-open-module-decomposer
+      mode: conditional
+      when: open_modules
+      consumes:
+      - ResultsContext
+      produces:
+      - OpenModulePlan
+      on_failure: quarantine
+    - id: plan_strategy
+      order: 50
+      skill: results-extension-strategy-planner
+      mode: required
+      when: null
+      consumes:
+      - ExtensionNeeds
+      - OpenModulePlan
+      produces:
+      - ExtensionStrategy
+      on_failure: stop
+    - id: self_refine
+      order: 60
+      skill: results-critical-self-refiner
+      mode: required
+      when: null
+      consumes:
+      - ExtensionStrategy
+      produces:
+      - RefinedResultCandidates
+      on_failure: stop
+    - id: certify_scope
+      order: 70
+      skill: results-theorem-scope-certifier
+      mode: validator_only
+      when: null
+      consumes:
+      - RefinedResultCandidates
+      produces:
+      - TheoremScopeDecision
+      on_failure: stop
+    - id: formalize_finite_object
+      order: 80
+      skill: results-finite-object-formalizer
+      mode: conditional
+      when: finite_object_required
+      consumes:
+      - RefinedResultCandidates
+      produces:
+      - FiniteObjectDefinition
+      on_failure: quarantine
+    - id: derive_proof_packet
+      order: 90
+      skill: results-proof-packet-deriver
+      mode: conditional
+      when: proof_class_work
+      consumes:
+      - RefinedResultCandidates
+      produces:
+      - ResultsProofPacket
+      on_failure: quarantine
+    - id: audit_prior_art
+      order: 100
+      skill: results-prior-art-disqualifier-auditor
+      mode: validator_only
+      when: null
+      consumes:
+      - RefinedResultCandidates
+      produces:
+      - PriorArtBoundaryAudit
+      on_failure: stop
+    - id: integrate_narrative
+      order: 110
+      skill: results-narrative-integrator
+      mode: required
+      when: null
+      consumes:
+      - RefinedResultCandidates
+      - PriorArtBoundaryAudit
+      produces:
+      - IntegratedPaperDraft
+      on_failure: stop
+    - id: validate_expansion
+      order: 120
+      skill: results-expansion-validator
+      mode: validator_only
+      when: null
+      consumes:
+      - IntegratedPaperDraft
+      produces:
+      - ExpansionValidation
+      on_failure: stop
+    - id: gate_readiness
+      order: 130
+      skill: results-paper-readiness-gatekeeper
+      mode: validator_only
+      when: null
+      consumes:
+      - IntegratedPaperDraft
+      - ExpansionValidation
+      produces:
+      - PaperReadinessDecision
+      on_failure: stop
+  abducer.environment:
+    python: pyproject.toml
+    lock: uv.lock
+    native_controls: .codex/config.toml
+    native_controls_optional: true
+    control_policy: prism_me/shared/references/codex-control-stack.md
+  abducer.execution_boundary:
+    status: specification_only
+    notes: Source inspection only. Effects above deny native execution until a separately reviewed adapter
+      exists.
+  abducer.step_interfaces:
+    routea_attack: step_routea_attack
+    routea_open_points: step_routea_open_points
+    routea_symbolic_audit: step_routea_symbolic_audit
+    routea_integrate_result: step_routea_integrate_result
+    routea_second_wave: step_routea_second_wave
+# REUSE-IgnoreEnd

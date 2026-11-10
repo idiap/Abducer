@@ -1,0 +1,445 @@
+# SPDX-FileCopyrightText: © 2026 Idiap Research Institute <contact@idiap.ch>
+#
+# SPDX-FileContributor: Andre Freitas <andre.freitas@idiap.ch>
+# Neuro-symbolic AI Group
+#
+# SPDX-FileContributor: Danilo Gusicuma <danilo.gusicuma@idiap.ch>
+# Neuro-symbolic AI Group
+#
+# SPDX-License-Identifier: MIT
+version: 1
+title: Cumulative result and subgoal atlas
+created_at: "2026-07-11"
+status: resolved
+completed_at: "2026-07-11"
+implementation_status: >
+  Implemented schemas, builders, validators, workflow hooks, report rendering,
+  documentation, skill registry integration, and agentic-check enforcement for
+  the cumulative result/subgoal atlas, problem-space map, derivation vault, and
+  subgoal state transitions.
+source_artifacts:
+  scientific_contribution_monitor: agentic/reports/scientific_contribution_monitor/latest.json
+  discovery_marathon_report: agentic/reports/discovery_marathon/latest.json
+  full_timeline_report: agentic/reports/discovery_marathon/full_timeline.html
+  formal_derivation_report: agentic/reports/timeline_formal_derivation/latest.json
+  pvsnp_pressure_bridges: agentic/reports/pvsnp_pressure_bridges/latest.json
+  pvsnp_negative_tactics: agentic/reports/pvsnp_negative_tactics/latest.json
+  big_deal_goal_archive: agentic/reports/big_deal_goal_archive/latest.json
+  target_profiles: agentic/scripts/target_profiles.py
+reflection:
+  current_state: >
+    Abducer already persists rich cumulative reports: discovery timelines,
+    contribution candidates, pressure bridges, negative tactics, derivation
+    packets, big-deal goal summaries, and target-specific profiles. This is
+    enough for human inspection, but it is not yet a fully durable result
+    memory. The strongest artifacts are still organized by report type and
+    latest run state rather than by stable subgoal identity.
+  gap: >
+    The workflow needs a target-scoped result atlas where every important
+    result, derivation, obstruction, falsifier, bridge, and publishable
+    stepping-stone candidate is stored as a stable object with subgoal links,
+    proof dependencies, validation status, source-cycle evidence, open
+    obligations, and problem-space coordinates. Without this, future cycles can
+    rediscover or restate results instead of building cumulatively.
+  design_principle: >
+    Results should be persisted at the level at which future reasoning needs
+    to reuse them: not merely as prose in a timeline, and not only as ranked
+    queue items, but as typed subgoal-state objects. Each object should say:
+    what was achieved, what remains to be achieved, what it depends on, why it
+    matters for the global problem, which target commitments it touches, and
+    what would promote or demote it.
+  target_scope: >
+    The atlas must preserve target separation. P vs NP and Yang-Mills can share
+    infrastructure, schemas, validators, and report widgets, but their result
+    types, achievement criteria, barrier language, proof obligations, and
+    problem-space maps must remain target-specific.
+todos:
+  - id: CRSA-001
+    type: planning_todo
+    phase: result-atlas-schema
+    owner: agentic/spec/result_subgoal_atlas.schema.json
+    priority: critical
+    risk_class: cumulative_memory_gap
+    title: Define a typed schema for cumulative result and subgoal atlas entries.
+    intent: >
+      Create a schema for durable result objects that future cycles can query.
+      Each entry must represent a subgoal-level scientific object rather than a
+      transient report paragraph.
+    use_skills:
+      - scientific-contribution-detector
+      - contribution-oriented-subgoal-manager
+      - main-problem-alignment-auditor
+      - paper-contribution-readiness-judge
+    required_artifact:
+      - agentic/spec/result_subgoal_atlas.schema.json
+      - agentic/spec/result_subgoal_entry.schema.json
+    acceptance_criteria:
+      - Entry schema includes stable `result_id`, `target_id`, `subgoal_id`, `result_kind`, `claim`, `achievement_status`, `problem_space_coordinates`, `dependencies`, `derivations`, `evidence_sources`, `validation_state`, `open_obligations`, `promotion_criteria`, `demotion_criteria`, `paper_relevance`, and `non_claims`.
+      - Schema distinguishes achieved, partially achieved, blocked, falsified, quarantined, and handoff-ready states.
+      - Schema supports target-specific extension fields for P vs NP and Yang-Mills without cross-target vocabulary leakage.
+      - Schema can reference existing artifacts by path, cycle id, branch id, theorem/proposition id, and validator output.
+    blocked_by: []
+    evidence:
+      - agentic/reports/scientific_contribution_monitor/latest.json
+      - agentic/reports/timeline_formal_derivation/latest.json
+      - agentic/reports/pvsnp_negative_tactics/latest.json
+    review_date: "2026-07-11"
+    failure_modes:
+      - Result entries duplicate timeline prose without stable subgoal identity.
+      - Schema cannot express dependencies, validation state, or open proof obligations.
+      - Target-specific fields allow P vs NP and Yang-Mills concepts to bleed into each other.
+    status: resolved
+
+  - id: CRSA-002
+    type: workflow_todo
+    phase: result-atlas-builder
+    owner: agentic/scripts/build_result_subgoal_atlas.py
+    priority: critical
+    risk_class: report_type_fragmentation
+    title: Build a cumulative result atlas from existing reports.
+    intent: >
+      Aggregate durable result candidates from contribution monitor, pressure
+      bridges, negative tactics, formal derivations, big-deal archive, and
+      discovery cycles into a single target-scoped atlas.
+    use_skills:
+      - scientific-contribution-detector
+      - pvsnp-negative-tactic-selector
+      - pvsnp-pressure-bridge-forger
+      - finite-theorem-section-packager
+      - main-problem-alignment-auditor
+    required_artifact:
+      - agentic/scripts/build_result_subgoal_atlas.py
+      - agentic/reports/result_subgoal_atlas/latest.json
+      - agentic/reports/result_subgoal_atlas/latest.md
+    acceptance_criteria:
+      - Builder reads current active target and refuses to merge target artifacts with mismatched `target_id`.
+      - Builder extracts entries from at least contribution candidates, P vs NP pressure bridges, P vs NP negative tactics, formal derivation propositions, and big-deal archive milestones when available.
+      - Builder de-duplicates objects by claim, target, branch, route family, and source evidence rather than by text string alone.
+      - Builder emits both machine-readable JSON and human-readable Markdown organized by subgoal.
+    blocked_by:
+      - CRSA-001
+    evidence:
+      - agentic/reports/scientific_contribution_monitor/latest.json
+      - agentic/reports/pvsnp_pressure_bridges/latest.json
+      - agentic/reports/timeline_formal_derivation/latest.json
+    review_date: "2026-07-11"
+    failure_modes:
+      - Builder merely concatenates reports without normalizing claims into result objects.
+      - Duplicate variants of the same obstruction appear as separate achievements.
+      - Builder silently uses stale artifacts from another target.
+    status: resolved
+
+  - id: CRSA-003
+    type: workflow_todo
+    phase: problem-space-map
+    owner: agentic/scripts/build_problem_space_map.py
+    priority: critical
+    risk_class: global_problem_map_missing
+    title: Build a target-specific map of the overall problem space and subgoal status.
+    intent: >
+      Represent the global problem as a structured map: major route families,
+      essential commitments, subgoals, achieved results, remaining obligations,
+      blocked zones, quarantined routes, and high-reward next moves.
+    use_skills:
+      - main-problem-alignment-auditor
+      - progression-payoff-judge
+      - next-experiment-queue-ranker
+      - pvsnp-conceptual-pressure-localizer
+      - physics-regime-map-builder
+    required_artifact:
+      - agentic/scripts/build_problem_space_map.py
+      - agentic/reports/problem_space_map/latest.json
+      - agentic/reports/problem_space_map/latest.md
+    acceptance_criteria:
+      - P vs NP map includes route families such as hardness magnification, natural-property/barrier analysis, MCSP/MKtP carriers, proof-complexity transfer, padding/projection, and all-exponent uniformity lifting.
+      - Yang-Mills map includes route families such as finite OS obstruction, Wilson collar calculation, same-theory transfer, constructive continuum control, spectral reconstruction, and nontriviality witness.
+      - Each map node states `achieved`, `partially_achieved`, `open`, `blocked`, `quarantined`, or `not_started`.
+      - Each node links to atlas result IDs and states what would count as the next achievement.
+    blocked_by:
+      - CRSA-001
+      - CRSA-002
+    evidence:
+      - agentic/scripts/target_profiles.py
+      - agentic/reports/macro_strategy/latest.json
+      - agentic/reports/target_literature_evolution/latest.json
+    review_date: "2026-07-11"
+    failure_modes:
+      - Problem map becomes a static taxonomy rather than a live achievement/open-obligation ledger.
+      - Map does not distinguish achieved scientific content from queued intentions.
+      - Map uses generic labels that are not meaningful inside the target problem.
+    status: resolved
+
+  - id: CRSA-004
+    type: workflow_todo
+    phase: derivation-vault
+    owner: agentic/scripts/build_derivation_vault.py
+    priority: high
+    risk_class: derivation_persistence_gap
+    title: Persist derivations as reusable theorem/proof objects linked to subgoals.
+    intent: >
+      Move important derivations out of transient timeline cards into a
+      derivation vault where definitions, assumptions, equations, proof steps,
+      failure points, validation status, and result links are stable.
+    use_skills:
+      - kb-deduce
+      - kb-proof-sketcher
+      - pvsnp-symbolic-complexity-auditor
+      - finite-theorem-section-packager
+      - endpoint-worked-calculation-packager
+    required_artifact:
+      - agentic/scripts/build_derivation_vault.py
+      - agentic/reports/derivation_vault/latest.json
+      - agentic/reports/derivation_vault/latest.md
+    acceptance_criteria:
+      - Vault ingests `timeline_formal_derivation`, branch-output candidate lemmas, equations, and validated paper-derivation fragments.
+      - Each derivation links to at least one atlas result or explicitly records why it is orphaned.
+      - Each derivation states definitions, assumptions, validity regime, proof status, unresolved obligations, and non-claims.
+      - Vault separates exact derivations from sketches, heuristic arguments, symbolic audits, and falsifier calculations.
+    blocked_by:
+      - CRSA-001
+      - CRSA-002
+    evidence:
+      - agentic/reports/timeline_formal_derivation/latest.json
+      - agentic/reports/timeline_latex_sections/latest.json
+      - agentic/reports/discovery_marathon/latest.json
+    review_date: "2026-07-11"
+    failure_modes:
+      - Derivations cannot be reused because assumptions and validity regimes are not self-contained.
+      - Sketches are promoted as proofs.
+      - Orphan derivations accumulate without subgoal or result links.
+    status: resolved
+
+  - id: CRSA-005
+    type: hook_todo
+    phase: discovery-loop-integration
+    owner: agentic/scripts/run_discovery_marathon.py
+    priority: high
+    risk_class: future_cycle_forgets_results
+    title: Inject atlas and problem-space state into future branch prompts and queue ranking.
+    intent: >
+      Make future cycles aware of what has already been achieved and what
+      remains open per subgoal, preventing rediscovery and low-value repetition.
+    use_skills:
+      - long-horizon-route-portfolio-manager
+      - next-experiment-queue-ranker
+      - contribution-oriented-subgoal-manager
+      - main-problem-alignment-auditor
+    required_artifact:
+      - agentic/scripts/run_discovery_marathon.py
+      - agentic/scripts/discovery_marathon_scheduler.py
+      - agentic/registries/discovery_marathon_skill_dispatch.yaml
+    acceptance_criteria:
+      - Branch prompt includes a compact target-scoped summary of achieved results, live subgoals, blocked obligations, and no-repeat constraints from the atlas.
+      - Scheduler gives priority to branches that close open problem-map nodes or validate near-stepping-stone atlas entries.
+      - Scheduler demotes branches whose next action only restates an already archived result without improving validation, proof status, or obligation closure.
+      - Dispatch trace records use of the atlas in branch selection and obligation gating phases.
+    blocked_by:
+      - CRSA-002
+      - CRSA-003
+    evidence:
+      - agentic/scripts/run_discovery_marathon.py
+      - agentic/scripts/discovery_marathon_scheduler.py
+      - agentic/registries/discovery_marathon_skill_dispatch.yaml
+    review_date: "2026-07-11"
+    failure_modes:
+      - Future cycles keep rediscovering known results.
+      - Queue ranking ignores achieved/open status by subgoal.
+      - Atlas guidance is injected as prose but not enforced by validators.
+    status: resolved
+
+  - id: CRSA-006
+    type: report_todo
+    phase: report-rendering
+    owner: agentic/scripts/generate_discovery_marathon_html.py
+    priority: high
+    risk_class: results_not_visible
+    title: Add a Result Atlas and Problem Map section to the timeline report.
+    intent: >
+      Give the end user a clear cumulative view: what has been achieved, what
+      remains to be achieved, which subgoals are blocked, and how each result
+      contributes to the overall problem.
+    use_skills:
+      - show-reasoning
+      - kb-explain
+      - scientific-contribution-paper-handoff
+      - target-literature-evolution-narrator
+    required_artifact:
+      - agentic/scripts/generate_discovery_marathon_html.py
+      - agentic/reports/discovery_marathon/latest.html
+      - agentic/reports/discovery_marathon/full_timeline.html
+    acceptance_criteria:
+      - Report has an expert-readable Result Atlas panel or tab with grouped subgoals and durable result entries.
+      - Report has a Problem Space Map panel showing achieved/open/blocked/quarantined status by route family.
+      - Panel avoids JSON-pointer clutter and explains why each result matters in target-specific language.
+      - Mathematical expressions in result claims, derivations, and obligations render correctly in the HTML.
+    blocked_by:
+      - CRSA-002
+      - CRSA-003
+      - CRSA-004
+    evidence:
+      - agentic/reports/discovery_marathon/latest.html
+      - agentic/reports/discovery_marathon/full_timeline.html
+    review_date: "2026-07-11"
+    failure_modes:
+      - Report displays raw JSON instead of an interpretable result map.
+      - User cannot distinguish achieved results from next analyses.
+      - LaTeX rendering breaks inside result claims or derivation snippets.
+    status: resolved
+
+  - id: CRSA-007
+    type: test_todo
+    phase: atlas-validation
+    owner: agentic/scripts/validate_result_subgoal_atlas.py
+    priority: high
+    risk_class: no_deterministic_guardrails
+    title: Add validators for atlas, problem map, derivation vault, and report integration.
+    intent: >
+      Make cumulative result organization enforceable rather than aspirational.
+      Validators should fail when durable results are missing subgoal links,
+      stale target data, validation state, or open obligations.
+    use_skills:
+      - progression-payoff-judge
+      - main-problem-alignment-auditor
+      - paper-contribution-readiness-judge
+      - pvsnp-symbolic-complexity-auditor
+    required_artifact:
+      - agentic/scripts/validate_result_subgoal_atlas.py
+      - agentic/scripts/validate_problem_space_map.py
+      - agentic/scripts/validate_derivation_vault.py
+      - tests/fixtures/result_subgoal_atlas/valid_pvsnp_atlas.json
+      - tests/fixtures/result_subgoal_atlas/invalid_cross_target_atlas.json
+    acceptance_criteria:
+      - Validators require every result to link to a target, subgoal, evidence source, validation state, and open/closed obligation list.
+      - Validators reject cross-target vocabulary leakage.
+      - Validators reject handoff-ready or achieved status without evidence and validation state.
+      - Validators are added to `agentic/scripts/agentic_check.py`.
+    blocked_by:
+      - CRSA-001
+      - CRSA-002
+      - CRSA-003
+      - CRSA-004
+    evidence:
+      - agentic/scripts/validate_discovery_marathon_report.py
+      - agentic/scripts/validate_scientific_contribution_monitor.py
+      - agentic/scripts/agentic_check.py
+    review_date: "2026-07-11"
+    failure_modes:
+      - Atlas can silently mark claims as achieved without derivation or validation.
+      - Validator checks shape but not target-specific conceptual content.
+      - Cross-target result leakage is not caught.
+    status: resolved
+
+  - id: CRSA-008
+    type: workflow_todo
+    phase: subgoal-state-transition
+    owner: agentic/scripts/update_subgoal_state_from_cycle.py
+    priority: medium
+    risk_class: achievement_state_not_updated
+    title: Add deterministic state transitions from cycle outputs to subgoal achievement states.
+    intent: >
+      Convert validated cycle outputs and contribution-monitor decisions into
+      explicit subgoal-state transitions: open to partial, partial to achieved,
+      achieved to handoff-ready, blocked to backtrack, or active to quarantined.
+    use_skills:
+      - abducer-obligation-gatekeeper
+      - entailment-gap-auditor
+      - contribution-oriented-subgoal-manager
+      - progression-payoff-judge
+    required_artifact:
+      - agentic/scripts/update_subgoal_state_from_cycle.py
+      - agentic/state/subgoals/
+    acceptance_criteria:
+      - State transition records cite the cycle id, result id, validator output, and rationale.
+      - Promotions require evidence and demotions require failure learning.
+      - State update refuses to overwrite achieved results without recording a supersession relation.
+      - State update can be run after a marathon cycle and before report generation.
+    blocked_by:
+      - CRSA-002
+      - CRSA-003
+      - CRSA-007
+    evidence:
+      - agentic/reports/scientific_contribution_monitor/latest.json
+      - agentic/scripts/validate_discovery_marathon_cycle.py
+    review_date: "2026-07-11"
+    failure_modes:
+      - Subgoal status is inferred informally from prose rather than persisted.
+      - Later cycles overwrite or obscure earlier achievements.
+      - Demotions lose the learning that justified the pivot.
+    status: resolved
+
+  - id: CRSA-009
+    type: documentation_todo
+    phase: researcher-facing-runbook
+    owner: docs/research-methods/result-subgoal-atlas.md
+    priority: medium
+    risk_class: user_cannot_interpret_atlas
+    title: Document how to read and use the cumulative result atlas.
+    intent: >
+      Provide a self-contained explanation for researchers: what the atlas is,
+      how result status differs from queue status, how derivations are linked,
+      and how the problem-space map should guide next runs.
+    use_skills:
+      - kb-explain
+      - scientific-contribution-paper-handoff
+      - main-problem-alignment-auditor
+    required_artifact:
+      - docs/research-methods/result-subgoal-atlas.md
+      - docs/case-studies/pvsnp/pvsnp-runbook.md
+    acceptance_criteria:
+      - Documentation explains result entry fields and achievement states.
+      - Documentation explains how to use the atlas before choosing a marathon run or paper-finalization task.
+      - Documentation includes P vs NP and Yang-Mills examples without mixing target terminology.
+      - Documentation includes commands for building and validating the atlas.
+    blocked_by:
+      - CRSA-001
+      - CRSA-002
+      - CRSA-003
+    evidence:
+      - docs/case-studies/pvsnp/pvsnp-runbook.md
+      - agentic/reports/scientific_contribution_monitor/latest.md
+    review_date: "2026-07-11"
+    failure_modes:
+      - Documentation describes implementation files but not how a researcher uses the result map.
+      - Documentation fails to distinguish durable results from next-experiment queue items.
+      - Examples become stale or target-generic.
+    status: resolved
+
+  - id: CRSA-010
+    type: release_todo
+    phase: workflow-contract
+    owner: agentic/registries/discovery_marathon_skill_dispatch.yaml
+    priority: medium
+    risk_class: workflow_contract_not_updated
+    title: Promote result-atlas maintenance into the discovery workflow contract.
+    intent: >
+      Make cumulative result organization part of the official workflow rather
+      than an optional report-generation side effect.
+    use_skills:
+      - looper-workflow-contract-governor
+      - looper-hook-policy-maintainer
+      - long-horizon-route-portfolio-manager
+      - result-atlas-maintainer
+    required_artifact:
+      - agentic/registries/discovery_marathon_skill_dispatch.yaml
+      - agentic/scripts/agentic_check.py
+      - docs/reference/skills.md
+    acceptance_criteria:
+      - Dispatch matrix has explicit phases or hooks for result-atlas maintenance and problem-map update.
+      - Agentic check runs atlas/problem-map/derivation-vault builders and validators in the correct order.
+      - `docs/reference/skills.md` includes any new skills introduced for atlas maintenance.
+      - Release notes or runbook identify the atlas as the authoritative cumulative result memory.
+    blocked_by:
+      - CRSA-002
+      - CRSA-003
+      - CRSA-004
+      - CRSA-007
+    evidence:
+      - agentic/registries/discovery_marathon_skill_dispatch.yaml
+      - agentic/scripts/agentic_check.py
+      - docs/reference/skills.md
+    review_date: "2026-07-11"
+    failure_modes:
+      - Atlas is built once but not maintained by future cycles.
+      - Skills exist but are not visible in dispatch traces.
+      - Checks do not enforce result accumulation before report rendering.
+    status: resolved

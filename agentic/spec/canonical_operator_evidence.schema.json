@@ -1,0 +1,178 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://abducer.local/schemas/canonical_operator_evidence.schema.json",
+  "title": "Sealed canonical operator execution evidence",
+  "description": "Complete requests and attempt receipts plus a byte-exact mapping from every producer output and semantic role to one immutable commit artifact.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "cycle_id",
+    "target_id",
+    "run_id",
+    "prior_state_version",
+    "operator_requests",
+    "operator_receipts",
+    "successful_receipt_ids",
+    "input_bindings",
+    "role_bindings",
+    "output_bindings",
+    "validator_authority_bindings",
+    "authority_boundary",
+    "evidence_digest"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "cycle_id": {"$ref": "#/$defs/id"},
+    "target_id": {"$ref": "#/$defs/id"},
+    "run_id": {"$ref": "#/$defs/id"},
+    "prior_state_version": {"type": "integer", "minimum": 0},
+    "operator_requests": {"type": "array", "minItems": 1, "items": {"type": "object"}},
+    "operator_receipts": {"type": "array", "minItems": 1, "items": {"type": "object"}},
+    "successful_receipt_ids": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {"$ref": "#/$defs/id"}
+    },
+    "input_bindings": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/inputBinding"}
+    },
+    "role_bindings": {
+      "type": "array",
+      "minItems": 5,
+      "items": {"$ref": "#/$defs/roleBinding"}
+    },
+    "output_bindings": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/outputBinding"}
+    },
+    "validator_authority_bindings": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/validatorAuthorityBinding"}
+    },
+    "authority_boundary": {"type": "string", "minLength": 1},
+    "evidence_digest": {"$ref": "#/$defs/digest"}
+  },
+  "$defs": {
+    "id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]*$",
+      "not": {"enum": ["latest", "current", "global"]}
+    },
+    "digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "path": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))(?!.*(?:^|/)(?:latest(?:\\.json)?|current)(?:/|$)).+$"
+    },
+    "nullableId": {"oneOf": [{"$ref": "#/$defs/id"}, {"type": "null"}]},
+    "inputBinding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "request_id", "operator_id", "input_index", "original_descriptor",
+        "sealed_path", "sealed_sha256", "sealed_size_bytes", "commit_artifact_role"
+      ],
+      "properties": {
+        "request_id": {"$ref": "#/$defs/id"},
+        "operator_id": {"$ref": "#/$defs/id"},
+        "input_index": {"type": "integer", "minimum": 0},
+        "original_descriptor": {"type": "object"},
+        "sealed_path": {"$ref": "#/$defs/path"},
+        "sealed_sha256": {"$ref": "#/$defs/digest"},
+        "sealed_size_bytes": {"type": "integer", "minimum": 0},
+        "commit_artifact_role": {"type": "string", "minLength": 1}
+      }
+    },
+    "roleBinding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "role",
+        "role_index",
+        "original_path",
+        "sealed_path",
+        "sha256",
+        "size_bytes",
+        "source_kind",
+        "producer_receipt_id",
+        "producer_request_id",
+        "producer_operator_id",
+        "commit_artifact_role"
+      ],
+      "properties": {
+        "role": {"type": "string", "minLength": 1},
+        "role_index": {"type": "integer", "minimum": 0},
+        "original_path": {"$ref": "#/$defs/path"},
+        "sealed_path": {"$ref": "#/$defs/path"},
+        "sha256": {"$ref": "#/$defs/digest"},
+        "size_bytes": {"type": "integer", "minimum": 0},
+        "source_kind": {"enum": ["operator_output", "external_role_artifact"]},
+        "producer_receipt_id": {"$ref": "#/$defs/nullableId"},
+        "producer_request_id": {"$ref": "#/$defs/nullableId"},
+        "producer_operator_id": {"$ref": "#/$defs/nullableId"},
+        "commit_artifact_role": {"type": "string", "minLength": 1}
+      }
+    },
+    "outputBinding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "receipt_id",
+        "request_id",
+        "operator_id",
+        "attempt",
+        "status",
+        "original_descriptor",
+        "history_descriptor",
+        "sealed_path",
+        "sealed_sha256",
+        "sealed_size_bytes",
+        "semantic_role",
+        "commit_artifact_role"
+      ],
+      "properties": {
+        "receipt_id": {"$ref": "#/$defs/id"},
+        "request_id": {"$ref": "#/$defs/id"},
+        "operator_id": {"$ref": "#/$defs/id"},
+        "attempt": {"type": "integer", "minimum": 1},
+        "status": {"enum": ["succeeded", "failed", "timed_out", "skipped"]},
+        "original_descriptor": {"type": "object"},
+        "history_descriptor": {"type": "object"},
+        "sealed_path": {"$ref": "#/$defs/path"},
+        "sealed_sha256": {"$ref": "#/$defs/digest"},
+        "sealed_size_bytes": {"type": "integer", "minimum": 0},
+        "semantic_role": {"type": ["string", "null"]},
+        "commit_artifact_role": {"type": "string", "minLength": 1}
+      }
+    },
+    "validatorAuthorityBinding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "receipt_id", "validator_receipt_digest", "validator_id", "authority_digest",
+        "file_index", "authority_file", "sealed_path", "sealed_sha256",
+        "sealed_size_bytes", "commit_artifact_role"
+      ],
+      "properties": {
+        "receipt_id": {"$ref": "#/$defs/id"},
+        "validator_receipt_digest": {"$ref": "#/$defs/digest"},
+        "validator_id": {"$ref": "#/$defs/id"},
+        "authority_digest": {"$ref": "#/$defs/digest"},
+        "file_index": {"type": "integer", "minimum": 0},
+        "authority_file": {"type": "object"},
+        "sealed_path": {"$ref": "#/$defs/path"},
+        "sealed_sha256": {"$ref": "#/$defs/digest"},
+        "sealed_size_bytes": {"type": "integer", "minimum": 0},
+        "commit_artifact_role": {"type": "string", "minLength": 1}
+      }
+    }
+  }
+}

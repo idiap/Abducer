@@ -1,0 +1,39 @@
+# SPDX-FileCopyrightText: Copyright © 2026 Idiap Research Institute <contact@idiap.ch>
+#
+# SPDX-FileContributor: Andre Freitas <andre.freitas@idiap.ch>
+# Neuro-symbolic AI Group
+#
+# SPDX-FileContributor: Danilo Gusicuma <danilo.gusicuma@idiap.ch>
+# Neuro-symbolic AI Group
+#
+# SPDX-License-Identifier: MIT
+name: ScholarlyAssistant
+domain: language_model_concept
+role: Answers scholarly questions with citations.
+representation:
+  context_window: finite
+architecture:
+  base: transformer_assistant
+interaction:
+  mode: chat
+tools: []
+evaluation:
+  suites:
+    - citation_accuracy
+safety:
+  policy: standard_assistant
+governance:
+  monitoring:
+    - basic_logs
+tasks:
+  - name: cite_answer
+    kind: predict
+    goal: "answer with source-supported citations"
+    required_status: source_supported
+preservation:
+  - helpful scholarly answers
+traces:
+  - prompt: "Give a source for a theorem claim"
+    model_output: "Invented citation"
+counterexamples:
+  - "hallucinated citation with no provenance"

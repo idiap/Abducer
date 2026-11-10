@@ -1,0 +1,163 @@
+# SPDX-FileCopyrightText: © 2026 Idiap Research Institute <contact@idiap.ch>
+#
+# SPDX-FileContributor: Andre Freitas <andre.freitas@idiap.ch>
+# Neuro-symbolic AI Group
+#
+# SPDX-FileContributor: Danilo Gusicuma <danilo.gusicuma@idiap.ch>
+# Neuro-symbolic AI Group
+#
+# SPDX-License-Identifier: MIT
+version: 1
+target_id: p-vs-np-target
+created_at: "2026-07-11"
+source_artifacts:
+  skill: skills/reasoning/pvsnp-symbolic-complexity-auditor/SKILL.md
+  script: skills/reasoning/pvsnp-symbolic-complexity-auditor/scripts/audit_transfer.py
+  dispatch: agentic/registries/discovery_marathon_skill_dispatch.yaml
+  report: agentic/reports/discovery_marathon/latest.html
+implementation_status:
+  status: completed
+  completed_at: "2026-07-11"
+todos:
+  - id: pvsnp-symbolic-001
+    type: workflow_todo
+    phase: pvsnp-symbolic-reasoning-layer
+    owner: skills/reasoning/pvsnp-symbolic-complexity-auditor
+    priority: critical
+    risk_class: symbolic_complexity_target_control
+    title: Define the symbolic reasoning regimes that matter for P vs NP.
+    intent: >
+      Give the P vs NP workflow a target-specific account of when symbolic
+      reasoning is useful: exponent transfer, padding/projection bookkeeping,
+      finite carrier sanity checks, natural-proof pressure, advice/uniformity
+      accounting, and barrier ledgers.
+    use_skills:
+      - pvsnp-symbolic-complexity-auditor
+      - pvsnp-conceptual-pressure-localizer
+      - pvsnp-qualitative-complexity-reasoner
+    required_artifact:
+      - skills/reasoning/pvsnp-symbolic-complexity-auditor/SKILL.md
+    acceptance_criteria:
+      - The skill names symbolic regimes specific to P vs NP rather than generic CAS usage.
+      - The skill states non-claim boundaries so CAS output is not confused with a P vs NP proof.
+      - The skill output contract requires variables, quantifiers, side conditions, and validation handoffs.
+    blocked_by: []
+    evidence:
+      - skills/reasoning/pvsnp-symbolic-complexity-auditor/SKILL.md
+    review_date: "2026-07-11"
+    failure_modes:
+      - Symbolic reasoning becomes unbounded CAS exploration.
+      - Fixed-exponent evidence is misread as all-polynomial lower-bound progress.
+      - Advice, uniformity, or barrier status is hidden outside the formula.
+    status: resolved
+  - id: pvsnp-symbolic-002
+    type: workflow_todo
+    phase: pvsnp-symbolic-reasoning-layer
+    owner: skills/reasoning/pvsnp-symbolic-complexity-auditor
+    priority: critical
+    risk_class: exact_transfer_probe
+    title: Add a reusable exact transfer-audit helper.
+    intent: >
+      Provide a deterministic exact-rational script that computes induced
+      source-carrier upper exponents and identifies all-polynomial,
+      bounded-window, or no-window outcomes.
+    use_skills:
+      - pvsnp-symbolic-complexity-auditor
+    required_artifact:
+      - skills/reasoning/pvsnp-symbolic-complexity-auditor/scripts/audit_transfer.py
+    acceptance_criteria:
+      - The script computes q + beta*c and the strict contradiction condition a > q + beta*c.
+      - The script reports bounded_exponent_window_only when beta is positive and the margin is finite.
+      - The script reports potential_all_polynomial_exclusion only when beta is zero and a exceeds q.
+      - The script emits non-claims warning that the audit does not prove P != NP.
+    blocked_by:
+      - pvsnp-symbolic-001
+    evidence:
+      - skills/reasoning/pvsnp-symbolic-complexity-auditor/scripts/audit_transfer.py
+      - command: .venv-pmp/bin/python skills/reasoning/pvsnp-symbolic-complexity-auditor/scripts/audit_transfer.py --source-carrier MCSP --a 6/5 --q 1 --beta 1/4 --padding-k 1
+      - command: .venv-pmp/bin/python skills/reasoning/pvsnp-symbolic-complexity-auditor/scripts/audit_transfer.py --source-carrier nonblackbox-carrier --a 6/5 --q 1 --beta 0 --padding-k 1
+    review_date: "2026-07-11"
+    failure_modes:
+      - Decimal or approximate arithmetic replaces exact rational exponent bookkeeping.
+      - The script omits barrier, advice, or uniformity status from the result.
+      - The output gives a disposition without a reproducible formula.
+    status: resolved
+  - id: pvsnp-symbolic-003
+    type: hook_todo
+    phase: pvsnp-symbolic-reasoning-layer
+    owner: agentic/registries/discovery_marathon_skill_dispatch.yaml
+    priority: high
+    risk_class: workflow_integration
+    title: Wire symbolic auditing into the P vs NP discovery loop.
+    intent: >
+      Ensure every relevant P vs NP marathon cycle can invoke symbolic
+      transfer auditing during branch exploration, qualitative reasoning,
+      contradiction/no-go generation, and obligation gating.
+    use_skills:
+      - pvsnp-symbolic-complexity-auditor
+      - next-experiment-queue-ranker
+      - pvsnp-impossibility-theorem-forger
+    required_artifact:
+      - agentic/registries/discovery_marathon_skill_dispatch.yaml
+      - agentic/scripts/discovery_marathon_common.py
+      - agentic/scripts/generate_discovery_marathon_html.py
+      - agentic/scripts/build_macro_strategy_report.py
+      - agentic/scripts/validate_discovery_marathon_report.py
+    acceptance_criteria:
+      - The skill appears in P vs NP skill dispatch traces.
+      - The queue payoff profile asks for exact beta and q audits where relevant.
+      - Macro strategy packets expose symbolic transfer checks as active skills.
+      - Report validation fails if the P vs NP report omits the symbolic auditor.
+    blocked_by:
+      - pvsnp-symbolic-001
+      - pvsnp-symbolic-002
+    evidence:
+      - agentic/registries/discovery_marathon_skill_dispatch.yaml
+      - agentic/scripts/discovery_marathon_common.py
+      - agentic/scripts/generate_discovery_marathon_html.py
+      - agentic/scripts/build_macro_strategy_report.py
+      - agentic/scripts/validate_discovery_marathon_report.py
+    review_date: "2026-07-11"
+    failure_modes:
+      - The skill exists but is invisible in reports and traces.
+      - The queue still asks for generic computation rather than P vs NP transfer formulas.
+      - Symbolic checks are optional when a branch is clearly formula-shaped.
+    status: resolved
+  - id: pvsnp-symbolic-004
+    type: documentation_todo
+    phase: pvsnp-symbolic-reasoning-layer
+    owner: docs/reference/skills.md
+    priority: medium
+    risk_class: skill_visibility
+    title: Document and register the new symbolic skill.
+    intent: >
+      Make the symbolic auditor discoverable in the human skill inventory,
+      machine skill registry, quality registry, and taxonomy projections.
+    use_skills:
+      - pvsnp-symbolic-complexity-auditor
+    required_artifact:
+      - docs/reference/skills.md
+      - registry/skill_projections/abducer_skill_projections.json
+      - agentic/registries/skill_registry.yaml
+      - agentic/registries/skill_quality_registry.yaml
+      - agentic/reports/skill_depth/latest.json
+    acceptance_criteria:
+      - docs/reference/skills.md links to the skill, agent config, and transfer-audit script.
+      - Skill depth validation reports zero critical findings.
+      - Skill taxonomy projections include 135 skills and expose the symbolic auditor.
+    blocked_by:
+      - pvsnp-symbolic-001
+      - pvsnp-symbolic-002
+      - pvsnp-symbolic-003
+    evidence:
+      - docs/reference/skills.md
+      - registry/skill_projections/abducer_skill_projections.json
+      - agentic/registries/skill_registry.yaml
+      - agentic/registries/skill_quality_registry.yaml
+      - agentic/reports/skill_depth/latest.json
+    review_date: "2026-07-11"
+    failure_modes:
+      - The skill can be invoked only by knowing the filesystem path.
+      - The registry omits quality boundaries or validation oracles.
+      - Documentation hides the deterministic/generative split.
+    status: resolved

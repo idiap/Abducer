@@ -1,0 +1,170 @@
+# SPDX-FileCopyrightText: © 2026 Idiap Research Institute <contact@idiap.ch>
+#
+# SPDX-FileContributor: Danilo Gusicuma <danilo.gusicuma@idiap.ch>
+# Neuro-symbolic AI Group
+#
+# SPDX-License-Identifier: MIT
+# REUSE-IgnoreStart
+schema_version: workflow-skill/v1
+namespace: abducer_support
+id: workflow_health_audit_workflow
+version: 1.0.0
+kind: workflow
+description: Draft interface projection of workflow-health-audit-orchestrator; native execution and authority
+  remain unchanged.
+aliases:
+- workflow-health-audit-orchestrator
+lifecycle: draft
+activation:
+  mode: explicit
+  prerequisites: []
+types:
+  NativeRequest:
+    schema:
+      type: object
+      description: Skill-defined request; consult preserved source text for inputs and conditions.
+    representation: value
+  NativeResult:
+    schema:
+      type: object
+      description: Skill-defined durable artifact bundle; no invented runtime output shape.
+    representation: value
+inputs:
+  request:
+    type: NativeRequest
+outputs:
+  result:
+    type: NativeResult
+    value:
+      ref: steps.native.outputs.result
+operations:
+  native_workflow:
+    inputs:
+      request:
+        type: NativeRequest
+    outputs:
+      result:
+        type: NativeResult
+    execution:
+      mode: specification_only
+      reason: No workflow-skill/v1 host adapter is supplied. Native skill/hook/CLI interfaces exist, but
+        payload materialization, guard evidence, execution effects and receipt translation are not qualified
+        for this format.
+flow:
+  kind: sequence
+  steps:
+  - id: native
+    kind: call
+    operation: native_workflow
+    description: Opaque native workflow boundary; internal ordering, guards and handoffs are retained
+      in abducer.native_contract.
+    arguments:
+      request:
+        ref: inputs.request
+    on_failure: blocked
+policy:
+  effects:
+    filesystem:
+      read:
+      - native_sources
+      - inputs
+      write: []
+    network: []
+    external_write: []
+  authority:
+    allowed:
+    - describe_native_interface
+    forbidden:
+    - execute_scientific_workflow
+    - approve
+    - prove
+    - publish
+    - promote
+  limits:
+    wall_time_seconds: 1800
+    max_operation_calls: 1
+  failure:
+    default: blocked
+    retry:
+      max_attempts: 1
+      retryable_codes: []
+  resume:
+    mode: none
+    require_matching_definition_and_inputs: true
+  claim_ceiling: Interface description only; no proof, scientific validity, runtime qualification, promotion
+    or approval.
+observability:
+  receipts: required
+  artifact_digests: sha256
+  provenance: required
+  events:
+  - workflow_started
+  - step_failed
+  - workflow_completed
+provenance:
+  coverage: interface_only
+  sources:
+  - path: proj_skills/workflow-health-audit-orchestrator/SKILL.md
+    digest: sha256:b7bf8f3646c5de2bdcab40c7b5b767dbed3c87b2ca469a2ca090fcde964f321e
+  - path: proj_skills/workflow-health-audit-orchestrator/scripts/generate_workflow_health_audit.py
+    digest: sha256:234100557e72ea36332949d53f2327855d9e734bd7d3e03aacb704cf32c3fe4e
+  - path: agentic/registries/skill_registry.yaml
+    digest: sha256:15076ed8d1bd4c10895060ab485353fe520421c44e1fc6f506508d2d566eacf0
+  - path: pyproject.toml
+    digest: sha256:69325c4805f66033ce7f7e0e68f4a0996913728c6041bb3cee656571693b2f1e
+  - path: uv.lock
+    digest: sha256:a6c77e5d86a93915eeb0f129f80bc8c45d572be387872e3ace7460a3d6ada9ae
+  - path: prism_me/shared/references/codex-control-stack.md
+    digest: sha256:4e8e7a5cdbc0572cf9b0d4ffc4a41c8f4f9c9a304fae3bcee99d8af3553be30e
+  gaps:
+  - No workflow-skill/v1 host adapter is supplied. Native skill/hook/CLI interfaces exist, but payload
+    materialization, guard evidence, execution effects and receipt translation are not qualified for this
+    format.
+  - Native control flow remains opaque; coverage is interface_only, not source-equivalence certification.
+  - One or more native payloads have no exact JSON Schema; object-only types remain explicitly underspecified.
+extensions:
+  abducer.owner:
+    path: proj_skills/workflow-health-audit-orchestrator/SKILL.md
+  abducer.native_identity:
+    id: workflow-health-audit-orchestrator
+  abducer.native_contract:
+    source_skill: proj_skills/workflow-health-audit-orchestrator/SKILL.md
+    source_text: "---\nname: workflow-health-audit-orchestrator\ndescription: Orchestrate periodic project-support\
+      \ workflow health reviews. Use when Codex should revisit workflow stacks from time to time and systematically\
+      \ check for blind-run leakage, orphaned or underhooked skills, poor prompt control, mocked behavior,\
+      \ weak deterministic testing coverage, and improvement opportunities as HTML and JSON.\n---\n\n\
+      # Workflow Health Audit Orchestrator\n\nUse this skill to periodically review the health of the\
+      \ workflow framework itself.\n\nThis is the orchestrator hook for workflow health auditing:\n\n\
+      1. `$workflow-leakage-auditor`\n2. `$workflow-orphan-skill-auditor`\n3. `$workflow-prompt-control-auditor`\n\
+      4. `$workflow-mock-behavior-auditor`\n5. `$workflow-test-coverage-auditor`\n6. `$workflow-health-html-reporter`\n\
+      \n## Workflow\n\n1. Run the bundled deterministic audit generator from the repository root:\n\n\
+      \   ```bash\n   audit_dir=$(mktemp -d)\n   python proj_skills/workflow-health-audit-orchestrator/scripts/generate_workflow_health_audit.py\
+      \ --repo . --output \"$audit_dir/workflow_health_audit.html\" --json-output \"$audit_dir/workflow_health_audit.json\"\
+      \n   ```\n\n2. Inspect severity counts first, then review the grouped findings.\n3. Treat findings\
+      \ as triage inputs. Confirm high-impact changes before editing core workflow behavior.\n4. Publish\
+      \ a reviewed report under `docs/generated/` only when it should become a maintained documentation\
+      \ artifact; ad hoc audits stay temporary.\n\n## Review Dimensions\n\n- leakage and blind-run boundary\
+      \ risk\n- orphaned, uncataloged, or underhooked skills\n- prompt control and output-contract weakness\n\
+      - mocked, stubbed, skipped, or placeholder behavior\n- missing or weak deterministic test coverage\n\
+      \n## Hook Discipline\n\n- Keep this under `proj_skills/`; it audits project/workflow health rather\
+      \ than domain scientific artifact semantics directly.\n- Prefer diagnostic findings and TODO candidates\
+      \ over silent workflow edits.\n- Distinguish intentionally post-hoc reference handling from actual\
+      \ generation-path leakage.\n- Distinguish legitimate test isolation from mocked behavior that is\
+      \ being overclaimed as validation.\n\n## Conceptual Explanatory Core\n\n- Explain which audit dimension\
+      \ concentrates the strongest triage signals and why it deserves confirmation.\n- Assign each dimension\
+      \ an explicit posture such as repository cross-reference, context-sensitive boundary scan, marker\
+      \ scan, or reference heuristic.\n- Keep every health finding at `triage_signal` strength until source\
+      \ context or runtime evidence confirms a defect.\n- Give one decision rule: confirm the matched\
+      \ context and owning workflow contract before changing core behavior.\n- Use calibration rails suited\
+      \ to audit reasoning. Do not reuse the history, topology, or runtime visual grammar.\n"
+  abducer.environment:
+    python: pyproject.toml
+    lock: uv.lock
+    native_controls: .codex/config.toml
+    native_controls_optional: true
+    control_policy: prism_me/shared/references/codex-control-stack.md
+  abducer.execution_boundary:
+    status: specification_only
+    notes: Source inspection only. Effects above deny native execution until a separately reviewed adapter
+      exists.
+# REUSE-IgnoreEnd

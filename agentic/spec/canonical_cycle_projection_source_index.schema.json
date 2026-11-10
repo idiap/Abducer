@@ -1,0 +1,220 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://abducer.local/schemas/canonical_cycle_projection_source_index.schema.json",
+  "title": "Canonical committed-cycle projection source index",
+  "description": "Path-stable index for the exact committed bytes from which a theory-first experiment authority projection may be reconstructed. Missing optional cycle roles are represented explicitly and never promoted to producer authority.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "index_kind",
+    "cycle_id",
+    "target_id",
+    "run_id",
+    "source_cycle_prior_state_version",
+    "matrix_base_generation",
+    "core_bindings",
+    "semantic_role_bindings",
+    "authority_boundary",
+    "index_digest"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "index_kind": {"const": "canonical_committed_cycle_world_projection_sources"},
+    "cycle_id": {"$ref": "#/$defs/identifier"},
+    "target_id": {"$ref": "#/$defs/identifier"},
+    "run_id": {"$ref": "#/$defs/identifier"},
+    "source_cycle_prior_state_version": {"type": "integer", "minimum": 0},
+    "matrix_base_generation": {"type": "integer", "minimum": 1},
+    "core_bindings": {
+      "type": "array",
+      "minItems": 4,
+      "maxItems": 4,
+      "prefixItems": [
+        {"allOf": [{"$ref": "#/$defs/coreBinding"}, {"properties": {"source_name": {"const": "canonical_cycle"}}}]},
+        {"allOf": [{"$ref": "#/$defs/coreBinding"}, {"properties": {"source_name": {"const": "finalized_reflection"}}}]},
+        {"allOf": [{"$ref": "#/$defs/coreBinding"}, {"properties": {"source_name": {"const": "operator_evidence"}}}]},
+        {"allOf": [{"$ref": "#/$defs/coreBinding"}, {"properties": {"source_name": {"const": "schedule"}}}]}
+      ],
+      "items": false
+    },
+    "semantic_role_bindings": {
+      "type": "array",
+      "minItems": 9,
+      "maxItems": 9,
+      "prefixItems": [
+        {"allOf": [{"$ref": "#/$defs/semanticBinding"}, {"properties": {"semantic_role": {"const": "literature_production_input_bundle"}, "role_index": {"const": 0}}}]},
+        {"allOf": [{"$ref": "#/$defs/semanticBinding"}, {"properties": {"semantic_role": {"const": "source_routing_pre_map_policy"}, "role_index": {"const": 0}}}]},
+        {"allOf": [{"$ref": "#/$defs/semanticBinding"}, {"properties": {"semantic_role": {"const": "source_routing_realization"}, "role_index": {"const": 0}}}]},
+        {"allOf": [{"$ref": "#/$defs/semanticBinding"}, {"properties": {"semantic_role": {"const": "high_risk_portfolio"}, "role_index": {"const": 0}}}]},
+        {"allOf": [{"$ref": "#/$defs/semanticBinding"}, {"properties": {"semantic_role": {"const": "parallel_portfolio"}, "role_index": {"const": 0}}}]},
+        {"allOf": [{"$ref": "#/$defs/semanticBinding"}, {"properties": {"semantic_role": {"const": "reflective_packets"}, "role_index": {"const": 0}}}]},
+        {"allOf": [{"$ref": "#/$defs/semanticBinding"}, {"properties": {"semantic_role": {"const": "reflective_packets"}, "role_index": {"const": 1}}}]},
+        {"allOf": [{"$ref": "#/$defs/semanticBinding"}, {"properties": {"semantic_role": {"const": "parent_conceptual_adjudication"}, "role_index": {"const": 0}}}]},
+        {"allOf": [{"$ref": "#/$defs/semanticBinding"}, {"properties": {"semantic_role": {"const": "synthesis_conceptual_adjudication"}, "role_index": {"const": 0}}}]}
+      ],
+      "items": false
+    },
+    "authority_boundary": {"type": "string", "minLength": 1},
+    "index_digest": {"$ref": "#/$defs/digest"}
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"matrix_base_generation": {"type": "integer"}}},
+      "then": {}
+    }
+  ],
+  "$defs": {
+    "identifier": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]*$",
+      "not": {"enum": ["latest", "current", "global"]}
+    },
+    "digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "path": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))(?!.*(?:^|/)(?:latest(?:\\.json)?|current)(?:/|$)).+$"
+    },
+    "namespace": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["target_id", "run_id", "branch_id", "state_version"],
+      "properties": {
+        "target_id": {"$ref": "#/$defs/identifier"},
+        "run_id": {"$ref": "#/$defs/identifier"},
+        "branch_id": {"const": "root"},
+        "state_version": {"type": "integer", "minimum": 0}
+      }
+    },
+    "artifactDescriptor": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "sha256", "size_bytes", "namespace"],
+      "properties": {
+        "path": {"$ref": "#/$defs/path"},
+        "sha256": {"$ref": "#/$defs/digest"},
+        "size_bytes": {"type": "integer", "minimum": 0},
+        "namespace": {"$ref": "#/$defs/namespace"},
+        "media_type": {"type": "string", "minLength": 1}
+      }
+    },
+    "coreBinding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_name",
+        "package_path",
+        "sha256",
+        "size_bytes",
+        "origin_kind",
+        "producer_receipt_id",
+        "producer_request_id",
+        "producer_operator_id",
+        "producer_descriptor"
+      ],
+      "properties": {
+        "source_name": {"enum": ["canonical_cycle", "finalized_reflection", "operator_evidence", "schedule"]},
+        "package_path": {"$ref": "#/$defs/path"},
+        "sha256": {"$ref": "#/$defs/digest"},
+        "size_bytes": {"type": "integer", "minimum": 1},
+        "origin_kind": {"const": "canonical_cycle_reducer"},
+        "producer_receipt_id": {"type": "null"},
+        "producer_request_id": {"type": "null"},
+        "producer_operator_id": {"type": "null"},
+        "producer_descriptor": {"type": "null"}
+      }
+    },
+    "semanticBinding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "semantic_role",
+        "role_index",
+        "availability",
+        "package_path",
+        "sha256",
+        "size_bytes",
+        "source_kind",
+        "original_sealed_path",
+        "commit_artifact_role",
+        "producer_receipt_id",
+        "producer_request_id",
+        "producer_operator_id",
+        "producer_descriptor"
+      ],
+      "properties": {
+        "semantic_role": {
+          "enum": [
+            "source_routing_pre_map_policy",
+            "source_routing_realization",
+            "literature_production_input_bundle",
+            "high_risk_portfolio",
+            "parallel_portfolio",
+            "reflective_packets",
+            "parent_conceptual_adjudication",
+            "synthesis_conceptual_adjudication"
+          ]
+        },
+        "role_index": {"type": "integer", "minimum": 0},
+        "availability": {"enum": ["available", "absent"]},
+        "package_path": {"$ref": "#/$defs/path"},
+        "sha256": {"$ref": "#/$defs/digest"},
+        "size_bytes": {"type": "integer", "minimum": 1},
+        "source_kind": {"enum": ["operator_output", "external_role_artifact", "absent"]},
+        "original_sealed_path": {"oneOf": [{"$ref": "#/$defs/path"}, {"type": "null"}]},
+        "commit_artifact_role": {"type": ["string", "null"], "minLength": 1},
+        "producer_receipt_id": {"oneOf": [{"$ref": "#/$defs/identifier"}, {"type": "null"}]},
+        "producer_request_id": {"oneOf": [{"$ref": "#/$defs/identifier"}, {"type": "null"}]},
+        "producer_operator_id": {"oneOf": [{"$ref": "#/$defs/identifier"}, {"type": "null"}]},
+        "producer_descriptor": {"oneOf": [{"$ref": "#/$defs/artifactDescriptor"}, {"type": "null"}]}
+      },
+      "allOf": [
+        {
+          "if": {"properties": {"availability": {"const": "available"}}, "required": ["availability"]},
+          "then": {
+            "oneOf": [
+              {
+                "properties": {
+                  "semantic_role": {"const": "literature_production_input_bundle"},
+                  "source_kind": {"const": "external_role_artifact"},
+                  "original_sealed_path": {"$ref": "#/$defs/path"},
+                  "commit_artifact_role": {"type": "string", "minLength": 1},
+                  "producer_receipt_id": {"type": "null"},
+                  "producer_request_id": {"type": "null"},
+                  "producer_operator_id": {"type": "null"},
+                  "producer_descriptor": {"type": "null"}
+                }
+              },
+              {
+                "properties": {
+                  "semantic_role": {"not": {"const": "literature_production_input_bundle"}},
+                  "source_kind": {"const": "operator_output"},
+                  "original_sealed_path": {"$ref": "#/$defs/path"},
+                  "commit_artifact_role": {"type": "string", "minLength": 1},
+                  "producer_receipt_id": {"$ref": "#/$defs/identifier"},
+                  "producer_request_id": {"$ref": "#/$defs/identifier"},
+                  "producer_operator_id": {"$ref": "#/$defs/identifier"},
+                  "producer_descriptor": {"$ref": "#/$defs/artifactDescriptor"}
+                }
+              }
+            ]
+          },
+          "else": {
+            "properties": {
+              "source_kind": {"const": "absent"},
+              "original_sealed_path": {"type": "null"},
+              "commit_artifact_role": {"type": "null"},
+              "producer_receipt_id": {"type": "null"},
+              "producer_request_id": {"type": "null"},
+              "producer_operator_id": {"type": "null"},
+              "producer_descriptor": {"type": "null"}
+            }
+          }
+        }
+      ]
+    }
+  }
+}

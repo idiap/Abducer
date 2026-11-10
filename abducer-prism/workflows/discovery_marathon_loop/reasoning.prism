@@ -1,0 +1,84 @@
+# SPDX-FileCopyrightText: © 2026 Idiap Research Institute <contact@idiap.ch>
+#
+# SPDX-FileContributor: Andre Freitas <andre.freitas@idiap.ch>
+# Neuro-symbolic AI Group
+#
+# SPDX-FileContributor: Danilo Gusicuma <danilo.gusicuma@idiap.ch>
+# Neuro-symbolic AI Group
+#
+# SPDX-License-Identifier: MIT
+# Function: run one bounded discovery cycle and choose the next route.
+# Input: DiscoveryRunContext is grounded into a BoundedDiscoveryScope.
+# Types: hypothesis and pattern form independently; model, contrast, and refutation types test the candidate.
+# Output: DiscoveryRoutingAssessment selects promotion, reorientation, target reset, or stall with a basis.
+# Flow: scope -> parallel formation -> parallel probes -> refutation -> routing.
+# Layer: high-level epistemic topology only.
+# Metadata: workflows/manifest.json (`discovery_marathon_loop`).
+
+from workflows.discovery_marathon_loop.types import (
+    HypothesisContrastAssessment,
+    DiscriminatingDiscoveryHypothesis,
+    DiscoveryDisposition,
+    BoundedDiscoveryScope,
+    ProvisionalDiscoveryPattern,
+    DiscoveryRunContext,
+    DiscoveryRoutingAssessment,
+    HypothesisRefutationAssessment,
+    HypothesisModelImplications,
+)
+
+from workflows.discovery_marathon_loop.occurrences import (
+    AbductiveDiscoveryHypothesisFormation,
+    ContrastiveDiscoveryHypothesisProbe,
+    DiscoveryRoutingInput,
+    DiscoveryHypothesisProbeInput,
+    DiscoveryRefutationInput,
+    EvidentialDiscoveryRoutingAssessment,
+    EvidentialDiscoveryScopeGrounding,
+    InductiveDiscoveryPatternFormation,
+    ModelBasedDiscoveryHypothesisProbe,
+    RefutationalDiscoveryHypothesisAssessment,
+)
+
+from workflows.discovery_marathon_loop.relations import (
+    CalibratesDiscoveryRouting,
+    ScopesDiscoveryFormation,
+    GroundsDiscoveryProbe,
+    GroundsDiscoveryRefutation,
+)
+
+reasoning DiscoveryMarathonLoop(
+    run_context: DiscoveryRunContext,
+) -> Generated[DiscoveryRoutingAssessment]:
+    sequence:
+        # Scope grounding prevents later formation from silently widening the run.
+        [search_scope: EvidentialDiscoveryScopeGrounding(run_context)]
+        parallel:
+            # Abduction proposes an explanation while induction extracts a pattern;
+            # neither is treated as confirmation of the other.
+            [discovery_hypothesis: AbductiveDiscoveryHypothesisFormation(search_scope.value)] by ScopesDiscoveryFormation
+            [discovery_pattern: InductiveDiscoveryPatternFormation(search_scope.value)] by ScopesDiscoveryFormation
+        parallel:
+            # Both probes consume the same typed hypothesis-pattern join but ask
+            # different questions: implications under a model versus a contrast case.
+            [model_implications: ModelBasedDiscoveryHypothesisProbe(DiscoveryHypothesisProbeInput(
+                discovery_hypothesis = discovery_hypothesis.value,
+                discovery_pattern = discovery_pattern.value,
+            ))] by GroundsDiscoveryProbe
+            [contrast_assessment: ContrastiveDiscoveryHypothesisProbe(DiscoveryHypothesisProbeInput(
+                discovery_hypothesis = discovery_hypothesis.value,
+                discovery_pattern = discovery_pattern.value,
+            ))] by GroundsDiscoveryProbe
+        # Refutation combines the two probes before routing sees the candidate.
+        [refutation_assessment: RefutationalDiscoveryHypothesisAssessment(DiscoveryRefutationInput(
+            model_implications = model_implications.value,
+            contrast_assessment = contrast_assessment.value,
+        ))] by GroundsDiscoveryRefutation
+        # Routing joins formation and refutation evidence into the next-cycle decision.
+        [routing_assessment: EvidentialDiscoveryRoutingAssessment(DiscoveryRoutingInput(
+            discovery_hypothesis = discovery_hypothesis.value,
+            discovery_pattern = discovery_pattern.value,
+            refutation_assessment = refutation_assessment.value,
+        ))] by CalibratesDiscoveryRouting
+
+    return routing_assessment

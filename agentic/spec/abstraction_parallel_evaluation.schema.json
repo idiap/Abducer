@@ -1,0 +1,361 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://abducer.local/spec/abstraction_parallel_evaluation.schema.json",
+  "title": "Executed matched-budget abstraction evaluation",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "evaluation_id", "target_id", "literature_snapshot_id",
+    "literature_snapshot_digest", "assimilation_packet_id", "assimilation_digest",
+    "factorial_arms", "repetitions_scheduled_per_arm", "minimum_retained_repetitions_per_arm",
+    "minimum_matched_repetitions_per_arm", "calibration_status",
+    "common_input_digest", "common_budget", "matched_budget", "case_suite_id", "held_out_cases",
+    "held_out_case_suite_digest", "dependency_authority", "skill_bindings",
+    "literature_snapshot", "assimilation_packet", "source_portfolio", "source_portfolio_digest",
+    "runtime_portfolio", "runtime_portfolio_digest", "attempt_receipts",
+    "condition_outputs", "evaluator_evidence", "task_clustered_reporting",
+    "negative_control_outcomes", "aggregates", "partial_failure",
+    "dissent", "decision_authority", "authority_boundary", "content_digest"
+  ],
+  "$defs": {
+    "id": {"type": "string", "minLength": 1, "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$"},
+    "digest": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
+    "text": {"type": "string", "minLength": 8},
+    "formal_dependency_authority": {
+      "type": "object", "additionalProperties": false,
+      "required": ["authority_version", "scope", "declared_roots", "entries", "schema_closure", "import_boundary", "runtime_dependencies", "authority_boundary", "content_digest"],
+      "properties": {
+        "authority_version": {"const": "2.0.0"}, "scope": {"const": "finite_formal_abstraction_local_closure"},
+        "declared_roots": {"type": "array", "minItems": 2, "uniqueItems": true, "items": {"type": "object", "additionalProperties": false, "required": ["kind", "path", "roles"], "properties": {"kind": {"enum": ["entry_python", "semantic"]}, "path": {"type": "string", "minLength": 3}, "roles": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "minLength": 3}}}}},
+        "entries": {"type": "array", "minItems": 15, "uniqueItems": true, "items": {"type": "object", "additionalProperties": false, "required": ["path", "roles", "byte_size", "content_digest"], "properties": {"path": {"type": "string", "minLength": 3}, "roles": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "minLength": 3}}, "byte_size": {"type": "integer", "minimum": 0}, "content_digest": {"$ref": "#/$defs/digest"}}}},
+        "schema_closure": {"type": "object", "additionalProperties": false, "required": ["literal_paths", "referenced_paths"], "properties": {"literal_paths": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "minLength": 3}}, "referenced_paths": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 3}}}},
+        "import_boundary": {"type": "object", "additionalProperties": false, "required": ["policy", "repository_local_python_paths", "stdlib_modules", "third_party_modules"], "properties": {"policy": {"const": "conservative_repository_local_ast_import_closure_v2"}, "repository_local_python_paths": {"type": "array", "minItems": 4, "uniqueItems": true, "items": {"type": "string", "minLength": 3}}, "stdlib_modules": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1}}, "third_party_modules": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "object", "additionalProperties": false, "required": ["module", "distribution", "version"], "properties": {"module": {"type": "string", "minLength": 1}, "distribution": {"type": "string", "minLength": 1}, "version": {"type": "string", "minLength": 1}}}}}},
+        "runtime_dependencies": {"type": "array", "minItems": 2, "uniqueItems": true, "items": {"type": "object", "additionalProperties": false, "required": ["name", "version"], "properties": {"name": {"type": "string", "minLength": 1}, "version": {"type": "string", "minLength": 1}}}},
+        "authority_boundary": {"$ref": "#/$defs/text"}, "content_digest": {"$ref": "#/$defs/digest"}
+      }
+    },
+    "arm": {"enum": ["categorical", "hott", "combined", "incumbent", "no_abstraction"]},
+    "scorecard": {
+      "type": "object", "additionalProperties": false,
+      "required": ["burden_closure", "obstruction_localization", "consequence_yield", "unification_without_erasure", "correction_specificity"],
+      "properties": {
+        "burden_closure": {"type": "number", "minimum": 0, "maximum": 5},
+        "obstruction_localization": {"type": "number", "minimum": 0, "maximum": 5},
+        "consequence_yield": {"type": "number", "minimum": 0, "maximum": 5},
+        "unification_without_erasure": {"type": "number", "minimum": 0, "maximum": 5},
+        "correction_specificity": {"type": "number", "minimum": 0, "maximum": 5}
+      }
+    },
+    "repeatability": {
+      "type": "object", "additionalProperties": false,
+      "required": ["descriptive_mean", "minimum", "maximum", "range", "unique_values", "n_executions", "all_replays_identical", "unit", "iid_assumption", "population_inference_authorized", "method"],
+      "properties": {
+        "descriptive_mean": {"type": "number"}, "minimum": {"type": "number"},
+        "maximum": {"type": "number"}, "range": {"type": "number", "minimum": 0},
+        "unique_values": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "number"}},
+        "n_executions": {"type": "integer", "minimum": 1},
+        "all_replays_identical": {"type": "boolean"},
+        "unit": {"const": "same_sealed_task_execution"},
+        "iid_assumption": {"const": false}, "population_inference_authorized": {"const": false},
+        "method": {"const": "deterministic-repeatability-diagnostic"}
+      }
+    },
+    "paired_calibration": {
+      "type": "object", "additionalProperties": false,
+      "required": ["status", "minimum_required_matched_repetitions", "n_matched_repetitions", "matched_repetitions", "diagnostics", "iid_assumption", "population_inference_authorized"],
+      "properties": {
+        "status": {"enum": ["sufficient_internal_calibration", "insufficient_internal_calibration"]},
+        "minimum_required_matched_repetitions": {"const": 5},
+        "n_matched_repetitions": {"type": "integer", "minimum": 0},
+        "matched_repetitions": {"type": "array", "uniqueItems": true, "items": {"type": "integer", "minimum": 1}},
+        "diagnostics": {
+          "anyOf": [
+            {"type": "null"},
+            {"type": "object", "minProperties": 5, "maxProperties": 5, "additionalProperties": {"$ref": "#/$defs/repeatability"}}
+          ]
+        },
+        "iid_assumption": {"const": false},
+        "population_inference_authorized": {"const": false}
+      },
+      "allOf": [
+        {
+          "if": {"properties": {"status": {"const": "sufficient_internal_calibration"}}},
+          "then": {
+            "properties": {
+              "n_matched_repetitions": {"minimum": 5},
+              "matched_repetitions": {"minItems": 5},
+              "diagnostics": {"type": "object", "minProperties": 5, "maxProperties": 5, "additionalProperties": {"$ref": "#/$defs/repeatability"}}
+            }
+          }
+        },
+        {
+          "if": {"properties": {"status": {"const": "insufficient_internal_calibration"}}},
+          "then": {
+            "properties": {
+              "n_matched_repetitions": {"maximum": 4},
+              "matched_repetitions": {"maxItems": 4},
+              "diagnostics": {"type": "null"}
+            }
+          }
+        }
+      ]
+    },
+    "budget": {
+      "type": "object", "additionalProperties": false,
+      "required": ["wall_seconds", "cost_units", "storage_bytes"],
+      "properties": {
+        "wall_seconds": {"type": "number", "exclusiveMinimum": 0},
+        "cost_units": {"type": "number", "minimum": 0},
+        "storage_bytes": {"type": "integer", "minimum": 0}
+      }
+    },
+    "overhead": {
+      "type": "object", "additionalProperties": false,
+      "required": ["wall_seconds", "cost_units", "storage_bytes", "semantic_nodes", "surface_tokens"],
+      "properties": {
+        "wall_seconds": {"type": "number", "minimum": 0},
+        "cost_units": {"type": "number", "minimum": 0},
+        "storage_bytes": {"type": "integer", "minimum": 0},
+        "semantic_nodes": {"type": "integer", "minimum": 1},
+        "surface_tokens": {"type": "integer", "minimum": 1}
+      }
+    }
+  },
+  "properties": {
+    "schema_version": {"const": "4.0.0"},
+    "evaluation_id": {"$ref": "#/$defs/id"},
+    "target_id": {"$ref": "#/$defs/id"},
+    "literature_snapshot_id": {"$ref": "#/$defs/id"},
+    "literature_snapshot_digest": {"$ref": "#/$defs/digest"},
+    "assimilation_packet_id": {"$ref": "#/$defs/id"},
+    "assimilation_digest": {"$ref": "#/$defs/digest"},
+    "factorial_arms": {
+      "type": "array", "minItems": 5, "maxItems": 5, "uniqueItems": true,
+      "items": {"$ref": "#/$defs/arm"}
+    },
+    "repetitions_scheduled_per_arm": {"type": "integer", "minimum": 6},
+    "minimum_retained_repetitions_per_arm": {"type": "integer", "minimum": 1},
+    "minimum_matched_repetitions_per_arm": {"type": "integer", "minimum": 0},
+    "calibration_status": {"enum": ["sufficient_internal_calibration", "insufficient_internal_calibration"]},
+    "common_input_digest": {"$ref": "#/$defs/digest"},
+    "common_budget": {
+      "type": "object", "additionalProperties": false,
+      "required": ["wall_seconds", "cost_units", "storage_bytes", "max_workers"],
+      "properties": {
+        "wall_seconds": {"type": "number", "exclusiveMinimum": 0},
+        "cost_units": {"type": "number", "minimum": 0},
+        "storage_bytes": {"type": "integer", "minimum": 0},
+        "max_workers": {"type": "integer", "minimum": 2}
+      }
+    },
+    "matched_budget": {"const": true},
+    "case_suite_id": {"$ref": "#/$defs/id"},
+    "held_out_cases": {"type": "array", "minItems": 2, "items": {"type": "object"}},
+    "held_out_case_suite_digest": {"$ref": "#/$defs/digest"},
+    "dependency_authority": {"$ref": "#/$defs/formal_dependency_authority"},
+    "skill_bindings": {
+      "type": "array", "minItems": 3, "uniqueItems": true,
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["skill_id", "contract_schema", "registry_status", "dependency_authority_digest"],
+        "properties": {
+          "skill_id": {"enum": ["categorical-concept-forger", "hott-equivalence-coherence-forger", "ym-categorical-hott-physics-bridge"]},
+          "contract_schema": {"$ref": "#/$defs/text"},
+          "registry_status": {"const": "promoted"},
+          "dependency_authority_digest": {"$ref": "#/$defs/digest"}
+        }
+      }
+    },
+    "literature_snapshot": {"type": "object"},
+    "assimilation_packet": {"type": "object"},
+    "source_portfolio": {"type": "object"},
+    "source_portfolio_digest": {"$ref": "#/$defs/digest"},
+    "runtime_portfolio": {"type": "object"},
+    "runtime_portfolio_digest": {"$ref": "#/$defs/digest"},
+    "attempt_receipts": {
+      "type": "array", "minItems": 30,
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["arm", "repetition", "case_suite_id", "branch_id", "request_digest", "seed_digest", "cell_binding_digest", "status", "input_digest", "sealed_output_digest", "branch_receipt_digest", "opportunity_budget", "validator_receipt_ids", "is_dissent"],
+        "properties": {
+          "arm": {"$ref": "#/$defs/arm"}, "repetition": {"type": "integer", "minimum": 1},
+          "case_suite_id": {"$ref": "#/$defs/id"}, "branch_id": {"$ref": "#/$defs/id"},
+          "request_digest": {"$ref": "#/$defs/digest"}, "seed_digest": {"$ref": "#/$defs/digest"},
+          "cell_binding_digest": {"$ref": "#/$defs/digest"},
+          "status": {"enum": ["completed", "failed", "timeout", "invalid", "cancelled", "dependency_blocked"]},
+          "input_digest": {"$ref": "#/$defs/digest"},
+          "sealed_output_digest": {"anyOf": [{"$ref": "#/$defs/digest"}, {"type": "null"}]},
+          "branch_receipt_digest": {"$ref": "#/$defs/digest"},
+          "opportunity_budget": {"$ref": "#/$defs/budget"},
+          "validator_receipt_ids": {"type": "array", "items": {"$ref": "#/$defs/id"}},
+          "is_dissent": {"type": "boolean"}
+        }
+      }
+    },
+    "condition_outputs": {
+      "type": "array", "minItems": 5,
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["arm", "repetition", "case_suite_id", "branch_id", "cell_binding_digest", "blind_alias", "sealed_output", "sealed_output_digest", "blinded_projection_digest", "scorecard", "case_scorecards", "negative_control_outcomes", "overhead", "is_dissent"],
+        "properties": {
+          "arm": {"$ref": "#/$defs/arm"}, "repetition": {"type": "integer", "minimum": 1},
+          "case_suite_id": {"$ref": "#/$defs/id"}, "branch_id": {"$ref": "#/$defs/id"},
+          "cell_binding_digest": {"$ref": "#/$defs/digest"},
+          "blind_alias": {"$ref": "#/$defs/id"}, "sealed_output": {"type": "object"},
+          "sealed_output_digest": {"$ref": "#/$defs/digest"},
+          "blinded_projection_digest": {"$ref": "#/$defs/digest"},
+          "scorecard": {"$ref": "#/$defs/scorecard"},
+          "case_scorecards": {
+            "type": "array", "minItems": 2,
+            "items": {"type": "object", "additionalProperties": false, "required": ["case_id", "case_digest", "scorecard"], "properties": {"case_id": {"$ref": "#/$defs/id"}, "case_digest": {"$ref": "#/$defs/digest"}, "scorecard": {"$ref": "#/$defs/scorecard"}}}
+          },
+          "negative_control_outcomes": {
+            "type": "array", "minItems": 3, "maxItems": 3,
+            "items": {"type": "object", "additionalProperties": false, "required": ["control_id", "control_kind", "candidate_digest", "scorecard", "zero_score_passed", "outcome"], "properties": {"control_id": {"$ref": "#/$defs/id"}, "control_kind": {"enum": ["decorative", "restatement", "sham"]}, "candidate_digest": {"$ref": "#/$defs/digest"}, "scorecard": {"$ref": "#/$defs/scorecard"}, "zero_score_passed": {"const": true}, "outcome": {"const": "rejected_zero_structural_credit"}}}
+          },
+          "overhead": {"$ref": "#/$defs/overhead"},
+          "is_dissent": {"type": "boolean"}
+        }
+      }
+    },
+    "evaluator_evidence": {
+      "type": "object", "additionalProperties": false,
+      "required": ["evaluator_id", "evaluator_version", "evaluator_executable_digest", "dependency_authority_digest", "rubric_digest", "blind", "authority_class", "conceptual_value_authorized", "physics_value_authorized", "counterbalanced_seed_digest", "sealed_output_set_digest", "blinded_input_set_digest", "score_set_digest", "receipt_id", "receipt_digest", "external_human"],
+      "properties": {
+        "evaluator_id": {"const": "abstraction-structural-evaluator"}, "evaluator_version": {"const": "1.0.0"},
+        "evaluator_executable_digest": {"$ref": "#/$defs/digest"},
+        "dependency_authority_digest": {"$ref": "#/$defs/digest"},
+        "rubric_digest": {"$ref": "#/$defs/digest"}, "blind": {"const": true},
+        "authority_class": {"const": "internal_protocol_calibration"},
+        "conceptual_value_authorized": {"const": false},
+        "physics_value_authorized": {"const": false},
+        "counterbalanced_seed_digest": {"$ref": "#/$defs/digest"},
+        "sealed_output_set_digest": {"$ref": "#/$defs/digest"},
+        "blinded_input_set_digest": {"$ref": "#/$defs/digest"},
+        "score_set_digest": {"$ref": "#/$defs/digest"},
+        "receipt_id": {"$ref": "#/$defs/id"}, "receipt_digest": {"$ref": "#/$defs/digest"},
+        "external_human": {
+          "type": "object", "additionalProperties": false,
+          "required": ["status", "reason", "fabricated", "receipt_id"],
+          "properties": {
+            "status": {"const": "unavailable"}, "reason": {"$ref": "#/$defs/text"},
+            "fabricated": {"const": false}, "receipt_id": {"type": "null"}
+          }
+        }
+      }
+    },
+    "task_clustered_reporting": {
+      "type": "object", "additionalProperties": false,
+      "required": ["unit_of_analysis", "within_task_repetition_role", "iid_assumption", "population_inference_authorized", "task_count", "clusters"],
+      "properties": {
+        "unit_of_analysis": {"const": "sealed_held_out_case"},
+        "within_task_repetition_role": {"const": "deterministic_repeatability_check_only"},
+        "iid_assumption": {"const": false}, "population_inference_authorized": {"const": false},
+        "task_count": {"type": "integer", "minimum": 2},
+        "clusters": {
+          "type": "array", "minItems": 2,
+          "items": {"type": "object", "additionalProperties": false, "required": ["case_id", "case_digest", "preferred_lens", "arm_results"], "properties": {
+            "case_id": {"$ref": "#/$defs/id"}, "case_digest": {"$ref": "#/$defs/digest"},
+            "preferred_lens": {"enum": ["categorical", "hott"]},
+            "arm_results": {"type": "array", "minItems": 5, "maxItems": 5, "items": {"type": "object", "additionalProperties": false, "required": ["arm", "n_completed", "retention_status", "score_repeatability", "paired_differences_vs_no_abstraction"], "properties": {
+              "arm": {"$ref": "#/$defs/arm"}, "n_completed": {"type": "integer", "minimum": 1},
+              "retention_status": {"enum": ["sufficient_retained_repetitions", "insufficient_retained_repetitions"]},
+              "score_repeatability": {"type": "object", "minProperties": 5, "maxProperties": 5, "additionalProperties": {"$ref": "#/$defs/repeatability"}},
+              "paired_differences_vs_no_abstraction": {"$ref": "#/$defs/paired_calibration"}
+            }}}
+          }}
+        }
+      }
+    },
+    "negative_control_outcomes": {
+      "type": "array", "minItems": 3, "maxItems": 3,
+      "items": {"type": "object", "additionalProperties": false, "required": ["control_kind", "control_ids", "n_executions", "all_zero", "outcome"], "properties": {
+        "control_kind": {"enum": ["decorative", "restatement", "sham"]},
+        "control_ids": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"$ref": "#/$defs/id"}},
+        "n_executions": {"type": "integer", "minimum": 5}, "all_zero": {"const": true},
+        "outcome": {"const": "rejected_zero_structural_credit"}
+      }}
+    },
+    "aggregates": {
+      "type": "array", "minItems": 5, "maxItems": 5,
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["arm", "n_scheduled", "n_completed", "n_failed", "retention_status", "descriptive_mean_scorecard", "score_repeatability", "mean_overhead", "paired_differences_vs_no_abstraction", "task_cluster_summary", "internal_refinement_eligible"],
+        "properties": {
+          "arm": {"$ref": "#/$defs/arm"}, "n_scheduled": {"type": "integer", "minimum": 6},
+          "n_completed": {"type": "integer", "minimum": 1}, "n_failed": {"type": "integer", "minimum": 0},
+          "retention_status": {"enum": ["sufficient_retained_repetitions", "insufficient_retained_repetitions"]},
+          "descriptive_mean_scorecard": {"$ref": "#/$defs/scorecard"},
+          "score_repeatability": {
+            "type": "object", "minProperties": 5, "maxProperties": 5,
+            "additionalProperties": {"$ref": "#/$defs/repeatability"}
+          },
+          "mean_overhead": {
+            "type": "object", "additionalProperties": false,
+            "required": ["wall_seconds", "cost_units", "storage_bytes", "semantic_nodes", "surface_tokens"],
+            "properties": {
+              "wall_seconds": {"type": "number", "minimum": 0},
+              "cost_units": {"type": "number", "minimum": 0},
+              "storage_bytes": {"type": "number", "minimum": 0},
+              "semantic_nodes": {"type": "number", "minimum": 1},
+              "surface_tokens": {"type": "number", "minimum": 1}
+            }
+          },
+          "paired_differences_vs_no_abstraction": {"$ref": "#/$defs/paired_calibration"},
+          "task_cluster_summary": {"type": "object", "additionalProperties": false, "required": ["eligible_case_ids", "task_cluster_count", "dimensions_positive_on_all_eligible_cases"], "properties": {
+            "eligible_case_ids": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/id"}},
+            "task_cluster_count": {"type": "integer", "minimum": 0},
+            "dimensions_positive_on_all_eligible_cases": {"type": "array", "uniqueItems": true, "items": {"enum": ["burden_closure", "obstruction_localization", "consequence_yield", "unification_without_erasure", "correction_specificity"]}}
+          }},
+          "internal_refinement_eligible": {"type": "boolean"}
+        }
+      }
+    },
+    "partial_failure": {
+      "type": "object", "additionalProperties": false,
+      "required": ["precommitted_failures", "unexpected_failure_branch_ids", "retained_completed_branch_ids", "minimum_completed_per_arm", "insufficient_calibration_arms", "siblings_preserved"],
+      "properties": {
+        "precommitted_failures": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "object", "additionalProperties": false, "required": ["arm", "repetition", "branch_id", "status"], "properties": {"arm": {"$ref": "#/$defs/arm"}, "repetition": {"type": "integer", "minimum": 1}, "branch_id": {"$ref": "#/$defs/id"}, "status": {"enum": ["failed", "timeout", "invalid"]}}}},
+        "unexpected_failure_branch_ids": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/id"}},
+        "retained_completed_branch_ids": {"type": "array", "minItems": 5, "uniqueItems": true, "items": {"$ref": "#/$defs/id"}},
+        "minimum_completed_per_arm": {"type": "integer", "minimum": 1},
+        "insufficient_calibration_arms": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/arm"}},
+        "siblings_preserved": {"const": true}
+      }
+    },
+    "dissent": {
+      "type": "object", "additionalProperties": false,
+      "required": ["retained_dissent_branch_ids", "contradiction_edges", "flattened"],
+      "properties": {
+        "retained_dissent_branch_ids": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"$ref": "#/$defs/id"}},
+        "contradiction_edges": {"type": "array", "minItems": 1, "items": {"type": "object"}},
+        "flattened": {"const": false}
+      }
+    },
+    "decision_authority": {
+      "type": "object", "additionalProperties": false,
+      "required": ["status", "calibration_status", "full_factorial_refinement_eligible", "investment_authorized", "conceptual_value_authorized", "physics_value_authorized", "reason"],
+      "properties": {
+        "status": {"const": "internal_calibration_refinement_only"},
+        "calibration_status": {"enum": ["sufficient_internal_calibration", "insufficient_internal_calibration"]},
+        "full_factorial_refinement_eligible": {"type": "boolean"},
+        "investment_authorized": {"const": false},
+        "conceptual_value_authorized": {"const": false},
+        "physics_value_authorized": {"const": false},
+        "reason": {"$ref": "#/$defs/text"}
+      }
+    },
+    "authority_boundary": {"$ref": "#/$defs/text"},
+    "content_digest": {"$ref": "#/$defs/digest"}
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"calibration_status": {"const": "sufficient_internal_calibration"}}},
+      "then": {"properties": {"minimum_matched_repetitions_per_arm": {"minimum": 5}}}
+    },
+    {
+      "if": {"properties": {"calibration_status": {"const": "insufficient_internal_calibration"}}},
+      "then": {"properties": {"minimum_matched_repetitions_per_arm": {"maximum": 4}, "decision_authority": {"properties": {"full_factorial_refinement_eligible": {"const": false}}}}}
+    }
+  ]
+}

@@ -1,0 +1,76 @@
+% SPDX-FileCopyrightText: © 2026 Idiap Research Institute <contact@idiap.ch>
+%
+% SPDX-FileContributor: Andre Freitas <andre.freitas@idiap.ch>
+% Neuro-symbolic AI Group
+%
+% SPDX-FileContributor: Danilo Gusicuma <danilo.gusicuma@idiap.ch>
+% Neuro-symbolic AI Group
+%
+% SPDX-License-Identifier: MIT
+\subsection{Following one premise through four Prism steps}
+\label{sec:step-walkthrough}
+To make the distinction between an interface and a reasoning procedure concrete,
+consider a constructed task: establish diffusion decay with one positive rate for
+every graph in a specified family of finite connected undirected graphs. Let $L$
+be the symmetric combinatorial Laplacian, and restrict $u(0)$ to the mean-zero
+subspace. The desired conclusion is
+\[
+ \|u(t)\|_2\leq e^{-ct}\|u(0)\|_2,
+ \qquad \dot u=-Lu,\quad t\geq0,
+\]
+with the same $c>0$ throughout the family. The four native occurrences of the
+abductive work loop can now be read as four distinct questions. Their internal
+procedures below are source-guided prescriptions and the values are illustrative;
+this is not a recorded execution.
+
+\begin{enumerate}[leftmargin=*]
+\item \textbf{Formation: what premise is missing?}
+The input is the unclosed uniform-decay obligation. The linked abductive procedure
+first attempts deduction to locate the missing support, then proposes small sets
+of additional premises and compares their coverage, compatibility and falsifiers.
+Here the useful candidate is a common lower bound $\lambda_1(L)\geq c$ on the
+first positive eigenvalue. The output is this \emph{proposed} premise, with its
+family-wide quantifier. It changes the proof question from ``derive decay somehow''
+to ``does this family have a common gap?'' It does not assert that the gap exists.
+
+\item \textbf{Derivation: what follows if that premise holds?}
+The next occurrence consumes the proposed route. Expanding the initial vector in
+orthonormal positive-eigenvalue modes gives
+\[
+ u(t)=\sum_{j\geq1}\alpha_j e^{-\lambda_jt}v_j,
+ \qquad
+ \|u(t)\|_2^2=\sum_{j\geq1}|\alpha_j|^2e^{-2\lambda_jt}
+ \leq e^{-2ct}\|u(0)\|_2^2.
+\]
+The output is the conditional decay claim. Connectedness and mean-zero data remove
+the zero mode; symmetry supplies the orthonormal spectral decomposition. The
+assumption relation licenses using the proposed common gap as a premise, while
+leaving its proof burden intact. Dropping that condition would change the claim.
+
+\item \textbf{Refutation: which commitment can fail?}
+The test receives the derived claim, including its stated premises. If the family
+is all connected graphs, cycle graphs provide a discriminating boundary case:
+\[
+ \lambda_1(C_n)=2-2\cos(2\pi/n)\longrightarrow0.
+\]
+Thus connectedness does not supply the proposed positive common bound. The finding
+attacks the route's attempted uniform strengthening, not the conditional spectral
+calculation. If the input were restricted to a family with an independently proved
+common gap, this particular objection would no longer defeat its premise.
+
+\item \textbf{Calibration: what should change next?}
+The final occurrence consumes both the retained derived claim and its refutation
+assessment through named fields. It can therefore preserve the valid conditional
+estimate while recording why the unrestricted route fails. A useful continuation
+is to seek a stronger structural assumption or restrict the family; repeating the
+same connectedness argument adds no support. The original workflow policy provides
+reframe, retarget, release and stop routes. The native sequence returns a routing
+assessment and does not execute those downstream branches.
+\end{enumerate}
+
+This reconstruction makes the informational change at each boundary visible:
+an obligation becomes a candidate premise, the premise becomes a conditional
+consequence, a boundary case becomes a targeted criticism, and the retained
+claim--criticism pair determines the next question. Appendix~\ref{app:granular-prism-workflows}
+provides this step-level account for every declared occurrence in all nineteen
+workflows, including unresolved producers, parallel inputs and handoff gaps.

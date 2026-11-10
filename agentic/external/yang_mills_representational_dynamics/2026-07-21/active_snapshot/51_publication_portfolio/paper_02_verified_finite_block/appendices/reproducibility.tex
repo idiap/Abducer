@@ -1,0 +1,22 @@
+\section{Reproducibility}\label{app:reproducibility}
+
+From the manuscript directory, run
+\begin{verbatim}
+python3 supplement/verify_finite_block.py \
+  --output supplement/finite_block_certificate.json
+python3 supplement/verify_independent.py \
+  --output supplement/independent_certificate.json
+python3 -m unittest -v supplement/test_verify_finite_block.py
+\end{verbatim}
+The expected result is eleven passing tests and
+\texttt{all\_checks\_pass: true} in both JSON files.  No third-party Python
+package is required.
+
+Compile the paper with
+\begin{verbatim}
+latexmk -pdf -interaction=nonstopmode -halt-on-error \
+  -outdir=build main.tex
+\end{verbatim}
+The submission archive includes source, bibliography, both verifiers, tests,
+the two JSON certificates, the PDF, and the build report.  File hashes and the
+runtime version are recorded alongside the archive.

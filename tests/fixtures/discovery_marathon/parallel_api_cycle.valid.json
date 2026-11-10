@@ -1,0 +1,119 @@
+{
+  "cycle_id": "cycle-0042",
+  "target_id": "p-vs-np-target",
+  "selected_branch_ids": [
+    "pvsnp.branch.magnification",
+    "pvsnp.branch.mcsp",
+    "pvsnp.branch.barrier"
+  ],
+  "parallel_execution": {
+    "enabled": true,
+    "max_workers": 3,
+    "request_spacing_seconds": 1.0,
+    "worker_engine": "azure_responses_api",
+    "merge_policy": "scheduler_order_single_writer",
+    "state_mutation_policy": "serialized_after_all_branch_packets_validate"
+  },
+  "branch_execution_records": [
+    {
+      "branch_id": "pvsnp.branch.magnification",
+      "engine": "azure_responses_api",
+      "status": "complete",
+      "elapsed_seconds": 31.2,
+      "parallel_worker_index": 0,
+      "parallel_group_size": 3,
+      "parallel_max_workers": 3
+    },
+    {
+      "branch_id": "pvsnp.branch.mcsp",
+      "engine": "azure_responses_api",
+      "status": "complete",
+      "elapsed_seconds": 29.8,
+      "parallel_worker_index": 1,
+      "parallel_group_size": 3,
+      "parallel_max_workers": 3
+    },
+    {
+      "branch_id": "pvsnp.branch.barrier",
+      "engine": "azure_responses_api",
+      "status": "complete",
+      "elapsed_seconds": 35.4,
+      "parallel_worker_index": 2,
+      "parallel_group_size": 3,
+      "parallel_max_workers": 3
+    }
+  ],
+  "branch_outputs": [
+    {
+      "branch_id": "pvsnp.branch.magnification",
+      "next_experiment": "Compute the exact beta-window preserved by the barely-nontrivial lower-bound source model."
+    },
+    {
+      "branch_id": "pvsnp.branch.mcsp",
+      "next_experiment": "Test whether the MCSP carrier gives an explicit certificate without nonuniform advice leakage."
+    },
+    {
+      "branch_id": "pvsnp.branch.barrier",
+      "next_experiment": "Turn the natural-proof obstruction into a route-specific no-go lemma."
+    }
+  ],
+  "parallel_synthesis": {
+    "enabled": true,
+    "merge_policy": "scheduler_order_single_writer",
+    "state_mutation_policy": "branch memory, run state, reports, and queue synthesis are written only after every branch packet validates",
+    "cited_branch_ids": [
+      "pvsnp.branch.magnification",
+      "pvsnp.branch.mcsp",
+      "pvsnp.branch.barrier"
+    ],
+    "branch_record_statuses": [
+      "complete",
+      "complete",
+      "complete"
+    ],
+    "pressure_families": {
+      "hardness_magnification_threshold": [
+        "pvsnp.branch.magnification"
+      ],
+      "meta_complexity_carrier": [
+        "pvsnp.branch.mcsp"
+      ],
+      "barrier_and_impossibility_control": [
+        "pvsnp.branch.barrier"
+      ]
+    },
+    "common_proof_obligations": [
+      "Name the exact exponent or beta-window and prove target-preserving transfer."
+    ],
+    "cross_branch_conflicts": [
+      "A magnification route must not use a proof object whose largeness falls under the natural-proof audit."
+    ],
+    "no_go_opportunities": [
+      "Turn the named barrier pressure into a route-specific impossibility lemma."
+    ],
+    "queue_promotions": [
+      {
+        "pressure_family": "hardness_magnification_threshold",
+        "cited_branch_ids": [
+          "pvsnp.branch.magnification"
+        ],
+        "next_analysis": "Compute the exact beta-window preserved by the barely-nontrivial lower-bound source model.",
+        "novelty_signal": "Exact transfer parameters a,q,beta and the resulting SAT exponent window.",
+        "high_reward_payoff": "Decides whether the route can reach all polynomial exponents or only a bounded window.",
+        "step_back_or_pivot_criterion": "Pivot to no-go or a new carrier if beta>0 or q consumes the source lower-bound margin.",
+        "promotion_test": "Promote only if the next packet returns a named source object, target object, threshold, and falsifier."
+      },
+      {
+        "pressure_family": "meta_complexity_carrier",
+        "cited_branch_ids": [
+          "pvsnp.branch.mcsp"
+        ],
+        "next_analysis": "Test whether the MCSP carrier gives an explicit certificate without nonuniform advice leakage.",
+        "novelty_signal": "Advice-free searchable MCSP/MKtP certificate carrier with explicit gap coverage.",
+        "high_reward_payoff": "Could turn meta-complexity into uniform lower-bound evidence.",
+        "step_back_or_pivot_criterion": "Backtrack if certificate existence is equivalent to the target lower bound or searchability leaves the target class.",
+        "promotion_test": "Promote only if explicitness and extraction are separately certified."
+      }
+    ]
+  }
+}

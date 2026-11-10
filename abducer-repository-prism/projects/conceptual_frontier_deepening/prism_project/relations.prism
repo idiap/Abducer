@@ -1,0 +1,47 @@
+# Relation layer for conceptual_frontier_deepening.
+# Owns edge/certificate contracts only; builders belong to future materialization.
+
+type ConceptualFrontierConstraint[SourceValue, TargetValue]:
+    source: SourceValue
+    target: Generated[TargetValue]
+
+type ConceptualHypothesisTest[SourceValue, TargetValue]:
+    source: SourceValue
+    target: Generated[TargetValue]
+
+type ConceptualFrontierProgressCalibration[SourceValue, TargetValue]:
+    source: SourceValue
+    target: Generated[TargetValue]
+
+type ConceptualBridgeRevision[SourceValue, TargetValue]:
+    source: SourceValue
+    target: Generated[TargetValue]
+
+type FormalClaimBridgeAssumption[SourceValue, TargetValue]:
+    source: SourceValue
+    target: Generated[TargetValue]
+
+relation BoundsConceptualFrontierSearch[SourceValue, TargetValue](
+    source: SourceValue,
+    target: Generated[TargetValue],
+) -> ConceptualFrontierConstraint[SourceValue, TargetValue]
+
+relation TestsConceptualHypothesis[SourceValue, TargetValue](
+    source: SourceValue,
+    target: Generated[TargetValue],
+) -> ConceptualHypothesisTest[SourceValue, TargetValue]
+
+relation CalibratesConceptualFrontierProgress[SourceValue, TargetValue](
+    source: SourceValue,
+    target: Generated[TargetValue],
+) -> ConceptualFrontierProgressCalibration[SourceValue, TargetValue]
+
+relation RevisesConceptualBridge[SourceValue, TargetValue](
+    source: SourceValue,
+    target: Generated[TargetValue],
+) -> ConceptualBridgeRevision[SourceValue, TargetValue]
+
+relation TreatsBridgeAsFormalClaimPremise[SourceValue, TargetValue](
+    source: SourceValue,
+    target: Generated[TargetValue],
+) -> FormalClaimBridgeAssumption[SourceValue, TargetValue]

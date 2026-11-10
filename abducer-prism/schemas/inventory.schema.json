@@ -1,0 +1,62 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://prism.local/to-prism/inventory.schema.json",
+  "additionalProperties": false,
+  "properties": {
+    "artifact": {"const": "inventory"},
+    "coverage": {
+      "additionalProperties": false,
+      "properties": {
+        "classified": {"minimum": 0, "type": "integer"},
+        "total": {"minimum": 0, "type": "integer"},
+        "unresolved": {"minimum": 0, "type": "integer"}
+      },
+      "required": ["classified", "total", "unresolved"],
+      "type": "object"
+    },
+    "items": {
+      "items": {
+        "additionalProperties": true,
+        "properties": {
+          "confidence": {"enum": ["explicit", "inferred", "unknown"]},
+          "disposition": {"enum": ["convert", "wrap", "copy", "exclude", "unsupported", "unresolved"]},
+          "entry_type": {"enum": ["file", "symlink", "socket", "fifo", "device", "special"]},
+          "executable": {"type": "boolean"},
+          "id": {"pattern": "^item_[0-9a-f]{24}$", "type": "string"},
+          "kind": {"enum": ["skill", "hook_group", "hook_handler", "command", "script", "tool", "agent", "subagent", "mcp_capability", "reference", "asset", "configuration", "test", "entry_point"]},
+          "path": {"minLength": 1, "type": "string"},
+          "provider": {"minLength": 1, "type": "string"},
+          "security": {"type": "object"}
+        },
+        "required": ["confidence", "disposition", "entry_type", "executable", "id", "kind", "path", "provider", "security"],
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "providers": {"items": {"type": "object"}, "type": "array"},
+    "schema_version": {"const": "1.0"},
+    "semantic_coverage": {
+      "additionalProperties": false,
+      "properties": {
+        "classified": {"minimum": 0, "type": "integer"},
+        "total": {"minimum": 0, "type": "integer"},
+        "unresolved": {"minimum": 0, "type": "integer"}
+      },
+      "required": ["classified", "total", "unresolved"],
+      "type": "object"
+    },
+    "source": {
+      "additionalProperties": false,
+      "properties": {
+        "fingerprint": {"pattern": "^sha256:[0-9a-f]{64}$", "type": "string"},
+        "ignore_rules": {"items": {"type": "object"}, "type": "array"},
+        "scope": {"const": "."}
+      },
+      "required": ["fingerprint", "ignore_rules", "scope"],
+      "type": "object"
+    },
+    "tool": {"type": "object"}
+  },
+  "required": ["artifact", "coverage", "items", "providers", "schema_version", "semantic_coverage", "source", "tool"],
+  "type": "object"
+}

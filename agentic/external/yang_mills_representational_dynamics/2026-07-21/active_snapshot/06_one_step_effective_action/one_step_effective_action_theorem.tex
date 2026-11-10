@@ -1,0 +1,506 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools,bm}
+\usepackage{booktabs,longtable,array}
+\usepackage[dvipsnames]{xcolor}
+\usepackage[colorlinks=true,linkcolor=MidnightBlue,citecolor=BrickRed,urlcolor=MidnightBlue]{hyperref}
+\usepackage{microtype}
+
+\hypersetup{
+  pdftitle={One-Step Generated Effective-Action Transfer},
+  pdfauthor={},
+  pdfsubject={A finite-dimensional retained/fiber RG theorem},
+  pdfkeywords={Yang--Mills, renormalization group, effective action, Brascamp--Lieb, fiber marginalization}
+}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+
+\newcommand{\R}{\mathbb R}
+\newcommand{\E}{\mathbb E}
+\newcommand{\Cov}{\operatorname{Cov}}
+\newcommand{\Hess}{\operatorname{Hess}}
+\newcommand{\Id}{\mathrm I}
+\newcommand{\good}{\mathrm g}
+\newcommand{\bad}{\mathrm b}
+\newcommand{\eff}{\mathrm{eff}}
+\newcommand{\statusproved}{\textcolor{ForestGreen}{\textsc{proved}}}
+\newcommand{\statusnumeric}{\textcolor{RoyalBlue}{\textsc{computed}}}
+\newcommand{\statusopen}{\textcolor{BrickRed}{\textsc{open}}}
+
+\title{One-Step Generated Effective-Action Transfer\\
+\large Explicit retained/fiber recursion, centered transport, and defect sensitivity}
+\author{Research dossier---restricted theorem and frontier audit}
+\date{20 July 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+An explicit four-dimensional cubical block supplies a retained space of
+dimension $51$, a conditional $\mathfrak{su}(2)$ fiber of dimension $357$, and
+a certified tangent fiber lower bound $\lambda_F=2$.  The next question is
+whether a local nonlinear certificate can survive the operation that actually
+generates an effective action: integration of the fiber.  This paper proves a
+finite-dimensional one-step theorem.  A five-component scaled derivative norm
+controls fiber coercivity, conditional-minimizer motion, centered conditional
+transport, and the Hessian of the exactly marginalized action.  The generated
+good-action budget is
+\[
+ \eta_{\good}=\varepsilon_Y+
+ \frac{\varepsilon_X^2}{\lambda_F-\varepsilon_F}.
+\]
+A gauge-invariant bad/good ratio with scaled $C^2$ budgets contributes at most
+$\zeta_2+\zeta_1^2$.  State normalization and conditional observable transport
+are exact, and residual orthogonal covariance is preserved.  These are
+\statusproved\ implications from declared finite-chart hypotheses.  Explicit
+Yang--Mills initialization of those hypotheses, dependent large-field control,
+locality across blocks, repeated ultraviolet iteration, and infrared mass
+generation remain \statusopen.
+\end{abstract}
+
+\tableofcontents
+
+\section{Target and epistemic boundary}
+
+The preceding quotient/fiber construction isolates two kinds of information.
+The retained variable $y$ carries the coarse curvature data that must survive
+blocking; the fiber variable $z$ carries the fluctuation information integrated
+out at one step.  A local Hessian estimate on $z$ is useful only if it can be
+converted into a controlled statement about the generated action on $y$.
+
+The target here is therefore neither a formal beta function nor an infrared
+claim.  It is the exact finite-dimensional implication
+\[
+ \text{input derivative certificate}
+ \longrightarrow
+ \text{fiber marginalization}
+ \longrightarrow
+ \text{output derivative certificate}.
+\]
+Balaban's constructive programme generates localized effective actions in a
+small-field approximation through one-step transformations
+\cite{Balaban1987}; the theorem below abstracts one analytic mechanism needed
+inside such a step.  The heat-kernel action motivating the initialization was
+introduced by Menotti and Onofri \cite{MenottiOnofri}.
+
+The theorem is a restricted-model result at claim level C2.  It does not show
+that the four-dimensional nonlinear $SU(2)$ measure satisfies its input norm,
+that the exceptional set is summable, or that the recursion closes through a
+number of scales diverging with the cutoff.  The Clay target remains the
+construction of nontrivial pure Yang--Mills theory on $\R^4$ with a positive
+Hamiltonian gap \cite{JaffeWitten}.
+
+\section{Typed one-step package}
+
+Let $Y=\R^m$ be the retained space and $F=\R^n$ the conditional fiber.  For the
+block imported from the previous stage, $(m,n)=(51,357)$.  Let $D\subset F$ be
+a fixed convex domain and $t>0$ the declared heat-time normalization.  Write
+\begin{equation}\label{eq:action}
+ S(y,z)=\frac{1}{2t}\bigl(\langle y,L_Yy\rangle+
+ \langle z,L_Fz\rangle\bigr)+R(y,z),
+\end{equation}
+where
+\begin{equation}\label{eq:tangent-bounds}
+ L_F\succeq\lambda_F\Id,
+ \qquad L_Y\succeq\lambda_Y\Id.
+\end{equation}
+The coordinates are Gaussian conditional-mean coordinates: the tangent
+quadratic form has no retained--fiber mixed term.  This is a choice of local
+splitting, not a global gauge fixing theorem.
+
+Define the good partition function, effective action, and conditional law by
+\begin{equation}\label{eq:marginal}
+ Z_{\good}(y)=\int_D e^{-S(y,z)}\,dz,
+ \quad
+ \widehat S_{\good}(y)=-\log Z_{\good}(y),
+ \quad
+ \nu_y(dz)=Z_{\good}(y)^{-1}e^{-S(y,z)}\,dz.
+\end{equation}
+All differentiations below are justified either on a bounded $D$ or by the
+uniform fiber convexity and the standard domination hypotheses stated with the
+theorem.
+
+\begin{definition}[Scaled local action norm]\label{def:norm}
+The remainder $R$ has budget
+\[
+ \mathfrak N_t(R)=
+ (\varepsilon_F,\varepsilon_X,\varepsilon_Y,\tau_F,\tau_X)
+\]
+on a declared region if
+\begin{equation}\label{eq:second}
+ t\|R_{zz}\|\le\varepsilon_F,\qquad
+ t\|R_{zy}\|\le\varepsilon_X,\qquad
+ t\|R_{yy}\|\le\varepsilon_Y.
+\end{equation}
+\begin{equation}\label{eq:third}
+ t\|D_zR_{zz}\|\le\tau_F,\qquad
+ t\|D_zR_{zy}\|\le\tau_X.
+\end{equation}
+All norms are Euclidean operator or multilinear operator norms.  The five
+entries are dimensionless and are part of the RG state; they are not hidden in
+big-$O$ notation.
+\end{definition}
+
+\section{Fiber margin and centered transport}
+
+Set
+\begin{equation}\label{eq:mu}
+ \mu:=\lambda_F-\varepsilon_F.
+\end{equation}
+
+\begin{proposition}[Fiber coercivity and minimizer response, \statusproved]
+\label{prop:minimizer}
+Assume $\mu>0$.  Then
+\[
+ S_{zz}(y,z)\succeq\frac{\mu}{t}\Id.
+\]
+Whenever the conditional minimizer $z_\star(y)$ is interior, it is unique and
+\begin{equation}\label{eq:response}
+ \|Dz_\star(y)\|\le h,
+ \qquad h:=\frac{\varepsilon_X}{\mu}.
+\end{equation}
+\end{proposition}
+\begin{proof}
+Equations \eqref{eq:tangent-bounds} and \eqref{eq:second} give the Hessian
+bound.  Differentiate $S_z(y,z_\star(y))=0$ to obtain
+\[
+ Dz_\star=-S_{zz}^{-1}S_{zy}.
+\]
+The tangent mixed Hessian vanishes, so $S_{zy}=R_{zy}$.  Hence
+$\|S_{zz}^{-1}\|\le t/\mu$ and $\|S_{zy}\|\le\varepsilon_X/t$, proving
+\eqref{eq:response}.
+\end{proof}
+
+For $w=z-z_\star(y)$, define the centered potential
+\[
+ V_y(w)=S(y,z_\star(y)+w)-S(y,z_\star(y)).
+\]
+
+\begin{proposition}[Explicit centered cross budget, \statusproved]
+\label{prop:cross}
+Suppose \eqref{eq:third} holds on every segment
+$z_\star(y)+sw$, $0\le s\le1$, with $\|w\|\le r$.  Then
+\begin{equation}\label{eq:chi}
+ t\|D_y\nabla_wV_y(w)\|
+ \le \chi(r):=r\left(\tau_X+\tau_F
+ \frac{\varepsilon_X}{\mu}\right).
+\end{equation}
+\end{proposition}
+\begin{proof}
+Differentiating $S_z(y,z_\star(y))=0$ also shows that
+$D_y\nabla_wV_y(0)=0$.  At a general $w$,
+\[
+ D_y\nabla_wV_y(w)=S_{zy}(y,z_\star+w)
+ +S_{zz}(y,z_\star+w)Dz_\star.
+\]
+Subtract its value at $w=0$.  The constant tangent fiber Hessian cancels.
+The mean-value theorem, \eqref{eq:third}, and \eqref{eq:response} give
+\eqref{eq:chi}.
+\end{proof}
+
+Let $B_r\subset F$ be a common centered convex tube, and normalize
+$e^{-V_y(w)}\,dw$ on $B_r$.
+
+\begin{corollary}[Centered-fiber transport, \statusproved]
+\label{cor:transport}
+For retained points connected by a segment inside the declared chart,
+\begin{equation}\label{eq:K}
+ W_2(\widetilde\nu_y,\widetilde\nu_{y'})
+ \le K_F(r)\|y-y'\|,
+ \qquad
+ K_F(r):=\frac{\chi(r)}{\mu}.
+\end{equation}
+Thus $K_F(r)<1$ is an explicit local centered-fiber contraction certificate.
+\end{corollary}
+\begin{proof}
+The centered potentials are $\mu/t$ strongly convex.  The
+Brascamp--Lieb/logarithmic-Sobolev transport argument bounds response by the
+ratio of the cross-gradient constant $\chi(r)/t$ to the convexity constant
+$\mu/t$; see also \cite{OttoVillani}.  Equation \eqref{eq:K} follows.
+\end{proof}
+
+\section{Exact marginalization and the generated Hessian}
+
+\begin{theorem}[One-step generated-action bound, \statusproved]
+\label{thm:generated}
+Assume $R$ is $C^2$, $\mu>0$, differentiation under
+\eqref{eq:marginal} is valid, and the Brascamp--Lieb covariance inequality
+applies to $\nu_y$.  Then
+\begin{equation}\label{eq:loewner}
+ -\left(\varepsilon_Y+\frac{\varepsilon_X^2}{\mu}\right)\Id
+ \preceq
+ t\nabla_y^2\widehat S_{\good}(y)-L_Y
+ \preceq \varepsilon_Y\Id.
+\end{equation}
+In particular,
+\begin{equation}\label{eq:eta-good}
+ \left\|t\nabla_y^2\widehat S_{\good}(y)-L_Y\right\|
+ \le \eta_{\good},
+ \qquad
+ \eta_{\good}:=\varepsilon_Y+
+ \frac{\varepsilon_X^2}{\mu}.
+\end{equation}
+\end{theorem}
+\begin{proof}
+Twice differentiating the logarithm of the partition function gives the exact
+identity
+\begin{equation}\label{eq:hessian-identity}
+ \nabla_y^2\widehat S_{\good}
+ =\E_{\nu_y}[S_{yy}]-\Cov_{\nu_y}(S_y,S_y).
+\end{equation}
+The deterministic part $t^{-1}L_Yy$ has zero covariance.  For every unit
+vector $u\in Y$, the Brascamp--Lieb covariance inequality
+\cite{BrascampLieb} gives
+\begin{align*}
+ \operatorname{Var}_{\nu_y}(u\cdot R_y)
+ &\le \E_{\nu_y}\!\left[
+  \langle R_{zy}u,S_{zz}^{-1}R_{zy}u\rangle\right]\\
+ &\le \frac{\varepsilon_X^2}{t\mu}.
+\end{align*}
+Moreover, $-\varepsilon_Y\Id/t\preceq R_{yy}\preceq
+\varepsilon_Y\Id/t$.  Insert these estimates in
+\eqref{eq:hessian-identity}.  Covariance is positive semidefinite, yielding
+both sides of \eqref{eq:loewner} and hence \eqref{eq:eta-good}.
+\end{proof}
+
+The term $\varepsilon_X^2/\mu$ is the nonlinear analogue of a Schur-complement
+correction.  In a Gaussian model, the generated Hessian is exactly
+\[
+ A_{\eff}=A-BC^{-1}B^*.
+\]
+The accompanying implementation checks this identity and its covariance under
+orthogonal retained and fiber recodings.
+
+\section{The defect channel}
+
+Let the full one-block partition function split into good and bad parts:
+\[
+ Z_{\mathrm{full}}(y)=Z_{\good}(y)+Z_{\bad}(y)
+ =Z_{\good}(y)(1+\delta(y)),
+ \qquad \delta(y):=\frac{Z_{\bad}(y)}{Z_{\good}(y)}\ge0.
+\]
+Consequently,
+\begin{equation}\label{eq:defect-action}
+ \widehat S_{\mathrm{full}}(y)
+ =\widehat S_{\good}(y)-\log(1+\delta(y)).
+\end{equation}
+
+\begin{definition}[Scaled defect norm]
+On the retained chart, suppose
+\begin{equation}\label{eq:defect-norm}
+ 0\le\delta\le\zeta_0,
+ \qquad \sqrt t\|D\delta\|\le\zeta_1,
+ \qquad t\|D^2\delta\|\le\zeta_2.
+\end{equation}
+The activity $\zeta_0$ controls mass comparison, whereas
+$\zeta_1,\zeta_2$ control the generated derivative budget.
+\end{definition}
+
+\begin{proposition}[Defect sensitivity, \statusproved]
+\label{prop:defect}
+Under \eqref{eq:defect-norm},
+\begin{equation}\label{eq:defect-hessian}
+ t\left\|D^2\log(1+\delta)\right\|
+ \le \eta_{\bad}:=\zeta_2+\zeta_1^2.
+\end{equation}
+Therefore
+\begin{equation}\label{eq:eta-full}
+ \left\|t\nabla_y^2\widehat S_{\mathrm{full}}-L_Y\right\|
+ \le
+ \eta_{\mathrm{full}}:=
+ \varepsilon_Y+
+ \frac{\varepsilon_X^2}{\lambda_F-\varepsilon_F}
+ +\zeta_2+\zeta_1^2.
+\end{equation}
+If $L_Y\succeq\lambda_Y\Id$ and
+$\eta_{\mathrm{full}}<\lambda_Y$, the generated base action is at least
+$(\lambda_Y-\eta_{\mathrm{full}})/t$ strongly convex on this finite chart.
+\end{proposition}
+\begin{proof}
+Differentiate $\log(1+\delta)$ twice:
+\[
+ D^2\log(1+\delta)=\frac{D^2\delta}{1+\delta}
+ -\frac{D\delta\otimes D\delta}{(1+\delta)^2}.
+\]
+Since $\delta\ge0$, \eqref{eq:defect-hessian} follows from the triangle
+inequality.  Combine it with Theorem~\ref{thm:generated} and
+\eqref{eq:defect-action}.
+\end{proof}
+
+The proposition identifies exactly what a large-field theorem must supply.
+It does not prove the bounds \eqref{eq:defect-norm}.  In particular,
+$\zeta_0$ must eventually arise from a dependent polymer estimate rather than
+from treating blocks as independent.
+
+\section{State, observables, and covariance}
+
+For an integrable observable $O(y,z)$, define its blocked representative
+\begin{equation}\label{eq:observable}
+ (\mathcal TO)(y)=\int_D O(y,z)\,\nu_y(dz).
+\end{equation}
+Fubini's theorem gives the exact state-transport identity
+\begin{equation}\label{eq:state}
+ \int O(y,z)e^{-S(y,z)}\,dy\,dz
+ =\int (\mathcal TO)(y)e^{-\widehat S_{\good}(y)}\,dy.
+\end{equation}
+Thus marginalization preserves positivity and normalization and transports
+observables by conditional expectation.  It is lossy as a map of individual
+configurations but exact as a state/observable duality.
+
+Let a compact residual group $H$ act orthogonally by
+$(y,z)\mapsto(\rho_Y(h)y,\rho_F(h)z)$.  If $D$ is invariant and
+$S(\rho_Y(h)y,\rho_F(h)z)=S(y,z)$, then a change of variables proves
+\[
+ \widehat S_{\good}(\rho_Y(h)y)=\widehat S_{\good}(y).
+\]
+Equivariant observables remain equivariant under $\mathcal T$.  This is the
+covariance of the local residual representation.  A global gauge-orbit atlas,
+including exceptional stabilizers, is a separate open problem.
+
+\section{RG certificate and parameter registry}
+
+\begin{longtable}{@{}p{0.22\textwidth}p{0.30\textwidth}p{0.38\textwidth}@{}}
+\toprule
+Certificate field & Stage-06 result & Qualification\\
+\midrule
+\endhead
+Configuration spaces & finite $Y\oplus F$ & local quotient/fiber chart\\
+Blocking kernel & exact conditional integration & fixed declared domain\\
+Gauge covariance & preserved for invariant orthogonal residual action & global orbit atlas open\\
+State transport & exact, Eq.~\eqref{eq:state} & good channel; defect added by Eq.~\eqref{eq:defect-action}\\
+Observable transport & exact conditional expectation & support/locality growth not bounded\\
+Measure positivity & preserved & weaker than OS reflection positivity\\
+Physical scale & $t$ explicit; block factor must be declared externally & no energy-unit mass conclusion\\
+Locality & absent from the finite norm & polymer interaction norm open\\
+Volume dependence & one finite block & uniform-volume theorem open\\
+Running coupling & not extracted & initialization and scheme open\\
+Reconstruction & conditional law $\nu_y$ retained & individual fiber configuration forgotten\\
+Error recursion & Eqs.~\eqref{eq:K}, \eqref{eq:eta-good}, \eqref{eq:eta-full} & one step only\\
+\bottomrule
+\end{longtable}
+
+\begin{center}
+\begin{tabular}{@{}lll@{}}
+\toprule
+Parameter & Meaning & Required condition\\
+\midrule
+$\lambda_F$ & tangent fiber lower bound & imported value $2$\\
+$\varepsilon_F$ & nonlinear fiber-Hessian budget & $\varepsilon_F<\lambda_F$\\
+$\varepsilon_X$ & retained--fiber mixed budget & finite\\
+$\varepsilon_Y$ & direct retained-Hessian budget & finite\\
+$\tau_F,\tau_X$ & fiber variation of second derivatives & finite on declared tube\\
+$r$ & centered good-tube radius & $K_F(r)<1$ for contraction\\
+$\zeta_0,\zeta_1,\zeta_2$ & defect mass and derivative budgets & must be proved from full measure\\
+$\lambda_Y$ & finite-chart base reference curvature & not a physical gap\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\section{Executable calibration and hostile cases}
+
+The implementation evaluates the formulas without asymptotic notation.  With
+$\lambda_F=2$, $\lambda_Y=1$, and the small example
+\[
+ (\varepsilon_F,\varepsilon_X,\varepsilon_Y,\tau_F,\tau_X)
+ =(0.25,0.20,0.10,0.30,0.20),
+\]
+$r=0.5$, and $(\zeta_0,\zeta_1,\zeta_2)=(0.01,0.02,0.03)$, it returns
+\[
+ \mu=1.75,
+ \quad K_F\approx0.06694,
+ \quad \eta_{\good}\approx0.12286,
+ \quad \eta_{\mathrm{full}}\approx0.15326.
+\]
+A deterministic $3+4$ dimensional Gaussian witness has actual generated
+remainder norm $0.0937808$, below the certified bound $0.107226$.
+
+The test suite also enforces the boundary of the theorem:
+\begin{itemize}
+\item $\varepsilon_F\ge\lambda_F$ fails closed;
+\item a large tube may retain fiber coercivity while losing $K_F<1$;
+\item a nonpositive fiber Hessian and a nonorthogonal claimed frame are rejected;
+\item $\lambda_Y=0$ is never converted into a positive mass claim;
+\item the Gaussian Schur complement is invariant under orthogonal retained and
+fiber recodings.
+\end{itemize}
+
+These tests mechanize finite algebra only.  They do not sample gauge fields or
+certify the analytic initialization.
+
+\section{Frontier audit and restrategy}
+
+\begin{longtable}{@{}p{0.08\textwidth}p{0.66\textwidth}p{0.14\textwidth}@{}}
+\toprule
+ID & Required implication & Status\\
+\midrule
+\endhead
+R1 & One-step derivative, transport, and defect recursion from declared norms & \statusproved\\
+F1 & Explicit cutoff-aware initialization of all five derivative budgets for the exact nonlinear $SU(2)$ heat-kernel block and generated interaction & \statusopen\\
+F2 & Gauge-invariant dependent polymer estimate proving the defect budgets, including topology and exceptional orbits & \statusopen\\
+F3 & Uniform spatial locality, observable-support control, and positivity preservation or recovery & \statusopen\\
+F4 & Closure of the recursion for $k(a)\to\infty$ steps with summable errors & \statusopen\\
+F5 & Nonperturbative crossover of the retained base into a massive basin & \statusopen\\
+F6 & Nontrivial regulator-independent OS continuum theory and Hamiltonian spectral transfer & \statusopen\\
+\bottomrule
+\end{longtable}
+
+The strongest advance is representational: the local fiber certificate is now
+connected to the exact operation that forgets the fiber and generates the next
+description.  The theorem explains which information survives and the exact
+price of forgetting it.  It also localizes the first unproved implication.
+The obstruction is no longer the algebra of marginalization; it is proving
+that the nonlinear gauge theory enters the declared norm, including its bad
+channel, with constants stable in cutoff and volume.
+
+The next target should therefore be an initialization theorem, not another
+abstract recursion.  It should compute explicit $SU(2)$ heat-kernel/BCH chart
+constants for the five norm components and pair them with a genuinely
+gauge-invariant defect activity.  If the resulting values violate
+$\varepsilon_F<2$ or $K_F<1$, the failure will identify whether the retained
+variables, chart, or good/bad decomposition must change.
+
+\begin{thebibliography}{9}
+\bibitem{Balaban1987}
+T.~Balaban,
+\emph{Renormalization group approach to lattice gauge field theories: I.
+Generation of effective actions in a small field approximation and a coupling
+constant renormalization in four dimensions},
+Commun. Math. Phys. \textbf{109} (1987), 249--301,
+\url{https://doi.org/10.1007/BF01215223}.
+
+\bibitem{BrascampLieb}
+H.~J.~Brascamp and E.~H.~Lieb,
+\emph{On extensions of the Brunn--Minkowski and Pr\'ekopa--Leindler theorems,
+including inequalities for log concave functions, and with an application to
+the diffusion equation},
+J. Funct. Anal. \textbf{22} (1976), 366--389,
+\url{https://doi.org/10.1016/0022-1236(76)90004-5}.
+
+\bibitem{MenottiOnofri}
+P.~Menotti and E.~Onofri,
+\emph{The action of $SU(N)$ lattice gauge theory in terms of the heat kernel on
+the group manifold},
+Nucl. Phys. B \textbf{190} (1981), 288--300,
+\url{https://doi.org/10.1016/0550-3213(81)90560-5}.
+
+\bibitem{OttoVillani}
+F.~Otto and C.~Villani,
+\emph{Generalization of an inequality by Talagrand and links with the
+logarithmic Sobolev inequality},
+J. Funct. Anal. \textbf{173} (2000), 361--400,
+\url{https://doi.org/10.1006/jfan.1999.3557}.
+
+\bibitem{JaffeWitten}
+A.~Jaffe and E.~Witten,
+\emph{Quantum Yang--Mills Theory}, Clay Mathematics Institute Millennium
+Problem description,
+\url{https://www.claymath.org/wp-content/uploads/2022/06/yangmills.pdf}.
+\end{thebibliography}
+
+\end{document}

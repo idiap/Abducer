@@ -1,0 +1,187 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://abducer.local/schemas/source_routing_warrant_validation_packet.schema.json",
+  "title": "Source-routing warrant validation packet",
+  "description": "Deterministic output of the policy-bound warrant-validation stage. Source identity is projected from the enclosing validated snapshot record; the packet grants no source-truth or positive-support authority.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "packet_id",
+    "target_id",
+    "run_id",
+    "state_version",
+    "policy_binding",
+    "ordered_source_ids",
+    "explicit_warrant_source_ids",
+    "sources_without_explicit_warrants",
+    "validated_warrants",
+    "warrant_ids",
+    "routing_certificate",
+    "semantic_input_digest",
+    "semantic_output_digest",
+    "authority_boundary",
+    "packet_digest"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "packet_id": {"$ref": "#/$defs/identifier"},
+    "target_id": {"$ref": "#/$defs/identifier"},
+    "run_id": {"$ref": "#/$defs/identifier"},
+    "state_version": {"type": "integer", "minimum": 0},
+    "policy_binding": {"$ref": "#/$defs/policyBinding"},
+    "ordered_source_ids": {"$ref": "#/$defs/sourceIds"},
+    "explicit_warrant_source_ids": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {"$ref": "#/$defs/identifier"}
+    },
+    "sources_without_explicit_warrants": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {"$ref": "#/$defs/identifier"}
+    },
+    "validated_warrants": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {"$ref": "#/$defs/projectedWarrant"}
+    },
+    "warrant_ids": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {"$ref": "#/$defs/identifier"}
+    },
+    "routing_certificate": {"$ref": "#/$defs/routingCertificate"},
+    "semantic_input_digest": {"$ref": "#/$defs/digest"},
+    "semantic_output_digest": {"$ref": "#/$defs/digest"},
+    "authority_boundary": {
+      "const": "policy-bound local warrant projection only; no source truth, semantic entailment, positive support, external authentication, peer review, novelty, exhaustiveness, conceptual merit, creativity efficacy, physics value, proof authority, experiment authority, or investment authority"
+    },
+    "packet_digest": {"$ref": "#/$defs/digest"}
+  },
+  "$defs": {
+    "identifier": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$"
+    },
+    "digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "nonempty": {"type": "string", "minLength": 1},
+    "sourceIds": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {"$ref": "#/$defs/identifier"}
+    },
+    "policyBinding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "policy_id",
+        "policy_digest",
+        "snapshot_id",
+        "snapshot_digest",
+        "source_state_digest",
+        "warrant_stage_contract_digest"
+      ],
+      "properties": {
+        "policy_id": {"$ref": "#/$defs/identifier"},
+        "policy_digest": {"$ref": "#/$defs/digest"},
+        "snapshot_id": {"$ref": "#/$defs/identifier"},
+        "snapshot_digest": {"$ref": "#/$defs/digest"},
+        "source_state_digest": {"$ref": "#/$defs/digest"},
+        "warrant_stage_contract_digest": {"$ref": "#/$defs/digest"}
+      }
+    },
+    "projectedWarrant": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_id",
+        "warrant_id",
+        "exact_claim",
+        "claim_digest",
+        "source_version",
+        "correction_status",
+        "theory_object_ids",
+        "relation",
+        "warrant_text",
+        "evidence_locator",
+        "authority_id"
+      ],
+      "properties": {
+        "source_id": {"$ref": "#/$defs/identifier"},
+        "warrant_id": {"$ref": "#/$defs/identifier"},
+        "exact_claim": {"$ref": "#/$defs/nonempty"},
+        "claim_digest": {"$ref": "#/$defs/digest"},
+        "source_version": {"$ref": "#/$defs/nonempty"},
+        "correction_status": {"enum": ["none_known", "corrected", "superseded", "retracted", "unknown"]},
+        "theory_object_ids": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/identifier"}
+        },
+        "relation": {"enum": ["entails", "contradicts", "leaves_open", "unresolved"]},
+        "warrant_text": {"$ref": "#/$defs/nonempty"},
+        "evidence_locator": {"$ref": "#/$defs/nonempty"},
+        "authority_id": {"$ref": "#/$defs/identifier"},
+        "claim_origin": {"enum": ["verbatim_source_excerpt", "author_paraphrase", "model_extraction", "internal_target_audit"]},
+        "authority_class": {"enum": ["source_bound_semantic_annotation", "author_paraphrase_interpretation", "model_extraction_interpretation", "internal_target_semantic_audit"]},
+        "extractor_receipt_id": {"type": ["string", "null"]},
+        "external_authentication_status": {"const": "unavailable"}
+      }
+    },
+    "checkedWarrant": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["row_kind", "source_id", "eligibility", "relation", "row_digest"],
+      "properties": {
+        "row_kind": {"const": "semantic_warrant"},
+        "source_id": {"$ref": "#/$defs/identifier"},
+        "eligibility": {"enum": ["blocked_positive_support", "negative_evidence_only", "unverified_audit_only"]},
+        "relation": {"enum": ["entails", "contradicts", "leaves_open", "unresolved"]},
+        "row_digest": {"$ref": "#/$defs/digest"}
+      }
+    },
+    "routingCertificate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "certificate_version",
+        "stage",
+        "source_routing_eligibility",
+        "source_ids",
+        "mapping_source_ids",
+        "require_complete_mapping",
+        "checked_rows",
+        "policy_digest",
+        "authority_boundary",
+        "content_digest"
+      ],
+      "properties": {
+        "certificate_version": {"const": "1.0"},
+        "stage": {"const": "warrant_validation"},
+        "source_routing_eligibility": {
+          "type": "object",
+          "minProperties": 1,
+          "propertyNames": {"$ref": "#/$defs/identifier"},
+          "additionalProperties": {"enum": ["blocked_positive_support", "negative_evidence_only", "unverified_audit_only"]}
+        },
+        "source_ids": {"$ref": "#/$defs/sourceIds"},
+        "mapping_source_ids": {"type": "array", "maxItems": 0},
+        "require_complete_mapping": {"const": false},
+        "checked_rows": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/checkedWarrant"}
+        },
+        "policy_digest": {"$ref": "#/$defs/digest"},
+        "authority_boundary": {"$ref": "#/$defs/nonempty"},
+        "content_digest": {"$ref": "#/$defs/digest"}
+      }
+    }
+  }
+}

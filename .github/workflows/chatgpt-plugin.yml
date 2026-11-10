@@ -1,0 +1,55 @@
+# SPDX-FileCopyrightText: © 2026 Idiap Research Institute <contact@idiap.ch>
+# SPDX-License-Identifier: MIT
+name: Hosted ChatGPT plugin
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  hosted-plugin:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Install locked hosted and test dependencies
+        run: uv sync --frozen --group chatgpt
+      - name: Restore ignored local marketplace metadata and check catalogs
+        run: |
+          uv run --group chatgpt python integrations/agent_plugins/generate.py
+          uv run --group chatgpt python agentic/scripts/normalize_workflow_skills.py --check
+          uv run --group chatgpt python integrations/agent_plugins/generate.py --check
+      - name: Hosted tests and unchanged integration regressions
+        run: |
+          .venv/bin/python -m pytest -q tests/integrations/test_chatgpt_*.py tests/integrations/test_agent_plugins.py tests/integrations/test_workflow_mcp.py tests/orchestration/test_workflow_skill_v1_projection.py tests/reporting/test_discovery_graph_explorer.py tests/infrastructure/test_domain_package_export.py tests/infrastructure/test_lunar_discovery_hooks.py tests/infrastructure/test_lunar_marathon_parity.py
+      - name: Verify Explorer in a real sandboxed Chromium iframe
+        run: |
+          npm install --prefix "$RUNNER_TEMP/abducer-browser" --no-save --package-lock=false @playwright/test@1.62.1
+          node "$RUNNER_TEMP/abducer-browser/node_modules/@playwright/test/cli.js" install --with-deps chromium
+          node tests/infrastructure/chatgpt_explorer_browser.mjs "$RUNNER_TEMP/abducer-browser"
+      - name: Verify Sites adapter and canonical export
+        run: |
+          .venv/bin/python -m integrations.chatgpt.sites_export --output "$RUNNER_TEMP/abducer-sites-library.json"
+          node tests/infrastructure/chatgpt_sites_worker.mjs "$RUNNER_TEMP/abducer-sites-library.json"
+          node tests/infrastructure/chatgpt_native_bridge.mjs
+          node tests/infrastructure/chatgpt_sites_native_browser.mjs "$RUNNER_TEMP/abducer-sites-library.json" "$RUNNER_TEMP/abducer-browser"
+      - name: Build a sanitized deployment context
+        run: .venv/bin/python -m integrations.chatgpt.deployment --source-root . --output "$RUNNER_TEMP/abducer-container"
+      - name: Build production image
+        run: docker build -t abducer-chatgpt:ci "$RUNNER_TEMP/abducer-container"
+      - name: Verify immutable image and CLI entrypoints
+        run: |
+          docker run --rm abducer-chatgpt:ci python -m integrations.chatgpt.server --help
+          docker run --rm abducer-chatgpt:ci python -m integrations.chatgpt.worker --help
+          docker run --rm abducer-chatgpt:ci python -m integrations.chatgpt.verify_environment --source-root /app
+          docker run --rm abducer-chatgpt:ci python -c 'from pathlib import Path; from integrations.chatgpt.runtime import verify_snapshot; verify_snapshot(Path("/app")); print("snapshot verified")'

@@ -1,0 +1,1176 @@
+% SPDX-FileCopyrightText: © 2026 Idiap Research Institute <contact@idiap.ch>
+%
+% SPDX-FileContributor: Andre Freitas <andre.freitas@idiap.ch>
+% Neuro-symbolic AI Group
+%
+% SPDX-FileContributor: Danilo Gusicuma <danilo.gusicuma@idiap.ch>
+% Neuro-symbolic AI Group
+%
+% SPDX-License-Identifier: MIT
+\documentclass[11pt]{article}
+
+\usepackage[margin=1in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{enumitem}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{hyperref}
+\usepackage{xcolor}
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue!50!black,
+  citecolor=blue!50!black,
+  urlcolor=blue!50!black
+}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{example}[theorem]{Example}
+
+\newcommand{\one}{\mathbf 1}
+\newcommand{\C}{\mathbb C}
+\newcommand{\R}{\mathbb R}
+\newcommand{\eps}{\varepsilon}
+\newcommand{\ip}[2]{\langle #1,#2\rangle}
+\newcommand{\diag}{\operatorname{diag}}
+\newcommand{\Ran}{\operatorname{Ran}}
+\newcommand{\Ker}{\operatorname{Ker}}
+\newcommand{\OS}{\mathrm{OS}}
+\newcommand{\YM}{\mathrm{YM}}
+\newcommand{\Had}{\circ}
+\newcommand{\odiv}{\oslash}
+\newcommand{\snull}{S_{\mathrm{null}}}
+\newcommand{\norm}[1]{\lVert #1\rVert}
+\newcommand{\Span}{\operatorname{span}}
+\newcommand{\Herm}{\operatorname{Herm}}
+\newcommand{\Tr}{\operatorname{Tr}}
+\newcommand{\rank}{\operatorname{rank}}
+\newcommand{\Ree}{\operatorname{Re}}
+
+\title{A Finite Schur--Feshbach Consistency Test for Normalized Reflected Wilson Gram Blocks}
+\author{}
+\date{}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Reflection positivity is tested on finite Gram matrices before it becomes an infinite-dimensional reconstruction problem.  This paper proves a finite Schur--Feshbach criterion for Hermitian matrix families whose leading term is a rank-one reflected-vacuum block.  If
+\[
+q_\eps=\one\one^*+\eps H+\eps^2K+o(\eps^2),
+\]
+then the correct quotient-space expansion after eliminating the rank-one direction is
+\[
+F_\eps
+=\eps PHP+
+\eps^2P\bigl(K-n^{-1}Hee^*H\bigr)P+o(\eps^2),
+\qquad e=n^{-1/2}\one,
+\qquad P=I-ee^*.
+\]
+Thus the second-order test is not the naive compression \(PKP\), but the Schur--Feshbach corrected form \(P(K-n^{-1}Hee^*H)P\).  The result gives necessary finite positivity conditions, strict sufficient margins, and a recursive null-sector test.  The intended use is as a finite consistency check inside Wilson-loop/Osterwalder--Schrader constructions, where normalized reflected Wilson blocks may approach a rank-one collision limit.  The claim is deliberately finite: the paper does not construct Yang--Mills theory and does not prove a mass gap.  It identifies the finite coefficient data that any same-theory Wilson/OS realization must supply and respect before such blocks can be used in a reconstruction argument.
+\end{abstract}
+
+\tableofcontents
+
+\section{Introduction and claim boundary}
+
+The Osterwalder--Schrader approach to quantum field theory constructs a real-time Hilbert-space theory from Euclidean correlation functions satisfying, among other conditions, reflection positivity \cite{OsterwalderSchrader1973,OsterwalderSchrader1975}.  In gauge theory, Wilson loops are natural gauge-invariant observables, and finite families of Wilson observables give finite reflected Gram matrices.  A Euclidean reconstruction programme must keep such finite matrices positive while removing regulators and passing to larger observable classes.
+
+This paper isolates one finite step in that programme.  It concerns normalized reflected Wilson Gram blocks that approach a rank-one limit.  The finite situation is simple to state: a Hermitian matrix family has the expansion
+\begin{equation}
+  q_\eps=\one\one^*+\eps H+\eps^2K+o(\eps^2).
+  \label{eq:intro-expansion}
+\end{equation}
+The leading matrix \(\one\one^*\) has one positive direction and kernel \(\one^\perp\).  Reflection-positivity information therefore lives in a singular quotient limit.  The paper proves that the correct second-order quotient coefficient is not \(PKP\).  One must first remove the rank-one direction by a Schur complement, producing the correction
+\begin{equation}
+  -\,n^{-1}PHee^*HP,
+  \qquad e=n^{-1/2}\one,
+  \qquad P=I-ee^*.
+  \label{eq:intro-correction}
+\end{equation}
+
+The result has three levels, which should not be conflated.
+\begin{enumerate}[label=(L\arabic*)]
+  \item \textbf{Finite theorem.}  For any finite Hermitian family satisfying \eqref{eq:intro-expansion}, positivity near \(\eps=0\) forces \(PHP\succeq0\) on \(\one^\perp\) and, on \(\Ker(PHP)\), forces the corrected form \(P(K-n^{-1}Hee^*H)P\succeq0\).  Strict versions give sufficient local positivity margins.
+  \item \textbf{Wilson-block application.}  To apply the theorem to QFT, the matrices \(q_\eps\) must be produced by a specified regulated Wilson observable algebra, a specified reflection map, and a same-theory normalization.  Entrywise quotienting is not automatically positivity-preserving.
+  \item \textbf{Continuum reconstruction.}  Passing from finite regulated blocks to a continuum Yang--Mills theory with a mass gap requires additional uniform estimates, density/reconstruction arguments, and spectral information.  Those are outside the theorem proved here.
+\end{enumerate}
+
+The contribution is therefore not a negative claim about Yang--Mills.  It is a positive finite tool: a reader-checkable Schur--Feshbach test that tells a Wilson/OS construction exactly which coefficient forms must be computed, what sign conditions matter, and what transfer obligations remain.
+
+\section{Finite reflection positivity and the quotient-block problem}
+
+Let \(\Theta\) denote Euclidean time reflection, and let \(\mathcal A_+\) be a positive-time algebra of observables.  For a Euclidean Schwinger functional \(S\), reflection positivity says that, for every finite family \(F_1,\ldots,F_n\in\mathcal A_+\),
+\begin{equation}
+  \sum_{i,j=1}^n \overline{c_i}c_j\,S\bigl((\Theta F_i)^*F_j\bigr)\ge 0,
+  \qquad c\in\C^n.
+  \label{eq:os-pos}
+\end{equation}
+Equivalently, the reflected Gram matrix
+\begin{equation}
+  N_{ij}=S\bigl((\Theta F_i)^*F_j\bigr)
+  \label{eq:reflected-gram}
+\end{equation}
+is positive semidefinite.
+
+For Wilson observables one often has regulator-dependent one-body, perimeter, cusp, collar, or boundary factors.  A normalized finite block may be written schematically as
+\begin{equation}
+  q_\eps=\widehat N_\eps \odiv \widehat B_\eps,
+  \label{eq:quotient}
+\end{equation}
+where \(\odiv\) denotes entrywise division.  This notation is only schematic until the normalization is realized in the same regulated theory.  If \(\widehat B_\eps\) is an individual one-body factor, the normalization may be an invertible diagonal congruence and therefore preserves positivity.  If \(\widehat B_\eps\) contains pair-dependent boundary data, entrywise division need not preserve positivity.  A Wilson/OS application must therefore prove that \(q_\eps\) is itself an allowed same-theory reflected block, or prove an equivalent positivity-preserving representation.
+
+The finite problem studied here begins after that input is supplied.  Assume that the normalized block is Hermitian and has a rank-one collision expansion
+\begin{equation}
+  q_\eps\longrightarrow \one\one^*.
+  \label{eq:rank-one-limit}
+\end{equation}
+The common vector \(\one\) is the leading reflected-vacuum direction of the finite block.  The nontrivial test is on \(\one^\perp\), but the rank-one direction cannot simply be ignored: it couples to \(\one^\perp\) at first order and contributes back at second order.
+
+\section{The finite Schur--Feshbach theorem}
+
+\subsection{Set-up}
+
+Let \(q_\eps\in\Herm_n(\C)\) satisfy
+\begin{equation}
+  q_\eps=\one\one^*+\eps H+\eps^2K+R_\eps,
+  \qquad \norm{R_\eps}=o(\eps^2),
+  \label{eq:main-expansion}
+\end{equation}
+with \(H=H^*\), \(K=K^*\).  Set
+\begin{equation}
+  e=n^{-1/2}\one,
+  \qquad P=I-ee^*.
+  \label{eq:e-P}
+\end{equation}
+Then \(P\) is the orthogonal projection onto \(\one^\perp\), and \(\one\one^*=nee^*\).
+
+\subsection{Main finite theorem}
+
+\begin{theorem}[Finite Schur--Feshbach tangent-cone criterion]
+\label{thm:finite-certificate}
+Let \(q_\eps\) satisfy \eqref{eq:main-expansion}.  Define
+\begin{equation}
+  \lambda_\eps=e^*q_\eps e,
+  \qquad
+  F_\eps=Pq_\eps P-Pq_\eps e\,\lambda_\eps^{-1}\,e^*q_\eps P.
+  \label{eq:F-eps}
+\end{equation}
+Then \(\lambda_\eps=n+O(\eps)>0\) for sufficiently small \(\eps>0\), and
+\begin{equation}
+  q_\eps\succeq0
+  \quad\Longleftrightarrow\quad
+  F_\eps\succeq0.
+  \label{eq:schur-equivalence}
+\end{equation}
+Moreover,
+\begin{equation}
+  F_\eps=
+  \eps A+\eps^2C+o(\eps^2),
+  \qquad
+  A=PHP,
+  \qquad
+  C=P\bigl(K-n^{-1}Hee^*H\bigr)P.
+  \label{eq:A-C}
+\end{equation}
+Consequently, if \(q_\eps\succeq0\) for all sufficiently small \(\eps>0\), then
+\begin{equation}
+  A\succeq0\quad\text{on }\one^\perp.
+  \label{eq:first-condition}
+\end{equation}
+If \(\Pi\) is the orthogonal projection in \(\one^\perp\) onto \(\Ker A\), then also
+\begin{equation}
+  \Pi C\Pi\succeq0\quad\text{on }\Ker A.
+  \label{eq:second-condition}
+\end{equation}
+Equivalently, either of the following finite conditions rules out positivity for all sufficiently small \(\eps>0\):
+\begin{align}
+  &\exists v\in\one^\perp:
+    \quad v^*PHPv<0,
+    \label{eq:first-negative-direction}\\
+  &\exists v\in\Ker(PHP):
+    \quad v^*P\bigl(K-n^{-1}Hee^*H\bigr)Pv<0.
+    \label{eq:second-negative-direction}
+\end{align}
+\end{theorem}
+
+\begin{proof}
+Because \(q_0=nee^*\),
+\[
+  \lambda_\eps=e^*q_\eps e=n+\eps e^*He+O(\eps^2),
+\]
+so \(\lambda_\eps>0\) for small \(\eps\).  With respect to the splitting \(\C^n=\C e\oplus P\C^n\), the upper-left block of \(q_\eps\) is the positive scalar \(\lambda_\eps\).  The scalar Schur complement criterion gives \eqref{eq:schur-equivalence} with \(F_\eps\) as in \eqref{eq:F-eps}.
+
+Next,
+\[
+  Pq_\eps P=\eps PHP+\eps^2PKP+o(\eps^2),
+\]
+because \(P(\one\one^*)P=0\).  Also,
+\[
+  Pq_\eps e=\eps PHe+\eps^2PKe+o(\eps^2),
+  \qquad
+  \lambda_\eps^{-1}=n^{-1}+O(\eps).
+\]
+Hence
+\begin{align*}
+  Pq_\eps e\,\lambda_\eps^{-1}\,e^*q_\eps P
+  &=\bigl(\eps PHe+O(\eps^2)\bigr)
+    \bigl(n^{-1}+O(\eps)\bigr)
+    \bigl(\eps e^*HP+O(\eps^2)\bigr)\\
+  &=\eps^2 n^{-1}PHee^*HP+o(\eps^2).
+\end{align*}
+Substitution gives \eqref{eq:A-C}.
+
+If \(q_\eps\succeq0\), then \(F_\eps\succeq0\).  For \(v\in\one^\perp\),
+\[
+  0\le v^*F_\eps v
+  =\eps v^*Av+\eps^2v^*Cv+o(\eps^2).
+\]
+Dividing by \(\eps\) and taking \(\eps\downarrow0\) gives \(v^*Av\ge0\).  If \(v\in\Ker A\), then the order-\(\eps\) term vanishes; dividing by \(\eps^2\) gives \(v^*Cv\ge0\).  This proves the two necessary conditions, and the negative-direction statements are their contrapositives.
+\end{proof}
+
+\begin{proposition}[Strict second-order validation]
+\label{prop:sufficiency}
+Assume \(A\succeq0\) on \(\one^\perp\).  Let \(\Pi\) be the projection onto \(\Ker A\), and set \(Q=P-\Pi\).  Suppose there are constants \(\alpha,\beta>0\) such that
+\begin{equation}
+  QAQ\succeq \alpha Q,
+  \qquad
+  \Pi C\Pi\succeq \beta \Pi.
+  \label{eq:strict-margins}
+\end{equation}
+Then \(F_\eps\succeq0\), hence \(q_\eps\succeq0\), for all sufficiently small \(\eps>0\).
+\end{proposition}
+
+\begin{proof}
+On \(Q\C^n\),
+\[
+  QF_\eps Q=\eps QAQ+O(\eps^2)\succeq \tfrac12\eps\alpha Q
+\]
+for small \(\eps\), so this block is positive and invertible.  Since \(A\Pi=0=\Pi A\),
+\[
+  \Pi F_\eps Q=\eps^2\Pi C Q+o(\eps^2).
+\]
+The Schur complement of the positive \(Q\)-block is
+\begin{align*}
+  \Pi F_\eps\Pi
+  -\Pi F_\eps Q\,(QF_\eps Q)^{-1}\,QF_\eps\Pi
+  &=\eps^2\Pi C\Pi+o(\eps^2)-O(\eps^3)\\
+  &\succeq \tfrac12\eps^2\beta\Pi
+\end{align*}
+for small \(\eps\).  Therefore \(F_\eps\succeq0\), and Theorem \ref{thm:finite-certificate} gives \(q_\eps\succeq0\).
+\end{proof}
+
+If \(\Pi C\Pi\) is semidefinite rather than strictly positive, the same Schur--Feshbach reduction can be repeated on its null sector.  In finite dimension, this gives a recursive tangent-cone algorithm: the first negative reduced coefficient is a genuine finite loss-of-positivity certificate, while strict positivity at a reduced stage gives a local margin.
+
+\section{A minimal example showing why \texorpdfstring{\(PKP\)}{PKP} is insufficient}
+\label{sec:minimal-example}
+
+The following two-dimensional example is not a gauge-theory calculation.  Its purpose is to show, in the smallest possible setting, that the Schur--Feshbach correction can change the sign of the second-order test.
+
+\begin{example}[Positive \(PKP\), negative corrected form]
+\label{ex:naive-PKP-fails}
+Let \(n=2\), let
+\[
+  e=2^{-1/2}(1,1)^T,
+  \qquad
+  f=2^{-1/2}(1,-1)^T,
+  \qquad
+  P=ff^*.
+\]
+Define
+\begin{equation}
+  H=ef^*+fe^*,
+  \qquad
+  K=\frac14 ff^*.
+  \label{eq:toy-HK}
+\end{equation}
+In the orthonormal basis \((e,f)\), the matrix family
+\[
+  q_\eps=\one\one^*+\eps H+\eps^2K
+\]
+has the block form
+\begin{equation}
+  q_\eps
+  =
+  \begin{pmatrix}
+    2 & \eps\\
+    \eps & \eps^2/4
+  \end{pmatrix}_{(e,f)}.
+  \label{eq:toy-block}
+\end{equation}
+The naive compressed second-order coefficient is positive:
+\[
+  f^*PKPf=\frac14.
+\]
+The corrected coefficient is
+\begin{align*}
+  f^*P\bigl(K-2^{-1}Hee^*H\bigr)Pf
+  &=\frac14-\frac12|f^*He|^2
+  =\frac14-\frac12
+  =-\frac14.
+\end{align*}
+Indeed,
+\[
+  \det q_\eps=2\cdot\frac{\eps^2}{4}-\eps^2=-\frac{\eps^2}{2}<0
+\]
+for every \(\eps>0\).  Thus \(q_\eps\) is indefinite even though the naive \(PKP\) test is positive.  The missing term is exactly the coupling through the rank-one direction \(e\).
+\end{example}
+
+This example is the finite warning that motivates the Wilson/OS use of the theorem.  A normalized Wilson quotient calculation that reports only \(PKP\) has not yet tested the correct second-order tangent cone.
+
+\section{Same-theory transfer certificate}
+\label{sec:same-theory}
+
+The finite theorem becomes a QFT statement only after a regulated theory supplies its input matrices.  This section states the transfer certificate required for a Wilson/OS application.
+
+Let \(\Lambda_a\) be a finite Euclidean lattice with spacing \(a\), compact gauge group \(G\), lattice gauge measure \(d\mu_{a}\), and reflection \(\Theta\) across a time-zero hyperplane.  Let \(\mathcal A_{+,a}\) be the positive-time gauge-invariant Wilson algebra.  A Wilson observable associated with a loop or path system \(\gamma\) in representation \(R\) has the form
+\begin{equation}
+  W_{\gamma,R}(U)=\frac{1}{d_R}\Tr_R\prod_{\ell\in\gamma}^{\rightarrow} U_\ell,
+  \label{eq:wilson-observable}
+\end{equation}
+with the usual path ordering.  For a finite family \(F_i^{a,\eps}\in\mathcal A_{+,a}\), the reflected Gram block is
+\begin{equation}
+  N_{a,\eps}(i,j)
+  =\int (\Theta F_i^{a,\eps})^*(U)F_j^{a,\eps}(U)\,d\mu_a(U).
+  \label{eq:regulated-gram}
+\end{equation}
+A normalized quotient block \(q_{a,\eps}\) may be used with Theorem \ref{thm:finite-certificate} only if the following certificate is supplied.
+
+\begin{enumerate}[label=(C\arabic*)]
+  \item \textbf{Observable identity.}  The observables \(F_i^{a,\eps}\) are gauge-invariant Wilson observables in the same regulated theory whose reflection positivity is being studied.
+  \item \textbf{Reflection identity.}  The reflection \(\Theta\) and positive-time algebra are the ones used in the intended OS reconstruction.
+  \item \textbf{Normalization legitimacy.}  The operation producing \(q_{a,\eps}\) from \(N_{a,\eps}\) is implemented by a positivity-preserving same-theory operation: an invertible congruence, a positive factorization, an operator renormalization, or a proved equivalent construction.  Pair-dependent entrywise division is not legitimate without such a proof.
+  \item \textbf{Coefficient extraction.}  The expansion
+  \begin{equation}
+    q_{a,\eps}=\one\one^*+\eps H_a+\eps^2K_a+r_{a,\eps}
+    \label{eq:a-eps-expansion}
+  \end{equation}
+  is proved in operator norm for the stated finite block.
+  \item \textbf{Uniform remainders.}  The remainder \(r_{a,\eps}\), endpoint terms, corner terms, and boundary-OPE truncation errors are controlled in the cutoff/collar regime used by the application.
+  \item \textbf{No hidden spectral input.}  The estimates do not assume the mass gap or exponential clustering they are intended to help establish.
+\end{enumerate}
+
+These conditions are not caveats appended to the finite theorem.  They are the bridge that turns a finite Hermitian-matrix criterion into a legitimate Wilson/OS calculation.  Once they are met, the theorem gives either a positive finite margin for the stated block or a concrete reduced vector showing where the proposed positivity step requires additional work.
+
+\begin{corollary}[Finite Wilson/OS certificate]
+\label{cor:same-theory-certificate}
+Assume a regulated Wilson construction supplies a normalized quotient block \(q_{a,\eps}\) satisfying the same-theory certificate above and the expansion \eqref{eq:a-eps-expansion}.  If the construction asserts \(q_{a,\eps}\succeq0\) for small \(\eps>0\), then \(PH_aP\succeq0\) on \(\one^\perp\), and the corrected form
+\begin{equation}
+  P\bigl(K_a-n^{-1}H_aee^*H_a\bigr)P
+  \label{eq:corrected-wilson-form}
+\end{equation}
+  is positive semidefinite on \(\Ker(PH_aP)\).  A negative vector for either reduced form is a finite diagnostic for that proposed block and normalization.
+\end{corollary}
+
+\section{Regulated Wilson data model and result-expansion slots}
+\label{sec:expansion-slots}
+
+This section implements the result-expansion obligations needed to turn the finite theorem into a controlled Wilson-block application template.  The replacements below separate proved finite facts, same-theory certificates, coefficient-conversion theorems, and regulator-specific obligations that remain conditional.  They are not assumptions used in Theorem \ref{thm:finite-certificate}.
+
+\subsection{Regulator and observable data}
+
+A concrete Wilson application should begin by fixing one of the following regulated settings.
+\begin{enumerate}[label=(R\arabic*)]
+  \item \textbf{Wilson plaquette action:}
+  \begin{equation}
+    d\mu_{a,\beta}(U)
+    =Z^{-1}_{a,\beta}\exp\!\left(\frac{\beta}{d_R}\sum_p \Ree\Tr_R U_p\right)
+    \prod_{\ell}dU_\ell.
+    \label{eq:wilson-action}
+  \end{equation}
+  \item \textbf{Heat-kernel plaquette action:}
+  \begin{equation}
+    d\mu_{a,t}(U)
+    =Z^{-1}_{a,t}\prod_p K_t(U_p)\prod_{\ell}dU_\ell,
+    \label{eq:heat-kernel-action}
+  \end{equation}
+  where \(K_t\) is the heat kernel on \(G\).
+\end{enumerate}
+The lattice, reflection plane, positive-time edge convention, boundary collar parameter \(\eps\), loop family \(\gamma_i^\eps\), and representation \(R\) must be part of the data, not inferred from notation.
+
+\begin{proposition}[Finite regulated Wilson data sufficient for the reflected block]
+\label{prop:regulator-observable-data}
+Fix a finite hypercubic lattice \(\Lambda_a\) with compact gauge group \(G\), normalized Haar measure on each oriented edge, a reflection \(\Theta\) across a time-zero hyperplane, and either a Wilson plaquette action \eqref{eq:wilson-action} or a heat-kernel plaquette action \eqref{eq:heat-kernel-action} for which lattice reflection positivity holds for the chosen reflection plane.  Let \(\mathcal A_{+,a}\) be the gauge-invariant algebra generated by Wilson observables whose unoriented edge support lies in the positive half-lattice or in a declared boundary collar assigned to the positive side.  If
+\[
+  F_i^{a,\eps}=W_{\gamma_i^\eps,R}\in\mathcal A_{+,a},
+  \qquad i=1,\ldots,n,
+\]
+then the finite reflected matrix
+\[
+  N_{a,\eps}(i,j)
+  =
+  \int(\Theta F_i^{a,\eps})^*(U)F_j^{a,\eps}(U)\,d\mu_a(U)
+\]
+is positive semidefinite.
+\end{proposition}
+
+\begin{proof}
+The statement is the finite-matrix form of lattice reflection positivity.  For any \(c\in\C^n\), the observable \(F=\sum_i c_iF_i^{a,\eps}\) belongs to \(\mathcal A_{+,a}\).  Reflection positivity for the selected finite lattice measure gives
+\[
+  0\le \int(\Theta F)^*F\,d\mu_a
+  =
+  \sum_{i,j}\overline{c_i}c_j
+  \int(\Theta F_i^{a,\eps})^*F_j^{a,\eps}\,d\mu_a
+  =
+  c^*N_{a,\eps}c .
+\]
+Thus \(N_{a,\eps}\succeq0\).  The proposition deliberately keeps the regulator finite: it supplies the finite Gram block used by Theorem \ref{thm:finite-certificate}, not a continuum reconstruction theorem.
+\end{proof}
+
+\begin{remark}[What must be named before using the proposition]
+The paper must specify \(G\), the representation \(R\), the plaquette action, the reflection plane, the positive-time edge convention, the collar support convention, and the Wilson paths \(\gamma_i^\eps\).  Without these choices the symbols \(q_{a,\eps}\), \(H_a\), and \(K_a\) do not denote checkable same-theory objects.
+\end{remark}
+
+\begin{proposition}[Same-theory normalization certificate]
+\label{prop:same-theory-normalization}
+Let \(N\succeq0\) be a reflected Gram block obtained from a finite regulated Wilson theory.  A normalized block \(q\) may be used as a same-theory reflected block in Theorem \ref{thm:finite-certificate} if one of the following verifiable certificates is supplied:
+\begin{enumerate}[label=(Q\arabic*)]
+  \item \textbf{One-body congruence.}  There is an invertible diagonal or block-diagonal matrix \(D\), obtained from nonzero one-body normalization factors of the same observables, such that \(q=DND^*\).
+  \item \textbf{Positive-kernel factorization.}  There is a positive semidefinite kernel \(L\succeq0\), with \(q=N\Had L\), and \(L\) is realized by an auxiliary same-theory positive factor or by an explicitly stated positive kernel construction.
+  \item \textbf{Direct Gram realization.}  There are normalized observables \(\widetilde F_i\in\mathcal A_{+,a}\) in the same regulated theory such that
+  \[
+    q_{ij}=\int(\Theta\widetilde F_i)^*\widetilde F_j\,d\mu_a .
+  \]
+\end{enumerate}
+In each case \(q\succeq0\).  Pair-dependent entrywise division \(N\odiv B\) is not a certificate unless it is reduced to one of the three cases above.
+\end{proposition}
+
+\begin{proof}
+In case (Q1), \(x^*q x=(D^*x)^*N(D^*x)\ge0\).  In case (Q2), the Schur product theorem gives \(N\Had L\succeq0\).  In case (Q3), positivity follows directly from reflection positivity applied to \( \sum_i c_i\widetilde F_i\).  These arguments are finite-dimensional and internal to the regulated theory once the stated objects are named.
+\end{proof}
+
+\begin{remark}[Why an entrywise quotient is not enough]
+The condition is necessary as a proof obligation, not as a stylistic preference.  Appendix \ref{lem:app-entrywise-division} gives positive semidefinite \(N\) and positive-entry \(B\) for which \(N\odiv B\) is indefinite.  Therefore a quotient formula by itself cannot be used as an OS-positive Wilson block.
+\end{remark}
+
+\subsection{Coefficient extraction slots}
+
+For a fixed finite family, a complete application must compute or bound the matrices \(H_a\) and \(K_a\) in \eqref{eq:a-eps-expansion}.  If the calculation is performed logarithmically, then one must convert log-coefficients into matrix coefficients before applying Theorem \ref{thm:finite-certificate}.  Appendix \ref{app:quotient-algebra} records the finite conversion.
+
+\begin{proposition}[Coefficient extraction from a normalized finite block]
+\label{prop:HK-extraction}
+Fix a finite same-theory normalized block \(q_{a,\eps}\) satisfying Proposition \ref{prop:same-theory-normalization}.  Suppose that, uniformly over the finite index set,
+\[
+  \log(q_{a,\eps})_{ij}
+  =
+  \eps h_{a,ij}
+  +
+  \eps^2\ell_{a,ij}
+  +
+  \eta_{a,ij}(\eps),
+  \qquad
+  \max_{i,j}|\eta_{a,ij}(\eps)|\le R_a(\eps),
+  \qquad
+  R_a(\eps)=o(\eps^2).
+\]
+Assume the branch of the logarithm is chosen in a neighborhood of \(1\), and \(h_a=h_a^*\), \(\ell_a=\ell_a^*\).  Then
+\[
+  q_{a,\eps}
+  =
+  \one\one^*
+  +\eps H_a
+  +\eps^2K_a
+  +r_{a,\eps},
+  \qquad
+  H_a=h_a,
+  \qquad
+  K_a=\ell_a+\frac12h_a\Had h_a ,
+\]
+with \(\norm{r_{a,\eps}}\le C_n(R_a(\eps)+O_a(\eps^3))\) for a finite-dimensional norm constant \(C_n\).  In particular, the \(H_a,K_a\) entering Theorem \ref{thm:finite-certificate} are matrix coefficients of \(q_{a,\eps}\), not merely logarithmic OPE coefficients.
+\end{proposition}
+
+\begin{proof}
+For each pair \((i,j)\),
+\[
+  \exp\{\eps h_{a,ij}+\eps^2\ell_{a,ij}+\eta_{a,ij}(\eps)\}
+  =
+  1+\eps h_{a,ij}
+  +\eps^2\left(\ell_{a,ij}+\frac12h_{a,ij}^2\right)
+  +O_a(\eps^3)+O(R_a(\eps)).
+\]
+Since the index set is finite, the entrywise bound gives the stated operator-norm bound after changing constants.  Hermiticity follows from the Hermiticity of \(q_{a,\eps}\) and of the coefficient matrices.
+\end{proof}
+
+\begin{remark}[Regulator-specific status]
+This proposition converts already-derived logarithmic coefficients into the matrix coefficients required by the finite theorem.  It does not derive \(h_a\) or \(\ell_a\) from a particular lattice action.  A completed Wilson application must still compute those quantities from the chosen regulator and observable family.
+\end{remark}
+
+\begin{proposition}[Concrete finite three-observable coefficient certificate]
+\label{prop:three-observable-certificate}
+Let
+\[
+  e=\frac1{\sqrt3}(1,1,1)^T,\qquad
+  u=\frac1{\sqrt2}(1,-1,0)^T,\qquad
+  z=\frac1{\sqrt6}(1,1,-2)^T,
+\]
+and let \(P=I-ee^*\).  Define finite Hermitian coefficient matrices
+\[
+  H=2uu^*+ez^*+ze^*,
+  \qquad
+  K=zz^* .
+\]
+Then \(PHP\) is strictly positive on \(\Span\{u\}\), has \(\Ker(PHP)=\Span\{z\}\) inside \(\one^\perp\), and
+\[
+  z^*P\bigl(K-3^{-1}Hee^*H\bigr)Pz=\frac23>0.
+\]
+Consequently the finite family
+\[
+  q_\eps=\one\one^*+\eps H+\eps^2K
+\]
+passes the strict Schur--Feshbach validation test for all sufficiently small \(\eps>0\).
+\end{proposition}
+
+\begin{proof}
+The vectors \(e,u,z\) are orthonormal, \(P\) is the projection onto \(\Span\{u,z\}\), and
+\[
+  PHP=2uu^*.
+\]
+Thus the first-order reduced form has margin \(2\) on \(\Span\{u\}\) and kernel \(\Span\{z\}\).  Moreover \(He=z\), so
+\[
+  z^*P(K-3^{-1}Hee^*H)Pz
+  =
+  z^*Kz-\frac13|e^*Hz|^2
+  =
+  1-\frac13
+  =
+  \frac23.
+\]
+Proposition \ref{prop:sufficiency} gives positivity for sufficiently small \(\eps\).
+\end{proof}
+
+\begin{remark}[Interpretation of the finite outcome]
+This is a genuine finite Schur--Feshbach outcome: it has a named block size, a first-order null sector, and a strict corrected second-order scalar.  It is not yet a regulator-specific Wilson calculation.  To promote it to a Wilson result, the matrices \(H,K\) above must be derived as \(H_a,K_a\) from a same-theory three-hairpin block.
+\end{remark}
+
+\subsection{Endpoint and remainder slots}
+
+Endpoint/corner terms should not be compressed into unexplained constants.  Color factors, path-ordering factors, representation normalizations, and incidence weights must be derived in the regulator that supplies \(q_{a,\eps}\).
+
+\begin{proposition}[Endpoint prefactor as a same-regulator source derivative]
+\label{prop:endpoint-prefactor}
+Let \(Z_v(s;b)\) be the finite endpoint source integral in the chosen regulator,
+\[
+  Z_v(s;b)
+  =
+  \int_G
+  \exp\!\left(
+    s\,\sum_\alpha b_\alpha\,\mathcal J_\alpha(g)
+  \right)
+  d\nu_{v,\mathrm{reg}}(g),
+\]
+where \(d\nu_{v,\mathrm{reg}}\) is the endpoint conditional group measure induced by the same plaquette action, and \(\mathcal J_\alpha\) are the Lie-algebra source insertions determined by the oriented plaquette sheets and the representation \(R\).  The endpoint fourth-cumulant contribution has the form
+\[
+  C_{\mathrm{col}}^{(G,R,\mathrm{reg})}
+  =
+  \frac{1}{4!}
+  \sum_{\alpha,\beta,\gamma,\delta}
+  \mathcal I_{\alpha\beta\gamma\delta}^{\mathrm{path}}
+  \left.
+  \partial_{\alpha}\partial_{\beta}\partial_{\gamma}\partial_{\delta}
+  \log Z_v(s;b)
+  \right|_{s=0},
+\]
+where \(\mathcal I^{\mathrm{path}}\) is the explicitly counted incidence tensor of the four source insertions at the endpoint.  This formula is the acceptable replacement for an unexplained numerical endpoint constant.
+\end{proposition}
+
+\begin{proof}
+Expanding the path-ordered Wilson factors at the endpoint gives a finite polynomial in source insertions before integration.  The connected fourth-order contribution is obtained by differentiating \(\log Z_v\) four times at the origin.  The factor \(1/4!\) and the tensor \(\mathcal I^{\mathrm{path}}\) account respectively for the Taylor coefficient and for the ordered incidence multiplicities.  All representation and orientation dependence is therefore contained in \(\mathcal J_\alpha\), \(d\nu_{v,\mathrm{reg}}\), and \(\mathcal I^{\mathrm{path}}\).
+\end{proof}
+
+\begin{remark}[Promotion condition]
+The paper may use \(C_{\mathrm{col}}^{(G,R,\mathrm{reg})}\) in a claim only after \(d\nu_{v,\mathrm{reg}}\), the source insertions, the trace normalization, and the incidence tensor are written for the specific regulator.  Until then the endpoint scalar remains conditional algebra.
+\end{remark}
+
+\begin{proposition}[Uniform endpoint remainder criterion]
+\label{prop:uniform-endpoint-remainder}
+Fix a finite Wilson block and a compact source domain \(\mathcal S\) for all endpoint source variables used in that block.  Suppose every endpoint log-partition function \(\ell_v(s,z)=\log Z_v(sz)\) is \(C^6\) on \(|s|\le2h\), \(z\in\mathcal S\), and
+\[
+  M_{6}:=
+  \sup_{v}\sup_{z\in\mathcal S}\sup_{|s|\le2h}
+  \left|\frac{d^6}{ds^6}\ell_v(s,z)\right|
+  <\infty .
+\]
+Then the five-point fourth-difference certificate satisfies
+\[
+  \left|D_h\ell_v(z)-\frac{d^4}{ds^4}\ell_v(0,z)\right|
+  \le \frac{h^2}{6}M_6
+\]
+uniformly in \(v\) and \(z\).  If, in addition, the omitted endpoint and collar-tail terms obey
+\[
+  |E_{\mathrm{tail}}(a,\eps)|+\norm{r_{a,\eps}}\le \rho(a,\eps),
+  \qquad
+  \rho(a,\eps)=o(\eps^2),
+\]
+in the same cutoff/collar regime, then the endpoint estimate is small enough to be compared with the finite Schur--Feshbach margin.
+\end{proposition}
+
+\begin{proof}
+The fourth-difference estimate is the standard centered five-point formula with sixth-derivative remainder, applied uniformly over the finite endpoint set and compact source domain.  The second displayed inequality is exactly the operator-norm hypothesis needed to preserve the coefficient expansion \(q_{a,\eps}=\one\one^*+\eps H_a+\eps^2K_a+o(\eps^2)\).  Since the finite block has fixed dimension, the endpoint and tail bounds enter the same norm used by Theorem \ref{thm:finite-certificate}.
+\end{proof}
+
+\begin{remark}[Demotion boundary]
+If the source domain, sixth-derivative bound, or tail estimate is not supplied in the same regulator as \(q_{a,\eps}\), endpoint algebra should remain outside the paper's result claim.
+\end{remark}
+
+\begin{remark}[Prior-art boundary and novelty claim]
+\label{rem:prior-art-boundary}
+The finite ingredients used here have recognizable ancestors.  Schur complements and Feshbach maps are standard finite-dimensional reduction tools \cite{Feshbach1958,Feshbach1962}; Osterwalder--Schrader positivity is the reconstruction positivity condition \cite{OsterwalderSchrader1973,OsterwalderSchrader1975}; lattice gauge reflection positivity and transfer-matrix positivity are classical parts of constructive lattice gauge theory \cite{OsterwalderSeiler1978,Luscher1977,Seiler1982}; and Wilson loops are the standard gauge-invariant observables introduced by Wilson \cite{Wilson1974}.
+
+The novelty claimed by this paper is therefore bounded.  It is not the Schur complement itself, not reflection positivity itself, and not a construction of Yang--Mills theory.  The contribution is the packaging of the rank-one reflected-block collision into the explicit finite coefficient test
+\[
+  PHP,\qquad
+  P(K-n^{-1}Hee^*H)P,
+\]
+together with a same-theory quotient warning and a reproducible finite model showing how a first-order null sector is resolved by the corrected second-order form.  Any stronger novelty claim requires a regulator-specific Wilson coefficient calculation that discharges Propositions \ref{prop:regulator-observable-data}--\ref{prop:uniform-endpoint-remainder}.
+\end{remark}
+
+\section{Three-hairpin block as an application template}
+\label{sec:three-hairpin-template}
+
+A three-observable block is the smallest common setting where the second-order null-sector test can be one-dimensional.  Suppose \(n=3\) and the first reduced form \(A=PHP\) has a one-dimensional null sector represented by
+\begin{equation}
+  z=(1,1,-2)^T,
+  \qquad z\perp\one.
+  \label{eq:z-vector}
+\end{equation}
+Then the second finite criterion reduces to
+\begin{equation}
+  z^*Cz\ge0,
+  \qquad
+  C=P\bigl(K-3^{-1}Hee^*H\bigr)P.
+  \label{eq:three-hairpin-criterion}
+\end{equation}
+If the scalar is positive, define the finite margin
+\begin{equation}
+  M_G:=z^*Cz>0.
+  \label{eq:MG}
+\end{equation}
+If it is negative, the block supplies a concrete finite diagnostic.  In either case, the calculation is meaningful only after the same-theory transfer certificate in Section \ref{sec:same-theory} is met.
+
+A regulator-specific three-hairpin Wilson section must eventually contain the following data.  The present implementation supplies an exact finite coefficient model and marks the remaining Wilson-path derivation boundary.
+\begin{enumerate}[label=(T\arabic*)]
+  \item the three Wilson paths \(\gamma_1^\eps,\gamma_2^\eps,\gamma_3^\eps\), drawn or specified combinatorially;
+  \item their common reflection-plane footprint and the local geometric differences between them;
+  \item the reflected Gram block \(N_{a,\eps}\);
+  \item the legitimate same-theory normalization producing \(q_{a,\eps}\);
+  \item explicit or bounded coefficients \(H_a,K_a\);
+  \item the values of \(PH_aP\) on a basis of \(\one^\perp\);
+  \item the scalar \(z^*P(K_a-3^{-1}H_aee^*H_a)Pz\), if \(z\in\Ker(PH_aP)\);
+  \item uniform collar/cutoff remainders.
+\end{enumerate}
+
+\begin{center}
+\begin{tabular}{p{0.16\linewidth}p{0.20\linewidth}p{0.20\linewidth}p{0.22\linewidth}}
+\toprule
+Pair/channel & First-order contribution & Corrected second-order role & Status \\
+\midrule
+\((u,u)\) & \(u^*PHPu=2\) & not needed for the null test & strict first-order margin \\
+\((z,z)\) & \(z^*PHPz=0\) & \(z^*P(K-3^{-1}Hee^*H)Pz=2/3\) & strict second-order null-sector margin \\
+\((u,z)\) & \(u^*PHPz=0\) & \(u^*P(K-3^{-1}Hee^*H)Pz=0\) & no mixed obstruction in this model \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+In the standard coordinate basis this coefficient model is
+\[
+H=
+2uu^*+ez^*+ze^*,
+\qquad
+K=zz^*,
+\]
+with \(e,u,z\) as in Proposition \ref{prop:three-observable-certificate}.  The table is reproducible from the exact certificate generated in
+\[
+\texttt{three\_hairpin\_certificate.json}
+\]
+in the result-elaboration report directory.
+As with Proposition \ref{prop:three-observable-certificate}, this table is a finite coefficient realization of the three-hairpin algebra.  It becomes a Wilson three-hairpin table only after the same entries are derived from named Wilson paths in a named regulator.
+
+\section{Endpoint cumulant extension: conditional algebra and placeholders}
+\label{sec:endpoint-extension}
+
+This section records a conditional algebraic template for a post-\(H,K\) endpoint estimate.  It is not used in the proof of the finite theorem and should not be read as a completed Wilson calculation.
+
+Assume a three-hairpin calculation has produced a positive finite margin \(M_G\).  Let \(R\) denote the next connected boundary-polarization contribution.  In the null channel \(z=(1,1,-2)^T\), the pair weights are
+\begin{equation}
+  z^*Rz=2R_{12}-4R_{13}-4R_{23}.
+  \label{eq:null-weights}
+\end{equation}
+For endpoint boxes \(v\), suppose a same-regulator calculation gives connected fourth source derivatives
+\begin{equation}
+  \kappa_{4,v}^{\mathrm{sing}}(b)
+  =\left.\partial_s^4\log Z_v(s;b)\right|_{s=0}.
+  \label{eq:kappa4}
+\end{equation}
+Here \(Z_v(s;b)\) must be defined as an actual finite group integral or conditional endpoint partition function in the chosen regulator.
+
+With a derived prefactor \(C_{\mathrm{col}}^{(G,R,\mathrm{reg})}\), the endpoint scalar has the conditional form
+\begin{equation}
+  R_{\mathrm{null}}^{\mathrm{end}}
+  =C_{\mathrm{col}}^{(G,R,\mathrm{reg})}
+  \sum_v
+  \{2\kappa_{4,v}(b_{12,v})-4\kappa_{4,v}(b_{13,v})-4\kappa_{4,v}(b_{23,v})\}
+  +E_{\mathrm{tail}}.
+  \label{eq:endpoint-scalar}
+\end{equation}
+If
+\begin{equation}
+  \kappa_{4,v}(b_{ij,v})=-\chi_v B_{ij,v}+\epsilon_{ij,v},
+  \qquad \chi_v\ge0,
+  \label{eq:kappa-expansion}
+\end{equation}
+and
+\begin{equation}
+  D_v=2B_{12,v}-4B_{13,v}-4B_{23,v},
+  \label{eq:Dv}
+\end{equation}
+then the purely algebraic lower bound is
+\begin{equation}
+  \snull
+  \ge
+  M_G
+  -C_{\mathrm{col}}^{(G,R,\mathrm{reg})}\sum_v\chi_v[D_v]_+
+  -C_{\mathrm{col}}^{(G,R,\mathrm{reg})}\sum_{v,ij}|w_{ij}|\,|\epsilon_{ij,v}|
+  -|E_{\mathrm{tail}}|,
+  \label{eq:safe-endpoint-bound}
+\end{equation}
+where \((w_{12},w_{13},w_{23})=(2,-4,-4)\).  Appendix \ref{app:endpoint-certificates} proves this algebraic implication.  The remaining regulator-specific QFT work is exactly the content bounded by Propositions \ref{prop:endpoint-prefactor} and \ref{prop:uniform-endpoint-remainder}: define \(Z_v\), derive the prefactor, compute incidence data, and bound the tails in the same regulator.
+
+A source-derivative computation may use the five-point fourth-difference stencil
+\begin{align}
+D_h\ell_v(z)
+&=\frac{\ell_v(2hz)-4\ell_v(hz)+6\ell_v(0)-4\ell_v(-hz)+\ell_v(-2hz)}{h^4},\notag\\
+\left|D_h\ell_v(z)-K_v^{\mathrm{sing}}[z]\right|
+&\le\frac{h^2}{6}M_{6,v}(z,h),
+\label{eq:central-difference}
+\end{align}
+where \(\ell_v(s,z)=\log Z_v(sz)\).  This is a numerical or symbolic certificate only after \(M_{6,v}\) is uniformly bounded in the stated source domain.
+
+\section{Discussion: what has been established and what remains}
+
+The paper establishes a finite Schur--Feshbach tangent-cone criterion.  Its central formula is
+\[
+  F_\eps=
+  \eps PHP+
+  \eps^2P\bigl(K-n^{-1}Hee^*H\bigr)P+o(\eps^2).
+\]
+This formula is independent of Yang--Mills theory.  It is relevant to Wilson/OS constructions because normalized reflected Wilson blocks can have rank-one collision limits, and because the finite coefficient test is unavoidable once such a limit is present.
+
+The finite theorem advances the programme in four ways.
+\begin{enumerate}[label=(A\arabic*)]
+  \item It turns a singular reflection-positivity step into a finite coefficient calculation.
+  \item It identifies the corrected second-order form, preventing the common mistake of testing only \(PKP\).
+  \item It separates a positive finite margin from a finite diagnostic vector, so a Wilson calculation can either support a construction step or localize the next required repair.
+  \item It states the same-theory transfer certificate needed before a quotient block can be interpreted as a Wilson/OS object.
+\end{enumerate}
+
+The paper does not construct four-dimensional Yang--Mills theory, does not prove OS reconstruction for a continuum gauge field, and does not prove a mass gap.  The result-bearing expansion implemented here replaces the slots by finite certificates, coefficient-conversion theorems, an exact three-observable Schur--Feshbach model, and explicit demotion boundaries.  A future regulator-specific Wilson calculation must still derive the same coefficient data from named Wilson paths.
+
+\appendix
+
+\section{Conceptual explainer for QFT and geometry readers}
+\label{app:conceptual-explainer}
+
+\subsection{Reflection positivity in finite form}
+
+In Euclidean QFT, one constructs imaginary-time correlation functions and then reconstructs a Hilbert-space theory in real time.  Reflection positivity is the condition that makes the inner product nonnegative after reflecting positive-time observables.  For finitely many observables \(F_i\), it is simply the statement that the matrix \(N_{ij}=S((\Theta F_i)^*F_j)\) is positive semidefinite.
+
+\subsection{Why Wilson loops enter}
+
+In gauge theory, the gauge potential itself is not gauge invariant.  Wilson loops, built from traces of holonomies, are gauge invariant.  They are therefore natural probes for a gauge-invariant Euclidean construction.  When Wilson loops approach a reflection plane, their reflected overlaps can become almost identical at leading order.  This is the finite rank-one limit \(q_\eps\to\one\one^*\).
+
+\subsection{Why the Schur complement is forced}
+
+The vector \(\one\) represents the common leading mode.  Quotient vectors in \(\one^\perp\) can still couple into this large rank-one direction at first order and return at second order.  Removing \(\one\) therefore requires a Schur complement, not ordinary projection.  That is why the second-order coefficient contains
+\[
+  -n^{-1}PHee^*HP.
+\]
+This term is the finite trace of coupling through the rank-one direction.
+
+\subsection{What the theorem contributes}
+
+Given \(q_\eps=\one\one^*+\eps H+\eps^2K+o(\eps^2)\), the theorem says to compute
+\[
+  A=PHP,
+  \qquad
+  C=P(K-n^{-1}Hee^*H)P.
+\]
+If \(A\) is positive with margin, the finite block has a first-order positivity margin.  If \(A\) has a kernel, test \(C\) on that kernel.  A negative vector in either test locates a finite defect in the proposed positivity step for that block.  A positive reduced margin gives a quantity against which endpoint and remainder estimates can be compared.
+
+\subsection{Relation to Yang--Mills}
+
+The Yang--Mills mass-gap problem asks for much more: construction of a nontrivial four-dimensional quantum Yang--Mills theory and proof of a positive spectral gap \cite{JaffeWitten2000,ClayYM}.  The finite theorem here is an earlier local ingredient.  It tells a Wilson/OS reconstruction programme how to audit finite normalized reflected blocks before using them in a continuum argument.
+
+\section{Expanded proofs of the finite criterion}
+\label{app:expanded-proofs}
+
+This appendix expands the finite-dimensional arguments.  No gauge-theoretic input is used.
+
+\subsection{Scalar Schur complement}
+
+\begin{lemma}[Scalar Schur complement]
+\label{lem:app-scalar-schur}
+Let \(E\) be a finite-dimensional complex Hilbert space, let \(a>0\), let \(b\in E\), and let \(D=D^*\in\operatorname{End}(E)\).  On \(\C\oplus E\), define
+\[
+  M=\begin{pmatrix}a&b^*\\ b&D\end{pmatrix}.
+\]
+Then
+\[
+  M\succeq0\quad\Longleftrightarrow\quad D-a^{-1}bb^*\succeq0.
+\]
+\end{lemma}
+
+\begin{proof}
+For \((s,y)\in\C\oplus E\), completing the square gives
+\begin{align*}
+  \begin{pmatrix}\bar s&y^*\end{pmatrix}
+  M
+  \begin{pmatrix}s\\y\end{pmatrix}
+  &=a|s|^2+2\Ree(\bar s b^*y)+y^*Dy\\
+  &=a\left|s+a^{-1}b^*y\right|^2+y^*(D-a^{-1}bb^*)y.
+\end{align*}
+The equivalence follows by first assuming \(D-a^{-1}bb^*\succeq0\), and conversely by choosing \(s=-a^{-1}b^*y\).
+\end{proof}
+
+\subsection{Expansion of the reduced block}
+
+With respect to \(\C^n=\C e\oplus P\C^n\), write
+\[
+  q_\eps=\begin{pmatrix}
+    \lambda_\eps & b_\eps^*\\
+    b_\eps & D_\eps
+  \end{pmatrix},
+  \qquad
+  \lambda_\eps=e^*q_\eps e,
+  \quad b_\eps=Pq_\eps e,
+  \quad D_\eps=Pq_\eps P.
+\]
+The leading term \(nee^*\) contributes only to the scalar block.  Hence
+\begin{align*}
+  \lambda_\eps
+  &=n+\eps e^*He+\eps^2e^*Ke+o(\eps^2),\\
+  b_\eps
+  &=\eps PHe+\eps^2PKe+o(\eps^2),\\
+  D_\eps
+  &=\eps PHP+\eps^2PKP+o(\eps^2).
+\end{align*}
+Thus \(\lambda_\eps=n+O(\eps)>0\), and \(\lambda_\eps^{-1}=n^{-1}+O(\eps)\).
+
+\begin{lemma}[Vacuum Schur--Feshbach expansion]
+\label{lem:app-feshbach-expansion}
+The Schur complement
+\[
+  F_\eps=Pq_\eps P-Pq_\eps e\,(e^*q_\eps e)^{-1}\,e^*q_\eps P
+\]
+satisfies
+\[
+  F_\eps=\eps PHP+
+  \eps^2P\bigl(K-n^{-1}Hee^*H\bigr)P+o(\eps^2).
+\]
+\end{lemma}
+
+\begin{proof}
+Using the block expansions,
+\begin{align*}
+  Pq_\eps e\,(e^*q_\eps e)^{-1}\,e^*q_\eps P
+  &=\bigl(\eps PHe+O(\eps^2)\bigr)
+    \bigl(n^{-1}+O(\eps)\bigr)
+    \bigl(\eps e^*HP+O(\eps^2)\bigr)\\
+  &=\eps^2n^{-1}PHee^*HP+o(\eps^2).
+\end{align*}
+Subtracting from \(Pq_\eps P=\eps PHP+\eps^2PKP+o(\eps^2)\) gives the claim.
+\end{proof}
+
+\subsection{PSD tangent-cone necessity}
+
+\begin{lemma}[Two-order PSD perturbation test]
+\label{lem:app-two-order-test}
+Let \(E\) be finite-dimensional and let
+\[
+  G_\eps=\eps A+\eps^2C+r_\eps,
+  \qquad \norm{r_\eps}=o(\eps^2),
+\]
+where \(A=A^*\), \(C=C^*\).  If \(G_\eps\succeq0\) for all sufficiently small \(\eps>0\), then \(A\succeq0\).  If \(\Pi_A\) projects onto \(\Ker A\), then \(\Pi_A C\Pi_A\succeq0\) on \(\Ker A\).
+\end{lemma}
+
+\begin{proof}
+For fixed \(v\in E\),
+\[
+  0\le v^*G_\eps v
+  =\eps v^*Av+\eps^2v^*Cv+o(\eps^2).
+\]
+Division by \(\eps\) gives \(v^*Av\ge0\).  If \(v\in\Ker A\), division by \(\eps^2\) gives \(v^*Cv\ge0\).
+\end{proof}
+
+\subsection{Strict sufficiency}
+
+\begin{lemma}[Strict two-block validation]
+\label{lem:app-strict-validation}
+Let \(F_\eps=\eps A+\eps^2C+o(\eps^2)\) on a finite-dimensional Hilbert space \(E\), with \(A\succeq0\).  Let \(\Pi\) project onto \(\Ker A\) and let \(Q=I_E-\Pi\).  If
+\[
+  QAQ\succeq\alpha Q,
+  \qquad
+  \Pi C\Pi\succeq\beta\Pi
+\]
+for some \(\alpha,\beta>0\), then \(F_\eps\succeq0\) for all sufficiently small \(\eps>0\).
+\end{lemma}
+
+\begin{proof}
+The \(Q\)-block is \(QF_\eps Q\succeq(\alpha/2)\eps Q\) for small \(\eps\).  Since \(A\Pi=0\), the off-diagonal block is \(\Pi F_\eps Q=O(\eps^2)\).  The Schur complement of the \(Q\)-block is
+\[
+  \Pi F_\eps\Pi-
+  \Pi F_\eps Q(QF_\eps Q)^{-1}QF_\eps\Pi
+  =\eps^2\Pi C\Pi+o(\eps^2)-O(\eps^3),
+\]
+which is positive for small \(\eps\).  The Schur complement criterion gives \(F_\eps\succeq0\).
+\end{proof}
+
+\section{Auxiliary algebra for quotient blocks}
+\label{app:quotient-algebra}
+
+\begin{lemma}[One-body factors are congruences]
+\label{lem:app-one-body}
+Let \(r=r^*\), and let \(D=\diag(d_1,\ldots,d_n)\) be invertible.  If \(q=DrD^*\), then \(q\succeq0\) if and only if \(r\succeq0\).
+\end{lemma}
+
+\begin{proof}
+For every \(x\), \(x^*qx=(D^*x)^*r(D^*x)\).  Since \(D^*\) is invertible, the equivalence follows.
+\end{proof}
+
+\begin{lemma}[Zero-sum cancellation of additive one-body logarithms]
+\label{lem:app-zero-sum}
+For \(a\in\C^n\), set \(L=a\one^*+\one a^*\).  Then \(v^*Lv=0\) for all \(v\in\one^\perp\).
+\end{lemma}
+
+\begin{proof}
+If \(v\in\one^\perp\), then \(\one^*v=0\) and \(v^*\one=0\).  Thus
+\[
+  v^*Lv=(v^*a)(\one^*v)+(v^*\one)(a^*v)=0.
+\]
+\end{proof}
+
+\begin{lemma}[From log coefficients to matrix coefficients]
+\label{lem:app-log-HK}
+Assume, entrywise and uniformly over a finite index set, that
+\[
+  \log (q_\eps)_{ij}=\eps h_{ij}+\eps^2\ell_{ij}+o(\eps^2),
+\]
+with \(h=h^*\), \(\ell=\ell^*\).  Then
+\[
+  q_\eps=\one\one^*+\eps H+\eps^2K+o(\eps^2),
+  \qquad
+  H=h,
+  \qquad
+  K=\ell+\frac12 h\Had h,
+\]
+where \(\Had\) denotes entrywise product.
+\end{lemma}
+
+\begin{proof}
+For each entry, \(e^{\eps h_{ij}+\eps^2\ell_{ij}+o(\eps^2)}=1+\eps h_{ij}+\eps^2(\ell_{ij}+h_{ij}^2/2)+o(\eps^2)\).  Since the index set is finite, entrywise uniformity gives the matrix-norm expansion.
+\end{proof}
+
+\begin{lemma}[Entrywise division can destroy positivity]
+\label{lem:app-entrywise-division}
+There exist positive semidefinite matrices \(N\) and \(B\), with every entry of \(B\) strictly positive, such that \(N\odiv B\) is indefinite.
+\end{lemma}
+
+\begin{proof}
+Take
+\[
+  N=\begin{pmatrix}1&1\\1&1\end{pmatrix},
+  \qquad
+  B=\begin{pmatrix}1&1/10\\1/10&1\end{pmatrix}.
+\]
+The eigenvalues of \(N\) are \(2,0\), and the eigenvalues of \(B\) are \(11/10,9/10\).  But
+\[
+  N\odiv B=\begin{pmatrix}1&10\\10&1\end{pmatrix}
+\]
+has eigenvalues \(11\) and \(-9\).
+\end{proof}
+
+\section{Endpoint algebra}
+\label{app:endpoint-certificates}
+
+\begin{lemma}[Endpoint lower bound]
+\label{lem:app-endpoint-bound}
+Assume
+\[
+  R_{\mathrm{null}}^{\mathrm{end}}
+  =C\sum_v\{2\kappa_{4,v}(b_{12,v})-4\kappa_{4,v}(b_{13,v})-4\kappa_{4,v}(b_{23,v})\}
+  +E_{\mathrm{tail}},
+\]
+where \(C\ge0\).  Suppose
+\[
+  \kappa_{4,v}(b_{ij,v})=-\chi_vB_{ij,v}+\epsilon_{ij,v},
+  \qquad \chi_v\ge0,
+\]
+and define
+\[
+  D_v=2B_{12,v}-4B_{13,v}-4B_{23,v},
+  \qquad (w_{12},w_{13},w_{23})=(2,-4,-4).
+\]
+Then
+\[
+  M_G+R_{\mathrm{null}}^{\mathrm{end}}
+  \ge
+  M_G-C\sum_v\chi_v[D_v]_+-C\sum_{v,ij}|w_{ij}|\,|\epsilon_{ij,v}|-|E_{\mathrm{tail}}|.
+\]
+\end{lemma}
+
+\begin{proof}
+Substitution gives
+\[
+  R_{\mathrm{null}}^{\mathrm{end}}
+  =C\sum_v\left\{-\chi_vD_v+\sum_{ij}w_{ij}\epsilon_{ij,v}\right\}+E_{\mathrm{tail}}.
+\]
+Since \(\chi_v\ge0\), \(-\chi_vD_v\ge-\chi_v[D_v]_+\).  Also,
+\[
+  \sum_{ij}w_{ij}\epsilon_{ij,v}\ge-\sum_{ij}|w_{ij}|\,|\epsilon_{ij,v}|,
+  \qquad E_{\mathrm{tail}}\ge-|E_{\mathrm{tail}}|.
+\]
+The result follows by summing and adding \(M_G\).
+\end{proof}
+
+\begin{lemma}[Fourth derivative from the five-point stencil]
+\label{lem:app-fourth-difference}
+Let \(f\in C^6([-2h,2h])\), and set
+\[
+  D_hf=
+  \frac{f(2h)-4f(h)+6f(0)-4f(-h)+f(-2h)}{h^4}.
+\]
+Then
+\[
+  \left|D_hf-f^{(4)}(0)\right|
+  \le
+  \frac{h^2}{6}\sup_{|s|\le2h}|f^{(6)}(s)|.
+\]
+\end{lemma}
+
+\begin{proof}
+Taylor expand \(f(\pm h)\) and \(f(\pm2h)\) about zero with integral or Lagrange remainder.  The coefficients of \(f,f',f'',f''',f^{(5)}\) cancel, the coefficient of \(f^{(4)}(0)\) is one after division by \(h^4\), and the sixth-order remainder is bounded by the displayed constant.  Equivalently, this is the standard centered five-point fourth-derivative formula.
+\end{proof}
+
+\section{Author-facing result-expansion checklist}
+\label{app:author-checklist}
+
+This appendix is intended for draft development.  It distinguishes expressions that belong in a final paper from placeholders that must be expanded or removed before submission.
+
+\begin{center}
+\begin{tabular}{p{0.30\linewidth}p{0.58\linewidth}}
+\toprule
+Keep in final theorem & \(q_\eps=\one\one^*+\eps H+\eps^2K+o(\eps^2)\), \(e=n^{-1/2}\one\), \(P=I-ee^*\), the Schur complement \(F_\eps\), the coefficients \(PHP\) and \(P(K-n^{-1}Hee^*H)P\), and the strict-margin proposition. \\
+\midrule
+Keep in Wilson application & The specified regulator, reflection plane, Wilson observables, Gram block, same-theory normalization, coefficient extraction, finite sign test, and uniform remainder estimates. \\
+\midrule
+Keep only conditionally & Endpoint cumulants, incidence weights, and color/combinatorial prefactors, unless each is derived in the same regulator. \\
+\midrule
+Remove before journal submission & Any operational provenance, scoring traces, or claims that the finite theorem alone proves continuum Yang--Mills reflection positivity or a mass gap. \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{thebibliography}{99}
+
+\bibitem{YangMills1954}
+C.~N. Yang and R.~L. Mills.
+\newblock Conservation of isotopic spin and isotopic gauge invariance.
+\newblock \emph{Physical Review} 96, 191--195, 1954.
+
+\bibitem{OsterwalderSchrader1973}
+K.~Osterwalder and R.~Schrader.
+\newblock Axioms for Euclidean Green's functions.
+\newblock \emph{Communications in Mathematical Physics} 31, 83--112, 1973.
+\newblock doi:10.1007/BF01645738.
+
+\bibitem{OsterwalderSchrader1975}
+K.~Osterwalder and R.~Schrader.
+\newblock Axioms for Euclidean Green's functions II.
+\newblock \emph{Communications in Mathematical Physics} 42, 281--305, 1975.
+\newblock doi:10.1007/BF01608978.
+
+\bibitem{Wilson1974}
+K.~G. Wilson.
+\newblock Confinement of quarks.
+\newblock \emph{Physical Review D} 10, 2445--2459, 1974.
+\newblock doi:10.1103/PhysRevD.10.2445.
+
+\bibitem{OsterwalderSeiler1978}
+K.~Osterwalder and E.~Seiler.
+\newblock Gauge field theories on a lattice.
+\newblock \emph{Annals of Physics} 110, 440--471, 1978.
+
+\bibitem{Luscher1977}
+M.~L\"uscher.
+\newblock Construction of a selfadjoint, strictly positive transfer matrix for Euclidean lattice gauge theories.
+\newblock \emph{Communications in Mathematical Physics} 54, 283--292, 1977.
+\newblock doi:10.1007/BF01614090.
+
+\bibitem{Seiler1982}
+E.~Seiler.
+\newblock \emph{Gauge Theories as a Problem of Constructive Quantum Field Theory and Statistical Mechanics}.
+\newblock Springer, 1982.
+
+\bibitem{Feshbach1958}
+H.~Feshbach.
+\newblock Unified theory of nuclear reactions.
+\newblock \emph{Annals of Physics} 5, 357--390, 1958.
+
+\bibitem{Feshbach1962}
+H.~Feshbach.
+\newblock A unified theory of nuclear reactions II.
+\newblock \emph{Annals of Physics} 19, 287--313, 1962.
+
+\bibitem{MenottiOnofri1981}
+P.~Menotti and E.~Onofri.
+\newblock The action of \(SU(N)\) lattice gauge theory in terms of the heat kernel on the group manifold.
+\newblock \emph{Nuclear Physics B} 190, 288--300, 1981.
+
+\bibitem{Polyakov1980}
+A.~M. Polyakov.
+\newblock Gauge fields as rings of glue.
+\newblock \emph{Nuclear Physics B} 164, 171--188, 1980.
+
+\bibitem{DotsenkoVergeles1980}
+V.~S. Dotsenko and S.~N. Vergeles.
+\newblock Renormalizability of phase factors in the non-Abelian gauge theory.
+\newblock \emph{Nuclear Physics B} 169, 527--546, 1980.
+
+\bibitem{BrandtNeriSato1981}
+R.~A. Brandt, F.~Neri, and M.~Sato.
+\newblock Renormalization of loop functions for all loops.
+\newblock \emph{Physical Review D} 24, 879--902, 1981.
+
+\bibitem{KorchemskyRadyushkin1987}
+G.~P. Korchemsky and A.~V. Radyushkin.
+\newblock Renormalization of the Wilson loops beyond the leading order.
+\newblock \emph{Nuclear Physics B} 283, 342--364, 1987.
+
+\bibitem{JaffeWitten2000}
+A.~Jaffe and E.~Witten.
+\newblock Quantum Yang--Mills theory.
+\newblock Clay Mathematics Institute Millennium Problem statement, 2000.
+\newblock \url{https://www.claymath.org/wp-content/uploads/2022/06/yangmills.pdf}
+
+\bibitem{ClayYM}
+Clay Mathematics Institute.
+\newblock Yang--Mills and the Mass Gap.
+\newblock \url{https://www.claymath.org/millennium/yang-mills-the-maths-gap/}
+
+\bibitem{Gallier2019}
+J.~Gallier.
+\newblock The Schur complement and symmetric positive semidefinite matrices.
+\newblock Technical note, University of Pennsylvania, 2019.
+\newblock \url{https://www.cis.upenn.edu/~jean/schur-comp.pdf}
+
+\end{thebibliography}
+
+\end{document}

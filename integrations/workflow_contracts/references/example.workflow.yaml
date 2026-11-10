@@ -1,0 +1,122 @@
+# SPDX-FileCopyrightText: © 2026 Idiap Research Institute <contact@idiap.ch>
+# SPDX-License-Identifier: MIT
+schema_version: workflow-skill/v1
+namespace: example
+id: validated_analysis_workflow
+version: 1.0.0
+kind: workflow
+description: Illustrative analysis contract with no executable runtime bindings.
+aliases: []
+lifecycle: draft
+activation:
+  mode: explicit
+  prerequisites: []
+types:
+  Request:
+    representation: value
+    schema:
+      type: object
+      properties:
+        text: {type: string}
+      required: [text]
+      additionalProperties: false
+  Candidate:
+    representation: value
+    schema:
+      type: object
+      properties:
+        content: {type: string}
+      required: [content]
+      additionalProperties: false
+  ValidationReport:
+    representation: value
+    schema:
+      type: object
+      properties:
+        accepted: {type: boolean}
+      required: [accepted]
+      additionalProperties: false
+inputs:
+  request: {type: Request, required: true}
+outputs:
+  candidate:
+    type: Candidate
+    value: {ref: steps.analyze.outputs.candidate}
+  validation:
+    type: ValidationReport
+    value: {ref: steps.validate.outputs.report}
+operations:
+  analyze:
+    inputs:
+      request: {type: Request}
+    outputs:
+      candidate: {type: Candidate}
+    execution:
+      mode: specification_only
+      reason: This example supplies an interface without an implementation.
+  validate:
+    inputs:
+      candidate: {type: Candidate}
+    outputs:
+      report: {type: ValidationReport}
+    execution:
+      mode: specification_only
+      reason: Acceptance requires a domain-specific validation implementation.
+flow:
+  kind: sequence
+  steps:
+    - id: analyze
+      kind: call
+      operation: analyze
+      arguments:
+        request: {ref: inputs.request}
+    - id: validate
+      kind: call
+      operation: validate
+      arguments:
+        candidate: {ref: steps.analyze.outputs.candidate}
+    - id: acceptance
+      kind: gate
+      condition:
+        eq:
+          - {ref: steps.validate.outputs.report.accepted}
+          - {literal: true}
+      on_false: blocked
+policy:
+  effects:
+    filesystem:
+      read: [inputs]
+      write: [run_artifacts]
+    network: []
+    external_write: []
+  authority:
+    allowed: [produce_candidate, produce_validation_report]
+    forbidden: [approve, promote_to_knowledge_base]
+  limits:
+    wall_time_seconds: 1800
+    max_operation_calls: 20
+  failure:
+    default: fail
+    retry:
+      max_attempts: 1
+      retryable_codes: []
+  resume:
+    mode: checkpoint
+    require_matching_definition_and_inputs: true
+observability:
+  receipts: required
+  artifact_digests: sha256
+  provenance: required
+  events:
+    - workflow_started
+    - step_started
+    - step_completed
+    - step_failed
+    - workflow_completed
+provenance:
+  coverage: interface_only
+  sources:
+    - path: references/format.md
+  gaps:
+    - Illustrative operations have no domain implementation or runtime qualification.
+extensions: {}

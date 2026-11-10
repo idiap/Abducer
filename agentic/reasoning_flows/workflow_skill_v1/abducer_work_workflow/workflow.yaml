@@ -1,0 +1,178 @@
+# SPDX-FileCopyrightText: © 2026 Idiap Research Institute <contact@idiap.ch>
+#
+# SPDX-FileContributor: Danilo Gusicuma <danilo.gusicuma@idiap.ch>
+# Neuro-symbolic AI Group
+#
+# SPDX-License-Identifier: MIT
+# REUSE-IgnoreStart
+schema_version: workflow-skill/v1
+namespace: abducer
+id: abducer_work_workflow
+version: 1.0.0
+kind: workflow
+description: Draft interface projection of abducer_work_loop; native execution and authority remain unchanged.
+aliases:
+- abducer_work_loop
+lifecycle: draft
+activation:
+  mode: explicit
+  prerequisites: []
+types:
+  NativeRequest:
+    schema:
+      type: object
+      description: Native owner-specific input bundle; not a new execution API.
+    representation: value
+  NativeResult:
+    schema:
+      type: object
+      description: Native gate/required-artifact bundle; concrete paths stay in native_contract.
+    representation: value
+inputs:
+  request:
+    type: NativeRequest
+outputs:
+  result:
+    type: NativeResult
+    value:
+      ref: steps.native.outputs.result
+operations:
+  native_workflow:
+    inputs:
+      request:
+        type: NativeRequest
+    outputs:
+      result:
+        type: NativeResult
+    execution:
+      mode: specification_only
+      reason: No workflow-skill/v1 host adapter is supplied. Native skill/hook/CLI interfaces exist, but
+        payload materialization, guard evidence, execution effects and receipt translation are not qualified
+        for this format.
+flow:
+  kind: sequence
+  steps:
+  - id: native
+    kind: call
+    operation: native_workflow
+    description: Opaque native workflow boundary; internal ordering, guards and handoffs are retained
+      in abducer.native_contract.
+    arguments:
+      request:
+        ref: inputs.request
+    on_failure: blocked
+policy:
+  effects:
+    filesystem:
+      read:
+      - native_sources
+      - inputs
+      write: []
+    network: []
+    external_write: []
+  authority:
+    allowed:
+    - describe_native_interface
+    forbidden:
+    - execute_scientific_workflow
+    - approve
+    - prove
+    - publish
+    - promote
+  limits:
+    wall_time_seconds: 1800
+    max_operation_calls: 1
+  failure:
+    default: blocked
+    retry:
+      max_attempts: 1
+      retryable_codes: []
+  resume:
+    mode: none
+    require_matching_definition_and_inputs: true
+  claim_ceiling: Interface description only; no proof, scientific validity, runtime qualification, promotion
+    or approval.
+observability:
+  receipts: required
+  artifact_digests: sha256
+  provenance: required
+  events:
+  - workflow_started
+  - step_failed
+  - workflow_completed
+provenance:
+  coverage: interface_only
+  sources:
+  - path: agentic/registries/workflow_contracts.yaml
+    digest: sha256:87fa0266c714219668ece825d40a3686d3f02d68fd5bea08c9e60013d86873c7
+  - path: skills/orchestration/work/SKILL.md
+    digest: sha256:89fd51dfb27aa494554668aeefa17f40e72dc1e7a6a5f52e456fb8ac3cc09983
+  - path: hooks/workflow_local/hook_utils.py
+    digest: sha256:65cb3615d064ab6307b1117d493af57331cfd6ef0157ef7b8e733d96d748578c
+  - path: hooks/workflow_local/user_prompt_submit_intake.py
+    digest: sha256:14f6c15eac450b918ce56b290a5a30052ec4c08052b73663aeab5230338ccb11
+  - path: hooks/workflow_local/pre_skill_use_policy.py
+    digest: sha256:2140beff9c300564dedf1b0b8b00bc59cf78ef066f184bc8cbc992670ee0f489
+  - path: hooks/workflow_local/post_skill_use_review.py
+    digest: sha256:0187d1cc3e942aebf6aa4c6874cd23f5661ce6a6dd9f6de9f74703a26a83e296
+  - path: hooks/workflow_local/pre_tool_use_policy.py
+    digest: sha256:916b7acb61078b55f56b13b922ce2b9123fa06184e61fc275a8e80b3f7f30e60
+  - path: hooks/workflow_local/stop_artifact_check.py
+    digest: sha256:d9e526e86cec17c4d74a5a67a9cbeb08766aabe7f1c844ffc71cfef6384145af
+  - path: agentic/registries/gate_policy.yaml
+    digest: sha256:a20e7e46637043a2ad4998e9ccc8f184a8f7301adcb08dd5ca2f6744f1c44594
+  - path: agentic/scripts/validate_dependency_graph.py
+    digest: sha256:79c4489231fd2c38e0479800bb4cfd3112b490666ea4d530ba6054b0112d1fb5
+  - path: agentic/registries/skill_registry.yaml
+    digest: sha256:15076ed8d1bd4c10895060ab485353fe520421c44e1fc6f506508d2d566eacf0
+  - path: pyproject.toml
+    digest: sha256:69325c4805f66033ce7f7e0e68f4a0996913728c6041bb3cee656571693b2f1e
+  - path: uv.lock
+    digest: sha256:a6c77e5d86a93915eeb0f129f80bc8c45d572be387872e3ace7460a3d6ada9ae
+  - path: prism_me/shared/references/codex-control-stack.md
+    digest: sha256:4e8e7a5cdbc0572cf9b0d4ffc4a41c8f4f9c9a304fae3bcee99d8af3553be30e
+  gaps:
+  - No workflow-skill/v1 host adapter is supplied. Native skill/hook/CLI interfaces exist, but payload
+    materialization, guard evidence, execution effects and receipt translation are not qualified for this
+    format.
+  - Native control flow remains opaque; coverage is interface_only, not source-equivalence certification.
+  - One or more native payloads have no exact JSON Schema; object-only types remain explicitly underspecified.
+extensions:
+  abducer.owner:
+    path: skills/orchestration/work/SKILL.md
+  abducer.native_identity:
+    id: abducer_work_loop
+  abducer.native_contract:
+    id: abducer_work_loop
+    kind: domain_engine_contract
+    phase: proof_search
+    owner_skill: work
+    required_artifacts:
+    - artifacts/p-vs-np/work-state.json
+    - artifacts/p-vs-np/proof-queue.json
+    - artifacts/p-vs-np/search-space-tree.json
+    gate: dependency_frontier_gate
+    reasoning_log_events:
+    - skill_application_start
+    - skill_application_action_taken
+    - skill_application_evidence_recorded
+    - skill_application_gate_evaluated
+    - skill_application_complete
+    - skill_application_error
+    validators:
+    - agentic/scripts/validate_dependency_graph.py
+    handoff_to:
+    - target_navigation_loop
+    - conceptual_hypothesis_exploration_loop
+    - release_promotion_loop
+  abducer.environment:
+    python: pyproject.toml
+    lock: uv.lock
+    native_controls: .codex/config.toml
+    native_controls_optional: true
+    control_policy: prism_me/shared/references/codex-control-stack.md
+  abducer.execution_boundary:
+    status: specification_only
+    notes: Source inspection only. Effects above deny native execution until a separately reviewed adapter
+      exists.
+# REUSE-IgnoreEnd

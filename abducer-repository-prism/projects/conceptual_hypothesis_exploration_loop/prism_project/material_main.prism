@@ -1,0 +1,100 @@
+# lunar-runtime: {"declaration":"MaterializedConceptualHypothesisExplorationLoop","entry_argument":"failure_state","execute_hook":"abducer-workflow-execute","id":"conceptual_hypothesis_exploration_loop","input_schema":{"additionalProperties":false,"default":{"obstruction":"The current route does not justify why the fixed-point set of the first n maps is preserved by the remaining commuting map."},"properties":{"obstruction":{"default":"The current route does not justify why the fixed-point set of the first n maps is preserved by the remaining commuting map.","maxLength":16000,"minLength":1,"type":"string"}},"required":["obstruction"],"type":"object"},"metadata":{"completion_contract":{"allowed_final_statuses":["passed","completed"],"forbid_blockers":true,"reasoning_complete":true,"reasoning_events_min":12,"terminal_state":"completed"},"description":"replace a structural obstruction with a mediated, testable route","model_required":true,"network_required":false,"provenance_contract":{"agent_invocations":[{"activated_skill_ids":["epistemic-status-ledger"],"agent_name":"obstruction_pressure_material_agent","workflow_occurrence":"obstruction_pressure"},{"activated_skill_ids":["kb-abduce"],"agent_name":"mediation_hypothesis_material_agent","workflow_occurrence":"mediation_hypothesis"},{"activated_skill_ids":["proof-bridge-object-forger"],"agent_name":"conceptual_bridge_material_agent","workflow_occurrence":"conceptual_bridge"},{"activated_skill_ids":["kb-deduce"],"agent_name":"bridge_consequence_material_agent","workflow_occurrence":"bridge_consequence"},{"activated_skill_ids":["counterexample-hunter"],"agent_name":"refutation_assessment_material_agent","workflow_occurrence":"refutation_assessment"},{"activated_skill_ids":["epistemic-status-ledger"],"agent_name":"refinement_routing_material_agent","workflow_occurrence":"refinement_routing"}],"required_source_reads":[]},"reasoning_contract":{"steps":["obstruction_pressure","mediation_hypothesis","conceptual_bridge","bridge_consequence","refutation_assessment","refinement_routing"],"workflow":"ConceptualHypothesisExplorationLoop"},"reasoning_required":true,"required_host_capabilities":["model","prism-engine","reasoning-events"],"scientific_truth_verified":false,"semantic_mode":"operational-model-generated","source_materialization_status":"linked_fake_handler_smoke","timeout_seconds":1800},"output_schema":{"additionalProperties":false,"properties":{"analysis_results":{"type":"object"},"compact_prism_input":{"type":"object"},"markdown":{"minLength":1,"type":"string"},"narrative_slots":{"type":"array"},"report_verification":{"properties":{"reasoning_complete":{"const":true},"status":{"const":"passed"}},"required":["status","reasoning_complete"],"type":"object"},"structured_value":{"properties":{"execution_provenance":{"type":"object"},"final_disposition":{"properties":{"blockers":{"maxItems":0,"type":"array"},"reasoning_complete":{"const":true},"status":{"const":"passed"}},"required":["status","reasoning_complete","blockers"],"type":"object"},"reasoning_result":{"type":"object"}},"required":["final_disposition","reasoning_result","execution_provenance"],"type":"object"}},"required":["markdown","structured_value","analysis_results","compact_prism_input","narrative_slots","report_verification"],"type":"object"},"prepare_hook":"abducer-workflow-prepare","verify_hook":"abducer-workflow-verify"}
+
+# Host-executed material graph for the complete reviewed reasoning path.
+# Generated values retain the source epistemic boundary and are not native proof or experiment receipts.
+
+from types import (
+    BridgeConsequenceRefutationAssessment,
+    BridgeDerivedConsequence,
+    ConceptualFailureState,
+    ConceptualMediationHypothesis,
+    ConceptualObstructionPressure,
+    ConceptualRefinementDisposition,
+    ConceptualRefinementRoutingAssessment,
+    MediatingConceptualBridge,
+)
+from occurrences import (
+    ConceptualRefinementRoutingInput,
+)
+
+from generated.material_types import (
+    MaterialConceptualRefinementRoutingAssessment,
+)
+
+from generated.bridge_consequence_skill_1 import bridge_consequence_skill_1
+from generated.conceptual_bridge_skill_1 import conceptual_bridge_skill_1
+from generated.mediation_hypothesis_skill_1 import mediation_hypothesis_skill_1
+from generated.obstruction_pressure_skill_1 import obstruction_pressure_skill_1
+from generated.refinement_routing_skill_1 import refinement_routing_skill_1
+from generated.refutation_assessment_skill_1 import refutation_assessment_skill_1
+
+# Real model capability for source occurrence obstruction_pressure:EvidentialConceptualObstructionAssessment.
+agent obstruction_pressure_material_agent(
+    task: ConceptualFailureState,
+) -> Result[Generated[ConceptualObstructionPressure], ModelFailure]
+    ! {AI.Generate, Context.Disclose}:
+    skills: Skills[ConceptualFailureState] = [obstruction_pressure_skill_1]
+
+# Real model capability for source occurrence mediation_hypothesis:AbductiveMediationHypothesisFormation.
+agent mediation_hypothesis_material_agent(
+    task: ConceptualObstructionPressure,
+) -> Result[Generated[ConceptualMediationHypothesis], ModelFailure]
+    ! {AI.Generate, Context.Disclose}:
+    skills: Skills[ConceptualObstructionPressure] = [mediation_hypothesis_skill_1]
+
+# Real model capability for source occurrence conceptual_bridge:AnalogicalConceptualBridgeTransfer.
+agent conceptual_bridge_material_agent(
+    task: ConceptualMediationHypothesis,
+) -> Result[Generated[MediatingConceptualBridge], ModelFailure]
+    ! {AI.Generate, Context.Disclose}:
+    skills: Skills[ConceptualMediationHypothesis] = [conceptual_bridge_skill_1]
+
+# Real model capability for source occurrence bridge_consequence:DeductiveConceptualBridgeConsequenceDerivation.
+agent bridge_consequence_material_agent(
+    task: MediatingConceptualBridge,
+) -> Result[Generated[BridgeDerivedConsequence], ModelFailure]
+    ! {AI.Generate, Context.Disclose}:
+    skills: Skills[MediatingConceptualBridge] = [bridge_consequence_skill_1]
+
+# Real model capability for source occurrence refutation_assessment:RefutationalBridgeConsequenceAssessment.
+agent refutation_assessment_material_agent(
+    task: BridgeDerivedConsequence,
+) -> Result[Generated[BridgeConsequenceRefutationAssessment], ModelFailure]
+    ! {AI.Generate, Context.Disclose}:
+    skills: Skills[BridgeDerivedConsequence] = [refutation_assessment_skill_1]
+
+# Real model capability for source occurrence refinement_routing:EvidentialConceptualRefinementRoutingAssessment.
+agent refinement_routing_material_agent(
+    task: ConceptualRefinementRoutingInput,
+) -> Result[Generated[MaterialConceptualRefinementRoutingAssessment], ModelFailure]
+    ! {AI.Generate, Context.Disclose}:
+    skills: Skills[ConceptualRefinementRoutingInput] = [refinement_routing_skill_1]
+
+workflow MaterializedConceptualHypothesisExplorationLoop(
+    failure_state: ConceptualFailureState,
+) -> Generated[MaterialConceptualRefinementRoutingAssessment]
+    fails ModelFailure
+    ! {AI.Generate, Context.Disclose}:
+    sequence:
+        # Diagnosis bounds what the abductive repair must explain.
+        [obstruction_pressure: obstruction_pressure_material_agent(failure_state)]
+        [mediation_hypothesis: mediation_hypothesis_material_agent(obstruction_pressure.value)]
+        # Analogy constructs a bridge; deduction exposes a consequence that can fail.
+        [conceptual_bridge: conceptual_bridge_material_agent(mediation_hypothesis.value)]
+        [bridge_consequence: bridge_consequence_material_agent(conceptual_bridge.value)]
+        # Refutation tests the consequence before the final routing calibration.
+        [refutation_assessment: refutation_assessment_material_agent(bridge_consequence.value)]
+        [refinement_routing: refinement_routing_material_agent(ConceptualRefinementRoutingInput(
+            conceptual_bridge = conceptual_bridge.value,
+            refutation_assessment = refutation_assessment.value,
+        ))]
+
+    return refinement_routing
+
+
+def main(
+    failure_state: ConceptualFailureState,
+    model_access: ModelGenerate,
+    disclosure: ContextDisclose,
+) -> Result[Generated[MaterialConceptualRefinementRoutingAssessment], ModelFailure] ! {AI.Generate, Context.Disclose}:
+    return solve MaterializedConceptualHypothesisExplorationLoop(failure_state)

@@ -1,0 +1,444 @@
+% SPDX-FileCopyrightText: © 2026 Idiap Research Institute <contact@idiap.ch>
+%
+% SPDX-FileContributor: Andre Freitas <andre.freitas@idiap.ch>
+% Neuro-symbolic AI Group
+%
+% SPDX-FileContributor: Danilo Gusicuma <danilo.gusicuma@idiap.ch>
+% Neuro-symbolic AI Group
+%
+% SPDX-License-Identifier: MIT
+\documentclass[11pt]{article}
+
+\usepackage[margin=1in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{booktabs}
+\usepackage{enumitem}
+\usepackage{hyperref}
+\usepackage{xcolor}
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue!50!black,
+  urlcolor=blue!50!black,
+  citecolor=blue!50!black,
+  pdftitle={A Formal Assessment of Abducer as a Framework for Systematic Informal Mathematical Search-Space Exploration}
+}
+
+\title{A Formal Assessment of Abducer as a Framework\\for Systematic Informal Mathematical Search-Space Exploration}
+\author{Neuro-symbolic AI Group\\Idiap Research Institute}
+\date{March 16, 2026}
+
+\newtheorem{definition}{Definition}
+\newtheorem{principle}{Principle}
+\newtheorem{claim}{Claim}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+This note formalizes the current Abducer framework at the level relevant to systematic informal natural-language exploration of mathematical search spaces. The goal is not to restate the entire architecture, but to isolate the scientific object that the framework is actually manipulating: a run-scoped, typed, inspectable process that proposes theorem-grounded routes, bridge objects, proof obligations, and revision actions over a mathematical knowledge base. We then use the March 16, 2026 end-to-end \texttt{p-vs-np} run as an empirical probe of the framework. The conclusion is mixed. There is evidence that the system is moving in a real discovery direction in the weak but meaningful sense that it consistently localizes nontrivial theorem interfaces, concentrates on the hardness-magnification regime, produces typed bridge objects, and exposes route-specific proof obligations and counterfactual failure modes. However, there is not yet evidence of genuine mathematical discovery in the strong sense of validated new mathematics, because the framework still lacks route-level global scoring, evidence-bearing falsification, sufficiently concrete witness objects, and diagnostic revision operators. The right interpretation is therefore that the framework is already a useful search-space reduction and audit system, but is not yet a reliable informal theorem-discovery engine.
+\end{abstract}
+
+\section{Problem Statement}
+
+The underlying scientific question is:
+
+\begin{quote}
+Can a reasoning framework carry out systematic informal exploration of a mathematical search space in natural language, while remaining inspectable enough that mathematical experts can audit what conceptual moves, route proposals, and failure diagnoses actually occurred?
+\end{quote}
+
+This question is narrower than ``can a language model solve hard mathematics?'' and more operational than ``can one generate plausible conjectures?'' The point is to formalize a process that:
+
+\begin{enumerate}[leftmargin=*,itemsep=0.3em]
+\item moves through a mathematical space by explicit intermediate artifacts rather than opaque generation;
+\item records route formation, bridge-object design, and failure probes in a way that experts can inspect;
+\item supports revision of the search regime rather than merely reranking textual hypotheses.
+\end{enumerate}
+
+\section{Formal Search-State Model}
+
+\subsection{Problem State}
+
+\begin{definition}[Informal discovery state]
+At reasoning step $t$, the framework state is
+\[
+\mathcal{X}_t = (\mathcal{K}_t, \mathcal{A}_t, \Lambda_t, \Pi_t),
+\]
+where:
+\begin{itemize}[leftmargin=*,itemsep=0.2em]
+\item $\mathcal{K}_t$ is the mathematical KB state;
+\item $\mathcal{A}_t$ is the family of stage artifacts currently available;
+\item $\Lambda_t$ is the run-scoped log and surface trace;
+\item $\Pi_t$ is the portfolio of active route programs, each of which proposes a source theorem, target theorem, bridge object, and obligation set.
+\end{itemize}
+\end{definition}
+
+The key addition relative to a plain KB formalization is $\Pi_t$. The framework is not operating directly on isolated statements. It is operating on candidate \emph{routes} through statement space.
+
+\begin{definition}[KB state]
+The KB state is represented as
+\[
+\mathcal{K}_t = (S_t, C_t, M_t, B_t, R_t, H_t, O_t),
+\]
+where $S_t$ is the set of statements, $C_t$ the active concepts, $M_t$ the methods or regimes, $B_t$ the barriers, $R_t$ the typed relations, $H_t$ the current hypotheses, and $O_t$ the open obligations.
+\end{definition}
+
+\subsection{Statement and Route Objects}
+
+\begin{definition}[Theorem-grounded statement object]
+A statement node is not only a label. It is modeled as
+\[
+s = (\mathrm{id}, \mathrm{body}, \mathrm{roles}, \mathrm{model}, \mathrm{problem}, \mathrm{status}),
+\]
+where $\mathrm{body}$ is the normalized theorem or definition text excerpt, $\mathrm{roles}$ captures inferential roles such as antecedent or consequence, and $\mathrm{model}$ and $\mathrm{problem}$ locate the statement in the relevant mathematical regime.
+\end{definition}
+
+\begin{definition}[Route program]
+A route program is a tuple
+\[
+\pi = (s_{\mathrm{src}}, s_{\mathrm{tgt}}, \Delta, b, I, L, F),
+\]
+where:
+\begin{itemize}[leftmargin=*,itemsep=0.2em]
+\item $s_{\mathrm{src}}$ is the source theorem or definition;
+\item $s_{\mathrm{tgt}}$ is the target theorem or consequence statement;
+\item $\Delta$ is the statement delta;
+\item $b$ is the candidate bridge object;
+\item $I$ is the preserved invariant set;
+\item $L$ is the lemma and obligation chain;
+\item $F$ is the negative-route or failure diagnosis.
+\end{itemize}
+\end{definition}
+
+\begin{definition}[Statement delta]
+The statement delta for a route is
+\[
+\Delta = (\Delta_{\mathrm{problem}}, \Delta_{\mathrm{model}}, \Delta_{\mathrm{threshold}}, \Delta_{\mathrm{consequence}}, \Delta_{\mathrm{missing}}),
+\]
+recording the concrete mathematical shift from source to target: problem-family movement, model change, threshold strengthening, consequence strengthening, and the missing transport lemma.
+\end{definition}
+
+This delta is the central object for systematic informal reasoning. Without it, the framework falls back to thematic similarity. With it, it can at least ask what mathematical step is missing.
+
+\subsection{Bridge Objects}
+
+\begin{definition}[Typed bridge object]
+A bridge object is represented as
+\[
+b = (\mathrm{name}, \mathrm{type}, \mathrm{carrier}, N(b), S(b), X(b)),
+\]
+where $\mathrm{type}$ is the bridge family, $\mathrm{carrier}$ is the mathematical carrier description, $N(b)$ are necessary attributes, $S(b)$ are sufficient attribute sets, and $X(b)$ are excluded superficial attributes.
+\end{definition}
+
+In the current framework, examples include witness families, promise problems, certificate families, pseudorandom objects, and surrogate reductions. The model is only search-relevant if $\mathrm{carrier}$ is theorem-pair-specific rather than a generic noun phrase.
+
+\section{Pipeline as Search-Space Dynamics}
+
+The current end-to-end discovery operator can be grouped as
+\[
+\begin{aligned}
+\mathsf{Pipeline}
+= {} & \mathsf{Surface}
+\circ
+\mathsf{Paper}
+\circ
+\mathsf{Revise}
+\circ
+\mathsf{Loop}
+\circ
+\mathsf{Eval}
+\circ
+\mathsf{Sketch} \\
+& \circ
+\mathsf{Strategize}
+\circ
+\mathsf{Conjecture}
+\circ
+\mathsf{Bridge}
+\circ
+\mathsf{Hardness}
+\circ
+\mathsf{Path} \\
+& \circ
+\mathsf{Entry}
+\circ
+\mathsf{Coherence}
+\circ
+\mathsf{Connect}.
+\end{aligned}
+\]
+
+The scientific interpretation is:
+
+\begin{itemize}[leftmargin=*,itemsep=0.25em]
+\item \textbf{Formation}: $\mathsf{Connect}$ and $\mathsf{Coherence}$ build the initial inferential field.
+\item \textbf{Frontier selection}: $\mathsf{Entry}$ and $\mathsf{Path}$ choose where the search should focus.
+\item \textbf{Gap localization}: $\mathsf{Hardness}$ and $\mathsf{Bridge}$ identify where known mathematics does not yet transport.
+\item \textbf{Object invention}: $\mathsf{Conjecture}$ proposes the missing mathematical object family.
+\item \textbf{Program articulation}: $\mathsf{Strategize}$ and $\mathsf{Sketch}$ turn that object into a candidate proof program.
+\item \textbf{Filtering and repair}: $\mathsf{Eval}$, $\mathsf{Loop}$, and $\mathsf{Revise}$ decide whether the route should be kept, challenged, or repaired.
+\item \textbf{Expert inspection}: $\mathsf{Paper}$ and $\mathsf{Surface}$ expose the route in human-facing forms.
+\end{itemize}
+
+\begin{principle}[Inspectability requirement]
+An informal reasoning framework counts as systematic only if each stage emits artifacts that can be inspected independently of the final recommendation.
+\end{principle}
+
+This requirement is already one of the real strengths of the current framework.
+
+\section{Empirical Probe: the March 16, 2026 \texttt{p-vs-np} Run}
+
+We treat the latest \texttt{p-vs-np} execution as an empirical probe of the framework rather than as a claim to solve the problem.
+
+\subsection{Observed Run Facts}
+
+For run \texttt{20260316T195321Z-40292}, the framework produced:
+
+\begin{itemize}[leftmargin=*,itemsep=0.2em]
+\item 64 usable statements and 40 candidate links;
+\item global coherence baseline $0.3133$;
+\item 20 ranked entrypoints and 8 pathways;
+\item 20 bridge programs and 34 abstraction conjectures;
+\item 6 proof strategies and 6 proof sketches;
+\item 44 hypotheses, with 22 marked supported and 22 inconclusive;
+\item 103 tracked process states, with graph growth from $2$ to $104$ nodes and from $1$ to $165$ edges.
+\end{itemize}
+
+The dominant bridge agenda concentrated on the hardness-magnification region, especially the route from the hardness-magnification programme statement to the Oliveira--Pich--Santhanam and Oliveira--Santhanam consequences. The strongest proof-sketch route remained the theorem pair
+\begin{quote}
+\path{st.def.hardness-magnification-phenomenon-programme-leve}\\
+$\rightsquigarrow$\\
+\path{st.thm.oliveira-pich-santhanam-magnification-near-state}
+\end{quote}
+with target consequence \textit{NP-not-in-P/poly} and invariant \textit{MCSP complexity profile in nonuniform circuits}.
+
+\subsection{What the Run Actually Demonstrates}
+
+The run shows four nontrivial behaviors.
+
+\begin{enumerate}[leftmargin=*,itemsep=0.3em]
+\item The framework does not remain at topical clustering. It repeatedly recovers the hardness-magnification theorem family as the main route-bearing region.
+\item The source and target theorem bodies are now explicitly surfaced in the paper-style artifacts, so the route is theorem-grounded rather than profile-signature-grounded.
+\item The bridge objects are typed and paired with explicit negative routes, so the system can state what would count as degeneration into topical overlap.
+\item The final artifacts are inspectable by experts at the level of source theorem, target theorem, mathematical delta, carrier kind, obligations, and failure diagnosis.
+\end{enumerate}
+
+This is enough to say that the system is tracking real mathematical structure, not merely generating generic research prose.
+
+\section{Current Modelling Defects}
+
+The same run also exposes the present limitations of the model.
+
+\subsection{Entrypoint bias}
+
+The top entrypoint is still the generic \texttt{P/poly} definition rather than the main magnification theorem statement. This means the current entrypoint objective over-rewards structural centrality and under-rewards mathematical leverage.
+
+Formally, the framework is using a local frontier score
+\[
+\operatorname{EntryScore}(s) \approx f_{\mathrm{centrality}}(s) + f_{\mathrm{coherence}}(s) + f_{\mathrm{bridgeability}}(s),
+\]
+but it needs an additional term that conditions on downstream route quality:
+\[
+\operatorname{EntryScore}^{\star}(s)
+=
+\operatorname{EntryScore}(s)
++
+\eta \cdot \mathbb{E}[\operatorname{RouteValue}(\pi) \mid s \in \pi].
+\]
+
+\subsection{Stage-local objective mismatch}
+
+The best bridge and best proof sketch are MCSP magnification routes, but the top conjectures are PIT-oriented objects. This is evidence that the pipeline currently optimizes stage-local salience instead of end-to-end route quality. The model needs a route portfolio objective that scores conjectures by their value inside the strongest retained routes, not only by local gap pressure.
+
+\subsection{Weak falsification semantics}
+
+The hypothesis evaluator and refutation loop used zero external evidence items in the current run, yet promoted 22 hypotheses to supported and refuted none. This shows that the present verdict semantics are mostly structural:
+\[
+\operatorname{Supported}(h) \approx \text{internally favored by the current scoring regime},
+\]
+not:
+\[
+\operatorname{Supported}(h) \approx \text{survives adversarial or evidential pressure}.
+\]
+
+The framework therefore needs a separate evidential layer:
+\[
+\mathcal{E}_t = (\mathcal{E}^{+}_t, \mathcal{E}^{-}_t, \mathcal{E}^{\pm}_t),
+\]
+with positive evidence, negative evidence, and adversarial probes attached to route components.
+
+\subsection{Bridge objects remain too schematic}
+
+Although the bridge objects are now typed, many of them are still phrases such as \texttt{MCSP witness family} or \texttt{unspecified witness family}. This is better than the older profile-signature labels, but it is still one level too abstract for expert mathematical inference. The model should force bridge objects into one of the following stronger carrier classes whenever possible:
+
+\begin{itemize}[leftmargin=*,itemsep=0.2em]
+\item explicit witness family;
+\item reduction map or transport map;
+\item promise-gap problem with threshold parameters;
+\item certificate relation;
+\item invariant-valued measure on a concrete class of instances;
+\item obstruction object witnessing impossibility.
+\end{itemize}
+
+If no such carrier can be named, the route should be marked \emph{underspecified} instead of receiving a high bridge maturity score.
+
+\subsection{Revision is not diagnostic enough}
+
+With 22 open hypotheses, the framework proposes only a single generic concept-splitting action. That is a valid repair class, but not a sufficient diagnosis. The revision operator should be route-local:
+\[
+\mathsf{Revise}(\pi)
+=
+(\mathrm{repair}_{\Delta}, \mathrm{repair}_{b}, \mathrm{repair}_{I}, \mathrm{repair}_{L}),
+\]
+so that the system can specify whether the failure came from the delta decomposition, the bridge carrier, the invariant set, or the lemma chain.
+
+\subsection{Observability is execution-heavy}
+
+The surface index records many artifact-emission events and relatively fewer true reasoning-move events. This means the framework is excellent at provenance, but less mature at concept-evolution semantics. A next modelling step is to log the change operator itself:
+\[
+\chi_t : \Pi_t \rightarrow \Pi_{t+1},
+\]
+where $\chi_t$ records not only that an artifact was produced, but what conceptual commitments were added, split, demoted, or ruled out.
+
+\section{Opportunities for Improved Modelling}
+
+The preceding defects suggest a more explicit mathematical model of the framework.
+
+\subsection{Opportunity 1: Route-level global scoring}
+
+Replace stage-local ranking by a route portfolio functional
+\[
+\Phi(\Pi_t)
+=
+\sum_{\pi \in \Pi_t}
+w_1 g(\pi)
++
+w_2 q(\pi)
++
+w_3 f(\pi)
++
+w_4 r(\pi)
++
+w_5 u(\pi),
+\]
+where:
+\begin{itemize}[leftmargin=*,itemsep=0.2em]
+\item $g(\pi)$ is theorem grounding quality;
+\item $q(\pi)$ is consequence quality or leverage;
+\item $f(\pi)$ is falsifiability quality;
+\item $r(\pi)$ is revision value;
+\item $u(\pi)$ is uniqueness or nonredundancy within the route portfolio.
+\end{itemize}
+
+\subsection{Opportunity 2: Stronger theorem-body typing}
+
+The last pass already improved theorem excerpt normalization and source-claim focus. The next modelling step is to enrich each statement body with typed fields for quantifiers, object classes, asymptotic thresholds, and conclusion kinds. This would allow the statement delta to become partially formal rather than purely narrative.
+
+\subsection{Opportunity 3: Bridge maturity should depend on carrier realism}
+
+Current bridge maturity can be high even when the carrier object is only weakly specified. A stricter maturity model would factor in carrier realism:
+\[
+\begin{aligned}
+\operatorname{BridgeMaturity}(b)
+= {} & \alpha \cdot \operatorname{typing}
++
+\beta \cdot \operatorname{carrier\_specificity} \\
+& +
+\gamma \cdot \operatorname{route\_necessity}
++
+\delta \cdot \operatorname{counterfactual\_sharpness}.
+\end{aligned}
+\]
+
+\subsection{Opportunity 4: Explicit anti-bridge and anti-barrier programs}
+
+Negative routes are currently present, but they are still subordinate to the positive route. The framework should represent anti-bridges and anti-barrier programs as first-class artifacts so that ``no such transport object exists under these commitments'' becomes a valid discovery product.
+
+\subsection{Opportunity 5: Discovery evidence metrics}
+
+The framework needs explicit metrics that distinguish productive search from inert elaboration. Useful candidates are:
+
+\begin{itemize}[leftmargin=*,itemsep=0.2em]
+\item route stability across reruns;
+\item fraction of top conjectures aligned with top bridges;
+\item obligation specificity and discharge readiness;
+\item rate of route-local revision over generic repair;
+\item number of hypotheses actually challenged by negative evidence;
+\item convergence of open-hypothesis mass under repair.
+\end{itemize}
+
+\section{Is There Evidence of a Real Discovery Direction?}
+
+This is the central interpretive question.
+
+\begin{definition}[Real discovery direction]
+A run is in a real discovery direction if it satisfies most of the following:
+\begin{enumerate}[leftmargin=*,itemsep=0.25em]
+\item \textbf{nontrivial route concentration}: the search repeatedly localizes theorem pairs that experts would recognize as mathematically central;
+\item \textbf{theorem grounding}: source and target claims are tied to actual theorem bodies rather than topic labels;
+\item \textbf{bridge necessity}: the candidate bridge object is shown to be mathematically load-bearing by explicit counterfactual failure;
+\item \textbf{falsifiability}: the route is exposed to adversarial or negative evidence rather than only supportive ranking;
+\item \textbf{repair informativeness}: unresolved routes generate specific modelling repairs rather than generic rerun advice;
+\item \textbf{progress under iteration}: repeated runs either stabilize the same strong route or sharpen it by reducing obligation vagueness.
+\end{enumerate}
+\end{definition}
+
+\begin{claim}[Assessment of the current \texttt{p-vs-np} run]
+The current run provides \emph{partial but nontrivial} evidence of a real discovery direction, but not evidence of discovery in the strong mathematical sense.
+\end{claim}
+
+\paragraph{Why the evidence is positive.}
+
+There is positive evidence because:
+
+\begin{itemize}[leftmargin=*,itemsep=0.2em]
+\item the run repeatedly concentrates on the hardness-magnification region rather than diffusing across unrelated complexity topics;
+\item the main route is theorem-grounded and stable across bridge, sketch, and expert-paper artifacts;
+\item the system isolates concrete missing mathematics, such as the route-specific lemma connecting barely nontrivial lower bounds to major consequences through an MCSP-based invariant;
+\item the framework now distinguishes constructive route content from negative-route degeneration into topical overlap.
+\end{itemize}
+
+\paragraph{Why the evidence is still insufficient.}
+
+There is not yet strong evidence of genuine discovery because:
+
+\begin{itemize}[leftmargin=*,itemsep=0.2em]
+\item no bridge object is validated by new mathematics;
+\item the refutation loop runs without real adverse evidence and therefore cannot establish robustness;
+\item 22 hypotheses remain open after the loop, and the revision operator does not localize the failure precisely enough;
+\item several key objects remain placeholders rather than expert-usable mathematical constructions.
+\end{itemize}
+
+So the right conclusion is:
+\[
+\text{search-space discovery support} \quad \text{yes}, \qquad
+\text{validated mathematical discovery} \quad \text{not yet}.
+\]
+
+\section{Conclusion}
+
+The current Abducer framework already supports a meaningful form of systematic informal natural-language exploration. It can now produce theorem-grounded route programs, typed bridge objects, structured proof sketches, negative-route probes, and expert-inspectable surfaces. That is real progress.
+
+But the framework should not yet be described as performing mathematical discovery in the strong sense. The evidence from the latest \texttt{p-vs-np} run supports a more precise claim: the system is becoming a rigorous search-space reduction and route-auditing framework for hard mathematics. If the next modelling pass adds route-level global scoring, evidence-bearing falsification, carrier-specific bridge typing, and route-local revision diagnostics, then the framework would have a credible path from structured exploration toward genuine discovery assistance.
+
+\section{Source Basis}
+
+This note is grounded in the following repository artifacts and documents:
+
+\begin{itemize}[leftmargin=*,itemsep=0.2em]
+\item \url{docs/publications/framework-scientific-concept-paper.tex}
+\item \url{docs/publications/framework-state-formalization.tex}
+\item \url{docs/research-methods/epistemic-prompt-framework.md}
+\item \url{artifacts/p-vs-np/reasoning-process-report.md}
+\item \url{artifacts/p-vs-np/discovery-interpretation-report.md}
+\item \url{artifacts/p-vs-np/reasoning-dynamics.md}
+\item \url{artifacts/p-vs-np/paper-style-argument.md}
+\item \url{artifacts/p-vs-np/expert-hypothesis-paper.md}
+\item \url{artifacts/p-vs-np/reasoning-log-index.md}
+\item \url{artifacts/p-vs-np/reasoning-surface-index.md}
+\end{itemize}
+
+\end{document}

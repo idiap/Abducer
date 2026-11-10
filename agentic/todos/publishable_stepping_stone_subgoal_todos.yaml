@@ -1,0 +1,441 @@
+# SPDX-FileCopyrightText: © 2026 Idiap Research Institute <contact@idiap.ch>
+#
+# SPDX-FileContributor: Andre Freitas <andre.freitas@idiap.ch>
+# Neuro-symbolic AI Group
+#
+# SPDX-FileContributor: Danilo Gusicuma <danilo.gusicuma@idiap.ch>
+# Neuro-symbolic AI Group
+#
+# SPDX-License-Identifier: MIT
+version: 1
+title: Publishable stepping-stone subgoal detection
+created_utc: "2026-07-11T09:07:00Z"
+status: completed
+created_at: "2026-07-11"
+implementation_status:
+  status: completed
+  completed_at: "2026-07-11"
+source_artifacts:
+  monitor: agentic/reports/scientific_contribution_monitor/latest.json
+  report: agentic/reports/discovery_marathon/full_timeline.html
+  latex_sections: agentic/reports/timeline_latex_sections/latest.json
+  fixture_validator: agentic/scripts/validate_publishable_stepping_stone_fixtures.py
+context:
+  problem: >
+    Long-horizon discovery runs need a reliable mechanism for recognizing when a branch is close
+    to a "big deal" subgoal: a publishable stepping-stone result that matters independently even
+    though the main target remains open.
+  current_limitation: >
+    The existing scientific contribution monitor detects contribution-shaped outputs and high
+    reward directions, but it can over-promote candidates because the scoring model does not
+    sharply distinguish interesting route learning from a paper-level stepping-stone package.
+    For example, a repeated quantitative obstruction can score as "good_enough_to_handoff" before
+    prior-art boundaries, theorem statements, proof obligations, and validation artifacts are
+    separated.
+  design_principle: >
+    A big-deal subgoal is not just a high-scoring branch. It is a bounded scientific object with
+    a smallest honest claim, a clear audience, a known novelty boundary, an explicit proof or
+    disproof burden, and a finite path to a paper note, lemma packet, negative-result note,
+    benchmark/probe note, or conceptual-method note.
+
+criteria:
+  publishable_stepping_stone_definition:
+    description: >
+      A subgoal qualifies as a publishable stepping stone when it could be written as a scoped
+      contribution whose value does not depend on solving the main problem.
+    must_have:
+      - "Named mathematical object: theorem, lemma, obstruction, falsifier, transfer inequality, carrier, benchmark/probe, or conceptual mechanism."
+      - "Smallest honest claim that avoids overclaiming the main target."
+      - "Explicit assumptions, validity regime, definitions, and model boundaries."
+      - "Evidence basis: derivation, computation, counterexample, symbolic check, source-backed comparison, or falsifier."
+      - "Novelty boundary against known literature or a concrete prior-art search obligation."
+      - "Main-problem relevance: explains which bottleneck, route family, transfer obligation, or impossibility pressure it changes."
+      - "Finite certification path with validators, proof obligations, prior-art tasks, and packaging artifacts."
+      - "Overclaim boundary: what the result does not prove and what would be needed to connect it to the main target."
+    must_not_have:
+      - "Only a queue-management or workflow-improvement claim without external scientific content."
+      - "A proxy lower bound or proxy theory that silently replaces the target."
+      - "A contribution claim whose source assumption is already equivalent to the main theorem."
+      - "An unbounded next step such as 'explore more' or 'continue the route' without a decisive test."
+      - "Novelty asserted without prior-art boundary or rediscovery risk analysis."
+
+  maturity_levels:
+    contribution_shaped:
+      meaning: >
+        The branch has an independently meaningful object or obstruction, but it is not yet a
+        publishable stepping stone.
+      required_evidence:
+        - "Object named."
+        - "Smallest honest claim drafted."
+        - "At least one target-relevance argument."
+      forbidden_promotion:
+        - "Do not hand off to paper until validation and prior-art gates are separated."
+    near_stepping_stone:
+      meaning: >
+        The branch is close to a publishable sub-problem result; one or two bounded tasks could
+        make it paper-note ready.
+      required_evidence:
+        - "Proof or calculation skeleton exists."
+        - "Main disqualifiers are known."
+        - "Prior-art search target is explicit."
+        - "Validation task is finite and local."
+      routing:
+        - "Do not run broad marathon exploration; run bounded certification or paper-argument tasks."
+    publishable_handoff_ready:
+      meaning: >
+        The candidate should stop consuming discovery budget and move to validation, prior-art,
+        and manuscript packaging.
+      required_evidence:
+        - "Theorem/claim statement can be written in paper style."
+        - "Evidence table or derivation supports the claim."
+        - "Known limitations and non-claims are explicit."
+        - "Prior-art boundary has been checked or is represented as a finite citation task."
+        - "A paper skeleton can be produced without pipeline jargon."
+
+todos:
+  - id: PSS-001
+    title: Add a three-state stepping-stone classifier
+    status: resolved
+    priority: critical
+    result_artifact: agentic/reports/scientific_contribution_monitor/latest.json
+    use_skills:
+      - scientific-contribution-detector
+      - contribution-oriented-subgoal-manager
+    acceptance_criteria:
+      - "Candidates expose contribution_shaped, near_stepping_stone, or publishable_handoff_ready maturity."
+      - "good_enough_to_handoff is only assigned to publishable_handoff_ready candidates."
+    failure_modes:
+      - "A high-scoring branch is promoted to paper handoff without stepping-stone maturity."
+    completed_utc: "2026-07-11T09:52:00Z"
+    implementation_note: >
+      Implemented `stepping_stone_maturity`, backward-compatible statuses,
+      missing-to-publishable fields, paper-note shape, certification blockers,
+      and separate monitor metrics.
+    intent: >
+      Replace the binary-ish "good_enough_to_handoff" promotion with a three-state classifier:
+      contribution_shaped, near_stepping_stone, and publishable_handoff_ready.
+    files:
+      - agentic/scripts/build_scientific_contribution_monitor.py
+      - agentic/scripts/validate_scientific_contribution_monitor.py
+      - skills/evaluation/scientific-contribution-detector/SKILL.md
+      - skills/evaluation/paper-contribution-readiness-judge/SKILL.md
+    implementation:
+      - "Add `stepping_stone_maturity` to each candidate."
+      - "Keep existing `status` for backward compatibility, but make `good_enough_to_handoff` require publishable_handoff_ready maturity."
+      - "Add fields `missing_to_publishable`, `paper_note_shape`, and `certification_blockers`."
+      - "Ensure monitor metrics separately count contribution-shaped candidates and publishable handoff candidates."
+    validation:
+      - "Run `python agentic/scripts/build_scientific_contribution_monitor.py`."
+      - "Run `python agentic/scripts/validate_scientific_contribution_monitor.py`."
+      - "Check that repeated P vs NP quantitative-obstruction candidates are not automatically publishable unless prior-art and proof-shape gates are met."
+
+  - id: PSS-002
+    title: Add hard gates for publishable handoff readiness
+    status: resolved
+    priority: critical
+    result_artifact: agentic/reports/scientific_contribution_monitor/latest.json
+    use_skills:
+      - contribution-value-assessor
+      - scientific-contribution-paper-handoff
+    acceptance_criteria:
+      - "Publishable handoff requires claim, evidence, novelty, validation, and overclaim gates."
+      - "Validator rejects publishable candidates with missing or unevidenced gates."
+    failure_modes:
+      - "Novelty or explanatory score bypasses missing proof, prior-art, or validation evidence."
+    completed_utc: "2026-07-11T09:52:00Z"
+    implementation_note: >
+      Added hard gates for claim, evidence, novelty boundary, validation, and
+      overclaim boundary, with validator checks preventing unsupported handoff.
+    intent: >
+      Prevent high scores from bypassing core scientific-readiness requirements.
+    files:
+      - agentic/scripts/build_scientific_contribution_monitor.py
+      - skills/evaluation/contribution-value-assessor/SKILL.md
+      - skills/reporting/scientific-contribution-paper-handoff/SKILL.md
+    implementation:
+      - "Define `handoff_hard_gates`: claim_statement_ready, evidence_ready, novelty_boundary_ready, validation_ready, overclaim_boundary_ready."
+      - "A candidate cannot be `publishable_handoff_ready` unless every hard gate is true or has a finite task assigned."
+      - "Add `gate_evidence` with cycle IDs, equations, report sections, KB IDs, or explicit unknowns for each gate."
+      - "Demote candidates with high novelty/explanatory scores but missing prior-art or proof-shape evidence to `near_stepping_stone`."
+    validation:
+      - "Validator fails if a publishable candidate lacks any hard gate."
+      - "Validator fails if hard gates are set to true without evidence strings."
+
+  - id: PSS-003
+    title: Make publishable stepping-stone criteria target-specific
+    status: resolved
+    priority: critical
+    result_artifact: agentic/scripts/target_profiles.py
+    use_skills:
+      - paper-contribution-readiness-judge
+      - scientific-contribution-detector
+    acceptance_criteria:
+      - "Target profiles define stepping-stone forms for P vs NP, Yang-Mills, and generic targets."
+      - "Candidates are classified using target-specific scientific objects and disqualifiers."
+    failure_modes:
+      - "P vs NP and Yang-Mills candidates collapse into generic contribution language."
+    completed_utc: "2026-07-11T09:52:00Z"
+    implementation_note: >
+      Added target-profile stepping-stone forms for P vs NP, Yang-Mills, and a
+      generic fallback, and routed monitor candidates through those profiles.
+    intent: >
+      Ensure the mechanism can recognize big-deal subgoals differently for P vs NP, Yang-Mills,
+      and future targets.
+    files:
+      - agentic/scripts/build_scientific_contribution_monitor.py
+      - agentic/scripts/target_profiles.py
+      - skills/evaluation/paper-contribution-readiness-judge/SKILL.md
+    implementation:
+      - "Add target-profile definitions for stepping-stone forms."
+      - "For P vs NP, include: quantitative transfer obstruction, route-specific no-go, searchable certificate bridge, all-exponent quantifier-lift lemma, restricted-model transfer boundary, proof-complexity certificate bridge."
+      - "For Yang-Mills, include: finite OS obstruction theorem, worked Wilson-collar calculation, same-theory transfer lemma, endpoint estimate, spectral/reconstruction bridge lemma."
+      - "Each target-specific form must define: object, likely audience, novelty axis, decisive validation, and disqualifiers."
+    validation:
+      - "Build monitor for P vs NP and verify candidates use complexity-theoretic forms, not generic contribution language."
+      - "Build monitor for Yang-Mills when active and verify candidates use physics/mathematics forms, not P vs NP forms."
+
+  - id: PSS-004
+    title: Add a novelty-and-prior-art boundary packet
+    status: resolved
+    priority: high
+    result_artifact: agentic/reports/scientific_contribution_monitor/latest.json
+    use_skills:
+      - prior-art-importer
+      - paper-contribution-readiness-judge
+    acceptance_criteria:
+      - "Every candidate includes closest results, reused material, novelty claim, rediscovery risk, citation tasks, and novelty status."
+      - "Prior-art-unknown candidates cannot be publishable_handoff_ready."
+    failure_modes:
+      - "The monitor asserts novelty without a checked boundary or finite citation task."
+    completed_utc: "2026-07-11T09:52:00Z"
+    implementation_note: >
+      Added prior-art boundary packets with closest-result families, reuse/new
+      claim separation, rediscovery risk, citation tasks, and novelty status.
+    intent: >
+      A candidate should not be called publishable until its novelty is bounded against adjacent
+      literature or a finite literature check is queued.
+    files:
+      - skills/evidence/prior-art-importer/SKILL.md
+      - skills/evaluation/paper-contribution-readiness-judge/SKILL.md
+      - agentic/scripts/build_scientific_contribution_monitor.py
+      - agentic/reports/scientific_contribution_monitor/latest.json
+    implementation:
+      - "Add `prior_art_boundary` object to contribution candidates."
+      - "Fields: closest_known_results, what_is_reused, what_is_new_if_true, rediscovery_risk, citation_tasks, novelty_status."
+      - "If prior art is unknown, status can be `near_stepping_stone` but not `publishable_handoff_ready`."
+      - "For P vs NP quantitative obstruction candidates, compare against known hardness magnification, natural proofs, relativization/algebrization, MCSP/MKtP, and proof-complexity transfer literature."
+    validation:
+      - "Validator fails publishable candidates with missing `prior_art_boundary`."
+      - "Timeline report shows prior-art boundary in the Scientific Contribution Monitor tab."
+
+  - id: PSS-005
+    title: Add a paper-shape extractor for candidate subgoals
+    status: resolved
+    priority: high
+    result_artifact: agentic/reports/scientific_contribution_monitor/latest.json
+    use_skills:
+      - scientific-contribution-paper-handoff
+      - timeline-paper-section-synthesizer
+    acceptance_criteria:
+      - "Near and publishable candidates expose a paper_note_shape consumable by paper-building workflows."
+      - "Paper-facing fields do not leak pipeline, marathon, or skill-control jargon."
+    failure_modes:
+      - "A candidate keeps accumulating exploration details without a bounded paper-note shape."
+    completed_utc: "2026-07-11T09:52:00Z"
+    implementation_note: >
+      Added paper-note-shape extraction for near and publishable candidates and
+      validation against pipeline-jargon leakage.
+    intent: >
+      Convert a near-stepping-stone candidate into a paper-note outline, making missing work
+      visible and stopping infinite exploration.
+    files:
+      - skills/reporting/scientific-contribution-paper-handoff/SKILL.md
+      - agentic/scripts/build_scientific_contribution_monitor.py
+      - agentic/scripts/build_timeline_paper.py
+    implementation:
+      - "Emit `paper_note_shape` for every near or publishable candidate."
+      - "Fields: title, abstract_claim, theorem_or_result_statement, definitions_needed, proof_plan, figures_or_tables, relation_to_main_problem, limitations, next_validation_artifacts."
+      - "Require no pipeline jargon in `paper_note_shape`."
+      - "When `publishable_handoff_ready`, automatically add top-priority queue items for paper packaging rather than more discovery."
+    validation:
+      - "Validator checks `paper_note_shape` exists for near/publishable candidates."
+      - "Timeline paper builder can consume the shape without needing marathon internals."
+
+  - id: PSS-006
+    title: Separate scientific value from exploration value
+    status: resolved
+    priority: critical
+    result_artifact: agentic/reports/scientific_contribution_monitor/latest.json
+    use_skills:
+      - next-experiment-queue-ranker
+      - contribution-oriented-subgoal-manager
+    acceptance_criteria:
+      - "Monitor emits exploration_payoff_score and publishable_subgoal_score separately."
+      - "Publishable labeling never uses exploration payoff alone."
+    failure_modes:
+      - "Useful next experiments are mistaken for paper-level subgoals."
+    completed_utc: "2026-07-11T09:52:00Z"
+    implementation_note: >
+      Added separate exploration-payoff and publishable-subgoal scores and made
+      validators reject publishable labeling from exploration score alone.
+    intent: >
+      Prevent the system from confusing a useful next experiment with a publishable subgoal.
+    files:
+      - agentic/scripts/build_scientific_contribution_monitor.py
+      - skills/orchestration/next-experiment-queue-ranker/SKILL.md
+      - skills/orchestration/contribution-oriented-subgoal-manager/SKILL.md
+    implementation:
+      - "Add two separate scores: `exploration_payoff_score` and `publishable_subgoal_score`."
+      - "Exploration payoff can be high when a branch is worth testing."
+      - "Publishable subgoal score becomes high only when claim, evidence, novelty, validation, and packaging gates are nearing completion."
+      - "Report disagreements explicitly, e.g. high exploration value but low publishable readiness."
+    validation:
+      - "Validator fails if a report uses exploration score alone to label a candidate publishable."
+
+  - id: PSS-007
+    title: Add disqualifier-first review for candidate promotion
+    status: resolved
+    priority: critical
+    result_artifact: agentic/reports/scientific_contribution_monitor/latest.json
+    use_skills:
+      - scientific-contribution-detector
+      - contribution-value-assessor
+    acceptance_criteria:
+      - "Candidates expose disqualifier_tests with pass, fail, unknown, or finite_check_queued verdicts."
+      - "Publishable candidates cannot have unresolved disqualifiers."
+    failure_modes:
+      - "A branch is promoted before proxy drift, target-equivalent assumptions, or barrier leakage are checked."
+    completed_utc: "2026-07-11T09:52:00Z"
+    implementation_note: >
+      Added disqualifier-first review with P-vs-NP-specific barrier/advice/proxy
+      checks and report/validator coverage.
+    intent: >
+      Promotion should begin by asking what would make the contribution not matter.
+    files:
+      - skills/evaluation/scientific-contribution-detector/SKILL.md
+      - skills/evaluation/contribution-value-assessor/SKILL.md
+      - agentic/scripts/build_scientific_contribution_monitor.py
+    implementation:
+      - "Add `disqualifier_tests`: already_known, proxy_problem, target_equivalent_assumption, evidence_gap, validation_unbounded, overclaim_risk, narrow_bookkeeping."
+      - "Each test has a verdict: pass, fail, unknown, finite_check_queued."
+      - "Unknown disqualifiers demote publishable readiness unless a finite check is queued."
+      - "For P vs NP, force checks for target-equivalent hardness, advice leakage, naturalness, relativization/algebrization, and restricted-model proxy drift."
+    validation:
+      - "Validator fails publishable candidates with missing disqualifier tests."
+      - "Report tab lists disqualifiers before enthusiasm language."
+
+  - id: PSS-008
+    title: Add budget routing based on stepping-stone maturity
+    status: resolved
+    priority: high
+    result_artifact: agentic/scripts/discovery_marathon_scheduler.py
+    use_skills:
+      - contribution-oriented-subgoal-manager
+      - next-experiment-queue-ranker
+    acceptance_criteria:
+      - "Scheduler surfaces budget_posture and why_this_budget_now from contribution maturity."
+      - "Near-stepping-stone branches route to bounded certification rather than broad exploration."
+    failure_modes:
+      - "A near-paper branch continues consuming broad discovery budget indefinitely."
+    completed_utc: "2026-07-11T09:52:00Z"
+    implementation_note: >
+      Added contribution-monitor budget hints into the marathon scheduler and
+      exposed `why_this_budget_now` in monitor/report surfaces.
+    intent: >
+      Make the discovery loop react differently when a branch is near a paper-level subgoal.
+    files:
+      - agentic/scripts/run_discovery_marathon.py
+      - agentic/scripts/run_discovery_marathon_job.py
+      - agentic/scripts/generate_discovery_marathon_html.py
+      - agentic/scripts/build_scientific_contribution_monitor.py
+    implementation:
+      - "If a candidate is `publishable_handoff_ready`, pause broad marathon scheduling for that branch and create paper/validation tasks."
+      - "If `near_stepping_stone`, allocate the next bounded cycle to the missing hard gate, not broad exploration."
+      - "If only `contribution_shaped`, allow exploration only when the next cycle improves a named maturity dimension."
+      - "Expose routing decision in the report as `why_this_budget_now`."
+    validation:
+      - "Run a dry report build and verify the next queue prioritizes hard-gate closure over generic exploration."
+
+  - id: PSS-009
+    title: Add report UX for big-deal subgoal recognition
+    status: resolved
+    priority: high
+    result_artifact: agentic/reports/discovery_marathon/full_timeline.html
+    use_skills:
+      - timeline-report-latex-composer
+      - scientific-contribution-paper-handoff
+    acceptance_criteria:
+      - "HTML and LaTeX report surfaces explain maturity, gates, disqualifiers, prior-art boundary, and finite next action."
+      - "Report prose explains why a branch is or is not close to a publishable stepping stone."
+    failure_modes:
+      - "The report reduces big-deal subgoal status to generic scores."
+    completed_utc: "2026-07-11T09:52:00Z"
+    implementation_note: >
+      Updated the HTML report and timeline LaTeX sections to explain maturity,
+      hard gates, disqualifiers, prior-art boundary, and next finite action.
+    intent: >
+      Make the report communicate why a candidate is or is not a publishable stepping stone.
+    files:
+      - agentic/scripts/generate_discovery_marathon_html.py
+      - agentic/scripts/build_timeline_latex_sections.py
+      - agentic/scripts/validate_discovery_marathon_report.py
+    implementation:
+      - "In Scientific Contribution Monitor, show three bands: contribution-shaped, near stepping stone, publishable handoff."
+      - "For each candidate show: smallest honest claim, maturity level, missing gates, disqualifiers, prior-art boundary, next finite certification action."
+      - "Avoid generic score cards; prioritize explanatory prose with evidence links."
+      - "In Summary, show the top candidate and whether to keep exploring or switch to paper/validation mode."
+    validation:
+      - "Run `python agentic/scripts/generate_discovery_marathon_html.py`."
+      - "Run `python agentic/scripts/validate_discovery_marathon_report.py`."
+      - "Manual check: report should explain why a candidate is close to publishable, not just assign a number."
+
+  - id: PSS-010
+    title: Add regression examples for overpromotion and proper promotion
+    status: resolved
+    priority: critical
+    result_artifact: agentic/scripts/validate_publishable_stepping_stone_fixtures.py
+    use_skills:
+      - scientific-contribution-detector
+      - contribution-value-assessor
+    acceptance_criteria:
+      - "Fixture A prevents prior-art-unknown high-score overpromotion."
+      - "Fixture B permits proper publishable promotion when all gates close."
+      - "Fixtures C and D keep claimless exploration and workflow-only improvements out of publishable handoff."
+    failure_modes:
+      - "Future scoring changes regress into overpromotion or block proper handoff."
+    completed_utc: "2026-07-11T09:52:00Z"
+    implementation_note: >
+      Added `validate_publishable_stepping_stone_fixtures.py` and wired it into
+      `agentic_check.py` to cover overpromotion and proper-promotion cases.
+    intent: >
+      Create deterministic fixtures that prevent future regressions.
+    files:
+      - tests/
+      - agentic/scripts/validate_scientific_contribution_monitor.py
+    implementation:
+      - "Fixture A: high-scoring but prior-art-unknown quantitative obstruction; expected maturity `near_stepping_stone`, not publishable."
+      - "Fixture B: route-specific no-go with theorem statement, proof sketch, prior-art boundary, and disqualifiers; expected maturity `publishable_handoff_ready`."
+      - "Fixture C: interesting branch exploration with no claim statement; expected maturity `contribution_shaped` or lower."
+      - "Fixture D: workflow-only improvement; expected not to count as scientific contribution unless it has external method value."
+    validation:
+      - "Run repository test command once pytest or equivalent runner is available."
+      - "Also run a lightweight script-level validator so this does not depend only on pytest availability."
+
+success_criteria:
+  - "The monitor no longer equates high contribution score with publishable readiness."
+  - "Every publishable candidate has hard gates, prior-art boundary, disqualifier tests, and paper note shape."
+  - "The next queue can pause broad exploration when a candidate should move to validation or paper handoff."
+  - "The report explains big-deal subgoal status in domain language, not generic workflow metrics."
+  - "P vs NP candidates distinguish exact transfer obstructions, route-specific no-gos, MCSP/MKtP certificate bridges, restricted-model gates, and all-exponent quantifier lifts."
+
+validation_handoff:
+  scripts:
+    - "python agentic/scripts/build_scientific_contribution_monitor.py"
+    - "python agentic/scripts/validate_scientific_contribution_monitor.py"
+    - "python agentic/scripts/validate_publishable_stepping_stone_fixtures.py"
+    - "python agentic/scripts/generate_discovery_marathon_html.py"
+    - "python agentic/scripts/validate_discovery_marathon_report.py"
+  report_artifacts:
+    - "agentic/reports/scientific_contribution_monitor/latest.json"
+    - "agentic/reports/scientific_contribution_monitor/latest.md"
+    - "agentic/reports/discovery_marathon/full_timeline.html"

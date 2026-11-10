@@ -1,0 +1,51 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://abducer.local/spec/discovery_proof_worker_protocol.schema.json",
+  "title": "Claim-bound built-in proof worker protocol",
+  "oneOf": [{"$ref": "#/$defs/request"}, {"$ref": "#/$defs/response"}],
+  "$defs": {
+    "digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "jsonValue": {"oneOf": [{"type": "null"}, {"type": "boolean"}, {"type": "number"}, {"type": "string"}, {"type": "array", "items": {"$ref": "#/$defs/jsonValue"}}, {"type": "object", "additionalProperties": {"$ref": "#/$defs/jsonValue"}}]},
+    "request": {
+      "type": "object", "additionalProperties": false,
+      "required": ["schema_version", "message_kind", "request_id", "attempt_id", "adapter", "handoff_id", "handoff_content_digest", "formal_claim", "formal_claim_digest", "execution_plan", "resource_budget", "authority_boundary", "content_digest"],
+      "properties": {
+        "schema_version": {"const": 1},
+        "message_kind": {"const": "proof_worker_request"},
+        "request_id": {"type": "string", "minLength": 1},
+        "attempt_id": {"type": "string", "minLength": 1},
+        "adapter": {"enum": ["exact", "finite_model"]},
+        "handoff_id": {"type": "string", "minLength": 1},
+        "handoff_content_digest": {"$ref": "#/$defs/digest"},
+        "formal_claim": {"$ref": "discovery_proof_handoff.schema.json#/$defs/formalClaim"},
+        "formal_claim_digest": {"$ref": "#/$defs/digest"},
+        "execution_plan": {"$ref": "discovery_proof_handoff.schema.json#/$defs/builtinWorkerPlan"},
+        "resource_budget": {"$ref": "dynamic_experiment_v3_common.schema.json#/$defs/resourceBudget"},
+        "authority_boundary": {"const": "worker_evaluates_only_the_exact_claim_and_has_no_theory_truth_or_physics_authority"},
+        "content_digest": {"$ref": "#/$defs/digest"}
+      }
+    },
+    "response": {
+      "type": "object", "additionalProperties": false,
+      "required": ["schema_version", "message_kind", "response_id", "request_id", "attempt_id", "handoff_id", "handoff_content_digest", "formal_claim_digest", "adapter", "proof_verdict", "result", "certificate", "completeness", "uncertainty", "authority_boundary", "content_digest"],
+      "properties": {
+        "schema_version": {"const": 1},
+        "message_kind": {"const": "proof_worker_response"},
+        "response_id": {"type": "string", "minLength": 1},
+        "request_id": {"type": "string", "minLength": 1},
+        "attempt_id": {"type": "string", "minLength": 1},
+        "handoff_id": {"type": "string", "minLength": 1},
+        "handoff_content_digest": {"$ref": "#/$defs/digest"},
+        "formal_claim_digest": {"$ref": "#/$defs/digest"},
+        "adapter": {"enum": ["exact", "finite_model"]},
+        "proof_verdict": {"enum": ["claim_validated_within_declared_scope", "counterexample_validated_within_declared_scope", "inconclusive"]},
+        "result": {"type": "object", "additionalProperties": {"$ref": "#/$defs/jsonValue"}},
+        "certificate": {"oneOf": [{"type": "object", "additionalProperties": {"$ref": "#/$defs/jsonValue"}}, {"type": "null"}]},
+        "completeness": {"oneOf": [{"type": "object", "additionalProperties": {"$ref": "#/$defs/jsonValue"}}, {"type": "null"}]},
+        "uncertainty": {"oneOf": [{"type": "object", "additionalProperties": {"$ref": "#/$defs/jsonValue"}}, {"type": "null"}]},
+        "authority_boundary": {"const": "worker_response_is_scoped_to_the_bound_claim_and_requires_parent_process_and_protocol_validation"},
+        "content_digest": {"$ref": "#/$defs/digest"}
+      }
+    }
+  }
+}

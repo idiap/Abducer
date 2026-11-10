@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://prism.local/to-prism/baseline.schema.json",
+  "additionalProperties": false,
+  "properties": {
+    "artifact": {"const": "baseline"},
+    "candidates": {"items": {"type": "object"}, "type": "array"},
+    "execution": {
+      "properties": {
+        "authorized": {"type": "boolean"},
+        "classification": {"enum": ["reproducible", "flaky", "nondeterministic", "unavailable", "failed"]}
+      },
+      "required": ["authorized", "classification"],
+      "type": "object"
+    },
+    "schema_version": {"const": "1.0"},
+    "source_fingerprint": {"pattern": "^sha256:[0-9a-f]{64}$", "type": "string"},
+    "tool": {"type": "object"}
+  },
+  "required": ["artifact", "candidates", "execution", "schema_version", "source_fingerprint", "tool"],
+  "type": "object"
+}

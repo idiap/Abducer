@@ -1,0 +1,228 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://abducer.local/spec/blind_conceptual_judge_output_v3.schema.json",
+  "title": "Separated blind conceptual judge output v3",
+  "description": "Canonical set-valued Pareto result over opaque nonces and typed evidence statuses. Every evaluator, scientific, and promotion authority remains explicitly unavailable or false.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "output_kind",
+    "schema_version",
+    "commission_digest",
+    "adjudication_rule_digest",
+    "selection_policy",
+    "preference_semantics",
+    "records",
+    "preference_set",
+    "judge_authority",
+    "output_digest"
+  ],
+  "properties": {
+    "output_kind": {"const": "blind_judgment"},
+    "schema_version": {"const": "3.0.0"},
+    "commission_digest": {"$ref": "#/$defs/digest"},
+    "adjudication_rule_digest": {"$ref": "#/$defs/digest"},
+    "selection_policy": {"const": "set_valued_pareto_nondomination"},
+    "preference_semantics": {"const": "set"},
+    "records": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 1024,
+      "items": {"$ref": "#/$defs/record"}
+    },
+    "preference_set": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 1024,
+      "uniqueItems": true,
+      "items": {"$ref": "#/$defs/nonce"}
+    },
+    "judge_authority": {"$ref": "#/$defs/judgeAuthority"},
+    "output_digest": {"$ref": "#/$defs/digest"}
+  },
+  "$defs": {
+    "digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "nonce": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "evidenceStatus": {
+      "enum": ["failed", "partial", "satisfied"]
+    },
+    "criterionStatus": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["criterion", "status", "criterion_digest"],
+      "properties": {
+        "criterion": {
+          "enum": [
+            "target_relevance",
+            "protected_success_preservation",
+            "consequence_specificity",
+            "burden_localization",
+            "unification_compression",
+            "discriminating_falsifier",
+            "conceptual_depth"
+          ]
+        },
+        "status": {"$ref": "#/$defs/evidenceStatus"},
+        "criterion_digest": {"$ref": "#/$defs/digest"}
+      }
+    },
+    "criterionStatusLedger": {
+      "type": "array",
+      "minItems": 7,
+      "maxItems": 7,
+      "prefixItems": [
+        {
+          "allOf": [
+            {"$ref": "#/$defs/criterionStatus"},
+            {"properties": {"criterion": {"const": "target_relevance"}}}
+          ]
+        },
+        {
+          "allOf": [
+            {"$ref": "#/$defs/criterionStatus"},
+            {
+              "properties": {
+                "criterion": {"const": "protected_success_preservation"}
+              }
+            }
+          ]
+        },
+        {
+          "allOf": [
+            {"$ref": "#/$defs/criterionStatus"},
+            {"properties": {"criterion": {"const": "consequence_specificity"}}}
+          ]
+        },
+        {
+          "allOf": [
+            {"$ref": "#/$defs/criterionStatus"},
+            {"properties": {"criterion": {"const": "burden_localization"}}}
+          ]
+        },
+        {
+          "allOf": [
+            {"$ref": "#/$defs/criterionStatus"},
+            {"properties": {"criterion": {"const": "unification_compression"}}}
+          ]
+        },
+        {
+          "allOf": [
+            {"$ref": "#/$defs/criterionStatus"},
+            {"properties": {"criterion": {"const": "discriminating_falsifier"}}}
+          ]
+        },
+        {
+          "allOf": [
+            {"$ref": "#/$defs/criterionStatus"},
+            {"properties": {"criterion": {"const": "conceptual_depth"}}}
+          ]
+        }
+      ],
+      "items": false
+    },
+    "record": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "opaque_candidate_nonce",
+        "criterion_statuses",
+        "evidence_ledger_digest",
+        "pareto_nondominated",
+        "preference_rank",
+        "promotion_authorized"
+      ],
+      "properties": {
+        "opaque_candidate_nonce": {"$ref": "#/$defs/nonce"},
+        "criterion_statuses": {"$ref": "#/$defs/criterionStatusLedger"},
+        "evidence_ledger_digest": {"$ref": "#/$defs/digest"},
+        "pareto_nondominated": {"type": "boolean"},
+        "preference_rank": {"type": "null"},
+        "promotion_authorized": {"const": false}
+      }
+    },
+    "judgeAuthority": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "authority_distinct_status",
+        "candidate_nonce_randomness_authorized",
+        "counterbalancing_authorized",
+        "input_order_authorized",
+        "candidate_metadata_observed",
+        "route_labels_observed",
+        "method_metadata_observed",
+        "authored_text_observed",
+        "source_material_observed",
+        "source_imports_observed",
+        "count_scoring_applied",
+        "text_or_length_scoring_applied",
+        "formal_vocabulary_bonus_applied",
+        "promotion_authorized",
+        "external_evidence_authorized",
+        "evaluator_independence_authorized",
+        "provider_independence_authorized",
+        "model_independence_authorized",
+        "human_independence_authorized",
+        "hidden_input_independence_authorized",
+        "cognitive_independence_authorized",
+        "semantic_independence_authorized",
+        "creativity_authorized",
+        "conceptual_merit_authorized",
+        "relevance_authorized",
+        "conceptual_depth_authorized",
+        "philosophical_understanding_authorized",
+        "unification_power_authorized",
+        "formal_advantage_authorized",
+        "category_hott_advantage_authorized",
+        "physics_value_authorized",
+        "truth_authorized",
+        "theorem_authorized",
+        "continuum_authorized",
+        "yang_mills_authorized"
+      ],
+      "properties": {
+        "authority_distinct_status": {"const": "unavailable"},
+        "candidate_nonce_randomness_authorized": {"const": false},
+        "counterbalancing_authorized": {"const": false},
+        "input_order_authorized": {"const": false},
+        "candidate_metadata_observed": {"const": false},
+        "route_labels_observed": {"const": false},
+        "method_metadata_observed": {"const": false},
+        "authored_text_observed": {"const": false},
+        "source_material_observed": {"const": false},
+        "source_imports_observed": {"const": false},
+        "count_scoring_applied": {"const": false},
+        "text_or_length_scoring_applied": {"const": false},
+        "formal_vocabulary_bonus_applied": {"const": false},
+        "promotion_authorized": {"const": false},
+        "external_evidence_authorized": {"const": false},
+        "evaluator_independence_authorized": {"const": false},
+        "provider_independence_authorized": {"const": false},
+        "model_independence_authorized": {"const": false},
+        "human_independence_authorized": {"const": false},
+        "hidden_input_independence_authorized": {"const": false},
+        "cognitive_independence_authorized": {"const": false},
+        "semantic_independence_authorized": {"const": false},
+        "creativity_authorized": {"const": false},
+        "conceptual_merit_authorized": {"const": false},
+        "relevance_authorized": {"const": false},
+        "conceptual_depth_authorized": {"const": false},
+        "philosophical_understanding_authorized": {"const": false},
+        "unification_power_authorized": {"const": false},
+        "formal_advantage_authorized": {"const": false},
+        "category_hott_advantage_authorized": {"const": false},
+        "physics_value_authorized": {"const": false},
+        "truth_authorized": {"const": false},
+        "theorem_authorized": {"const": false},
+        "continuum_authorized": {"const": false},
+        "yang_mills_authorized": {"const": false}
+      }
+    }
+  }
+}

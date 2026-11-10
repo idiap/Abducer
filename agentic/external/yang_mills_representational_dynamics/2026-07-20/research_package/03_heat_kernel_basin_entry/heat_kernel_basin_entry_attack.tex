@@ -1,0 +1,685 @@
+\documentclass[11pt]{article}
+\usepackage[a4paper,margin=27mm]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{booktabs,longtable,array,enumitem,microtype}
+\usepackage{xcolor}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[hidelinks]{hyperref}
+
+\definecolor{proved}{RGB}{0,105,75}
+\definecolor{conditional}{RGB}{160,92,0}
+\definecolor{open}{RGB}{165,25,35}
+\newcommand{\Pstatus}{\textcolor{proved}{\textsf{PROVED}}}
+\newcommand{\Cstatus}{\textcolor{conditional}{\textsf{CONDITIONAL}}}
+\newcommand{\Ostatus}{\textcolor{open}{\textsf{OPEN}}}
+\newcommand{\Fstatus}{\textcolor{open}{\textsf{FALSIFIED}}}
+\newcommand{\TV}{\operatorname{TV}}
+\newcommand{\Cov}{\operatorname{Cov}}
+\newcommand{\diam}{\operatorname{diam}}
+\newcommand{\e}{\mathrm e}
+\newcommand{\cA}{\mathcal A}
+\newcommand{\cG}{\mathcal G}
+\newcommand{\cH}{\mathcal H}
+
+\newtheorem{definition}{Definition}[section]
+\newtheorem{theorem}[definition]{Theorem}
+\newtheorem{proposition}[definition]{Proposition}
+\newtheorem{lemma}[definition]{Lemma}
+\newtheorem{corollary}[definition]{Corollary}
+\newtheorem{obligation}[definition]{Frontier obligation}
+\theoremstyle{remark}
+\newtheorem{remark}[definition]{Remark}
+
+\title{Heat-Kernel Boundary Sensitivity and a Two-Tier\\
+Infrared Basin for Lattice Yang--Mills}
+\author{Research dossier}
+\date{20 July 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We implement the first theorem-level step of a representation-aware programme
+for the Yang--Mills mass gap.  The heat-kernel plaquette action is selected as
+a primary regulator because gauge invariance, positive character coefficients,
+and convolution structure are explicit.  We prove that a naive worst-case
+total-variation Dobrushin basin cannot be uniform in the small heat-time limit:
+on every nontrivial compact group, a heat kernel and any fixed nontrivial
+translate become asymptotically mutually singular.  This is a constructive
+obstruction, not a no-go theorem for clustering.  It shows that continuum basin
+entry must combine scale-sensitive good-field couplings with quantitative
+control of exceptional and topological blocks.  We define such a two-tier
+basin, prove its abstract basin-to-clustering and stability theorems, give an
+executable $U(1)$ calibration, and isolate two explicit four-dimensional entry
+inequalities.  Their verification for pure Yang--Mills remains open.
+\end{abstract}
+
+\tableofcontents
+
+\section{Target and result status}
+
+The ultimate target is the construction of nontrivial four-dimensional pure
+Yang--Mills theory with a Hamiltonian gap above the vacuum for every compact
+simple gauge group \cite{JaffeWitten}.  The present paper addresses one earlier
+interface: a local, regulator-level criterion that could generate exponential
+infrared rigidity after renormalization.
+
+The results are:
+\begin{enumerate}[label=(\roman*)]
+\item a finite-lattice heat-kernel regulator and positivity certificate;
+\item a compact-group obstruction theorem for worst-case total-variation
+      influence;
+\item a two-tier good-field/defect comparison theorem;
+\item explicit replacement basin-entry inequalities; and
+\item tested $U(1)$ and $SU(2)$ heat-kernel calibrations, an exact $U(1)$
+      convolution-blocking experiment, and a curvature-matched Wilson
+      comparison.
+\end{enumerate}
+Items (ii)--(iii) are rigorous abstract results.  The proof that the
+four-dimensional Yang--Mills RG trajectory satisfies the replacement
+inequalities is not supplied.  Consequently no continuum construction or
+Clay-level mass gap is claimed.
+
+\section{Selection of the heat-kernel regulator}
+
+Let $G$ be a compact connected Lie group with normalized Haar measure $dg$ and
+bi-invariant Laplacian $\Delta_G$.  Let $p_t(g)$ be the heat kernel at time
+$t>0$, normalized by
+\[
+ \partial_t p_t=\frac12\Delta_Gp_t,
+ \qquad \int_Gp_t(g)\,dg=1.
+\]
+It is central, satisfies $p_t(g^{-1})=p_t(g)$, and has the character expansion
+\begin{equation}\label{eq:character}
+ p_t(g)=\sum_{\lambda\in\widehat G}
+ d_\lambda\e^{-tC_2(\lambda)/2}\chi_\lambda(g),
+\end{equation}
+with positive coefficients.  This action was introduced for lattice gauge
+theory by Menotti and Onofri \cite{MenottiOnofri}.
+
+On a finite oriented lattice $\Lambda=(V,E,P)$, assign $U_e\in G$ to each
+oriented edge with $U_{e^{-1}}=U_e^{-1}$.  For an oriented plaquette $p$, let
+$U_p$ be the ordered boundary holonomy.  Define
+\begin{equation}\label{eq:measure}
+ d\mu_{t,\Lambda}(U)
+ =Z_{t,\Lambda}^{-1}\prod_{p\in P}p_t(U_p)
+   \prod_{e\in E^+}dU_e.
+\end{equation}
+
+\begin{proposition}[Finite gauge invariance \Pstatus]
+The measure \eqref{eq:measure} is invariant under
+$U_{xy}\mapsto g_xU_{xy}g_y^{-1}$ for arbitrary $(g_x)_{x\in V}\in G^V$.
+\end{proposition}
+
+\begin{proof}
+Plaquette holonomy transforms by conjugation at its base point.  The heat
+kernel is central, and Haar measure is left- and right-invariant.
+\end{proof}
+
+\begin{proposition}[Finite reflection-positive factor \Pstatus]\label{prop:rp}
+Consider a lattice reflection that splits every plaquette crossing the
+reflection plane into a negative and a positive half-holonomy.  Each crossing
+heat-kernel factor has a positive sum-of-squares decomposition.  Consequently,
+with reflection-compatible boundary conditions, the standard finite-lattice
+reflection-positivity form is nonnegative.
+\end{proposition}
+
+\begin{proof}
+Write a crossing holonomy as $a^{-1}b$, where reflection exchanges the half
+variables.  By \eqref{eq:character},
+\[
+ p_t(a^{-1}b)=\sum_{\lambda,i,j}
+ d_\lambda\e^{-tC_2(\lambda)/2}
+ \overline{\lambda(a)_{ij}}\lambda(b)_{ij}.
+\]
+The coefficient of every matrix element is nonnegative.  Products of crossing
+factors retain a Gram decomposition; plaquettes away from the plane occur in
+reflected pairs.  Integrating a positive-time cylinder function against its
+reflection therefore gives a sum of squared norms.
+\end{proof}
+
+This proposition is a finite-regulator certificate.  RG blocking must either
+preserve the factorization or carry an independent recovery certificate.
+
+\subsection{Why this regulator is selected}
+
+\begin{center}
+\small
+\begin{tabular}{p{.22\textwidth}p{.31\textwidth}p{.34\textwidth}}
+\toprule
+Feature & Advantage & Remaining obligation\\
+\midrule
+central heat kernel & exact gauge invariance & global orbit and topology control\\
+positive characters & transparent finite positivity & preservation or recovery under RG\\
+semigroup convolution & natural block comparison in two dimensions and toy sectors & no exact four-dimensional RG closure is assumed\\
+small-time local Gaussianity & connects to Lie-algebra weak fields & worst-case boundary sensitivity degenerates\\
+strictly positive density & finite conditional kernels are well defined & uniform physical-scale inequalities remain open\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The Wilson regulator is retained as an adversarial comparison, not as a
+foundation.  A universality theorem between the two remains part of the final
+continuum programme.
+
+\section{The original basin and its hidden quantifier}
+
+For a Gibbs specification $(\gamma_i)$ on blocks $i\in I$, the classical
+worst-case total-variation coefficient is schematically
+\begin{equation}\label{eq:naive}
+ c_{ij}=\sup_{x=z\text{ off }j}
+ \TV\!\left(\gamma_i(\cdot\mid x),
+             \gamma_i(\cdot\mid z)\right).
+\end{equation}
+A uniform bound $\sup_i\sum_jc_{ij}<1$ implies uniqueness and comparison
+estimates in its domain of applicability.  Generalized block comparison
+theorems can extend that domain \cite{RebeschiniVanHandel}.
+
+The critical word in \eqref{eq:naive} is ``sup''.  In a weak-field limit the
+conditional law can become extremely narrow.  Boundary data that move its
+center by a fixed group element then produce nearly disjoint conditionals even
+when typical neighboring configurations are much more coherent.
+
+\section{Compact-group heat-kernel obstruction}
+
+We use the convention
+\[
+ \TV(\mu,\nu)=\sup_{A}|\mu(A)-\nu(A)|
+              =\frac12\|\mu-\nu\|_{L^1}
+\]
+when densities exist.
+
+\begin{lemma}[Disjoint concentration \Pstatus]\label{lem:disjoint}
+Let $X$ be a Hausdorff space and let $\mu_t\Rightarrow\delta_x$ and
+$\nu_t\Rightarrow\delta_y$ weakly as $t\downarrow0$, with $x\ne y$.
+Then $\TV(\mu_t,\nu_t)\to1$.
+\end{lemma}
+
+\begin{proof}
+Choose disjoint open neighborhoods $U\ni x$ and $V\ni y$ whose closures remain
+disjoint.  By the Portmanteau theorem, after shrinking if necessary,
+$\mu_t(U)\to1$ and $\nu_t(U)\to0$.  Thus
+$\TV(\mu_t,\nu_t)\ge|\mu_t(U)-\nu_t(U)|\to1$, while total variation is at most
+one.
+\end{proof}
+
+\begin{theorem}[Translated heat-kernel obstruction \Pstatus]\label{thm:tv}
+Let $G$ be a nontrivial compact Lie group, let
+$\mu_t(dg)=p_t(g)dg$, and fix $h\ne e$.  If $L_h\mu_t$ denotes its left
+translate, then
+\[
+ \lim_{t\downarrow0}\TV(\mu_t,L_h\mu_t)=1.
+\]
+\end{theorem}
+
+\begin{proof}
+The heat kernels form an approximate identity, hence
+$\mu_t\Rightarrow\delta_e$.  Translation is continuous, so
+$L_h\mu_t\Rightarrow\delta_h$.  Apply Lemma~\ref{lem:disjoint}.
+\end{proof}
+
+\begin{corollary}[Failure of uniform worst-case contraction \Fstatus]
+Consider the one-plaquette conditional family
+\[
+ \gamma_t^\eta(dx)=p_t(x\eta^{-1})\,dx,
+ \qquad\eta\in G.
+\]
+Then
+\[
+ c(t):=\sup_{\eta,\eta'}\TV(\gamma_t^\eta,\gamma_t^{\eta'})
+ \longrightarrow1
+ \quad(t\downarrow0).
+\]
+In particular, there is no $q<1$ such that $c(t)\le q$ for every sufficiently
+small $t$.
+\end{corollary}
+
+\begin{proof}
+Choose $\eta'=h\eta$ with fixed $h\ne e$.  The two conditional laws are
+translates covered by Theorem~\ref{thm:tv}.
+\end{proof}
+
+\begin{remark}
+The theorem does not prove absence of a mass gap, uniqueness, or clustering.
+It falsifies a proposed proof resource: a cutoff-uniform worst-case
+single-plaquette total-variation coefficient.  Larger blocks, quotient
+metrics, typical-set restrictions, and defect expansions remain available.
+\end{remark}
+
+\section{Executable circle calibration}
+
+For $G=U(1)$ with angle $\theta$, the heat kernel is
+\begin{equation}\label{eq:circle}
+ p_t(\theta)=\frac1{2\pi}
+ \left(1+2\sum_{n\ge1}\e^{-n^2t/2}\cos(n\theta)\right).
+\end{equation}
+The supplied program truncates this positive character series at a certified
+coefficient tolerance and applies periodic trapezoidal quadrature.
+
+\begin{center}
+\begin{tabular}{rrrr}
+\toprule
+$t$ & $\TV(p_t,p_t(\cdot-\pi))$ &
+$\TV(p_t,p_t(\cdot-0.5\sqrt t))$ & Gaussian limit\\
+\midrule
+1.00 & 0.767544967 & 0.194274584 & 0.197412651\\
+0.50 & 0.947357851 & 0.197387803 & 0.197412651\\
+0.20 & 0.999111867 & 0.197412653 & 0.197412651\\
+0.10 & 0.999998642 & 0.197412651 & 0.197412651\\
+0.05 & 1.000000000 & 0.197412642 & 0.197412651\\
+0.02 & 1.000000000 & 0.197412640 & 0.197412651\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The final column is
+\[
+ \TV(N(0,1),N(0.5,1))
+ =\operatorname{erf}\left(\frac{0.5}{2\sqrt2}\right).
+\]
+The fixed-shift computation illustrates Theorem~\ref{thm:tv}.  The
+$\sqrt t$ shift shows that merely rescaling the metric does not automatically
+produce a small coefficient: one obtains a nontrivial tangent-Gaussian
+influence.  Actual contraction must come from block dynamics or a smaller
+response of the conditional center to boundary perturbations.
+
+Seven unit tests check positivity at the calibration grid, zero-shift identity,
+translation symmetry, fixed-shift degeneration, the tangent-Gaussian limit,
+output schema, and fail-closed parameter validation.
+
+\section{Advanced regulator calibrations}
+
+\subsection{$SU(2)$ character calibration}
+
+For $SU(2)$, write the conjugacy angle as $\theta\in[0,\pi]$.  With the
+Casimir convention used by the executable artifact,
+\begin{equation}\label{eq:su2}
+ p_t^{SU(2)}(\theta)
+ =\sum_{n\ge0}(n+1)\e^{-tn(n+2)/2}
+   \frac{\sin((n+1)\theta)}{\sin\theta},
+ \qquad
+ dg_{\rm class}=\frac2\pi\sin^2\theta\,d\theta.
+\end{equation}
+Translation by the nontrivial central element $-I$ sends
+$\theta\mapsto\pi-\theta$.  Midpoint Haar quadrature gives
+\begin{center}
+\begin{tabular}{rr}
+\toprule
+$t$ & $\TV(p_t^{SU(2)}(\theta),p_t^{SU(2)}(\pi-\theta))$\\
+\midrule
+0.50 & 0.770181734\\
+0.20 & 0.991849661\\
+0.10 & 0.999976815\\
+0.05 & 1.000000000\\
+\bottomrule
+\end{tabular}
+\end{center}
+This completes the simple-group numerical calibration of
+Theorem~\ref{thm:tv}; the theorem itself does not depend on the truncation.
+
+\subsection{Exact $U(1)$ convolution blocking}
+
+The circle heat kernel obeys $p_t^{*m}=p_{mt}$.  Therefore a one-dimensional
+chain or exactly convolutional plaquette block provides a controlled diagnostic
+of how fixed-shift sensitivity changes under coarse graining:
+\begin{center}
+\begin{tabular}{rrr}
+\toprule
+Steps $m$ & coarse time $mt$ for $t=0.02$ & antipodal TV\\
+\midrule
+1 & 0.02 & 1.000000000\\
+2 & 0.04 & 1.000000000\\
+5 & 0.10 & 0.999998642\\
+10 & 0.20 & 0.999111867\\
+20 & 0.40 & 0.973991076\\
+50 & 1.00 & 0.767544967\\
+\bottomrule
+\end{tabular}
+\end{center}
+Blocking reduces the fixed-shift coefficient only after the accumulated heat
+time becomes appreciable.  Four-dimensional gauge blocking is not an exact
+plaquette convolution, so this is a mechanism calibration rather than an RG
+theorem.
+
+\subsection{Defect-tail and regulator-comparison diagnostics}
+
+Define a circle good field by $|\theta|\le2\sqrt t$.  Let $R_{\rm tail}$ be its
+complement probability and let $K_{0.25}$ be the TV response to a
+$0.25\sqrt t$ boundary shift.  The table also compares the heat kernel with the
+curvature-matched Wilson density $Z^{-1}\exp(t^{-1}\cos\theta)$.
+\begin{center}
+\small
+\begin{tabular}{rrrrr}
+\toprule
+$t$ & HK/Wilson TV & $R_{\rm tail}$ & $K_{0.25}$ & $8(K_{0.25}+R_{\rm tail})$\\
+\midrule
+0.50 & 0.063594784 & 0.045482439 & 0.099465621 & 1.159584482\\
+0.20 & 0.019917856 & 0.045528368 & 0.099476451 & 1.160038549\\
+0.10 & 0.009231571 & 0.045524826 & 0.099476455 & 1.160010248\\
+0.05 & 0.004476830 & 0.045528348 & 0.099476460 & 1.160038463\\
+\bottomrule
+\end{tabular}
+\end{center}
+The decreasing second column is a one-plaquette comparison, not a universality
+proof.  The final column is deliberately labeled an \emph{optimistic proxy}:
+it treats a raw defect probability as though it were the required Lipschitz
+defect influence and uses degree eight as a four-dimensional nearest-neighbor
+stress test.  Its value above one shows that this toy choice of good radius and
+local shift does not enter even the replacement basin.  A successful argument
+must gain contraction through a genuine block quotient coupling, a sharper
+defect-disagreement estimate, or both.
+
+Together the basic and advanced suites contain fourteen passing tests.
+
+\section{Two-tier good-field/defect basin}
+
+The obstruction suggests splitting two effects that the worst-case supremum
+mixes together: smooth response inside a regular orbit chart and propagation
+through exceptional or topological blocks.
+
+Let $I$ be a finite or countable block graph with metric $d$.  Let each block
+state space $(S_i,\rho_i)$ have diameter at most one; for gauge systems it is a
+quotient or pseudometric on physical block data.  Let $\gamma_i(\cdot\mid x)$
+be local conditional kernels.  Choose gauge-invariant good events
+$\mathsf G_i$.
+
+\begin{definition}[Two-tier local coupling certificate]
+For boundary configurations $x,z$ differing only at block $j$, a coupling
+$Q_{ij}^{x,z}$ of the two $i$-conditionals has a certificate $(K_{ij},R_{ij})$
+if
+\begin{align}
+ \mathbb E_Q[\rho_i(X_i,Z_i)\,;
+       X_i,Z_i\in\mathsf G_i]
+ &\le K_{ij}\rho_j(x_j,z_j),\label{eq:good}\\
+ \mathbb E_Q[\rho_i(X_i,Z_i)\,;
+       \{X_i,Z_i\}\not\subset\mathsf G_i]
+ &\le R_{ij}\rho_j(x_j,z_j).
+ \label{eq:bad}
+\end{align}
+Here $K$ measures regular transport and $R$ dominates defect activation,
+topological mismatch, and chart failure.  Both are local quantities; neither is
+defined by long-distance correlation decay.
+\end{definition}
+
+The estimates imply a Wasserstein influence matrix $M\le K+R$.  In a concrete
+construction, \eqref{eq:bad} can follow from a disagreement-polymer estimate
+rather than pointwise convexity.
+
+\begin{definition}[Two-tier basin]
+For $\kappa>0$ and $q<1$, a specification lies in
+$\mathfrak B_{\rm 2t}(\kappa,q)$ when it has a two-tier certificate and
+\begin{equation}\label{eq:twotier}
+ \|K+R\|_\kappa
+ :=\sup_i\sum_j\e^{\kappa d(i,j)}(K_{ij}+R_{ij})\le q<1,
+\end{equation}
+uniformly in total volume.
+\end{definition}
+
+\begin{lemma}[Certificate combination \Pstatus]
+The full coupling satisfies
+\[
+ W_{1,\rho_i}(\gamma_i(\cdot\mid x),\gamma_i(\cdot\mid z))
+ \le (K_{ij}+R_{ij})\rho_j(x_j,z_j).
+\]
+\end{lemma}
+
+\begin{proof}
+Add \eqref{eq:good} and \eqref{eq:bad}; together their events partition the
+coupling space.  The Wasserstein distance is bounded by the cost of this
+coupling.
+\end{proof}
+
+\begin{theorem}[Two-tier basin-to-clustering \Cstatus]\label{thm:twotier}
+Assume the local specification admits the Wasserstein comparison theorem for
+the seminorms
+\[
+ \delta_iF=\sup_{x=z\text{ off }i}
+ \frac{|F(x)-F(z)|}{\rho_i(x_i,z_i)}.
+\]
+If it lies in $\mathfrak B_{\rm 2t}(\kappa,q)$, then for local $F,G$,
+\begin{equation}\label{eq:cluster}
+ |\Cov(F,G)|
+ \le \frac{C_0}{1-q}\e^{-\kappa d(S_F,S_G)}
+ \left(\sum_i\delta_iF\right)
+ \left(\sum_j\delta_jG\right),
+\end{equation}
+where $C_0$ is the normalization constant in the chosen comparison theorem.
+\end{theorem}
+
+\begin{proof}
+Let $M=K+R$.  The weighted row norm is submultiplicative, so
+$D=(I-M)^{-1}=\sum_{n\ge0}M^n$ and $\|D\|_\kappa\le(1-q)^{-1}$.  Hence
+\[
+ D_{ij}\le(1-q)^{-1}\e^{-\kappa d(i,j)}.
+\]
+The Wasserstein comparison theorem bounds covariance by
+$C_0\sum_{ij}\delta_iF D_{ij}\delta_jG$.  Nonzero seminorms lie in
+$S_F$ and $S_G$, which yields \eqref{eq:cluster}.
+\end{proof}
+
+The comparison-theorem hypothesis is explicit because Gauss constraints can
+prevent a naive product-site theorem from applying directly.  One must either
+formulate the blocks on physical quotient data or prove the constrained
+version required by the chosen regulator.
+
+\begin{proposition}[Openness and perturbative stability \Pstatus]
+Suppose $(K,R)$ satisfies \eqref{eq:twotier} with margin $1-q$ and another
+effective theory has certificates $(K',R')$ with
+\[
+ \|(K'-K)+(R'-R)\|_\kappa\le\varepsilon<1-q.
+\]
+Then it lies in $\mathfrak B_{\rm 2t}(\kappa,q+\varepsilon)$.
+\end{proposition}
+
+\begin{proof}
+Apply the triangle inequality for the weighted row norm.
+\end{proof}
+
+\begin{corollary}[Physical decay rate \Cstatus]
+If the basin is reached at physical block length $\ell_*$ and observable
+pullback errors are summable, the corresponding original observables have
+correlation rate at least $\kappa/\ell_*$.  If the controlled separation is
+Euclidean time and OS reconstruction plus observable density hold, the
+positive spectral argument yields the same lower bound for the Hamiltonian
+gap.
+\end{corollary}
+
+\section{Gauge-invariant good blocks and defect data}
+
+For a block $B$, a regulator-level good event can be defined without a global
+gauge slice by
+\begin{equation}\label{eq:goodblock}
+ \mathsf G_B(\rho)
+ =\left\{U:\sum_{p\subset B}
+ d_G(U_p,e)^2\le\rho^2|B|\right\},
+\end{equation}
+supplemented by physical bounds on boundary holonomy and an atlas label when a
+single orbit chart is insufficient.  Plaquette conjugation invariance makes
+\eqref{eq:goodblock} gauge invariant.
+
+The defect tier records at least:
+\begin{itemize}
+\item high-curvature blocks violating \eqref{eq:goodblock};
+\item failure of the chosen orbit chart or large transition functions between
+      charts;
+\item nontrivial center flux, global holonomy, or bundle-sector mismatch;
+\item instanton-like concentration relevant at the selected scale; and
+\item RG remainder events whose reconstruction error exceeds its budget.
+\end{itemize}
+
+A volume-small probability is insufficient.  What is required is a connected
+polymer estimate whose entropy is dominated uniformly in volume and across the
+number of RG steps used to reach $\ell_*$.
+
+\section{Revised basin-entry theorem target}
+
+Let $a$ be the microscopic spacing, $b>1$ the block factor, and
+$\ell_k=b^ka$.  Let $K^{(k)}$ and $R^{(k)}$ be the regular and defect matrices
+for the effective heat-kernel representation after $k$ controlled steps.
+
+\begin{obligation}[Good-field contraction $\mathrm{BE_G}$ \Ostatus]
+Prove that for some finite physical $\ell_*$ and $\kappa>0$,
+\begin{equation}\label{eq:BEG}
+ \sup_B\sum_C\e^{\kappa d(B,C)}K^{(k_*)}_{BC}le q_G,
+\end{equation}
+uniformly in cutoff and volume.  The matrix must be obtained from couplings on
+gauge-orbit block data and must include all generated quasilocal interactions.
+\end{obligation}
+
+\begin{obligation}[Defect subcriticality $\mathrm{BE_D}$ \Ostatus]
+Construct a defect-disagreement matrix or connected-polymer domination with
+\begin{equation}\label{eq:BED}
+ \sup_B\sum_C\e^{\kappa d(B,C)}R^{(k_*)}_{BC}le q_D,
+ \qquad q_G+q_D<1,
+\end{equation}
+uniformly in cutoff and volume, including global orbit and topological data.
+\end{obligation}
+
+\begin{theorem}[Revised conditional entry theorem \Cstatus]
+If $\mathrm{BE_G}$ and $\mathrm{BE_D}$ hold, the effective theory lies in
+$\mathfrak B_{\rm 2t}(\kappa,q_G+q_D)$ and therefore satisfies
+Theorem~\ref{thm:twotier}.
+\end{theorem}
+
+\begin{proof}
+Combine \eqref{eq:BEG} and \eqref{eq:BED} by the triangle inequality and apply
+the definition of the two-tier basin.
+\end{proof}
+
+This theorem is logically complete; its two hypotheses are the unresolved
+four-dimensional analytic work.
+
+\section{Three implementation branches}
+
+\subsection{Influence branch}
+
+Construct a block conditional transport map on the quotient by internal gauge
+transformations.  On $\mathsf G_B$, derive a gauge-orthogonal Hessian or
+geodesic convexity estimate and bound the derivative of the conditional center
+with respect to physical boundary data.  The target is \eqref{eq:BEG}, not
+mere convexity of a sampling dynamics.
+
+\subsection{Polymer branch}
+
+Decompose the full measure into good blocks and connected defects.  Establish
+activities $z_k(X)$ satisfying, for a scale-independent $\alpha>0$,
+\begin{equation}\label{eq:KP}
+ \sup_B\sum_{X\ni B}|z_k(X)|\e^{\alpha|X|}\le\eta<1.
+\end{equation}
+Then construct $R^{(k)}$ from polymers connecting $B$ to $C$.  The key burden
+is to obtain \eqref{eq:KP} along the weak-coupling trajectory and through the
+finite physical entry scale, not only in the strong-coupling phase.
+
+\subsection{Transfer branch}
+
+Use Proposition~\ref{prop:rp} to construct the physical finite-lattice transfer
+operator.  Seek a block-cone or projective contraction after quotienting gauge
+null directions.  Any contraction constant must be uniform in volume and
+convert to physical units before it can enter a spectral conclusion.
+
+These branches share the same defect and reconstruction ledger.  Running them
+independently provides adversarial cross-checks: a local coupling estimate that
+loses positivity cannot be repaired by calling it a transfer estimate, and a
+polymer estimate restricted to the trivial orbit chart does not control the
+full measure.
+
+\section{Relation to existing rigorous regimes}
+
+Balaban's four-dimensional RG analysis supplies detailed small-field coupling
+renormalization but explicitly restricts that stage to a small-field
+approximation \cite{BalabanI}.  Strong-coupling lattice results can obtain
+functional inequalities and exponential decay in explicit regimes
+\cite{ShenZhuZhu}.  These are important calibrations on opposite sides of the
+programme:
+\begin{itemize}
+\item the former informs the good-field multiscale construction;
+\item the latter shows that local coupling and functional-inequality methods
+      can yield regulated infinite-volume decay; and
+\item neither result proves \eqref{eq:BEG}--\eqref{eq:BED} along the
+      four-dimensional continuum trajectory.
+\end{itemize}
+
+The replacement basin is designed precisely to expose the bridge between
+those regimes: regular weak-field transport plus full-measure defect
+subcriticality at a finite physical scale.
+
+\section{Frontier audit}
+
+\begin{longtable}{p{.08\textwidth}p{.46\textwidth}p{.18\textwidth}p{.16\textwidth}}
+\toprule
+ID & Statement & Status & Claim level\\
+\midrule
+\endhead
+HK1 & finite heat-kernel gauge invariance and reflection-positive factor & \Pstatus & C2 regulated\\
+HK2 & fixed-translate heat-kernel TV tends to one & \Pstatus & C2\\
+HK3 & naive worst-case TV basin is cutoff-uniform & \Fstatus & rejected\\
+TB1 & two-tier local certificate implies a Wasserstein influence bound & \Pstatus & C2\\
+TB2 & weighted two-tier basin implies clustering & \Cstatus & C2--C3\\
+BE-G & four-dimensional good-field block contraction & \Ostatus & frontier\\
+BE-D & four-dimensional defect/topology subcriticality & \Ostatus & frontier\\
+CONT & nontrivial regulator-independent OS-positive continuum theory & \Ostatus & frontier\\
+\bottomrule
+\end{longtable}
+
+The strongest advance is not a mass-gap proof.  It is a rigorous elimination
+of an over-strong basin and a sharper decomposition of the first missing
+nonperturbative theorem.  The new target is both more plausible and more
+demanding: it must show that regular response and exceptional propagation fit
+inside one contraction budget at a finite physical scale.
+
+\section{Implemented diagnostics and immediate proof obligations}
+
+\begin{enumerate}[label=\textbf{N\arabic*.},leftmargin=3em]
+\item[\textbf{N1.}] \Pstatus\ The $SU(2)$ character-series translation
+      calibration is implemented and normalized against Haar measure.
+\item[\textbf{N2.}] \Pstatus\ Exact $U(1)$ convolution blocking is
+      implemented.  The next step is a genuinely interacting two-plaquette or
+      $2^4$ block conditional kernel on quotient boundary data.
+\item[\textbf{N3.}] \Ostatus\ Test whether quotient-Wasserstein response
+      decreases with interacting block size after removing pure gauge modes.
+\item[\textbf{N4.}] \Pstatus\ A one-plaquette good-field tail is implemented.
+      The open theorem is a connected, boundary-uniform large-deviation bound
+      for \eqref{eq:goodblock} with topology recorded.
+\item[\textbf{N5.}] \Pstatus\ The first finite-scale optimistic $K+R$ proxy
+      is measured and fails the degree-eight threshold.  Replace the proxy by
+      a certified block coupling and defect-disagreement matrix.
+\item[\textbf{N6.}] \Pstatus\ A curvature-matched $U(1)$ one-plaquette
+      heat-kernel/Wilson comparison is implemented.  Extend it to common
+      block observables with volume- and cutoff-uniform errors.
+\end{enumerate}
+
+\begin{thebibliography}{99}
+\bibitem{JaffeWitten}
+A. Jaffe and E. Witten,
+\emph{Quantum Yang--Mills Theory}, Clay Mathematics Institute problem
+description,\newline
+\url{https://www.claymath.org/wp-content/uploads/2022/06/yangmills.pdf}.
+
+\bibitem{MenottiOnofri}
+P. Menotti and E. Onofri,
+``The Action of $SU(N)$ Lattice Gauge Theory in Terms of the Heat Kernel on
+the Group Manifold,'' \emph{Nuclear Physics B} \textbf{190} (1981), 288--300.
+
+\bibitem{RebeschiniVanHandel}
+P. Rebeschini and R. van Handel,
+``Comparison Theorems for Gibbs Measures,''
+\emph{Journal of Statistical Physics} \textbf{157} (2014), 234--281,\newline
+\url{https://web.math.princeton.edu/~rvan/dobrushin130819.pdf}.
+
+\bibitem{BalabanI}
+T. Ba\l aban,
+``Renormalization Group Approach to Lattice Gauge Field Theories I:
+Generation of Effective Actions in a Small Field Approximation and a Coupling
+Constant Renormalization in Four Dimensions,''
+\emph{Communications in Mathematical Physics} \textbf{109} (1987), 249--301,\newline
+\url{https://projecteuclid.org/euclid.cmp/1104116842}.
+
+\bibitem{ShenZhuZhu}
+H. Shen, R. Zhu, and X. Zhu,
+``A Stochastic Analysis Approach to Lattice Yang--Mills at Strong Coupling,''
+\emph{Communications in Mathematical Physics} \textbf{400} (2023), 805--851,\newline
+\url{https://arxiv.org/abs/2204.12737}.
+\end{thebibliography}
+
+\end{document}

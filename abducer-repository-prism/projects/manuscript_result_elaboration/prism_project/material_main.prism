@@ -1,0 +1,93 @@
+# lunar-runtime: {"declaration":"MaterializedManuscriptResultElaboration","entry_argument":"paper","execute_hook":"abducer-workflow-execute","id":"manuscript_result_elaboration","input_schema":{"additionalProperties":false,"default":{"draft_id":"mk-fixed-point-method-note"},"properties":{"draft_id":{"default":"mk-fixed-point-method-note","maxLength":16000,"minLength":1,"type":"string"}},"required":["draft_id"],"type":"object"},"metadata":{"completion_contract":{"allowed_final_statuses":["passed","completed"],"forbid_blockers":true,"reasoning_complete":true,"reasoning_events_min":8,"terminal_state":"completed"},"description":"extend a result into a scope-safe and evidence-aligned manuscript","model_required":true,"network_required":false,"provenance_contract":{"agent_invocations":[{"activated_skill_ids":["epistemic-status-ledger"],"agent_name":"e0_material_agent","workflow_occurrence":"e0"},{"activated_skill_ids":["kb-abduce"],"agent_name":"a0_material_agent","workflow_occurrence":"a0"},{"activated_skill_ids":["counterexample-hunter"],"agent_name":"r0_material_agent","workflow_occurrence":"r0"},{"activated_skill_ids":["epistemic-status-ledger"],"agent_name":"e1_material_agent","workflow_occurrence":"e1"}],"required_source_reads":[]},"reasoning_contract":{"steps":["e0","a0","r0","e1"],"workflow":"ManuscriptResultElaboration"},"reasoning_required":true,"required_host_capabilities":["model","prism-engine","reasoning-events"],"scientific_truth_verified":false,"semantic_mode":"operational-model-generated","source_materialization_status":"linked_fake_handler_smoke","timeout_seconds":1800},"output_schema":{"additionalProperties":false,"properties":{"analysis_results":{"type":"object"},"compact_prism_input":{"type":"object"},"markdown":{"minLength":1,"type":"string"},"narrative_slots":{"type":"array"},"report_verification":{"properties":{"reasoning_complete":{"const":true},"status":{"const":"passed"}},"required":["status","reasoning_complete"],"type":"object"},"structured_value":{"properties":{"execution_provenance":{"type":"object"},"final_disposition":{"properties":{"blockers":{"maxItems":0,"type":"array"},"reasoning_complete":{"const":true},"status":{"const":"passed"}},"required":["status","reasoning_complete","blockers"],"type":"object"},"reasoning_result":{"type":"object"}},"required":["final_disposition","reasoning_result","execution_provenance"],"type":"object"}},"required":["markdown","structured_value","analysis_results","compact_prism_input","narrative_slots","report_verification"],"type":"object"},"prepare_hook":"abducer-workflow-prepare","verify_hook":"abducer-workflow-verify"}
+
+# Host-executed material graph for the complete reviewed reasoning path.
+# Generated values retain the source epistemic boundary and are not native proof or experiment receipts.
+
+from types import (
+    ExpansionValidation,
+    ExtensionValidityAssessment,
+    IntegratedPaperDraft,
+    ManuscriptExtensionHypothesis,
+    ManuscriptReadinessAssessment,
+    ManuscriptReadinessDisposition,
+    ManuscriptResultScope,
+    PaperDraft,
+    PaperReadinessDecision,
+)
+from occurrences import (
+    ManuscriptReadinessInput,
+)
+
+from generated.material_types import (
+    MaterialManuscriptReadinessAssessment,
+)
+
+from generated.a0_skill_1 import a0_skill_1
+from generated.e0_skill_1 import e0_skill_1
+from generated.e1_skill_1 import e1_skill_1
+from generated.r0_skill_1 import r0_skill_1
+
+# Real model capability for source occurrence e0:EvidentialManuscriptResultScopeAssessment.
+agent e0_material_agent(
+    task: PaperDraft,
+) -> Result[Generated[ManuscriptResultScope], ModelFailure]
+    ! {AI.Generate, Context.Disclose}:
+    skills: Skills[PaperDraft] = [e0_skill_1]
+
+# Real model capability for source occurrence a0:AbductiveManuscriptExtensionHypothesisFormation.
+agent a0_material_agent(
+    task: ManuscriptResultScope,
+) -> Result[Generated[ManuscriptExtensionHypothesis], ModelFailure]
+    ! {AI.Generate, Context.Disclose}:
+    skills: Skills[ManuscriptResultScope] = [a0_skill_1]
+
+# Real model capability for source occurrence r0:RefutationalManuscriptExtensionAssessment.
+agent r0_material_agent(
+    task: ManuscriptExtensionHypothesis,
+) -> Result[Generated[ExtensionValidityAssessment], ModelFailure]
+    ! {AI.Generate, Context.Disclose}:
+    skills: Skills[ManuscriptExtensionHypothesis] = [r0_skill_1]
+
+# Real model capability for source occurrence e1:EvidentialManuscriptReadinessAssessment.
+agent e1_material_agent(
+    task: ManuscriptReadinessInput,
+) -> Result[Generated[MaterialManuscriptReadinessAssessment], ModelFailure]
+    ! {AI.Generate, Context.Disclose}:
+    skills: Skills[ManuscriptReadinessInput] = [e1_skill_1]
+
+workflow MaterializedManuscriptResultElaboration(
+    paper: PaperDraft,
+) -> Generated[MaterialManuscriptReadinessAssessment]
+    fails ModelFailure
+    ! {AI.Generate, Context.Disclose}:
+    sequence:
+        # Scope assessment prevents extension from silently enlarging the result.
+        [e0: e0_material_agent(paper)]
+        # Abduction proposes an extension only within that assessed scope.
+        [a0: a0_material_agent(e0.value)]
+        # Refutation tests the extension before readiness can integrate it.
+        [r0: r0_material_agent(a0.value)]
+        [e1: e1_material_agent(ManuscriptReadinessInput(
+            extension_hypothesis = a0.value,
+            validity_assessment = r0.value,
+        ))]
+
+    return e1
+
+# HANDOFF (non-executable): when e1 finds that a new theorem needs proof, adapt
+# the readiness result to ProofQueueItem and offer it to theorem_proof_delivery.
+# The handoff preserves finite/asymptotic/continuum scope, prior-art boundaries,
+# provenance, taints, and open obligations and adds no proof or truth warrant.
+# ACCEPT (non-executable): paper_ready accepts only after IntegratedPaperDraft,
+# ExpansionValidation, and PaperReadinessDecision pass the declared exit gate;
+# acceptance does not silently remove unresolved markers.
+# STOP (non-executable): a stalled flow stops. Step failures stop or quarantine
+# as declared; rejected or quarantined readiness is not acceptance.
+
+
+def main(
+    paper: PaperDraft,
+    model_access: ModelGenerate,
+    disclosure: ContextDisclose,
+) -> Result[Generated[MaterialManuscriptReadinessAssessment], ModelFailure] ! {AI.Generate, Context.Disclose}:
+    return solve MaterializedManuscriptResultElaboration(paper)

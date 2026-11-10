@@ -1,0 +1,84 @@
+# lunar-runtime: {"declaration":"MaterializedScientificContributionCultivation","entry_argument":"result","execute_hook":"abducer-workflow-execute","id":"scientific_contribution_cultivation","input_schema":{"additionalProperties":false,"default":{"result_id":"mk-finite-family-proof-route"},"properties":{"result_id":{"default":"mk-finite-family-proof-route","maxLength":16000,"minLength":1,"type":"string"}},"required":["result_id"],"type":"object"},"metadata":{"completion_contract":{"allowed_final_statuses":["passed","completed"],"forbid_blockers":true,"reasoning_complete":true,"reasoning_events_min":6,"terminal_state":"completed"},"description":"test what scientific contribution is actually supported by a result","model_required":true,"network_required":false,"provenance_contract":{"agent_invocations":[{"activated_skill_ids":["kb-abduce"],"agent_name":"a0_material_agent","workflow_occurrence":"a0"},{"activated_skill_ids":["counterexample-hunter"],"agent_name":"r0_material_agent","workflow_occurrence":"r0"},{"activated_skill_ids":["epistemic-status-ledger"],"agent_name":"e0_material_agent","workflow_occurrence":"e0"}],"required_source_reads":[]},"reasoning_contract":{"steps":["a0","r0","e0"],"workflow":"ScientificContributionCultivation"},"reasoning_required":true,"required_host_capabilities":["model","prism-engine","reasoning-events"],"scientific_truth_verified":false,"semantic_mode":"operational-model-generated","source_materialization_status":"linked_fake_handler_smoke","timeout_seconds":1800},"output_schema":{"additionalProperties":false,"properties":{"analysis_results":{"type":"object"},"compact_prism_input":{"type":"object"},"markdown":{"minLength":1,"type":"string"},"narrative_slots":{"type":"array"},"report_verification":{"properties":{"reasoning_complete":{"const":true},"status":{"const":"passed"}},"required":["status","reasoning_complete"],"type":"object"},"structured_value":{"properties":{"execution_provenance":{"type":"object"},"final_disposition":{"properties":{"blockers":{"maxItems":0,"type":"array"},"reasoning_complete":{"const":true},"status":{"const":"passed"}},"required":["status","reasoning_complete","blockers"],"type":"object"},"reasoning_result":{"type":"object"}},"required":["final_disposition","reasoning_result","execution_provenance"],"type":"object"}},"required":["markdown","structured_value","analysis_results","compact_prism_input","narrative_slots","report_verification"],"type":"object"},"prepare_hook":"abducer-workflow-prepare","verify_hook":"abducer-workflow-verify"}
+
+# Host-executed material graph for the complete reviewed reasoning path.
+# Generated values retain the source epistemic boundary and are not native proof or experiment receipts.
+
+from types import (
+    ContributionReadinessAssessment,
+    ContributionSupportAssessment,
+    ContributionValueAssessment,
+    EnablementAudit,
+    MainProblemAlignmentAudit,
+    ResultAtlasSlice,
+    ScientificContributionDisposition,
+    ScientificContributionHypothesis,
+)
+from occurrences import (
+    ContributionReadinessInput,
+)
+
+from generated.material_types import (
+    MaterialContributionReadinessAssessment,
+)
+
+from generated.a0_skill_1 import a0_skill_1
+from generated.e0_skill_1 import e0_skill_1
+from generated.r0_skill_1 import r0_skill_1
+
+# Real model capability for source occurrence a0:AbductiveScientificContributionHypothesisFormation.
+agent a0_material_agent(
+    task: ResultAtlasSlice,
+) -> Result[Generated[ScientificContributionHypothesis], ModelFailure]
+    ! {AI.Generate, Context.Disclose}:
+    skills: Skills[ResultAtlasSlice] = [a0_skill_1]
+
+# Real model capability for source occurrence r0:RefutationalContributionSupportAssessment.
+agent r0_material_agent(
+    task: ScientificContributionHypothesis,
+) -> Result[Generated[ContributionSupportAssessment], ModelFailure]
+    ! {AI.Generate, Context.Disclose}:
+    skills: Skills[ScientificContributionHypothesis] = [r0_skill_1]
+
+# Real model capability for source occurrence e0:EvidentialContributionReadinessAssessment.
+agent e0_material_agent(
+    task: ContributionReadinessInput,
+) -> Result[Generated[MaterialContributionReadinessAssessment], ModelFailure]
+    ! {AI.Generate, Context.Disclose}:
+    skills: Skills[ContributionReadinessInput] = [e0_skill_1]
+
+workflow MaterializedScientificContributionCultivation(
+    result: ResultAtlasSlice,
+) -> Generated[MaterialContributionReadinessAssessment]
+    fails ModelFailure
+    ! {AI.Generate, Context.Disclose}:
+    sequence:
+        # Abduction interprets the result as a candidate contribution, not a fact.
+        [a0: a0_material_agent(result)]
+        # Refutation tests whether the proposed contribution is actually supported.
+        [r0: r0_material_agent(a0.value)]
+        # Readiness joins hypothesis and support assessment and emits all three audits.
+        [e0: e0_material_agent(ContributionReadinessInput(
+            contribution_hypothesis = a0.value,
+            support_assessment = r0.value,
+        ))]
+
+    return e0
+
+# HANDOFF (non-executable): when e0 is paper-ready, construct the contract's
+# PaperArgumentHandoff through paper_argument_to_draft and offer it to
+# manuscript_result_elaboration. Transport does not inflate novelty, promote a
+# support-only result, or add mechanism evidence or other epistemic warrant.
+# ACCEPT (non-executable): paper_ready is a handoff condition, not a local
+# terminal accept or publication decision.
+# STOP (non-executable): a refuted r0 or stalled workflow stops. Step failures
+# stop or quarantine as declared. Exit validation requires the value,
+# main-problem alignment, and enablement audits represented in e0, while open
+# obligations remain declared; an archived or quarantined result is not accept.
+
+
+def main(
+    result: ResultAtlasSlice,
+    model_access: ModelGenerate,
+    disclosure: ContextDisclose,
+) -> Result[Generated[MaterialContributionReadinessAssessment], ModelFailure] ! {AI.Generate, Context.Disclose}:
+    return solve MaterializedScientificContributionCultivation(result)

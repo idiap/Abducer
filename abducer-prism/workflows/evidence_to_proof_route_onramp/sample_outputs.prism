@@ -1,0 +1,45 @@
+# Simulated payloads for evidence_to_proof_route_onramp; documentary values, not execution evidence.
+from workflows.evidence_to_proof_route_onramp.types import (
+    ProofRouteEvidenceGround, ProofRouteHypothesis, ProofRouteDerivedConsequence,
+    ProofRouteConsequenceAssessment, ProofObligationEntrypointHypothesis,
+    EntrypointFalsificationAssessment, ProofRouteReadinessAssessment, ProofRouteDisposition,
+    ExpertRouteDossier, HubBiasAudit,
+)
+
+# @sample workflow=evidence_to_proof_route_onramp reasoning=EvidenceToProofRouteOnramp binding=e0 occurrence=EvidentialProofRouteGrounding output=Generated[ProofRouteEvidenceGround] stage=1 branch=main mode=simulated example_set=finite-tree-proof-route projection_status=resolved
+sample_e0_value: ProofRouteEvidenceGround = ProofRouteEvidenceGround(
+    source_id = "finite-tree-definition-set",
+)
+
+# @sample workflow=evidence_to_proof_route_onramp reasoning=EvidenceToProofRouteOnramp binding=a0 occurrence=AbductiveProofRouteHypothesisFormation output=Generated[ProofRouteHypothesis] stage=2 branch=main mode=simulated example_set=finite-tree-proof-route projection_status=resolved
+sample_a0_value: ProofRouteHypothesis = ProofRouteHypothesis(
+    route_hypothesis_id = "leaf-removal-induction-route",
+)
+
+# @sample workflow=evidence_to_proof_route_onramp reasoning=EvidenceToProofRouteOnramp binding=d0 occurrence=DeductiveProofRouteConsequenceDerivation output=Generated[ProofRouteDerivedConsequence] stage=3 branch=main mode=simulated example_set=finite-tree-proof-route projection_status=resolved
+sample_d0_value: ProofRouteDerivedConsequence = ProofRouteDerivedConsequence(
+    derived_consequence_id = "edge-count-decreases-with-leaf-removal",
+)
+
+# @sample workflow=evidence_to_proof_route_onramp reasoning=EvidenceToProofRouteOnramp binding=e1 occurrence=EvidentialProofRouteConsequenceAssessment output=Generated[ProofRouteConsequenceAssessment] stage=4 branch=main mode=simulated example_set=finite-tree-proof-route projection_status=resolved
+sample_e1_value: ProofRouteConsequenceAssessment = ProofRouteConsequenceAssessment(
+    consequence_assessment_id = "consequence-preserves-induction-target",
+)
+
+# @sample workflow=evidence_to_proof_route_onramp reasoning=EvidenceToProofRouteOnramp binding=a1 occurrence=AbductiveProofObligationEntrypointRevision output=Generated[ProofObligationEntrypointHypothesis] stage=5 branch=main mode=simulated example_set=finite-tree-proof-route projection_status=resolved
+sample_a1_value: ProofObligationEntrypointHypothesis = ProofObligationEntrypointHypothesis(
+    entrypoint_hypothesis_id = "prove-base-case-and-leaf-existence",
+)
+
+# @sample workflow=evidence_to_proof_route_onramp reasoning=EvidenceToProofRouteOnramp binding=r0 occurrence=RefutationalProofEntrypointAssessment output=Generated[EntrypointFalsificationAssessment] stage=6 branch=main mode=simulated example_set=finite-tree-proof-route projection_status=resolved
+sample_r0_value: EntrypointFalsificationAssessment = EntrypointFalsificationAssessment(
+    falsification_assessment_id = "counterexample-requires-cycle-or-disconnection",
+)
+
+# @sample workflow=evidence_to_proof_route_onramp reasoning=EvidenceToProofRouteOnramp binding=e2 occurrence=EvidentialProofRouteReadinessAssessment output=Generated[ProofRouteReadinessAssessment] stage=7 branch=main mode=simulated example_set=finite-tree-proof-route projection_status=resolved
+sample_e2_value: ProofRouteReadinessAssessment = ProofRouteReadinessAssessment(
+    disposition = RouteReady(),
+    dossier = ExpertRouteDossier(dossier_id = "finite-tree-induction-dossier"),
+    falsification = sample_r0_value,
+    hub_bias = HubBiasAudit(audit_id = "no-single-source-hub-assumed"),
+)

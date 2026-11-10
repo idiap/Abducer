@@ -1,0 +1,188 @@
+\section{A proof-bearing calculus of representation change}
+\label{sec:calculus}
+
+The calculus is intentionally small.  It does not attempt to encode every
+feature of a physical theory.  It records the objects needed to decide whether
+a particular claim can cross a particular interface.
+
+\subsection{Representation packages}
+
+\begin{definition}[Representation package]
+\label{def:package}
+A \emph{representation package} is a tuple
+\[
+ \Rep=(\mathcal K,\mathcal G,\Aphys,\mathcal S,\mathcal T,
+       \mathcal L,\mathcal Q)
+\]
+with the following typed components.
+\begin{enumerate}[label=(\roman*),itemsep=2pt]
+ \item $\mathcal G\rightrightarrows\mathcal K$ is a groupoid of
+ kinematical presentations and redundancies.
+ \item $\Aphys$ is a unital $*$-algebra of physical observables, equipped
+ with seminorms $p_\alpha$ and an interpretation of support.
+ \item $\mathcal S\subset\Aphys^{*}$ is a specified class of normalized
+ positive states.
+ \item $\mathcal T$ is physical time evolution, a Euclidean correlation
+ family, or another explicitly typed dynamics; these alternatives are not
+ identified.
+ \item $\mathcal L=(I,\preceq,\lambda,\mathfrak C)$ records the directed
+ index set, physical scales and units, admissible limiting paths, and
+ convergence topologies.
+ \item $\mathcal Q$ is a family of property predicates, each with a bearer,
+ domain, units, and quantifier prefix.
+\end{enumerate}
+The algebra $\Aphys$ is invariant under $\mathcal G$, or is supplied with a
+descent theorem from a covariant algebra.
+\end{definition}
+
+The groupoid accommodates the fact that a gauge transformation relates
+presentations rather than physical histories.  The distinction between
+$\mathcal T$ and $\mathcal L$ prevents physical time from being identified
+with an RG parameter.  The property set $\mathcal Q$ is not a list of words:
+``locality,'' for example, must specify a net or support rule, while ``gap''
+must specify a generator, a vacuum sector, and physical energy units.
+Appendix~\ref{app:typed} gives the full typing and identity conditions.
+
+\begin{example}[Finite semigroup package]
+Let $\mathcal K=\mathbb C^{d}$, let the redundancy groupoid be trivial, let
+$\Aphys=M_d(\mathbb C)$, and let $\mathcal S$ be density matrices.  A positive
+self-adjoint $H$ defines $\mathcal T_t(A)=\e^{-tH}A\e^{-tH}$ for Euclidean
+quadratic forms.  The limit data may be a sequence of inclusions into a
+separable Hilbert space.  Spectral support, core completeness, and semigroup
+decay are well-typed property predicates.
+\end{example}
+
+\begin{example}[Regulated lattice gauge package]
+For a finite lattice, $\mathcal K=G^{E}$, the vertex gauge group acts as a
+groupoid of link presentations, and $\Aphys$ is a chosen algebra of invariant
+functions.  A positive lattice measure defines states and Euclidean
+correlations.  The limit data include lattice spacing, physical volume,
+bare/renormalized parameters, and observable renormalization.  Gauge
+invariance is exact at finite cutoff, while continuum covariance, physical
+observable completeness, and a Hamiltonian gap are limit or reconstruction
+predicates.  This instantiates every component without treating the regulator
+as the continuum theory.
+\end{example}
+
+\subsection{Certificate-profiled morphisms}
+
+Let $F:\Rep_0\to\Rep_1$ contain a pullback
+$F^*: \mathcal D_1\to\Aphys^{(0)}$ on a declared target-observable domain and,
+when defined, a state pushforward $F_*:\mathcal S_0\to\mathcal S_1$.  Exact
+duality would require
+\[
+ \langle F_*\omega,A\rangle
+   =\langle\omega,F^*A\rangle.
+\]
+Approximate, limiting, and coarse-graining maps instead carry a family
+$\varepsilon_F(A;i)$ satisfying
+\begin{equation}
+\label{eq:fidelity}
+ \left|\langle F_*\omega,A\rangle-
+        \langle\omega,F^*A\rangle\right|
+ \leq \varepsilon_F(A;i)
+\end{equation}
+for the stated states, observables, and indices.
+
+\begin{definition}[Certificate profile]
+\label{def:profile}
+The profile of $F$ is
+\[
+ \Cert(F)=(\Exact_F,\varepsilon_F,\Forgot_F,\Recover_F,\Uniform_F).
+\]
+$\Exact_F$ contains exact property channels.  $\varepsilon_F$ is a
+heterogeneous family of observable-dependent moduli.  $\Forgot_F$ lists
+structures not available in the target variables.  $\Recover_F$ contains
+theorems or partial sections that recover specified claims despite such loss.
+$\Uniform_F$ records the full index domain and order of quantifiers on which
+each entry holds.
+\end{definition}
+
+Forgetting is therefore not the negation of physical existence.  It says that
+the target representation does not by itself carry a datum required by the
+inference.  Recovery is not a declaration that the datum ``must still be
+there.''  It names a map or theorem, its domain, and a modulus.  Exact
+inverses, reconstruction on an observable core, asymptotic recovery, and
+external reconstruction theorems are consequently different entries.
+
+Figure~\ref{fig:profile} displays the logical form.  The arrow can preserve
+some channels and erase others; a recovery theorem is a second arrow, not an
+optimistic interpretation of the first.
+
+\begin{figure}[t]
+\centering
+\begin{tikzpicture}[
+  box/.style={draw,rounded corners,align=center,minimum width=34mm,minimum height=10mm},
+  cert/.style={draw,dashed,rounded corners,align=left,inner sep=5pt},
+  arr/.style={-{Latex[length=2.2mm]},thick},
+  node distance=18mm and 25mm]
+\node[box] (r0) {$\Rep_0$\\source description};
+\node[box,right=of r0] (r1) {$\Rep_1$\\target description};
+\draw[arr] (r0) -- node[above] {$F$} (r1);
+\node[cert,below=of r0] (c)
+ {$\Exact_F$: exact channels\\
+  $\varepsilon_F$: quantitative fidelity\\
+  $\Forgot_F$: unavailable structure\\
+  $\Uniform_F$: index domain};
+\node[box,below=of r1] (p) {target property\\$Q_1$};
+\draw[arr,dashed] (r1) -- node[right] {direct} (p);
+\draw[arr,blue!65!black] (c.east) --
+ node[below,align=center,font=\small] {$\Recover_F$} (p.west);
+\end{tikzpicture}
+\caption{A property-relative representation morphism.  Recovery is a
+separate theorem-backed route from the source data and certificate profile to
+the target claim.}
+\label{fig:profile}
+\end{figure}
+
+\subsection{Composition without scalarization}
+
+Suppose $F:\Rep_0\to\Rep_1$ and $G:\Rep_1\to\Rep_2$.  For a target
+observable $B$, inserting the intermediate expectation gives
+\begin{equation}
+\label{eq:composition}
+ \varepsilon_{G\circ F}(B;i)
+ \leq \varepsilon_G(B;i)+\varepsilon_F(G^*B;i).
+\end{equation}
+If the pullback of $G$ obeys
+$p_1(G^*B)\leq L_G(B)p_2(B)$ and the first error is controlled by $p_1$,
+then
+\[
+ \varepsilon_{G\circ F}(B;i)
+ \leq \varepsilon_G(B;i)+L_G(B)\varepsilon_F(B;i).
+\]
+Locality range, positivity, gauge descent, and spectral fidelity are not
+folded into this scalar expression.  Each has its own composition rule and
+failure mode.
+
+\begin{proposition}[Typed profile composition]
+\label{prop:composition}
+On composable observable domains, expectation moduli compose by
+Equation~\eqref{eq:composition}; exact channels compose by conjunction;
+uniformity domains compose by intersection with the pulled-back quantifier
+order; and a forgotten prerequisite can appear in the composite conclusion
+only through an explicit recovery theorem.  For three composable morphisms,
+the expectation modulus is associative:
+\[
+ \varepsilon_H+L_H\varepsilon_G+L_HL_G\varepsilon_F,
+\]
+independently of bracketing.
+\end{proposition}
+
+The proof is in Appendix~\ref{app:composition}.  This proposition is still
+bookkeeping.  Its importance is negative and architectural: it prevents one
+successful channel from licensing another.  The substantive result comes
+when a recovery theorem turns a family of Euclidean bounds into a spectral
+property.
+
+\subsection{How much category theory is claimed?}
+
+Exact representation equivalences, with total observable maps and identities,
+form an ordinary category.  Approximate arrows with seminorm-valued profiles
+can be organized in enriched or ordered structures, and institution-style
+semantics provides useful analogies for invariance under change of notation
+\cite{GoguenBurstall1992}.  We do not claim that every coarse graining,
+limiting correspondence, or partial reconstruction belongs to one completed
+category.  In the present paper, ``morphism'' means a typed composable arrow
+on the stated domain.  Categorical vocabulary is retained only where identity
+and associativity have been proved.

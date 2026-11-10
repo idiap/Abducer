@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://abducer.local/spec/benchmark_human_evidence_trust_anchor.schema.json",
+  "title": "Caller-configured external human-evidence authority trust anchor",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "trust_anchor_id", "authority_id", "benchmark_id", "verifier_command_authority_digest", "trust_boundary", "policy_scope", "out_of_band_signature_status", "external_authority_eligible", "content_digest"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "trust_anchor_id": {"type": "string", "minLength": 1},
+    "authority_id": {"type": "string", "minLength": 1},
+    "benchmark_id": {"type": "string", "minLength": 1},
+    "verifier_command_authority_digest": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
+    "trust_boundary": {"const": "caller_configured_external_authority_not_evidence_supplied"},
+    "policy_scope": {"const": "caller_policy_eligibility_only"},
+    "out_of_band_signature_status": {"const": "unavailable_no_independent_trust_store"},
+    "external_authority_eligible": {"const": false},
+    "content_digest": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"}
+  }
+}

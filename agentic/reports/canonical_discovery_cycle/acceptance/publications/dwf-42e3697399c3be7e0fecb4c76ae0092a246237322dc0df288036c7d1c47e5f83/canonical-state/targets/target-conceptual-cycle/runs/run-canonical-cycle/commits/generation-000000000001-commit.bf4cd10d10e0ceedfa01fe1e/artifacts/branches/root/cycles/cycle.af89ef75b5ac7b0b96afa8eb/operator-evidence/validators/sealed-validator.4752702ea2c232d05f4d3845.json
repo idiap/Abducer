@@ -1,0 +1,57 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://abducer.local/schemas/parallel_hypothesis_portfolio.schema.json",
+  "title": "Isolated parallel hypothesis portfolio",
+  "description": "Frozen dependency waves, branch-local every-attempt receipts, literature rebase, and one conflict-preserving CAS merge.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "portfolio_id", "target_id", "base_theory_state_version", "base_theory_digest", "literature_snapshot_id", "literature_snapshot_digest", "created_at", "dependency_dag", "resource_budget", "diversity_matrix", "branch_requests", "waves", "attempt_receipts", "branch_results", "partial_failure_ledger", "literature_rebase", "merge_proposal", "reducer_receipt", "portfolio_metrics", "next_dependency_ready_wave", "content_digest"],
+  "$defs": {
+    "id": {"type": "string", "minLength": 1, "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$"},
+    "digest": {"type": "string", "pattern": "^(sha256:)?[a-f0-9]{64}$"},
+    "text": {"type": "string", "minLength": 1},
+    "request": {
+      "type": "object", "additionalProperties": false,
+      "required": ["invocation_id", "attempt", "branch_id", "hypothesis_id", "corner_family", "mechanism_key", "maturation_question", "unique_primitives", "genealogy", "seed_digest", "is_wildcard", "depends_on_branch_ids", "input_digest", "artifact_namespace", "allowed_skills", "forbidden_shared_reads", "budget", "stop_conditions", "expected_theory_delta", "frozen_inputs"],
+      "properties": {
+        "invocation_id": {"$ref": "#/$defs/id"}, "attempt": {"type": "integer", "minimum": 1}, "branch_id": {"$ref": "#/$defs/id"}, "hypothesis_id": {"$ref": "#/$defs/id"}, "corner_family": {"$ref": "#/$defs/id"}, "mechanism_key": {"$ref": "#/$defs/id"}, "maturation_question": {"$ref": "#/$defs/text"}, "unique_primitives": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/id"}}, "genealogy": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/id"}}, "seed_digest": {"$ref": "#/$defs/digest"}, "is_wildcard": {"type": "boolean"},
+        "depends_on_branch_ids": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/id"}},
+        "input_digest": {"$ref": "#/$defs/digest"}, "artifact_namespace": {"$ref": "#/$defs/text"},
+        "allowed_skills": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/id"}},
+        "forbidden_shared_reads": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/text"}},
+        "budget": {"type": "object", "required": ["wall_seconds", "cost_units", "storage_bytes"], "properties": {"wall_seconds": {"type": "number", "exclusiveMinimum": 0}, "cost_units": {"type": "number", "minimum": 0}, "storage_bytes": {"type": "integer", "minimum": 0}}},
+        "stop_conditions": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/text"}},
+        "expected_theory_delta": {"$ref": "#/$defs/text"},
+        "frozen_inputs": {"type": "object", "additionalProperties": false, "required": ["target_id", "theory_digest", "literature_digest", "portfolio_digest"], "properties": {"target_id": {"$ref": "#/$defs/id"}, "theory_digest": {"$ref": "#/$defs/digest"}, "literature_digest": {"$ref": "#/$defs/digest"}, "portfolio_digest": {"$ref": "#/$defs/digest"}}}
+      }
+    },
+    "receipt": {
+      "type": "object", "additionalProperties": false,
+      "required": ["receipt_id", "invocation_id", "attempt", "branch_id", "input_digest", "started_at", "completed_at", "status", "output_digest", "theory_delta_ref", "failure_class", "failure_detail", "resource_usage", "validator_receipt_ids", "reused_success"],
+      "properties": {
+        "receipt_id": {"$ref": "#/$defs/id"}, "invocation_id": {"$ref": "#/$defs/id"}, "attempt": {"type": "integer", "minimum": 1}, "branch_id": {"$ref": "#/$defs/id"}, "input_digest": {"$ref": "#/$defs/digest"},
+        "started_at": {"type": "string", "format": "date-time"}, "completed_at": {"type": "string", "format": "date-time"},
+        "status": {"enum": ["completed", "timeout", "failed", "cancelled", "invalid", "dependency_blocked", "reused"]},
+        "output_digest": {"type": ["string", "null"], "pattern": "^(sha256:)?[a-f0-9]{64}$"}, "theory_delta_ref": {"type": ["string", "null"]}, "failure_class": {"type": ["string", "null"]}, "failure_detail": {"type": ["string", "null"]},
+        "resource_usage": {"type": "object"}, "validator_receipt_ids": {"type": "array", "items": {"$ref": "#/$defs/id"}}, "reused_success": {"type": "boolean"}
+      }
+    }
+  },
+  "properties": {
+    "schema_version": {"const": "1.0"}, "portfolio_id": {"$ref": "#/$defs/id"}, "target_id": {"$ref": "#/$defs/id"}, "base_theory_state_version": {"type": "integer", "minimum": 0}, "base_theory_digest": {"$ref": "#/$defs/digest"}, "literature_snapshot_id": {"$ref": "#/$defs/id"}, "literature_snapshot_digest": {"$ref": "#/$defs/digest"}, "created_at": {"type": "string", "format": "date-time"},
+    "dependency_dag": {"type": "object", "additionalProperties": false, "required": ["nodes", "edges", "deduplicated_branch_ids", "duplicate_groups"], "properties": {"nodes": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/id"}}, "edges": {"type": "array", "items": {"type": "object", "required": ["parent", "child"]}}, "deduplicated_branch_ids": {"type": "array", "items": {"$ref": "#/$defs/id"}}, "duplicate_groups": {"type": "array", "items": {"type": "array", "minItems": 2, "items": {"$ref": "#/$defs/id"}}}}},
+    "resource_budget": {"type": "object", "required": ["wall_seconds", "max_workers", "cost_units", "storage_bytes"], "properties": {"wall_seconds": {"type": "number", "exclusiveMinimum": 0}, "max_workers": {"type": "integer", "minimum": 1}, "cost_units": {"type": "number", "minimum": 0}, "storage_bytes": {"type": "integer", "minimum": 0}}},
+    "diversity_matrix": {"type": "array", "items": {"type": "object", "required": ["left_branch_id", "right_branch_id", "same_mechanism", "same_genealogy", "same_maturation_question", "independent"]}},
+    "branch_requests": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/request"}},
+    "waves": {"type": "array", "minItems": 1, "items": {"type": "object", "required": ["wave_id", "purpose", "depends_on_wave_ids", "branch_ids", "validation_barrier"], "properties": {"wave_id": {"$ref": "#/$defs/id"}, "purpose": {"enum": ["blind_divergence", "cross_pollination", "maturation", "synthesis_support"]}, "depends_on_wave_ids": {"type": "array", "items": {"$ref": "#/$defs/id"}}, "branch_ids": {"type": "array", "items": {"$ref": "#/$defs/id"}}, "validation_barrier": {"type": "object", "required": ["valid_branch_ids", "failed_branch_ids", "invalid_branch_ids", "blocked_branch_ids", "partial_success_preserved"], "properties": {"valid_branch_ids": {"type": "array", "items": {"$ref": "#/$defs/id"}}, "failed_branch_ids": {"type": "array", "items": {"$ref": "#/$defs/id"}}, "invalid_branch_ids": {"type": "array", "items": {"$ref": "#/$defs/id"}}, "blocked_branch_ids": {"type": "array", "items": {"$ref": "#/$defs/id"}}, "partial_success_preserved": {"const": true}}}}}},
+    "attempt_receipts": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/receipt"}},
+    "branch_results": {"type": "array", "items": {"type": "object", "required": ["branch_id", "invocation_id", "input_digest", "output_digest", "literature_status", "theory_delta", "claims", "genealogy", "conceptual_learning", "rebase_receipt_id"]}},
+    "partial_failure_ledger": {"type": "object", "required": ["preserved_branch_ids", "retry_branch_ids", "invalidated_by_dependency_ids", "operational_failures"], "properties": {"preserved_branch_ids": {"type": "array", "items": {"$ref": "#/$defs/id"}}, "retry_branch_ids": {"type": "array", "items": {"$ref": "#/$defs/id"}}, "invalidated_by_dependency_ids": {"type": "array", "items": {"$ref": "#/$defs/id"}}, "operational_failures": {"type": "array", "items": {"type": "object"}}}},
+    "literature_rebase": {"type": "object", "required": ["frozen_snapshot_id", "frozen_snapshot_digest", "newest_snapshot_id", "newest_snapshot_digest", "status", "rebase_receipt_ids", "required_branch_ids", "rebased_branch_ids", "blocked_branch_ids"], "properties": {"frozen_snapshot_id": {"$ref": "#/$defs/id"}, "frozen_snapshot_digest": {"$ref": "#/$defs/digest"}, "newest_snapshot_id": {"$ref": "#/$defs/id"}, "newest_snapshot_digest": {"$ref": "#/$defs/digest"}, "status": {"enum": ["current", "literature_superseded", "rebased", "rebase_blocked"]}, "rebase_receipt_ids": {"type": "array", "items": {"$ref": "#/$defs/id"}}, "required_branch_ids": {"type": "array", "items": {"$ref": "#/$defs/id"}}, "rebased_branch_ids": {"type": "array", "items": {"$ref": "#/$defs/id"}}, "blocked_branch_ids": {"type": "array", "items": {"$ref": "#/$defs/id"}}}},
+    "merge_proposal": {"type": "object", "required": ["ancestry_edges", "opposition_edges", "synthesis_edges", "duplicate_edges", "contradiction_edges", "pareto_frontier_ids", "retained_dissent_ids", "retained_wildcard_ids", "proposed_ledger_events"], "properties": {"ancestry_edges": {"type": "array", "items": {"type": "object"}}, "opposition_edges": {"type": "array", "items": {"type": "object"}}, "synthesis_edges": {"type": "array", "items": {"type": "object"}}, "duplicate_edges": {"type": "array", "items": {"type": "object"}}, "contradiction_edges": {"type": "array", "items": {"type": "object"}}, "pareto_frontier_ids": {"type": "array", "items": {"$ref": "#/$defs/id"}}, "retained_dissent_ids": {"type": "array", "items": {"$ref": "#/$defs/id"}}, "retained_wildcard_ids": {"type": "array", "items": {"$ref": "#/$defs/id"}}, "proposed_ledger_events": {"type": "array", "items": {"type": "object"}}}},
+    "reducer_receipt": {"type": "object", "required": ["reducer_id", "expected_state_version", "committed_state_version", "compare_and_swap_status", "merged_branch_ids", "content_digest"], "properties": {"reducer_id": {"$ref": "#/$defs/id"}, "expected_state_version": {"type": "integer", "minimum": 0}, "committed_state_version": {"type": ["integer", "null"], "minimum": 0}, "compare_and_swap_status": {"enum": ["committed", "conflict", "not_executed", "blocked_rebase"]}, "merged_branch_ids": {"type": "array", "items": {"$ref": "#/$defs/id"}}, "content_digest": {"$ref": "#/$defs/digest"}}},
+    "portfolio_metrics": {"type": "object", "required": ["conceptual_corner_coverage", "independent_learning_count", "successful_branch_count", "attempted_branch_count", "matched_budget_baseline_corner_coverage", "matched_budget_improvement", "worker_count_is_progress"], "properties": {"conceptual_corner_coverage": {"type": "integer", "minimum": 0}, "independent_learning_count": {"type": "integer", "minimum": 0}, "successful_branch_count": {"type": "integer", "minimum": 0}, "attempted_branch_count": {"type": "integer", "minimum": 0}, "matched_budget_baseline_corner_coverage": {"type": "integer", "minimum": 0}, "matched_budget_improvement": {"type": "boolean"}, "worker_count_is_progress": {"const": false}}},
+    "next_dependency_ready_wave": {"type": ["string", "null"]},
+    "content_digest": {"$ref": "#/$defs/digest"}
+  }
+}

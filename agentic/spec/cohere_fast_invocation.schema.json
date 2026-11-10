@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://abducer.local/spec/cohere_fast_invocation.schema.json",
+  "type": "object",
+  "required": ["schema_version", "receipt_type", "id", "workflow_id", "workflow_version", "domain_id", "subworkflow_id", "target", "run_id", "command_digest"],
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "receipt_type": {"const": "cohere_fast_activation"},
+    "id": {"type": "string", "pattern": "^cfact-[a-f0-9]{24}$"},
+    "workflow_id": {"const": "cohere_fast"},
+    "workflow_version": {"type": "string"},
+    "domain_id": {"type": "string", "pattern": "^[a-z][a-z0-9_-]*$"},
+    "subworkflow_id": {"type": ["string", "null"]},
+    "target": {"type": "string", "minLength": 1},
+    "run_id": {"type": "string", "pattern": "^cf-[a-f0-9]{24}$"},
+    "command_digest": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"}
+  },
+  "additionalProperties": false
+}

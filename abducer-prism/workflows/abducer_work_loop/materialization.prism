@@ -1,0 +1,96 @@
+# SPDX-FileCopyrightText: © 2026 Idiap Research Institute <contact@idiap.ch>
+#
+# SPDX-FileContributor: Andre Freitas <andre.freitas@idiap.ch>
+# Neuro-symbolic AI Group
+#
+# SPDX-FileContributor: Danilo Gusicuma <danilo.gusicuma@idiap.ch>
+# Neuro-symbolic AI Group
+#
+# SPDX-License-Identifier: MIT
+# Materialization layer for abducer_work_loop.
+# Compiled modules snapshot current linked skill bytes without writing source trees;
+# the manifest records paths/hashes. Fake execution proves typed integration only.
+from workflows.abducer_work_loop.types import (
+    ActiveProofGap,
+    ProofRouteDerivedClaim,
+    ProofRouteHypothesis,
+    ProofRouteRefutationAssessment,
+    ProofWorkRoutingAssessment,
+)
+from workflows.abducer_work_loop.occurrences import (
+    ProofWorkRoutingInput,
+)
+from workflows.abducer_work_loop.reasoning import AbducerWorkLoop
+from workflows.abducer_work_loop.relations import (
+    ProofRouteClaimAssumption,
+    ProofRouteClaimTest,
+    ProofWorkRoutingCalibration,
+)
+from workflows.abducer_work_loop.generated.route_hypothesis_reasoning_skill_1 import kb_abduce_skill as route_hypothesis_reasoning_skill_1
+from workflows.abducer_work_loop.generated.derived_claim_reasoning_skill_1 import kb_deduce_skill as derived_claim_reasoning_skill_1
+from workflows.abducer_work_loop.generated.refutation_assessment_reasoning_skill_1 import counterexample_hunter_skill as refutation_assessment_reasoning_skill_1
+from workflows.abducer_work_loop.generated.work_routing_reasoning_skill_1 import epistemic_status_ledger_skill as work_routing_reasoning_skill_1
+
+def derived_claim_reasoning_relation_builder[SourceValue, TargetValue](
+    source: SourceValue,
+    target: Generated[TargetValue],
+) -> ProofRouteClaimAssumption[SourceValue, TargetValue]:
+    return ProofRouteClaimAssumption(source = source, target = target)
+
+def refutation_assessment_reasoning_relation_builder[SourceValue, TargetValue](
+    source: SourceValue,
+    target: Generated[TargetValue],
+) -> ProofRouteClaimTest[SourceValue, TargetValue]:
+    return ProofRouteClaimTest(source = source, target = target)
+
+def work_routing_reasoning_relation_builder[SourceValue, TargetValue](
+    source: SourceValue,
+    target: Generated[TargetValue],
+) -> ProofWorkRoutingCalibration[SourceValue, TargetValue]:
+    return ProofWorkRoutingCalibration(source = source, target = target)
+
+# AbductiveProofRouteHypothesisFormation performs the reviewed abduct boundary.
+# Granularity: The source exposes AbductiveProofRouteFormation as a separately consumed typed result in the abducer_work_loop occurrence graph.
+# Linked source skill: skills/reasoning/kb-abduce/SKILL.md (sha256:3c0985794a9e14c75a8edc7a3ecccfa4ef28a51cd1b096985359d6cdab534a03).
+agent route_hypothesis_reasoning_agent(
+    task: ActiveProofGap,
+) -> Result[Generated[ProofRouteHypothesis], ModelFailure]
+    ! {AI.Generate, Context.Disclose}:
+    skills: Skills[ActiveProofGap] = [route_hypothesis_reasoning_skill_1]
+
+# DeductiveProofRouteClaimDerivation performs the reviewed derive boundary.
+# Granularity: The source exposes DeductiveClaimDerivation as a separately consumed typed result in the abducer_work_loop occurrence graph.
+# Linked source skill: skills/reasoning/kb-deduce/SKILL.md (sha256:375666867a794a5f949ffc364920dc2f954a021a587df98538a0c8fe6a0f2ddc).
+agent derived_claim_reasoning_agent(
+    task: ProofRouteHypothesis,
+) -> Result[Generated[ProofRouteDerivedClaim], ModelFailure]
+    ! {AI.Generate, Context.Disclose}:
+    skills: Skills[ProofRouteHypothesis] = [derived_claim_reasoning_skill_1]
+
+# RefutationalProofRouteClaimAssessment performs the reviewed refute boundary.
+# Granularity: The source exposes RefutationalClaimTest as a separately consumed typed result in the abducer_work_loop occurrence graph.
+# Linked source skill: skills/evaluation/counterexample-hunter/SKILL.md (sha256:413eb19c3dcdc59f53bac734b6a9864e1252095063f1cbb3674dcab3445c748d).
+agent refutation_assessment_reasoning_agent(
+    task: ProofRouteDerivedClaim,
+) -> Result[Generated[ProofRouteRefutationAssessment], ModelFailure]
+    ! {AI.Generate, Context.Disclose}:
+    skills: Skills[ProofRouteDerivedClaim] = [refutation_assessment_reasoning_skill_1]
+
+# EvidentialProofWorkRoutingAssessment performs the reviewed calibrate boundary.
+# Granularity: The source exposes EvidentialWorkCalibration as a separately consumed typed result in the abducer_work_loop occurrence graph.
+# Linked source skill: skills/evaluation/epistemic-status-ledger/SKILL.md (sha256:980ad92b1f190316a941b8124eaffc6c414680666d2960ebcc8bd21444b4d454).
+agent work_routing_reasoning_agent(
+    task: ProofWorkRoutingInput,
+) -> Result[Generated[ProofWorkRoutingAssessment], ModelFailure]
+    ! {AI.Generate, Context.Disclose}:
+    skills: Skills[ProofWorkRoutingInput] = [work_routing_reasoning_skill_1]
+
+converted_reasoning = AbducerWorkLoop(
+    route_hypothesis = route_hypothesis_reasoning_agent,
+    derived_claim = derived_claim_reasoning_agent,
+    derived_claim_by = derived_claim_reasoning_relation_builder,
+    refutation_assessment = refutation_assessment_reasoning_agent,
+    refutation_assessment_by = refutation_assessment_reasoning_relation_builder,
+    work_routing = work_routing_reasoning_agent,
+    work_routing_by = work_routing_reasoning_relation_builder,
+)

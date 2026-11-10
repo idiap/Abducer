@@ -1,0 +1,345 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://abducer.local/schemas/literature_tool_response_artifact.schema.json",
+  "title": "Sealed literature tool-visible response artifact",
+  "description": "A byte-sealed record of the bounded result material exposed to the discovery workflow by one web-tool call. It is explicitly not a raw provider HTTP response, index snapshot, ranking trace, or source-truth certificate.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "artifact_kind",
+    "target_id",
+    "lane_id",
+    "lane_type",
+    "request",
+    "execution",
+    "response_exposure",
+    "result_items",
+    "normalization_links",
+    "claim_boundary",
+    "content_digest"
+  ],
+  "$defs": {
+    "id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 200,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$"
+    },
+    "digest": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "nonempty": {
+      "type": "string",
+      "minLength": 1
+    },
+    "lane_type": {
+      "enum": [
+        "closest_known_work",
+        "recent_frontier_preprints",
+        "negative_results_barriers",
+        "conceptual_genealogy",
+        "adjacent_field_mechanisms",
+        "dissenting_positions"
+      ]
+    },
+    "lineage_evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "evidence_id",
+        "authority_class",
+        "predicate",
+        "subject",
+        "object",
+        "claim_digest",
+        "source_locator",
+        "source_field",
+        "evidence_digest"
+      ],
+      "properties": {
+        "evidence_id": {"$ref": "#/$defs/id"},
+        "authority_class": {
+          "enum": [
+            "primary_repository_metadata",
+            "primary_repository_relation",
+            "primary_record_note",
+            "publisher_status_notice",
+            "bounded_capture_limitation"
+          ]
+        },
+        "predicate": {
+          "enum": [
+            "record_doi",
+            "record_member_of_concept",
+            "lineage_ordered_record_dois",
+            "record_version",
+            "record_created_at",
+            "record_updated_at",
+            "record_status",
+            "successor_revision_of",
+            "successor_supersedes_predecessor",
+            "successor_corrects_predecessor",
+            "successor_narrows_scope",
+            "successor_broadens_scope",
+            "successor_changes_scope",
+            "successor_changes_architecture",
+            "scope_unchanged",
+            "scope_delta_unresolved",
+            "architecture_unchanged",
+            "architecture_delta_unresolved"
+          ]
+        },
+        "subject": {"$ref": "#/$defs/nonempty"},
+        "object": {
+          "oneOf": [
+            {"$ref": "#/$defs/nonempty"},
+            {
+              "type": "array",
+              "minItems": 1,
+              "uniqueItems": true,
+              "items": {"$ref": "#/$defs/nonempty"}
+            }
+          ]
+        },
+        "claim_digest": {
+          "oneOf": [
+            {"type": "null"},
+            {"$ref": "#/$defs/digest"}
+          ]
+        },
+        "source_locator": {"type": "string", "format": "uri"},
+        "source_field": {"$ref": "#/$defs/nonempty"},
+        "evidence_digest": {"$ref": "#/$defs/digest"}
+      }
+    },
+    "source_observation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_id",
+        "work_identity",
+        "title",
+        "authors",
+        "publication_date",
+        "source_version",
+        "source_type",
+        "url",
+        "correction_status",
+        "decision_relevant",
+        "claims",
+        "limitations",
+        "observation_digest"
+      ],
+      "properties": {
+        "source_id": {"$ref": "#/$defs/id"},
+        "work_identity": {"$ref": "#/$defs/nonempty"},
+        "title": {"$ref": "#/$defs/nonempty"},
+        "authors": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/nonempty"}
+        },
+        "publication_date": {"$ref": "#/$defs/nonempty"},
+        "source_version": {"$ref": "#/$defs/nonempty"},
+        "source_type": {
+          "enum": ["primary", "preprint", "survey", "correction", "retraction", "other"]
+        },
+        "url": {"type": "string", "format": "uri"},
+        "doi": {"type": ["string", "null"]},
+        "arxiv_id": {"type": ["string", "null"]},
+        "correction_status": {
+          "enum": ["none_known", "corrected", "superseded", "withdrawn", "retracted", "unknown"]
+        },
+        "decision_relevant": {"type": "boolean"},
+        "claims": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/nonempty"}
+        },
+        "limitations": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/nonempty"}
+        },
+        "lineage_evidence": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/lineage_evidence"}
+        },
+        "observation_digest": {"$ref": "#/$defs/digest"}
+      }
+    },
+    "result_item": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "item_id",
+        "provider_rank",
+        "title",
+        "url",
+        "displayed_publication",
+        "bounded_excerpt",
+        "excerpt_word_count",
+        "retrieval_class",
+        "source_observation",
+        "item_digest"
+      ],
+      "properties": {
+        "item_id": {"$ref": "#/$defs/id"},
+        "provider_rank": {"type": "integer", "minimum": 0},
+        "title": {"$ref": "#/$defs/nonempty"},
+        "url": {"type": "string", "format": "uri"},
+        "displayed_publication": {"type": ["string", "null"]},
+        "bounded_excerpt": {"$ref": "#/$defs/nonempty"},
+        "excerpt_word_count": {"type": "integer", "minimum": 1, "maximum": 24},
+        "retrieval_class": {
+          "enum": [
+            "search_result_metadata",
+            "primary_page_metadata",
+            "primary_api_metadata",
+            "publisher_metadata"
+          ]
+        },
+        "source_observation": {"$ref": "#/$defs/source_observation"},
+        "item_digest": {"$ref": "#/$defs/digest"}
+      }
+    },
+    "normalization_link": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "item_id",
+        "capture_result_id",
+        "source_id",
+        "disposition",
+        "reason"
+      ],
+      "properties": {
+        "item_id": {"$ref": "#/$defs/id"},
+        "capture_result_id": {"$ref": "#/$defs/id"},
+        "source_id": {"$ref": "#/$defs/id"},
+        "disposition": {
+          "enum": [
+            "included_authoritative_status",
+            "included_current_review",
+            "included_unverified_challenger",
+            "included_bounded_result",
+            "included_conceptual_genealogy",
+            "included_adjacent_mechanism",
+            "included_correction_or_supersession",
+            "excluded_retracted",
+            "excluded_target_mismatch",
+            "excluded_duplicate",
+            "excluded_insufficient_metadata"
+          ]
+        },
+        "reason": {"$ref": "#/$defs/nonempty"}
+      }
+    }
+  },
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "artifact_kind": {"const": "codex_tool_visible_search_response"},
+    "target_id": {"$ref": "#/$defs/id"},
+    "lane_id": {"$ref": "#/$defs/id"},
+    "lane_type": {"$ref": "#/$defs/lane_type"},
+    "request": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["tool_name", "search_query", "response_length", "request_digest"],
+      "properties": {
+        "tool_name": {"const": "web.run"},
+        "search_query": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["q"],
+          "properties": {
+            "q": {"$ref": "#/$defs/nonempty"},
+            "domains": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {"$ref": "#/$defs/nonempty"}
+            },
+            "recency": {"type": "integer", "minimum": 0}
+          }
+        },
+        "response_length": {"enum": ["short", "medium", "long"]},
+        "request_digest": {"$ref": "#/$defs/digest"}
+      }
+    },
+    "execution": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "tool_call_id",
+        "observed_started_at",
+        "observed_completed_at",
+        "execution_mode",
+        "external_provider_request_id",
+        "external_authentication_status",
+        "exposure_boundary"
+      ],
+      "properties": {
+        "tool_call_id": {"$ref": "#/$defs/id"},
+        "observed_started_at": {"type": "string", "format": "date-time"},
+        "observed_completed_at": {"type": "string", "format": "date-time"},
+        "execution_mode": {"const": "live_tool_call"},
+        "external_provider_request_id": {"type": "null"},
+        "external_authentication_status": {"const": "unavailable"},
+        "exposure_boundary": {"$ref": "#/$defs/nonempty"}
+      }
+    },
+    "response_exposure": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "capture_mode",
+        "complete_backend_payload_available",
+        "complete_ranking_trace_available",
+        "selected_result_count",
+        "selection_rule"
+      ],
+      "properties": {
+        "capture_mode": {"const": "bounded_tool_visible_result_metadata"},
+        "complete_backend_payload_available": {"const": false},
+        "complete_ranking_trace_available": {"const": false},
+        "selected_result_count": {"type": "integer", "minimum": 1},
+        "selection_rule": {"$ref": "#/$defs/nonempty"}
+      }
+    },
+    "result_items": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/result_item"}
+    },
+    "normalization_links": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/normalization_link"}
+    },
+    "claim_boundary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_truth_authority",
+        "peer_review_authority",
+        "exhaustiveness_authority",
+        "novelty_authority",
+        "allowed_use"
+      ],
+      "properties": {
+        "source_truth_authority": {"const": false},
+        "peer_review_authority": {"const": false},
+        "exhaustiveness_authority": {"const": false},
+        "novelty_authority": {"const": false},
+        "allowed_use": {"const": "bounded discovery routing and explicit claim-audit creation only"}
+      }
+    },
+    "content_digest": {"$ref": "#/$defs/digest"}
+  }
+}

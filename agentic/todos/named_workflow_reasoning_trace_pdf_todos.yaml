@@ -1,0 +1,615 @@
+[
+  {
+    "id": "PDFTRACE-001",
+    "type": "planning_todo",
+    "phase": "cross-format-baseline",
+    "owner": "agentic/reporting",
+    "priority": "critical",
+    "risk_class": "semantic-drift",
+    "title": "Freeze the packet and HTML reasoning trace as the PDF compatibility baseline",
+    "intent": "Make the LaTeX/PDF report an additive projection of the same validated monitor packet, without changing or scraping the HTML renderer or established main-workflow visualizers.",
+    "use_skills": [],
+    "implementation_steps": [
+      "Document the workflow-neutral monitor packet as the sole semantic source for HTML and PDF.",
+      "Map all thirteen HTML expert views to required PDF body sections, appendices, or explicit not-applicable dispositions.",
+      "Freeze identity, lens, route, inference, claim/evidence, scope, failure, gate, obligation, artifact, authority, handoff, coverage, graph, and profile-topology parity fields.",
+      "State non-goals: no HTML parsing, no new scientific inference, no hidden chain-of-thought, and no changes to existing HTML output paths or defaults."
+    ],
+    "required_artifact": [
+      "docs/architecture/reasoning-trace-pdf-compatibility.md",
+      "tests/reporting/test_reasoning_trace_pdf_compatibility.py"
+    ],
+    "acceptance_criteria": [
+      "PDF generation consumes the exact packet used by HTML and records its canonical SHA-256 digest.",
+      "Every HTML expert view has a documented PDF disposition and no semantic lane is silently omitted.",
+      "Existing HTML, process-graph, reasoning-dynamics, and main-monitor compatibility tests pass unchanged.",
+      "The compatibility contract explicitly prohibits deriving scientific claims from layout or control events."
+    ],
+    "blocked_by": [],
+    "evidence": [
+      "file:agentic/spec/public_reasoning_monitor_packet.schema.json",
+      "file:agentic/scripts/build_public_reasoning_monitor_packet.py",
+      "file:agentic/scripts/generate_public_reasoning_trace_html.py",
+      "file:tests/reporting/test_main_workflow_trace_compatibility.py"
+    ],
+    "review_date": "2026-08-05",
+    "failure_modes": [
+      "PDF prose is generated independently and diverges from the HTML packet.",
+      "The implementation parses HTML DOM content instead of the canonical packet.",
+      "Adding PDF support changes successful HTML or main-workflow behavior."
+    ],
+    "status": "resolved",
+    "completed_utc": "2026-08-05T00:00:00Z",
+    "resolution_summary": "Frozen the packet/HTML compatibility boundary and mapped all thirteen expert views to print dispositions."
+  },
+  {
+    "id": "PDFTRACE-002",
+    "type": "workflow_todo",
+    "phase": "print-semantic-inventory",
+    "owner": "agentic/spec",
+    "priority": "critical",
+    "risk_class": "silent-omission",
+    "title": "Define a versioned deterministic print inventory and PDF projection profile",
+    "intent": "Specify exactly which packet facts must appear in the expert body, audit appendices, manifest, or an explicit omission record.",
+    "use_skills": [],
+    "implementation_steps": [
+      "Define stable ordered inventory entries for route steps, inference events, claims, evidence, alternatives/falsifiers, scope transitions, gates, obligations, artifacts/receipts, authority, handoffs, graph edges, coverage requirements, and specialized projections.",
+      "Preserve semantically meaningful packet order and sort only explicitly set-like collections deterministically.",
+      "Assign every packet field a rendered, summarized-with-complete-appendix, not-applicable, or omitted-with-reason disposition.",
+      "Define stable labels and cross-reference keys derived from semantic IDs, never page numbers or list positions.",
+      "Define mandatory body content, appendix completeness, scale limits, lens usage, and the public-rationale/no-chain-of-thought boundary."
+    ],
+    "required_artifact": [
+      "agentic/spec/public_reasoning_trace_print_inventory.schema.json",
+      "agentic/spec/public_reasoning_trace_pdf_profile.schema.json",
+      "agentic/scripts/reasoning_trace_print_model.py",
+      "tests/reporting/test_reasoning_trace_print_model.py"
+    ],
+    "acceptance_criteria": [
+      "The inventory is deterministic for repeated builds of the same packet.",
+      "Every required packet lane and semantic ID receives an explicit projection disposition.",
+      "The inventory never upgrades status, infers a claim, or treats chronology as entailment.",
+      "All six workflow lenses, Route-A, and the neutral fallback validate against the profile."
+    ],
+    "blocked_by": ["PDFTRACE-001"],
+    "evidence": [
+      "file:agentic/spec/public_reasoning_monitor_packet.schema.json",
+      "file:agentic/registries/reasoning_trace_lenses.yaml",
+      "file:tests/fixtures/reasoning_trace/generated/"
+    ],
+    "review_date": "2026-08-05",
+    "failure_modes": [
+      "A shortened body silently drops failures, gaps, minority findings, or obligations.",
+      "Ordering changes nondeterministically between builds.",
+      "The print model becomes a second epistemic authority."
+    ],
+    "status": "resolved",
+    "completed_utc": "2026-08-05T00:00:00Z",
+    "resolution_summary": "Implemented the deterministic print inventory, projection profile, stable semantic IDs, and omission accounting."
+  },
+  {
+    "id": "PDFTRACE-003",
+    "type": "dependency_todo",
+    "phase": "tex-safety",
+    "owner": "agentic/reporting",
+    "priority": "critical",
+    "risk_class": "tex-injection-and-data-leakage",
+    "title": "Implement centralized strict TeX escaping and safe value formatting",
+    "intent": "Render packet content as inert text by default so hostile or accidental TeX cannot execute commands, read files, break compilation, or alter report semantics.",
+    "use_skills": [],
+    "implementation_steps": [
+      "Escape backslash, braces, dollar, ampersand, hash, percent, underscore, caret, tilde, control characters, and unsafe Unicode sequences in every packet-derived value.",
+      "Treat mathematical-looking content as plain text unless a future separately typed and validated trusted-math field is introduced.",
+      "Reject or neutralize input/include, write18, shell escape, URL/network fetches, arbitrary path reads, raw package directives, and document termination sequences.",
+      "Wrap long paths, digests, identifiers, and unbroken tokens without shrinking the document below the declared readability threshold.",
+      "Normalize repository-relative paths and visibly label permitted external references without creating executable links."
+    ],
+    "required_artifact": [
+      "agentic/scripts/reasoning_trace_tex_safety.py",
+      "tests/reporting/test_reasoning_trace_tex_safety.py"
+    ],
+    "acceptance_criteria": [
+      "Adversarial values including input, include, write18, comments, braces, underscores, Unicode, and long tokens compile as inert visible text.",
+      "No packet-derived content enters the preamble, package list, control sequence, file path argument, or raw LaTeX context.",
+      "Absolute local paths and secret-like values fail validation or are redacted according to the public trace contract.",
+      "Escaping is deterministic and covered independently of TeX engine availability."
+    ],
+    "blocked_by": ["PDFTRACE-002"],
+    "evidence": [
+      "file:agentic/scripts/generate_public_reasoning_trace_html.py",
+      "file:agentic/scripts/validate_public_reasoning_trace.py",
+      "file:agentic/scripts/build_timeline_paper.py"
+    ],
+    "review_date": "2026-08-05",
+    "failure_modes": [
+      "A packet string becomes executable TeX or reads a local file.",
+      "Escaping corrupts semantic IDs or makes evidence paths untraceable.",
+      "The renderer guesses that mathematical text is trusted LaTeX."
+    ],
+    "status": "resolved",
+    "completed_utc": "2026-08-05T00:00:00Z",
+    "resolution_summary": "Implemented centralized inert TeX escaping, redaction, path controls, and long-token formatting with adversarial tests."
+  },
+  {
+    "id": "PDFTRACE-004",
+    "type": "report_todo",
+    "phase": "workflow-neutral-latex-renderer",
+    "owner": "agentic/reporting",
+    "priority": "critical",
+    "risk_class": "report-generation",
+    "title": "Implement a pure workflow-neutral LaTeX renderer from the print inventory",
+    "intent": "Generate deterministic compile-ready TeX whose reading order communicates the complete expert reasoning trace without workflow-specific code branches.",
+    "use_skills": [],
+    "implementation_steps": [
+      "Implement a pure render_tex(packet, inventory, lens) function with no filesystem writes or compilation side effects.",
+      "Use a fixed offline preamble and minimal installed packages for page geometry, headings, long tables, boxes, cross-references, headers, metadata, and bookmarks.",
+      "Render cover identity, focus question, no-chain-of-thought notice, status legend, validation dashboard, declared route, inference spine, cross-cutting ledgers, causal graph ledger, chronological appendix, and build provenance section.",
+      "Render empty lanes explicitly and keep workflow names, focus, accents, and spine language descriptor-driven through the selected lens.",
+      "Provide a CLI that reads a validated packet and writes only the requested TeX and inventory artifacts atomically."
+    ],
+    "required_artifact": [
+      "agentic/scripts/generate_public_reasoning_trace_latex.py",
+      "agentic/templates/public_reasoning_trace.tex",
+      "tests/reporting/test_public_reasoning_trace_latex.py"
+    ],
+    "acceptance_criteria": [
+      "Repeated rendering of the same packet produces byte-identical TeX.",
+      "The renderer contains no workflow-ID branches; missing lenses use the documented neutral fallback.",
+      "All mandatory body and appendix sections are present with stable labels and extractable text.",
+      "Rendering does not modify HTML, packet, trace, or established main-workflow artifacts."
+    ],
+    "blocked_by": ["PDFTRACE-002", "PDFTRACE-003"],
+    "evidence": [
+      "file:agentic/scripts/generate_public_reasoning_trace_html.py",
+      "file:agentic/registries/reasoning_trace_lenses.yaml",
+      "file:docs/reference/reasoning-trace-visual-grammar.md"
+    ],
+    "review_date": "2026-08-05",
+    "failure_modes": [
+      "The TeX renderer hard-codes workflow terminology or conclusions.",
+      "Optional or empty sections vanish without explanation.",
+      "Rendering mutates source packets or generates nondeterministic ordering."
+    ],
+    "status": "resolved",
+    "completed_utc": "2026-08-05T00:00:00Z",
+    "resolution_summary": "Implemented the deterministic workflow-neutral LaTeX renderer, fixed template, print lenses, and atomic CLI."
+  },
+  {
+    "id": "PDFTRACE-005",
+    "type": "report_todo",
+    "phase": "expert-inference-dossiers",
+    "owner": "agentic/reporting",
+    "priority": "critical",
+    "risk_class": "expert-readability",
+    "title": "Render stable expert inference dossiers and cross-linked semantic ledgers",
+    "intent": "Let an expert validate each substantive inference from its premises, operator, warrant, evidence, scope, authority, alternatives, and remaining debt.",
+    "use_skills": [],
+    "implementation_steps": [
+      "Give every substantive inference a stable number and label bound to its event ID, step, and skill.",
+      "Render question, typed premises, transformation/operator, bounded public warrant, conclusion, uncertainty, assumptions, model/regime/scope before and after, causal parents, and all three independent status axes.",
+      "Cross-reference evidence polarity, alternatives and dispositions, falsifiers/counterevidence, obligations, artifacts/receipts, gates, authority exercised/absent, prohibitions, and handoffs.",
+      "Place control-only events in a separate lifecycle ledger and explicitly prevent them from appearing as scientific claims.",
+      "Use multipage tables with repeated headers and controlled inference-card page breaks; never shrink content to fit."
+    ],
+    "required_artifact": [
+      "agentic/templates/reasoning_trace_inference_macros.tex",
+      "tests/reporting/test_reasoning_trace_latex_inferences.py"
+    ],
+    "acceptance_criteria": [
+      "Every packet inference ID has exactly one complete dossier or a visible trace-incomplete disposition.",
+      "Every substantive conclusion links to evidence or an explicit obligation and displays scope and authority.",
+      "Artifact integrity, scientific epistemic status, and workflow disposition remain visibly independent.",
+      "Negative, refuting, quarantined, minority, and failed paths receive equal audit visibility to successful paths."
+    ],
+    "blocked_by": ["PDFTRACE-004"],
+    "evidence": [
+      "file:agentic/spec/public_reasoning_event.schema.json",
+      "file:agentic/spec/public_reasoning_monitor_packet.schema.json",
+      "file:docs/reference/public-reasoning-trace-contract.md"
+    ],
+    "review_date": "2026-08-05",
+    "failure_modes": [
+      "The PDF summarizes conclusions while omitting warrants, failures, or scope.",
+      "Control authorization is typeset as scientific validation.",
+      "Cross-references break or depend on page layout rather than semantic IDs."
+    ],
+    "status": "resolved",
+    "completed_utc": "2026-08-05T00:00:00Z",
+    "resolution_summary": "Rendered complete expert inference dossiers and cross-linked semantic ledgers with independent status axes."
+  },
+  {
+    "id": "PDFTRACE-006",
+    "type": "report_todo",
+    "phase": "route-topology-and-print-lenses",
+    "owner": "agentic/reporting",
+    "priority": "critical",
+    "risk_class": "topology-loss",
+    "title": "Project declared routes, causal topology, and workflow-specific expert contrasts",
+    "intent": "Communicate workflow structure and causal/inferential relations without turning chronology into entailment or producing unreadable graph hairballs.",
+    "use_skills": [],
+    "implementation_steps": [
+      "Render required, conditional, advisory, validator, and specialist roles with observed, justified-N/A, missing, failed, quarantined, and handed-off states.",
+      "Render typed causal edges and legends distinguishing precedes, contains, supports, refutes, constrains, produces, branches, joins, refines, validates, blocks, and hands-off relations.",
+      "Use bounded route or DAG summaries only where readable and always provide a complete textual edge-table alternative.",
+      "Represent Route-A specialist fan-out/join, specialist output, integration, validation-tail adapter, and finite-to-continuum boundary explicitly.",
+      "Reuse declarative lens focus and contrast requirements for evidence onramp, conceptual deepening, proof delivery, contribution cultivation, manuscript elaboration, deep review, and Route-A."
+    ],
+    "required_artifact": [
+      "agentic/templates/reasoning_trace_topology_macros.tex",
+      "agentic/registries/reasoning_trace_print_lenses.yaml",
+      "tests/reporting/test_reasoning_trace_latex_topology.py"
+    ],
+    "acceptance_criteria": [
+      "Every route step and typed graph edge appears in the inventory and in a PDF-visible route or appendix representation.",
+      "Chronological edges and evidential or inferential edges use distinct labels and explanatory legends.",
+      "Route-A shows all 22 roles, specialist fork/join, common validation tail, and no finite-to-continuum promotion.",
+      "Every workflow report exposes its required contrast, negative path, falsifier or open obligation, authority boundary, and handoff."
+    ],
+    "blocked_by": ["PDFTRACE-004", "PDFTRACE-005"],
+    "evidence": [
+      "file:agentic/registries/reasoning_trace_lenses.yaml",
+      "file:agentic/registries/named_workflow_trace_contracts.yaml",
+      "file:tests/fixtures/reasoning_trace/generated/manuscript_result_elaboration-route_a.packet.json"
+    ],
+    "review_date": "2026-08-05",
+    "failure_modes": [
+      "A dense graph becomes unreadable or clips labels.",
+      "Chronology is visually mistaken for logical support.",
+      "Workflow-specific failures or Route-A specialist provenance disappear in generic presentation."
+    ],
+    "status": "resolved",
+    "completed_utc": "2026-08-05T00:00:00Z",
+    "resolution_summary": "Projected complete route, typed graph, workflow contrasts, and Route-A specialist fork/join/validation-tail topology."
+  },
+  {
+    "id": "PDFTRACE-007",
+    "type": "workflow_todo",
+    "phase": "isolated-pdf-compilation",
+    "owner": "agentic/scripts",
+    "priority": "critical",
+    "risk_class": "build-security-and-reliability",
+    "title": "Implement isolated, bounded, no-shell-escape PDF compilation",
+    "intent": "Compile validated TeX safely and reproducibly without giving document content authority over the host filesystem or network.",
+    "use_skills": [],
+    "implementation_steps": [
+      "Implement explicit engine discovery and selection for latexmk, XeLaTeX, pdfLaTeX, and LuaLaTeX with a documented preferred engine and fallback behavior.",
+      "Invoke fixed argument arrays with nonstop interaction, halt-on-error, file-line diagnostics, and no-shell-escape; never use shell=True.",
+      "Compile in an isolated temporary directory with a sanitized environment, UTC, SOURCE_DATE_EPOCH, bounded timeout, captured log tail, and no network or repository-wide write access.",
+      "Run the minimum passes required for references, validate outputs, and atomically promote only TeX, PDF, manifest, and declared logs.",
+      "Retain structurally validated TeX with an explicit compiler-unavailable disposition in development mode; require a PDF in release mode."
+    ],
+    "required_artifact": [
+      "agentic/scripts/compile_public_reasoning_trace_pdf.py",
+      "tests/reporting/test_reasoning_trace_pdf_compiler.py"
+    ],
+    "acceptance_criteria": [
+      "Compilation never enables shell escape, network fetches, arbitrary includes, or unrestricted output paths.",
+      "Timeout, missing engine, missing package, fatal TeX error, and interrupted promotion produce actionable non-destructive failures.",
+      "Temporary auxiliary files are cleaned and valid existing HTML/PDF artifacts are not removed on failure.",
+      "The chosen engine, version, arguments, duration, disposition, and bounded diagnostics are recorded in the manifest."
+    ],
+    "blocked_by": ["PDFTRACE-003", "PDFTRACE-004"],
+    "evidence": [
+      "file:agentic/scripts/build_timeline_paper.py",
+      "file:skills/discovery/kb-prove-cycle/scripts/generate_proof_queue_report.py"
+    ],
+    "review_date": "2026-08-05",
+    "failure_modes": [
+      "Compilation runs packet-controlled commands or reads arbitrary files.",
+      "A failed build overwrites the last valid PDF.",
+      "Engine absence is reported as a successful PDF validation."
+    ],
+    "status": "resolved",
+    "completed_utc": "2026-08-05T00:00:00Z",
+    "resolution_summary": "Implemented isolated bounded no-shell-escape compilation with sanitized environments, timeouts, diagnostics, and atomic promotion."
+  },
+  {
+    "id": "PDFTRACE-008",
+    "type": "dependency_todo",
+    "phase": "provenance-manifest",
+    "owner": "agentic/spec",
+    "priority": "critical",
+    "risk_class": "stale-or-unreproducible-output",
+    "title": "Bind packet, inventory, TeX, PDF, toolchain, and semantic IDs in a reproducibility manifest",
+    "intent": "Detect stale or mismatched report companions and define reproducibility at the semantic level across TeX engines and platforms.",
+    "use_skills": [],
+    "implementation_steps": [
+      "Define manifest fields for trace/workflow/profile/run identity, packet digest, inventory digest, lens digest, template/renderer versions, TeX digest, PDF digest, engine/version/arguments, page count, compile disposition, warnings, semantic IDs/counts, and explicit truncation or split-volume records.",
+      "Canonicalize JSON digest inputs and bind the manifest to the same packet embedded in HTML.",
+      "Require deterministic TeX and inventory bytes for repeated builds.",
+      "Define pinned-environment PDF byte reproducibility and cross-platform semantic reproducibility through normalized metadata and extracted text rather than universal byte equality.",
+      "Reject stale PDF/TeX companions whenever the packet, lens, template, or renderer version changes."
+    ],
+    "required_artifact": [
+      "agentic/spec/public_reasoning_trace_pdf_manifest.schema.json",
+      "agentic/scripts/build_reasoning_trace_pdf_manifest.py",
+      "tests/reporting/test_reasoning_trace_pdf_manifest.py"
+    ],
+    "acceptance_criteria": [
+      "Changing any bound packet, lens, template, inventory, TeX, or PDF byte invalidates the manifest.",
+      "Manifest semantic IDs and counts exactly match the print inventory and packet.",
+      "Build timestamps and platform metadata do not make deterministic TeX or normalized semantic checks unstable.",
+      "No absolute local paths, secrets, or unbounded logs enter the public manifest."
+    ],
+    "blocked_by": ["PDFTRACE-002", "PDFTRACE-007"],
+    "evidence": [
+      "file:agentic/spec/public_reasoning_trace.schema.json",
+      "file:tests/fixtures/reasoning_trace/generated/"
+    ],
+    "review_date": "2026-08-05",
+    "failure_modes": [
+      "A PDF from an old packet passes because only filenames are compared.",
+      "Cross-platform PDF metadata is mistaken for semantic drift.",
+      "The manifest omits semantic IDs needed to prove completeness."
+    ],
+    "status": "resolved",
+    "completed_utc": "2026-08-05T00:00:00Z",
+    "resolution_summary": "Implemented digest-bound reproducibility manifests for packet, lens, inventory, templates, TeX, PDF, toolchain, and semantic IDs."
+  },
+  {
+    "id": "PDFTRACE-009",
+    "type": "test_todo",
+    "phase": "cross-format-semantic-validation",
+    "owner": "agentic/scripts",
+    "priority": "critical",
+    "risk_class": "epistemic-and-parity-validation",
+    "title": "Validate packet, HTML, TeX, PDF, and manifest semantic equivalence",
+    "intent": "Ensure the expert PDF neither omits required reasoning nor strengthens, weakens, or conflates the canonical packet semantics.",
+    "use_skills": [],
+    "implementation_steps": [
+      "Extract the HTML embedded packet and require exact equality with the source packet.",
+      "Validate manifest digests and identity across packet, inventory, TeX, PDF, workflow, profile, run, and trace.",
+      "Require inventory parity for route steps, inference tuples, claims/evidence relations, failures, scope transitions, gates, obligations, artifacts, authority, handoffs, coverage rows, graph edges, and trace gaps.",
+      "Use PDF text extraction to verify identity, lens question, no-chain-of-thought notice, inference IDs, conclusions, evidence polarity, status axes, scope, failures/falsifiers, obligations, authority limitations, handoffs, and coverage labels.",
+      "Reject status promotion, missing rationale, hidden gap, merged statuses, unsupported scope widening, review/proof authority escalation, novelty inflation, and finite-to-continuum promotion."
+    ],
+    "required_artifact": [
+      "agentic/scripts/validate_public_reasoning_trace_pdf.py",
+      "tests/reporting/test_reasoning_trace_cross_format_equivalence.py",
+      "tests/reporting/test_reasoning_trace_pdf_epistemic_safety.py"
+    ],
+    "acceptance_criteria": [
+      "All canonical semantic IDs and required relations are accounted for without relying on page snapshots.",
+      "Every substantive conclusion remains linked to evidence or an obligation with unchanged scope, status, and authority.",
+      "Control events, chronological edges, and integrity receipts cannot become scientific claims or proof authority.",
+      "Validation fails on stale companions, missing negative paths, altered statuses, dangling references, and packet/HTML/PDF identity mismatches."
+    ],
+    "blocked_by": ["PDFTRACE-005", "PDFTRACE-006", "PDFTRACE-008"],
+    "evidence": [
+      "file:agentic/scripts/validate_public_reasoning_trace.py",
+      "file:tests/reporting/test_reasoning_trace_epistemic_safety.py",
+      "file:tests/reporting/test_public_reasoning_trace_html.py"
+    ],
+    "review_date": "2026-08-05",
+    "failure_modes": [
+      "Validation checks only that a PDF exists or contains a title.",
+      "Page or byte snapshots obscure semantic omissions and toolchain differences.",
+      "The PDF visually hides uncertainty or failures while machine IDs still match."
+    ],
+    "status": "resolved",
+    "completed_utc": "2026-08-05T00:00:00Z",
+    "resolution_summary": "Implemented read-only cross-format semantic, stale-binding, extraction, and epistemic-safety validation."
+  },
+  {
+    "id": "PDFTRACE-010",
+    "type": "test_todo",
+    "phase": "realistic-pdf-fixtures",
+    "owner": "tests/fixtures",
+    "priority": "critical",
+    "risk_class": "workflow-coverage",
+    "title": "Generate realistic TeX, PDF, inventory, and manifest fixtures for all workflows and Route-A",
+    "intent": "Exercise the same seven realistic packet scenarios already used by HTML so experts can validate workflow-specific inference structures in print.",
+    "use_skills": [],
+    "implementation_steps": [
+      "Generate TeX, PDF, print inventory, and manifest beside each existing workflow/profile trace, packet, and HTML fixture.",
+      "Reuse existing scenario and packet data; do not duplicate or hand-author scientific semantics for PDF.",
+      "Require every fixture to expose its named negative/demotion path, falsifier or open obligation, authority boundary, scope boundary, and handoff.",
+      "Require workflow-specific contrasts: provenance/bias/regime; frozen context/blind adjudication; exact theorem/gap or countermodel; contribution novelty/alignment/enablement; manuscript finite/asymptotic/continuum; independent review/minority dissent; Route-A same-theory/CAS/endpoint/margin/fork-join-tail.",
+      "Rebuild twice and compare deterministic TeX/inventory plus pinned or normalized PDF results."
+    ],
+    "required_artifact": [
+      "tests/fixtures/reasoning_trace/generated/",
+      "tests/reporting/test_named_workflow_trace_pdf.py"
+    ],
+    "acceptance_criteria": [
+      "Exactly seven packet/HTML/TeX/PDF/inventory/manifest companion sets validate.",
+      "All workflows achieve complete route, inference, evidence, scope, authority, failure, handoff, and PDF visibility coverage.",
+      "Route-A contains all 22 roles, 21 inference dossiers, 143 typed graph edges or their complete inventory equivalent, specialist fan-out/join, and validation tail.",
+      "No fixture introduces PDF-only claims or loses its realistic negative path."
+    ],
+    "blocked_by": ["PDFTRACE-007", "PDFTRACE-008", "PDFTRACE-009"],
+    "evidence": [
+      "file:tests/fixtures/reasoning_trace/named_workflow_semantics.json",
+      "file:tests/fixtures/reasoning_trace/generated/",
+      "file:tests/orchestration/test_named_workflow_realistic_trace_scenarios.py"
+    ],
+    "review_date": "2026-08-05",
+    "failure_modes": [
+      "PDF fixtures use simplified or separately authored semantics.",
+      "Only the easiest workflow compiles and Route-A is skipped for size.",
+      "A fixture passes despite missing negative evidence or authority boundaries."
+    ],
+    "status": "resolved",
+    "completed_utc": "2026-08-05T00:00:00Z",
+    "resolution_summary": "Generated and validated seven realistic inventory, TeX, PDF, manifest, and compile-log companion sets."
+  },
+  {
+    "id": "PDFTRACE-011",
+    "type": "test_todo",
+    "phase": "pdf-quality-security-and-accessibility",
+    "owner": "tests/reporting",
+    "priority": "critical",
+    "risk_class": "print-quality-and-accessibility",
+    "title": "Test compilation, pagination, extraction, accessibility, security, and scale",
+    "intent": "Ensure expert reports are readable, searchable, non-dangerous, and complete across empty, normal, adversarial, and large traces.",
+    "use_skills": [],
+    "implementation_steps": [
+      "Test engine-independent TeX structure and engine-available compilation separately so missing tools cannot turn semantic tests into skips.",
+      "Parse logs and fail fatal errors, undefined references/citations, missing glyphs, duplicate destinations, and material overfull boxes above a documented threshold; report lesser warnings.",
+      "Use pdfinfo for pages, metadata, title, producer/date policy, and font-related checks available in the environment.",
+      "Use pdftotext with layout preservation to test selectable reading order, identity, inference sentinels, negative paths, obligations, authority, handoffs, and no-chain-of-thought notice.",
+      "Test empty lanes, one inference, all seven fixtures, Route-A scale, very long Unicode/math/path content, hostile TeX strings, grayscale status redundancy, bookmarks/TOC, repeated table headers, and textual alternatives for graphs.",
+      "Declare an honest accessibility level; report unavailable PDF tagging or conformance checks as not-run rather than passed."
+    ],
+    "required_artifact": [
+      "tests/reporting/test_reasoning_trace_pdf_compilation.py",
+      "tests/reporting/test_reasoning_trace_pdf_accessibility.py",
+      "tests/reporting/test_reasoning_trace_pdf_security.py",
+      "docs/reference/reasoning-trace-pdf-accessibility.md"
+    ],
+    "acceptance_criteria": [
+      "All seven PDFs have at least one page, expected metadata, selectable text, bookmarks or TOC, stable headings, and no material clipping.",
+      "Status remains understandable without color and every graphical summary has a complete textual alternative.",
+      "Hostile inputs remain inert and compilation uses no shell escape, network, absolute local path, or secret leakage.",
+      "Route-A remains readable at full scale without silently dropping any mandatory semantic ID or edge."
+    ],
+    "blocked_by": ["PDFTRACE-007", "PDFTRACE-009", "PDFTRACE-010"],
+    "evidence": [
+      "file:tests/generative/named_workflow_trace_expert_review.md",
+      "file:docs/reference/reasoning-trace-visual-grammar.md"
+    ],
+    "review_date": "2026-08-05",
+    "failure_modes": [
+      "Compilation success is treated as proof of semantic completeness or readability.",
+      "PDF text is clipped, unextractable, color-dependent, or missing graph alternatives.",
+      "Unavailable accessibility tooling is recorded as a passing conformance check."
+    ],
+    "status": "resolved",
+    "completed_utc": "2026-08-05T00:00:00Z",
+    "resolution_summary": "Added compilation, pagination, extraction, accessibility, security, scale, and layout-warning gates."
+  },
+  {
+    "id": "PDFTRACE-012",
+    "type": "report_todo",
+    "phase": "pdf-coverage-and-expert-review",
+    "owner": "agentic/reporting",
+    "priority": "high",
+    "risk_class": "expert-validation-accountability",
+    "title": "Report PDF semantic visibility and record expert validation evidence",
+    "intent": "Separate source semantic coverage from successful print projection and require a reviewer to validate the reasoning as presented in PDF form.",
+    "use_skills": [],
+    "implementation_steps": [
+      "Compute PDF visibility by workflow/profile, route step, inference ID, semantic field, evidence relation, negative path, scope transition, status axis, authority boundary, obligation, handoff, graph edge type, appendix entry, and extracted-text sentinel.",
+      "Keep control, semantic, evidence, authority, HTML visibility, TeX inventory, and PDF visibility as separate measures.",
+      "Create a shared expert-review rubric asking what changed, why, from which premises and evidence, under which scope and authority, what failed, what debt remains, and where the result went next.",
+      "Add workflow-specific review probes and a matrix covering all six workflows plus Route-A.",
+      "Record unresolved readability, pagination, accessibility, or semantic issues as blocking findings rather than averaging them into a score."
+    ],
+    "required_artifact": [
+      "agentic/scripts/build_reasoning_trace_pdf_coverage.py",
+      "agentic/reports/reasoning_trace_pdf_coverage/latest.json",
+      "agentic/reports/reasoning_trace_pdf_coverage/latest.md",
+      "tests/generative/named_workflow_trace_pdf_expert_review.md",
+      "tests/reporting/test_reasoning_trace_pdf_coverage.py"
+    ],
+    "acceptance_criteria": [
+      "Every source inference and mandatory route role has a separate PDF visibility disposition.",
+      "A semantically complete packet cannot report complete PDF coverage when TeX/PDF projection omits or obscures required content.",
+      "All seven reports answer the shared expert questions and their workflow-specific probes.",
+      "Minority findings, failures, uncertainty, scope limits, and authority absences remain visible in the review evidence."
+    ],
+    "blocked_by": ["PDFTRACE-010", "PDFTRACE-011"],
+    "evidence": [
+      "file:agentic/reports/reasoning_trace_coverage/by_workflow/",
+      "file:tests/generative/named_workflow_trace_expert_review.md"
+    ],
+    "review_date": "2026-08-05",
+    "failure_modes": [
+      "Packet coverage is reused as PDF coverage without inspecting the projection.",
+      "Human review approves visual polish while missing a semantic lane.",
+      "Workflow-specific expert questions are replaced with a generic checklist only."
+    ],
+    "status": "resolved",
+    "completed_utc": "2026-08-05T00:00:00Z",
+    "resolution_summary": "Implemented independent PDF visibility coverage and expert review evidence for all workflows and Route-A."
+  },
+  {
+    "id": "PDFTRACE-013",
+    "type": "release_todo",
+    "phase": "pdf-release-gate",
+    "owner": "agentic/release",
+    "priority": "critical",
+    "risk_class": "release-integration",
+    "title": "Integrate PDF companions into the release gate without weakening focused or HTML validation",
+    "intent": "Require complete non-stale expert PDF companions for release while preserving engine-independent development checks and existing HTML behavior.",
+    "use_skills": [],
+    "implementation_steps": [
+      "Extend no-argument release validation to require exactly seven TeX/PDF/inventory/manifest companion sets only after all fixtures are committed.",
+      "Keep focused trace validation usable without a local TeX engine and keep engine-independent TeX semantic/security validation mandatory.",
+      "Add engine-available compilation and PDF extraction validation to the project environment gate with explicit dependency diagnostics.",
+      "Require stale-output, digest, parity, semantic visibility, expert review, and main HTML compatibility gates to agree.",
+      "Ensure PDF failure never mutates or deletes valid trace, packet, HTML, or established main-workflow artifacts."
+    ],
+    "required_artifact": [
+      "agentic/scripts/validate_public_reasoning_trace_pdf.py",
+      "agentic/scripts/agentic_check.py",
+      "tests/reporting/test_reasoning_trace_pdf_release_gate.py"
+    ],
+    "acceptance_criteria": [
+      "Release validation passes 7/7 complete packet/HTML/TeX/PDF/inventory/manifest sets and rejects missing, stale, mismatched, or semantically incomplete companions.",
+      "A missing compiler produces a clear dependency failure in release mode, not a false pass or silent skip.",
+      "Existing HTML release, main-workflow compatibility, packet schema, and reasoning-trace coverage suites remain green.",
+      "The default main visualizer and HTML report remain unchanged and PDF generation stays additive."
+    ],
+    "blocked_by": ["PDFTRACE-009", "PDFTRACE-011", "PDFTRACE-012"],
+    "evidence": [
+      "file:agentic/scripts/validate_public_reasoning_trace.py",
+      "file:agentic/scripts/agentic_check.py",
+      "file:tests/reporting/test_main_workflow_trace_compatibility.py"
+    ],
+    "review_date": "2026-08-05",
+    "failure_modes": [
+      "Release passes because PDF checks are skipped when the engine is absent.",
+      "PDF validation replaces or weakens existing HTML validation.",
+      "A failed PDF build corrupts valid current reports."
+    ],
+    "status": "resolved",
+    "completed_utc": "2026-08-05T00:00:00Z",
+    "resolution_summary": "Integrated the read-only seven-companion PDF validator without weakening focused or HTML validation."
+  },
+  {
+    "id": "PDFTRACE-014",
+    "type": "documentation_todo",
+    "phase": "pdf-runbook-and-rollout",
+    "owner": "docs",
+    "priority": "high",
+    "risk_class": "operational-adoption",
+    "title": "Document PDF authoring, building, expert review, troubleshooting, and reproducibility",
+    "intent": "Make the LaTeX/PDF trace projection understandable and safely operable without reading renderer internals.",
+    "use_skills": [],
+    "implementation_steps": [
+      "Document the build order: trace, packet, semantic validation, HTML, print inventory, TeX, isolated PDF compilation, manifest, cross-format validation, coverage, and expert review.",
+      "Provide commands for one workflow, all seven fixtures, engine selection, engine-independent validation, PDF release validation, and stale-output diagnosis.",
+      "Explain body versus audit appendix structure, semantic IDs and cross-references, three independent status axes, evidence polarity, scope transitions, authority boundaries, negative paths, and the no-hidden-chain-of-thought rule.",
+      "Document TeX escaping, shell/network prohibition, temporary builds, retained artifacts, log triage, overfull/missing-glyph thresholds, accessibility level, and reproducibility caveats.",
+      "Pilot one bounded workflow, then Route-A, then all workflows and cross-workflow handoffs before enabling the PDF release requirement."
+    ],
+    "required_artifact": [
+      "docs/architecture/reasoning-trace-pdf-architecture.md",
+      "docs/reference/reasoning-trace-pdf-grammar.md",
+      "docs/operations/reasoning-trace-pdf-runbook.md",
+      "docs/reference/public-reasoning-trace-pdf-examples.md"
+    ],
+    "acceptance_criteria": [
+      "A maintainer can generate and validate a report without inspecting Python renderer code.",
+      "An expert can navigate from conclusion to premises, warrant, evidence/obligation, scope, authority, failure, and handoff using stable IDs.",
+      "Documentation does not claim PDF/UA, bytewise cross-platform reproducibility, or scientific correctness beyond verified capabilities.",
+      "Rollout completes only when documentation, manifests, coverage, expert review, tests, and TODO status agree."
+    ],
+    "blocked_by": ["PDFTRACE-012", "PDFTRACE-013"],
+    "evidence": [
+      "file:docs/operations/reasoning-trace-runbook.md",
+      "file:docs/architecture/reasoning-trace-architecture.md",
+      "file:docs/reference/public-reasoning-trace-examples.md"
+    ],
+    "review_date": "2026-08-05",
+    "failure_modes": [
+      "Instructions encourage raw TeX insertion or non-isolated compilation.",
+      "Accessibility or reproducibility claims exceed what the tested toolchain establishes.",
+      "The PDF becomes mandatory before all seven expert reviews and release gates pass."
+    ],
+    "status": "resolved",
+    "completed_utc": "2026-08-05T00:00:00Z",
+    "resolution_summary": "Documented PDF architecture, grammar, accessibility, examples, build operations, troubleshooting, and rollout."
+  }
+]

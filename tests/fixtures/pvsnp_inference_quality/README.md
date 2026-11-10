@@ -1,0 +1,1 @@
+These fixtures mirror `agentic/fixtures/pvsnp_inference_quality` and are used as human-readable anchors for generative review tests. The deterministic validator reads the canonical JSON fixtures from `agentic/fixtures/pvsnp_inference_quality`.

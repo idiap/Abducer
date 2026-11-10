@@ -1,0 +1,417 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://abducer.local/spec/dynamic_experiment_content_object_headers_v1.schema.json",
+  "title": "Strict structural headers for atomic dynamic-experiment objects",
+  "description": "A closed union of thin reference-only headers. These records establish typed storage dependencies over separately validated objects; they never promote an opaque payload, infer scientific causality, select theory, or authorize a physics claim.",
+  "oneOf": [
+    {"$ref": "#/$defs/literatureProjectionHeader"},
+    {"$ref": "#/$defs/worldAuthorityProjectionHeader"},
+    {"$ref": "#/$defs/worldMatrixCommissionHeader"},
+    {"$ref": "#/$defs/worldRequestHeader"},
+    {"$ref": "#/$defs/worldObservationHeader"},
+    {"$ref": "#/$defs/worldMatrixAggregationHeader"},
+    {"$ref": "#/$defs/causalProducerBindingHeader"},
+    {"$ref": "#/$defs/producerEvidenceHeader"}
+  ],
+  "$defs": {
+    "authorityBoundary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "storage_graph_authority",
+        "domain_payload_authority",
+        "scientific_authority",
+        "theory_mutation_authorized"
+      ],
+      "properties": {
+        "storage_graph_authority": {"const": "structural_reference_only"},
+        "domain_payload_authority": {"const": false},
+        "scientific_authority": {"const": false},
+        "theory_mutation_authorized": {"const": false}
+      }
+    },
+    "baseHeader": {
+      "type": "object",
+      "required": ["schema_version", "header_kind", "authority_boundary", "header_digest"],
+      "properties": {
+        "schema_version": {"const": "1.0.0"},
+        "authority_boundary": {"$ref": "#/$defs/authorityBoundary"},
+        "header_digest": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/digest"}
+      }
+    },
+    "contentRef": {
+      "$ref": "./dynamic_experiment_content_object_ref_v1.schema.json"
+    },
+    "worldId": {
+      "enum": [
+        "no_probe",
+        "neutral_inconclusive",
+        "misleading_toy_positive",
+        "registered_premise_falsifier",
+        "operational_failure"
+      ]
+    },
+    "literatureProjectionHeader": {
+      "allOf": [
+        {"$ref": "#/$defs/baseHeader"},
+        {
+          "type": "object",
+          "required": ["target_id", "run_id", "state_version", "literature_input_ref"],
+          "properties": {
+            "header_kind": {"const": "literature_projection_header"},
+            "target_id": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/identifier"},
+            "run_id": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/identifier"},
+            "state_version": {"type": "integer", "minimum": 0},
+            "literature_input_ref": {
+              "allOf": [
+                {"$ref": "#/$defs/contentRef"},
+                {"properties": {"object_kind": {"const": "literature_production_input_bundle"}}}
+              ]
+            }
+          }
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "worldAuthorityProjectionHeader": {
+      "allOf": [
+        {"$ref": "#/$defs/baseHeader"},
+        {
+          "type": "object",
+          "required": [
+            "projection_id",
+            "target_id",
+            "run_id",
+            "prior_state_version",
+            "projection_payload_ref",
+            "literature_projection_header_ref",
+            "producer_binding_header_refs"
+          ],
+          "properties": {
+            "header_kind": {"const": "world_authority_projection_header"},
+            "projection_id": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/identifier"},
+            "target_id": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/identifier"},
+            "run_id": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/identifier"},
+            "prior_state_version": {"type": "integer", "minimum": 0},
+            "projection_payload_ref": {
+              "allOf": [
+                {"$ref": "#/$defs/contentRef"},
+                {"properties": {"object_kind": {"const": "world_authority_projection"}}}
+              ]
+            },
+            "literature_projection_header_ref": {
+              "allOf": [
+                {"$ref": "#/$defs/contentRef"},
+                {"properties": {"object_kind": {"const": "literature_projection_header"}}}
+              ]
+            },
+            "producer_binding_header_refs": {
+              "type": "array",
+              "minItems": 2,
+              "uniqueItems": true,
+              "items": {
+                "allOf": [
+                  {"$ref": "#/$defs/contentRef"},
+                  {"properties": {"object_kind": {"const": "causal_producer_binding_header"}}}
+                ]
+              }
+            }
+          }
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "worldMatrixCommissionHeader": {
+      "allOf": [
+        {"$ref": "#/$defs/baseHeader"},
+        {
+          "type": "object",
+          "required": [
+            "commission_id",
+            "target_id",
+            "run_id",
+            "prior_state_version",
+            "commission_payload_ref",
+            "authority_projection_header_ref",
+            "commission_producer_binding_header_ref"
+          ],
+          "properties": {
+            "header_kind": {"const": "world_matrix_commission_header"},
+            "commission_id": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/identifier"},
+            "target_id": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/identifier"},
+            "run_id": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/identifier"},
+            "prior_state_version": {"type": "integer", "minimum": 0},
+            "commission_payload_ref": {
+              "allOf": [
+                {"$ref": "#/$defs/contentRef"},
+                {"properties": {"object_kind": {"const": "world_matrix_commission"}}}
+              ]
+            },
+            "authority_projection_header_ref": {
+              "allOf": [
+                {"$ref": "#/$defs/contentRef"},
+                {"properties": {"object_kind": {"const": "world_authority_projection_header"}}}
+              ]
+            },
+            "commission_producer_binding_header_ref": {
+              "allOf": [
+                {"$ref": "#/$defs/contentRef"},
+                {"properties": {"object_kind": {"const": "causal_producer_binding_header"}}}
+              ]
+            }
+          }
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "worldRequestHeader": {
+      "allOf": [
+        {"$ref": "#/$defs/baseHeader"},
+        {
+          "type": "object",
+          "required": [
+            "request_id",
+            "world_id",
+            "request_payload_ref",
+            "commission_header_ref",
+            "request_producer_binding_header_ref"
+          ],
+          "properties": {
+            "header_kind": {"const": "world_request_header"},
+            "request_id": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/identifier"},
+            "world_id": {"$ref": "#/$defs/worldId"},
+            "request_payload_ref": {
+              "allOf": [
+                {"$ref": "#/$defs/contentRef"},
+                {"properties": {"object_kind": {"const": "world_request"}}}
+              ]
+            },
+            "commission_header_ref": {
+              "allOf": [
+                {"$ref": "#/$defs/contentRef"},
+                {"properties": {"object_kind": {"const": "world_matrix_commission_header"}}}
+              ]
+            },
+            "request_producer_binding_header_ref": {
+              "allOf": [
+                {"$ref": "#/$defs/contentRef"},
+                {"properties": {"object_kind": {"const": "causal_producer_binding_header"}}}
+              ]
+            }
+          }
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "worldObservationHeader": {
+      "allOf": [
+        {"$ref": "#/$defs/baseHeader"},
+        {
+          "type": "object",
+          "required": [
+            "envelope_id",
+            "world_id",
+            "observation_payload_ref",
+            "envelope_payload_ref",
+            "request_header_ref",
+            "observation_producer_binding_header_ref"
+          ],
+          "properties": {
+            "header_kind": {"const": "world_observation_header"},
+            "envelope_id": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/identifier"},
+            "world_id": {"$ref": "#/$defs/worldId"},
+            "observation_payload_ref": {
+              "allOf": [
+                {"$ref": "#/$defs/contentRef"},
+                {"properties": {"object_kind": {"const": "world_observation"}}}
+              ]
+            },
+            "envelope_payload_ref": {
+              "allOf": [
+                {"$ref": "#/$defs/contentRef"},
+                {"properties": {"object_kind": {"const": "world_observation_envelope"}}}
+              ]
+            },
+            "request_header_ref": {
+              "allOf": [
+                {"$ref": "#/$defs/contentRef"},
+                {"properties": {"object_kind": {"const": "world_request_header"}}}
+              ]
+            },
+            "observation_producer_binding_header_ref": {
+              "allOf": [
+                {"$ref": "#/$defs/contentRef"},
+                {"properties": {"object_kind": {"const": "causal_producer_binding_header"}}}
+              ]
+            }
+          }
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "worldMatrixAggregationHeader": {
+      "allOf": [
+        {"$ref": "#/$defs/baseHeader"},
+        {
+          "type": "object",
+          "required": [
+            "certificate_id",
+            "certificate_payload_ref",
+            "commission_header_ref",
+            "observation_header_refs",
+            "aggregation_producer_binding_header_ref"
+          ],
+          "properties": {
+            "header_kind": {"const": "world_matrix_aggregation_header"},
+            "certificate_id": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/identifier"},
+            "certificate_payload_ref": {
+              "allOf": [
+                {"$ref": "#/$defs/contentRef"},
+                {"properties": {"object_kind": {"const": "world_matrix_certificate"}}}
+              ]
+            },
+            "commission_header_ref": {
+              "allOf": [
+                {"$ref": "#/$defs/contentRef"},
+                {"properties": {"object_kind": {"const": "world_matrix_commission_header"}}}
+              ]
+            },
+            "observation_header_refs": {
+              "type": "array",
+              "minItems": 5,
+              "maxItems": 5,
+              "uniqueItems": true,
+              "items": {
+                "allOf": [
+                  {"$ref": "#/$defs/contentRef"},
+                  {"properties": {"object_kind": {"const": "world_observation_header"}}}
+                ]
+              }
+            },
+            "aggregation_producer_binding_header_ref": {
+              "allOf": [
+                {"$ref": "#/$defs/contentRef"},
+                {"properties": {"object_kind": {"const": "causal_producer_binding_header"}}}
+              ]
+            }
+          }
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "causalProducerBindingHeader": {
+      "allOf": [
+        {"$ref": "#/$defs/baseHeader"},
+        {
+          "type": "object",
+          "required": [
+            "binding_id",
+            "stage_id",
+            "producer_role",
+            "target_id",
+            "run_id",
+            "state_version",
+            "binding_payload_ref",
+            "producer_request_evidence_header_ref",
+            "producer_receipt_evidence_header_ref",
+            "producer_artifact_evidence_header_ref",
+            "immutable_history_evidence_header_ref",
+            "governed_clock_evidence_header_ref",
+            "staged_input_evidence_header_ref"
+          ],
+          "properties": {
+            "header_kind": {"const": "causal_producer_binding_header"},
+            "binding_id": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/identifier"},
+            "stage_id": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/identifier"},
+            "producer_role": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/identifier"},
+            "target_id": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/identifier"},
+            "run_id": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/identifier"},
+            "state_version": {"type": "integer", "minimum": 0},
+            "binding_payload_ref": {
+              "allOf": [
+                {"$ref": "#/$defs/contentRef"},
+                {"properties": {"object_kind": {"const": "causal_producer_binding"}}}
+              ]
+            },
+            "producer_request_evidence_header_ref": {"$ref": "#/$defs/evidenceHeaderRef"},
+            "producer_receipt_evidence_header_ref": {"$ref": "#/$defs/evidenceHeaderRef"},
+            "producer_artifact_evidence_header_ref": {"$ref": "#/$defs/evidenceHeaderRef"},
+            "immutable_history_evidence_header_ref": {"$ref": "#/$defs/evidenceHeaderRef"},
+            "governed_clock_evidence_header_ref": {"$ref": "#/$defs/evidenceHeaderRef"},
+            "staged_input_evidence_header_ref": {"$ref": "#/$defs/evidenceHeaderRef"}
+          }
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "evidenceHeaderRef": {
+      "allOf": [
+        {"$ref": "#/$defs/contentRef"},
+        {"properties": {"object_kind": {"const": "producer_evidence_header"}}}
+      ]
+    },
+    "producerEvidenceHeader": {
+      "allOf": [
+        {"$ref": "#/$defs/baseHeader"},
+        {
+          "type": "object",
+          "required": [
+            "evidence_authority_id",
+            "stage_id",
+            "producer_role",
+            "target_id",
+            "run_id",
+            "state_version",
+            "evidence_kind",
+            "evidence_payload_ref"
+          ],
+          "properties": {
+            "header_kind": {"const": "producer_evidence_header"},
+            "evidence_authority_id": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/identifier"},
+            "stage_id": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/identifier"},
+            "producer_role": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/identifier"},
+            "target_id": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/identifier"},
+            "run_id": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/identifier"},
+            "state_version": {"type": "integer", "minimum": 0},
+            "evidence_kind": {
+              "enum": [
+                "producer_request",
+                "producer_receipt",
+                "producer_artifact",
+                "immutable_history",
+                "governed_clock",
+                "staged_input"
+              ]
+            },
+            "evidence_payload_ref": {"$ref": "#/$defs/contentRef"}
+          }
+        },
+        {
+          "if": {"properties": {"evidence_kind": {"const": "producer_request"}}, "required": ["evidence_kind"]},
+          "then": {"properties": {"evidence_payload_ref": {"properties": {"object_kind": {"const": "producer_request_evidence"}}}}}
+        },
+        {
+          "if": {"properties": {"evidence_kind": {"const": "producer_receipt"}}, "required": ["evidence_kind"]},
+          "then": {"properties": {"evidence_payload_ref": {"properties": {"object_kind": {"const": "producer_receipt_evidence"}}}}}
+        },
+        {
+          "if": {"properties": {"evidence_kind": {"const": "producer_artifact"}}, "required": ["evidence_kind"]},
+          "then": {"properties": {"evidence_payload_ref": {"properties": {"object_kind": {"const": "producer_artifact_evidence"}}}}}
+        },
+        {
+          "if": {"properties": {"evidence_kind": {"const": "immutable_history"}}, "required": ["evidence_kind"]},
+          "then": {"properties": {"evidence_payload_ref": {"properties": {"object_kind": {"const": "immutable_history_evidence"}}}}}
+        },
+        {
+          "if": {"properties": {"evidence_kind": {"const": "governed_clock"}}, "required": ["evidence_kind"]},
+          "then": {"properties": {"evidence_payload_ref": {"properties": {"object_kind": {"const": "governed_clock_evidence"}}}}}
+        },
+        {
+          "if": {"properties": {"evidence_kind": {"const": "staged_input"}}, "required": ["evidence_kind"]},
+          "then": {"properties": {"evidence_payload_ref": {"properties": {"object_kind": {"const": "staged_input_evidence"}}}}}
+        }
+      ],
+      "unevaluatedProperties": false
+    }
+  }
+}

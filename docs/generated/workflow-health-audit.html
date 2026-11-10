@@ -1,0 +1,2098 @@
+<!--
+SPDX-FileCopyrightText: © 2026 Idiap Research Institute <contact@idiap.ch>
+
+SPDX-FileContributor: Andre Freitas <andre.freitas@idiap.ch>
+Neuro-symbolic AI Group
+
+SPDX-FileContributor: Danilo Gusicuma <danilo.gusicuma@idiap.ch>
+Neuro-symbolic AI Group
+
+SPDX-License-Identifier: MIT
+-->
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Workflow Health Audit</title>
+  <style>
+    :root { --ink:#172033; --muted:#64748b; --line:#dbe4ef; --accent:#0f766e; }
+    * { box-sizing:border-box; }
+    body {
+      margin:0; color:var(--ink);
+      background: radial-gradient(circle at 16% 5%, #dff8f2 0, transparent 30%), linear-gradient(180deg, #f8fbff, #eef3f8);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height:1.5;
+    }
+    main { max-width:1120px; margin:0 auto; padding:48px 24px 72px; }
+    .eyebrow { color:var(--accent); font-weight:800; letter-spacing:.08em; text-transform:uppercase; font-size:12px; }
+    h1 { font-size:clamp(40px, 6vw, 76px); line-height:.94; margin:10px 0 18px; max-width:940px; }
+    .lead { color:var(--muted); font-size:19px; max-width:860px; }
+    section { margin:34px 0; }
+    h2 { font-size:28px; margin:0 0 18px; }
+    .stats { display:grid; grid-template-columns:repeat(auto-fit, minmax(145px,1fr)); gap:12px; }
+    .stat, details {
+      background:rgba(255,255,255,.9); border:1px solid rgba(203,213,225,.82); border-radius:16px;
+      box-shadow:0 18px 45px rgba(15,23,42,.06);
+    }
+    .stat { padding:16px; min-height:104px; }
+    .stat span { display:block; color:var(--muted); font-size:13px; }
+    .stat strong { display:block; font-size:32px; margin-top:10px; }
+    .audit-reading {
+      display: grid;
+      grid-template-columns: minmax(250px, .85fr) minmax(420px, 1.7fr);
+      gap: 34px;
+      padding: 26px 0;
+      border-block: 1px solid rgba(15, 118, 110, .24);
+    }
+    .audit-reading h2 { font-size: 34px; line-height: 1.08; }
+    .audit-reading .audit-thesis p { color: #334155; font-size: 16px; }
+    .audit-reading .limit { color: var(--muted); font-size: 13px; }
+    .calibration-rails { list-style: none; padding: 0; margin: 0; }
+    .calibration-rails li { position: relative; padding: 11px 0 13px 22px; border-bottom: 1px solid var(--line); }
+    .calibration-rails li::before { content: ""; position: absolute; left: 0; top: 18px; width: 9px; height: 9px; border-radius: 50%; background: #0e7490; }
+    .calibration-rails li div { display: flex; justify-content: space-between; gap: 18px; }
+    .calibration-rails li span { color: var(--muted); font-size: 12px; font-weight: 800; }
+    .calibration-rails li p { margin: 5px 0; color: #475569; font-size: 13px; }
+    .calibration-rails li code { color: #0e7490; font-size: 11px; }
+    details { padding:16px 20px; margin:12px 0; }
+    summary { cursor:pointer; display:flex; justify-content:space-between; gap:18px; font-weight:850; font-size:18px; }
+    summary span { color:var(--muted); font-size:13px; font-weight:750; }
+    .findings { list-style:none; margin:16px 0 0; padding:0; display:grid; gap:10px; }
+    .finding { border:1px solid var(--line); border-left-width:6px; border-radius:12px; padding:12px 14px; background:#f8fafc; }
+    .finding.high { border-left-color:#dc2626; }
+    .finding.medium { border-left-color:#d97706; }
+    .finding.review { border-left-color:#0e7490; }
+    .finding div { display:flex; justify-content:space-between; gap:12px; }
+    .finding span { text-transform:uppercase; color:var(--muted); font-size:11px; font-weight:850; }
+    .finding p { margin:6px 0; color:#334155; }
+    .finding code { display:inline-block; background:#eef6f5; color:#0f766e; padding:2px 5px; border-radius:6px; }
+    .rec { color:#475569; }
+    .empty { color:var(--muted); }
+    footer { color:var(--muted); margin-top:34px; font-size:13px; }
+    @media (max-width: 760px) {
+      .audit-reading { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+<main>
+  <header>
+    <div class="eyebrow">Workflow health audit</div>
+    <h1>Periodic workflow review for abducer.</h1>
+    <p class="lead">A diagnostic sweep for leakage boundaries, skill hook coverage, prompt control, mock behavior, and deterministic testing coverage. Generated 2026-08-05 12:27.</p>
+  </header>
+  <section class="audit-reading" data-conceptual-core="workflow-health">
+    <div class="audit-thesis">
+      <div class="eyebrow">Calibrated triage</div>
+      <h2>What this audit can—and cannot—tell you</h2>
+      <p>The strongest current triage concentration is mock and placeholder use. The audit combines repository cross-references with pattern-based scans, so each finding identifies where to inspect next rather than establishing a workflow defect.</p>
+      <p><strong>Decision rule.</strong> Confirm the matched source context and the owning workflow contract before changing core behavior; prioritize corroborated boundary or integration defects over marker-only findings.</p>
+      <p class="limit"><strong>Evidence limit.</strong> The audit reports static repository signals. It does not execute workflows, establish runtime leakage, prove missing coverage, or classify every mock as invalid.</p>
+    </div>
+    <ul class="calibration-rails">
+        <li>
+          <div><strong>Blind-run boundary</strong><span>0 signals</span></div>
+          <p>Sensitive vocabulary identifies a boundary worth reviewing; surrounding loader behavior determines whether leakage exists.</p>
+          <code>heuristic_context_required</code>
+        </li>
+
+
+        <li>
+          <div><strong>Skill integration</strong><span>249 signals</span></div>
+          <p>Missing catalog or hook references are observable repository facts; whether the omission is intentional still requires owner confirmation.</p>
+          <code>repository_cross_reference</code>
+        </li>
+
+
+        <li>
+          <div><strong>Prompt control</strong><span>308 signals</span></div>
+          <p>Absent control cues suggest review but may be supplied by an external schema or caller contract.</p>
+          <code>heuristic_control_scan</code>
+        </li>
+
+
+        <li>
+          <div><strong>Mock and placeholder use</strong><span>1237 signals</span></div>
+          <p>Mock-like tokens locate possible substitutes; they do not distinguish legitimate isolation from overclaimed validation.</p>
+          <code>heuristic_marker_scan</code>
+        </li>
+
+
+        <li>
+          <div><strong>Deterministic coverage</strong><span>1 signals</span></div>
+          <p>A missing textual test reference is a coverage lead, not proof that an execution path is untested.</p>
+          <code>heuristic_reference_scan</code>
+        </li>
+        </ul>
+  </section>
+  <section>
+    <h2>Severity Overview</h2>
+    <div class="stats"><div class='stat'><span>High</span><strong>11</strong></div>
+<div class='stat'><span>Medium</span><strong>795</strong></div>
+<div class='stat'><span>Review</span><strong>989</strong></div>
+<div class='stat'><span>Skills</span><strong>280</strong></div>
+<div class='stat'><span>Prompts</span><strong>545</strong></div>
+<div class='stat'><span>Scripts</span><strong>17</strong></div></div>
+  </section>
+  <section>
+    <h2>Findings</h2>
+
+        <details open>
+          <summary>Leakage And Blind-Run Boundaries <span>0 findings</span></summary>
+          <p class='empty'>No findings for this dimension.</p>
+        </details>
+
+
+        <details open>
+          <summary>Orphaned Or Underhooked Skills <span>249 findings</span></summary>
+          <ul class='findings'>
+        <li class="finding review">
+          <div><strong>Skill not referenced by a workflow hook</strong> <span>review</span></div>
+          <p>prism-agent-contract-author is cataloged but not explicitly hooked in AGENTS.md or proj_skills/INDEX.md.</p>
+          <code>prism_me/prism-agent-contract-author/SKILL.md:1</code>
+          <p class="rec">Either hook the skill into the owning workflow stack or leave a deliberate specialization note.</p>
+        </li>
+
+
+        <li class="finding review">
+          <div><strong>Skill not referenced by a workflow hook</strong> <span>review</span></div>
+          <p>prism-agentic-shape-forger is cataloged but not explicitly hooked in AGENTS.md or proj_skills/INDEX.md.</p>
+          <code>prism_me/prism-agentic-shape-forger/SKILL.md:1</code>
+          <p class="rec">Either hook the skill into the owning workflow stack or leave a deliberate specialization note.</p>
+        </li>
+
+
+        <li class="finding high">
+          <div><strong>Prism skill missing from its contract</strong> <span>high</span></div>
+          <p>prism-ai-researcher-review is absent from prism_me/agents.md.</p>
+          <code>prism_me/prism-ai-researcher-review/SKILL.md:1</code>
+          <p class="rec">Reconcile the Prism skill contract and coverage workflow.</p>
+        </li>
+
+
+        <li class="finding review">
+          <div><strong>Skill not referenced by a workflow hook</strong> <span>review</span></div>
+          <p>prism-ai-researcher-review is cataloged but not explicitly hooked in AGENTS.md or proj_skills/INDEX.md.</p>
+          <code>prism_me/prism-ai-researcher-review/SKILL.md:1</code>
+          <p class="rec">Either hook the skill into the owning workflow stack or leave a deliberate specialization note.</p>
+        </li>
+
+
+        <li class="finding review">
+          <div><strong>Skill not referenced by a workflow hook</strong> <span>review</span></div>
+          <p>prism-dependency-cartographer is cataloged but not explicitly hooked in AGENTS.md or proj_skills/INDEX.md.</p>
+          <code>prism_me/prism-dependency-cartographer/SKILL.md:1</code>
+          <p class="rec">Either hook the skill into the owning workflow stack or leave a deliberate specialization note.</p>
+        </li>
+
+
+        <li class="finding high">
+          <div><strong>Prism skill missing from its contract</strong> <span>high</span></div>
+          <p>prism-epistemologist-review is absent from prism_me/agents.md.</p>
+          <code>prism_me/prism-epistemologist-review/SKILL.md:1</code>
+          <p class="rec">Reconcile the Prism skill contract and coverage workflow.</p>
+        </li>
+
+
+        <li class="finding review">
+          <div><strong>Skill not referenced by a workflow hook</strong> <span>review</span></div>
+          <p>prism-epistemologist-review is cataloged but not explicitly hooked in AGENTS.md or proj_skills/INDEX.md.</p>
+          <code>prism_me/prism-epistemologist-review/SKILL.md:1</code>
+          <p class="rec">Either hook the skill into the owning workflow stack or leave a deliberate specialization note.</p>
+        </li>
+
+
+        <li class="finding review">
+          <div><strong>Skill not referenced by a workflow hook</strong> <span>review</span></div>
+          <p>prism-external-capability-extractor is cataloged but not explicitly hooked in AGENTS.md or proj_skills/INDEX.md.</p>
+          <code>prism_me/prism-external-capability-extractor/SKILL.md:1</code>
+          <p class="rec">Either hook the skill into the owning workflow stack or leave a deliberate specialization note.</p>
+        </li>
+
+
+        <li class="finding review">
+          <div><strong>Skill not referenced by a workflow hook</strong> <span>review</span></div>
+          <p>prism-external-reference-scoper is cataloged but not explicitly hooked in AGENTS.md or proj_skills/INDEX.md.</p>
+          <code>prism_me/prism-external-reference-scoper/SKILL.md:1</code>
+          <p class="rec">Either hook the skill into the owning workflow stack or leave a deliberate specialization note.</p>
+        </li>
+
+
+        <li class="finding review">
+          <div><strong>Skill not referenced by a workflow hook</strong> <span>review</span></div>
+          <p>prism-generative-validation-runner is cataloged but not explicitly hooked in AGENTS.md or proj_skills/INDEX.md.</p>
+          <code>prism_me/prism-generative-validation-runner/SKILL.md:1</code>
+          <p class="rec">Either hook the skill into the owning workflow stack or leave a deliberate specialization note.</p>
+        </li>
+
+
+        <li class="finding review">
+          <div><strong>Skill not referenced by a workflow hook</strong> <span>review</span></div>
+          <p>prism-implementation-driver is cataloged but not explicitly hooked in AGENTS.md or proj_skills/INDEX.md.</p>
+          <code>prism_me/prism-implementation-driver/SKILL.md:1</code>
+          <p class="rec">Either hook the skill into the owning workflow stack or leave a deliberate specialization note.</p>
+        </li>
+
+
+        <li class="finding review">
+          <div><strong>Skill not referenced by a workflow hook</strong> <span>review</span></div>
+          <p>prism-integration-handoff is cataloged but not explicitly hooked in AGENTS.md or proj_skills/INDEX.md.</p>
+          <code>prism_me/prism-integration-handoff/SKILL.md:1</code>
+          <p class="rec">Either hook the skill into the owning workflow stack or leave a deliberate specialization note.</p>
+        </li>
+
+
+        <li class="finding high">
+          <div><strong>Prism skill missing from its contract</strong> <span>high</span></div>
+          <p>prism-mathematician-review is absent from prism_me/agents.md.</p>
+          <code>prism_me/prism-mathematician-review/SKILL.md:1</code>
+          <p class="rec">Reconcile the Prism skill contract and coverage workflow.</p>
+        </li>
+
+
+        <li class="finding review">
+          <div><strong>Skill not referenced by a workflow hook</strong> <span>review</span></div>
+          <p>prism-mathematician-review is cataloged but not explicitly hooked in AGENTS.md or proj_skills/INDEX.md.</p>
+          <code>prism_me/prism-mathematician-review/SKILL.md:1</code>
+          <p class="rec">Either hook the skill into the owning workflow stack or leave a deliberate specialization note.</p>
+        </li>
+
+
+        <li class="finding high">
+          <div><strong>Prism skill missing from its contract</strong> <span>high</span></div>
+          <p>prism-persona-review-orchestrator is absent from prism_me/agents.md.</p>
+          <code>prism_me/prism-persona-review-orchestrator/SKILL.md:1</code>
+          <p class="rec">Reconcile the Prism skill contract and coverage workflow.</p>
+        </li>
+
+
+        <li class="finding review">
+          <div><strong>Skill not referenced by a workflow hook</strong> <span>review</span></div>
+          <p>prism-persona-review-orchestrator is cataloged but not explicitly hooked in AGENTS.md or proj_skills/INDEX.md.</p>
+          <code>prism_me/prism-persona-review-orchestrator/SKILL.md:1</code>
+          <p class="rec">Either hook the skill into the owning workflow stack or leave a deliberate specialization note.</p>
+        </li>
+
+
+        <li class="finding review">
+          <div><strong>Skill not referenced by a workflow hook</strong> <span>review</span></div>
+          <p>prism-quality-criteria-elicitor is cataloged but not explicitly hooked in AGENTS.md or proj_skills/INDEX.md.</p>
+          <code>prism_me/prism-quality-criteria-elicitor/SKILL.md:1</code>
+          <p class="rec">Either hook the skill into the owning workflow stack or leave a deliberate specialization note.</p>
+        </li>
+
+
+        <li class="finding review">
+          <div><strong>Skill not referenced by a workflow hook</strong> <span>review</span></div>
+          <p>prism-reflective-refinement-loop is cataloged but not explicitly hooked in AGENTS.md or proj_skills/INDEX.md.</p>
+          <code>prism_me/prism-reflective-refinement-loop/SKILL.md:1</code>
+          <p class="rec">Either hook the skill into the owning workflow stack or leave a deliberate specialization note.</p>
+        </li>
+
+
+        <li class="finding review">
+          <div><strong>Skill not referenced by a workflow hook</strong> <span>review</span></div>
+          <p>prism-repo-cartographer is cataloged but not explicitly hooked in AGENTS.md or proj_skills/INDEX.md.</p>
+          <code>prism_me/prism-repo-cartographer/SKILL.md:1</code>
+          <p class="rec">Either hook the skill into the owning workflow stack or leave a deliberate specialization note.</p>
+        </li>
+
+
+        <li class="finding review">
+          <div><strong>Skill not referenced by a workflow hook</strong> <span>review</span></div>
+          <p>prism-slice-planner is cataloged but not explicitly hooked in AGENTS.md or proj_skills/INDEX.md.</p>
+          <code>prism_me/prism-slice-planner/SKILL.md:1</code>
+          <p class="rec">Either hook the skill into the owning workflow stack or leave a deliberate specialization note.</p>
+        </li>
+
+
+        <li class="finding high">
+          <div><strong>Prism skill missing from its contract</strong> <span>high</span></div>
+          <p>prism-software-engineer-review is absent from prism_me/agents.md.</p>
+          <code>prism_me/prism-software-engineer-review/SKILL.md:1</code>
+          <p class="rec">Reconcile the Prism skill contract and coverage workflow.</p>
+        </li>
+
+
+        <li class="finding review">
+          <div><strong>Skill not referenced by a workflow hook</strong> <span>review</span></div>
+          <p>prism-software-engineer-review is cataloged but not explicitly hooked in AGENTS.md or proj_skills/INDEX.md.</p>
+          <code>prism_me/prism-software-engineer-review/SKILL.md:1</code>
+          <p class="rec">Either hook the skill into the owning workflow stack or leave a deliberate specialization note.</p>
+        </li>
+
+
+        <li class="finding review">
+          <div><strong>Skill not referenced by a workflow hook</strong> <span>review</span></div>
+          <p>prism-spec-intake is cataloged but not explicitly hooked in AGENTS.md or proj_skills/INDEX.md.</p>
+          <code>prism_me/prism-spec-intake/SKILL.md:1</code>
+          <p class="rec">Either hook the skill into the owning workflow stack or leave a deliberate specialization note.</p>
+        </li>
+
+
+        <li class="finding review">
+          <div><strong>Skill not referenced by a workflow hook</strong> <span>review</span></div>
+          <p>prism-spec-orchestrator is cataloged but not explicitly hooked in AGENTS.md or proj_skills/INDEX.md.</p>
+          <code>prism_me/prism-spec-orchestrator/SKILL.md:1</code>
+          <p class="rec">Either hook the skill into the owning workflow stack or leave a deliberate specialization note.</p>
+        </li>
+
+
+        <li class="finding review">
+          <div><strong>Skill not referenced by a workflow hook</strong> <span>review</span></div>
+          <p>prism-spec-verification-critic is cataloged but not explicitly hooked in AGENTS.md or proj_skills/INDEX.md.</p>
+          <code>prism_me/prism-spec-verification-critic/SKILL.md:1</code>
+          <p class="rec">Either hook the skill into the owning workflow stack or leave a deliberate specialization note.</p>
+        </li>
+
+
+        <li class="finding review">
+          <div><strong>Skill not referenced by a workflow hook</strong> <span>review</span></div>
+          <p>prism-test-strategy-architect is cataloged but not explicitly hooked in AGENTS.md or proj_skills/INDEX.md.</p>
+          <code>prism_me/prism-test-strategy-architect/SKILL.md:1</code>
+          <p class="rec">Either hook the skill into the owning workflow stack or leave a deliberate specialization note.</p>
+        </li>
+
+
+        <li class="finding review">
+          <div><strong>Skill not referenced by a workflow hook</strong> <span>review</span></div>
+          <p>looper-hook-policy-maintainer is cataloged but not explicitly hooked in AGENTS.md or proj_skills/INDEX.md.</p>
+          <code>skills/control-plane/looper-hook-policy-maintainer/SKILL.md:1</code>
+          <p class="rec">Either hook the skill into the owning workflow stack or leave a deliberate specialization note.</p>
+        </li>
+
+
+        <li class="finding review">
+          <div><strong>Skill not referenced by a workflow hook</strong> <span>review</span></div>
+          <p>looper-release-promoter is cataloged but not explicitly hooked in AGENTS.md or proj_skills/INDEX.md.</p>
+          <code>skills/control-plane/looper-release-promoter/SKILL.md:1</code>
+          <p class="rec">Either hook the skill into the owning workflow stack or leave a deliberate specialization note.</p>
+        </li>
+
+
+        <li class="finding review">
+          <div><strong>Skill not referenced by a workflow hook</strong> <span>review</span></div>
+          <p>looper-target-dependency-cartographer is cataloged but not explicitly hooked in AGENTS.md or proj_skills/INDEX.md.</p>
+          <code>skills/control-plane/looper-target-dependency-cartographer/SKILL.md:1</code>
+          <p class="rec">Either hook the skill into the owning workflow stack or leave a deliberate specialization note.</p>
+        </li>
+
+
+        <li class="finding review">
+          <div><strong>Skill not referenced by a workflow hook</strong> <span>review</span></div>
+          <p>looper-target-goal-enricher is cataloged but not explicitly hooked in AGENTS.md or proj_skills/INDEX.md.</p>
+          <code>skills/control-plane/looper-target-goal-enricher/SKILL.md:1</code>
+          <p class="rec">Either hook the skill into the owning workflow stack or leave a deliberate specialization note.</p>
+        </li>
+
+
+        <li class="finding review">
+          <div><strong>Skill not referenced by a workflow hook</strong> <span>review</span></div>
+          <p>looper-workflow-contract-governor is cataloged but not explicitly hooked in AGENTS.md or proj_skills/INDEX.md.</p>
+          <code>skills/control-plane/looper-workflow-contract-governor/SKILL.md:1</code>
+          <p class="rec">Either hook the skill into the owning workflow stack or leave a deliberate specialization note.</p>
+        </li>
+
+
+        <li class="finding review">
+          <div><strong>Skill not referenced by a workflow hook</strong> <span>review</span></div>
+          <p>meta is cataloged but not explicitly hooked in AGENTS.md or proj_skills/INDEX.md.</p>
+          <code>skills/control-plane/meta/SKILL.md:1</code>
+          <p class="rec">Either hook the skill into the owning workflow stack or leave a deliberate specialization note.</p>
+        </li>
+
+
+        <li class="finding review">
+          <div><strong>Skill not referenced by a workflow hook</strong> <span>review</span></div>
+          <p>abducer-mediation-candidate-generator is cataloged but not explicitly hooked in AGENTS.md or proj_skills/INDEX.md.</p>
+          <code>skills/discovery/abducer-mediation-candidate-generator/SKILL.md:1</code>
+          <p class="rec">Either hook the skill into the owning workflow stack or leave a deliberate specialization note.</p>
+        </li>
+
+
+        <li class="finding review">
+          <div><strong>Skill not referenced by a workflow hook</strong> <span>review</span></div>
+          <p>categorical-concept-forger is cataloged but not explicitly hooked in AGENTS.md or proj_skills/INDEX.md.</p>
+          <code>skills/discovery/categorical-concept-forger/SKILL.md:1</code>
+          <p class="rec">Either hook the skill into the owning workflow stack or leave a deliberate specialization note.</p>
+        </li>
+
+
+        <li class="finding review">
+          <div><strong>Skill not referenced by a workflow hook</strong> <span>review</span></div>
+          <p>hott-equivalence-coherence-forger is cataloged but not explicitly hooked in AGENTS.md or proj_skills/INDEX.md.</p>
+          <code>skills/discovery/hott-equivalence-coherence-forger/SKILL.md:1</code>
+          <p class="rec">Either hook the skill into the owning workflow stack or leave a deliberate specialization note.</p>
+        </li>
+
+
+        <li class="finding review">
+          <div><strong>Skill not referenced by a workflow hook</strong> <span>review</span></div>
+          <p>kb-coherence-evaluator is cataloged but not explicitly hooked in AGENTS.md or proj_skills/INDEX.md.</p>
+          <code>skills/discovery/kb-coherence-evaluator/SKILL.md:1</code>
+          <p class="rec">Either hook the skill into the owning workflow stack or leave a deliberate specialization note.</p>
+        </li>
+
+
+        <li class="finding review">
+          <div><strong>Skill not referenced by a workflow hook</strong> <span>review</span></div>
+          <p>kb-concept-bridge-planner is cataloged but not explicitly hooked in AGENTS.md or proj_skills/INDEX.md.</p>
+          <code>skills/discovery/kb-concept-bridge-planner/SKILL.md:1</code>
+          <p class="rec">Either hook the skill into the owning workflow stack or leave a deliberate specialization note.</p>
+        </li>
+
+
+        <li class="finding review">
+          <div><strong>Skill not referenced by a workflow hook</strong> <span>review</span></div>
+          <p>kb-discovery-cycle is cataloged but not explicitly hooked in AGENTS.md or proj_skills/INDEX.md.</p>
+          <code>skills/discovery/kb-discovery-cycle/SKILL.md:1</code>
+          <p class="rec">Either hook the skill into the owning workflow stack or leave a deliberate specialization note.</p>
+        </li>
+
+
+        <li class="finding review">
+          <div><strong>Skill not referenced by a workflow hook</strong> <span>review</span></div>
+          <p>kb-entrypoint-finder is cataloged but not explicitly hooked in AGENTS.md or proj_skills/INDEX.md.</p>
+          <code>skills/discovery/kb-entrypoint-finder/SKILL.md:1</code>
+          <p class="rec">Either hook the skill into the owning workflow stack or leave a deliberate specialization note.</p>
+        </li>
+
+
+        <li class="finding review">
+          <div><strong>Skill not referenced by a workflow hook</strong> <span>review</span></div>
+          <p>kb-entrypoint-pathfinder is cataloged but not explicitly hooked in AGENTS.md or proj_skills/INDEX.md.</p>
+          <code>skills/discovery/kb-entrypoint-pathfinder/SKILL.md:1</code>
+          <p class="rec">Either hook the skill into the owning workflow stack or leave a deliberate specialization note.</p>
+        </li>
+
+
+        <li class="finding review">
+          <div><strong>Skill not referenced by a workflow hook</strong> <span>review</span></div>
+          <p>kb-epistemic-hardness is cataloged but not explicitly hooked in AGENTS.md or proj_skills/INDEX.md.</p>
+          <code>skills/discovery/kb-epistemic-hardness/SKILL.md:1</code>
+          <p class="rec">Either hook the skill into the owning workflow stack or leave a deliberate specialization note.</p>
+        </li>
+
+
+        <li class="finding review">
+          <div><strong>Skill not referenced by a workflow hook</strong> <span>review</span></div>
+          <p>kb-framework-state-formalizer is cataloged but not explicitly hooked in AGENTS.md or proj_skills/INDEX.md.</p>
+          <code>skills/discovery/kb-framework-state-formalizer/SKILL.md:1</code>
+          <p class="rec">Either hook the skill into the owning workflow stack or leave a deliberate specialization note.</p>
+        </li>
+
+
+        <li class="finding review">
+          <div><strong>Skill not referenced by a workflow hook</strong> <span>review</span></div>
+          <p>kb-gap-abstraction-conjecturer is cataloged but not explicitly hooked in AGENTS.md or proj_skills/INDEX.md.</p>
+          <code>skills/discovery/kb-gap-abstraction-conjecturer/SKILL.md:1</code>
+          <p class="rec">Either hook the skill into the owning workflow stack or leave a deliberate specialization note.</p>
+        </li>
+
+
+        <li class="finding review">
+          <div><strong>Skill not referenced by a workflow hook</strong> <span>review</span></div>
+          <p>kb-main-conjecture-grounder is cataloged but not explicitly hooked in AGENTS.md or proj_skills/INDEX.md.</p>
+          <code>skills/discovery/kb-main-conjecture-grounder/SKILL.md:1</code>
+          <p class="rec">Either hook the skill into the owning workflow stack or leave a deliberate specialization note.</p>
+        </li>
+
+
+        <li class="finding review">
+          <div><strong>Skill not referenced by a workflow hook</strong> <span>review</span></div>
+          <p>kb-novel-proof-strategist is cataloged but not explicitly hooked in AGENTS.md or proj_skills/INDEX.md.</p>
+          <code>skills/discovery/kb-novel-proof-strategist/SKILL.md:1</code>
+          <p class="rec">Either hook the skill into the owning workflow stack or leave a deliberate specialization note.</p>
+        </li>
+
+
+        <li class="finding review">
+          <div><strong>Skill not referenced by a workflow hook</strong> <span>review</span></div>
+          <p>kb-prior-art-pass is cataloged but not explicitly hooked in AGENTS.md or proj_skills/INDEX.md.</p>
+          <code>skills/discovery/kb-prior-art-pass/SKILL.md:1</code>
+          <p class="rec">Either hook the skill into the owning workflow stack or leave a deliberate specialization note.</p>
+        </li>
+
+
+        <li class="finding review">
+          <div><strong>Skill not referenced by a workflow hook</strong> <span>review</span></div>
+          <p>kb-promising-direction-assessor is cataloged but not explicitly hooked in AGENTS.md or proj_skills/INDEX.md.</p>
+          <code>skills/discovery/kb-promising-direction-assessor/SKILL.md:1</code>
+          <p class="rec">Either hook the skill into the owning workflow stack or leave a deliberate specialization note.</p>
+        </li>
+
+
+        <li class="finding review">
+          <div><strong>Skill not referenced by a workflow hook</strong> <span>review</span></div>
+          <p>kb-proof-connector is cataloged but not explicitly hooked in AGENTS.md or proj_skills/INDEX.md.</p>
+          <code>skills/discovery/kb-proof-connector/SKILL.md:1</code>
+          <p class="rec">Either hook the skill into the owning workflow stack or leave a deliberate specialization note.</p>
+        </li>
+
+
+        <li class="finding review">
+          <div><strong>Skill not referenced by a workflow hook</strong> <span>review</span></div>
+          <p>kb-proof-sketcher is cataloged but not explicitly hooked in AGENTS.md or proj_skills/INDEX.md.</p>
+          <code>skills/discovery/kb-proof-sketcher/SKILL.md:1</code>
+          <p class="rec">Either hook the skill into the owning workflow stack or leave a deliberate specialization note.</p>
+        </li>
+
+
+        <li class="finding review">
+          <div><strong>Skill not referenced by a workflow hook</strong> <span>review</span></div>
+          <p>kb-prove-cycle is cataloged but not explicitly hooked in AGENTS.md or proj_skills/INDEX.md.</p>
+          <code>skills/discovery/kb-prove-cycle/SKILL.md:1</code>
+          <p class="rec">Either hook the skill into the owning workflow stack or leave a deliberate specialization note.</p>
+        </li>
+
+
+        <li class="finding high">
+          <div><strong>Skill missing from generated catalog surface</strong> <span>high</span></div>
+          <p>theory-atlas-defect-compiler is absent from docs/reference/skills.md.</p>
+          <code>skills/discovery/theory-atlas-defect-compiler/SKILL.md:1</code>
+          <p class="rec">Regenerate the skill index/catalog or repair the skill frontmatter.</p>
+        </li>
+
+
+        <li class="finding review">
+          <div><strong>Skill not referenced by a workflow hook</strong> <span>review</span></div>
+          <p>theory-atlas-defect-compiler is cataloged but not explicitly hooked in AGENTS.md or proj_skills/INDEX.md.</p>
+          <code>skills/discovery/theory-atlas-defect-compiler/SKILL.md:1</code>
+          <p class="rec">Either hook the skill into the owning workflow stack or leave a deliberate specialization note.</p>
+        </li>
+
+
+        <li class="finding review">
+          <div><strong>Skill not referenced by a workflow hook</strong> <span>review</span></div>
+          <p>abducer-conceptual-pressure-formalizer is cataloged but not explicitly hooked in AGENTS.md or proj_skills/INDEX.md.</p>
+          <code>skills/evaluation/abducer-conceptual-pressure-formalizer/SKILL.md:1</code>
+          <p class="rec">Either hook the skill into the owning workflow stack or leave a deliberate specialization note.</p>
+        </li>
+
+
+        <li class="finding review">
+          <div><strong>Skill not referenced by a workflow hook</strong> <span>review</span></div>
+          <p>abducer-failure-signal-cartographer is cataloged but not explicitly hooked in AGENTS.md or proj_skills/INDEX.md.</p>
+          <code>skills/evaluation/abducer-failure-signal-cartographer/SKILL.md:1</code>
+          <p class="rec">Either hook the skill into the owning workflow stack or leave a deliberate specialization note.</p>
+        </li>
+
+
+        <li class="finding review">
+          <div><strong>Skill not referenced by a workflow hook</strong> <span>review</span></div>
+          <p>abducer-obligation-gatekeeper is cataloged but not explicitly hooked in AGENTS.md or proj_skills/INDEX.md.</p>
+          <code>skills/evaluation/abducer-obligation-gatekeeper/SKILL.md:1</code>
+          <p class="rec">Either hook the skill into the owning workflow stack or leave a deliberate specialization note.</p>
+        </li>
+
+
+        <li class="finding review">
+          <div><strong>Skill not referenced by a workflow hook</strong> <span>review</span></div>
+          <p>abstraction-fit-gap-auditor is cataloged but not explicitly hooked in AGENTS.md or proj_skills/INDEX.md.</p>
+          <code>skills/evaluation/abstraction-fit-gap-auditor/SKILL.md:1</code>
+          <p class="rec">Either hook the skill into the owning workflow stack or leave a deliberate specialization note.</p>
+        </li>
+
+
+        <li class="finding review">
+          <div><strong>Skill not referenced by a workflow hook</strong> <span>review</span></div>
+          <p>blind-conceptual-preference-adjudicator is cataloged but not explicitly hooked in AGENTS.md or proj_skills/INDEX.md.</p>
+          <code>skills/evaluation/blind-conceptual-preference-adjudicator/SKILL.md:1</code>
+          <p class="rec">Either hook the skill into the owning workflow stack or leave a deliberate specialization note.</p>
+        </li>
+
+
+        <li class="finding review">
+          <div><strong>Skill not referenced by a workflow hook</strong> <span>review</span></div>
+          <p>bridge-object-equivalence-checker is cataloged but not explicitly hooked in AGENTS.md or proj_skills/INDEX.md.</p>
+          <code>skills/evaluation/bridge-object-equivalence-checker/SKILL.md:1</code>
+          <p class="rec">Either hook the skill into the owning workflow stack or leave a deliberate specialization note.</p>
+        </li>
+
+
+        <li class="finding review">
+          <div><strong>Skill not referenced by a workflow hook</strong> <span>review</span></div>
+          <p>completed-subgoal-enablement-auditor is cataloged but not explicitly hooked in AGENTS.md or proj_skills/INDEX.md.</p>
+          <code>skills/evaluation/completed-subgoal-enablement-auditor/SKILL.md:1</code>
+          <p class="rec">Either hook the skill into the owning workflow stack or leave a deliberate specialization note.</p>
+        </li>
+
+
+        <li class="finding review">
+          <div><strong>Skill not referenced by a workflow hook</strong> <span>review</span></div>
+          <p>contradiction-route-auditor is cataloged but not explicitly hooked in AGENTS.md or proj_skills/INDEX.md.</p>
+          <code>skills/evaluation/contradiction-route-auditor/SKILL.md:1</code>
+          <p class="rec">Either hook the skill into the owning workflow stack or leave a deliberate specialization note.</p>
+        </li>
+
+
+        <li class="finding review">
+          <div><strong>Skill not referenced by a workflow hook</strong> <span>review</span></div>
+          <p>contribution-value-assessor is cataloged but not explicitly hooked in AGENTS.md or proj_skills/INDEX.md.</p>
+          <code>skills/evaluation/contribution-value-assessor/SKILL.md:1</code>
+          <p class="rec">Either hook the skill into the owning workflow stack or leave a deliberate specialization note.</p>
+        </li>
+
+
+        <li class="finding review">
+          <div><strong>Skill not referenced by a workflow hook</strong> <span>review</span></div>
+          <p>counterexample-hunter is cataloged but not explicitly hooked in AGENTS.md or proj_skills/INDEX.md.</p>
+          <code>skills/evaluation/counterexample-hunter/SKILL.md:1</code>
+          <p class="rec">Either hook the skill into the owning workflow stack or leave a deliberate specialization note.</p>
+        </li>
+
+
+        <li class="finding review">
+          <div><strong>Skill not referenced by a workflow hook</strong> <span>review</span></div>
+          <p>counterfactual-route-prober is cataloged but not explicitly hooked in AGENTS.md or proj_skills/INDEX.md.</p>
+          <code>skills/evaluation/counterfactual-route-prober/SKILL.md:1</code>
+          <p class="rec">Either hook the skill into the owning workflow stack or leave a deliberate specialization note.</p>
+        </li>
+
+
+        <li class="finding review">
+          <div><strong>Skill not referenced by a workflow hook</strong> <span>review</span></div>
+          <p>dimensional-symmetry-constraint-checker is cataloged but not explicitly hooked in AGENTS.md or proj_skills/INDEX.md.</p>
+          <code>skills/evaluation/dimensional-symmetry-constraint-checker/SKILL.md:1</code>
+          <p class="rec">Either hook the skill into the owning workflow stack or leave a deliberate specialization note.</p>
+        </li>
+
+
+        <li class="finding review">
+          <div><strong>Skill not referenced by a workflow hook</strong> <span>review</span></div>
+          <p>entailment-gap-auditor is cataloged but not explicitly hooked in AGENTS.md or proj_skills/INDEX.md.</p>
+          <code>skills/evaluation/entailment-gap-auditor/SKILL.md:1</code>
+          <p class="rec">Either hook the skill into the owning workflow stack or leave a deliberate specialization note.</p>
+        </li>
+
+
+        <li class="finding review">
+          <div><strong>Skill not referenced by a workflow hook</strong> <span>review</span></div>
+          <p>epistemic-status-ledger is cataloged but not explicitly hooked in AGENTS.md or proj_skills/INDEX.md.</p>
+          <code>skills/evaluation/epistemic-status-ledger/SKILL.md:1</code>
+          <p class="rec">Either hook the skill into the owning workflow stack or leave a deliberate specialization note.</p>
+        </li>
+
+
+        <li class="finding review">
+          <div><strong>Skill not referenced by a workflow hook</strong> <span>review</span></div>
+          <p>failed-hypothesis-anticipator is cataloged but not explicitly hooked in AGENTS.md or proj_skills/INDEX.md.</p>
+          <code>skills/evaluation/failed-hypothesis-anticipator/SKILL.md:1</code>
+          <p class="rec">Either hook the skill into the owning workflow stack or leave a deliberate specialization note.</p>
+        </li>
+
+
+        <li class="finding review">
+          <div><strong>Skill not referenced by a workflow hook</strong> <span>review</span></div>
+          <p>failure-archaeology-explainer is cataloged but not explicitly hooked in AGENTS.md or proj_skills/INDEX.md.</p>
+          <code>skills/evaluation/failure-archaeology-explainer/SKILL.md:1</code>
+          <p class="rec">Either hook the skill into the owning workflow stack or leave a deliberate specialization note.</p>
+        </li>
+
+
+        <li class="finding review">
+          <div><strong>Skill not referenced by a workflow hook</strong> <span>review</span></div>
+          <p>gedanken-need-assessor is cataloged but not explicitly hooked in AGENTS.md or proj_skills/INDEX.md.</p>
+          <code>skills/evaluation/gedanken-need-assessor/SKILL.md:1</code>
+          <p class="rec">Either hook the skill into the owning workflow stack or leave a deliberate specialization note.</p>
+        </li>
+
+
+        <li class="finding review">
+          <div><strong>Skill not referenced by a workflow hook</strong> <span>review</span></div>
+          <p>gedanken-transfer-guard is cataloged but not explicitly hooked in AGENTS.md or proj_skills/INDEX.md.</p>
+          <code>skills/evaluation/gedanken-transfer-guard/SKILL.md:1</code>
+          <p class="rec">Either hook the skill into the owning workflow stack or leave a deliberate specialization note.</p>
+        </li>
+
+
+        <li class="finding review">
+          <div><strong>Skill not referenced by a workflow hook</strong> <span>review</span></div>
+          <p>hub-bias-auditor is cataloged but not explicitly hooked in AGENTS.md or proj_skills/INDEX.md.</p>
+          <code>skills/evaluation/hub-bias-auditor/SKILL.md:1</code>
+          <p class="rec">Either hook the skill into the owning workflow stack or leave a deliberate specialization note.</p>
+        </li>
+
+
+        <li class="finding review">
+          <div><strong>Skill not referenced by a workflow hook</strong> <span>review</span></div>
+          <p>kb-discovery-breakthrough-profiler is cataloged but not explicitly hooked in AGENTS.md or proj_skills/INDEX.md.</p>
+          <code>skills/evaluation/kb-discovery-breakthrough-profiler/SKILL.md:1</code>
+          <p class="rec">Either hook the skill into the owning workflow stack or leave a deliberate specialization note.</p>
+        </li>
+
+
+        <li class="finding review">
+          <div><strong>Skill not referenced by a workflow hook</strong> <span>review</span></div>
+          <p>kb-discovery-governor is cataloged but not explicitly hooked in AGENTS.md or proj_skills/INDEX.md.</p>
+          <code>skills/evaluation/kb-discovery-governor/SKILL.md:1</code>
+          <p class="rec">Either hook the skill into the owning workflow stack or leave a deliberate specialization note.</p>
+        </li>
+
+
+        <li class="finding review">
+          <div><strong>Skill not referenced by a workflow hook</strong> <span>review</span></div>
+          <p>kb-end-to-end-proof-critic is cataloged but not explicitly hooked in AGENTS.md or proj_skills/INDEX.md.</p>
+          <code>skills/evaluation/kb-end-to-end-proof-critic/SKILL.md:1</code>
+          <p class="rec">Either hook the skill into the owning workflow stack or leave a deliberate specialization note.</p>
+        </li>
+
+
+        <li class="finding review">
+          <div><strong>Skill not referenced by a workflow hook</strong> <span>review</span></div>
+          <p>kb-hypothesis-evaluator is cataloged but not explicitly hooked in AGENTS.md or proj_skills/INDEX.md.</p>
+          <code>skills/evaluation/kb-hypothesis-evaluator/SKILL.md:1</code>
+          <p class="rec">Either hook the skill into the owning workflow stack or leave a deliberate specialization note.</p>
+        </li>
+
+
+        <li class="finding review">
+          <div><strong>Skill not referenced by a workflow hook</strong> <span>review</span></div>
+          <p>kb-hypothesis-refutation-loop is cataloged but not explicitly hooked in AGENTS.md or proj_skills/INDEX.md.</p>
+          <code>skills/evaluation/kb-hypothesis-refutation-loop/SKILL.md:1</code>
+          <p class="rec">Either hook the skill into the owning workflow stack or leave a deliberate specialization note.</p>
+        </li>
+
+
+        <li class="finding review">
+          <div><strong>Skill not referenced by a workflow hook</strong> <span>review</span></div>
+          <p>kb-revision-loop is cataloged but not explicitly hooked in AGENTS.md or proj_skills/INDEX.md.</p>
+          <code>skills/evaluation/kb-revision-loop/SKILL.md:1</code>
+          <p class="rec">Either hook the skill into the owning workflow stack or leave a deliberate specialization note.</p>
+        </li>
+
+
+        <li class="finding review">
+          <div><strong>Skill not referenced by a workflow hook</strong> <span>review</span></div>
+          <p>limit-convergence-behavior-auditor is cataloged but not explicitly hooked in AGENTS.md or proj_skills/INDEX.md.</p>
+          <code>skills/evaluation/limit-convergence-behavior-auditor/SKILL.md:1</code>
+          <p class="rec">Either hook the skill into the owning workflow stack or leave a deliberate specialization note.</p>
+        </li>
+
+
+        <li class="finding review">
+          <div><strong>Skill not referenced by a workflow hook</strong> <span>review</span></div>
+          <p>literature-gap-relevance-auditor is cataloged but not explicitly hooked in AGENTS.md or proj_skills/INDEX.md.</p>
+          <code>skills/evaluation/literature-gap-relevance-auditor/SKILL.md:1</code>
+          <p class="rec">Either hook the skill into the owning workflow stack or leave a deliberate specialization note.</p>
+        </li>
+
+
+        <li class="finding review">
+          <div><strong>Skill not referenced by a workflow hook</strong> <span>review</span></div>
+          <p>main-problem-alignment-auditor is cataloged but not explicitly hooked in AGENTS.md or proj_skills/INDEX.md.</p>
+          <code>skills/evaluation/main-problem-alignment-auditor/SKILL.md:1</code>
+          <p class="rec">Either hook the skill into the owning workflow stack or leave a deliberate specialization note.</p>
+        </li>
+        </ul><p class='empty'>Showing 80 of 249 findings. See JSON for the full list.</p>
+        </details>
+
+
+        <details open>
+          <summary>Prompt Control <span>308 findings</span></summary>
+          <ul class='findings'>
+        <li class="finding medium">
+          <div><strong>Prompt is large enough to deserve control review</strong> <span>medium</span></div>
+          <p>prism_me/agents.md has 441 nonblank lines.</p>
+          <code>prism_me/agents.md:1</code>
+          <p class="rec">Check whether the prompt should be split into staged prompts, schema contracts, or referenced policy snippets.</p>
+        </li>
+
+
+        <li class="finding review">
+          <div><strong>Prompt has weak control cues</strong> <span>review</span></div>
+          <p>Missing or unclear: output-shape control.</p>
+          <code>prism_me/prism-agent-contract-author/agents/openai.yaml:1</code>
+          <p class="rec">Confirm the prompt is controlled by an external schema or add explicit output/source/loop constraints.</p>
+        </li>
+
+
+        <li class="finding review">
+          <div><strong>Prompt has weak control cues</strong> <span>review</span></div>
+          <p>Missing or unclear: output-shape control.</p>
+          <code>prism_me/prism-agentic-shape-forger/SKILL.md:1</code>
+          <p class="rec">Confirm the prompt is controlled by an external schema or add explicit output/source/loop constraints.</p>
+        </li>
+
+
+        <li class="finding review">
+          <div><strong>Prompt has weak control cues</strong> <span>review</span></div>
+          <p>Missing or unclear: output-shape control.</p>
+          <code>prism_me/prism-agentic-shape-forger/agents/openai.yaml:1</code>
+          <p class="rec">Confirm the prompt is controlled by an external schema or add explicit output/source/loop constraints.</p>
+        </li>
+
+
+        <li class="finding medium">
+          <div><strong>Prompt has weak control cues</strong> <span>medium</span></div>
+          <p>Missing or unclear: output-shape control, bounded-reflection control.</p>
+          <code>prism_me/prism-ai-researcher-review/agents/openai.yaml:1</code>
+          <p class="rec">Confirm the prompt is controlled by an external schema or add explicit output/source/loop constraints.</p>
+        </li>
+
+
+        <li class="finding review">
+          <div><strong>Prompt has weak control cues</strong> <span>review</span></div>
+          <p>Missing or unclear: output-shape control.</p>
+          <code>prism_me/prism-dependency-cartographer/agents/openai.yaml:1</code>
+          <p class="rec">Confirm the prompt is controlled by an external schema or add explicit output/source/loop constraints.</p>
+        </li>
+
+
+        <li class="finding medium">
+          <div><strong>Prompt has weak control cues</strong> <span>medium</span></div>
+          <p>Missing or unclear: output-shape control, bounded-reflection control.</p>
+          <code>prism_me/prism-epistemologist-review/agents/openai.yaml:1</code>
+          <p class="rec">Confirm the prompt is controlled by an external schema or add explicit output/source/loop constraints.</p>
+        </li>
+
+
+        <li class="finding review">
+          <div><strong>Prompt has weak control cues</strong> <span>review</span></div>
+          <p>Missing or unclear: output-shape control.</p>
+          <code>prism_me/prism-external-capability-extractor/SKILL.md:1</code>
+          <p class="rec">Confirm the prompt is controlled by an external schema or add explicit output/source/loop constraints.</p>
+        </li>
+
+
+        <li class="finding review">
+          <div><strong>Prompt has weak control cues</strong> <span>review</span></div>
+          <p>Missing or unclear: output-shape control.</p>
+          <code>prism_me/prism-external-capability-extractor/agents/openai.yaml:1</code>
+          <p class="rec">Confirm the prompt is controlled by an external schema or add explicit output/source/loop constraints.</p>
+        </li>
+
+
+        <li class="finding review">
+          <div><strong>Prompt has weak control cues</strong> <span>review</span></div>
+          <p>Missing or unclear: output-shape control.</p>
+          <code>prism_me/prism-external-reference-scoper/SKILL.md:1</code>
+          <p class="rec">Confirm the prompt is controlled by an external schema or add explicit output/source/loop constraints.</p>
+        </li>
+
+
+        <li class="finding medium">
+          <div><strong>Prompt has weak control cues</strong> <span>medium</span></div>
+          <p>Missing or unclear: output-shape control, source-boundary control.</p>
+          <code>prism_me/prism-external-reference-scoper/agents/openai.yaml:1</code>
+          <p class="rec">Confirm the prompt is controlled by an external schema or add explicit output/source/loop constraints.</p>
+        </li>
+
+
+        <li class="finding review">
+          <div><strong>Prompt has weak control cues</strong> <span>review</span></div>
+          <p>Missing or unclear: output-shape control.</p>
+          <code>prism_me/prism-generative-validation-runner/agents/openai.yaml:1</code>
+          <p class="rec">Confirm the prompt is controlled by an external schema or add explicit output/source/loop constraints.</p>
+        </li>
+
+
+        <li class="finding review">
+          <div><strong>Prompt has weak control cues</strong> <span>review</span></div>
+          <p>Missing or unclear: output-shape control.</p>
+          <code>prism_me/prism-implementation-driver/agents/openai.yaml:1</code>
+          <p class="rec">Confirm the prompt is controlled by an external schema or add explicit output/source/loop constraints.</p>
+        </li>
+
+
+        <li class="finding medium">
+          <div><strong>Prompt has weak control cues</strong> <span>medium</span></div>
+          <p>Missing or unclear: output-shape control, bounded-reflection control.</p>
+          <code>prism_me/prism-mathematician-review/agents/openai.yaml:1</code>
+          <p class="rec">Confirm the prompt is controlled by an external schema or add explicit output/source/loop constraints.</p>
+        </li>
+
+
+        <li class="finding medium">
+          <div><strong>Prompt has weak control cues</strong> <span>medium</span></div>
+          <p>Missing or unclear: output-shape control, bounded-reflection control.</p>
+          <code>prism_me/prism-persona-review-orchestrator/agents/openai.yaml:1</code>
+          <p class="rec">Confirm the prompt is controlled by an external schema or add explicit output/source/loop constraints.</p>
+        </li>
+
+
+        <li class="finding review">
+          <div><strong>Prompt has weak control cues</strong> <span>review</span></div>
+          <p>Missing or unclear: output-shape control.</p>
+          <code>prism_me/prism-quality-criteria-elicitor/agents/openai.yaml:1</code>
+          <p class="rec">Confirm the prompt is controlled by an external schema or add explicit output/source/loop constraints.</p>
+        </li>
+
+
+        <li class="finding medium">
+          <div><strong>Prompt has weak control cues</strong> <span>medium</span></div>
+          <p>Missing or unclear: output-shape control, bounded-reflection control.</p>
+          <code>prism_me/prism-reflective-refinement-loop/agents/openai.yaml:1</code>
+          <p class="rec">Confirm the prompt is controlled by an external schema or add explicit output/source/loop constraints.</p>
+        </li>
+
+
+        <li class="finding review">
+          <div><strong>Prompt has weak control cues</strong> <span>review</span></div>
+          <p>Missing or unclear: output-shape control.</p>
+          <code>prism_me/prism-repo-cartographer/agents/openai.yaml:1</code>
+          <p class="rec">Confirm the prompt is controlled by an external schema or add explicit output/source/loop constraints.</p>
+        </li>
+
+
+        <li class="finding review">
+          <div><strong>Prompt has weak control cues</strong> <span>review</span></div>
+          <p>Missing or unclear: output-shape control.</p>
+          <code>prism_me/prism-slice-planner/agents/openai.yaml:1</code>
+          <p class="rec">Confirm the prompt is controlled by an external schema or add explicit output/source/loop constraints.</p>
+        </li>
+
+
+        <li class="finding medium">
+          <div><strong>Prompt has weak control cues</strong> <span>medium</span></div>
+          <p>Missing or unclear: output-shape control, bounded-reflection control.</p>
+          <code>prism_me/prism-software-engineer-review/agents/openai.yaml:1</code>
+          <p class="rec">Confirm the prompt is controlled by an external schema or add explicit output/source/loop constraints.</p>
+        </li>
+
+
+        <li class="finding review">
+          <div><strong>Prompt has weak control cues</strong> <span>review</span></div>
+          <p>Missing or unclear: output-shape control.</p>
+          <code>prism_me/prism-spec-intake/SKILL.md:1</code>
+          <p class="rec">Confirm the prompt is controlled by an external schema or add explicit output/source/loop constraints.</p>
+        </li>
+
+
+        <li class="finding review">
+          <div><strong>Prompt has weak control cues</strong> <span>review</span></div>
+          <p>Missing or unclear: output-shape control.</p>
+          <code>prism_me/prism-spec-intake/agents/openai.yaml:1</code>
+          <p class="rec">Confirm the prompt is controlled by an external schema or add explicit output/source/loop constraints.</p>
+        </li>
+
+
+        <li class="finding review">
+          <div><strong>Prompt has weak control cues</strong> <span>review</span></div>
+          <p>Missing or unclear: output-shape control.</p>
+          <code>prism_me/prism-spec-orchestrator/agents/openai.yaml:1</code>
+          <p class="rec">Confirm the prompt is controlled by an external schema or add explicit output/source/loop constraints.</p>
+        </li>
+
+
+        <li class="finding review">
+          <div><strong>Prompt has weak control cues</strong> <span>review</span></div>
+          <p>Missing or unclear: output-shape control.</p>
+          <code>prism_me/prism-spec-verification-critic/SKILL.md:1</code>
+          <p class="rec">Confirm the prompt is controlled by an external schema or add explicit output/source/loop constraints.</p>
+        </li>
+
+
+        <li class="finding medium">
+          <div><strong>Prompt has weak control cues</strong> <span>medium</span></div>
+          <p>Missing or unclear: output-shape control, bounded-reflection control.</p>
+          <code>prism_me/prism-spec-verification-critic/agents/openai.yaml:1</code>
+          <p class="rec">Confirm the prompt is controlled by an external schema or add explicit output/source/loop constraints.</p>
+        </li>
+
+
+        <li class="finding review">
+          <div><strong>Prompt has weak control cues</strong> <span>review</span></div>
+          <p>Missing or unclear: output-shape control.</p>
+          <code>prism_me/prism-test-strategy-architect/agents/openai.yaml:1</code>
+          <p class="rec">Confirm the prompt is controlled by an external schema or add explicit output/source/loop constraints.</p>
+        </li>
+
+
+        <li class="finding medium">
+          <div><strong>Prompt has weak control cues</strong> <span>medium</span></div>
+          <p>Missing or unclear: output-shape control, bounded-reflection control.</p>
+          <code>prism_me/shared/references/persona-review-discipline.md:1</code>
+          <p class="rec">Confirm the prompt is controlled by an external schema or add explicit output/source/loop constraints.</p>
+        </li>
+
+
+        <li class="finding review">
+          <div><strong>Prompt has weak control cues</strong> <span>review</span></div>
+          <p>Missing or unclear: output-shape control.</p>
+          <code>prism_me/shared/templates/02c-external-surface.md:1</code>
+          <p class="rec">Confirm the prompt is controlled by an external schema or add explicit output/source/loop constraints.</p>
+        </li>
+
+
+        <li class="finding review">
+          <div><strong>Prompt has weak control cues</strong> <span>review</span></div>
+          <p>Missing or unclear: output-shape control.</p>
+          <code>prism_me/shared/templates/02d-external-capabilities.md:1</code>
+          <p class="rec">Confirm the prompt is controlled by an external schema or add explicit output/source/loop constraints.</p>
+        </li>
+
+
+        <li class="finding review">
+          <div><strong>Prompt has weak control cues</strong> <span>review</span></div>
+          <p>Missing or unclear: output-shape control.</p>
+          <code>prism_me/shared/templates/02e-agentic-shape.md:1</code>
+          <p class="rec">Confirm the prompt is controlled by an external schema or add explicit output/source/loop constraints.</p>
+        </li>
+
+
+        <li class="finding review">
+          <div><strong>Prompt has weak control cues</strong> <span>review</span></div>
+          <p>Missing or unclear: output-shape control.</p>
+          <code>prism_me/shared/templates/03-repo-map.md:1</code>
+          <p class="rec">Confirm the prompt is controlled by an external schema or add explicit output/source/loop constraints.</p>
+        </li>
+
+
+        <li class="finding review">
+          <div><strong>Prompt has weak control cues</strong> <span>review</span></div>
+          <p>Missing or unclear: output-shape control.</p>
+          <code>prism_me/shared/templates/03b-dependency-map.md:1</code>
+          <p class="rec">Confirm the prompt is controlled by an external schema or add explicit output/source/loop constraints.</p>
+        </li>
+
+
+        <li class="finding review">
+          <div><strong>Prompt has weak control cues</strong> <span>review</span></div>
+          <p>Missing or unclear: output-shape control.</p>
+          <code>prism_me/shared/templates/04-slice-plan.md:1</code>
+          <p class="rec">Confirm the prompt is controlled by an external schema or add explicit output/source/loop constraints.</p>
+        </li>
+
+
+        <li class="finding review">
+          <div><strong>Prompt has weak control cues</strong> <span>review</span></div>
+          <p>Missing or unclear: output-shape control.</p>
+          <code>prism_me/shared/templates/04b-test-strategy.md:1</code>
+          <p class="rec">Confirm the prompt is controlled by an external schema or add explicit output/source/loop constraints.</p>
+        </li>
+
+
+        <li class="finding review">
+          <div><strong>Prompt has weak control cues</strong> <span>review</span></div>
+          <p>Missing or unclear: output-shape control.</p>
+          <code>prism_me/shared/templates/05-execution-log.md:1</code>
+          <p class="rec">Confirm the prompt is controlled by an external schema or add explicit output/source/loop constraints.</p>
+        </li>
+
+
+        <li class="finding review">
+          <div><strong>Prompt has weak control cues</strong> <span>review</span></div>
+          <p>Missing or unclear: bounded-reflection control.</p>
+          <code>prism_me/shared/templates/05b-refinement-loop.md:1</code>
+          <p class="rec">Confirm the prompt is controlled by an external schema or add explicit output/source/loop constraints.</p>
+        </li>
+
+
+        <li class="finding review">
+          <div><strong>Prompt has weak control cues</strong> <span>review</span></div>
+          <p>Missing or unclear: output-shape control.</p>
+          <code>prism_me/shared/templates/05c-test-evidence.md:1</code>
+          <p class="rec">Confirm the prompt is controlled by an external schema or add explicit output/source/loop constraints.</p>
+        </li>
+
+
+        <li class="finding medium">
+          <div><strong>Prompt has weak control cues</strong> <span>medium</span></div>
+          <p>Missing or unclear: output-shape control, bounded-reflection control.</p>
+          <code>prism_me/shared/templates/05d-persona-review.md:1</code>
+          <p class="rec">Confirm the prompt is controlled by an external schema or add explicit output/source/loop constraints.</p>
+        </li>
+
+
+        <li class="finding review">
+          <div><strong>Prompt has weak control cues</strong> <span>review</span></div>
+          <p>Missing or unclear: output-shape control.</p>
+          <code>prism_me/shared/templates/06-verification.md:1</code>
+          <p class="rec">Confirm the prompt is controlled by an external schema or add explicit output/source/loop constraints.</p>
+        </li>
+
+
+        <li class="finding medium">
+          <div><strong>Prompt is large enough to deserve control review</strong> <span>medium</span></div>
+          <p>prism_me/skill-pack.yaml has 199 nonblank lines.</p>
+          <code>prism_me/skill-pack.yaml:1</code>
+          <p class="rec">Check whether the prompt should be split into staged prompts, schema contracts, or referenced policy snippets.</p>
+        </li>
+
+
+        <li class="finding review">
+          <div><strong>Prompt has weak control cues</strong> <span>review</span></div>
+          <p>Missing or unclear: output-shape control.</p>
+          <code>proj_skills/PROVENANCE.md:1</code>
+          <p class="rec">Confirm the prompt is controlled by an external schema or add explicit output/source/loop constraints.</p>
+        </li>
+
+
+        <li class="finding review">
+          <div><strong>Prompt has weak control cues</strong> <span>review</span></div>
+          <p>Missing or unclear: output-shape control.</p>
+          <code>proj_skills/evolution-figure-builder/SKILL.md:1</code>
+          <p class="rec">Confirm the prompt is controlled by an external schema or add explicit output/source/loop constraints.</p>
+        </li>
+
+
+        <li class="finding review">
+          <div><strong>Prompt has weak control cues</strong> <span>review</span></div>
+          <p>Missing or unclear: output-shape control.</p>
+          <code>proj_skills/evolution-figure-builder/agents/openai.yaml:1</code>
+          <p class="rec">Confirm the prompt is controlled by an external schema or add explicit output/source/loop constraints.</p>
+        </li>
+
+
+        <li class="finding review">
+          <div><strong>Prompt has weak control cues</strong> <span>review</span></div>
+          <p>Missing or unclear: output-shape control.</p>
+          <code>proj_skills/framework-abstraction-synthesizer/agents/openai.yaml:1</code>
+          <p class="rec">Confirm the prompt is controlled by an external schema or add explicit output/source/loop constraints.</p>
+        </li>
+
+
+        <li class="finding review">
+          <div><strong>Prompt has weak control cues</strong> <span>review</span></div>
+          <p>Missing or unclear: output-shape control.</p>
+          <code>proj_skills/framework-evidence-indexer/agents/openai.yaml:1</code>
+          <p class="rec">Confirm the prompt is controlled by an external schema or add explicit output/source/loop constraints.</p>
+        </li>
+
+
+        <li class="finding review">
+          <div><strong>Prompt has weak control cues</strong> <span>review</span></div>
+          <p>Missing or unclear: output-shape control.</p>
+          <code>proj_skills/framework-execution-evidence-assessor/SKILL.md:1</code>
+          <p class="rec">Confirm the prompt is controlled by an external schema or add explicit output/source/loop constraints.</p>
+        </li>
+
+
+        <li class="finding review">
+          <div><strong>Prompt has weak control cues</strong> <span>review</span></div>
+          <p>Missing or unclear: output-shape control.</p>
+          <code>proj_skills/framework-execution-evidence-assessor/agents/openai.yaml:1</code>
+          <p class="rec">Confirm the prompt is controlled by an external schema or add explicit output/source/loop constraints.</p>
+        </li>
+
+
+        <li class="finding review">
+          <div><strong>Prompt has weak control cues</strong> <span>review</span></div>
+          <p>Missing or unclear: output-shape control.</p>
+          <code>proj_skills/framework-functional-modeler/agents/openai.yaml:1</code>
+          <p class="rec">Confirm the prompt is controlled by an external schema or add explicit output/source/loop constraints.</p>
+        </li>
+
+
+        <li class="finding review">
+          <div><strong>Prompt has weak control cues</strong> <span>review</span></div>
+          <p>Missing or unclear: output-shape control.</p>
+          <code>proj_skills/framework-paper-abstract-writer/agents/openai.yaml:1</code>
+          <p class="rec">Confirm the prompt is controlled by an external schema or add explicit output/source/loop constraints.</p>
+        </li>
+
+
+        <li class="finding review">
+          <div><strong>Prompt has weak control cues</strong> <span>review</span></div>
+          <p>Missing or unclear: output-shape control.</p>
+          <code>proj_skills/framework-paper-architecture-writer/agents/openai.yaml:1</code>
+          <p class="rec">Confirm the prompt is controlled by an external schema or add explicit output/source/loop constraints.</p>
+        </li>
+
+
+        <li class="finding review">
+          <div><strong>Prompt has weak control cues</strong> <span>review</span></div>
+          <p>Missing or unclear: output-shape control.</p>
+          <code>proj_skills/framework-paper-blueprint-author/agents/openai.yaml:1</code>
+          <p class="rec">Confirm the prompt is controlled by an external schema or add explicit output/source/loop constraints.</p>
+        </li>
+
+
+        <li class="finding review">
+          <div><strong>Prompt has weak control cues</strong> <span>review</span></div>
+          <p>Missing or unclear: output-shape control.</p>
+          <code>proj_skills/framework-paper-claim-curator/SKILL.md:1</code>
+          <p class="rec">Confirm the prompt is controlled by an external schema or add explicit output/source/loop constraints.</p>
+        </li>
+
+
+        <li class="finding review">
+          <div><strong>Prompt has weak control cues</strong> <span>review</span></div>
+          <p>Missing or unclear: output-shape control.</p>
+          <code>proj_skills/framework-paper-claim-curator/agents/openai.yaml:1</code>
+          <p class="rec">Confirm the prompt is controlled by an external schema or add explicit output/source/loop constraints.</p>
+        </li>
+
+
+        <li class="finding review">
+          <div><strong>Prompt has weak control cues</strong> <span>review</span></div>
+          <p>Missing or unclear: output-shape control.</p>
+          <code>proj_skills/framework-paper-conclusion-writer/agents/openai.yaml:1</code>
+          <p class="rec">Confirm the prompt is controlled by an external schema or add explicit output/source/loop constraints.</p>
+        </li>
+
+
+        <li class="finding review">
+          <div><strong>Prompt has weak control cues</strong> <span>review</span></div>
+          <p>Missing or unclear: output-shape control.</p>
+          <code>proj_skills/framework-paper-consistency-adjudicator/SKILL.md:1</code>
+          <p class="rec">Confirm the prompt is controlled by an external schema or add explicit output/source/loop constraints.</p>
+        </li>
+
+
+        <li class="finding review">
+          <div><strong>Prompt has weak control cues</strong> <span>review</span></div>
+          <p>Missing or unclear: output-shape control.</p>
+          <code>proj_skills/framework-paper-consistency-adjudicator/agents/openai.yaml:1</code>
+          <p class="rec">Confirm the prompt is controlled by an external schema or add explicit output/source/loop constraints.</p>
+        </li>
+
+
+        <li class="finding review">
+          <div><strong>Prompt has weak control cues</strong> <span>review</span></div>
+          <p>Missing or unclear: output-shape control.</p>
+          <code>proj_skills/framework-paper-evaluation-writer/agents/openai.yaml:1</code>
+          <p class="rec">Confirm the prompt is controlled by an external schema or add explicit output/source/loop constraints.</p>
+        </li>
+
+
+        <li class="finding review">
+          <div><strong>Prompt has weak control cues</strong> <span>review</span></div>
+          <p>Missing or unclear: output-shape control.</p>
+          <code>proj_skills/framework-paper-figure-planner/agents/openai.yaml:1</code>
+          <p class="rec">Confirm the prompt is controlled by an external schema or add explicit output/source/loop constraints.</p>
+        </li>
+
+
+        <li class="finding review">
+          <div><strong>Prompt has weak control cues</strong> <span>review</span></div>
+          <p>Missing or unclear: output-shape control.</p>
+          <code>proj_skills/framework-paper-implementation-writer/agents/openai.yaml:1</code>
+          <p class="rec">Confirm the prompt is controlled by an external schema or add explicit output/source/loop constraints.</p>
+        </li>
+
+
+        <li class="finding review">
+          <div><strong>Prompt has weak control cues</strong> <span>review</span></div>
+          <p>Missing or unclear: output-shape control.</p>
+          <code>proj_skills/framework-paper-introduction-writer/agents/openai.yaml:1</code>
+          <p class="rec">Confirm the prompt is controlled by an external schema or add explicit output/source/loop constraints.</p>
+        </li>
+
+
+        <li class="finding review">
+          <div><strong>Prompt has weak control cues</strong> <span>review</span></div>
+          <p>Missing or unclear: output-shape control.</p>
+          <code>proj_skills/framework-paper-latex-assembler/agents/openai.yaml:1</code>
+          <p class="rec">Confirm the prompt is controlled by an external schema or add explicit output/source/loop constraints.</p>
+        </li>
+
+
+        <li class="finding review">
+          <div><strong>Prompt has weak control cues</strong> <span>review</span></div>
+          <p>Missing or unclear: output-shape control.</p>
+          <code>proj_skills/framework-paper-limitations-writer/agents/openai.yaml:1</code>
+          <p class="rec">Confirm the prompt is controlled by an external schema or add explicit output/source/loop constraints.</p>
+        </li>
+
+
+        <li class="finding review">
+          <div><strong>Prompt has weak control cues</strong> <span>review</span></div>
+          <p>Missing or unclear: output-shape control.</p>
+          <code>proj_skills/framework-paper-method-writer/agents/openai.yaml:1</code>
+          <p class="rec">Confirm the prompt is controlled by an external schema or add explicit output/source/loop constraints.</p>
+        </li>
+
+
+        <li class="finding review">
+          <div><strong>Prompt has weak control cues</strong> <span>review</span></div>
+          <p>Missing or unclear: output-shape control.</p>
+          <code>proj_skills/framework-paper-orchestrator/agents/openai.yaml:1</code>
+          <p class="rec">Confirm the prompt is controlled by an external schema or add explicit output/source/loop constraints.</p>
+        </li>
+
+
+        <li class="finding review">
+          <div><strong>Prompt has weak control cues</strong> <span>review</span></div>
+          <p>Missing or unclear: output-shape control.</p>
+          <code>proj_skills/framework-paper-related-work-writer/agents/openai.yaml:1</code>
+          <p class="rec">Confirm the prompt is controlled by an external schema or add explicit output/source/loop constraints.</p>
+        </li>
+
+
+        <li class="finding review">
+          <div><strong>Prompt has weak control cues</strong> <span>review</span></div>
+          <p>Missing or unclear: output-shape control.</p>
+          <code>proj_skills/framework-paper-validator/agents/openai.yaml:1</code>
+          <p class="rec">Confirm the prompt is controlled by an external schema or add explicit output/source/loop constraints.</p>
+        </li>
+
+
+        <li class="finding review">
+          <div><strong>Prompt has weak control cues</strong> <span>review</span></div>
+          <p>Missing or unclear: output-shape control.</p>
+          <code>proj_skills/framework-workflow-modeler/agents/openai.yaml:1</code>
+          <p class="rec">Confirm the prompt is controlled by an external schema or add explicit output/source/loop constraints.</p>
+        </li>
+
+
+        <li class="finding review">
+          <div><strong>Prompt has weak control cues</strong> <span>review</span></div>
+          <p>Missing or unclear: output-shape control.</p>
+          <code>proj_skills/functionality-milestone-classifier/SKILL.md:1</code>
+          <p class="rec">Confirm the prompt is controlled by an external schema or add explicit output/source/loop constraints.</p>
+        </li>
+
+
+        <li class="finding review">
+          <div><strong>Prompt has weak control cues</strong> <span>review</span></div>
+          <p>Missing or unclear: output-shape control.</p>
+          <code>proj_skills/functionality-milestone-classifier/agents/openai.yaml:1</code>
+          <p class="rec">Confirm the prompt is controlled by an external schema or add explicit output/source/loop constraints.</p>
+        </li>
+
+
+        <li class="finding review">
+          <div><strong>Prompt has weak control cues</strong> <span>review</span></div>
+          <p>Missing or unclear: output-shape control.</p>
+          <code>proj_skills/git-history-evolution-miner/agents/openai.yaml:1</code>
+          <p class="rec">Confirm the prompt is controlled by an external schema or add explicit output/source/loop constraints.</p>
+        </li>
+
+
+        <li class="finding review">
+          <div><strong>Prompt has weak control cues</strong> <span>review</span></div>
+          <p>Missing or unclear: output-shape control.</p>
+          <code>proj_skills/project-evolution-html-assembler/agents/openai.yaml:1</code>
+          <p class="rec">Confirm the prompt is controlled by an external schema or add explicit output/source/loop constraints.</p>
+        </li>
+
+
+        <li class="finding medium">
+          <div><strong>Prompt has weak control cues</strong> <span>medium</span></div>
+          <p>Missing or unclear: output-shape control, source-boundary control.</p>
+          <code>proj_skills/project-evolution-timeline-reporter/agents/openai.yaml:1</code>
+          <p class="rec">Confirm the prompt is controlled by an external schema or add explicit output/source/loop constraints.</p>
+        </li>
+
+
+        <li class="finding review">
+          <div><strong>Prompt has weak control cues</strong> <span>review</span></div>
+          <p>Missing or unclear: output-shape control.</p>
+          <code>proj_skills/project-evolution-timeline-reporter/references/functionality-classification.md:1</code>
+          <p class="rec">Confirm the prompt is controlled by an external schema or add explicit output/source/loop constraints.</p>
+        </li>
+
+
+        <li class="finding review">
+          <div><strong>Prompt has weak control cues</strong> <span>review</span></div>
+          <p>Missing or unclear: output-shape control.</p>
+          <code>proj_skills/project-onboarding-path-verifier/SKILL.md:1</code>
+          <p class="rec">Confirm the prompt is controlled by an external schema or add explicit output/source/loop constraints.</p>
+        </li>
+
+
+        <li class="finding review">
+          <div><strong>Prompt has weak control cues</strong> <span>review</span></div>
+          <p>Missing or unclear: output-shape control.</p>
+          <code>proj_skills/project-onboarding-path-verifier/agents/openai.yaml:1</code>
+          <p class="rec">Confirm the prompt is controlled by an external schema or add explicit output/source/loop constraints.</p>
+        </li>
+
+
+        <li class="finding review">
+          <div><strong>Prompt has weak control cues</strong> <span>review</span></div>
+          <p>Missing or unclear: output-shape control.</p>
+          <code>proj_skills/project-onboarding-path-verifier/references/onboarding-verification-matrix.md:1</code>
+          <p class="rec">Confirm the prompt is controlled by an external schema or add explicit output/source/loop constraints.</p>
+        </li>
+
+
+        <li class="finding review">
+          <div><strong>Prompt has weak control cues</strong> <span>review</span></div>
+          <p>Missing or unclear: output-shape control.</p>
+          <code>proj_skills/project-readme-concept-builder/agents/openai.yaml:1</code>
+          <p class="rec">Confirm the prompt is controlled by an external schema or add explicit output/source/loop constraints.</p>
+        </li>
+
+
+        <li class="finding review">
+          <div><strong>Prompt has weak control cues</strong> <span>review</span></div>
+          <p>Missing or unclear: output-shape control.</p>
+          <code>proj_skills/project-readme-concept-builder/references/concept-evidence-questions.md:1</code>
+          <p class="rec">Confirm the prompt is controlled by an external schema or add explicit output/source/loop constraints.</p>
+        </li>
+
+
+        <li class="finding review">
+          <div><strong>Prompt has weak control cues</strong> <span>review</span></div>
+          <p>Missing or unclear: output-shape control.</p>
+          <code>proj_skills/project-readme-orchestrator/agents/openai.yaml:1</code>
+          <p class="rec">Confirm the prompt is controlled by an external schema or add explicit output/source/loop constraints.</p>
+        </li>
+
+
+        <li class="finding review">
+          <div><strong>Prompt has weak control cues</strong> <span>review</span></div>
+          <p>Missing or unclear: output-shape control.</p>
+          <code>proj_skills/project-readme-orchestrator/references/readme-quality-contract.md:1</code>
+          <p class="rec">Confirm the prompt is controlled by an external schema or add explicit output/source/loop constraints.</p>
+        </li>
+        </ul><p class='empty'>Showing 80 of 308 findings. See JSON for the full list.</p>
+        </details>
+
+
+        <details open>
+          <summary>Mocks, Stubs, And Placeholders <span>1237 findings</span></summary>
+          <ul class='findings'>
+        <li class="finding review">
+          <div><strong>Synthetic fixture</strong> <span>review</span></div>
+          <p>and scoring code. Synthetic ratings never authorize an efficacy claim.</p>
+          <code>agentic/discovery/benchmark.py:6</code>
+          <p class="rec">Confirm this is legitimate test isolation, or add a real-path regression / explicit limitation note.</p>
+        </li>
+
+
+        <li class="finding review">
+          <div><strong>Synthetic fixture</strong> <span>review</span></div>
+          <p>raise BenchmarkIntegrityError(&quot;synthetic rubric comparison must model blinding&quot;)</p>
+          <code>agentic/discovery/benchmark.py:263</code>
+          <p class="rec">Confirm this is legitimate test isolation, or add a real-path regression / explicit limitation note.</p>
+        </li>
+
+
+        <li class="finding review">
+          <div><strong>Synthetic fixture</strong> <span>review</span></div>
+          <p>raise BenchmarkIntegrityError(&quot;synthetic rubric must expose anonymous A/B conditions&quot;)</p>
+          <code>agentic/discovery/benchmark.py:265</code>
+          <p class="rec">Confirm this is legitimate test isolation, or add a real-path regression / explicit limitation note.</p>
+        </li>
+
+
+        <li class="finding review">
+          <div><strong>Synthetic fixture</strong> <span>review</span></div>
+          <p>raise BenchmarkIntegrityError(&quot;synthetic rubric requires an adjudication policy&quot;)</p>
+          <code>agentic/discovery/benchmark.py:267</code>
+          <p class="rec">Confirm this is legitimate test isolation, or add a real-path regression / explicit limitation note.</p>
+        </li>
+
+
+        <li class="finding review">
+          <div><strong>Synthetic fixture</strong> <span>review</span></div>
+          <p>f&quot;synthetic rubric agreement below fixture threshold: {agreement}&quot;</p>
+          <code>agentic/discovery/benchmark.py:271</code>
+          <p class="rec">Confirm this is legitimate test isolation, or add a real-path regression / explicit limitation note.</p>
+        </li>
+
+
+        <li class="finding review">
+          <div><strong>Synthetic fixture</strong> <span>review</span></div>
+          <p>raise BenchmarkIntegrityError(&quot;synthetic manifest must be version 1.0.0/frozen&quot;)</p>
+          <code>agentic/discovery/benchmark.py:410</code>
+          <p class="rec">Confirm this is legitimate test isolation, or add a real-path regression / explicit limitation note.</p>
+        </li>
+
+
+        <li class="finding review">
+          <div><strong>Synthetic fixture</strong> <span>review</span></div>
+          <p>raise BenchmarkIntegrityError(&quot;synthetic case identity mismatch&quot;)</p>
+          <code>agentic/discovery/benchmark.py:423</code>
+          <p class="rec">Confirm this is legitimate test isolation, or add a real-path regression / explicit limitation note.</p>
+        </li>
+
+
+        <li class="finding review">
+          <div><strong>Synthetic fixture</strong> <span>review</span></div>
+          <p>&quot;Synthetic packets and synthetic rubric values validate protocol mechanics only. &quot;</p>
+          <code>agentic/discovery/benchmark.py:441</code>
+          <p class="rec">Confirm this is legitimate test isolation, or add a real-path regression / explicit limitation note.</p>
+        </li>
+
+
+        <li class="finding review">
+          <div><strong>Synthetic fixture</strong> <span>review</span></div>
+          <p>&quot;&quot;&quot;Evaluate a synthetic protocol fixture or a live external benchmark.&quot;&quot;&quot;</p>
+          <code>agentic/discovery/benchmark.py:1229</code>
+          <p class="rec">Confirm this is legitimate test isolation, or add a real-path regression / explicit limitation note.</p>
+        </li>
+
+
+        <li class="finding review">
+          <div><strong>Synthetic fixture</strong> <span>review</span></div>
+          <p>raise BenchmarkIntegrityError(&quot;synthetic fixtures cannot accept human authority&quot;)</p>
+          <code>agentic/discovery/benchmark.py:1236</code>
+          <p class="rec">Confirm this is legitimate test isolation, or add a real-path regression / explicit limitation note.</p>
+        </li>
+
+
+        <li class="finding review">
+          <div><strong>Synthetic fixture</strong> <span>review</span></div>
+          <p>&quot;benchmark_mode must explicitly distinguish synthetic fixtures from live evidence&quot;</p>
+          <code>agentic/discovery/benchmark.py:1246</code>
+          <p class="rec">Confirm this is legitimate test isolation, or add a real-path regression / explicit limitation note.</p>
+        </li>
+
+
+        <li class="finding medium">
+          <div><strong>Placeholder implementation</strong> <span>medium</span></div>
+          <p>&quot;todo&quot;,</p>
+          <code>agentic/discovery/evaluation.py:63</code>
+          <p class="rec">Confirm this is legitimate test isolation, or add a real-path regression / explicit limitation note.</p>
+        </li>
+
+
+        <li class="finding medium">
+          <div><strong>Placeholder implementation</strong> <span>medium</span></div>
+          <p>&quot;placeholder&quot;,</p>
+          <code>agentic/discovery/evaluation.py:64</code>
+          <p class="rec">Confirm this is legitimate test isolation, or add a real-path regression / explicit limitation note.</p>
+        </li>
+
+
+        <li class="finding medium">
+          <div><strong>Placeholder implementation</strong> <span>medium</span></div>
+          <p>placeholder = &quot;Source supplied no separately transcribed claim.&quot;</p>
+          <code>agentic/discovery/literature.py:1590</code>
+          <p class="rec">Confirm this is legitimate test isolation, or add a real-path regression / explicit limitation note.</p>
+        </li>
+
+
+        <li class="finding medium">
+          <div><strong>Placeholder implementation</strong> <span>medium</span></div>
+          <p>distinct_claims[placeholder.casefold()] = placeholder</p>
+          <code>agentic/discovery/literature.py:1591</code>
+          <p class="rec">Confirm this is legitimate test isolation, or add a real-path regression / explicit limitation note.</p>
+        </li>
+
+
+        <li class="finding review">
+          <div><strong>Synthetic fixture</strong> <span>review</span></div>
+          <p># synthetic supersession or silently migrate to replacement text.</p>
+          <code>agentic/discovery/literature.py:2366</code>
+          <p class="rec">Confirm this is legitimate test isolation, or add a real-path regression / explicit limitation note.</p>
+        </li>
+
+
+        <li class="finding review">
+          <div><strong>Synthetic fixture</strong> <span>review</span></div>
+          <p>It runs three independent-cluster families: eight synthetic literature</p>
+          <code>agentic/discovery/matched_studies.py:4</code>
+          <p class="rec">Confirm this is legitimate test isolation, or add a real-path regression / explicit limitation note.</p>
+        </li>
+
+
+        <li class="finding review">
+          <div><strong>Synthetic fixture</strong> <span>review</span></div>
+          <p>synthetic = {</p>
+          <code>agentic/discovery/open_world_creativity.py:1947</code>
+          <p class="rec">Confirm this is legitimate test isolation, or add a real-path regression / explicit limitation note.</p>
+        </li>
+
+
+        <li class="finding review">
+          <div><strong>Synthetic fixture</strong> <span>review</span></div>
+          <p>_validate_matured(synthetic)</p>
+          <code>agentic/discovery/open_world_creativity.py:1953</code>
+          <p class="rec">Confirm this is legitimate test isolation, or add a real-path regression / explicit limitation note.</p>
+        </li>
+
+
+        <li class="finding review">
+          <div><strong>Synthetic fixture</strong> <span>review</span></div>
+          <p>_pairwise_nonredundancy([candidate_base, synthetic])</p>
+          <code>agentic/discovery/open_world_creativity.py:1965</code>
+          <p class="rec">Confirm this is legitimate test isolation, or add a real-path regression / explicit limitation note.</p>
+        </li>
+
+
+        <li class="finding medium">
+          <div><strong>Placeholder implementation</strong> <span>medium</span></div>
+          <p>&quot;item&quot;, &quot;new&quot;, &quot;placeholder&quot;, &quot;something&quot;, &quot;thing&quot;, &quot;todo&quot;, &quot;tbd&quot;,</p>
+          <code>agentic/discovery/parallel.py:46</code>
+          <p class="rec">Confirm this is legitimate test isolation, or add a real-path regression / explicit limitation note.</p>
+        </li>
+
+
+        <li class="finding medium">
+          <div><strong>Placeholder implementation</strong> <span>medium</span></div>
+          <p>&quot;&quot;&quot;Execute and validate fresh, content-bound TODO acceptance evidence.</p>
+          <code>agentic/discovery/todo_acceptance.py:1</code>
+          <p class="rec">Confirm this is legitimate test isolation, or add a real-path regression / explicit limitation note.</p>
+        </li>
+
+
+        <li class="finding medium">
+          <div><strong>Placeholder implementation</strong> <span>medium</span></div>
+          <p># even when that file is not repeated on every TODO&#x27;s short required-artifact</p>
+          <code>agentic/discovery/todo_acceptance.py:37</code>
+          <p class="rec">Confirm this is legitimate test isolation, or add a real-path regression / explicit limitation note.</p>
+        </li>
+
+
+        <li class="finding medium">
+          <div><strong>Placeholder implementation</strong> <span>medium</span></div>
+          <p>def todo_definition_digest(todo: Mapping[str, Any]) -&gt; str:</p>
+          <code>agentic/discovery/todo_acceptance.py:74</code>
+          <p class="rec">Confirm this is legitimate test isolation, or add a real-path regression / explicit limitation note.</p>
+        </li>
+
+
+        <li class="finding medium">
+          <div><strong>Placeholder implementation</strong> <span>medium</span></div>
+          <p>for key, value in todo.items()</p>
+          <code>agentic/discovery/todo_acceptance.py:79</code>
+          <p class="rec">Confirm this is legitimate test isolation, or add a real-path regression / explicit limitation note.</p>
+        </li>
+
+
+        <li class="finding medium">
+          <div><strong>Placeholder implementation</strong> <span>medium</span></div>
+          <p>def _todo_contract(todo: Mapping[str, Any]) -&gt; tuple[list[str], list[str]]:</p>
+          <code>agentic/discovery/todo_acceptance.py:298</code>
+          <p class="rec">Confirm this is legitimate test isolation, or add a real-path regression / explicit limitation note.</p>
+        </li>
+
+
+        <li class="finding medium">
+          <div><strong>Placeholder implementation</strong> <span>medium</span></div>
+          <p>commands = todo.get(&quot;validation_commands&quot;)</p>
+          <code>agentic/discovery/todo_acceptance.py:301</code>
+          <p class="rec">Confirm this is legitimate test isolation, or add a real-path regression / explicit limitation note.</p>
+        </li>
+
+
+        <li class="finding medium">
+          <div><strong>Placeholder implementation</strong> <span>medium</span></div>
+          <p>artifacts = todo.get(&quot;required_artifact&quot;)</p>
+          <code>agentic/discovery/todo_acceptance.py:302</code>
+          <p class="rec">Confirm this is legitimate test isolation, or add a real-path regression / explicit limitation note.</p>
+        </li>
+
+
+        <li class="finding medium">
+          <div><strong>Placeholder implementation</strong> <span>medium</span></div>
+          <p>todo_id = todo.get(&quot;id&quot;)</p>
+          <code>agentic/discovery/todo_acceptance.py:303</code>
+          <p class="rec">Confirm this is legitimate test isolation, or add a real-path regression / explicit limitation note.</p>
+        </li>
+
+
+        <li class="finding medium">
+          <div><strong>Placeholder implementation</strong> <span>medium</span></div>
+          <p>raise TodoAcceptanceError(&quot;TODO has no valid id&quot;)</p>
+          <code>agentic/discovery/todo_acceptance.py:305</code>
+          <p class="rec">Confirm this is legitimate test isolation, or add a real-path regression / explicit limitation note.</p>
+        </li>
+
+
+        <li class="finding medium">
+          <div><strong>Placeholder implementation</strong> <span>medium</span></div>
+          <p>raise TodoAcceptanceError(f&quot;TODO {todo_id} has no validation_commands&quot;)</p>
+          <code>agentic/discovery/todo_acceptance.py:307</code>
+          <p class="rec">Confirm this is legitimate test isolation, or add a real-path regression / explicit limitation note.</p>
+        </li>
+
+
+        <li class="finding medium">
+          <div><strong>Placeholder implementation</strong> <span>medium</span></div>
+          <p>raise TodoAcceptanceError(f&quot;TODO {todo_id} has an invalid validation command&quot;)</p>
+          <code>agentic/discovery/todo_acceptance.py:309</code>
+          <p class="rec">Confirm this is legitimate test isolation, or add a real-path regression / explicit limitation note.</p>
+        </li>
+
+
+        <li class="finding medium">
+          <div><strong>Placeholder implementation</strong> <span>medium</span></div>
+          <p>raise TodoAcceptanceError(f&quot;TODO {todo_id} repeats a validation command&quot;)</p>
+          <code>agentic/discovery/todo_acceptance.py:311</code>
+          <p class="rec">Confirm this is legitimate test isolation, or add a real-path regression / explicit limitation note.</p>
+        </li>
+
+
+        <li class="finding medium">
+          <div><strong>Placeholder implementation</strong> <span>medium</span></div>
+          <p>raise TodoAcceptanceError(f&quot;TODO {todo_id} has no required artifacts&quot;)</p>
+          <code>agentic/discovery/todo_acceptance.py:313</code>
+          <p class="rec">Confirm this is legitimate test isolation, or add a real-path regression / explicit limitation note.</p>
+        </li>
+
+
+        <li class="finding medium">
+          <div><strong>Placeholder implementation</strong> <span>medium</span></div>
+          <p>raise TodoAcceptanceError(f&quot;TODO {todo_id} has an invalid required artifact&quot;)</p>
+          <code>agentic/discovery/todo_acceptance.py:315</code>
+          <p class="rec">Confirm this is legitimate test isolation, or add a real-path regression / explicit limitation note.</p>
+        </li>
+
+
+        <li class="finding medium">
+          <div><strong>Placeholder implementation</strong> <span>medium</span></div>
+          <p>raise TodoAcceptanceError(f&quot;TODO {todo_id} repeats a required artifact&quot;)</p>
+          <code>agentic/discovery/todo_acceptance.py:317</code>
+          <p class="rec">Confirm this is legitimate test isolation, or add a real-path regression / explicit limitation note.</p>
+        </li>
+
+
+        <li class="finding medium">
+          <div><strong>Placeholder implementation</strong> <span>medium</span></div>
+          <p>it to prove that a validator did not rewrite its own TODO deck or another</p>
+          <code>agentic/discovery/todo_acceptance.py:331</code>
+          <p class="rec">Confirm this is legitimate test isolation, or add a real-path regression / explicit limitation note.</p>
+        </li>
+
+
+        <li class="finding medium">
+          <div><strong>Placeholder implementation</strong> <span>medium</span></div>
+          <p>return stable_identifier(&quot;todo-acceptance&quot;, payload)</p>
+          <code>agentic/discovery/todo_acceptance.py:388</code>
+          <p class="rec">Confirm this is legitimate test isolation, or add a real-path regression / explicit limitation note.</p>
+        </li>
+
+
+        <li class="finding medium">
+          <div><strong>Placeholder implementation</strong> <span>medium</span></div>
+          <p>def receipt_annotation_path(todo: Mapping[str, Any], *, workspace: Path) -&gt; Path:</p>
+          <code>agentic/discovery/todo_acceptance.py:401</code>
+          <p class="rec">Confirm this is legitimate test isolation, or add a real-path regression / explicit limitation note.</p>
+        </li>
+
+
+        <li class="finding medium">
+          <div><strong>Placeholder implementation</strong> <span>medium</span></div>
+          <p>&quot;&quot;&quot;Resolve the one immutable receipt annotation allowed on a TODO card.&quot;&quot;&quot;</p>
+          <code>agentic/discovery/todo_acceptance.py:402</code>
+          <p class="rec">Confirm this is legitimate test isolation, or add a real-path regression / explicit limitation note.</p>
+        </li>
+
+
+        <li class="finding medium">
+          <div><strong>Placeholder implementation</strong> <span>medium</span></div>
+          <p>evidence = todo.get(&quot;evidence&quot;)</p>
+          <code>agentic/discovery/todo_acceptance.py:404</code>
+          <p class="rec">Confirm this is legitimate test isolation, or add a real-path regression / explicit limitation note.</p>
+        </li>
+
+
+        <li class="finding medium">
+          <div><strong>Placeholder implementation</strong> <span>medium</span></div>
+          <p>f&quot;TODO {todo.get(&#x27;id&#x27;)} must have exactly one receipt annotation; &quot;</p>
+          <code>agentic/discovery/todo_acceptance.py:416</code>
+          <p class="rec">Confirm this is legitimate test isolation, or add a real-path regression / explicit limitation note.</p>
+        </li>
+
+
+        <li class="finding medium">
+          <div><strong>Placeholder implementation</strong> <span>medium</span></div>
+          <p>f&quot;TODO {todo.get(&#x27;id&#x27;)} receipt path has surrounding whitespace&quot;</p>
+          <code>agentic/discovery/todo_acceptance.py:422</code>
+          <p class="rec">Confirm this is legitimate test isolation, or add a real-path regression / explicit limitation note.</p>
+        </li>
+
+
+        <li class="finding medium">
+          <div><strong>Placeholder implementation</strong> <span>medium</span></div>
+          <p>context=f&quot;TODO {todo.get(&#x27;id&#x27;)} receipt&quot;,</p>
+          <code>agentic/discovery/todo_acceptance.py:427</code>
+          <p class="rec">Confirm this is legitimate test isolation, or add a real-path regression / explicit limitation note.</p>
+        </li>
+
+
+        <li class="finding medium">
+          <div><strong>Placeholder implementation</strong> <span>medium</span></div>
+          <p>todo: Mapping[str, Any], *, todo_file: Path, workspace: Path, timeout_seconds: float = 900</p>
+          <code>agentic/discovery/todo_acceptance.py:434</code>
+          <p class="rec">Confirm this is legitimate test isolation, or add a real-path regression / explicit limitation note.</p>
+        </li>
+
+
+        <li class="finding medium">
+          <div><strong>Placeholder implementation</strong> <span>medium</span></div>
+          <p>commands, artifacts = _todo_contract(todo)</p>
+          <code>agentic/discovery/todo_acceptance.py:438</code>
+          <p class="rec">Confirm this is legitimate test isolation, or add a real-path regression / explicit limitation note.</p>
+        </li>
+
+
+        <li class="finding medium">
+          <div><strong>Placeholder implementation</strong> <span>medium</span></div>
+          <p>workspace, todo_file, context=&quot;TODO file&quot;, must_exist=True</p>
+          <code>agentic/discovery/todo_acceptance.py:440</code>
+          <p class="rec">Confirm this is legitimate test isolation, or add a real-path regression / explicit limitation note.</p>
+        </li>
+
+
+        <li class="finding medium">
+          <div><strong>Placeholder implementation</strong> <span>medium</span></div>
+          <p>workspace, resolved_todo_file, context=&quot;TODO file&quot;, must_exist=True</p>
+          <code>agentic/discovery/todo_acceptance.py:446</code>
+          <p class="rec">Confirm this is legitimate test isolation, or add a real-path regression / explicit limitation note.</p>
+        </li>
+
+
+        <li class="finding medium">
+          <div><strong>Placeholder implementation</strong> <span>medium</span></div>
+          <p>f&quot;TODO deck changed during acceptance command: {relative_file}&quot;</p>
+          <code>agentic/discovery/todo_acceptance.py:450</code>
+          <p class="rec">Confirm this is legitimate test isolation, or add a real-path regression / explicit limitation note.</p>
+        </li>
+
+
+        <li class="finding medium">
+          <div><strong>Placeholder implementation</strong> <span>medium</span></div>
+          <p>&quot;todo_id&quot;: todo[&quot;id&quot;], &quot;todo_file&quot;: relative_file,</p>
+          <code>agentic/discovery/todo_acceptance.py:467</code>
+          <p class="rec">Confirm this is legitimate test isolation, or add a real-path regression / explicit limitation note.</p>
+        </li>
+
+
+        <li class="finding medium">
+          <div><strong>Placeholder implementation</strong> <span>medium</span></div>
+          <p>&quot;todo_definition_digest&quot;: todo_definition_digest(todo),</p>
+          <code>agentic/discovery/todo_acceptance.py:468</code>
+          <p class="rec">Confirm this is legitimate test isolation, or add a real-path regression / explicit limitation note.</p>
+        </li>
+
+
+        <li class="finding medium">
+          <div><strong>Placeholder implementation</strong> <span>medium</span></div>
+          <p>todo: Mapping[str, Any],</p>
+          <code>agentic/discovery/todo_acceptance.py:482</code>
+          <p class="rec">Confirm this is legitimate test isolation, or add a real-path regression / explicit limitation note.</p>
+        </li>
+
+
+        <li class="finding medium">
+          <div><strong>Placeholder implementation</strong> <span>medium</span></div>
+          <p>Final TODO completion sets ``reexecute_commands``. Stored result fields then</p>
+          <code>agentic/discovery/todo_acceptance.py:492</code>
+          <p class="rec">Confirm this is legitimate test isolation, or add a real-path regression / explicit limitation note.</p>
+        </li>
+
+
+        <li class="finding medium">
+          <div><strong>Placeholder implementation</strong> <span>medium</span></div>
+          <p>commands, artifacts = _todo_contract(todo)</p>
+          <code>agentic/discovery/todo_acceptance.py:496</code>
+          <p class="rec">Confirm this is legitimate test isolation, or add a real-path regression / explicit limitation note.</p>
+        </li>
+
+
+        <li class="finding medium">
+          <div><strong>Placeholder implementation</strong> <span>medium</span></div>
+          <p>workspace, todo_file, context=&quot;TODO file&quot;, must_exist=True</p>
+          <code>agentic/discovery/todo_acceptance.py:498</code>
+          <p class="rec">Confirm this is legitimate test isolation, or add a real-path regression / explicit limitation note.</p>
+        </li>
+
+
+        <li class="finding medium">
+          <div><strong>Placeholder implementation</strong> <span>medium</span></div>
+          <p>workspace, resolved_todo_file, context=&quot;TODO file&quot;, must_exist=True</p>
+          <code>agentic/discovery/todo_acceptance.py:504</code>
+          <p class="rec">Confirm this is legitimate test isolation, or add a real-path regression / explicit limitation note.</p>
+        </li>
+
+
+        <li class="finding medium">
+          <div><strong>Placeholder implementation</strong> <span>medium</span></div>
+          <p>f&quot;TODO deck changed during fresh validation: {expected_file}&quot;</p>
+          <code>agentic/discovery/todo_acceptance.py:508</code>
+          <p class="rec">Confirm this is legitimate test isolation, or add a real-path regression / explicit limitation note.</p>
+        </li>
+
+
+        <li class="finding medium">
+          <div><strong>Placeholder implementation</strong> <span>medium</span></div>
+          <p>raise TodoAcceptanceError(&quot;TODO acceptance receipt digest mismatch&quot;)</p>
+          <code>agentic/discovery/todo_acceptance.py:516</code>
+          <p class="rec">Confirm this is legitimate test isolation, or add a real-path regression / explicit limitation note.</p>
+        </li>
+
+
+        <li class="finding medium">
+          <div><strong>Placeholder implementation</strong> <span>medium</span></div>
+          <p>raise TodoAcceptanceError(&quot;TODO acceptance receipt ID mismatch&quot;)</p>
+          <code>agentic/discovery/todo_acceptance.py:518</code>
+          <p class="rec">Confirm this is legitimate test isolation, or add a real-path regression / explicit limitation note.</p>
+        </li>
+
+
+        <li class="finding medium">
+          <div><strong>Placeholder implementation</strong> <span>medium</span></div>
+          <p>raise TodoAcceptanceError(&quot;TODO acceptance commands did not all pass&quot;)</p>
+          <code>agentic/discovery/todo_acceptance.py:523</code>
+          <p class="rec">Confirm this is legitimate test isolation, or add a real-path regression / explicit limitation note.</p>
+        </li>
+
+
+        <li class="finding medium">
+          <div><strong>Placeholder implementation</strong> <span>medium</span></div>
+          <p>if receipt[&quot;todo_id&quot;] != todo.get(&quot;id&quot;) or receipt[&quot;todo_file&quot;] != expected_file:</p>
+          <code>agentic/discovery/todo_acceptance.py:524</code>
+          <p class="rec">Confirm this is legitimate test isolation, or add a real-path regression / explicit limitation note.</p>
+        </li>
+
+
+        <li class="finding medium">
+          <div><strong>Placeholder implementation</strong> <span>medium</span></div>
+          <p>raise TodoAcceptanceError(&quot;TODO acceptance identity mismatch&quot;)</p>
+          <code>agentic/discovery/todo_acceptance.py:525</code>
+          <p class="rec">Confirm this is legitimate test isolation, or add a real-path regression / explicit limitation note.</p>
+        </li>
+
+
+        <li class="finding medium">
+          <div><strong>Placeholder implementation</strong> <span>medium</span></div>
+          <p>if receipt[&quot;todo_definition_digest&quot;] != todo_definition_digest(todo):</p>
+          <code>agentic/discovery/todo_acceptance.py:526</code>
+          <p class="rec">Confirm this is legitimate test isolation, or add a real-path regression / explicit limitation note.</p>
+        </li>
+
+
+        <li class="finding medium">
+          <div><strong>Placeholder implementation</strong> <span>medium</span></div>
+          <p>raise TodoAcceptanceError(&quot;TODO definition changed after acceptance&quot;)</p>
+          <code>agentic/discovery/todo_acceptance.py:527</code>
+          <p class="rec">Confirm this is legitimate test isolation, or add a real-path regression / explicit limitation note.</p>
+        </li>
+
+
+        <li class="finding medium">
+          <div><strong>Placeholder implementation</strong> <span>medium</span></div>
+          <p>raise TodoAcceptanceError(&quot;TODO validation command set changed after acceptance&quot;)</p>
+          <code>agentic/discovery/todo_acceptance.py:533</code>
+          <p class="rec">Confirm this is legitimate test isolation, or add a real-path regression / explicit limitation note.</p>
+        </li>
+
+
+        <li class="finding medium">
+          <div><strong>Placeholder implementation</strong> <span>medium</span></div>
+          <p>raise TodoAcceptanceError(&quot;TODO validation argv changed after acceptance&quot;)</p>
+          <code>agentic/discovery/todo_acceptance.py:537</code>
+          <p class="rec">Confirm this is legitimate test isolation, or add a real-path regression / explicit limitation note.</p>
+        </li>
+
+
+        <li class="finding medium">
+          <div><strong>Placeholder implementation</strong> <span>medium</span></div>
+          <p>raise TodoAcceptanceError(&quot;TODO acceptance receipt has a missing required artifact&quot;)</p>
+          <code>agentic/discovery/todo_acceptance.py:542</code>
+          <p class="rec">Confirm this is legitimate test isolation, or add a real-path regression / explicit limitation note.</p>
+        </li>
+
+
+        <li class="finding medium">
+          <div><strong>Placeholder implementation</strong> <span>medium</span></div>
+          <p>&quot;fresh TODO acceptance command failed: &quot; + &quot;; &quot;.join(failures)</p>
+          <code>agentic/discovery/todo_acceptance.py:562</code>
+          <p class="rec">Confirm this is legitimate test isolation, or add a real-path regression / explicit limitation note.</p>
+        </li>
+
+
+        <li class="finding review">
+          <div><strong>Test or dependency substitute</strong> <span>review</span></div>
+          <p>from unittest.mock import patch</p>
+          <code>agentic/evals/ym_representational_dynamics_20260721/literature_production_chain.py:29</code>
+          <p class="rec">Confirm this is legitimate test isolation, or add a real-path regression / explicit limitation note.</p>
+        </li>
+
+
+        <li class="finding medium">
+          <div><strong>Placeholder implementation</strong> <span>medium</span></div>
+          <p># placeholder has no lawful image in this contract.</p>
+          <code>agentic/experiments/world_matrix.py:205</code>
+          <p class="rec">Confirm this is legitimate test isolation, or add a real-path regression / explicit limitation note.</p>
+        </li>
+
+
+        <li class="finding review">
+          <div><strong>Test or dependency substitute</strong> <span>review</span></div>
+          <p>template generation, loose schemas, stub-like tests, unchecked proof adapters,</p>
+          <code>agentic/external/higher_abductive_theory_discovery/2026-07-22/README.md:18</code>
+          <p class="rec">Confirm this is legitimate test isolation, or add a real-path regression / explicit limitation note.</p>
+        </li>
+
+
+        <li class="finding medium">
+          <div><strong>Placeholder implementation</strong> <span>medium</span></div>
+          <p>## 5. Phased TODO plan</p>
+          <code>agentic/external/yang_mills_representational_dynamics/2026-07-20/research_package/02_relational_rigidity_program/yang_mills_representation_research_plan.md:240</code>
+          <p class="rec">Confirm this is legitimate test isolation, or add a real-path regression / explicit limitation note.</p>
+        </li>
+
+
+        <li class="finding review">
+          <div><strong>Test or dependency substitute</strong> <span>review</span></div>
+          <p>Test finite-volume fake gaps, a direct-sum hidden gapless sector, nonuniform cutoff gaps, signed spectral measures, and errors that vanish only for fixed time but not on the time scale used to extract the gap.</p>
+          <code>agentic/external/yang_mills_representational_dynamics/2026-07-20/skill_bundle/11_vscode_codex_skill_bundle/.agents/skills/ym-prove-rigidity-transfer/SKILL.md:43</code>
+          <p class="rec">Confirm this is legitimate test isolation, or add a real-path regression / explicit limitation note.</p>
+        </li>
+
+
+        <li class="finding medium">
+          <div><strong>Skipped validation</strong> <span>medium</span></div>
+          <p>verification flags agree.  No skip, xfail, source rewrite, or suppression was</p>
+          <code>agentic/external/yang_mills_representational_dynamics/2026-07-21/README.md:67</code>
+          <p class="rec">Confirm this is legitimate test isolation, or add a real-path regression / explicit limitation note.</p>
+        </li>
+
+
+        <li class="finding medium">
+          <div><strong>Placeholder implementation</strong> <span>medium</span></div>
+          <p>## 5. Phased TODO plan</p>
+          <code>agentic/external/yang_mills_representational_dynamics/2026-07-21/active_snapshot/02_relational_rigidity_program/yang_mills_representation_research_plan.md:240</code>
+          <p class="rec">Confirm this is legitimate test isolation, or add a real-path regression / explicit limitation note.</p>
+        </li>
+
+
+        <li class="finding medium">
+          <div><strong>Placeholder implementation</strong> <span>medium</span></div>
+          <p>- `research_plan_todos.md`: plan and completed todo ledger.</p>
+          <code>agentic/external/yang_mills_representational_dynamics/2026-07-21/active_snapshot/05_su2_quotient_fiber/README.md:17</code>
+          <p class="rec">Confirm this is legitimate test isolation, or add a real-path regression / explicit limitation note.</p>
+        </li>
+
+
+        <li class="finding medium">
+          <div><strong>Placeholder implementation</strong> <span>medium</span></div>
+          <p># Next-target plan and todo ledger</p>
+          <code>agentic/external/yang_mills_representational_dynamics/2026-07-21/active_snapshot/05_su2_quotient_fiber/research_plan_todos.md:1</code>
+          <p class="rec">Confirm this is legitimate test isolation, or add a real-path regression / explicit limitation note.</p>
+        </li>
+
+
+        <li class="finding medium">
+          <div><strong>Placeholder implementation</strong> <span>medium</span></div>
+          <p># Stage 06 plan and completed todo ledger</p>
+          <code>agentic/external/yang_mills_representational_dynamics/2026-07-21/active_snapshot/06_one_step_effective_action/research_plan_todos.md:1</code>
+          <p class="rec">Confirm this is legitimate test isolation, or add a real-path regression / explicit limitation note.</p>
+        </li>
+
+
+        <li class="finding medium">
+          <div><strong>Placeholder implementation</strong> <span>medium</span></div>
+          <p># Stage 07 plan and completed todo ledger</p>
+          <code>agentic/external/yang_mills_representational_dynamics/2026-07-21/active_snapshot/07_su2_heat_kernel_initializer/research_plan_todos.md:1</code>
+          <p class="rec">Confirm this is legitimate test isolation, or add a real-path regression / explicit limitation note.</p>
+        </li>
+
+
+        <li class="finding medium">
+          <div><strong>Placeholder implementation</strong> <span>medium</span></div>
+          <p># Stage 08 plan and todo ledger</p>
+          <code>agentic/external/yang_mills_representational_dynamics/2026-07-21/active_snapshot/08_su2_nonlinear_block_geometry/research_plan_todos.md:1</code>
+          <p class="rec">Confirm this is legitimate test isolation, or add a real-path regression / explicit limitation note.</p>
+        </li>
+        </ul><p class='empty'>Showing 80 of 1237 findings. See JSON for the full list.</p>
+        </details>
+
+
+        <details open>
+          <summary>Testing Coverage <span>1 findings</span></summary>
+          <ul class='findings'>
+        <li class="finding medium">
+          <div><strong>Project-support script lacks obvious test reference</strong> <span>medium</span></div>
+          <p>No direct reference to plan_figures or framework-paper-figure-planner was found in tests/**/test_*.py.</p>
+          <code>proj_skills/framework-paper-figure-planner/scripts/plan_figures.py:1</code>
+          <p class="rec">Add a deterministic test that exercises JSON output and at least one HTML marker.</p>
+        </li>
+        </ul>
+        </details>
+
+  </section>
+  <footer>Generated by <code>proj_skills/workflow-health-audit-orchestrator</code>. Findings are triage signals, not automatic proof of failure.</footer>
+</main>
+</body>
+</html>

@@ -1,0 +1,850 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://abducer.local/spec/literature_production_manifest_commitment.schema.json",
+  "title": "Portable pre-commission literature production input receipt",
+  "description": "A root-relative exact-byte descriptor and deterministic consumer projection for one publication-disabled literature production manifest. It is suitable for immutable persistence as a theory input, but grants no source-truth, latestness, literature-benefit, external-preference, creativity, physics-value, theorem, experiment, publication, or world-commissioning authority.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "receipt_kind",
+    "receipt_id",
+    "committed_input_role",
+    "descriptor",
+    "consumer_projection",
+    "validation_scope",
+    "publication_enabled",
+    "world_commissioning_authorized",
+    "authority_boundary",
+    "receipt_digest"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "receipt_kind": {
+      "const": "portable_literature_production_manifest_receipt"
+    },
+    "receipt_id": {
+      "$ref": "#/$defs/identifier"
+    },
+    "committed_input_role": {
+      "const": "pre_commission_theory_input"
+    },
+    "descriptor": {
+      "$ref": "#/$defs/manifestDescriptor"
+    },
+    "consumer_projection": {
+      "$ref": "#/$defs/consumerProjection"
+    },
+    "validation_scope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "exact_manifest_bytes_reopened",
+        "canonical_json_utf8_lf_required",
+        "manifest_internal_causal_invariants_validated",
+        "source_bundle_reexecution_performed",
+        "code_dependency_reexecution_performed",
+        "runtime_root_persisted"
+      ],
+      "properties": {
+        "exact_manifest_bytes_reopened": {
+          "const": true
+        },
+        "canonical_json_utf8_lf_required": {
+          "const": true
+        },
+        "manifest_internal_causal_invariants_validated": {
+          "const": true
+        },
+        "source_bundle_reexecution_performed": {
+          "const": false
+        },
+        "code_dependency_reexecution_performed": {
+          "const": false
+        },
+        "runtime_root_persisted": {
+          "const": false
+        }
+      }
+    },
+    "publication_enabled": {
+      "const": false
+    },
+    "world_commissioning_authorized": {
+      "const": false
+    },
+    "authority_boundary": {
+      "type": "string",
+      "minLength": 80
+    },
+    "receipt_digest": {
+      "$ref": "#/$defs/digest"
+    }
+  },
+  "$defs": {
+    "digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "identifier": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,255}$"
+    },
+    "manifestDescriptor": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "descriptor_version",
+        "object_kind",
+        "path",
+        "sha256",
+        "size_bytes",
+        "semantic_digest",
+        "manifest_schema_version",
+        "manifest_id",
+        "manifest_digest",
+        "chain_order_digest",
+        "serialization",
+        "descriptor_digest"
+      ],
+      "properties": {
+        "descriptor_version": {
+          "const": "1.0.0"
+        },
+        "object_kind": {
+          "const": "literature_production_chain_manifest"
+        },
+        "path": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))[^\\\\]+$"
+        },
+        "sha256": {
+          "$ref": "#/$defs/digest"
+        },
+        "size_bytes": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "semantic_digest": {
+          "$ref": "#/$defs/digest"
+        },
+        "manifest_schema_version": {
+          "const": "1.0.0"
+        },
+        "manifest_id": {
+          "$ref": "#/$defs/identifier"
+        },
+        "manifest_digest": {
+          "$ref": "#/$defs/digest"
+        },
+        "chain_order_digest": {
+          "$ref": "#/$defs/digest"
+        },
+        "serialization": {
+          "const": "canonical_json_utf8_lf_v1"
+        },
+        "descriptor_digest": {
+          "$ref": "#/$defs/digest"
+        }
+      }
+    },
+    "stageOutputDigests": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "high_risk_portfolio",
+        "parent_reflection_packet",
+        "parent_adjudication_evidence",
+        "theory_only_synthesis_packet",
+        "synthesis_adjudication_evidence"
+      ],
+      "properties": {
+        "high_risk_portfolio": {
+          "$ref": "#/$defs/digest"
+        },
+        "parent_reflection_packet": {
+          "$ref": "#/$defs/digest"
+        },
+        "parent_adjudication_evidence": {
+          "$ref": "#/$defs/digest"
+        },
+        "theory_only_synthesis_packet": {
+          "$ref": "#/$defs/digest"
+        },
+        "synthesis_adjudication_evidence": {
+          "$ref": "#/$defs/digest"
+        }
+      }
+    },
+    "highRiskGenerationProvenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "authored_operator_atlas_digest",
+        "authored_template_reference_digest",
+        "claim_boundary",
+        "generator_authority_digest",
+        "generator_authority_id",
+        "generator_policy_digest",
+        "mode",
+        "proposal_request_digest",
+        "scoring_policy_digest",
+        "source_proposals_digest"
+      ],
+      "properties": {
+        "authored_operator_atlas_digest": {
+          "const": null
+        },
+        "authored_template_reference_digest": {
+          "$ref": "#/$defs/digest"
+        },
+        "claim_boundary": {
+          "const": "The operator instantiated authored proposals or authored fallback templates; this is not proposal-field-free elicitation."
+        },
+        "generator_authority_digest": {
+          "$ref": "#/$defs/digest"
+        },
+        "generator_authority_id": {
+          "const": "high-risk-forger.authored-templates.v1"
+        },
+        "generator_policy_digest": {
+          "const": null
+        },
+        "mode": {
+          "const": "operator_instantiated_from_authored_proposals"
+        },
+        "proposal_request_digest": {
+          "const": null
+        },
+        "scoring_policy_digest": {
+          "const": null
+        },
+        "source_proposals_digest": {
+          "$ref": "#/$defs/digest"
+        }
+      }
+    },
+    "theoryGenerationProvenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "high_risk",
+        "high_risk_receipt_reason_codes",
+        "proposal_field_free",
+        "parent_reflection_generation_mode",
+        "theory_only_synthesis_generation_mode"
+      ],
+      "properties": {
+        "high_risk": {
+          "$ref": "#/$defs/highRiskGenerationProvenance"
+        },
+        "high_risk_receipt_reason_codes": {
+          "const": [
+            "authored_fallback_not_proposal_field_free"
+          ]
+        },
+        "proposal_field_free": {
+          "const": false
+        },
+        "parent_reflection_generation_mode": {
+          "const": "local_structural_fallback"
+        },
+        "theory_only_synthesis_generation_mode": {
+          "const": "operator_generated"
+        }
+      }
+    },
+    "adjudicationAuthority": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "blind_to_preferred_answer",
+        "claim_scope",
+        "conceptual_preference_authorized",
+        "content_warrants_verified",
+        "correlation_group_digests",
+        "external_generalization_authorized",
+        "external_human_evidence_available",
+        "external_human_evidence_status",
+        "judge_authority_digests",
+        "panel_evidence_class",
+        "plural_independent_perspectives"
+      ],
+      "properties": {
+        "blind_to_preferred_answer": {
+          "const": true
+        },
+        "claim_scope": {
+          "const": "internal_target_specific_conceptual_preference"
+        },
+        "conceptual_preference_authorized": {
+          "const": true
+        },
+        "content_warrants_verified": {
+          "const": true
+        },
+        "correlation_group_digests": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/digest"
+          },
+          "uniqueItems": true
+        },
+        "external_generalization_authorized": {
+          "const": false
+        },
+        "external_human_evidence_available": {
+          "const": false
+        },
+        "external_human_evidence_status": {
+          "const": "unavailable"
+        },
+        "judge_authority_digests": {
+          "type": "array",
+          "minItems": 3,
+          "maxItems": 3,
+          "items": {
+            "$ref": "#/$defs/digest"
+          },
+          "uniqueItems": true
+        },
+        "panel_evidence_class": {
+          "const": "correlated_internal_critique"
+        },
+        "plural_independent_perspectives": {
+          "const": false
+        }
+      }
+    },
+    "synthesisMateriality": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "stage_comparison_digest",
+        "applicability",
+        "material",
+        "current_selected_system_id",
+        "prior_selected_system_id",
+        "improved_dimensions",
+        "new_reflection_rounds",
+        "nondegrading_dimension_floors",
+        "reflective_resilience_increased",
+        "round_history_prefix_preserved",
+        "semantic_patch_content_changed",
+        "semantic_patch_change_count"
+      ],
+      "properties": {
+        "stage_comparison_digest": {
+          "$ref": "#/$defs/digest"
+        },
+        "applicability": {
+          "const": "applicable"
+        },
+        "material": {
+          "const": false
+        },
+        "current_selected_system_id": {
+          "const": null
+        },
+        "prior_selected_system_id": {
+          "const": null
+        },
+        "improved_dimensions": {
+          "const": []
+        },
+        "new_reflection_rounds": {
+          "const": 0
+        },
+        "nondegrading_dimension_floors": {
+          "const": false
+        },
+        "reflective_resilience_increased": {
+          "const": false
+        },
+        "round_history_prefix_preserved": {
+          "const": false
+        },
+        "semantic_patch_content_changed": {
+          "const": false
+        },
+        "semantic_patch_change_count": {
+          "const": 0
+        }
+      }
+    },
+    "claimBoundaries": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "bounded_local_production_causality",
+        "source_truth_authorized",
+        "global_latestness_authorized",
+        "exhaustive_coverage_authorized",
+        "literature_benefit_authorized",
+        "internal_correlated_conceptual_adjudication_executed",
+        "external_or_independent_conceptual_preference_authorized",
+        "internal_deep_lens_adjudication_executed",
+        "creativity_or_depth_authorized",
+        "physics_value_authorized",
+        "theorem_or_yang_mills_result_authorized",
+        "independent_producer_or_evaluator_authorized",
+        "experiments_executed"
+      ],
+      "properties": {
+        "bounded_local_production_causality": {
+          "const": true
+        },
+        "source_truth_authorized": {
+          "const": false
+        },
+        "global_latestness_authorized": {
+          "const": false
+        },
+        "exhaustive_coverage_authorized": {
+          "const": false
+        },
+        "literature_benefit_authorized": {
+          "const": false
+        },
+        "internal_correlated_conceptual_adjudication_executed": {
+          "const": true
+        },
+        "external_or_independent_conceptual_preference_authorized": {
+          "const": false
+        },
+        "internal_deep_lens_adjudication_executed": {
+          "const": true
+        },
+        "creativity_or_depth_authorized": {
+          "const": false
+        },
+        "physics_value_authorized": {
+          "const": false
+        },
+        "theorem_or_yang_mills_result_authorized": {
+          "const": false
+        },
+        "independent_producer_or_evaluator_authorized": {
+          "const": false
+        },
+        "experiments_executed": {
+          "const": false
+        }
+      }
+    },
+    "historicalConsumerProjection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "projection_kind",
+        "input_role",
+        "target_id",
+        "run_id",
+        "state_version",
+        "manifest_id",
+        "manifest_digest",
+        "chain_order_digest",
+        "source_bundle_digest",
+        "stage_output_digests",
+        "theory_generation_provenance",
+        "parent_adjudication_authority",
+        "synthesis_adjudication_authority",
+        "synthesis_materiality",
+        "claim_boundaries",
+        "publication_enabled",
+        "world_commissioning_authorized",
+        "consumer_authority_boundary",
+        "projection_digest"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "1.0.0"
+        },
+        "projection_kind": {
+          "const": "bounded_literature_production_theory_input"
+        },
+        "input_role": {
+          "const": "pre_commission_theory_input"
+        },
+        "target_id": {
+          "$ref": "#/$defs/identifier"
+        },
+        "run_id": {
+          "$ref": "#/$defs/identifier"
+        },
+        "state_version": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "manifest_id": {
+          "$ref": "#/$defs/identifier"
+        },
+        "manifest_digest": {
+          "$ref": "#/$defs/digest"
+        },
+        "chain_order_digest": {
+          "$ref": "#/$defs/digest"
+        },
+        "source_bundle_digest": {
+          "$ref": "#/$defs/digest"
+        },
+        "stage_output_digests": {
+          "$ref": "#/$defs/stageOutputDigests"
+        },
+        "theory_generation_provenance": {
+          "$ref": "#/$defs/theoryGenerationProvenance"
+        },
+        "parent_adjudication_authority": {
+          "$ref": "#/$defs/adjudicationAuthority"
+        },
+        "synthesis_adjudication_authority": {
+          "$ref": "#/$defs/adjudicationAuthority"
+        },
+        "synthesis_materiality": {
+          "$ref": "#/$defs/synthesisMateriality"
+        },
+        "claim_boundaries": {
+          "$ref": "#/$defs/claimBoundaries"
+        },
+        "publication_enabled": {
+          "const": false
+        },
+        "world_commissioning_authorized": {
+          "const": false
+        },
+        "consumer_authority_boundary": {
+          "type": "string",
+          "minLength": 100
+        },
+        "projection_digest": {
+          "$ref": "#/$defs/digest"
+        }
+      }
+    },
+    "liveHighRiskGenerationProvenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "authored_operator_atlas_digest",
+        "authored_template_reference_digest",
+        "claim_boundary",
+        "generator_authority_digest",
+        "generator_authority_id",
+        "generator_policy_digest",
+        "mode",
+        "proposal_request_digest",
+        "scoring_policy_digest",
+        "source_proposals_digest"
+      ],
+      "properties": {
+        "authored_operator_atlas_digest": {
+          "const": null
+        },
+        "authored_template_reference_digest": {
+          "$ref": "#/$defs/digest"
+        },
+        "claim_boundary": {
+          "const": "The operator instantiated authored proposals or authored fallback templates; this is not proposal-field-free elicitation."
+        },
+        "generator_authority_digest": {
+          "$ref": "#/$defs/digest"
+        },
+        "generator_authority_id": {
+          "const": "operator.supplied-proposals"
+        },
+        "generator_policy_digest": {
+          "const": null
+        },
+        "mode": {
+          "const": "operator_instantiated_from_authored_proposals"
+        },
+        "proposal_request_digest": {
+          "const": null
+        },
+        "scoring_policy_digest": {
+          "const": null
+        },
+        "source_proposals_digest": {
+          "$ref": "#/$defs/digest"
+        }
+      }
+    },
+    "liveTheoryGenerationProvenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "high_risk",
+        "high_risk_receipt_reason_codes",
+        "proposal_field_free",
+        "parent_reflection_generation_mode",
+        "theory_only_synthesis_generation_mode"
+      ],
+      "properties": {
+        "high_risk": {
+          "$ref": "#/$defs/liveHighRiskGenerationProvenance"
+        },
+        "high_risk_receipt_reason_codes": {
+          "const": [
+            "authored_fallback_not_proposal_field_free"
+          ]
+        },
+        "proposal_field_free": {
+          "const": false
+        },
+        "parent_reflection_generation_mode": {
+          "const": "operator_generated"
+        },
+        "theory_only_synthesis_generation_mode": {
+          "const": "operator_generated"
+        }
+      }
+    },
+    "liveSynthesisMateriality": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "stage_comparison_digest",
+        "applicability",
+        "material",
+        "current_selected_system_id",
+        "prior_selected_system_id",
+        "improved_dimensions",
+        "new_reflection_rounds",
+        "nondegrading_dimension_floors",
+        "reflective_resilience_increased",
+        "round_history_prefix_preserved",
+        "semantic_patch_content_changed",
+        "semantic_patch_change_count"
+      ],
+      "properties": {
+        "stage_comparison_digest": {
+          "$ref": "#/$defs/digest"
+        },
+        "applicability": {
+          "const": "applicable"
+        },
+        "material": {
+          "type": "boolean"
+        },
+        "current_selected_system_id": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "minLength": 1
+        },
+        "prior_selected_system_id": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "minLength": 1
+        },
+        "improved_dimensions": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "essential_relevance",
+              "explanatory_mediation",
+              "conceptual_depth",
+              "unification_power",
+              "preserved_difference",
+              "generativity",
+              "reflective_resilience",
+              "truth_aptness"
+            ]
+          }
+        },
+        "new_reflection_rounds": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "nondegrading_dimension_floors": {
+          "type": "boolean"
+        },
+        "reflective_resilience_increased": {
+          "type": "boolean"
+        },
+        "round_history_prefix_preserved": {
+          "type": "boolean"
+        },
+        "semantic_patch_content_changed": {
+          "type": "boolean"
+        },
+        "semantic_patch_change_count": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "liveConsumerProjection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "projection_kind",
+        "input_role",
+        "target_id",
+        "run_id",
+        "state_version",
+        "manifest_id",
+        "manifest_digest",
+        "chain_order_digest",
+        "source_bundle_digest",
+        "stage_output_digests",
+        "theory_generation_provenance",
+        "parent_adjudication_authority",
+        "synthesis_adjudication_authority",
+        "synthesis_materiality",
+        "claim_boundaries",
+        "publication_enabled",
+        "world_commissioning_authorized",
+        "consumer_authority_boundary",
+        "projection_digest"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "1.0.0"
+        },
+        "projection_kind": {
+          "const": "bounded_live_literature_production_theory_input"
+        },
+        "input_role": {
+          "const": "pre_commission_theory_input"
+        },
+        "target_id": {
+          "$ref": "#/$defs/identifier"
+        },
+        "run_id": {
+          "$ref": "#/$defs/identifier"
+        },
+        "state_version": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "manifest_id": {
+          "$ref": "#/$defs/identifier"
+        },
+        "manifest_digest": {
+          "$ref": "#/$defs/digest"
+        },
+        "chain_order_digest": {
+          "$ref": "#/$defs/digest"
+        },
+        "source_bundle_digest": {
+          "$ref": "#/$defs/digest"
+        },
+        "stage_output_digests": {
+          "$ref": "#/$defs/stageOutputDigests"
+        },
+        "theory_generation_provenance": {
+          "$ref": "#/$defs/liveTheoryGenerationProvenance"
+        },
+        "parent_adjudication_authority": {
+          "$ref": "#/$defs/liveAdjudicationAuthority"
+        },
+        "synthesis_adjudication_authority": {
+          "$ref": "#/$defs/liveAdjudicationAuthority"
+        },
+        "synthesis_materiality": {
+          "$ref": "#/$defs/liveSynthesisMateriality"
+        },
+        "claim_boundaries": {
+          "$ref": "#/$defs/claimBoundaries"
+        },
+        "publication_enabled": {
+          "const": false
+        },
+        "world_commissioning_authorized": {
+          "const": false
+        },
+        "consumer_authority_boundary": {
+          "type": "string",
+          "minLength": 100
+        },
+        "projection_digest": {
+          "$ref": "#/$defs/digest"
+        }
+      }
+    },
+    "consumerProjection": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/historicalConsumerProjection"
+        },
+        {
+          "$ref": "#/$defs/liveConsumerProjection"
+        }
+      ]
+    },
+    "liveAdjudicationAuthority": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "blind_to_preferred_answer",
+        "claim_scope",
+        "conceptual_preference_authorized",
+        "content_warrants_verified",
+        "correlation_group_digests",
+        "external_generalization_authorized",
+        "external_human_evidence_available",
+        "external_human_evidence_status",
+        "judge_authority_digests",
+        "panel_evidence_class",
+        "plural_independent_perspectives"
+      ],
+      "properties": {
+        "blind_to_preferred_answer": {
+          "const": true
+        },
+        "claim_scope": {
+          "const": "internal_target_specific_conceptual_preference"
+        },
+        "conceptual_preference_authorized": {
+          "type": "boolean"
+        },
+        "content_warrants_verified": {
+          "const": true
+        },
+        "correlation_group_digests": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/digest"
+          },
+          "uniqueItems": true
+        },
+        "external_generalization_authorized": {
+          "const": false
+        },
+        "external_human_evidence_available": {
+          "const": false
+        },
+        "external_human_evidence_status": {
+          "const": "unavailable"
+        },
+        "judge_authority_digests": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 3,
+          "items": {
+            "$ref": "#/$defs/digest"
+          },
+          "uniqueItems": true
+        },
+        "panel_evidence_class": {
+          "const": "correlated_internal_critique"
+        },
+        "plural_independent_perspectives": {
+          "const": false
+        }
+      }
+    }
+  }
+}

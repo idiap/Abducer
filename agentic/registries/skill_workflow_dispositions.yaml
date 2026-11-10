@@ -1,0 +1,67 @@
+{
+  "version": 1,
+  "source_skill_registry": "agentic/registries/skill_registry.yaml",
+  "named_workflow_registry": "agentic/registries/named_workflow_contracts.yaml",
+  "allowed_dispositions": ["required", "conditional", "advisory", "validator_only", "standalone", "quarantined"],
+  "resolution_policy": {
+    "precedence": ["named_workflow_step", "named_profile_step", "named_profile_specialist", "legacy_workflow_owner", "dispatch_required", "dispatch_conditional", "dispatch_advisory", "task_workflow_member", "standalone_default"],
+    "named_workflow_step": {
+      "source": "workflows[].steps[]",
+      "disposition_field": "mode",
+      "primary_workflow_field": "workflows[].id",
+      "rationale": "The skill has an ordered, typed position and workflow-local authorization contract in its named workflow."
+    },
+    "named_profile_step": {
+      "source": "workflows[].profiles[].steps[]",
+      "disposition_field": "mode",
+      "primary_workflow_field": "workflows[].id",
+      "rationale": "The skill has an ordered, typed position in an opt-in profile of its parent named workflow."
+    },
+    "named_profile_specialist": {
+      "source": "workflows[].profiles[].specialist_skills[]",
+      "disposition": "conditional",
+      "primary_workflow_field": "workflows[].id",
+      "rationale": "The specialist is conditionally selected by the profile and must return its declared common packet type."
+    },
+    "legacy_workflow_owner": {
+      "source": "agentic/registries/workflow_contracts.yaml#workflows[].owner_skill",
+      "disposition": "required",
+      "primary_workflow_field": "workflows[].id",
+      "rationale": "The skill remains the owner of a pre-existing lightweight workflow whose semantics are preserved."
+    },
+    "dispatch_required": {
+      "source": "agentic/registries/discovery_marathon_skill_dispatch.yaml#phases[].required_skills[]",
+      "disposition": "required",
+      "primary_workflow": "discovery_marathon_loop",
+      "rationale": "The canonical discovery dispatch requires this skill in the named phase; runtime execution still requires a separately validated operator route."
+    },
+    "dispatch_conditional": {
+      "source": "agentic/registries/discovery_marathon_skill_dispatch.yaml#phases[].conditional_skills[]",
+      "disposition": "conditional",
+      "primary_workflow": "discovery_marathon_loop",
+      "rationale": "The discovery dispatch makes this skill eligible only when the phase-specific activation condition is evidenced."
+    },
+    "dispatch_advisory": {
+      "source": "agentic/registries/discovery_marathon_skill_dispatch.yaml#phases[].legacy_advisory_skills[]",
+      "disposition": "advisory",
+      "primary_workflow": "discovery_marathon_loop",
+      "rationale": "The skill remains visible as historical or advisory discovery guidance without an execution claim."
+    },
+    "task_workflow_member": {
+      "source": "registry/tasks/*/task_registry.json#visible_workflows[].composed_skills[]",
+      "disposition": "advisory",
+      "primary_workflow_field": "visible_workflows[].name",
+      "rationale": "The skill is composed into an existing visible task workflow whose untyped membership is preserved without overstating required execution."
+    },
+    "standalone_default": {
+      "disposition": "standalone",
+      "primary_workflow": null,
+      "rationale": "The registered capability remains independently invocable; absence from the named contract layer is intentional and is not an execution claim."
+    }
+  },
+  "executable_policy": {
+    "default": false,
+    "criterion": "True only when a live discovery-operator route has an existing entrypoint, validator, and receipt contract; workflow declaration or a scripts directory alone is insufficient.",
+    "source": "agentic/registries/discovery_operator_registry.yaml"
+  }
+}

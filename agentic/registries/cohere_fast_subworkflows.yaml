@@ -1,0 +1,12 @@
+{
+  "schema_version": "1.0.0", "parent_workflow": "cohere_fast",
+  "subworkflows": [
+    {"id":"scope-and-ground", "order":1, "input_type":"DomainRunRequest", "return_type":"ScopeGroundPacket", "budget":{"max_attempts":1}, "on_failure":"stop"},
+    {"id":"adaptive-frontier", "order":2, "input_type":"ScopeGroundPacket", "return_type":"FrontierPacket", "budget":{"max_attempts":3}, "on_failure":"quarantine"},
+    {"id":"derivation-and-proof", "order":3, "input_type":"FrontierPacket", "return_type":"DerivationPacket", "budget":{"max_attempts":3}, "on_failure":"quarantine"},
+    {"id":"independent-audit", "order":4, "input_type":"DerivationPacket", "return_type":"AuditPacket", "budget":{"max_attempts":1}, "on_failure":"quarantine"},
+    {"id":"manuscript-release", "order":5, "input_type":"AuditPacket", "return_type":"ReleasePacket", "budget":{"max_attempts":1}, "when":"audit_status == accepted", "on_failure":"stop"}
+  ],
+  "edges": [["scope-and-ground","adaptive-frontier"], ["adaptive-frontier","derivation-and-proof"], ["derivation-and-proof","independent-audit"], ["independent-audit","manuscript-release"]],
+  "deferred_source_workflows": ["analytics", "strong-cp", "riemann-hypothesis", "p-vs-np", "coherent-differentiation", "relational-physics"]
+}

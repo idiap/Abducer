@@ -1,0 +1,50 @@
+# lunar-runtime: {"declaration":"MaterializedCohereFastManuscriptRelease","entry_argument":"independent_audit","execute_hook":"abducer-workflow-execute","id":"cohere_fast_manuscript_release","input_schema":{"additionalProperties":false,"default":{"audit_ref":"independent-audit-finite-regulator-01","claim_ceiling":"claim-bounded presentation of conditional results","domain_id":"yang-mills"},"properties":{"audit_ref":{"default":"independent-audit-finite-regulator-01","maxLength":16000,"minLength":1,"type":"string"},"claim_ceiling":{"default":"claim-bounded presentation of conditional results","maxLength":16000,"minLength":1,"type":"string"},"domain_id":{"default":"yang-mills","maxLength":16000,"minLength":1,"type":"string"}},"required":["domain_id","audit_ref","claim_ceiling"],"type":"object"},"metadata":{"completion_contract":{"allowed_final_statuses":["passed","completed"],"forbid_blockers":true,"reasoning_complete":true,"reasoning_events_min":4,"terminal_state":"completed"},"description":"authorize presentation without changing the authority of its claims","model_required":true,"network_required":false,"provenance_contract":{"agent_invocations":[{"activated_skill_ids":["ym-build-latex-paper","ym-build-proof-appendix","ym-frame-paper-narrative"],"agent_name":"claim_bounded_presentation_material_agent","workflow_occurrence":"claim_bounded_presentation"},{"activated_skill_ids":["epistemic-status-ledger"],"agent_name":"release_disposition_material_agent","workflow_occurrence":"release_disposition"}],"required_source_reads":[]},"reasoning_contract":{"steps":["claim_bounded_presentation","release_disposition"],"workflow":"CohereFastManuscriptRelease"},"reasoning_required":true,"required_host_capabilities":["model","prism-engine","reasoning-events"],"scientific_truth_verified":false,"semantic_mode":"operational-model-generated","source_materialization_status":"blocked_unresolved_projection_gap","timeout_seconds":1800},"output_schema":{"additionalProperties":false,"properties":{"analysis_results":{"type":"object"},"compact_prism_input":{"type":"object"},"markdown":{"minLength":1,"type":"string"},"narrative_slots":{"type":"array"},"report_verification":{"properties":{"reasoning_complete":{"const":true},"status":{"const":"passed"}},"required":["status","reasoning_complete"],"type":"object"},"structured_value":{"properties":{"execution_provenance":{"type":"object"},"final_disposition":{"properties":{"blockers":{"maxItems":0,"type":"array"},"reasoning_complete":{"const":true},"status":{"const":"passed"}},"required":["status","reasoning_complete","blockers"],"type":"object"},"reasoning_result":{"type":"object"}},"required":["final_disposition","reasoning_result","execution_provenance"],"type":"object"}},"required":["markdown","structured_value","analysis_results","compact_prism_input","narrative_slots","report_verification"],"type":"object"},"prepare_hook":"abducer-workflow-prepare","verify_hook":"abducer-workflow-verify"}
+
+# Host-executed material graph for the complete reviewed reasoning path.
+# Generated values retain the source epistemic boundary and are not native proof or experiment receipts.
+
+from types import (
+    ClaimBoundedPresentation,
+    IndependentAuditPacket,
+    ManuscriptReleaseDisposition,
+)
+
+from generated.claim_bounded_presentation_skill_1 import claim_bounded_presentation_skill_1
+from generated.claim_bounded_presentation_skill_2 import claim_bounded_presentation_skill_2
+from generated.claim_bounded_presentation_skill_3 import claim_bounded_presentation_skill_3
+from generated.release_disposition_skill_1 import release_disposition_skill_1
+
+# Real model capability for source occurrence claim_bounded_presentation:UnresolvedClaimBoundedPresentationProjection.
+agent claim_bounded_presentation_material_agent(
+    task: IndependentAuditPacket,
+) -> Result[Generated[ClaimBoundedPresentation], ModelFailure]
+    ! {AI.Generate, Context.Disclose}:
+    skills: Skills[IndependentAuditPacket] = [claim_bounded_presentation_skill_1, claim_bounded_presentation_skill_2, claim_bounded_presentation_skill_3]
+
+# Real model capability for source occurrence release_disposition:EvidentialManuscriptReleaseDispositionAssessment.
+agent release_disposition_material_agent(
+    task: ClaimBoundedPresentation,
+) -> Result[Generated[String], ModelFailure]
+    ! {AI.Generate, Context.Disclose}:
+    skills: Skills[ClaimBoundedPresentation] = [release_disposition_skill_1]
+
+workflow MaterializedCohereFastManuscriptRelease(
+    independent_audit: IndependentAuditPacket,
+) -> Generated[String]
+    fails ModelFailure
+    ! {AI.Generate, Context.Disclose}:
+    sequence:
+        # Presentation construction preserves source audit identity and claim ceiling.
+        [claim_bounded_presentation: claim_bounded_presentation_material_agent(independent_audit)]
+        # Release evaluates the bounded presentation without increasing claim authority.
+        [release_disposition: release_disposition_material_agent(claim_bounded_presentation.value)]
+
+    return release_disposition
+
+
+def main(
+    independent_audit: IndependentAuditPacket,
+    model_access: ModelGenerate,
+    disclosure: ContextDisclose,
+) -> Result[Generated[String], ModelFailure] ! {AI.Generate, Context.Disclose}:
+    return solve MaterializedCohereFastManuscriptRelease(independent_audit)

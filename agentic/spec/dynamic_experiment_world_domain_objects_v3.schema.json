@@ -1,0 +1,835 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://abducer.local/spec/dynamic_experiment_world_domain_objects_v3.schema.json",
+  "title": "Thin reference-only dynamic-experiment world domain objects v3",
+  "description": "A closed union for the v3 theory-to-world DAG. Every dependency is an exact content-object ref; no v2 value, artifact bytes, base64, filesystem locator, callback, or open JSON object is embedded. Schema validity establishes typed reference structure only. Experiment results remain next-cycle reflection inputs and cannot mutate or select current-cycle theory.",
+  "oneOf": [
+    {"$ref": "#/$defs/theoryCarrier"},
+    {"$ref": "#/$defs/precommitAncestorCarrier"},
+    {"$ref": "#/$defs/worldPlan"},
+    {"$ref": "#/$defs/noProbeDecision"},
+    {"$ref": "#/$defs/executionResult"},
+    {"$ref": "#/$defs/nextCycleReflection"},
+    {"$ref": "#/$defs/projectionComponent"},
+    {"$ref": "#/$defs/projectionIndex"},
+    {"$ref": "#/$defs/commission"},
+    {"$ref": "#/$defs/request"},
+    {"$ref": "#/$defs/observation"},
+    {"$ref": "#/$defs/envelope"},
+    {"$ref": "#/$defs/certificate"},
+    {"$ref": "#/$defs/anchorRoot"},
+    {"$ref": "#/$defs/aggregationRoot"},
+    {"$ref": "#/$defs/descendantReflectionRoot"}
+  ],
+  "$defs": {
+    "authorityBoundary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "contract_scope",
+        "contextual_execution_authority",
+        "experiment_subordinate_to_theory",
+        "experiment_result_effect",
+        "current_cycle_theory_mutation_authorized",
+        "automatic_theory_selection_authorized",
+        "automatic_evidence_relation_authorized",
+        "source_truth_authority",
+        "literature_benefit_authority",
+        "truth_authority",
+        "proof_authority",
+        "physics_authority"
+      ],
+      "properties": {
+        "contract_scope": {"const": "typed_reference_structure_only"},
+        "contextual_execution_authority": {"const": "requires_separate_domain_replay"},
+        "experiment_subordinate_to_theory": {"const": true},
+        "experiment_result_effect": {"const": "next_cycle_reflection_only"},
+        "current_cycle_theory_mutation_authorized": {"const": false},
+        "automatic_theory_selection_authorized": {"const": false},
+        "automatic_evidence_relation_authorized": {"const": false},
+        "source_truth_authority": {"const": false},
+        "literature_benefit_authority": {"const": false},
+        "truth_authority": {"const": false},
+        "proof_authority": {"const": false},
+        "physics_authority": {"const": false}
+      }
+    },
+    "baseDomainObject": {
+      "type": "object",
+      "required": ["schema_version", "contract_version", "object_kind", "authority_boundary"],
+      "properties": {
+        "schema_version": {"const": "3.0.0"},
+        "authority_boundary": {"$ref": "#/$defs/authorityBoundary"}
+      }
+    },
+    "contentRef": {
+      "$ref": "./dynamic_experiment_content_object_ref_v1.schema.json"
+    },
+    "producerArtifactRef": {
+      "allOf": [
+        {"$ref": "#/$defs/contentRef"},
+        {"properties": {"object_kind": {"const": "producer_artifact_evidence"}}}
+      ]
+    },
+    "immutableHistoryRef": {
+      "allOf": [
+        {"$ref": "#/$defs/contentRef"},
+        {"properties": {"object_kind": {"const": "immutable_history_evidence"}}}
+      ]
+    },
+    "producerReceiptRef": {
+      "allOf": [
+        {"$ref": "#/$defs/contentRef"},
+        {"properties": {"object_kind": {"const": "producer_receipt_evidence"}}}
+      ]
+    },
+    "literatureRef": {
+      "allOf": [
+        {"$ref": "#/$defs/contentRef"},
+        {"properties": {"object_kind": {"const": "literature_production_input_bundle"}}}
+      ]
+    },
+    "materializerBindingRef": {
+      "allOf": [
+        {"$ref": "#/$defs/contentRef"},
+        {"properties": {"object_kind": {"const": "causal_materializer_binding_header_v3"}}}
+      ]
+    },
+    "theoryCarrierRef": {
+      "allOf": [
+        {"$ref": "#/$defs/contentRef"},
+        {"properties": {"object_kind": {"const": "world_theory_carrier_v3"}}}
+      ]
+    },
+    "precommitAncestorCarrierRef": {
+      "allOf": [
+        {"$ref": "#/$defs/contentRef"},
+        {"properties": {"object_kind": {"const": "world_precommit_ancestor_carrier_v3"}}}
+      ]
+    },
+    "worldPlanRef": {
+      "allOf": [
+        {"$ref": "#/$defs/contentRef"},
+        {"properties": {"object_kind": {"const": "world_plan_v3"}}}
+      ]
+    },
+    "noProbeDecisionRef": {
+      "allOf": [
+        {"$ref": "#/$defs/contentRef"},
+        {"properties": {"object_kind": {"const": "world_no_probe_decision_v3"}}}
+      ]
+    },
+    "executionResultRef": {
+      "allOf": [
+        {"$ref": "#/$defs/contentRef"},
+        {"properties": {"object_kind": {"const": "world_execution_result_v3"}}}
+      ]
+    },
+    "nextCycleReflectionRef": {
+      "allOf": [
+        {"$ref": "#/$defs/contentRef"},
+        {"properties": {"object_kind": {"const": "world_next_cycle_reflection_v3"}}}
+      ]
+    },
+    "projectionComponentRef": {
+      "allOf": [
+        {"$ref": "#/$defs/contentRef"},
+        {"properties": {"object_kind": {"const": "world_projection_component_v3"}}}
+      ]
+    },
+    "projectionIndexRef": {
+      "allOf": [
+        {"$ref": "#/$defs/contentRef"},
+        {"properties": {"object_kind": {"const": "world_projection_index_v3"}}}
+      ]
+    },
+    "commissionRef": {
+      "allOf": [
+        {"$ref": "#/$defs/contentRef"},
+        {"properties": {"object_kind": {"const": "world_matrix_commission_v3"}}}
+      ]
+    },
+    "requestRef": {
+      "allOf": [
+        {"$ref": "#/$defs/contentRef"},
+        {"properties": {"object_kind": {"const": "world_request_v3"}}}
+      ]
+    },
+    "observationRef": {
+      "allOf": [
+        {"$ref": "#/$defs/contentRef"},
+        {"properties": {"object_kind": {"const": "world_observation_v3"}}}
+      ]
+    },
+    "envelopeRef": {
+      "allOf": [
+        {"$ref": "#/$defs/contentRef"},
+        {"properties": {"object_kind": {"const": "world_observation_envelope_v3"}}}
+      ]
+    },
+    "certificateRef": {
+      "allOf": [
+        {"$ref": "#/$defs/contentRef"},
+        {"properties": {"object_kind": {"const": "world_matrix_certificate_v3"}}}
+      ]
+    },
+    "anchorRootRef": {
+      "allOf": [
+        {"$ref": "#/$defs/contentRef"},
+        {"properties": {"object_kind": {"const": "world_matrix_anchor_root_v3"}}}
+      ]
+    },
+    "aggregationRootRef": {
+      "allOf": [
+        {"$ref": "#/$defs/contentRef"},
+        {"properties": {"object_kind": {"const": "world_matrix_aggregation_root_v3"}}}
+      ]
+    },
+    "worldId": {
+      "enum": [
+        "no_probe",
+        "neutral_inconclusive",
+        "misleading_toy_positive",
+        "registered_premise_falsifier",
+        "operational_failure"
+      ]
+    },
+    "worldOrder": {
+      "const": [
+        "no_probe",
+        "neutral_inconclusive",
+        "misleading_toy_positive",
+        "registered_premise_falsifier",
+        "operational_failure"
+      ]
+    },
+    "worldPosition": {
+      "type": "object",
+      "required": ["world_id", "world_ordinal"],
+      "properties": {
+        "world_id": {"$ref": "#/$defs/worldId"},
+        "world_ordinal": {"type": "integer", "minimum": 0, "maximum": 4}
+      },
+      "allOf": [
+        {"if": {"properties": {"world_ordinal": {"const": 0}}, "required": ["world_ordinal"]}, "then": {"properties": {"world_id": {"const": "no_probe"}}}},
+        {"if": {"properties": {"world_ordinal": {"const": 1}}, "required": ["world_ordinal"]}, "then": {"properties": {"world_id": {"const": "neutral_inconclusive"}}}},
+        {"if": {"properties": {"world_ordinal": {"const": 2}}, "required": ["world_ordinal"]}, "then": {"properties": {"world_id": {"const": "misleading_toy_positive"}}}},
+        {"if": {"properties": {"world_ordinal": {"const": 3}}, "required": ["world_ordinal"]}, "then": {"properties": {"world_id": {"const": "registered_premise_falsifier"}}}},
+        {"if": {"properties": {"world_ordinal": {"const": 4}}, "required": ["world_ordinal"]}, "then": {"properties": {"world_id": {"const": "operational_failure"}}}}
+      ]
+    },
+    "componentKind": {
+      "enum": [
+        "committed_ancestor",
+        "theory_programme",
+        "reflection_packet",
+        "conceptual_systems",
+        "genealogy",
+        "source_authority",
+        "registered_claim",
+        "generator_authority",
+        "adjudication_authority",
+        "schedule"
+      ]
+    },
+    "theoryCarrierKind": {
+      "enum": [
+        "theory_programme",
+        "reflection_packet",
+        "conceptual_systems",
+        "genealogy",
+        "registered_claim",
+        "generator_authority",
+        "adjudication_authority",
+        "schedule",
+        "experiment_spec_family"
+      ]
+    },
+    "theoryCarrier": {
+      "allOf": [
+        {"$ref": "#/$defs/baseDomainObject"},
+        {
+          "type": "object",
+          "required": [
+            "carrier_id",
+            "carrier_kind",
+            "source_ref",
+            "source_semantic_digest",
+            "source_receipt_ref"
+          ],
+          "properties": {
+            "contract_version": {"const": "experiment-world-theory-carrier/3.0.0"},
+            "object_kind": {"const": "world_theory_carrier_v3"},
+            "carrier_id": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/identifier"},
+            "carrier_kind": {"$ref": "#/$defs/theoryCarrierKind"},
+            "source_ref": {"$ref": "#/$defs/producerArtifactRef"},
+            "source_semantic_digest": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/digest"},
+            "source_receipt_ref": {"$ref": "#/$defs/producerReceiptRef"}
+          }
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "precommitAncestorCarrier": {
+      "allOf": [
+        {"$ref": "#/$defs/baseDomainObject"},
+        {
+          "type": "object",
+          "required": [
+            "ancestor_id",
+            "target_id",
+            "run_id",
+            "precommit_state_version",
+            "ancestry_relation",
+            "precommit_state_ref",
+            "precommit_state_semantic_digest",
+            "precommit_receipt_ref"
+          ],
+          "properties": {
+            "contract_version": {"const": "experiment-world-precommit-ancestor-carrier/3.0.0"},
+            "object_kind": {"const": "world_precommit_ancestor_carrier_v3"},
+            "ancestor_id": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/identifier"},
+            "target_id": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/identifier"},
+            "run_id": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/identifier"},
+            "precommit_state_version": {"type": "integer", "minimum": 0},
+            "ancestry_relation": {"const": "committed_generation_N_minus_1"},
+            "precommit_state_ref": {"$ref": "#/$defs/immutableHistoryRef"},
+            "precommit_state_semantic_digest": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/digest"},
+            "precommit_receipt_ref": {"$ref": "#/$defs/producerReceiptRef"}
+          }
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "worldPlan": {
+      "allOf": [
+        {"$ref": "#/$defs/baseDomainObject"},
+        {"$ref": "#/$defs/worldPosition"},
+        {
+          "type": "object",
+          "required": [
+            "plan_id",
+            "commission_ref",
+            "execution_disposition",
+            "intervention_kind",
+            "source_plan_digest"
+          ],
+          "properties": {
+            "contract_version": {"const": "experiment-world-plan/3.0.0"},
+            "object_kind": {"const": "world_plan_v3"},
+            "plan_id": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/identifier"},
+            "commission_ref": {"$ref": "#/$defs/commissionRef"},
+            "execution_disposition": {"enum": ["not_executed", "executed"]},
+            "intervention_kind": {
+              "enum": [
+                "suppress_execution",
+                "bounded_resource_cutoff",
+                "scoped_positive_fixture",
+                "scoped_counterexample_fixture",
+                "adapter_operational_failure"
+              ]
+            },
+            "source_plan_digest": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/digest"}
+          }
+        },
+        {
+          "if": {"properties": {"world_id": {"const": "no_probe"}}, "required": ["world_id"]},
+          "then": {"properties": {"execution_disposition": {"const": "not_executed"}, "intervention_kind": {"const": "suppress_execution"}}},
+          "else": {"properties": {"execution_disposition": {"const": "executed"}}}
+        },
+        {"if": {"properties": {"world_id": {"const": "neutral_inconclusive"}}, "required": ["world_id"]}, "then": {"properties": {"intervention_kind": {"const": "bounded_resource_cutoff"}}}},
+        {"if": {"properties": {"world_id": {"const": "misleading_toy_positive"}}, "required": ["world_id"]}, "then": {"properties": {"intervention_kind": {"const": "scoped_positive_fixture"}}}},
+        {"if": {"properties": {"world_id": {"const": "registered_premise_falsifier"}}, "required": ["world_id"]}, "then": {"properties": {"intervention_kind": {"const": "scoped_counterexample_fixture"}}}},
+        {"if": {"properties": {"world_id": {"const": "operational_failure"}}, "required": ["world_id"]}, "then": {"properties": {"intervention_kind": {"const": "adapter_operational_failure"}}}}
+      ],
+      "unevaluatedProperties": false
+    },
+    "noProbeDecision": {
+      "allOf": [
+        {"$ref": "#/$defs/baseDomainObject"},
+        {"$ref": "#/$defs/worldPosition"},
+        {
+          "type": "object",
+          "required": [
+            "decision_id",
+            "request_ref",
+            "decision_kind",
+            "execution_disposition",
+            "source_decision_digest"
+          ],
+          "properties": {
+            "contract_version": {"const": "experiment-world-no-probe-decision/3.0.0"},
+            "object_kind": {"const": "world_no_probe_decision_v3"},
+            "world_id": {"const": "no_probe"},
+            "world_ordinal": {"const": 0},
+            "decision_id": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/identifier"},
+            "request_ref": {"$ref": "#/$defs/requestRef"},
+            "decision_kind": {"const": "precommitted_no_probe"},
+            "execution_disposition": {"const": "not_executed"},
+            "source_decision_digest": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/digest"}
+          }
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "executionResult": {
+      "allOf": [
+        {"$ref": "#/$defs/baseDomainObject"},
+        {"$ref": "#/$defs/worldPosition"},
+        {
+          "type": "object",
+          "required": ["result_id", "request_ref", "result_status", "source_result_digest", "result_effect"],
+          "properties": {
+            "contract_version": {"const": "experiment-world-execution-result/3.0.0"},
+            "object_kind": {"const": "world_execution_result_v3"},
+            "world_id": {"enum": ["neutral_inconclusive", "misleading_toy_positive", "registered_premise_falsifier", "operational_failure"]},
+            "result_id": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/identifier"},
+            "request_ref": {"$ref": "#/$defs/requestRef"},
+            "result_status": {"enum": ["inconclusive", "scoped_positive", "registered_premise_falsified", "operational_failure"]},
+            "source_result_digest": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/digest"},
+            "result_effect": {"const": "next_cycle_reflection_only"}
+          }
+        },
+        {"if": {"properties": {"world_id": {"const": "neutral_inconclusive"}}, "required": ["world_id"]}, "then": {"properties": {"result_status": {"const": "inconclusive"}}}},
+        {"if": {"properties": {"world_id": {"const": "misleading_toy_positive"}}, "required": ["world_id"]}, "then": {"properties": {"result_status": {"const": "scoped_positive"}}}},
+        {"if": {"properties": {"world_id": {"const": "registered_premise_falsifier"}}, "required": ["world_id"]}, "then": {"properties": {"result_status": {"const": "registered_premise_falsified"}}}},
+        {"if": {"properties": {"world_id": {"const": "operational_failure"}}, "required": ["world_id"]}, "then": {"properties": {"result_status": {"const": "operational_failure"}}}}
+      ],
+      "unevaluatedProperties": false
+    },
+    "nextCycleReflection": {
+      "allOf": [
+        {"$ref": "#/$defs/baseDomainObject"},
+        {"$ref": "#/$defs/worldPosition"},
+        {
+          "type": "object",
+          "required": [
+            "reflection_id",
+            "result_ref",
+            "reflection_disposition",
+            "source_reflection_digest",
+            "current_cycle_theory_mutation_authorized"
+          ],
+          "properties": {
+            "contract_version": {"const": "experiment-world-next-cycle-reflection/3.0.0"},
+            "object_kind": {"const": "world_next_cycle_reflection_v3"},
+            "world_id": {"enum": ["neutral_inconclusive", "misleading_toy_positive", "registered_premise_falsifier", "operational_failure"]},
+            "reflection_id": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/identifier"},
+            "result_ref": {"$ref": "#/$defs/executionResultRef"},
+            "reflection_disposition": {"const": "pending_next_cycle_reflection_only"},
+            "source_reflection_digest": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/digest"},
+            "current_cycle_theory_mutation_authorized": {"const": false}
+          }
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "projectionComponent": {
+      "allOf": [
+        {"$ref": "#/$defs/baseDomainObject"},
+        {
+          "type": "object",
+          "required": ["component_id", "component_kind", "component_payload_ref"],
+          "properties": {
+            "contract_version": {"const": "experiment-world-projection-component/3.0.0"},
+            "object_kind": {"const": "world_projection_component_v3"},
+            "component_id": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/identifier"},
+            "component_kind": {"$ref": "#/$defs/componentKind"},
+            "component_payload_ref": {"$ref": "#/$defs/contentRef"}
+          }
+        },
+        {
+          "if": {"properties": {"component_kind": {"const": "committed_ancestor"}}, "required": ["component_kind"]},
+          "then": {"properties": {"component_payload_ref": {"$ref": "#/$defs/precommitAncestorCarrierRef"}}},
+          "else": {
+            "if": {"properties": {"component_kind": {"const": "source_authority"}}, "required": ["component_kind"]},
+            "then": {"properties": {"component_payload_ref": {"$ref": "#/$defs/literatureRef"}}},
+            "else": {"properties": {"component_payload_ref": {"$ref": "#/$defs/theoryCarrierRef"}}}
+          }
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "componentEntry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["component_kind", "object_ref"],
+      "properties": {
+        "component_kind": {"$ref": "#/$defs/componentKind"},
+        "object_ref": {"$ref": "#/$defs/projectionComponentRef"}
+      }
+    },
+    "projectionComponentVector": {
+      "type": "array",
+      "minItems": 10,
+      "maxItems": 10,
+      "prefixItems": [
+        {"allOf": [{"$ref": "#/$defs/componentEntry"}, {"properties": {"component_kind": {"const": "committed_ancestor"}}}]},
+        {"allOf": [{"$ref": "#/$defs/componentEntry"}, {"properties": {"component_kind": {"const": "theory_programme"}}}]},
+        {"allOf": [{"$ref": "#/$defs/componentEntry"}, {"properties": {"component_kind": {"const": "reflection_packet"}}}]},
+        {"allOf": [{"$ref": "#/$defs/componentEntry"}, {"properties": {"component_kind": {"const": "conceptual_systems"}}}]},
+        {"allOf": [{"$ref": "#/$defs/componentEntry"}, {"properties": {"component_kind": {"const": "genealogy"}}}]},
+        {"allOf": [{"$ref": "#/$defs/componentEntry"}, {"properties": {"component_kind": {"const": "source_authority"}}}]},
+        {"allOf": [{"$ref": "#/$defs/componentEntry"}, {"properties": {"component_kind": {"const": "registered_claim"}}}]},
+        {"allOf": [{"$ref": "#/$defs/componentEntry"}, {"properties": {"component_kind": {"const": "generator_authority"}}}]},
+        {"allOf": [{"$ref": "#/$defs/componentEntry"}, {"properties": {"component_kind": {"const": "adjudication_authority"}}}]},
+        {"allOf": [{"$ref": "#/$defs/componentEntry"}, {"properties": {"component_kind": {"const": "schedule"}}}]}
+      ],
+      "items": false
+    },
+    "projectionIndex": {
+      "allOf": [
+        {"$ref": "#/$defs/baseDomainObject"},
+        {
+          "type": "object",
+          "required": ["projection_id", "target_id", "run_id", "prior_state_version", "components"],
+          "properties": {
+            "contract_version": {"const": "experiment-world-projection-index/3.0.0"},
+            "object_kind": {"const": "world_projection_index_v3"},
+            "projection_id": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/identifier"},
+            "target_id": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/identifier"},
+            "run_id": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/identifier"},
+            "prior_state_version": {"type": "integer", "minimum": 0},
+            "components": {"$ref": "#/$defs/projectionComponentVector"}
+          }
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "commission": {
+      "allOf": [
+        {"$ref": "#/$defs/baseDomainObject"},
+        {
+          "type": "object",
+          "required": [
+            "commission_id",
+            "target_id",
+            "run_id",
+            "prior_state_version",
+            "projection_index_ref",
+            "registered_claim_ref",
+            "spec_family_ref",
+            "adjudication_materializer_binding_ref",
+            "schedule_materializer_binding_ref",
+            "world_order"
+          ],
+          "properties": {
+            "contract_version": {"const": "dynamic-experiment-world-matrix-commission/3.0.0"},
+            "object_kind": {"const": "world_matrix_commission_v3"},
+            "commission_id": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/identifier"},
+            "target_id": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/identifier"},
+            "run_id": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/identifier"},
+            "prior_state_version": {"type": "integer", "minimum": 0},
+            "projection_index_ref": {"$ref": "#/$defs/projectionIndexRef"},
+            "registered_claim_ref": {"$ref": "#/$defs/theoryCarrierRef"},
+            "spec_family_ref": {"$ref": "#/$defs/theoryCarrierRef"},
+            "adjudication_materializer_binding_ref": {"$ref": "#/$defs/materializerBindingRef"},
+            "schedule_materializer_binding_ref": {"$ref": "#/$defs/materializerBindingRef"},
+            "world_order": {"$ref": "#/$defs/worldOrder"}
+          }
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "request": {
+      "allOf": [
+        {"$ref": "#/$defs/baseDomainObject"},
+        {"$ref": "#/$defs/worldPosition"},
+        {
+          "type": "object",
+          "required": ["request_id", "execution_disposition", "commission_ref", "world_plan_ref"],
+          "properties": {
+            "contract_version": {"const": "experiment-world-request/3.0.0"},
+            "object_kind": {"const": "world_request_v3"},
+            "request_id": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/identifier"},
+            "execution_disposition": {"enum": ["not_executed", "executed"]},
+            "commission_ref": {"$ref": "#/$defs/commissionRef"},
+            "world_plan_ref": {"$ref": "#/$defs/worldPlanRef"}
+          }
+        },
+        {
+          "if": {"properties": {"world_id": {"const": "no_probe"}}, "required": ["world_id"]},
+          "then": {"properties": {"execution_disposition": {"const": "not_executed"}}},
+          "else": {"properties": {"execution_disposition": {"const": "executed"}}}
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "observation": {
+      "allOf": [
+        {"$ref": "#/$defs/baseDomainObject"},
+        {"$ref": "#/$defs/worldPosition"},
+        {
+          "type": "object",
+          "required": [
+            "observation_id",
+            "observation_kind",
+            "commission_ref",
+            "request_ref",
+            "result_effect"
+          ],
+          "properties": {
+            "contract_version": {"const": "experiment-world-observation/3.0.0"},
+            "object_kind": {"const": "world_observation_v3"},
+            "observation_id": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/identifier"},
+            "observation_kind": {"enum": ["no_probe_decision", "executed_result_with_reflection"]},
+            "commission_ref": {"$ref": "#/$defs/commissionRef"},
+            "request_ref": {"$ref": "#/$defs/requestRef"},
+            "no_probe_decision_ref": {"$ref": "#/$defs/noProbeDecisionRef"},
+            "result_ref": {"$ref": "#/$defs/executionResultRef"},
+            "request_materializer_binding_ref": {"$ref": "#/$defs/materializerBindingRef"},
+            "result_materializer_binding_ref": {"$ref": "#/$defs/materializerBindingRef"},
+            "reflection_ref": {"$ref": "#/$defs/nextCycleReflectionRef"},
+            "reflection_materializer_binding_ref": {"$ref": "#/$defs/materializerBindingRef"},
+            "result_effect": {"const": "next_cycle_reflection_only"}
+          }
+        },
+        {
+          "if": {"properties": {"world_id": {"const": "no_probe"}}, "required": ["world_id"]},
+          "then": {
+            "required": ["no_probe_decision_ref"],
+            "properties": {"observation_kind": {"const": "no_probe_decision"}},
+            "not": {
+              "anyOf": [
+                {"required": ["result_ref"]},
+                {"required": ["request_materializer_binding_ref"]},
+                {"required": ["result_materializer_binding_ref"]},
+                {"required": ["reflection_ref"]},
+                {"required": ["reflection_materializer_binding_ref"]}
+              ]
+            }
+          },
+          "else": {
+            "required": [
+              "result_ref",
+              "request_materializer_binding_ref",
+              "result_materializer_binding_ref",
+              "reflection_ref",
+              "reflection_materializer_binding_ref"
+            ],
+            "properties": {"observation_kind": {"const": "executed_result_with_reflection"}},
+            "not": {"required": ["no_probe_decision_ref"]}
+          }
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "envelope": {
+      "allOf": [
+        {"$ref": "#/$defs/baseDomainObject"},
+        {"$ref": "#/$defs/worldPosition"},
+        {
+          "type": "object",
+          "required": [
+            "envelope_id",
+            "commission_ref",
+            "observation_ref",
+            "observation_materializer_binding_ref",
+            "parent_root_ref",
+            "observation_materialization_scope",
+            "experiment_execution_implied"
+          ],
+          "properties": {
+            "contract_version": {"const": "experiment-world-observation-envelope/3.0.0"},
+            "object_kind": {"const": "world_observation_envelope_v3"},
+            "envelope_id": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/identifier"},
+            "commission_ref": {"$ref": "#/$defs/commissionRef"},
+            "observation_ref": {"$ref": "#/$defs/observationRef"},
+            "observation_materializer_binding_ref": {"$ref": "#/$defs/materializerBindingRef"},
+            "parent_root_ref": {"$ref": "#/$defs/contentRef"},
+            "observation_materialization_scope": {"const": "typed_observation_storage_only"},
+            "experiment_execution_implied": {"const": false}
+          }
+        },
+        {
+          "if": {"properties": {"world_ordinal": {"const": 0}}, "required": ["world_ordinal"]},
+          "then": {"properties": {"parent_root_ref": {"$ref": "#/$defs/anchorRootRef"}}},
+          "else": {"properties": {"parent_root_ref": {"$ref": "#/$defs/envelopeRef"}}}
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "worldRequestEntry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["world_id", "object_ref"],
+      "properties": {"world_id": {"$ref": "#/$defs/worldId"}, "object_ref": {"$ref": "#/$defs/requestRef"}}
+    },
+    "worldEnvelopeEntry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["world_id", "object_ref"],
+      "properties": {"world_id": {"$ref": "#/$defs/worldId"}, "object_ref": {"$ref": "#/$defs/envelopeRef"}}
+    },
+    "worldBindingEntry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["world_id", "object_ref"],
+      "properties": {"world_id": {"$ref": "#/$defs/worldId"}, "object_ref": {"$ref": "#/$defs/materializerBindingRef"}}
+    },
+    "worldRequestVector": {"$ref": "#/$defs/worldRequestVectorClosed"},
+    "worldRequestVectorClosed": {
+      "type": "array",
+      "minItems": 5,
+      "maxItems": 5,
+      "prefixItems": [
+        {"allOf": [{"$ref": "#/$defs/worldRequestEntry"}, {"properties": {"world_id": {"const": "no_probe"}}}]},
+        {"allOf": [{"$ref": "#/$defs/worldRequestEntry"}, {"properties": {"world_id": {"const": "neutral_inconclusive"}}}]},
+        {"allOf": [{"$ref": "#/$defs/worldRequestEntry"}, {"properties": {"world_id": {"const": "misleading_toy_positive"}}}]},
+        {"allOf": [{"$ref": "#/$defs/worldRequestEntry"}, {"properties": {"world_id": {"const": "registered_premise_falsifier"}}}]},
+        {"allOf": [{"$ref": "#/$defs/worldRequestEntry"}, {"properties": {"world_id": {"const": "operational_failure"}}}]}
+      ],
+      "items": false
+    },
+    "worldEnvelopeVector": {
+      "type": "array",
+      "minItems": 5,
+      "maxItems": 5,
+      "prefixItems": [
+        {"allOf": [{"$ref": "#/$defs/worldEnvelopeEntry"}, {"properties": {"world_id": {"const": "no_probe"}}}]},
+        {"allOf": [{"$ref": "#/$defs/worldEnvelopeEntry"}, {"properties": {"world_id": {"const": "neutral_inconclusive"}}}]},
+        {"allOf": [{"$ref": "#/$defs/worldEnvelopeEntry"}, {"properties": {"world_id": {"const": "misleading_toy_positive"}}}]},
+        {"allOf": [{"$ref": "#/$defs/worldEnvelopeEntry"}, {"properties": {"world_id": {"const": "registered_premise_falsifier"}}}]},
+        {"allOf": [{"$ref": "#/$defs/worldEnvelopeEntry"}, {"properties": {"world_id": {"const": "operational_failure"}}}]}
+      ],
+      "items": false
+    },
+    "worldBindingVector": {
+      "type": "array",
+      "minItems": 5,
+      "maxItems": 5,
+      "prefixItems": [
+        {"allOf": [{"$ref": "#/$defs/worldBindingEntry"}, {"properties": {"world_id": {"const": "no_probe"}}}]},
+        {"allOf": [{"$ref": "#/$defs/worldBindingEntry"}, {"properties": {"world_id": {"const": "neutral_inconclusive"}}}]},
+        {"allOf": [{"$ref": "#/$defs/worldBindingEntry"}, {"properties": {"world_id": {"const": "misleading_toy_positive"}}}]},
+        {"allOf": [{"$ref": "#/$defs/worldBindingEntry"}, {"properties": {"world_id": {"const": "registered_premise_falsifier"}}}]},
+        {"allOf": [{"$ref": "#/$defs/worldBindingEntry"}, {"properties": {"world_id": {"const": "operational_failure"}}}]}
+      ],
+      "items": false
+    },
+    "certificate": {
+      "allOf": [
+        {"$ref": "#/$defs/baseDomainObject"},
+        {
+          "type": "object",
+          "required": ["certificate_id", "commission_ref", "observation_envelopes", "world_order", "result_effect"],
+          "properties": {
+            "contract_version": {"const": "experiment-world-certificate/3.0.0"},
+            "object_kind": {"const": "world_matrix_certificate_v3"},
+            "certificate_id": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/identifier"},
+            "commission_ref": {"$ref": "#/$defs/commissionRef"},
+            "observation_envelopes": {"$ref": "#/$defs/worldEnvelopeVector"},
+            "world_order": {"$ref": "#/$defs/worldOrder"},
+            "result_effect": {"const": "next_cycle_reflection_only"}
+          }
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "anchorRoot": {
+      "allOf": [
+        {"$ref": "#/$defs/baseDomainObject"},
+        {
+          "type": "object",
+          "required": [
+            "anchor_id",
+            "target_id",
+            "run_id",
+            "prior_state_version",
+            "literature_input_ref",
+            "projection_index_ref",
+            "commission_ref",
+            "commission_materializer_binding_ref",
+            "world_requests",
+            "world_request_materializer_bindings",
+            "world_order"
+          ],
+          "properties": {
+            "contract_version": {"const": "experiment-world-anchor-root/3.0.0"},
+            "object_kind": {"const": "world_matrix_anchor_root_v3"},
+            "anchor_id": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/identifier"},
+            "target_id": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/identifier"},
+            "run_id": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/identifier"},
+            "prior_state_version": {"type": "integer", "minimum": 0},
+            "literature_input_ref": {"$ref": "#/$defs/literatureRef"},
+            "projection_index_ref": {"$ref": "#/$defs/projectionIndexRef"},
+            "commission_ref": {"$ref": "#/$defs/commissionRef"},
+            "commission_materializer_binding_ref": {"$ref": "#/$defs/materializerBindingRef"},
+            "world_requests": {"$ref": "#/$defs/worldRequestVector"},
+            "world_request_materializer_bindings": {"$ref": "#/$defs/worldBindingVector"},
+            "world_order": {"$ref": "#/$defs/worldOrder"}
+          }
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "aggregationRoot": {
+      "allOf": [
+        {"$ref": "#/$defs/baseDomainObject"},
+        {
+          "type": "object",
+          "required": [
+            "aggregation_id",
+            "target_id",
+            "run_id",
+            "anchor_root_ref",
+            "observation_envelopes",
+            "certificate_ref",
+            "certificate_materializer_binding_ref",
+            "world_order",
+            "result_effect"
+          ],
+          "properties": {
+            "contract_version": {"const": "experiment-world-aggregation-root/3.0.0"},
+            "object_kind": {"const": "world_matrix_aggregation_root_v3"},
+            "aggregation_id": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/identifier"},
+            "target_id": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/identifier"},
+            "run_id": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/identifier"},
+            "anchor_root_ref": {"$ref": "#/$defs/anchorRootRef"},
+            "observation_envelopes": {"$ref": "#/$defs/worldEnvelopeVector"},
+            "certificate_ref": {"$ref": "#/$defs/certificateRef"},
+            "certificate_materializer_binding_ref": {"$ref": "#/$defs/materializerBindingRef"},
+            "world_order": {"$ref": "#/$defs/worldOrder"},
+            "result_effect": {"const": "next_cycle_reflection_only"}
+          }
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "descendantReflectionRoot": {
+      "allOf": [
+        {"$ref": "#/$defs/baseDomainObject"},
+        {
+          "type": "object",
+          "required": [
+            "reflection_id",
+            "target_id",
+            "run_id",
+            "aggregation_root_ref",
+            "reflection_disposition",
+            "result_effect",
+            "current_cycle_theory_mutation_authorized",
+            "automatic_theory_selection_authorized",
+            "proof_authorized",
+            "physics_authority"
+          ],
+          "properties": {
+            "contract_version": {"const": "experiment-world-descendant-reflection-root/3.0.0"},
+            "object_kind": {"const": "world_matrix_descendant_reflection_root_v3"},
+            "reflection_id": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/identifier"},
+            "target_id": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/identifier"},
+            "run_id": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/identifier"},
+            "aggregation_root_ref": {"$ref": "#/$defs/aggregationRootRef"},
+            "reflection_disposition": {"const": "immutable_input_for_later_theory_reflection"},
+            "result_effect": {"const": "later_theory_cycle_reflection_input_only"},
+            "current_cycle_theory_mutation_authorized": {"const": false},
+            "automatic_theory_selection_authorized": {"const": false},
+            "proof_authorized": {"const": false},
+            "physics_authority": {"const": false}
+          }
+        }
+      ],
+      "unevaluatedProperties": false
+    }
+  }
+}

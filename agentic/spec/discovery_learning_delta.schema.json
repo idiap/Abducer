@@ -1,0 +1,227 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://abducer.local/schemas/discovery_learning_delta.schema.json",
+  "title": "Semantic discovery learning delta",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "delta_id",
+    "identity",
+    "classification",
+    "truth_status",
+    "worker_status",
+    "duration_seconds",
+    "semantic_mutations",
+    "affected_hypothesis_ids",
+    "evidence",
+    "literature_effects",
+    "source_event_ids",
+    "operator_receipt_ids",
+    "summary"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "delta_id": {"$ref": "#/$defs/identifier"},
+    "identity": {"$ref": "#/$defs/namespace"},
+    "classification": {
+      "enum": [
+        "perspective_shift",
+        "conceptual_deepening",
+        "theory_synthesis",
+        "unification",
+        "ontology_revision",
+        "explanatory_compression",
+        "productive_contradiction",
+        "literature_absorption",
+        "literature_contradiction",
+        "source_generated_opportunity",
+        "high_risk_maturation",
+        "branch_convergence",
+        "branch_conflict",
+        "new_supported_claim",
+        "new_falsifier",
+        "assumption_repair",
+        "region_narrowing",
+        "duplicate",
+        "rhetorical_rewrite",
+        "operational_failure"
+      ]
+    },
+    "truth_status": {"enum": ["unknown", "suggestive", "supported", "established", "refuted"]},
+    "worker_status": {"enum": ["succeeded", "failed", "timed_out"]},
+    "duration_seconds": {"type": "number", "minimum": 0},
+    "semantic_mutations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["mutation_kind", "entity_id", "before_digest", "after_digest", "description"],
+        "properties": {
+          "mutation_kind": {
+            "enum": [
+              "primitive_added",
+              "primitive_removed",
+              "ontology_edge_changed",
+              "mechanism_revised",
+              "genealogy_edge_added",
+              "unification_map_added",
+              "explanatory_dependency_changed",
+              "hypothesis_relation_changed",
+              "assumption_changed",
+              "region_narrowed",
+              "scheduled_action_changed",
+              "status_changed"
+            ]
+          },
+          "entity_id": {"$ref": "#/$defs/identifier"},
+          "before_digest": {
+            "oneOf": [{"$ref": "#/$defs/digest"}, {"type": "null"}]
+          },
+          "after_digest": {"$ref": "#/$defs/digest"},
+          "description": {"type": "string", "minLength": 1}
+        }
+      }
+    },
+    "affected_hypothesis_ids": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {"$ref": "#/$defs/identifier"}
+    },
+    "evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "relation", "claim_ids", "falsified_premise"],
+      "properties": {
+        "status": {"enum": ["none", "unvalidated", "validated", "failed_execution"]},
+        "relation": {"enum": ["none", "supports", "contradicts", "mixed"]},
+        "claim_ids": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/identifier"}
+        },
+        "falsified_premise": {"type": ["string", "null"]}
+      }
+    },
+    "literature_effects": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "snapshot_id",
+        "changed_concept_ids",
+        "changed_relation_ids",
+        "scheduled_action_ids"
+      ],
+      "properties": {
+        "snapshot_id": {
+          "oneOf": [{"$ref": "#/$defs/identifier"}, {"type": "null"}]
+        },
+        "changed_concept_ids": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/identifier"}
+        },
+        "changed_relation_ids": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/identifier"}
+        },
+        "scheduled_action_ids": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/identifier"}
+        }
+      }
+    },
+    "source_event_ids": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {"$ref": "#/$defs/identifier"}
+    },
+    "operator_receipt_ids": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {"$ref": "#/$defs/identifier"}
+    },
+    "summary": {"type": "string", "minLength": 1},
+    "operational_error": {
+      "oneOf": [
+        {"type": "null"},
+        {
+          "type": "object",
+          "required": ["type", "message"],
+          "properties": {
+            "type": {"type": "string", "minLength": 1},
+            "message": {"type": "string"}
+          }
+        }
+      ]
+    },
+    "recommended_transition": {
+      "enum": ["promote", "persist", "pivot", "backtrack", "quarantine", "exhaust", "complete"]
+    },
+    "stop_condition": {
+      "enum": [
+        "fruitful_incubation",
+        "reflective_plateau",
+        "theory_reframe",
+        "formalization_ready",
+        "proof_ready",
+        "decisive_falsification",
+        "all_branches_terminal",
+        "budget_exhaustion",
+        "operational_failure"
+      ]
+    }
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"worker_status": {"enum": ["failed", "timed_out"]}}},
+      "then": {
+        "properties": {
+          "classification": {"const": "operational_failure"},
+          "semantic_mutations": {"maxItems": 0},
+          "evidence": {"properties": {"status": {"const": "failed_execution"}}}
+        },
+        "required": ["operational_error"]
+      }
+    },
+    {
+      "if": {"properties": {"classification": {"const": "new_falsifier"}}},
+      "then": {
+        "properties": {
+          "affected_hypothesis_ids": {"minItems": 1},
+          "evidence": {
+            "properties": {
+              "status": {"const": "validated"},
+              "relation": {"const": "contradicts"},
+              "falsified_premise": {"type": "string", "minLength": 1}
+            }
+          }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "identifier": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]*$",
+      "not": {"enum": ["latest", "current", "global"]}
+    },
+    "digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "namespace": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["target_id", "run_id", "branch_id", "state_version"],
+      "properties": {
+        "target_id": {"$ref": "#/$defs/identifier"},
+        "run_id": {"$ref": "#/$defs/identifier"},
+        "branch_id": {"$ref": "#/$defs/identifier"},
+        "state_version": {"type": "integer", "minimum": 0}
+      }
+    }
+  }
+}

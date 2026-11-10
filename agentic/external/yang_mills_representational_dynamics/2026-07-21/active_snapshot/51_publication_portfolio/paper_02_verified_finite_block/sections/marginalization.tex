@@ -1,0 +1,128 @@
+\section{One exact conditional marginalization}\label{sec:marginal}
+
+Use the decomposition $A=My+Nz$ from \eqref{eq:decomposition}.  Define
+\begin{equation}\label{eq:cylinder}
+ \cY_r=\{y\in\R^{51}:\norm y\le r/20\},\qquad
+ \cD_r=\{z\in\R^{357}:\norm z\le r/2\}.
+\end{equation}
+Since $\norm M\le5$,
+\[
+ \norm{My+Nz}\le5(r/20)+r/2=3r/4.
+\]
+The product cylinder therefore lies strictly inside $\cC_r$.
+
+For $y\in\cY_r$, put
+\begin{equation}\label{eq:conditional-law}
+ Z_t(y)=\int_{\cD_r}e^{-S_t(My+Nz)}\dd z,\qquad
+ \nu_{t,y}(\dd z)=Z_t(y)^{-1}e^{-S_t(My+Nz)}\mathbf1_{\cD_r}(z)\dd z
+\end{equation}
+and
+\begin{equation}\label{eq:effective-action}
+ S_t^{\eff}(y)=-\log Z_t(y).
+\end{equation}
+These are the exactly normalized conditional law and effective action of the
+reduced heat-kernel density restricted to the declared cylinder.
+
+\begin{theorem}[Verified finite-block marginalization]\label{thm:main}
+On the side-two four-dimensional cubical block with rooted lexicographic tree
+gauge, retained map \eqref{eq:selected-rows}, radius $r=10^{-5}$, and
+$0<t\le10^{-18}$, the following assertions hold.
+
+\begin{enumerate}
+\item The scalar reduced, retained, and fiber dimensions are $136$, $17$, and
+$119$; their $\suTwo$ dimensions are $408$, $51$, and $357$.
+\item Tree gauge gives the exact Haar factorization
+\eqref{eq:haar-factorization}.  The cotree curvature form satisfies
+$H\ge\frac1{25}\Id$.
+\item The exact nonlinear action \eqref{eq:exact-action} satisfies
+\eqref{eq:eta-bound}--\eqref{eq:tau-bound}; the curvature chart is
+$199/1000$ lower Lipschitz.
+\item For every $y\in\cY_r$, the conditional potential on $\cD_r$ is strongly
+convex:
+\begin{equation}\label{eq:fiber-convexity}
+ tD_z^2S_t(My+Nz)\succeq\frac3{80}\Id.
+\end{equation}
+The normalized conditional laws obey
+\begin{equation}\label{eq:transport-bound}
+ W_2(\nu_{t,y},\nu_{t,y'})\le\frac13\norm{y-y'}
+ \qquad(y,y'\in\cY_r).
+\end{equation}
+\item The local effective action is $C^2$ and
+\begin{equation}\label{eq:effective-hessian-bound}
+ \norm{tD^2S_t^{\eff}(y)-\Id_{51}}\le\frac1{15}.
+\end{equation}
+In particular,
+\begin{equation}\label{eq:effective-coercivity}
+ \frac{14}{15}\Id_{51}\preceq tD^2S_t^{\eff}(y)
+ \preceq\frac{16}{15}\Id_{51}.
+\end{equation}
+\end{enumerate}
+All conclusions are uniform over the displayed cylinder and time interval.
+They do not concern the unrestricted interacting density outside that
+cylinder.
+\end{theorem}
+
+\begin{proof}
+The first three items collect Propositions~\ref{prop:dimensions},
+\ref{prop:action-norm}, Theorem~\ref{thm:cotree-coercivity}, and
+Corollary~\ref{cor:injectivity}.  For the last two, write
+\[
+ tS_t(My+Nz)=\tfrac12\norm y^2
+ +\tfrac12 z^{\mathsf T}H_Fz+W_t(y,z),
+ \qquad H_F=N^{\mathsf T}HN.
+\]
+By $H_F\ge1/25$ and \eqref{eq:eta-bound},
+\[
+ \norm{D_z^2W_t}<\frac1{400},\qquad
+ \norm{D_zD_yW_t}<\frac5{400}=\frac1{80},\qquad
+ \norm{D_y^2W_t}<\frac{25}{400}=\frac1{16}.
+\]
+Thus $D_z^2(tS_t)\succeq1/25-1/400=3/80$, proving
+\eqref{eq:fiber-convexity}.  Strong log-concavity on the common convex domain,
+the logarithmic Sobolev inequality, and its transport consequence
+\cite{OttoVillani2000} give
+\[
+ W_2(\nu_{t,y},\nu_{t,y'})
+ \le\frac{1/80}{3/80}\norm{y-y'}=\frac13\norm{y-y'}.
+\]
+
+Compactness of $\cD_r$ justifies differentiation under the integral.  The
+exact identity
+\begin{equation}\label{eq:hessian-identity}
+ D^2S_t^{\eff}
+ =\E_{\nu_{t,y}}[D_y^2S_t]
+  -\Cov_{\nu_{t,y}}(D_yS_t,D_yS_t)
+\end{equation}
+and the Brascamp--Lieb covariance inequality
+\cite{BrascampLieb1976} imply
+\[
+ \norm{tD^2S_t^{\eff}-\Id}
+ \le\frac1{16}+\frac{(1/80)^2}{3/80}
+ =\frac1{15}.
+\]
+This proves \eqref{eq:effective-hessian-bound} and
+\eqref{eq:effective-coercivity}.  Appendix~\ref{app:marginal} gives the
+regularization argument for the hard convex boundary.
+\end{proof}
+
+\begin{proposition}[Declared reference complement]\label{prop:reference-tail}
+Let $\gamma_{t,F}$ be the unrestricted centered tangent Gaussian on
+$\R^{357}$ with precision $H_F/t$.  Then, for $0<t\le10^{-18}$,
+\[
+ \gamma_{t,F}(\norm z>r/2)\le\frac{357}{10^6}.
+\]
+\end{proposition}
+
+\begin{proof}
+Theorem~\ref{thm:cotree-coercivity} gives
+$\E\norm Z^2=t\operatorname{tr}H_F^{-1}\le357\cdot25t$.
+Markov's inequality at $r/2=1/200000$ gives the result.
+\end{proof}
+
+\begin{remark}
+Proposition~\ref{prop:reference-tail} is a calibration of the tangent
+reference only.  Nonlinear action control inside a chart cannot by itself
+bound the normalization or probability of the complement under the full
+interacting link measure.  That missing estimate is the first open bridge to
+an iterated construction.
+\end{remark}

@@ -1,0 +1,17 @@
+# SPDX-FileCopyrightText: © 2026 Idiap Research Institute <contact@idiap.ch>
+#
+# SPDX-FileContributor: Andre Freitas <andre.freitas@idiap.ch>
+# Neuro-symbolic AI Group
+#
+# SPDX-FileContributor: Danilo Gusicuma <danilo.gusicuma@idiap.ch>
+# Neuro-symbolic AI Group
+#
+# SPDX-License-Identifier: MIT
+erfl 0.2
+reasoning cohere_fast_adaptive_frontier {
+  goal "form a bounded domain frontier without epistemic promotion" -> frontier_status
+  steps pre:_[scope_state->frontier_candidate] -requires> ...
+        e0:E[frontier_candidate->frontier_status]
+  on e0.accepted => switch @cohere_fast_derivation_and_proof
+  on e0.quarantined => stop
+}

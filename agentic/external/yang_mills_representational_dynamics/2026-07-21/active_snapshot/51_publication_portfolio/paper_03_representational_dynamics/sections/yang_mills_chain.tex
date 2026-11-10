@@ -1,0 +1,124 @@
+\section{Yang--Mills as a full-chain test}
+\label{sec:ymchain}
+
+The Yang--Mills problem is unusually revealing because the structures needed
+for the conclusion are naturally distributed across representations.  The
+official target combines existence of a nontrivial continuum quantum field
+theory with a positive Hamiltonian mass gap \cite{JaffeWitten2000}.  A finite
+lattice construction makes neither conjunct automatic.
+
+\subsection{The representation chain}
+
+Fix a compact simple gauge group $G$.  A constructive route may begin with
+lattice link variables at spacing $a$ and physical volume $L$, pass to
+gauge-orbit data, integrate fluctuations into block variables, take volume
+and cutoff limits of renormalized gauge-invariant observables, reconstruct a
+Hilbert-space theory, and finally interpret Euclidean decay spectrally:
+
+\begin{figure}[t]
+\centering
+\begin{tikzpicture}[
+  node distance=7mm,
+  box/.style={draw,rounded corners,align=center,minimum width=42mm,
+    minimum height=8mm,font=\small},
+  arr/.style={-{Latex[length=1.8mm]},thick},
+  lab/.style={font=\scriptsize,align=left},
+  exposed/.style={font=\scriptsize,align=left,text width=47mm}]
+\node[box] (lat) {lattice links};
+\node[box,below=of lat] (quo) {gauge quotient};
+\node[box,below=of quo] (rg) {blocked family};
+\node[box,below=of rg] (sch) {continuum Schwinger data};
+\node[box,below=of sch] (os) {OS Hilbert space};
+\node[box,below=of os] (sp) {Hamiltonian spectrum};
+\draw[arr] (lat) -- node[left,lab] {descent} (quo);
+\draw[arr] (quo) -- node[left,lab] {block RG} (rg);
+\draw[arr] (rg) -- node[left,lab] {limits} (sch);
+\draw[arr] (sch) -- node[left,lab] {OS reconstruction} (os);
+\draw[arr] (os) -- node[left,lab] {spectral theorem} (sp);
+\node[exposed,right=15mm of lat] {manifest structure: locality};
+\node[exposed,right=15mm of quo] {manifest structure: gauge invariance};
+\node[exposed,right=15mm of rg] {manifest structure: scale dependence};
+\node[exposed,right=15mm of sch] {manifest structure: reflection positivity};
+\node[exposed,right=15mm of os] {manifest structure: physical time};
+\node[exposed,right=15mm of sp] {manifest structure: spectral gap};
+\end{tikzpicture}
+\caption{The Yang--Mills representation chain.  The labels to the right of the nodes
+name structures naturally exposed there, not properties absent everywhere
+else.  Every arrow has separate preservation and recovery obligations.}
+\label{fig:ymchain}
+\end{figure}
+
+The chain is not a chronology and no node is globally superior.  It is an
+interface graph.  The main obligations are as follows.
+
+\paragraph{Gauge descent.}
+The quotient must preserve the physical observable algebra and measure while
+accounting for orbit singularities, residual gauge transformations, and
+topological sectors.  A local gauge chart can be exact on its domain without
+covering the full measure.  Conversely, unreduced variables can carry useful
+local structure even when they are redundant; this is consonant with the
+locality analysis of surplus gauge structure
+\cite{NguyenTehWells2020}.
+
+\paragraph{Scale transformation.}
+An RG step changes variables and often the form or range of the action.  Its
+physical meaning depends on the specific RG construction; coarse graining is
+not synonymous with every use of the renormalization group
+\cite{KoberinskiFraser2023}.  For a constructive proof, the map must retain a
+state sufficient to reconstruct the required observables and must control
+positivity, locality range, large fields, boundary conditions, and topology.
+
+\paragraph{Infinite volume and continuum.}
+One needs normalized gauge-invariant observables whose correlation
+functionals converge in a declared distributional topology, together with
+reflection positivity, Euclidean covariance, clustering or another vacuum
+selection condition, nontriviality, and regulator independence.  Constants
+must be uniform in $L$ before $L\to\infty$ and stable in physical units as
+$a\downarrow0$.  A subsequential symmetric limit is not automatically the
+intended pure Yang--Mills theory.
+
+\paragraph{Reconstruction and spectral interpretation.}
+The OS axioms provide a theorem-backed route from suitable Euclidean data to
+a Hilbert space and positive Hamiltonian
+\cite{OsterwalderSchrader1973,OsterwalderSchrader1975}.  To infer a global gap
+from decay, the centered gauge-invariant core used in the estimate must be
+dense in the reconstructed vacuum complement.  Theorem
+\ref{thm:recovery-spectrum} then performs only the final inference; it cannot
+supply the Euclidean estimate or the continuum object.
+
+\subsection{Property visibility}
+
+The decisive properties do not line up in one column.  Lattice variables make
+local action and exact finite gauge covariance explicit.  The quotient makes
+physical invariance explicit but can hide local sections.  RG variables make
+scale dependence explicit but can hide microscopic locality and normalized
+boundary data.  Schwinger functions make Euclidean correlation structure
+explicit, while a Hamiltonian makes spectrum explicit.  Reflection
+positivity is an action- and interface-specific certificate, not an automatic
+benefit of Euclidean notation.  Appendix~\ref{app:ymtable} supplies the full
+visibility and obligation matrix.
+
+\subsection{The exact first open physical implication}
+
+The chain isolates a frontier before OS reconstruction.  One needs a
+gauge-invariant observable core $\mathcal D_{a,L}$ and constants in physical
+units such that, schematically,
+\begin{equation}
+\label{eq:ym-rigidity}
+ \left|\langle A\,\tau_t(B)\rangle_{a,L,c}\right|
+ \leq C_{A,B}\e^{-mt}+r_{a,L}(A,B,t),
+\end{equation}
+with $m>0$ and admissible prefactors uniform in volume and sufficiently small
+cutoff, and with recovery errors converging in the topology used for the
+Schwinger limit.  The statement must cover a core that becomes dense after
+reconstruction.  It may be generated by RG contraction, a polymer expansion,
+a transfer estimate, or another noncircular rigidity engine.  Assuming
+all-distance exponential clustering as an input would merely assume the
+needed property in a different representation.
+
+No result in this paper proves Equation~\eqref{eq:ym-rigidity} for
+four-dimensional weak-coupling pure Yang--Mills, nor does it prove the
+continuum premises.  The contribution is the implication boundary: local or
+finite spectral rigidity counts as a physical mass gap only after the
+full-measure, uniform, continuum, positivity, completeness, and reconstruction
+certificates close.

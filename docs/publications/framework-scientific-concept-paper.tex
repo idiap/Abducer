@@ -1,0 +1,405 @@
+% SPDX-FileCopyrightText: © 2026 Idiap Research Institute <contact@idiap.ch>
+%
+% SPDX-FileContributor: Andre Freitas <andre.freitas@idiap.ch>
+% Neuro-symbolic AI Group
+%
+% SPDX-FileContributor: Danilo Gusicuma <danilo.gusicuma@idiap.ch>
+% Neuro-symbolic AI Group
+%
+% SPDX-License-Identifier: MIT
+\documentclass[11pt]{article}
+
+\usepackage[margin=1in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{booktabs}
+\usepackage{enumitem}
+\usepackage{hyperref}
+\usepackage{xcolor}
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue!50!black,
+  urlcolor=blue!50!black,
+  citecolor=blue!50!black,
+  pdftitle={A Scientific Concept for Agentic Informal Theorem Assistance over Mathematical Knowledge Bases}
+}
+
+\title{A Scientific Concept for Agentic Informal Theorem Assistance\\over Mathematical Knowledge Bases}
+\author{Neuro-symbolic AI Group\\Idiap Research Institute}
+\date{March 17, 2026}
+
+\newtheorem{definition}{Definition}
+\newtheorem{principle}{Principle}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+This document presents the scientific concept behind the Abducer framework: an agentic, knowledge-base-centered approach to informal theorem assistance over mathematical source material expressed in natural language and \LaTeX. The framework is designed for hard mathematical settings in which direct formal proof is unavailable, incomplete, or strategically premature. Instead of aiming first at proof certification, it constructs a typed web of statements, concepts, methods, barriers, hypotheses, proof obligations, queued conjectures, and persistent proof artifacts, then applies distinct inference modes to organize, connect, test, revise, prove, govern, and interpret that web. The central scientific claim is that mathematical discovery can be operationalized as controlled movement over a structured epistemic object: a problem-specific knowledge base whose theorem-body grounding, coherence, explanatory power, conceptual bridge structure, proof-sketch viability, and outer-loop proof state can all be made explicit, inspectable, and revisable. The approach therefore treats informal theorem assistance not as one-shot question answering, but as an iterative program of theorem-body normalization, concept formation, bridge-object conjecture, proof-queue construction, critique-governed prove cycles, theory-level coherence management, and meta-level reflection.
+\end{abstract}
+
+\section{Introduction}
+
+Hard mathematical problems rarely fail because isolated statements are unknown. They fail because the available concepts, representations, and methods do not yet cohere into a route that transports local knowledge into a global proof. In such settings, a useful reasoning system must do more than retrieve facts or restate known theorems. It must help identify where the inferential web is sparse, where bridge objects are missing, which conceptual interfaces are overburdened, and which proof moves are blocked by structural barriers.
+
+The Abducer framework is built for that setting. It takes mathematical source material in \LaTeX, parses it into a problem-specific knowledge base (KB), and then applies a family of agentic skills that operate over the KB through distinct inference modes. The aim is not to replace formal theorem proving, but to provide an intermediate scientific layer between informal mathematical literature and eventual formal proof: a layer in which hypotheses, conceptual shifts, bridge objects, proof sketches, queued conjectures, proof attempts, and theory revisions can be generated, tested, logged, interpreted, and compared.
+
+\section{Scientific Objective}
+
+The framework targets the following scientific problem:
+
+\begin{quote}
+How can an agentic reasoning system support mathematical discovery in domains where direct proof is not yet available, by explicitly representing and iteratively revising the conceptual and inferential structure of the problem?
+\end{quote}
+
+This objective differs from classical automated theorem proving in three ways.
+
+\begin{enumerate}[leftmargin=*,itemsep=0.3em]
+\item It treats \emph{problem understanding} as a first-class computational object.
+\item It evaluates not only statements, but also \emph{connections}, \emph{barriers}, \emph{representational shifts}, \emph{intermediate invariants}, and \emph{bridge abstractions}.
+\item It makes the reasoning process itself inspectable through typed artifacts, run-scoped logs, human-readable reports, graph views, and publication-quality documents.
+\end{enumerate}
+
+\section{Phase 0: Theorem-Body Normalization and Claim Licensing}
+
+The current framework starts one step earlier than a bridge or proof-sketch pipeline. Before discovery-stage ranking, it requires a normalization pass that turns raw statements into theorem-body form and records what is actually licensed to be asserted.
+
+\begin{definition}[Theorem-body normalization]
+Given a raw statement excerpt $s$, the normalization operator produces
+\[
+\mathcal{N}(s) = (H_s, C_s, Q_s, M_s, T_s),
+\]
+where $H_s$ is the set of typed hypotheses, $C_s$ the typed conclusion, $Q_s$ the quantifier regime, $M_s$ the ambient model and admissibility assumptions, and $T_s$ the threshold or asymptotic conditions.
+\end{definition}
+
+This step matters scientifically because bridge planning over topic labels is not yet mathematical reasoning. The framework therefore introduces an explicit assertion license for every live claim.
+
+\begin{definition}[Claim class]
+Every important emitted claim should be readable as exactly one of:
+\begin{itemize}[leftmargin=*,itemsep=0.2em]
+\item grounded local theorem;
+\item conditional route claim;
+\item conjectural bridge-object proposal;
+\item research recommendation.
+\end{itemize}
+\end{definition}
+
+This discipline is what prevents coherence, novelty, and structural fit from masquerading as evidence.
+
+\section{Knowledge Base as the Central Scientific Object}
+
+The central object of the framework is a one-file mathematical KB. For a given problem, the KB stores canonical statements, definitions, axioms, theorems, barriers, and open gaps in a common structure. The KB is not just a repository of facts. It is the evolving scientific state of the problem.
+
+\begin{definition}[Problem KB]
+For a given mathematical domain, a KB state at reasoning step $t$ is a typed structure
+\[
+\mathcal{K}_t = (S_t, C_t, M_t, B_t, R_t, H_t, O_t, A_t),
+\]
+where:
+\begin{itemize}[leftmargin=*,itemsep=0.2em]
+\item $S_t$ is the set of statements;
+\item $C_t$ is the set of concepts;
+\item $M_t$ is the set of methods or proof regimes;
+\item $B_t$ is the set of barriers or obstructions;
+\item $R_t$ is the set of typed relations among these objects;
+\item $H_t$ is the current hypothesis set;
+\item $O_t$ is the set of proof obligations and unresolved gaps;
+\item $A_t$ is the artifact history generated by the reasoning process.
+\end{itemize}
+\end{definition}
+
+This representation allows the system to operate on multiple levels simultaneously:
+
+\begin{itemize}[leftmargin=*,itemsep=0.2em]
+\item statement level: what is known or claimed;
+\item concept level: which mathematical objects and abstractions are active;
+\item method level: which proof regimes or representations are in use;
+\item barrier level: what blocks transfer from one region of the KB to another;
+\item hypothesis level: what new inferential moves are being proposed.
+\end{itemize}
+
+\section{Inference Modes as Scientific Operations}
+
+The framework is organized around distinct inference modes. Each mode is a scientific operation over the current KB state rather than a generic language-model prompt.
+
+\subsection{Cohere}
+
+\texttt{cohere} is the entry mode for relational formation. It combines connection analysis with coherence evaluation. Its purpose is to identify high-information interfaces, plausible bridge relations, and the current global fit of the theory web.
+
+The key scientific role of this mode is to move from a flat collection of statements to an explicit inferential graph. Without this step, later reasoning is forced to operate on local textual adjacency rather than theory structure.
+
+\subsection{Explain}
+
+\texttt{explain} produces grounded interpretation over the KB. It does not generate new inferential content; it stabilizes intelligibility. In a scientific workflow this matters because discovery must remain auditable by a human mathematician.
+
+\subsection{Deduce}
+
+\texttt{deduce} derives conservative consequences from existing material. It is intentionally narrow. Its role is to tell us which consequences are already licensed by the KB and which proposed bridges exceed the currently available inferential support.
+
+\subsection{Abduce}
+
+\texttt{abduce} hypothesizes missing premises, missing interfaces, or latent lemmas that would make a desired connection go through. In the framework, abduction is not free association. It is constrained by the current KB structure and by the requirement that hypotheses become explicit objects for later testing.
+
+\subsection{Conjecture}
+
+\texttt{conjecture} is a distinct mode that investigates concept gaps and proposes the types of mathematical objects that could fill them. This is one of the key scientific innovations of the framework. The conjecture mode does not merely ask which statement is missing; it asks what \emph{kind of abstraction} is missing.
+
+Examples of conjectured bridge objects include:
+
+\begin{itemize}[leftmargin=*,itemsep=0.2em]
+\item representation shifts;
+\item intermediate invariants;
+\item definition introductions;
+\item barrier-escape principles;
+\item transfer objects between regimes;
+\item normal forms that preserve inferentially relevant structure.
+\end{itemize}
+
+\subsection{Proof-Sketch}
+
+\texttt{proof-sketch} takes conjectures, bridge plans, and strategies, and turns them into structured proof-outline programs. It is not a proof checker. It is a mechanism for articulating candidate proof architecture: which lemmas are needed, which invariants are preserved, where barriers appear, and where the route could fail.
+
+\subsection{Induce}
+
+\texttt{induce} is kept only as an optional late-stage synthesis mode. It is not treated as a primary discovery mode over raw KB content. Its role is to generalize already-supported bridge, strategy, or proof-sketch patterns into reusable schemas.
+
+\subsection{Discovery Cycle}
+
+\texttt{kb-discovery-cycle} turns the strongest current routes into a persistent proof queue. This is a scientific shift from open-ended brainstorming to theorem-shaped frontier management. Each queue item is a self-contained conjecture, paired with a route lemma, candidate carrier, invariant, and failure logic.
+
+\subsection{Prove Cycle}
+
+\texttt{kb-prove-cycle} consumes exactly one queued conjecture and turns it into an auditable informal proof or disproof attempt. It is local-first by design: it checks the KB, current artifacts, and problem-scoped InformalMathLib before web search is even eligible. It also makes critique explicit through judges for grounding, inferential validity, assumption discipline, citation fidelity, proof granularity, local counterexample search, obstruction analysis, and closure.
+
+\subsection{Work and Meta}
+
+\texttt{work} is the stop-aware outer loop that alternates discovery and prove while carrying persistent work-state, proof debt, and plausibility signals. \texttt{meta} is the reflection layer: it asks why the problem remains hard, how the proof state should be interpreted, and what conceptual understanding has shifted or persisted. Together they turn the system from a one-pass artifact factory into a governed research process.
+
+\section{A Coherentist View of Mathematical Discovery}
+
+The framework adopts a coherentist orientation. Individual hypotheses are not judged only in isolation. They are judged relative to the evolving web of claims, concepts, methods, and barriers.
+
+\begin{definition}[Typed coherence graph]
+Given a KB state $\mathcal{K}_t$, the coherence layer constructs a graph
+\[
+G_t = (V_t, E_t, \tau_t, \omega_t),
+\]
+where $V_t$ are typed nodes, $E_t$ are typed edges, $\tau_t$ maps nodes and edges to semantic types, and $\omega_t$ assigns weights reflecting support, attack, explanation, reframing, or blockage.
+\end{definition}
+
+The purpose of this layer is not philosophical ornament. It is operational. A hypothesis can be locally plausible yet globally damaging if it introduces tension, redundancy, or barrier conflict elsewhere in the graph. Conversely, a hypothesis can deserve promotion not because it is deductively complete, but because it increases theory-wide explanatory fit and aligns multiple previously disconnected regions.
+
+The framework therefore uses both local and global measures:
+
+\begin{itemize}[leftmargin=*,itemsep=0.2em]
+\item local support and refutation signals;
+\item local explanatory power;
+\item change in global coherence under acceptance;
+\item interaction with existing barriers;
+\item downstream effect on future deduction, abduction, and bridge planning.
+\end{itemize}
+
+\section{Persistent Proof Memory and Search Governance}
+
+The framework now includes two persistent memory objects beyond the core KB.
+
+\begin{definition}[Proof queue]
+For problem instance $P$, the proof queue
+\[
+\mathcal{Q}_P = \{ q_1, \dots, q_n \}
+\]
+stores self-contained conjectures selected for proof or disproof. Each $q_i$ includes the route claim, active carrier, invariant, route lemma, and current status.
+\end{definition}
+
+\begin{definition}[Problem-scoped InformalMathLib]
+For problem instance $P$, the InformalMathLib
+\[
+\mathcal{M}_P = (\mathcal{R}_P, \mathcal{E}_P)
+\]
+stores locally produced results $\mathcal{R}_P$ together with imported external theorems, definitions, and axioms $\mathcal{E}_P$ that were actually used in proof attempts.
+\end{definition}
+
+This matters because the framework no longer reasons only by regenerating intermediate prose. It accumulates route-level memory. Negative results, prior-art findings, and standalone subresults can therefore become persistent parts of the research state rather than transient by-products.
+
+The governance layer is equally important. Discovery is now explicitly controlled by anti-drift criteria, conjecture-value rubrics, revisit penalties, and end-to-end proof critics. In scientific terms, the system is evolving from an exploratory concept engine into a governed research process in which depth must be justified by theorem-body gain, typed carriers, sharper falsifiers, or independent subresult value.
+
+\section{Conceptual Specificity as a Requirement for Mathematical Reasoning}
+
+A central design principle of the framework is that mathematical concepts must be represented with enough specificity to preserve inferential identity. Broad topical labels such as ``gauge theory'' or ``circuit complexity'' are useful for navigation, but they are not sufficient for reasoning.
+
+\begin{principle}[Inferential specificity]
+A concept representation is specific enough for mathematical reasoning only if two statements with the same representation are interchangeable for the next intended inferential move.
+\end{principle}
+
+This principle forces the framework to model not just topics, but structured signatures such as:
+
+\begin{itemize}[leftmargin=*,itemsep=0.2em]
+\item antecedent schema;
+\item target consequence schema;
+\item preserved invariant;
+\item barrier scope;
+\item model or regime;
+\item transfer mechanism;
+\item proof obligation type.
+\end{itemize}
+
+The practical effect is that the framework can distinguish between conceptually adjacent but inferentially non-equivalent statements. That distinction is necessary if the system is to act as an informal theorem assistant rather than as a thematic clustering tool.
+
+\section{Bridge Objects and Concept-Gap Conjecture}
+
+In difficult mathematics, progress often depends on the discovery of the right intermediate object rather than on a direct derivation from known premises to the target theorem. The framework therefore introduces a dedicated conjecture stage for \emph{bridge objects}.
+
+A bridge object is any mathematical construct whose introduction makes a previously weak or impossible transfer become structured and testable. Examples include:
+
+\begin{itemize}[leftmargin=*,itemsep=0.2em]
+\item a witness that survives translation between formulations;
+\item an invariant that persists across a reduction or reconstruction;
+\item a representation in which a barrier becomes visible and attackable;
+\item a surrogate problem whose resolution would imply the original target;
+\item a normal form that isolates the proof-relevant structure of a class of statements.
+\end{itemize}
+
+The conjecture layer also carries two additional reasoning devices.
+
+\subsection{Counterfactual reasoning}
+
+For a candidate bridge object, the system asks what breaks if a proposed attribute is removed, relaxed, or replaced. This helps separate essential structure from incidental description.
+
+\subsection{Definitional reasoning}
+
+The framework attempts to articulate a \emph{definitional profile} for the bridge object:
+
+\[
+D(h) = (N(h), S(h), X(h)),
+\]
+where:
+\begin{itemize}[leftmargin=*,itemsep=0.2em]
+\item $N(h)$ is the set of necessary attributes;
+\item $S(h)$ is the family of sufficient attribute sets;
+\item $X(h)$ is the set of superficial or excluded attributes.
+\end{itemize}
+
+This matters scientifically because a bridge object should not merely be named; it should be defined in a way that exposes why it would carry inferential force.
+
+\section{Proof Sketching as Structured Scientific Hypothesizing}
+
+Proof sketches in the framework are not free-form narrative drafts. They are typed artifacts that expose:
+
+\begin{itemize}[leftmargin=*,itemsep=0.2em]
+\item the strategy family;
+\item the sequence of proof obligations;
+\item the required lemmas;
+\item preserved invariants;
+\item barrier checkpoints;
+\item abort conditions;
+\item counterfactual failure tests.
+\end{itemize}
+
+This turns proof sketching into a scientific instrument. A sketch can fail productively. Even when it does not resolve the problem, it clarifies where the missing mathematics lies.
+
+The framework currently supports several proof-sketch strategy families, including:
+
+\begin{itemize}[leftmargin=*,itemsep=0.2em]
+\item invariant lift through intermediate object;
+\item surrogate reduction transfer;
+\item barrier-escape re-encoding;
+\item contradiction via collapse or separation;
+\item bootstrapped derandomization or transfer;
+\item regime-switch case analysis.
+\end{itemize}
+
+\section{Hypothesis Evaluation and Refutation Loops}
+
+The framework does not stop at generating hypotheses. It evaluates them. Each hypothesis receives quantitative scores for support, refutation, and confidence, as well as a typed inferential readout.
+
+For a hypothesis $h$, the evaluator computes at least:
+
+\begin{itemize}[leftmargin=*,itemsep=0.2em]
+\item structural compatibility between support and target statements;
+\item grounding of the antecedent schema;
+\item grounding of the target consequence;
+\item grounding of the preserved invariant;
+\item grounding of the barrier scope;
+\item local explanatory power and coherence effects;
+\item evidence adjustments from deduction, abduction, or contradiction signals.
+\end{itemize}
+
+The result is a verdict such as supported, refuted, or inconclusive. Inconclusive is a first-class outcome. This is important because open mathematical discovery should preserve uncertainty rather than force premature binary decisions.
+
+The current framework additionally distinguishes claims that are only \emph{internally supported}. This class captures an important epistemic fact: a route can fit the current structural scoring regime without yet carrying genuine external or adversarial support.
+
+The framework also supports iterative refutation loops. Unresolved hypotheses can be retested in later rounds as the KB changes. If the theory stagnates, a revision loop can propose ontology repair, concept splitting, or re-encoding of the problem.
+
+\section{Observability and Human Interpretability}
+
+One of the framework's scientific commitments is that the reasoning process itself must remain interpretable. For that reason, every substantial stage emits:
+
+\begin{itemize}[leftmargin=*,itemsep=0.2em]
+\item structured JSON artifacts for machine reuse;
+\item markdown reports for human inspection;
+\item run-scoped reasoning logs with agent names and stage outputs;
+\item graph-based process views with typed edges;
+\item concept-evolution summaries;
+\item persistent proof queue, work-state, and plausibility artifacts;
+\item meta-reflection reports and expert-facing slide narratives;
+\item publication-oriented \LaTeX\ and PDF exports for hypothesis and review documents.
+\end{itemize}
+
+This observability layer serves two purposes. First, it enables debugging and critical review of the reasoning process. Second, it makes the system usable as a scientific collaborator rather than as a black box.
+
+\section{Illustrative Use Cases}
+
+The framework has been exercised on at least two hard-problem KBs:
+
+\begin{itemize}[leftmargin=*,itemsep=0.2em]
+\item \textbf{P vs NP}: where the system concentrates on theorem-family interfaces such as hardness magnification, proof complexity, derandomization, and meta-complexity;
+\item \textbf{Yang--Mills existence and mass gap}: where the system surfaces interfaces among Euclidean OS data, Wightman reconstruction, transfer matrices, correlator decay, spectral gap witnesses, and continuum-limit barriers.
+\end{itemize}
+
+These examples illustrate the intended scope of the framework: domains in which the main challenge is not recalling isolated facts, but constructing a conceptually coherent route through multiple mathematical regimes.
+
+\section{Why This Approach Is Scientifically Useful}
+
+The approach is scientifically useful because it produces explicit intermediate objects of inquiry. Instead of jumping directly from problem statement to proof attempt, it yields:
+
+\begin{itemize}[leftmargin=*,itemsep=0.2em]
+\item ranked intervention points;
+\item explicit bridge hypotheses;
+\item conjectured abstraction types;
+\item proof strategies;
+\item proof sketches;
+\item queued theorem-shaped proof targets;
+\item persistent proof attempts and InformalMathLib entries;
+\item evaluated and iterated hypothesis sets;
+\item theory-level coherence reports;
+\item end-to-end plausibility and governance reports.
+\end{itemize}
+
+These outputs support a mode of research in which mathematical discovery becomes inspectable, revisable, and strategically organized. The system can therefore support not only answer generation, but problem decomposition, research planning, conceptual diagnosis, and the disciplined exploration of alternative proof pathways.
+
+\section{Limitations}
+
+The framework is deliberately not a full formal prover. Its current limitations include:
+
+\begin{itemize}[leftmargin=*,itemsep=0.2em]
+\item dependence on KB quality and statement granularity;
+\item persistent risk that coherence or novelty can still be mistaken for evidence if the claim-class discipline is ignored;
+\item residual heuristic elements in concept extraction and bridge typing;
+\item only partial closure of the revision loop into executable KB transformations;
+\item limited direct theorem validation compared with proof assistants;
+\item possible overproduction of conceptually appealing but mathematically weak hypotheses if specificity constraints are not enforced;
+\item prove-cycle outputs that are still informal arguments rather than certified proofs.
+\end{itemize}
+
+These limitations are acceptable only if they remain visible and operationally constrained. That is why the system emphasizes logs, typed commitments, coherence scoring, and explicit falsifiers.
+
+\section{Conclusion}
+
+The Abducer framework embodies a scientific concept of informal theorem assistance grounded in structured KB evolution rather than one-shot theorem solving. Its core thesis is that hard mathematical reasoning can be productively supported by making theorem bodies, concepts, barriers, bridge objects, coherence relations, proof obligations, queued conjectures, and proof-state governance computationally explicit. In this view, the central achievement of the system is not merely to generate candidate proofs, but to transform a difficult mathematical problem into an inspectable evolving epistemic object.
+
+That transformation is the main scientific contribution of the approach. It creates a disciplined intermediate layer between informal literature and formal proof, and it gives both human researchers and agentic skills a common state on which conceptual discovery, abductive repair, coherentist evaluation, and proof planning can proceed.
+
+\end{document}

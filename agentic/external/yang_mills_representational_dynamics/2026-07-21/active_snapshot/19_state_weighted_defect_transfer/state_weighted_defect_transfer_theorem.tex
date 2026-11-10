@@ -1,0 +1,88 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,booktabs}
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}{Proposition}
+\newtheorem{example}{Example}
+\title{State-Weighted Defect Transfer for Dependent Block Explorations}
+\author{}
+\date{}
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We prove a weighted positive-kernel criterion for exponential suppression of
+connected bad-block events.  The criterion remembers energetic cost stored in
+a retained boundary state and can remain subcritical even when a scalar
+worst-history conditional probability equals one.  It is an abstract finite
+transfer theorem; construction of the required Yang--Mills kernel remains an
+analytic obligation.
+\end{abstract}
+
+\section{Weighted exploration}
+Let $\Sigma$ be a measurable retained-state space, $V:\Sigma\to[1,\infty)$,
+and let $Q_i(s,ds')$ be the subprobability kernel for a bad extension at step
+$i$.  Assume uniformly in $i$ and $s$ that
+\begin{equation}\label{eq:drift}
+ \int V(s')Q_i(s,ds')\le qV(s).
+\end{equation}
+
+\begin{theorem}[Weighted chain bound]
+If \eqref{eq:drift} holds and the initial law $\nu$ satisfies
+$\nu(V)\le M$, then any specified chain of $n$ bad extensions has probability
+at most $Mq^n$.
+\end{theorem}
+\begin{proof}
+Positivity and repeated kernel composition give
+\[
+ \int \nu(ds_0)Q_1(s_0,ds_1)\cdots Q_n(s_{n-1},ds_n)V(s_n)
+ \le q^n\nu(V)\le Mq^n.
+\]
+Since $V(s_n)\ge1$, deleting the terminal weight can only decrease the
+integrand on the bad-chain event.
+\end{proof}
+
+\begin{theorem}[Rooted connected-set sum]
+On a graph of maximum degree $\Delta$, suppose every connected bad set can be
+exposed by successive adjacent bad extensions satisfying the preceding
+hypothesis.  If $e^\alpha\Delta^2q<1$, then
+\[
+ \sum_{\substack{X\ni o\\X\text{ connected}}}
+ e^{\alpha|X|}\mathbb P(B_X)
+ \le \frac{M e^\alpha q}{1-e^\alpha\Delta^2q}.
+\]
+\end{theorem}
+\begin{proof}
+A rooted connected set of size $n$ admits a depth-first traversal of length at
+most $2(n-1)$, giving the standard upper bound
+$\Delta^{2(n-1)}$ on its number.  Sum the weighted chain estimate over $n$.
+\end{proof}
+
+\section{Why the state weight matters}
+\begin{example}
+For $0<q<1$, take
+\[
+ Q=\begin{pmatrix}0&q^2\\1&0\end{pmatrix},\qquad
+ V=\begin{pmatrix}1\\q^{-1}\end{pmatrix}.
+\]
+The scalar row ceiling is one, but $QV=qV$.  Entry into the high-cost state is
+rare, although the following bad transition is forced.  For finite irreducible
+$Q$, minimizing $\max_s(QV)(s)/V(s)$ over positive $V$ yields the
+Perron--Frobenius spectral radius.
+\end{example}
+
+At $q=0.002430277501841998$, $\Delta=18$, and $\alpha=0.1$, the branching
+ratio is $0.8702225338$ and the rooted sum is $0.0206959813$.  The strict
+critical value is
+\[
+ q_{\rm crit}=e^{-0.1}/18^2=0.0027927080803578997,
+\]
+equivalently a weighted extension cost greater than $5.8807435158$.
+
+\section{Scope}
+The theorem does not identify $Q$ with a nonlinear lattice Yang--Mills
+conditional kernel.  The next obligation is to construct a gauge-covariant
+retained state and physical weight satisfying the strict ceiling uniformly in
+volume.  No RG, continuum, or Hamiltonian-gap claim follows at this stage.
+\end{document}
+

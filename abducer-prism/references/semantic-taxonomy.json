@@ -1,0 +1,314 @@
+{
+  "catalogue_id": "to-prism-semantic-taxonomy-v1",
+  "status": "candidate-induction-catalogue",
+  "normative_notice": "Entries induce candidate target-project types only. Target-project instructions, schemas, examples, validators, consumers, and tests must confirm every selected object, operation, and field.",
+  "entry_semantics": {
+    "required_semantic_fields": "Minimum fields when the family is selected; target evidence may refine names and add fields.",
+    "conditional_fields": "Fields included only when target evidence or consumers require them.",
+    "invariants": "Claims that every selected representation must preserve.",
+    "allowed_provenance": "Permitted Prism provenance candidates; actual constructors and source evidence must justify selection.",
+    "allowed_assurance": "Upper bounds and conditions, never assurance inferred from vocabulary alone.",
+    "evidence_cues": "Source signals that justify investigating the candidate family, not proof that it applies.",
+    "anti_cues": "Patterns that indicate conflation, vagueness, or epistemic overclaiming."
+  },
+  "global_invariants": [
+    "Use nominal domain-and-epistemic names instead of Input, Output, Data, Item, ReasoningResult, or CritiqueResult.",
+    "Do not represent hypotheses, evidence, findings, objections, decisions, or recommendations as List[String].",
+    "Separate statement tokens, propositions, claims, observations, and evidence relations.",
+    "Separate judgments, recommendations, decisions, and actions.",
+    "A rank is relative to candidates, criteria, evidence snapshot, and ranking method; it is not truth.",
+    "Every selected field has a trace to target-project evidence or an explicit reviewed decision.",
+    "Operational failure is distinct from epistemic status.",
+    "Every epistemic occurrence in the to_prism conversion profile returns Generated[T]; stronger provenance or assurance requires a separate material boundary.",
+    "Reasoning occurrences and skills are many-to-many; neither count determines the other."
+  ],
+  "type_budget": {
+    "rule": "Use the smallest nominal type set that preserves distinctions visible in target-project examples and consumers.",
+    "introduce_a_type_when": ["public workflow port", "structured collection element", "separately consumed or validated intermediate", "branching distinction", "different provenance or assurance"],
+    "keep_as_a_field_when": ["representation is carried but not independently consumed", "detail does not change workflow behavior or assurance"],
+    "extension_rule": "Start coarse, record unresolved evidence, and split only when a new target case demonstrates an observable distinction."
+  },
+  "reasoning_granularity": {
+    "unit": "One independently meaningful typed epistemic commitment, not one skill, prompt, agent, file, or model call.",
+    "mapping": ["reasoning_occurrence_to_one_or_more_skill_contributions", "skill_artifact_to_one_or_more_reasoning_occurrences"],
+    "split_when": ["intermediate_result_is_separately_consumed", "independent_review_or_criticism", "separate_validation_boundary", "branch_or_join", "persistence_boundary", "different_provenance_or_assurance", "separate_observable_generative_judgment"],
+    "merge_when": ["complementary_instructions_for_one_typed_result", "context_or_specialist_lenses_without_independent_output"],
+    "move_to_materialization": ["parsing", "retrieval_or_query_execution", "routing", "formatting", "deterministic_computation_or_validation", "tool_or_model_invocation", "effects"],
+    "required_decision_field": "granularity_rationale",
+    "extension_rule": "Change occurrence boundaries only when new target evidence makes one of the split or merge conditions observable."
+  },
+  "example_derived_boundary_seeds": [
+    {"id": "rank_hypotheses", "input": "HypothesisEvidence", "output": "RankedHypotheses", "required_output_fields": ["candidates", "criteria", "grounds", "ties", "uncertainty", "ranking_method"], "grounding": "incident diagnosis and argument-interpretation examples"},
+    {"id": "retrieve_scientific_statements", "input": "StatementRetrievalQuery", "output": "RankedRelevantStatements", "required_output_fields": ["statement_hits_with_source_spans", "relevance_basis", "rank", "corpus_or_index_snapshot"], "grounding": "user-provided scientific retrieval example"},
+    {"id": "query_database", "input": "DatabaseQuery", "output": "TabularResultSet", "required_output_fields": ["columns_or_schema", "rows", "ordering", "truncation", "query_provenance"], "grounding": "user-provided database-query example"},
+    {"id": "review_informal_argument", "input": "ArgumentFragment", "output": "InformalLogicReview", "required_output_fields": ["premises_and_conclusion", "stance", "presumptions", "defeaters", "qualified_position"], "grounding": "libs/argumentation informal-logic workflow"},
+    {"id": "formalize_equation", "input": "EquationStatement", "output": "FormalizedEquation", "required_output_fields": ["symbols_and_assumptions", "sympy_expression", "latex_expression", "validation_status"], "grounding": "libs/mathformer SymPy pipeline; keep representations as fields unless independently consumed"}
+  ],
+  "inference_classes": [
+    {"id": "formal", "meaning": "A conclusion follows under an explicit formal system and rules.", "required": ["formal_system", "premises", "rule_or_derivation"], "does_not_establish": "Truth of premises; Proof requires the accepted checker."},
+    {"id": "material_defeasible", "meaning": "Domain content, evidence relevance, or a material policy supports a revisable conclusion.", "required": ["grounds", "relevance_or_policy", "defeaters"], "does_not_establish": "Strict entailment or proof."},
+    {"id": "representational", "meaning": "Extraction or formalization maps one representation to another.", "required": ["source_alignment", "mapping_policy", "ambiguities_or_losses"], "does_not_establish": "Truth, entailment, or unique faithfulness."},
+    {"id": "symbolic_computational", "meaning": "A named symbolic procedure transforms or solves a mathematical representation.", "required": ["algorithm", "assumptions", "side_conditions", "validation_status"], "does_not_establish": "Equivalence or completeness beyond the performed checks."}
+  ],
+  "input_object_families": [
+    {
+      "id": "statement",
+      "meaning": "A concrete linguistic token in a source artifact or communication.",
+      "required_semantic_fields": ["text", "author_or_speaker", "source_location"],
+      "conditional_fields": ["time", "revision", "language"],
+      "invariants": ["Statement identity depends on occurrence and attribution, not only normalized text."],
+      "allowed_provenance": ["ordinary", "Evidence[DomainStatement] when observed from an attributable source"],
+      "allowed_assurance": ["Validated only for explicit syntactic/schema predicates"],
+      "evidence_cues": ["message", "utterance", "quote", "document passage", "author", "speaker"],
+      "anti_cues": ["treating quoted text as proved content", "discarding attribution"],
+      "repository_candidate_examples": ["argumentation workflows: ArgumentStatement"]
+    },
+    {
+      "id": "proposition",
+      "meaning": "Truth-evaluable content independent of any one wording.",
+      "required_semantic_fields": ["normalized_content", "referenced_entities"],
+      "conditional_fields": ["scope", "time_index"],
+      "invariants": ["A proposition is not a runtime Bool and is not identified by claimant."],
+      "allowed_provenance": ["ordinary", "Computed[DomainProposition] when normalization is deterministic"],
+      "allowed_assurance": ["Supported[P]", "Proof[P]"],
+      "evidence_cues": ["claim content", "premise", "conclusion", "can be true or false"],
+      "anti_cues": ["using raw text identity as proposition identity"],
+      "repository_candidate_examples": ["informal logic: premise and conclusion propositions", "release readiness: ReadyToDeploy proposition"]
+    },
+    {
+      "id": "claim",
+      "meaning": "A proposition asserted by an accountable actor in a context.",
+      "required_semantic_fields": ["proposition", "claimant", "assertion_context"],
+      "conditional_fields": ["asserted_at", "qualification", "source_statement"],
+      "invariants": ["Claim attribution remains available even when several claims express the same proposition."],
+      "allowed_provenance": ["ordinary", "Evidence[DomainClaim] when observed"],
+      "allowed_assurance": ["Support/proof attaches to the proposition, not automatically to the act of claiming"],
+      "evidence_cues": ["asserts", "reports that", "maintains", "concludes"],
+      "anti_cues": ["claimant omitted where accountability matters", "assertion treated as evidence of its own content"],
+      "repository_candidate_examples": ["argumentation workflows: NormalizedClaim", "release readiness: ReadinessClaim"]
+    },
+    {
+      "id": "observation",
+      "meaning": "A method-bound record of measurement or observation.",
+      "required_semantic_fields": ["observed_value", "method_or_instrument", "source", "observation_context"],
+      "conditional_fields": ["timestamp", "sampling_window", "units", "limitations"],
+      "invariants": ["An observation is not evidence for a proposition until a relevance relation is declared."],
+      "allowed_provenance": ["Evidence[DomainObservation]"],
+      "allowed_assurance": ["Validated for method/schema conformance; Supported only after relation to a proposition"],
+      "evidence_cues": ["measured", "observed", "query result", "sample", "instrument"],
+      "anti_cues": ["generated model text called observation", "method/source omitted"],
+      "repository_candidate_examples": ["release readiness: ReleaseObservation", "informal logic: observed source passages"]
+    },
+    {
+      "id": "assumption",
+      "meaning": "A proposition provisionally accepted without establishing it in the current workflow.",
+      "required_semantic_fields": ["proposition", "scope", "owner", "rationale"],
+      "conditional_fields": ["expiry", "review_condition", "risk_if_false"],
+      "invariants": ["An assumption is never silently upgraded to evidence or proof."],
+      "allowed_provenance": ["ordinary", "Generated[DomainAssumption] when extracted/generated"],
+      "allowed_assurance": ["No implied assurance"],
+      "evidence_cues": ["assume", "given for this analysis", "unless otherwise stated"],
+      "anti_cues": ["hidden premise", "unscoped default represented as fact"],
+      "repository_candidate_examples": ["informal logic: missing-premise candidate", "refinement: fixed evaluation assumptions"]
+    }
+  ],
+  "intermediate_and_output_object_families": [
+    {
+      "id": "evidence_relation",
+      "meaning": "An attributable observation/artifact related to a target proposition under a relevance rule or policy.",
+      "required_semantic_fields": ["source_object", "target_proposition", "support_or_attack_direction", "policy_or_rule", "provenance"],
+      "invariants": ["The same source object may have different relevance to different propositions.", "Generated content is not evidence merely because it is useful."],
+      "allowed_provenance": ["Evidence[DomainObject]"],
+      "allowed_assurance": ["Supported[P] under a named MaterialPolicy"],
+      "evidence_cues": ["supports", "counts against", "relevant because", "under policy"],
+      "anti_cues": ["any input named evidence", "tool success treated as validation"],
+      "repository_candidate_examples": ["release readiness: observed checks materially support readiness"]
+    },
+    {
+      "id": "hypothesis",
+      "meaning": "A testable candidate explanation, interpretation, prediction, or bridge.",
+      "required_semantic_fields": ["candidate_proposition", "target_to_explain", "predicted_observations", "falsifiers"],
+      "conditional_fields": ["mechanism", "scope", "origin"],
+      "invariants": ["Candidate status does not imply plausibility or support."],
+      "allowed_provenance": ["Generated[List[DomainHypothesis]]", "Computed only for deterministic enumeration"],
+      "allowed_assurance": ["No implied assurance; later evidence may support/defeat its proposition"],
+      "evidence_cues": ["possible explanation", "interpretation candidate", "if true predicts"],
+      "anti_cues": ["free-form idea string", "generated hypothesis marked evidence"],
+      "repository_candidate_examples": ["informal logic: RankedInterpretationHypotheses", "argument reconstruction: missing-premise hypotheses"]
+    },
+    {
+      "id": "ranked_hypothesis_list",
+      "meaning": "Ordered hypothesis assessments under an explicit rule and evidence snapshot.",
+      "required_semantic_fields": ["candidate_assessments", "criterion_definitions", "per_criterion_values", "grounds", "uncertainty", "ranking_method", "ties", "excluded_or_unranked_candidates", "evidence_snapshot"],
+      "invariants": ["Ranking retains the complete candidate set.", "Bare score is forbidden.", "Top rank is not truth or validation."],
+      "allowed_provenance": ["Computed when deterministic", "Generated when model-ranked"],
+      "allowed_assurance": ["Validated only for ranking-rule conformance; no automatic support for top hypothesis"],
+      "evidence_cues": ["rank", "best explanation", "criteria", "score", "tie"],
+      "anti_cues": ["List[String]", "single confidence float", "winner without rule"],
+      "repository_candidate_examples": ["informal logic: ranked interpretations", "argumentation: competing reconstructions"]
+    },
+    {
+      "id": "critique",
+      "meaning": "A structured assessment of a named target under critic standards.",
+      "required_semantic_fields": ["target", "critic_kind", "standard", "typed_findings", "grounds", "scope", "severity", "disposition"],
+      "conditional_fields": ["repair_suggestions", "search_budget"],
+      "invariants": ["No-issue result is bounded by method and scope.", "One finding does not refute the whole target."],
+      "allowed_provenance": ["Generated", "Computed", "Evidence-backed judgment, according to actual method"],
+      "allowed_assurance": ["Validated for structural conformance only unless stronger grounds exist"],
+      "evidence_cues": ["critic", "review", "find flaws", "evaluate against rubric"],
+      "anti_cues": ["CritiqueResult string", "pass/fail without findings and standard"],
+      "repository_candidate_examples": ["informal logic: ArgumentCritique", "refinement loops: CriticFinding"]
+    },
+    {
+      "id": "objection",
+      "meaning": "One reason against accepting a target claim, inference, assumption, or decision.",
+      "required_semantic_fields": ["target", "objection_proposition", "grounds", "scope", "response_status"],
+      "invariants": ["An objection may remain open, answered, sustained, or withdrawn."],
+      "allowed_provenance": ["Generated", "Evidence-backed"],
+      "allowed_assurance": ["No implied refutation"],
+      "evidence_cues": ["objection", "reason against", "challenge"],
+      "anti_cues": ["criticism without target", "automatic rejection"],
+      "repository_candidate_examples": ["argumentation: objection to an inference", "release readiness: ReleaseRiskObjection"]
+    },
+    {
+      "id": "defeater",
+      "meaning": "Information that rebuts a conclusion or undercuts its warrant.",
+      "required_semantic_fields": ["target_support_or_inference", "defeater_kind", "grounds", "effect_on_warrant"],
+      "invariants": ["Defeater kind is Rebutting or Undercutting and affected scope is explicit."],
+      "allowed_provenance": ["Evidence-backed", "Generated candidate defeater pending assessment"],
+      "allowed_assurance": ["Material defeat under declared policy; proof only with kernel term"],
+      "evidence_cues": ["rebut", "undercut", "exception", "warrant no longer applies"],
+      "anti_cues": ["ordinary error called defeater", "scope omitted"],
+      "repository_candidate_examples": ["informal logic: defeasible inference challenges"]
+    },
+    {
+      "id": "counterexample",
+      "meaning": "A concrete admissible witness violating a universal claim or invariant.",
+      "required_semantic_fields": ["target_proposition", "witness", "admissibility_grounds", "violated_condition"],
+      "invariants": ["None found records bounded search, not proof of absence."],
+      "allowed_provenance": ["Generated candidate", "Evidence-backed witness", "Computed witness"],
+      "allowed_assurance": ["Proof only if formalized and kernel checked"],
+      "evidence_cues": ["case where", "witness", "violates invariant"],
+      "anti_cues": ["hypothetical assertion without admissibility", "search failure treated as validation"],
+      "repository_candidate_examples": ["argumentation/refutational workflows: counterexample search"]
+    },
+    {
+      "id": "judgment",
+      "meaning": "An evaluator's assessment under an explicit standard.",
+      "required_semantic_fields": ["subject", "standard", "findings", "evaluator", "grounds", "confidence_basis"],
+      "invariants": ["Judgment does not authorize action."],
+      "allowed_provenance": ["Generated", "Computed", "Evidence-backed"],
+      "allowed_assurance": ["Validated for rule conformance; Supported when material policy applies"],
+      "evidence_cues": ["assess", "judge", "readiness", "severity"],
+      "anti_cues": ["assessment treated as decision"],
+      "repository_candidate_examples": ["release readiness: ReadinessJudgment", "informal logic: argument-quality judgment"]
+    },
+    {
+      "id": "decision",
+      "meaning": "An authorized commitment among alternatives.",
+      "required_semantic_fields": ["chosen_alternative", "alternatives_considered", "decision_criteria", "authority", "rationale", "effective_time"],
+      "invariants": ["Decision is not execution and requires authority."],
+      "allowed_provenance": ["ordinary accountable artifact", "Evidence when observed from decision system"],
+      "allowed_assurance": ["Validated for authority/policy conformance when validator exists"],
+      "evidence_cues": ["approve", "select", "commit", "authorize"],
+      "anti_cues": ["recommendation called decision", "authority omitted"],
+      "repository_candidate_examples": ["release readiness: ReleaseDecision", "refinement: accept/revise/stop decision"]
+    },
+    {
+      "id": "recommendation",
+      "meaning": "Advice to an identified decision-maker.",
+      "required_semantic_fields": ["proposed_action", "addressee", "expected_outcome", "grounds", "risks", "preconditions"],
+      "invariants": ["Recommendation does not commit the addressee and does not execute."],
+      "allowed_provenance": ["Generated", "Computed", "Evidence-backed"],
+      "allowed_assurance": ["Validated for policy conformance when explicit"],
+      "evidence_cues": ["recommend", "advise", "propose"],
+      "anti_cues": ["recommendation silently executed", "addressee absent"],
+      "repository_candidate_examples": ["release readiness: release/hold recommendation"]
+    },
+    {
+      "id": "action",
+      "meaning": "A requested, planned, attempted, or completed intervention.",
+      "required_semantic_fields": ["action_kind", "target", "actor_or_capability", "preconditions", "status"],
+      "conditional_fields": ["effects", "operational_failure", "started_at", "completed_at"],
+      "invariants": ["Requested/planned/attempted/completed states are distinct.", "Effects cannot be fabricated from a decision."],
+      "allowed_provenance": ["Evidence for observed execution", "Computed plan", "ordinary request"],
+      "allowed_assurance": ["Validated for preconditions; Verified only with appropriate proof"],
+      "evidence_cues": ["execute", "write", "deploy", "send", "restart"],
+      "anti_cues": ["decision represented as completed effect", "capability hidden"],
+      "repository_candidate_examples": ["release readiness: deployment action after release decision"]
+    }
+  ],
+  "reasoning_operation_contract": {
+    "required_semantic_fields": ["operation_kind", "typed_inputs", "Generated[typed_output]", "method_or_rule", "scope", "granularity_rationale", "skill_contributions", "failure_contract"],
+    "invariants": ["Operation kind follows the semantic transformation, not a prompt verb.", "Operational steps are not mislabeled reasoning.", "One skill may implement several operations and one operation may compose several skills.", "Skill count and occurrence count are independent."],
+    "allowed_provenance": ["Generated"],
+    "allowed_assurance": ["Generation establishes production only", "Evidence/computation/validation/support/proof require separate material constructors and grounds"],
+    "evidence_cues": ["input/output examples", "acceptance rubric", "downstream field access", "critic instructions", "ranking criteria", "decision authority"],
+    "anti_cues": ["inferring method solely from skill name", "opaque model call for an entire workflow", "ReasoningResult output"]
+  },
+  "reasoning_operations": [
+    {"id": "generate_hypotheses", "inputs": ["question", "constraints", "observations", "generation_policy"], "outputs": ["Generated[candidate_hypothesis_set]"], "invariants": ["No rank/support/truth implied"], "anti_cues": ["untyped brainstorming text"]},
+    {"id": "abduct", "inputs": ["explanatory_target", "candidates", "evidence_relations", "explanatory_criteria"], "outputs": ["Generated[ranked_hypotheses_with_residual_anomalies]"], "invariants": ["Best available explanation is not proof"]},
+    {"id": "rank", "inputs": ["fixed_candidates", "criteria_and_scales", "evidence_snapshot", "aggregation_and_tie_rule"], "outputs": ["Generated[ordered_assessments_with_ties_exclusions_and_sensitivity]"], "invariants": ["Ranking does not generate candidates or validate winner"]},
+    {"id": "compare", "inputs": ["alternatives", "dimensions", "comparison_basis"], "outputs": ["Generated[comparison_with_tradeoffs_incomparabilities_and_missing_evidence]"], "invariants": ["No winner without rule"]},
+    {"id": "critique", "inputs": ["target", "critic_standard", "admissible_grounds"], "outputs": ["Generated[typed_critic_findings]"], "invariants": ["Finding scope remains explicit"]},
+    {"id": "adversarial_review", "inputs": ["target", "threat_model", "roles", "attack_budget_and_scope"], "outputs": ["Generated[challenges_counterexamples_untested_surfaces_and_surviving_claims]"], "invariants": ["Not exhaustive by default"]},
+    {"id": "refute", "inputs": ["target_proposition_or_inference", "counterevidence", "refutation_rule"], "outputs": ["Generated[candidate_defeaters_or_counterexamples_with_affected_scope]"], "invariants": ["Does not adjudicate falsity or negate unrelated claims"]},
+    {"id": "calibrate", "inputs": ["predictions_or_judgments", "outcomes_or_reference_evidence", "method", "population"], "outputs": ["Generated[calibration_assessment_with_error_and_uncertainty]"], "invariants": ["Does not establish individual correctness or deterministic calibration"]},
+    {"id": "synthesize", "inputs": ["typed_findings_claims_evidence", "compatibility_rules", "conflict_policy"], "outputs": ["Generated[integrated_account_with_conflicts_omissions_and_confidence]"], "invariants": ["Provenance and dissent are retained"]},
+    {"id": "recommend", "inputs": ["alternatives", "judgments", "objectives", "constraints", "identified_addressee"], "outputs": ["Generated[domain_recommendation]"], "invariants": ["Recommendation is not an authorized decision or execution"]}
+  ],
+  "material_operations": [
+    {"id": "retrieve_or_query", "result": "Evidence[T] or ordinary typed result according to the actual source/method"},
+    {"id": "deterministic_symbolic_compute", "result": "Computed[T] under a named procedure"},
+    {"id": "validate", "result": "Validated[value: T, P(value)] or typed validation failure"},
+    {"id": "record_authorized_decision", "result": "DomainDecision with attributable authority"},
+    {"id": "execute_action", "result": "Result[DomainAction, OperationalFailure]"}
+  ],
+  "critic_output_contract": {
+    "required_semantic_fields": ["target", "critic_kind", "standard", "typed_findings", "grounds", "scope", "severity", "disposition"],
+    "conditional_fields": ["repair_suggestions", "search_budget", "affected_support_relations", "response_status"],
+    "invariants": ["A finding has a scoped target.", "No-issue-found records bounded search and is not proof of absence.", "Critique, objection, defeater, and counterexample remain distinct."],
+    "allowed_provenance": ["Generated in the to_prism epistemic conversion profile"],
+    "allowed_assurance": ["No assurance from criticism alone", "Validation/support/proof require later explicit material boundaries"],
+    "evidence_cues": ["critic role", "review rubric", "challenge", "find flaws", "red team", "counterexample search"],
+    "anti_cues": ["String or Bool result", "pass/fail without standard", "finding without target or grounds", "critic success treated as refutation"]
+  },
+  "critic_families": [
+    {"id": "logical_validity", "target": "inference", "standard": "named_logic", "outputs": ["invalid_inference", "missing_premise", "scoped_validity_judgment"], "repository_candidate_examples": ["informal logic workflow"]},
+    {"id": "evidence_quality", "target": "source_and_support_relation", "standard": "fitness_recency_independence_relevance", "outputs": ["quality_findings", "affected_support_relations"], "repository_candidate_examples": ["release readiness workflow"]},
+    {"id": "assumption", "target": "explicit_or_hidden_assumptions", "standard": "support_scope_freshness", "outputs": ["assumption_challenges", "consequences", "needed_tests"], "repository_candidate_examples": ["argument reconstruction", "refinement loop"]},
+    {"id": "alternative_hypothesis", "target": "candidate_set", "standard": "coverage_and_discrimination", "outputs": ["omitted_hypotheses", "discriminating_observations"], "repository_candidate_examples": ["informal logic interpretation"]},
+    {"id": "causal", "target": "causal_claim_or_model", "standard": "confounding_temporality_mechanism_intervention", "outputs": ["causal_objections", "alternative_mechanisms", "needed_tests"]},
+    {"id": "statistical_calibration", "target": "estimate_score_or_confidence", "standard": "sampling_base_rates_uncertainty_calibration", "outputs": ["statistical_findings", "justified_corrections", "calibration_gaps"]},
+    {"id": "counterexample", "target": "universal_claim_or_invariant", "standard": "admissible_witness", "outputs": ["counterexamples", "or_bounded_search_report"], "repository_candidate_examples": ["refutational reasoning"]},
+    {"id": "adversarial_security", "target": "system_or_claim", "standard": "explicit_threat_model", "outputs": ["attacks", "exploit_traces", "affected_claims", "severity", "mitigations"]},
+    {"id": "domain_constraint", "target": "domain_artifact", "standard": "named_domain_rules", "outputs": ["rule_violations", "applicability", "repairs"]},
+    {"id": "decision_policy", "target": "recommendation_or_decision", "standard": "objectives_authority_values_constraints_effects", "outputs": ["policy_objections", "tradeoffs", "affected_stakeholders", "procedural_defects"], "repository_candidate_examples": ["release readiness workflow"]}
+  ],
+  "skill_composition_patterns": [
+    {
+      "id": "argument_interpretation_and_critique",
+      "repository_grounding": "libs/argumentation/skills/informal_logic and libs/argumentation/workflows/argumentation",
+      "skill_roles": ["statement_extractor", "claim_normalizer", "interpretation_hypothesis_generator", "logical_critic", "alternative_interpretation_critic", "hypothesis_ranker", "synthesizer"],
+      "typed_flow": ["ArgumentStatement", "NormalizedClaim", "Generated[InterpretationHypothesis]", "Generated[ArgumentCritique]", "Generated[RankedInterpretationHypotheses]", "Generated[SynthesizedArgumentAssessment]"],
+      "confirmation_rule": "Adopt only roles and fields evidenced in the target project."
+    },
+    {
+      "id": "bounded_refinement",
+      "repository_grounding": "examples/language/refinement_loop",
+      "skill_roles": ["candidate_producer", "criterion_critic", "feedback_synthesizer", "revision_skill", "accept_or_stop_decider"],
+      "typed_flow": ["Generated[RevisionCandidate]", "Generated[List[CriticFinding]]", "Generated[RefinementFeedback]", "RefinementAttempt", "AcceptedRevision or ExhaustedRefinement"],
+      "invariants": ["Attempts are bounded.", "Feedback changes visible state.", "Exhaustion is not success."],
+      "confirmation_rule": "Target evidence must establish criteria, bound, state transition, and acceptance rule."
+    },
+    {
+      "id": "release_readiness",
+      "repository_grounding": "docs/tutorial/release_readiness and to_prism/examples/layered_release_review",
+      "skill_roles": ["release_observer", "evidence_quality_critic", "risk_critic", "readiness_judge", "recommendation_skill", "authorized_decider", "deployment_action"],
+      "typed_flow": ["ReleaseObservation", "ReadinessClaim", "Generated[ReleaseRiskObjection]", "Generated[ReadinessJudgment]", "Generated[ReleaseRecommendation]", "ReleaseDecision", "Result[DeploymentAction, DeploymentError]"],
+      "invariants": ["Material support is not proof.", "Recommendation, decision, and deployment are separate."],
+      "confirmation_rule": "Target evidence must establish observations, policy, authority, and effect capability."
+    }
+  ]
+}

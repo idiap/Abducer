@@ -1,0 +1,33 @@
+# Function: decide whether a Yang--Mills representation candidate respects the continuum boundary.
+# Input: YangMillsTargetContext identifies the target and boundary reference.
+# Types: ContinuumBoundaryAuditInput adds the representation candidate to be checked.
+# Output: YangMillsOverlayDisposition is Accepted, Quarantined, or Stalled.
+# Boundary: finite or representational evidence cannot cross the continuum boundary by projection.
+# Layer: high-level epistemic topology only.
+# Metadata: workflows/manifest.json (`ym-representational-dynamics-overlay`).
+
+from types import (
+    ContinuumBoundaryAuditInput,
+    YangMillsOverlayDisposition,
+    YangMillsTargetContext,
+)
+
+from occurrences import (
+    UnresolvedContinuumAuditInputProjection,
+    EvidentialYangMillsOverlayDispositionAssessment,
+)
+
+from relations import (
+    AuditInputEnablesOverlayDisposition,
+)
+
+reasoning YmRepresentationalDynamicsOverlay(
+    yang_mills_target: YangMillsTargetContext,
+) -> Generated[YangMillsOverlayDisposition]:
+    sequence:
+        # The unresolved projection prepares an audit input but cannot cross the boundary.
+        [continuum_audit_input: UnresolvedContinuumAuditInputProjection(yang_mills_target)]
+        # The evidential gate determines whether the overlay remains boundary-safe.
+        [overlay_disposition: EvidentialYangMillsOverlayDispositionAssessment(continuum_audit_input.value)] by AuditInputEnablesOverlayDisposition
+
+    return overlay_disposition

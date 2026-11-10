@@ -1,0 +1,752 @@
+\documentclass[11pt]{article}
+\usepackage[a4paper,margin=27mm]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{booktabs,longtable,array,enumitem,microtype}
+\usepackage{xcolor}
+\usepackage[hidelinks]{hyperref}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+
+\definecolor{proved}{RGB}{0,105,75}
+\definecolor{conditional}{RGB}{160,92,0}
+\definecolor{open}{RGB}{165,25,35}
+\newcommand{\Pstatus}{\textcolor{proved}{\textsf{PROVED}}}
+\newcommand{\Cstatus}{\textcolor{conditional}{\textsf{CONDITIONAL}}}
+\newcommand{\Ostatus}{\textcolor{open}{\textsf{OPEN}}}
+\newcommand{\Rstatus}{\textcolor{proved}{\textsf{RESTRICTED}}}
+\newcommand{\Aphys}{\mathcal A_{\mathrm{phys}}}
+\newcommand{\R}{\mathsf R}
+\newcommand{\B}{\mathfrak B_{\mathrm{rig}}}
+\newcommand{\spec}{\operatorname{spec}}
+\newcommand{\Cov}{\operatorname{Cov}}
+\newcommand{\supp}{\operatorname{supp}}
+\newcommand{\dist}{\operatorname{dist}}
+\newcommand{\e}{\mathrm e}
+
+\newtheorem{definition}{Definition}[section]
+\newtheorem{theorem}[definition]{Theorem}
+\newtheorem{proposition}[definition]{Proposition}
+\newtheorem{lemma}[definition]{Lemma}
+\newtheorem{corollary}[definition]{Corollary}
+\newtheorem{counterexample}[definition]{Counterexample}
+\theoremstyle{remark}
+\newtheorem{remark}[definition]{Remark}
+\newtheorem{obligation}[definition]{Frontier obligation}
+
+\title{Representational Dynamics and Infrared Rigidity:\\
+A Constructive Research Programme for the Yang--Mills Mass Gap}
+\author{Research dossier}
+\date{20 July 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We formulate a representation-aware programme for the four-dimensional
+Yang--Mills existence and mass-gap problem.  The physical theory is treated as
+coherent information transported among regulated measures, observable
+algebras, renormalization-group descriptions, Euclidean correlation
+functionals, and reconstructed spectral data.  We define uniform physical
+relational rigidity, prove a positive spectral transfer theorem, give an
+abstract noncircular influence-basin theorem, type the required representation
+morphisms, and exhibit counterexamples that invalidate several common
+shortcuts.  We then isolate the first genuinely open four-dimensional step as
+a cutoff- and volume-uniform full-measure basin-entry inequality.  The result
+is a rigorous conditional architecture and a falsifiable research programme,
+not a solution of the Clay problem.  Its strongest claim level is C3: a
+conditional continuum/transfer theorem.
+\end{abstract}
+
+\tableofcontents
+
+\section{Epistemic statement and exact target}
+
+The Clay problem asks for a nontrivial quantum Yang--Mills theory on
+$\mathbb R^4$ for every compact simple gauge group $G$, satisfying axioms at
+least as strong as those conventionally required for a relativistic quantum
+field theory, and possessing a mass gap $\Delta>0$ above the vacuum
+\cite{JaffeWitten}.  This dossier does not prove that theorem.  It separates
+the theorem into interfaces so that a proof cannot move spectral information
+through a representation change without declaring what is preserved.
+
+\begin{definition}[Clay target]
+For a compact simple Lie group $G$, a \emph{Clay-level solution} supplies a
+physical Hilbert space $\mathcal H_G$, a unit vacuum $\Omega_G$, a positive
+self-adjoint Hamiltonian $H_G$, a nontrivial gauge-invariant local quantum
+field theory satisfying the required relativistic axioms, and a number
+$\Delta_G>0$ such that
+\[
+  \spec(H_G)\cap(0,\Delta_G)=\varnothing,
+\]
+with nonvacuum finite-energy content.  The construction must be obtained from
+mathematically controlled data, not by postulating the Hamiltonian or gap.
+\end{definition}
+
+The mass gap is distinct from confinement, an area law, a one-particle pole,
+or a gap for an auxiliary stochastic generator.  Any one of these may be
+related to a physical gap under additional hypotheses; none is a synonym.
+
+\subsection{Claim hierarchy}
+
+\begin{center}
+\begin{tabular}{cl}
+\toprule
+Level & Meaning\\
+\midrule
+C0 & concepts and definitions\\
+C1 & finite or executable calibration\\
+C2 & rigorous restricted-model theorem\\
+C3 & conditional continuum or representation-transfer theorem\\
+C4 & regulator-specific nonperturbative construction, uniform limits incomplete\\
+C5 & continuum construction and gap for a restricted target\\
+C6 & the full Clay target\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Nothing proved below exceeds C3.  This ceiling is a mathematical conclusion of
+the dependency audit, not a rhetorical disclaimer.
+
+\section{Ontology: a universe as coherent representational dynamics}
+
+The proposed ontology does not make representation more real than physics.
+It says instead that physically meaningful identity is the invariant content
+of a coherently related family of partial descriptions.  A universe is
+represented by
+\[
+ \mathfrak U=(\mathbf{Rep},\mathbf{Mor},\mathcal I,\mathcal P,\mathcal L),
+\]
+where $\mathbf{Rep}$ is a class of descriptions, $\mathbf{Mor}$ contains
+admissible transformations among descriptions, $\mathcal I$ assigns invariant
+physical content, $\mathcal P$ records preservation certificates, and
+$\mathcal L$ specifies limiting coherence.  No individual regulator is the
+universe.  The universe is the compatible structure that remains identifiable
+through admissible changes of resolution and language.
+
+In this interpretation:
+\begin{itemize}[itemsep=2pt]
+\item gauge potentials are coordinates on relational physical information;
+\item regulators are temporary realizations that expose different proof
+      structures;
+\item renormalization is a controlled transformation of descriptive scale;
+\item particles are spectral interpretations in a reconstructed
+      representation;
+\item the continuum theory is a coherence condition across limiting
+      representations; and
+\item a mass gap is invariant infrared rigidity: sufficiently low positive
+      energy cannot be created by changing a faithful physical description.
+\end{itemize}
+
+The ontology becomes mathematical only after the words ``controlled'',
+``faithful'', and ``invariant'' are replaced by typed maps, topologies, error
+bounds, and density theorems.
+
+\section{Physical observables and completeness}
+
+Let $\Lambda_{a,L}$ be a regulated spacetime with cutoff $a$ and physical
+linear size $L$.  Its kinematical fields form $\mathcal K_{a,L}$ and its gauge
+group is $\mathcal G_{a,L}$.  The primary physical algebra is
+\[
+ \mathcal A_{\mathrm{phys},a,L}
+  =\{F:\mathcal K_{a,L}\to\mathbb C:
+          F(g\cdot A)=F(A)\text{ for all }g\in\mathcal G_{a,L}\},
+\]
+completed only after a state and topology have been specified.
+
+Candidate cores include local curvature composites after renormalization,
+smeared gauge-invariant operators, Wilson loops, and extended operators needed
+to distinguish global or topological sectors.  Wilson loops alone are not
+assumed complete.
+
+\begin{definition}[State-separating core]
+A $*$-subalgebra $\mathcal D\subset\Aphys$ is state separating if equality of
+all expectation values on $\mathcal D$ implies equality of physical states.
+After OS reconstruction it is \emph{spectrally complete} if
+\[
+ \overline{\{A\Omega:A\in\mathcal D\}}=\mathcal H.
+\]
+For a mass-gap argument it suffices to require density of centered vectors in
+$\Omega^\perp$.
+\end{definition}
+
+\begin{obligation}[Observable completeness]
+Prove that the regulated observable cores converge to a continuum core whose
+centered vectors are dense in the reconstructed vacuum complement.  Until
+then, any correlation result is sectorial.
+\end{obligation}
+
+\section{Representation packages and typed morphisms}
+
+\begin{definition}[Representation package]
+A representation is a tuple
+\[
+ \R=(\mathcal K,\Aphys,\mathcal S,\mathcal D,\mathcal G,
+       \mathcal L,\mathcal Q),
+\]
+consisting of kinematics, physical observables, states or measures, dynamics,
+gauge structure, locality/scale data, and quantitative control data.
+\end{definition}
+
+A morphism $F:\R\to\R'$ contains maps on states and observables with the dual
+compatibility relation
+\[
+ \langle F_{\!*}\omega,A'\rangle
+   \simeq \langle\omega,F^*A'\rangle,
+\]
+where $\simeq$ is equality for exact maps and an explicitly bounded error for
+approximate maps.  Every morphism carries a certificate
+\[
+ \operatorname{cert}(F)=(g,p,\ell,o,u),
+\]
+recording gauge compatibility, reflection positivity, locality, observable
+completeness, and uniformity in volume.
+
+\begin{proposition}[Composition ledger \Pstatus]
+Let $F:\R_0\to\R_1$ and $G:\R_1\to\R_2$ have additive expectation errors
+$\varepsilon_F$ and $\varepsilon_G$.  Then $G\circ F$ has error at most
+$\varepsilon_F+\varepsilon_G$, and
+\[
+ \operatorname{cert}(G\circ F)
+ =\operatorname{cert}(F)\wedge\operatorname{cert}(G)
+\]
+componentwise.  Thus a lost certificate cannot reappear without a separate
+recovery theorem.
+\end{proposition}
+
+\begin{proof}
+Insert and subtract the intermediate expectation and use the triangle
+inequality.  A property claimed for the composition must hold at both stages;
+otherwise the corresponding Boolean certificate is false.  The executable
+artifact checks this rule with exact rational errors.
+\end{proof}
+
+The important morphism classes are exact equivalence, regulator embedding,
+coarse graining, renormalized observable transport, gauge fixing with global
+residual data, reconstruction, and continuum limiting.  Calling every one of
+them an ``equivalence'' would erase precisely the information the programme is
+designed to audit.
+
+\section{Regulator atlas}
+
+The programme is not founded on earlier Wilson-action work.  The Wilson action
+appears as one regulator among several because any final continuum conclusion
+needs a regulator choice or a regulator-comparison theorem.
+
+\begin{longtable}{p{.17\textwidth}p{.18\textwidth}p{.18\textwidth}p{.33\textwidth}}
+\toprule
+Regulator & Gauge invariance & Positivity/locality & Principal proof obligations\\
+\midrule
+\endhead
+Wilson plaquette & exact lattice gauge invariance & local; standard reflection-positive constructions exist in suitable settings & weak-coupling continuum trajectory, full-measure RG, physical scaling, universality\\
+Heat-kernel plaquette & exact class-function gauge invariance & local; positivity must be checked for the chosen time slicing & coefficient control, comparison with continuum renormalization, universality\\
+Villain-type or auxiliary-field formulations & gauge invariance depends on nonabelian implementation & may expose convexity but positivity is formulation dependent & auxiliary-field erasure, topology, equivalence to target theory\\
+Hamiltonian lattice gauge theory & Gauss law and physical Hilbert space explicit & spectral interpretation native; Euclidean covariance indirect & continuum limit, locality, Lorentz covariance, comparison with Euclidean measures\\
+Gradient-flowed observables over another regulator & gauge-covariant smoothing of observables & improves ultraviolet observables but is not a stand-alone theory & invertibility/sufficiency of flowed data, zero-flow-time limit\\
+\bottomrule
+\end{longtable}
+
+Balaban's work establishes deep multiscale control for lattice gauge theories,
+including a four-dimensional small-field coupling renormalization analysis
+\cite{BalabanI}.  It is indispensable evidence for the feasibility of exact
+RG methods, but it does not supply the complete full-measure, continuum,
+OS-reconstruction, and spectral chain required here.
+
+\section{Uniform physical relational rigidity}
+
+Let $a_n\downarrow0$, $L_n\uparrow\infty$, and let $\omega_n$ be regulated
+states.  Let $\tau_t^{(n)}$ denote Euclidean time translation in physical
+units, with interpolation when $t$ is not a lattice multiple.  For a centered
+observable $A_n$, write
+\[
+ C_n(A_n;t)=\omega_n(A_n^*\tau_t^{(n)}A_n)
+            -|\omega_n(A_n)|^2.
+\]
+
+\begin{definition}[Uniform physical relational rigidity]
+The family has UPRR with rate $m>0$ on a continuum core $\mathcal D$ if every
+$A\in\mathcal D$ has regulated representatives $A_n$, a constant $K_A<\infty$
+independent of $n$ and $L_n$, and errors $r_n(A,t)$ such that
+\begin{align}
+ 0\le C_n(A_n;t)&\le K_A\e^{-mt}+r_n(A,t),\label{eq:uprr}\\
+ \lim_{n\to\infty}r_n(A,t)&=0\quad\text{for every fixed }t\ge0,\nonumber
+\end{align}
+and the quadratic forms converge to continuum correlations.  The parameter
+$m$ has units of inverse physical length.  Polarization supplies mixed
+correlators when required.
+\end{definition}
+
+The definition is noncircular only if \eqref{eq:uprr} is obtained from an
+independent local or multiscale criterion.  It must not be used as the
+definition of the RG basin whose entry one then claims to prove.
+
+For a one-step transfer eigenvalue $\lambda_a$, the dimensionless gap is
+$\delta_a=-\log\lambda_a$ while the physical energy is $\delta_a/a$.  A lower
+bound on $\delta_a$ that shrinks faster than $a$ is irrelevant to the continuum
+mass gap.
+
+\section{Positive spectral transfer}
+
+\begin{lemma}[Positive Laplace support lemma \Pstatus]\label{lem:laplace}
+Let $\mu$ be a finite positive measure on $[0,\infty)$ and
+\[
+ C(t)=\int_{[0,\infty)}\e^{-t\lambda}\,d\mu(\lambda).
+\]
+If $C(t)\le K\e^{-mt}$ for all $t\ge0$, then
+$\mu([0,m))=0$.
+\end{lemma}
+
+\begin{proof}
+For $0<\varepsilon<m$,
+\[
+ \mu([0,m-\varepsilon])\e^{-t(m-\varepsilon)}
+ \le C(t)\le K\e^{-mt}.
+\]
+Thus $\mu([0,m-\varepsilon])\le K\e^{-\varepsilon t}$ for every
+$t$, and the left side is zero.  Let $\varepsilon\downarrow0$ through a
+countable sequence.
+\end{proof}
+
+\begin{theorem}[Dense-core rigidity transfer \Pstatus]\label{thm:transfer}
+Let $H\ge0$ be self-adjoint on $\mathcal H$, with unique vacuum $\Omega$, and
+let $\mathcal D_0\subset\Omega^\perp$ be dense.  Suppose for every
+$\psi\in\mathcal D_0$ there is $K_\psi<\infty$ such that
+\[
+ \langle\psi,\e^{-tH}\psi\rangle
+ \le K_\psi\e^{-mt}\qquad(t\ge0).
+\]
+Then
+\[
+ \spec(H|_{\Omega^\perp})\subset[m,\infty).
+\]
+\end{theorem}
+
+\begin{proof}
+For $\psi\in\mathcal D_0$, the spectral theorem gives a positive measure
+$\mu_\psi$ and Lemma~\ref{lem:laplace} shows
+$\|E_H([0,m))\psi\|^2=0$.  The spectral projection is bounded, so density gives
+$E_H([0,m))=0$ on $\Omega^\perp$.
+\end{proof}
+
+\begin{theorem}[Regulator-to-continuum transfer \Cstatus]\label{thm:regcont}
+Assume regulated representatives of a continuum observable core satisfy UPRR,
+their centered quadratic forms converge for every fixed $t$, reflection
+positivity reconstructs $\e^{-tH}$, and their continuum vectors are dense in
+$\Omega^\perp$.  Then $H$ has no spectrum in $(0,m)$.
+\end{theorem}
+
+\begin{proof}
+Take $n\to\infty$ in \eqref{eq:uprr} at fixed $t$ to obtain the hypothesis of
+Theorem~\ref{thm:transfer} on the dense continuum core.  Apply that theorem.
+\end{proof}
+
+Fixed-time error convergence is enough for this conditional theorem because
+the continuum estimate is established separately for every $t$.  It is not
+enough to infer a uniform regulated spectral gap if the large-time and cutoff
+limits are interchanged before a continuum semigroup exists.
+
+\section{A noncircular infrared basin}
+
+We now give an abstract basin whose membership is local in a block
+specification rather than defined by the desired global correlation decay.
+Let $I$ index blocks with metric $d$.  For a local observable $F$, let
+$\delta_i(F)$ be its oscillation under a change of block $i$.  Let
+$C=(c_{ij})$ be a nonnegative influence matrix derived from conditional kernels.
+
+\begin{definition}[Weighted influence basin]
+For $\kappa>0$ and $q<1$, an effective theory lies in
+$\B(\kappa,q)$ if its conditional specification obeys the comparison estimate
+\begin{equation}\label{eq:comparison}
+ |\Cov(F,G)|
+ \le K_0\sum_{i,j}\delta_i(F)D_{ij}\delta_j(G),
+ \qquad D=(I-C)^{-1},
+\end{equation}
+and
+\begin{equation}\label{eq:weighted}
+ \|C\|_\kappa
+ :=\sup_i\sum_j \e^{\kappa d(i,j)}c_{ij}\le q<1.
+\end{equation}
+All constants must be uniform in the total volume.  In a concrete Gibbs
+specification, \eqref{eq:comparison} is to be proved by a Dobrushin comparison
+argument; it is displayed rather than hidden inside the word ``mixing''.
+\end{definition}
+
+\begin{theorem}[Basin-to-clustering \Cstatus]\label{thm:basin}
+If an effective theory lies in $\B(\kappa,q)$ and $F,G$ have finite block
+supports $S_F,S_G$, then
+\[
+ |\Cov(F,G)|
+ \le \frac{K_0}{1-q}\,
+      \e^{-\kappa d(S_F,S_G)}
+      \Big(\sum_i\delta_i(F)\Big)
+      \Big(\sum_j\delta_j(G)\Big).
+\]
+\end{theorem}
+
+\begin{proof}
+The triangle inequality implies that the weighted row norm is submultiplicative,
+so $D=\sum_{n\ge0}C^n$ and $\|D\|_\kappa\le(1-q)^{-1}$.
+Consequently $D_{ij}\le(1-q)^{-1}\e^{-\kappa d(i,j)}$.
+Insert this in \eqref{eq:comparison} and use
+$d(i,j)\ge d(S_F,S_G)$ for nonzero oscillations.
+\end{proof}
+
+\begin{corollary}[RG scale to physical rigidity \Cstatus]
+Suppose a gauge-compatible RG flow reaches $\B(\kappa,q)$ at block length
+$\ell_*$; observable pullback has summable errors and uniformly controlled
+support growth.  Then the original correlations decay with physical rate at
+least
+\[
+ m_{\rm corr}=\frac{\kappa}{\ell_*},
+\]
+up to the declared pullback errors.  If the controlled direction is Euclidean
+time and OS hypotheses hold, Theorem~\ref{thm:regcont} yields the same lower
+bound for the Hamiltonian gap.
+\end{corollary}
+
+This result separates two questions: the implication from basin membership is
+proved, while membership of the four-dimensional Yang--Mills trajectory is not.
+
+\section{Gauge-covariant RG and the basin-entry frontier}
+
+A complete RG step must transform the measure, action, observables, scale, and
+reconstruction data together.  Schematically,
+\[
+ (\mu_k,S_k,\mathcal A_{\mathrm{phys},k},Z_k,\ell_k)
+ \longmapsto
+ (\mu_{k+1},S_{k+1},\mathcal A_{\mathrm{phys},k+1},Z_{k+1},b\ell_k).
+\]
+It must report gauge covariance, locality or quasilocality, reflection
+positivity, volume uniformity, running couplings, irrelevant remainders, and
+errors.  A perturbative beta function alone is not this map.
+
+The large-field decomposition must be gauge invariant, for example through
+plaquette-curvature or orbit-distance events.  Exceptional blocks require
+activities summable over positions, polymers, and RG scales.  Global holonomy,
+center flux, nontrivial bundles, and instanton-like sectors must either be
+included or bounded.  A coordinate chart near the trivial connection does not
+cover these obligations.
+
+\begin{definition}[Basin-entry statement $\mathrm{BE}$]
+$\mathrm{BE}(k_*,\kappa,q)$ is the assertion that, along the cutoff trajectory
+defining four-dimensional pure Yang--Mills, there is a finite physical entry
+scale $\ell_*=b^{k_*}a$ such that the complete effective conditional kernels
+$\gamma_B^{(k_*)}$ have influence coefficients satisfying
+\begin{equation}\label{eq:BE}
+ \sup_B\sum_C \e^{\kappa d(B,C)}c_{BC}^{(k_*)}\le q<1,
+\end{equation}
+and satisfy the comparison estimate \eqref{eq:comparison}, with all constants
+uniform in volume and cutoff and all reconstruction errors summable.
+\end{definition}
+
+\begin{obligation}[Central frontier \Ostatus]\label{obl:BE}
+Prove $\mathrm{BE}(k_*,\kappa,q)$ for the full four-dimensional pure
+Yang--Mills measure, or prove an equally explicit noncircular polymer,
+coercivity, or transfer-contraction criterion.  No such proof is supplied here.
+\end{obligation}
+
+Asymptotic freedom controls the ultraviolet running of the coupling but does
+not imply \eqref{eq:BE}.  Strong-coupling lattice theorems, such as exponential
+correlation decay established by functional-inequality methods in explicit
+parameter regimes \cite{SZZ,Nissim}, are rigorous restricted calibrations.
+They do not by themselves connect the weak-coupling continuum trajectory to a
+positive physical gap.
+
+\subsection{Concrete research sub-obligations}
+
+\begin{enumerate}[label=\textbf{BE\arabic*.},leftmargin=3em]
+\item Derive a gauge-orbit block specification with quantitatively local
+      conditional kernels.
+\item Establish weak-coupling small-field bounds with constants stable for the
+      required number of RG steps.
+\item Prove a summable exceptional-polymer estimate uniform in volume.
+\item Cover global orbit and topological sectors and control atlas overlaps.
+\item Bound generated nonlocal interactions in a weighted norm strong enough
+      for \eqref{eq:BE}.
+\item Show that the flow enters $q<1$ at finite physical $\ell_*$ rather than
+      merely at a cutoff-dependent scale.
+\item Preserve or recover reflection positivity and retain a spectrally
+      complete observable transport.
+\end{enumerate}
+
+These are detailed todos in the literal mathematical sense: each names a
+finite theorem or inequality whose proof can be accepted or rejected.
+
+\section{Continuum coherence}
+
+Let $S_n^{(a,L)}$ denote renormalized $n$-point Schwinger functionals on a
+gauge-invariant test algebra.  A continuum theory requires more than a formal
+limit of actions.
+
+\begin{definition}[Continuum coherence package]
+A package consists of:
+\begin{enumerate}[label=(\roman*)]
+\item a topology in which all $S_n^{(a,L)}$ converge;
+\item Euclidean covariance, symmetry, locality, reflection positivity, and
+      the regularity conditions required by the chosen OS theorem;
+\item nontriviality and a certificate identifying the limit as pure
+      Yang--Mills under stated renormalization conditions;
+\item uniqueness or a regulator-comparison theorem in a declared class; and
+\item justified interchange of cutoff, volume, RG-depth, observable, and
+      large-separation limits.
+\end{enumerate}
+\end{definition}
+
+The original OS programme reconstructs relativistic quantum theory from
+suitable Euclidean Green functions \cite{OS1,OS2}.  The precise regularity
+hypotheses matter: the corrected second paper is not interchangeable with an
+informal list of covariance and positivity properties.
+
+\begin{theorem}[Conditional continuum gap theorem \Cstatus]
+Assume a continuum coherence package for nontrivial pure Yang--Mills, UPRR with
+rate $m>0$ on an OS-dense gauge-invariant core, a unique vacuum, and nonempty
+finite-energy nonvacuum content.  Then the reconstructed Hamiltonian obeys
+\[
+ \spec(H)=\{0\}\cup\Sigma,
+ \qquad \Sigma\subset[m,\infty),\quad\Sigma\ne\varnothing.
+\]
+\end{theorem}
+
+\begin{proof}
+The coherence package and OS theorem construct $\mathcal H,\Omega,H$.  UPRR
+passes to the continuum by Theorem~\ref{thm:regcont}.  Density upgrades the
+sectorial conclusion to all of $\Omega^\perp$, and the final assumption gives
+$\Sigma\ne\varnothing$.
+\end{proof}
+
+\begin{obligation}[Continuum construction \Ostatus]
+Construct the above package in four dimensions with uniform estimates strong
+enough to pass UPRR, and prove regulator independence.  This dossier does not
+solve that constructive field-theory problem.
+\end{obligation}
+
+\section{Counterexample bank}
+
+\begin{counterexample}[Finite-volume fake gap]
+Let $H_L=\operatorname{diag}(0,L^{-1})$.  Every finite $L$ has a positive gap,
+but the gaps converge to zero.  Positivity without volume uniformity proves no
+infinite-volume gap.
+\end{counterexample}
+
+\begin{counterexample}[Lattice-unit collapse]
+Let $a_n=n^{-1}$ and let a transfer operator have dimensionless gap
+$\delta_n=a_n^2$.  Then $\delta_n>0$ for every regulator, while the physical
+energy is $\delta_n/a_n=a_n\to0$.
+\end{counterexample}
+
+\begin{counterexample}[Hidden gapless sector]
+Take
+\[
+ \mathcal H=\mathbb C\Omega\oplus\mathbb C g\oplus L^2([0,1]),
+ \qquad H=0\oplus1\oplus M_\lambda.
+\]
+An observable class whose centered vectors span only $\mathbb Cg$ has exact
+decay $\e^{-t}$, yet $H$ has spectrum arbitrarily close to zero in the hidden
+$L^2$ sector.  Observable density is indispensable.
+\end{counterexample}
+
+\begin{counterexample}[Why positivity matters]
+If signed spectral weights are permitted, low-energy terms can cancel.  For
+example $\delta_{\lambda}-\delta_{\lambda}$ has zero Laplace transform while
+being formally supported at any chosen low energy.  Reflection positivity is
+what turns Euclidean quadratic correlations into positive spectral measures.
+\end{counterexample}
+
+\begin{counterexample}[Stochastic gap is not physical energy]
+For a Markov generator $L$ with invariant measure $\mu$, replacing $L$ by
+$cL$ leaves $\mu$ unchanged and multiplies its Poincar\'e spectral gap by $c$.
+The Euclidean quantum theory determined by $\mu$ has not thereby acquired an
+arbitrarily large physical mass.  A comparison theorem must link the sampling
+dynamics to physical time before its mixing rate has spectral meaning.
+\end{counterexample}
+
+\begin{counterexample}[A vacuous local sector]
+A topological theory or an observable subalgebra with only multiples of the
+identity can satisfy any centered local correlation estimate vacuously.  The
+Clay target also requires a nontrivial theory and physical nonvacuum content.
+\end{counterexample}
+
+\section{Calibration matrix}
+
+\begin{center}
+\small
+\begin{tabular}{p{.22\textwidth}p{.16\textwidth}p{.18\textwidth}p{.15\textwidth}p{.16\textwidth}}
+\toprule
+Model & UPRR & Complete core & Physical gap & Verdict\\
+\midrule
+finite diagonal $H=\mathrm{diag}(0,1,2)$ & yes & yes & yes & accepts\\
+massive Gaussian field & yes & standard field core & yes & accepts\\
+massless Gaussian field & no uniform $m>0$ & yes & no & rejects\\
+$H_L=\mathrm{diag}(0,L^{-1})$ & nonuniform & yes & no limit gap & rejects\\
+hidden gapless direct sum & sectorial yes & no & no & rejects\\
+topological/trivial local sector & vacuous & generally no & not sufficient & rejects\\
+strong-coupling lattice YM & restricted decay & regulator core & lattice result & calibration only\\
+four-dimensional continuum YM & desired & open & open & frontier\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The finite diagonal, nonuniform, hidden-sector, positivity, and morphism-error
+cases are implemented in \texttt{finite\_spectral\_core.py} and its unit tests.
+Because no proof assistant is installed in the execution environment, the
+artifact uses exact rational arithmetic and fail-closed runtime validation.
+It is an executable C1 certificate, not formal verification of the analytic
+frontier.
+
+\section{Limit-order ledger}
+
+The following implications require named interchange theorems:
+\begin{align*}
+ &L\to\infty &&\text{thermodynamic limit},\\
+ &a\to0 &&\text{continuum limit},\\
+ &t\to\infty &&\text{spectral extraction},\\
+ &k\to k_*(a) &&\text{RG iteration to a physical scale},\\
+ &A_n\to A &&\text{renormalized observable approximation}.
+\end{align*}
+The safe route in Theorem~\ref{thm:regcont} takes the regulated limits at each
+fixed physical $t$, establishes a continuum positive semigroup estimate for
+all $t$, and only then takes $t\to\infty$ inside the spectral lemma.  Directly
+choosing $t=t(a)\to\infty$ requires a stronger uniform error theorem.
+
+\section{End-to-end theorem graph}
+
+The proposed proof chain is
+\[
+\begin{gathered}
+ \text{regulated gauge theory}
+ \xrightarrow{\text{typed RG}}
+ \mathrm{BE}(k_*,\kappa,q)
+ \xrightarrow{\text{Thm.~\ref{thm:basin}}}
+ \text{UPRR}
+ \\
+ \xrightarrow{\text{continuum coherence}}
+ \text{positive continuum correlations}
+ \xrightarrow{\text{OS+density}}
+ \spec(H|_{\Omega^\perp})\subset[m,\infty).
+\end{gathered}
+\]
+The middle implications are conditional theorems.  The first arrow to basin
+entry and the continuum-coherence arrow are open in the required four-
+dimensional strength.
+
+\section{Detailed implementation phases and acceptance gates}
+
+\begin{longtable}{p{.06\textwidth}p{.35\textwidth}p{.20\textwidth}p{.25\textwidth}}
+\toprule
+Phase & Implemented output & Gate & Current status\\
+\midrule
+\endhead
+0 & exact target, distinctions, C0--C6 hierarchy & no ambiguity in theorem & \Pstatus\\
+1 & observable taxonomy and density obligation & state separation proved & \Ostatus\\
+2 & representation packages, morphisms, certificates & composition/error theorem & \Pstatus\\
+3 & regulator atlas independent of prior Wilson work & one admissible route selected & \Cstatus\\
+4 & UPRR definition in physical units & false-positive suite passed & \Pstatus\ as definition\\
+5 & positive spectral and regulated transfer theorems & positivity+density supplied & \Cstatus\\
+6 & typed gauge-covariant RG architecture & full step estimates & \Ostatus\\
+7 & gauge-invariant large-field/topology obligations & summable global control & \Ostatus\\
+8 & weighted influence basin & local noncircular criterion & \Pstatus\ abstractly\\
+9 & basin-to-rigidity theorem & physical rate and pullback & \Cstatus\\
+10 & four-dimensional basin entry & Eq.~\eqref{eq:BE} uniform & \Ostatus\\
+11 & continuum Schwinger functions and theory identity & OS, nontrivial, universal & \Ostatus\\
+12 & OS reconstruction and spectral extraction & dense core and unique vacuum & \Cstatus\\
+13 & restricted-model calibration & massive accepted, false positives rejected & \Rstatus\\
+14 & executable finite core & tests pass & \Rstatus\\
+15 & frontier audit and claim downgrade & first open implication named & \Pstatus\\
+\bottomrule
+\end{longtable}
+
+\section{Frontier audit}
+
+\subsection*{What has been proved here}
+\begin{itemize}
+\item typed representation-error composition;
+\item the positive Laplace-support lemma and dense-core spectral transfer;
+\item an abstract weighted-influence basin-to-clustering theorem;
+\item the conditional logical chain from continuum UPRR and OS density to a
+      Hamiltonian gap;
+\item counterexamples invalidating finite-volume, lattice-unit, incomplete-
+      sector, signed-measure, and stochastic-time shortcuts;
+\item finite exact-arithmetic calibration of the spectral and morphism core.
+\end{itemize}
+
+\subsection*{What is conditional}
+The RG-to-rigidity and continuum-gap theorems are valid under their displayed
+hypotheses.  Those hypotheses are not asserted to be known for four-dimensional
+pure Yang--Mills.
+
+\subsection*{What remains open}
+\begin{enumerate}
+\item cutoff- and volume-uniform full-measure entry into a noncircular rigidity
+      basin along the asymptotically free trajectory;
+\item summable control of large fields, global gauge orbit geometry, and
+      topological sectors across all required RG steps;
+\item construction, nontriviality, uniqueness, OS regularity, and universality
+      of the four-dimensional continuum Schwinger functions;
+\item density of the chosen gauge-invariant observable core in the reconstructed
+      physical Hilbert space.
+\end{enumerate}
+
+Therefore the strongest justified claim is C3, not C6.  The big-picture value
+of representational dynamics is that it localizes the unresolved physics: the
+problem is not merely to ``find a gap'', but to generate an independently
+verifiable infrared contraction and transport it without losing gauge
+invariance, positivity, physical scaling, state completeness, or continuum
+identity.
+
+\section{Next theorem-level work}
+
+The next productive work is not another rephrasing of the final spectral
+statement.  It is to choose one regulator whose conditional block kernels can
+be defined globally and attack Eq.~\eqref{eq:BE}.  Three falsifiable branches
+are available:
+\begin{enumerate}
+\item \emph{Influence branch:} prove a weighted conditional influence norm
+      below one after a finite physical number of RG steps.
+\item \emph{Polymer branch:} derive a convergent full-measure polymer expansion
+      at the entry scale whose connected activities yield temporal clustering.
+\item \emph{Transfer branch:} prove a gauge-physical transfer-operator
+      contraction uniform in volume and cutoff, then compare it to UPRR.
+\end{enumerate}
+Each branch must include a large-field/topology lemma and a positivity/density
+certificate.  Failure of one branch should yield a counterexample or an exact
+lower-level obstruction, not be hidden by moving to the next representation.
+
+\begin{thebibliography}{99}
+\bibitem{JaffeWitten}
+A. Jaffe and E. Witten,
+\emph{Quantum Yang--Mills Theory}, Clay Mathematics Institute problem
+description,\newline
+\url{https://www.claymath.org/wp-content/uploads/2022/06/yangmills.pdf}.
+
+\bibitem{OS1}
+K. Osterwalder and R. Schrader,
+``Axioms for Euclidean Green's Functions,''
+\emph{Communications in Mathematical Physics} \textbf{31} (1973), 83--112,\newline
+\url{https://projecteuclid.org/euclid.cmp/1103858969}.
+
+\bibitem{OS2}
+K. Osterwalder and R. Schrader,
+``Axioms for Euclidean Green's Functions II,''
+\emph{Communications in Mathematical Physics} \textbf{42} (1975), 281--305.
+
+\bibitem{BalabanI}
+T. Ba\l aban,
+``Renormalization Group Approach to Lattice Gauge Field Theories I:
+Generation of Effective Actions in a Small Field Approximation and a Coupling
+Constant Renormalization in Four Dimensions,''
+\emph{Communications in Mathematical Physics} \textbf{109} (1987), 249--301,\newline
+\url{https://projecteuclid.org/euclid.cmp/1104116842}.
+
+\bibitem{SZZ}
+H. Shen, R. Zhu, and X. Zhu,
+``A Stochastic Analysis Approach to Lattice Yang--Mills at Strong Coupling,''
+\emph{Communications in Mathematical Physics} \textbf{400} (2023), 805--851,\newline
+\url{https://arxiv.org/abs/2204.12737}.
+
+\bibitem{Nissim}
+R. Nissim,
+``$\mathrm{U}(N)$ Lattice Yang--Mills in the 't Hooft Regime,'' preprint
+(2025),\newline
+\url{https://arxiv.org/abs/2510.22788}.
+\end{thebibliography}
+
+\end{document}

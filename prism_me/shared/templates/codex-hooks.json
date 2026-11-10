@@ -1,0 +1,71 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "startup|resume",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/usr/bin/env python3 \"$(git rev-parse --show-toplevel)/prism_me/scripts/prism_control.py\" hook-session-start",
+            "statusMessage": "Loading Prism control state"
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/usr/bin/env python3 \"$(git rev-parse --show-toplevel)/prism_me/scripts/prism_control.py\" hook-user-prompt-submit",
+            "statusMessage": "Checking Prism workflow routing"
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/usr/bin/env python3 \"$(git rev-parse --show-toplevel)/prism_me/scripts/prism_control.py\" hook-pre-tool-use",
+            "statusMessage": "Checking Prism shell guardrails"
+          }
+        ]
+      },
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/usr/bin/env python3 \"$(git rev-parse --show-toplevel)/prism_me/scripts/prism_control.py\" hook-pre-tool-use",
+            "statusMessage": "Reserving a Prism edit-review slot"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/usr/bin/env python3 \"$(git rev-parse --show-toplevel)/prism_me/scripts/prism_control.py\" hook-post-tool-use",
+            "statusMessage": "Updating Prism execution context"
+          }
+        ]
+      },
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/usr/bin/env python3 \"$(git rev-parse --show-toplevel)/prism_me/scripts/prism_control.py\" hook-post-tool-use",
+            "statusMessage": "Tracking Prism edit cycles"
+          }
+        ]
+      }
+    ]
+  }
+}

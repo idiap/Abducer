@@ -1,0 +1,12 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema", "$id": "urn:abducer:framework-paper:workflow-structure-model:1",
+  "title": "WorkflowStructureModel", "type": "object", "additionalProperties": false,
+  "required": ["schema_version", "model_id", "input_digest", "nodes", "edges", "failure_paths", "feedback_loops", "model_digest"],
+  "properties": {
+    "schema_version": {"const": "1.0.0"}, "model_id": {"type": "string", "minLength": 1}, "input_digest": {"$ref": "#/$defs/digest"},
+    "nodes": {"type": "array", "items": {"type": "object", "additionalProperties": false, "required": ["node_id", "node_type", "label", "evidence_ids"], "properties": {"node_id": {"type": "string", "minLength": 1}, "node_type": {"enum": ["workflow", "stage", "skill", "operator", "artifact", "state_store", "gate", "validator", "actor"]}, "label": {"type": "string", "minLength": 1}, "evidence_ids": {"$ref": "#/$defs/nonemptyStrings"}}}},
+    "edges": {"type": "array", "items": {"type": "object", "additionalProperties": false, "required": ["edge_id", "source", "target", "edge_type", "posture", "evidence_ids"], "properties": {"edge_id": {"type": "string", "minLength": 1}, "source": {"type": "string", "minLength": 1}, "target": {"type": "string", "minLength": 1}, "edge_type": {"enum": ["contains", "invokes", "consumes", "produces", "validates", "gates", "hands_off_to", "persists_to", "feeds_back_to"]}, "posture": {"enum": ["declared", "observed", "replayed", "inferred", "verified", "unknown", "contested"]}, "evidence_ids": {"$ref": "#/$defs/nonemptyStrings"}}}},
+    "failure_paths": {"$ref": "#/$defs/strings"}, "feedback_loops": {"$ref": "#/$defs/strings"}, "model_digest": {"$ref": "#/$defs/digest"}
+  },
+  "$defs": {"digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"}, "strings": {"type": "array", "items": {"type": "string"}, "uniqueItems": true}, "nonemptyStrings": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}, "uniqueItems": true}}
+}

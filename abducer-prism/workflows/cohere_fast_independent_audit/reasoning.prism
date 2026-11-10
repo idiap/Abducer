@@ -1,0 +1,46 @@
+# SPDX-FileCopyrightText: © 2026 Idiap Research Institute <contact@idiap.ch>
+#
+# SPDX-FileContributor: Andre Freitas <andre.freitas@idiap.ch>
+# Neuro-symbolic AI Group
+#
+# SPDX-FileContributor: Danilo Gusicuma <danilo.gusicuma@idiap.ch>
+# Neuro-symbolic AI Group
+#
+# SPDX-License-Identifier: MIT
+# Function: challenge a conditional derivation and calibrate whether it may proceed.
+# Input: ConditionalDerivationPacket is the independently audited claim packet.
+# Types: IndependentRefutationAssessment separates refuted, bounded non-refutation, and inconclusive results.
+# Output: IndependentAuditDisposition is Accepted or Quarantined.
+# Routing: Accepted continues to manuscript release; Quarantined stops.
+# Layer: high-level epistemic topology only.
+# Metadata: workflows/manifest.json (`cohere_fast_independent_audit`).
+
+from workflows.cohere_fast_independent_audit.types import (
+    IndependentAuditDisposition,
+    ConditionalDerivationPacket,
+    IndependentRefutationAssessment,
+)
+
+from workflows.cohere_fast_independent_audit.occurrences import (
+    IndependentAuditDispositionInput,
+    EvidentialIndependentAuditDispositionAssessment,
+    RefutationalIndependentDerivationAudit,
+)
+
+from workflows.cohere_fast_independent_audit.relations import (
+    CalibratesIndependentAuditDisposition,
+)
+
+reasoning CohereFastIndependentAudit(
+    conditional_derivation: ConditionalDerivationPacket,
+) -> Generated[IndependentAuditDisposition]:
+    sequence:
+        # The audit searches for a defeater but cannot turn non-refutation into proof.
+        [refutation_assessment: RefutationalIndependentDerivationAudit(conditional_derivation)]
+        # Calibration explicitly joins source packet and audit result before routing.
+        [audit_disposition: EvidentialIndependentAuditDispositionAssessment(IndependentAuditDispositionInput(
+            derivation = conditional_derivation,
+            refutation_assessment = refutation_assessment.value,
+        ))] by CalibratesIndependentAuditDisposition
+
+    return audit_disposition

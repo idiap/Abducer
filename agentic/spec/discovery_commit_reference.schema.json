@@ -1,0 +1,52 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://abducer.local/spec/discovery_commit_reference.schema.json",
+  "title": "Portable verified discovery commit reference",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "reference_kind",
+    "programme_id",
+    "target_id",
+    "run_id",
+    "generation",
+    "prior_generation",
+    "commit_id",
+    "manifest_digest",
+    "state_file_digest",
+    "state_semantic_digest",
+    "frozen_theory_state_projection_digest",
+    "transition_kind",
+    "transition_artifact",
+    "reference_digest"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "reference_kind": {"const": "portable_verified_discovery_commit"},
+    "programme_id": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/identifier"},
+    "target_id": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/identifier"},
+    "run_id": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/identifier"},
+    "generation": {"type": "integer", "minimum": 1},
+    "prior_generation": {"type": "integer", "minimum": 0},
+    "commit_id": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/identifier"},
+    "manifest_digest": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/digest"},
+    "state_file_digest": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/digest"},
+    "state_semantic_digest": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/digest"},
+    "frozen_theory_state_projection_digest": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/digest"},
+    "transition_kind": {
+      "enum": ["theory_and_commission_anchor", "world_observation", "world_matrix_aggregation"]
+    },
+    "transition_artifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "sha256", "size_bytes"],
+      "properties": {
+        "path": {"type": "string", "minLength": 1},
+        "sha256": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/digest"},
+        "size_bytes": {"type": "integer", "minimum": 1}
+      }
+    },
+    "reference_digest": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/digest"}
+  }
+}

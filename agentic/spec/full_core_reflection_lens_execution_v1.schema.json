@@ -1,0 +1,300 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://abducer.local/spec/full_core_reflection_lens_execution_v1.schema.json",
+  "title": "Six independently supervised full-core reflection lens executions",
+  "description": "One process-authored semantic transformation and immutable research-worker receipt per exact conceptual lens over one repeated candidate core and one matched budget. No upstream reflection record is accepted. Process evidence grants no cognitive or semantic independence.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "artifact_kind",
+    "execution_bundle_id",
+    "candidate_id",
+    "candidate_core",
+    "candidate_core_digest",
+    "literature_derived_invention_input",
+    "literature_derived_invention_input_digest",
+    "lens_order",
+    "matched_budget",
+    "matched_budget_digest",
+    "status",
+    "lens_executions",
+    "all_terminal_barrier",
+    "authority_nulls",
+    "authority_boundary",
+    "content_digest"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "artifact_kind": {"const": "full_core_reflection_lens_execution_bundle"},
+    "execution_bundle_id": {"$ref": "#/$defs/identifier"},
+    "candidate_id": {"$ref": "#/$defs/identifier"},
+    "candidate_core": {"$ref": "#/$defs/candidateCore"},
+    "candidate_core_digest": {"$ref": "#/$defs/digest"},
+    "literature_derived_invention_input": {
+      "type": "object",
+      "required": [
+        "artifact_kind",
+        "input_id",
+        "causal_inputs",
+        "content_digest"
+      ],
+      "properties": {
+        "artifact_kind": {"const": "literature_derived_invention_input"},
+        "input_id": {"$ref": "#/$defs/identifier"},
+        "causal_inputs": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"type": "object"}
+        },
+        "content_digest": {"$ref": "#/$defs/digest"}
+      }
+    },
+    "literature_derived_invention_input_digest": {"$ref": "#/$defs/digest"},
+    "lens_order": {"$ref": "#/$defs/lensOrder"},
+    "matched_budget": {"type": "object", "minProperties": 11},
+    "matched_budget_digest": {"$ref": "#/$defs/digest"},
+    "status": {
+      "enum": [
+        "all_terminal_promotion_eligible",
+        "all_terminal_not_promotion_eligible"
+      ]
+    },
+    "lens_executions": {
+      "type": "array",
+      "minItems": 6,
+      "maxItems": 6,
+      "items": {"$ref": "#/$defs/lensExecution"}
+    },
+    "all_terminal_barrier": {"$ref": "#/$defs/barrier"},
+    "authority_nulls": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "process_evidence_scope",
+        "hidden_input_independence",
+        "cognitive_independence",
+        "semantic_independence",
+        "conceptual_merit_authority",
+        "truth_authority",
+        "physics_value_authority"
+      ],
+      "properties": {
+        "process_evidence_scope": {
+          "const": "six_distinct_supervised_local_process_receipts_only"
+        },
+        "hidden_input_independence": {"const": "unavailable"},
+        "cognitive_independence": {"const": "unavailable"},
+        "semantic_independence": {"const": "unavailable"},
+        "conceptual_merit_authority": {"type": "null"},
+        "truth_authority": {"type": "null"},
+        "physics_value_authority": {"type": "null"}
+      }
+    },
+    "authority_boundary": {"type": "string", "minLength": 180},
+    "content_digest": {"$ref": "#/$defs/digest"}
+  },
+  "$defs": {
+    "identifier": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"
+    },
+    "digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "lens": {
+      "enum": [
+        "ontological",
+        "dialectical",
+        "genealogical",
+        "modal_explanatory",
+        "unification",
+        "philosophy_of_physics"
+      ]
+    },
+    "lensOrder": {
+      "const": [
+        "ontological",
+        "dialectical",
+        "genealogical",
+        "modal_explanatory",
+        "unification",
+        "philosophy_of_physics"
+      ]
+    },
+    "candidateCore": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "statement",
+        "semantic_core",
+        "risk_reward",
+        "physics_handback"
+      ],
+      "properties": {
+        "statement": {"type": "string", "minLength": 1},
+        "semantic_core": {"type": "object", "minProperties": 1},
+        "risk_reward": {"type": "object", "minProperties": 1},
+        "physics_handback": {"type": "object", "minProperties": 1}
+      }
+    },
+    "lensExecution": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "lens_id",
+        "candidate_core_digest",
+        "literature_derived_invention_input_digest",
+        "produced_reflection",
+        "produced_reflection_digest",
+        "semantic_output_digest",
+        "matched_budget_digest",
+        "registered_receipt",
+        "receipt_file_sha256",
+        "receipt_byte_length",
+        "execution_record_digest"
+      ],
+      "properties": {
+        "lens_id": {"$ref": "#/$defs/lens"},
+        "candidate_core_digest": {"$ref": "#/$defs/digest"},
+        "literature_derived_invention_input_digest": {
+          "$ref": "#/$defs/digest"
+        },
+        "produced_reflection": {
+          "oneOf": [
+            {"type": "object", "minProperties": 1},
+            {"type": "null"}
+          ]
+        },
+        "produced_reflection_digest": {
+          "oneOf": [
+            {"$ref": "#/$defs/digest"},
+            {"type": "null"}
+          ]
+        },
+        "semantic_output_digest": {
+          "oneOf": [
+            {"$ref": "#/$defs/digest"},
+            {"type": "null"}
+          ]
+        },
+        "matched_budget_digest": {"$ref": "#/$defs/digest"},
+        "registered_receipt": {
+          "$ref": "research_worker_execution_receipt.schema.json"
+        },
+        "receipt_file_sha256": {"$ref": "#/$defs/digest"},
+        "receipt_byte_length": {"type": "integer", "minimum": 1},
+        "execution_record_digest": {"$ref": "#/$defs/digest"}
+      }
+    },
+    "terminalMember": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "lens_id",
+        "receipt_id",
+        "receipt_digest",
+        "receipt_file_sha256",
+        "request_sha256",
+        "response_sha256",
+        "outcome_status",
+        "pid",
+        "process_started_at",
+        "process_completed_at"
+      ],
+      "properties": {
+        "lens_id": {"$ref": "#/$defs/lens"},
+        "receipt_id": {"$ref": "#/$defs/identifier"},
+        "receipt_digest": {"$ref": "#/$defs/digest"},
+        "receipt_file_sha256": {"$ref": "#/$defs/digest"},
+        "request_sha256": {"$ref": "#/$defs/digest"},
+        "response_sha256": {
+          "oneOf": [{"$ref": "#/$defs/digest"}, {"type": "null"}]
+        },
+        "outcome_status": {
+          "enum": ["accepted", "operational_failure", "protocol_failure"]
+        },
+        "pid": {
+          "oneOf": [
+            {"type": "integer", "minimum": 1},
+            {"type": "null"}
+          ]
+        },
+        "process_started_at": {
+          "oneOf": [{"type": "string", "minLength": 1}, {"type": "null"}]
+        },
+        "process_completed_at": {
+          "oneOf": [{"type": "string", "minLength": 1}, {"type": "null"}]
+        }
+      }
+    },
+    "barrier": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "artifact_kind",
+        "barrier_id",
+        "status",
+        "candidate_core_digest",
+        "matched_budget_digest",
+        "literature_derived_invention_input_digest",
+        "scheduled_lens_count",
+        "terminal_lens_count",
+        "accepted_lens_count",
+        "distinct_receipt_count",
+        "distinct_process_count",
+        "observed_peak_parallelism",
+        "all_six_intervals_overlap",
+        "exact_lens_receipt_bijection",
+        "promotion_eligible",
+        "terminal_members",
+        "barrier_digest"
+      ],
+      "properties": {
+        "schema_version": {"const": "1.0.0"},
+        "artifact_kind": {"const": "full_core_reflection_lens_terminal_barrier"},
+        "barrier_id": {"$ref": "#/$defs/identifier"},
+        "status": {"const": "all_scheduled_lenses_terminal"},
+        "candidate_core_digest": {"$ref": "#/$defs/digest"},
+        "matched_budget_digest": {"$ref": "#/$defs/digest"},
+        "literature_derived_invention_input_digest": {
+          "$ref": "#/$defs/digest"
+        },
+        "scheduled_lens_count": {"const": 6},
+        "terminal_lens_count": {"const": 6},
+        "accepted_lens_count": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 6
+        },
+        "distinct_receipt_count": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 6
+        },
+        "distinct_process_count": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 6
+        },
+        "observed_peak_parallelism": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 6
+        },
+        "all_six_intervals_overlap": {"type": "boolean"},
+        "exact_lens_receipt_bijection": {"type": "boolean"},
+        "promotion_eligible": {"type": "boolean"},
+        "terminal_members": {
+          "type": "array",
+          "minItems": 6,
+          "maxItems": 6,
+          "items": {"$ref": "#/$defs/terminalMember"}
+        },
+        "barrier_digest": {"$ref": "#/$defs/digest"}
+      }
+    }
+  }
+}

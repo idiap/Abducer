@@ -1,0 +1,2421 @@
+{
+  "version": 1,
+  "source_registry": "agentic/registries/named_workflow_contracts.yaml",
+  "workflows": [
+    {
+      "id": "evidence_to_proof_route_onramp",
+      "version": "1.0.0",
+      "trace_spine": [
+        "provenance",
+        "normalization",
+        "grounding",
+        "connection",
+        "bias_correction",
+        "ranking",
+        "regime_audit",
+        "falsification",
+        "handoff"
+      ],
+      "expert_question": "How did source-bound evidence become a ranked, adversarially tested proof route?",
+      "steps": [
+        {
+          "step_id": "ingest",
+          "skill": "latex-kb-ingest",
+          "mode": "required",
+          "disposition": "semantic_event_required",
+          "event_family": "transformation",
+          "inference_operator": "normalize_with_provenance",
+          "required_fields": [
+            "public_inference.question",
+            "public_inference.premises",
+            "public_inference.warrant",
+            "public_inference.conclusion",
+            "public_inference.scope",
+            "evidence",
+            "authority"
+          ],
+          "evidence_roles": [
+            "supports",
+            "constrains",
+            "refutes"
+          ],
+          "required_contrast": "Expose the promoted route beside a demoted alternative and the evidence, bias correction, regime issue, or falsifier that separates them.",
+          "authority_boundary": "May recommend an evidence-bound route; may not assert a theorem or erase provenance and assertion-license limits.",
+          "consumes": [
+            "SourceBundle"
+          ],
+          "produces": [
+            "IngestedKnowledgeBase"
+          ],
+          "when": null
+        },
+        {
+          "step_id": "parse_pvsnp",
+          "skill": "pvsnp-kb-parser",
+          "mode": "conditional",
+          "disposition": "conditional_event_or_justified_na",
+          "event_family": "transformation",
+          "inference_operator": "normalize_with_provenance",
+          "required_fields": [
+            "public_inference.question",
+            "public_inference.premises",
+            "public_inference.warrant",
+            "public_inference.conclusion",
+            "public_inference.scope",
+            "evidence",
+            "authority"
+          ],
+          "evidence_roles": [
+            "supports",
+            "constrains",
+            "refutes"
+          ],
+          "required_contrast": "Expose the promoted route beside a demoted alternative and the evidence, bias correction, regime issue, or falsifier that separates them.",
+          "authority_boundary": "May recommend an evidence-bound route; may not assert a theorem or erase provenance and assertion-license limits.",
+          "consumes": [
+            "IngestedKnowledgeBase"
+          ],
+          "produces": [
+            "ParsedKnowledgeBase"
+          ],
+          "when": "target == 'p-vs-np' and source_format == 'latex'"
+        },
+        {
+          "step_id": "normalize_theorems",
+          "skill": "theorem-body-normalizer",
+          "mode": "required",
+          "disposition": "semantic_event_required",
+          "event_family": "transformation",
+          "inference_operator": "normalize_with_provenance",
+          "required_fields": [
+            "public_inference.question",
+            "public_inference.premises",
+            "public_inference.warrant",
+            "public_inference.conclusion",
+            "public_inference.scope",
+            "evidence",
+            "authority"
+          ],
+          "evidence_roles": [
+            "supports",
+            "constrains",
+            "refutes"
+          ],
+          "required_contrast": "Expose the promoted route beside a demoted alternative and the evidence, bias correction, regime issue, or falsifier that separates them.",
+          "authority_boundary": "May recommend an evidence-bound route; may not assert a theorem or erase provenance and assertion-license limits.",
+          "consumes": [
+            "IngestedKnowledgeBase",
+            "ParsedKnowledgeBase"
+          ],
+          "produces": [
+            "NormalizedTheoremCorpus"
+          ],
+          "when": null
+        },
+        {
+          "step_id": "ground_conjecture",
+          "skill": "kb-main-conjecture-grounder",
+          "mode": "required",
+          "disposition": "semantic_event_required",
+          "event_family": "transformation",
+          "inference_operator": "ground_claim_to_target",
+          "required_fields": [
+            "public_inference.question",
+            "public_inference.premises",
+            "public_inference.warrant",
+            "public_inference.conclusion",
+            "public_inference.scope",
+            "evidence",
+            "authority"
+          ],
+          "evidence_roles": [
+            "supports",
+            "constrains",
+            "refutes"
+          ],
+          "required_contrast": "Expose the promoted route beside a demoted alternative and the evidence, bias correction, regime issue, or falsifier that separates them.",
+          "authority_boundary": "May recommend an evidence-bound route; may not assert a theorem or erase provenance and assertion-license limits.",
+          "consumes": [
+            "NormalizedTheoremCorpus"
+          ],
+          "produces": [
+            "GroundedConjecture"
+          ],
+          "when": null
+        },
+        {
+          "step_id": "narrate_literature_evolution",
+          "skill": "target-literature-evolution-narrator",
+          "mode": "conditional",
+          "disposition": "conditional_event_or_justified_na",
+          "event_family": "transformation",
+          "inference_operator": "assimilate_prior_evidence",
+          "required_fields": [
+            "public_inference.question",
+            "public_inference.premises",
+            "public_inference.warrant",
+            "public_inference.conclusion",
+            "public_inference.scope",
+            "evidence",
+            "authority"
+          ],
+          "evidence_roles": [
+            "supports",
+            "constrains",
+            "refutes"
+          ],
+          "required_contrast": "Expose the promoted route beside a demoted alternative and the evidence, bias correction, regime issue, or falsifier that separates them.",
+          "authority_boundary": "May recommend an evidence-bound route; may not assert a theorem or erase provenance and assertion-license limits.",
+          "consumes": [
+            "GroundedConjecture",
+            "SourceBundle"
+          ],
+          "produces": [
+            "TargetLiteratureNarrative"
+          ],
+          "when": "source_bundle_contains_literature_history"
+        },
+        {
+          "step_id": "connect_proof",
+          "skill": "kb-proof-connector",
+          "mode": "required",
+          "disposition": "semantic_event_required",
+          "event_family": "transformation",
+          "inference_operator": "construct_and_rank_route",
+          "required_fields": [
+            "public_inference.question",
+            "public_inference.premises",
+            "public_inference.warrant",
+            "public_inference.conclusion",
+            "public_inference.scope",
+            "evidence",
+            "authority"
+          ],
+          "evidence_roles": [
+            "supports",
+            "constrains",
+            "refutes"
+          ],
+          "required_contrast": "Expose the promoted route beside a demoted alternative and the evidence, bias correction, regime issue, or falsifier that separates them.",
+          "authority_boundary": "May recommend an evidence-bound route; may not assert a theorem or erase provenance and assertion-license limits.",
+          "consumes": [
+            "GroundedConjecture"
+          ],
+          "produces": [
+            "ProofConnectionGraph"
+          ],
+          "when": null
+        },
+        {
+          "step_id": "evaluate_hypotheses",
+          "skill": "kb-hypothesis-evaluator",
+          "mode": "conditional",
+          "disposition": "conditional_event_or_justified_na",
+          "event_family": "transformation",
+          "inference_operator": "artifact_grounded_transformation",
+          "required_fields": [
+            "public_inference.question",
+            "public_inference.premises",
+            "public_inference.warrant",
+            "public_inference.conclusion",
+            "public_inference.scope",
+            "evidence",
+            "authority"
+          ],
+          "evidence_roles": [
+            "supports",
+            "constrains",
+            "refutes"
+          ],
+          "required_contrast": "Expose the promoted route beside a demoted alternative and the evidence, bias correction, regime issue, or falsifier that separates them.",
+          "authority_boundary": "May recommend an evidence-bound route; may not assert a theorem or erase provenance and assertion-license limits.",
+          "consumes": [
+            "ProofConnectionGraph"
+          ],
+          "produces": [
+            "HypothesisAssessment"
+          ],
+          "when": "hypotheses_present"
+        },
+        {
+          "step_id": "audit_hubs",
+          "skill": "hub-bias-auditor",
+          "mode": "required",
+          "disposition": "semantic_event_required",
+          "event_family": "validation",
+          "inference_operator": "compare_pre_post_bias_correction",
+          "required_fields": [
+            "public_inference.question",
+            "public_inference.premises",
+            "public_inference.warrant",
+            "public_inference.conclusion",
+            "public_inference.scope",
+            "evidence",
+            "authority"
+          ],
+          "evidence_roles": [
+            "supports",
+            "constrains",
+            "refutes"
+          ],
+          "required_contrast": "Expose the promoted route beside a demoted alternative and the evidence, bias correction, regime issue, or falsifier that separates them.",
+          "authority_boundary": "May recommend an evidence-bound route; may not assert a theorem or erase provenance and assertion-license limits.",
+          "consumes": [
+            "ProofConnectionGraph"
+          ],
+          "produces": [
+            "HubBiasAudit"
+          ],
+          "when": null
+        },
+        {
+          "step_id": "find_entrypoint",
+          "skill": "kb-entrypoint-finder",
+          "mode": "required",
+          "disposition": "semantic_event_required",
+          "event_family": "transformation",
+          "inference_operator": "construct_and_rank_route",
+          "required_fields": [
+            "public_inference.question",
+            "public_inference.premises",
+            "public_inference.warrant",
+            "public_inference.conclusion",
+            "public_inference.scope",
+            "evidence",
+            "authority"
+          ],
+          "evidence_roles": [
+            "supports",
+            "constrains",
+            "refutes"
+          ],
+          "required_contrast": "Expose the promoted route beside a demoted alternative and the evidence, bias correction, regime issue, or falsifier that separates them.",
+          "authority_boundary": "May recommend an evidence-bound route; may not assert a theorem or erase provenance and assertion-license limits.",
+          "consumes": [
+            "ProofConnectionGraph",
+            "HubBiasAudit"
+          ],
+          "produces": [
+            "EntrypointCandidates"
+          ],
+          "when": null
+        },
+        {
+          "step_id": "pathfind",
+          "skill": "kb-entrypoint-pathfinder",
+          "mode": "required",
+          "disposition": "semantic_event_required",
+          "event_family": "transformation",
+          "inference_operator": "construct_and_rank_route",
+          "required_fields": [
+            "public_inference.question",
+            "public_inference.premises",
+            "public_inference.warrant",
+            "public_inference.conclusion",
+            "public_inference.scope",
+            "evidence",
+            "authority"
+          ],
+          "evidence_roles": [
+            "supports",
+            "constrains",
+            "refutes"
+          ],
+          "required_contrast": "Expose the promoted route beside a demoted alternative and the evidence, bias correction, regime issue, or falsifier that separates them.",
+          "authority_boundary": "May recommend an evidence-bound route; may not assert a theorem or erase provenance and assertion-license limits.",
+          "consumes": [
+            "EntrypointCandidates"
+          ],
+          "produces": [
+            "ProofRouteCandidates"
+          ],
+          "when": null
+        },
+        {
+          "step_id": "audit_regime_shift",
+          "skill": "regime-shift-auditor",
+          "mode": "conditional",
+          "disposition": "conditional_event_or_justified_na",
+          "event_family": "validation",
+          "inference_operator": "artifact_grounded_transformation",
+          "required_fields": [
+            "public_inference.question",
+            "public_inference.premises",
+            "public_inference.warrant",
+            "public_inference.conclusion",
+            "public_inference.scope",
+            "evidence",
+            "authority"
+          ],
+          "evidence_roles": [
+            "supports",
+            "constrains",
+            "refutes"
+          ],
+          "required_contrast": "Expose the promoted route beside a demoted alternative and the evidence, bias correction, regime issue, or falsifier that separates them.",
+          "authority_boundary": "May recommend an evidence-bound route; may not assert a theorem or erase provenance and assertion-license limits.",
+          "consumes": [
+            "ProofRouteCandidates"
+          ],
+          "produces": [
+            "RegimeShiftAudit"
+          ],
+          "when": "route_crosses_regime_or_model"
+        },
+        {
+          "step_id": "hunt_counterexamples",
+          "skill": "counterexample-hunter",
+          "mode": "required",
+          "disposition": "semantic_event_required",
+          "event_family": "falsification",
+          "inference_operator": "adversarially_test_or_split",
+          "required_fields": [
+            "public_inference.question",
+            "public_inference.premises",
+            "public_inference.warrant",
+            "public_inference.conclusion",
+            "public_inference.scope",
+            "evidence",
+            "authority"
+          ],
+          "evidence_roles": [
+            "supports",
+            "constrains",
+            "refutes"
+          ],
+          "required_contrast": "Expose the promoted route beside a demoted alternative and the evidence, bias correction, regime issue, or falsifier that separates them.",
+          "authority_boundary": "May recommend an evidence-bound route; may not assert a theorem or erase provenance and assertion-license limits.",
+          "consumes": [
+            "ProofRouteCandidates"
+          ],
+          "produces": [
+            "FalsificationPacket"
+          ],
+          "when": null
+        },
+        {
+          "step_id": "expert_handoff",
+          "skill": "expert-handoff",
+          "mode": "required",
+          "disposition": "semantic_event_required",
+          "event_family": "handoff",
+          "inference_operator": "artifact_grounded_transformation",
+          "required_fields": [
+            "public_inference.question",
+            "public_inference.premises",
+            "public_inference.warrant",
+            "public_inference.conclusion",
+            "public_inference.scope",
+            "evidence",
+            "authority"
+          ],
+          "evidence_roles": [
+            "supports",
+            "constrains",
+            "refutes"
+          ],
+          "required_contrast": "Expose the promoted route beside a demoted alternative and the evidence, bias correction, regime issue, or falsifier that separates them.",
+          "authority_boundary": "May recommend an evidence-bound route; may not assert a theorem or erase provenance and assertion-license limits.",
+          "consumes": [
+            "ProofRouteCandidates",
+            "FalsificationPacket"
+          ],
+          "produces": [
+            "ExpertRouteDossier"
+          ],
+          "when": null
+        }
+      ],
+      "profiles": []
+    },
+    {
+      "id": "conceptual_frontier_deepening",
+      "version": "1.0.0",
+      "trace_spine": [
+        "frozen_context",
+        "literature_delta",
+        "invention",
+        "branch_lineage",
+        "reflection_delta",
+        "synthesis",
+        "blind_adjudication",
+        "equivalence",
+        "formal_readiness"
+      ],
+      "expert_question": "Which conceptual transformation improved the frozen frontier, and why did blind adjudication prefer it?",
+      "steps": [
+        {
+          "step_id": "plan_deepening",
+          "skill": "conceptual-frontier-deepening",
+          "mode": "required",
+          "disposition": "semantic_event_required",
+          "event_family": "planning",
+          "inference_operator": "artifact_grounded_transformation",
+          "required_fields": [
+            "public_inference.question",
+            "public_inference.premises",
+            "public_inference.warrant",
+            "public_inference.conclusion",
+            "public_inference.scope",
+            "evidence",
+            "authority"
+          ],
+          "evidence_roles": [
+            "supports",
+            "constrains",
+            "refutes"
+          ],
+          "required_contrast": "Retain a rejected alternative with the adjudication criterion; conceal candidate identity during blind selection and disclose it only afterward.",
+          "authority_boundary": "May propose and rank theories under frozen context; experiments constrain but never select a conceptual theory, and no proof is certified.",
+          "consumes": [
+            "FrozenDiscoveryContext"
+          ],
+          "produces": [
+            "ConceptualDeepeningPlan"
+          ],
+          "when": null
+        },
+        {
+          "step_id": "assimilate_literature",
+          "skill": "frontier-literature-assimilator",
+          "mode": "required",
+          "disposition": "semantic_event_required",
+          "event_family": "transformation",
+          "inference_operator": "assimilate_prior_evidence",
+          "required_fields": [
+            "public_inference.question",
+            "public_inference.premises",
+            "public_inference.warrant",
+            "public_inference.conclusion",
+            "public_inference.scope",
+            "evidence",
+            "authority"
+          ],
+          "evidence_roles": [
+            "supports",
+            "constrains",
+            "refutes"
+          ],
+          "required_contrast": "Retain a rejected alternative with the adjudication criterion; conceal candidate identity during blind selection and disclose it only afterward.",
+          "authority_boundary": "May propose and rank theories under frozen context; experiments constrain but never select a conceptual theory, and no proof is certified.",
+          "consumes": [
+            "FrozenDiscoveryContext"
+          ],
+          "produces": [
+            "LiteratureFrontierMap"
+          ],
+          "when": null
+        },
+        {
+          "step_id": "forge_invention",
+          "skill": "literature-conditioned-invention-forger",
+          "mode": "required",
+          "disposition": "semantic_event_required",
+          "event_family": "transformation",
+          "inference_operator": "assimilate_prior_evidence",
+          "required_fields": [
+            "public_inference.question",
+            "public_inference.premises",
+            "public_inference.warrant",
+            "public_inference.conclusion",
+            "public_inference.scope",
+            "evidence",
+            "authority"
+          ],
+          "evidence_roles": [
+            "supports",
+            "constrains",
+            "refutes"
+          ],
+          "required_contrast": "Retain a rejected alternative with the adjudication criterion; conceal candidate identity during blind selection and disclose it only afterward.",
+          "authority_boundary": "May propose and rank theories under frozen context; experiments constrain but never select a conceptual theory, and no proof is certified.",
+          "consumes": [
+            "LiteratureFrontierMap"
+          ],
+          "produces": [
+            "InventionCandidates"
+          ],
+          "when": null
+        },
+        {
+          "step_id": "portfolio",
+          "skill": "parallel-hypothesis-portfolio",
+          "mode": "required",
+          "disposition": "semantic_event_required",
+          "event_family": "transformation",
+          "inference_operator": "generate_independent_alternatives",
+          "required_fields": [
+            "public_inference.question",
+            "public_inference.premises",
+            "public_inference.warrant",
+            "public_inference.conclusion",
+            "public_inference.scope",
+            "evidence",
+            "authority"
+          ],
+          "evidence_roles": [
+            "supports",
+            "constrains",
+            "refutes"
+          ],
+          "required_contrast": "Retain a rejected alternative with the adjudication criterion; conceal candidate identity during blind selection and disclose it only afterward.",
+          "authority_boundary": "May propose and rank theories under frozen context; experiments constrain but never select a conceptual theory, and no proof is certified.",
+          "consumes": [
+            "InventionCandidates"
+          ],
+          "produces": [
+            "HypothesisPortfolio"
+          ],
+          "when": null
+        },
+        {
+          "step_id": "reflect_discovery",
+          "skill": "reflective-conceptual-discovery",
+          "mode": "required",
+          "disposition": "semantic_event_required",
+          "event_family": "adjudication",
+          "inference_operator": "revise_and_synthesize",
+          "required_fields": [
+            "public_inference.question",
+            "public_inference.premises",
+            "public_inference.warrant",
+            "public_inference.conclusion",
+            "public_inference.scope",
+            "evidence",
+            "authority"
+          ],
+          "evidence_roles": [
+            "supports",
+            "constrains",
+            "refutes"
+          ],
+          "required_contrast": "Retain a rejected alternative with the adjudication criterion; conceal candidate identity during blind selection and disclose it only afterward.",
+          "authority_boundary": "May propose and rank theories under frozen context; experiments constrain but never select a conceptual theory, and no proof is certified.",
+          "consumes": [
+            "HypothesisPortfolio"
+          ],
+          "produces": [
+            "ConceptualReflection"
+          ],
+          "when": null
+        },
+        {
+          "step_id": "synthesize",
+          "skill": "reflective-theory-synthesizer",
+          "mode": "required",
+          "disposition": "semantic_event_required",
+          "event_family": "transformation",
+          "inference_operator": "revise_and_synthesize",
+          "required_fields": [
+            "public_inference.question",
+            "public_inference.premises",
+            "public_inference.warrant",
+            "public_inference.conclusion",
+            "public_inference.scope",
+            "evidence",
+            "authority"
+          ],
+          "evidence_roles": [
+            "supports",
+            "constrains",
+            "refutes"
+          ],
+          "required_contrast": "Retain a rejected alternative with the adjudication criterion; conceal candidate identity during blind selection and disclose it only afterward.",
+          "authority_boundary": "May propose and rank theories under frozen context; experiments constrain but never select a conceptual theory, and no proof is certified.",
+          "consumes": [
+            "ConceptualReflection"
+          ],
+          "produces": [
+            "TheoryCandidates"
+          ],
+          "when": null
+        },
+        {
+          "step_id": "blind_adjudicate",
+          "skill": "blind-conceptual-preference-adjudicator",
+          "mode": "required",
+          "disposition": "semantic_event_required",
+          "event_family": "adjudication",
+          "inference_operator": "blind_multi_criterion_compare",
+          "required_fields": [
+            "public_inference.question",
+            "public_inference.premises",
+            "public_inference.warrant",
+            "public_inference.conclusion",
+            "public_inference.scope",
+            "evidence",
+            "authority"
+          ],
+          "evidence_roles": [
+            "supports",
+            "constrains",
+            "refutes"
+          ],
+          "required_contrast": "Retain a rejected alternative with the adjudication criterion; conceal candidate identity during blind selection and disclose it only afterward.",
+          "authority_boundary": "May propose and rank theories under frozen context; experiments constrain but never select a conceptual theory, and no proof is certified.",
+          "consumes": [
+            "TheoryCandidates"
+          ],
+          "produces": [
+            "BlindAdjudication"
+          ],
+          "when": null
+        },
+        {
+          "step_id": "compile_atlas_defects",
+          "skill": "theory-atlas-defect-compiler",
+          "mode": "conditional",
+          "disposition": "conditional_event_or_justified_na",
+          "event_family": "transformation",
+          "inference_operator": "compute_result_atlas_delta",
+          "required_fields": [
+            "public_inference.question",
+            "public_inference.premises",
+            "public_inference.warrant",
+            "public_inference.conclusion",
+            "public_inference.scope",
+            "evidence",
+            "authority"
+          ],
+          "evidence_roles": [
+            "supports",
+            "constrains",
+            "refutes"
+          ],
+          "required_contrast": "Retain a rejected alternative with the adjudication criterion; conceal candidate identity during blind selection and disclose it only afterward.",
+          "authority_boundary": "May propose and rank theories under frozen context; experiments constrain but never select a conceptual theory, and no proof is certified.",
+          "consumes": [
+            "TheoryCandidates"
+          ],
+          "produces": [
+            "TheoryAtlasDefects"
+          ],
+          "when": "category_or_hott_pressure"
+        },
+        {
+          "step_id": "derive_central_routes",
+          "skill": "central-formal-conceptual-routes",
+          "mode": "required",
+          "disposition": "semantic_event_required",
+          "event_family": "transformation",
+          "inference_operator": "artifact_grounded_transformation",
+          "required_fields": [
+            "public_inference.question",
+            "public_inference.premises",
+            "public_inference.warrant",
+            "public_inference.conclusion",
+            "public_inference.scope",
+            "evidence",
+            "authority"
+          ],
+          "evidence_roles": [
+            "supports",
+            "constrains",
+            "refutes"
+          ],
+          "required_contrast": "Retain a rejected alternative with the adjudication criterion; conceal candidate identity during blind selection and disclose it only afterward.",
+          "authority_boundary": "May propose and rank theories under frozen context; experiments constrain but never select a conceptual theory, and no proof is certified.",
+          "consumes": [
+            "BlindAdjudication"
+          ],
+          "produces": [
+            "CentralConceptualRoutes"
+          ],
+          "when": null
+        },
+        {
+          "step_id": "check_bridge_equivalence",
+          "skill": "bridge-object-equivalence-checker",
+          "mode": "conditional",
+          "disposition": "conditional_event_or_justified_na",
+          "event_family": "validation",
+          "inference_operator": "test_semantic_equivalence",
+          "required_fields": [
+            "public_inference.question",
+            "public_inference.premises",
+            "public_inference.warrant",
+            "public_inference.conclusion",
+            "public_inference.scope",
+            "evidence",
+            "authority"
+          ],
+          "evidence_roles": [
+            "supports",
+            "constrains",
+            "refutes"
+          ],
+          "required_contrast": "Retain a rejected alternative with the adjudication criterion; conceal candidate identity during blind selection and disclose it only afterward.",
+          "authority_boundary": "May propose and rank theories under frozen context; experiments constrain but never select a conceptual theory, and no proof is certified.",
+          "consumes": [
+            "CentralConceptualRoutes"
+          ],
+          "produces": [
+            "BridgeEquivalenceDecision"
+          ],
+          "when": "multiple_carriers_compete"
+        },
+        {
+          "step_id": "produce_formal_claim",
+          "skill": "formal-claim-producer",
+          "mode": "required",
+          "disposition": "semantic_event_required",
+          "event_family": "transformation",
+          "inference_operator": "artifact_grounded_transformation",
+          "required_fields": [
+            "public_inference.question",
+            "public_inference.premises",
+            "public_inference.warrant",
+            "public_inference.conclusion",
+            "public_inference.scope",
+            "evidence",
+            "authority"
+          ],
+          "evidence_roles": [
+            "supports",
+            "constrains",
+            "refutes"
+          ],
+          "required_contrast": "Retain a rejected alternative with the adjudication criterion; conceal candidate identity during blind selection and disclose it only afterward.",
+          "authority_boundary": "May propose and rank theories under frozen context; experiments constrain but never select a conceptual theory, and no proof is certified.",
+          "consumes": [
+            "CentralConceptualRoutes",
+            "BlindAdjudication"
+          ],
+          "produces": [
+            "FormalClaimProducerOutputV2"
+          ],
+          "when": null
+        }
+      ],
+      "profiles": []
+    },
+    {
+      "id": "theorem_proof_delivery",
+      "version": "1.0.0",
+      "trace_spine": [
+        "statement_binding",
+        "obligation_derivation",
+        "lemma_dag",
+        "gap_or_countermodel",
+        "domain_audit",
+        "proof_gate"
+      ],
+      "expert_question": "How does the exact scoped theorem reduce to obligations and a lemma DAG, and where is the residual gap?",
+      "steps": [
+        {
+          "step_id": "orchestrate_delivery",
+          "skill": "proof-delivery-workflow-orchestrator",
+          "mode": "required",
+          "disposition": "semantic_event_required",
+          "event_family": "planning",
+          "inference_operator": "validate_exact_claim_boundary",
+          "required_fields": [
+            "public_inference.question",
+            "public_inference.premises",
+            "public_inference.warrant",
+            "public_inference.conclusion",
+            "public_inference.scope",
+            "evidence",
+            "authority"
+          ],
+          "evidence_roles": [
+            "supports",
+            "constrains",
+            "refutes"
+          ],
+          "required_contrast": "Expose failed lemmas, circularity, model mismatch, or countermodels beside the surviving chain and exact residual obligation.",
+          "authority_boundary": "May validate only the exact bound statement after the proof gate; may not silently close gaps or widen quantifiers, model, or regime.",
+          "consumes": [
+            "ProofQueueItem"
+          ],
+          "produces": [
+            "ProofDeliveryPlan"
+          ],
+          "when": null
+        },
+        {
+          "step_id": "formalize_obligations",
+          "skill": "proof-obligation-formalizer",
+          "mode": "required",
+          "disposition": "semantic_event_required",
+          "event_family": "transformation",
+          "inference_operator": "derive_formal_obligations",
+          "required_fields": [
+            "public_inference.question",
+            "public_inference.premises",
+            "public_inference.warrant",
+            "public_inference.conclusion",
+            "public_inference.scope",
+            "evidence",
+            "authority"
+          ],
+          "evidence_roles": [
+            "supports",
+            "constrains",
+            "refutes"
+          ],
+          "required_contrast": "Expose failed lemmas, circularity, model mismatch, or countermodels beside the surviving chain and exact residual obligation.",
+          "authority_boundary": "May validate only the exact bound statement after the proof gate; may not silently close gaps or widen quantifiers, model, or regime.",
+          "consumes": [
+            "ProofDeliveryPlan"
+          ],
+          "produces": [
+            "FormalProofObligations"
+          ],
+          "when": null
+        },
+        {
+          "step_id": "build_lemma_chain",
+          "skill": "lemma-chain-proof-builder",
+          "mode": "required",
+          "disposition": "semantic_event_required",
+          "event_family": "transformation",
+          "inference_operator": "compose_lemma_dependency",
+          "required_fields": [
+            "public_inference.question",
+            "public_inference.premises",
+            "public_inference.warrant",
+            "public_inference.conclusion",
+            "public_inference.scope",
+            "evidence",
+            "authority"
+          ],
+          "evidence_roles": [
+            "supports",
+            "constrains",
+            "refutes"
+          ],
+          "required_contrast": "Expose failed lemmas, circularity, model mismatch, or countermodels beside the surviving chain and exact residual obligation.",
+          "authority_boundary": "May validate only the exact bound statement after the proof gate; may not silently close gaps or widen quantifiers, model, or regime.",
+          "consumes": [
+            "FormalProofObligations"
+          ],
+          "produces": [
+            "LemmaChain"
+          ],
+          "when": null
+        },
+        {
+          "step_id": "split_gap_or_countermodel",
+          "skill": "proof-gap-countermodel-splitter",
+          "mode": "conditional",
+          "disposition": "conditional_event_or_justified_na",
+          "event_family": "falsification",
+          "inference_operator": "adversarially_test_or_split",
+          "required_fields": [
+            "public_inference.question",
+            "public_inference.premises",
+            "public_inference.warrant",
+            "public_inference.conclusion",
+            "public_inference.scope",
+            "evidence",
+            "authority"
+          ],
+          "evidence_roles": [
+            "supports",
+            "constrains",
+            "refutes"
+          ],
+          "required_contrast": "Expose failed lemmas, circularity, model mismatch, or countermodels beside the surviving chain and exact residual obligation.",
+          "authority_boundary": "May validate only the exact bound statement after the proof gate; may not silently close gaps or widen quantifiers, model, or regime.",
+          "consumes": [
+            "LemmaChain"
+          ],
+          "produces": [
+            "ProofGapDecision"
+          ],
+          "when": "lemma_blocked_or_false"
+        },
+        {
+          "step_id": "control_pvsnp_inference",
+          "skill": "pvsnp-inference-quality-controller",
+          "mode": "conditional",
+          "disposition": "conditional_event_or_justified_na",
+          "event_family": "transformation",
+          "inference_operator": "artifact_grounded_transformation",
+          "required_fields": [
+            "public_inference.question",
+            "public_inference.premises",
+            "public_inference.warrant",
+            "public_inference.conclusion",
+            "public_inference.scope",
+            "evidence",
+            "authority"
+          ],
+          "evidence_roles": [
+            "supports",
+            "constrains",
+            "refutes"
+          ],
+          "required_contrast": "Expose failed lemmas, circularity, model mismatch, or countermodels beside the surviving chain and exact residual obligation.",
+          "authority_boundary": "May validate only the exact bound statement after the proof gate; may not silently close gaps or widen quantifiers, model, or regime.",
+          "consumes": [
+            "LemmaChain"
+          ],
+          "produces": [
+            "InferenceQualityDecision"
+          ],
+          "when": "target == 'p-vs-np'"
+        },
+        {
+          "step_id": "gate_proof",
+          "skill": "proof-quality-gatekeeper",
+          "mode": "validator_only",
+          "disposition": "validator_event_required",
+          "event_family": "validation",
+          "inference_operator": "validate_exact_claim_boundary",
+          "required_fields": [
+            "public_inference.question",
+            "public_inference.premises",
+            "public_inference.warrant",
+            "public_inference.conclusion",
+            "public_inference.scope",
+            "evidence",
+            "authority"
+          ],
+          "evidence_roles": [
+            "supports",
+            "constrains",
+            "refutes"
+          ],
+          "required_contrast": "Expose failed lemmas, circularity, model mismatch, or countermodels beside the surviving chain and exact residual obligation.",
+          "authority_boundary": "May validate only the exact bound statement after the proof gate; may not silently close gaps or widen quantifiers, model, or regime.",
+          "consumes": [
+            "LemmaChain"
+          ],
+          "produces": [
+            "ProofGateDecision"
+          ],
+          "when": null
+        }
+      ],
+      "profiles": []
+    },
+    {
+      "id": "scientific_contribution_cultivation",
+      "version": "1.0.0",
+      "trace_spine": [
+        "atlas_delta",
+        "subgoal_enablement",
+        "contribution_class",
+        "value_evidence",
+        "target_alignment",
+        "enablement_counterfactual",
+        "handoff"
+      ],
+      "expert_question": "What is the smallest honest contribution supported by the result delta, and what does it enable?",
+      "steps": [
+        {
+          "step_id": "maintain_atlas",
+          "skill": "result-atlas-maintainer",
+          "mode": "required",
+          "disposition": "semantic_event_required",
+          "event_family": "transformation",
+          "inference_operator": "compute_result_atlas_delta",
+          "required_fields": [
+            "public_inference.question",
+            "public_inference.premises",
+            "public_inference.warrant",
+            "public_inference.conclusion",
+            "public_inference.scope",
+            "evidence",
+            "authority"
+          ],
+          "evidence_roles": [
+            "supports",
+            "constrains",
+            "refutes"
+          ],
+          "required_contrast": "Contrast target-critical novelty with local, supporting, prior-art-covered, or non-enabling interpretations.",
+          "authority_boundary": "May classify and package supported contribution candidates; may not inflate novelty, target alignment, or paper readiness.",
+          "consumes": [
+            "ResultAtlasSlice"
+          ],
+          "produces": [
+            "UpdatedResultAtlas"
+          ],
+          "when": null
+        },
+        {
+          "step_id": "manage_subgoal",
+          "skill": "contribution-oriented-subgoal-manager",
+          "mode": "required",
+          "disposition": "semantic_event_required",
+          "event_family": "planning",
+          "inference_operator": "classify_and_assess_contribution",
+          "required_fields": [
+            "public_inference.question",
+            "public_inference.premises",
+            "public_inference.warrant",
+            "public_inference.conclusion",
+            "public_inference.scope",
+            "evidence",
+            "authority"
+          ],
+          "evidence_roles": [
+            "supports",
+            "constrains",
+            "refutes"
+          ],
+          "required_contrast": "Contrast target-critical novelty with local, supporting, prior-art-covered, or non-enabling interpretations.",
+          "authority_boundary": "May classify and package supported contribution candidates; may not inflate novelty, target alignment, or paper readiness.",
+          "consumes": [
+            "UpdatedResultAtlas"
+          ],
+          "produces": [
+            "ContributionSubgoalPacket"
+          ],
+          "when": null
+        },
+        {
+          "step_id": "detect_contribution",
+          "skill": "scientific-contribution-detector",
+          "mode": "required",
+          "disposition": "semantic_event_required",
+          "event_family": "transformation",
+          "inference_operator": "classify_and_assess_contribution",
+          "required_fields": [
+            "public_inference.question",
+            "public_inference.premises",
+            "public_inference.warrant",
+            "public_inference.conclusion",
+            "public_inference.scope",
+            "evidence",
+            "authority"
+          ],
+          "evidence_roles": [
+            "supports",
+            "constrains",
+            "refutes"
+          ],
+          "required_contrast": "Contrast target-critical novelty with local, supporting, prior-art-covered, or non-enabling interpretations.",
+          "authority_boundary": "May classify and package supported contribution candidates; may not inflate novelty, target alignment, or paper readiness.",
+          "consumes": [
+            "ContributionSubgoalPacket"
+          ],
+          "produces": [
+            "ContributionCandidate"
+          ],
+          "when": null
+        },
+        {
+          "step_id": "assess_value",
+          "skill": "contribution-value-assessor",
+          "mode": "required",
+          "disposition": "semantic_event_required",
+          "event_family": "transformation",
+          "inference_operator": "classify_and_assess_contribution",
+          "required_fields": [
+            "public_inference.question",
+            "public_inference.premises",
+            "public_inference.warrant",
+            "public_inference.conclusion",
+            "public_inference.scope",
+            "evidence",
+            "authority"
+          ],
+          "evidence_roles": [
+            "supports",
+            "constrains",
+            "refutes"
+          ],
+          "required_contrast": "Contrast target-critical novelty with local, supporting, prior-art-covered, or non-enabling interpretations.",
+          "authority_boundary": "May classify and package supported contribution candidates; may not inflate novelty, target alignment, or paper readiness.",
+          "consumes": [
+            "ContributionCandidate"
+          ],
+          "produces": [
+            "ContributionValueAssessment"
+          ],
+          "when": null
+        },
+        {
+          "step_id": "audit_alignment",
+          "skill": "main-problem-alignment-auditor",
+          "mode": "validator_only",
+          "disposition": "validator_event_required",
+          "event_family": "validation",
+          "inference_operator": "audit_main_target_alignment",
+          "required_fields": [
+            "public_inference.question",
+            "public_inference.premises",
+            "public_inference.warrant",
+            "public_inference.conclusion",
+            "public_inference.scope",
+            "evidence",
+            "authority"
+          ],
+          "evidence_roles": [
+            "supports",
+            "constrains",
+            "refutes"
+          ],
+          "required_contrast": "Contrast target-critical novelty with local, supporting, prior-art-covered, or non-enabling interpretations.",
+          "authority_boundary": "May classify and package supported contribution candidates; may not inflate novelty, target alignment, or paper readiness.",
+          "consumes": [
+            "ContributionValueAssessment"
+          ],
+          "produces": [
+            "MainProblemAlignmentAudit"
+          ],
+          "when": null
+        },
+        {
+          "step_id": "audit_enablement",
+          "skill": "completed-subgoal-enablement-auditor",
+          "mode": "required",
+          "disposition": "semantic_event_required",
+          "event_family": "validation",
+          "inference_operator": "evaluate_counterfactual_enablement",
+          "required_fields": [
+            "public_inference.question",
+            "public_inference.premises",
+            "public_inference.warrant",
+            "public_inference.conclusion",
+            "public_inference.scope",
+            "evidence",
+            "authority"
+          ],
+          "evidence_roles": [
+            "supports",
+            "constrains",
+            "refutes"
+          ],
+          "required_contrast": "Contrast target-critical novelty with local, supporting, prior-art-covered, or non-enabling interpretations.",
+          "authority_boundary": "May classify and package supported contribution candidates; may not inflate novelty, target alignment, or paper readiness.",
+          "consumes": [
+            "ContributionValueAssessment"
+          ],
+          "produces": [
+            "EnablementAudit"
+          ],
+          "when": null
+        },
+        {
+          "step_id": "package_enablement",
+          "skill": "subgoal-enablement-handoff-packager",
+          "mode": "conditional",
+          "disposition": "conditional_event_or_justified_na",
+          "event_family": "handoff",
+          "inference_operator": "evaluate_counterfactual_enablement",
+          "required_fields": [
+            "public_inference.question",
+            "public_inference.premises",
+            "public_inference.warrant",
+            "public_inference.conclusion",
+            "public_inference.scope",
+            "evidence",
+            "authority"
+          ],
+          "evidence_roles": [
+            "supports",
+            "constrains",
+            "refutes"
+          ],
+          "required_contrast": "Contrast target-critical novelty with local, supporting, prior-art-covered, or non-enabling interpretations.",
+          "authority_boundary": "May classify and package supported contribution candidates; may not inflate novelty, target alignment, or paper readiness.",
+          "consumes": [
+            "EnablementAudit"
+          ],
+          "produces": [
+            "EnablementHandoff"
+          ],
+          "when": "enablement_non_empty"
+        },
+        {
+          "step_id": "paper_handoff",
+          "skill": "scientific-contribution-paper-handoff",
+          "mode": "conditional",
+          "disposition": "conditional_event_or_justified_na",
+          "event_family": "handoff",
+          "inference_operator": "classify_and_assess_contribution",
+          "required_fields": [
+            "public_inference.question",
+            "public_inference.premises",
+            "public_inference.warrant",
+            "public_inference.conclusion",
+            "public_inference.scope",
+            "evidence",
+            "authority"
+          ],
+          "evidence_roles": [
+            "supports",
+            "constrains",
+            "refutes"
+          ],
+          "required_contrast": "Contrast target-critical novelty with local, supporting, prior-art-covered, or non-enabling interpretations.",
+          "authority_boundary": "May classify and package supported contribution candidates; may not inflate novelty, target alignment, or paper readiness.",
+          "consumes": [
+            "ContributionValueAssessment",
+            "MainProblemAlignmentAudit"
+          ],
+          "produces": [
+            "PaperArgumentHandoff"
+          ],
+          "when": "contribution_paper_ready"
+        }
+      ],
+      "profiles": []
+    },
+    {
+      "id": "manuscript_result_elaboration",
+      "version": "1.0.0",
+      "trace_spine": [
+        "marker_inventory",
+        "bounded_plan",
+        "candidate_delta",
+        "self_critique",
+        "scope_boundary",
+        "proof_packet",
+        "prior_art",
+        "manuscript_diff",
+        "readiness"
+      ],
+      "expert_question": "How did bounded result packets change the manuscript while preserving theorem scope and prior-art limits?",
+      "steps": [
+        {
+          "step_id": "orchestrate_elaboration",
+          "skill": "results-elaboration-workflow-orchestrator",
+          "mode": "required",
+          "disposition": "semantic_event_required",
+          "event_family": "planning",
+          "inference_operator": "artifact_grounded_transformation",
+          "required_fields": [
+            "public_inference.question",
+            "public_inference.premises",
+            "public_inference.warrant",
+            "public_inference.conclusion",
+            "public_inference.scope",
+            "evidence",
+            "authority"
+          ],
+          "evidence_roles": [
+            "supports",
+            "constrains",
+            "refutes"
+          ],
+          "required_contrast": "Show rejected revisions and unresolved markers, with finite, asymptotic, and continuum claims kept explicitly distinct.",
+          "authority_boundary": "May elaborate and integrate supported manuscript claims; may not perform implicit discovery, erase disqualifiers, or promote finite evidence to continuum scope.",
+          "consumes": [
+            "PaperDraft"
+          ],
+          "produces": [
+            "ElaborationPlan"
+          ],
+          "when": null
+        },
+        {
+          "step_id": "interpret_context",
+          "skill": "results-context-interpreter",
+          "mode": "required",
+          "disposition": "semantic_event_required",
+          "event_family": "transformation",
+          "inference_operator": "artifact_grounded_transformation",
+          "required_fields": [
+            "public_inference.question",
+            "public_inference.premises",
+            "public_inference.warrant",
+            "public_inference.conclusion",
+            "public_inference.scope",
+            "evidence",
+            "authority"
+          ],
+          "evidence_roles": [
+            "supports",
+            "constrains",
+            "refutes"
+          ],
+          "required_contrast": "Show rejected revisions and unresolved markers, with finite, asymptotic, and continuum claims kept explicitly distinct.",
+          "authority_boundary": "May elaborate and integrate supported manuscript claims; may not perform implicit discovery, erase disqualifiers, or promote finite evidence to continuum scope.",
+          "consumes": [
+            "ElaborationPlan"
+          ],
+          "produces": [
+            "ResultsContext"
+          ],
+          "when": null
+        },
+        {
+          "step_id": "extract_extensions",
+          "skill": "results-extension-need-extractor",
+          "mode": "conditional",
+          "disposition": "conditional_event_or_justified_na",
+          "event_family": "transformation",
+          "inference_operator": "artifact_grounded_transformation",
+          "required_fields": [
+            "public_inference.question",
+            "public_inference.premises",
+            "public_inference.warrant",
+            "public_inference.conclusion",
+            "public_inference.scope",
+            "evidence",
+            "authority"
+          ],
+          "evidence_roles": [
+            "supports",
+            "constrains",
+            "refutes"
+          ],
+          "required_contrast": "Show rejected revisions and unresolved markers, with finite, asymptotic, and continuum claims kept explicitly distinct.",
+          "authority_boundary": "May elaborate and integrate supported manuscript claims; may not perform implicit discovery, erase disqualifiers, or promote finite evidence to continuum scope.",
+          "consumes": [
+            "ResultsContext"
+          ],
+          "produces": [
+            "ExtensionNeeds"
+          ],
+          "when": "expansion_markers"
+        },
+        {
+          "step_id": "decompose_modules",
+          "skill": "results-open-module-decomposer",
+          "mode": "conditional",
+          "disposition": "conditional_event_or_justified_na",
+          "event_family": "transformation",
+          "inference_operator": "artifact_grounded_transformation",
+          "required_fields": [
+            "public_inference.question",
+            "public_inference.premises",
+            "public_inference.warrant",
+            "public_inference.conclusion",
+            "public_inference.scope",
+            "evidence",
+            "authority"
+          ],
+          "evidence_roles": [
+            "supports",
+            "constrains",
+            "refutes"
+          ],
+          "required_contrast": "Show rejected revisions and unresolved markers, with finite, asymptotic, and continuum claims kept explicitly distinct.",
+          "authority_boundary": "May elaborate and integrate supported manuscript claims; may not perform implicit discovery, erase disqualifiers, or promote finite evidence to continuum scope.",
+          "consumes": [
+            "ResultsContext"
+          ],
+          "produces": [
+            "OpenModulePlan"
+          ],
+          "when": "open_modules"
+        },
+        {
+          "step_id": "plan_strategy",
+          "skill": "results-extension-strategy-planner",
+          "mode": "required",
+          "disposition": "semantic_event_required",
+          "event_family": "planning",
+          "inference_operator": "artifact_grounded_transformation",
+          "required_fields": [
+            "public_inference.question",
+            "public_inference.premises",
+            "public_inference.warrant",
+            "public_inference.conclusion",
+            "public_inference.scope",
+            "evidence",
+            "authority"
+          ],
+          "evidence_roles": [
+            "supports",
+            "constrains",
+            "refutes"
+          ],
+          "required_contrast": "Show rejected revisions and unresolved markers, with finite, asymptotic, and continuum claims kept explicitly distinct.",
+          "authority_boundary": "May elaborate and integrate supported manuscript claims; may not perform implicit discovery, erase disqualifiers, or promote finite evidence to continuum scope.",
+          "consumes": [
+            "ExtensionNeeds",
+            "OpenModulePlan"
+          ],
+          "produces": [
+            "ExtensionStrategy"
+          ],
+          "when": null
+        },
+        {
+          "step_id": "self_refine",
+          "skill": "results-critical-self-refiner",
+          "mode": "required",
+          "disposition": "semantic_event_required",
+          "event_family": "transformation",
+          "inference_operator": "artifact_grounded_transformation",
+          "required_fields": [
+            "public_inference.question",
+            "public_inference.premises",
+            "public_inference.warrant",
+            "public_inference.conclusion",
+            "public_inference.scope",
+            "evidence",
+            "authority"
+          ],
+          "evidence_roles": [
+            "supports",
+            "constrains",
+            "refutes"
+          ],
+          "required_contrast": "Show rejected revisions and unresolved markers, with finite, asymptotic, and continuum claims kept explicitly distinct.",
+          "authority_boundary": "May elaborate and integrate supported manuscript claims; may not perform implicit discovery, erase disqualifiers, or promote finite evidence to continuum scope.",
+          "consumes": [
+            "ExtensionStrategy"
+          ],
+          "produces": [
+            "RefinedResultCandidates"
+          ],
+          "when": null
+        },
+        {
+          "step_id": "certify_scope",
+          "skill": "results-theorem-scope-certifier",
+          "mode": "validator_only",
+          "disposition": "validator_event_required",
+          "event_family": "validation",
+          "inference_operator": "bind_claim_scope",
+          "required_fields": [
+            "public_inference.question",
+            "public_inference.premises",
+            "public_inference.warrant",
+            "public_inference.conclusion",
+            "public_inference.scope",
+            "evidence",
+            "authority"
+          ],
+          "evidence_roles": [
+            "supports",
+            "constrains",
+            "refutes"
+          ],
+          "required_contrast": "Show rejected revisions and unresolved markers, with finite, asymptotic, and continuum claims kept explicitly distinct.",
+          "authority_boundary": "May elaborate and integrate supported manuscript claims; may not perform implicit discovery, erase disqualifiers, or promote finite evidence to continuum scope.",
+          "consumes": [
+            "RefinedResultCandidates"
+          ],
+          "produces": [
+            "TheoremScopeDecision"
+          ],
+          "when": null
+        },
+        {
+          "step_id": "formalize_finite_object",
+          "skill": "results-finite-object-formalizer",
+          "mode": "conditional",
+          "disposition": "conditional_event_or_justified_na",
+          "event_family": "transformation",
+          "inference_operator": "derive_formal_obligations",
+          "required_fields": [
+            "public_inference.question",
+            "public_inference.premises",
+            "public_inference.warrant",
+            "public_inference.conclusion",
+            "public_inference.scope",
+            "evidence",
+            "authority"
+          ],
+          "evidence_roles": [
+            "supports",
+            "constrains",
+            "refutes"
+          ],
+          "required_contrast": "Show rejected revisions and unresolved markers, with finite, asymptotic, and continuum claims kept explicitly distinct.",
+          "authority_boundary": "May elaborate and integrate supported manuscript claims; may not perform implicit discovery, erase disqualifiers, or promote finite evidence to continuum scope.",
+          "consumes": [
+            "RefinedResultCandidates"
+          ],
+          "produces": [
+            "FiniteObjectDefinition"
+          ],
+          "when": "finite_object_required"
+        },
+        {
+          "step_id": "derive_proof_packet",
+          "skill": "results-proof-packet-deriver",
+          "mode": "conditional",
+          "disposition": "conditional_event_or_justified_na",
+          "event_family": "transformation",
+          "inference_operator": "validate_exact_claim_boundary",
+          "required_fields": [
+            "public_inference.question",
+            "public_inference.premises",
+            "public_inference.warrant",
+            "public_inference.conclusion",
+            "public_inference.scope",
+            "evidence",
+            "authority"
+          ],
+          "evidence_roles": [
+            "supports",
+            "constrains",
+            "refutes"
+          ],
+          "required_contrast": "Show rejected revisions and unresolved markers, with finite, asymptotic, and continuum claims kept explicitly distinct.",
+          "authority_boundary": "May elaborate and integrate supported manuscript claims; may not perform implicit discovery, erase disqualifiers, or promote finite evidence to continuum scope.",
+          "consumes": [
+            "RefinedResultCandidates"
+          ],
+          "produces": [
+            "ResultsProofPacket"
+          ],
+          "when": "proof_class_work"
+        },
+        {
+          "step_id": "audit_prior_art",
+          "skill": "results-prior-art-disqualifier-auditor",
+          "mode": "validator_only",
+          "disposition": "validator_event_required",
+          "event_family": "validation",
+          "inference_operator": "test_prior_art_disqualifiers",
+          "required_fields": [
+            "public_inference.question",
+            "public_inference.premises",
+            "public_inference.warrant",
+            "public_inference.conclusion",
+            "public_inference.scope",
+            "evidence",
+            "authority"
+          ],
+          "evidence_roles": [
+            "supports",
+            "constrains",
+            "refutes"
+          ],
+          "required_contrast": "Show rejected revisions and unresolved markers, with finite, asymptotic, and continuum claims kept explicitly distinct.",
+          "authority_boundary": "May elaborate and integrate supported manuscript claims; may not perform implicit discovery, erase disqualifiers, or promote finite evidence to continuum scope.",
+          "consumes": [
+            "RefinedResultCandidates"
+          ],
+          "produces": [
+            "PriorArtBoundaryAudit"
+          ],
+          "when": null
+        },
+        {
+          "step_id": "integrate_narrative",
+          "skill": "results-narrative-integrator",
+          "mode": "required",
+          "disposition": "semantic_event_required",
+          "event_family": "handoff",
+          "inference_operator": "apply_traceable_artifact_delta",
+          "required_fields": [
+            "public_inference.question",
+            "public_inference.premises",
+            "public_inference.warrant",
+            "public_inference.conclusion",
+            "public_inference.scope",
+            "evidence",
+            "authority"
+          ],
+          "evidence_roles": [
+            "supports",
+            "constrains",
+            "refutes"
+          ],
+          "required_contrast": "Show rejected revisions and unresolved markers, with finite, asymptotic, and continuum claims kept explicitly distinct.",
+          "authority_boundary": "May elaborate and integrate supported manuscript claims; may not perform implicit discovery, erase disqualifiers, or promote finite evidence to continuum scope.",
+          "consumes": [
+            "RefinedResultCandidates",
+            "PriorArtBoundaryAudit"
+          ],
+          "produces": [
+            "IntegratedPaperDraft"
+          ],
+          "when": null
+        },
+        {
+          "step_id": "validate_expansion",
+          "skill": "results-expansion-validator",
+          "mode": "validator_only",
+          "disposition": "validator_event_required",
+          "event_family": "validation",
+          "inference_operator": "artifact_grounded_transformation",
+          "required_fields": [
+            "public_inference.question",
+            "public_inference.premises",
+            "public_inference.warrant",
+            "public_inference.conclusion",
+            "public_inference.scope",
+            "evidence",
+            "authority"
+          ],
+          "evidence_roles": [
+            "supports",
+            "constrains",
+            "refutes"
+          ],
+          "required_contrast": "Show rejected revisions and unresolved markers, with finite, asymptotic, and continuum claims kept explicitly distinct.",
+          "authority_boundary": "May elaborate and integrate supported manuscript claims; may not perform implicit discovery, erase disqualifiers, or promote finite evidence to continuum scope.",
+          "consumes": [
+            "IntegratedPaperDraft"
+          ],
+          "produces": [
+            "ExpansionValidation"
+          ],
+          "when": null
+        },
+        {
+          "step_id": "gate_readiness",
+          "skill": "results-paper-readiness-gatekeeper",
+          "mode": "validator_only",
+          "disposition": "validator_event_required",
+          "event_family": "validation",
+          "inference_operator": "validate_exact_claim_boundary",
+          "required_fields": [
+            "public_inference.question",
+            "public_inference.premises",
+            "public_inference.warrant",
+            "public_inference.conclusion",
+            "public_inference.scope",
+            "evidence",
+            "authority"
+          ],
+          "evidence_roles": [
+            "supports",
+            "constrains",
+            "refutes"
+          ],
+          "required_contrast": "Show rejected revisions and unresolved markers, with finite, asymptotic, and continuum claims kept explicitly distinct.",
+          "authority_boundary": "May elaborate and integrate supported manuscript claims; may not perform implicit discovery, erase disqualifiers, or promote finite evidence to continuum scope.",
+          "consumes": [
+            "IntegratedPaperDraft",
+            "ExpansionValidation"
+          ],
+          "produces": [
+            "PaperReadinessDecision"
+          ],
+          "when": null
+        }
+      ],
+      "profiles": [
+        {
+          "id": "route_a",
+          "version": "1.0.0",
+          "trace_spine": [
+            "profile_activation",
+            "open_point_plan",
+            "specialist_fan_out",
+            "symbolic_audit",
+            "finite_scope",
+            "specialist_join",
+            "integration_delta",
+            "validation_tail"
+          ],
+          "steps": [
+            {
+              "step_id": "routea_attack",
+              "skill": "routea-paper-attack-orchestrator",
+              "mode": "required",
+              "disposition": "semantic_event_required",
+              "event_family": "transformation",
+              "inference_operator": "artifact_grounded_transformation",
+              "required_fields": [
+                "public_inference.question",
+                "public_inference.premises",
+                "public_inference.warrant",
+                "public_inference.conclusion",
+                "public_inference.scope",
+                "evidence",
+                "authority"
+              ],
+              "evidence_roles": [
+                "supports",
+                "constrains",
+                "refutes"
+              ],
+              "required_contrast": "Expose failed identities, endpoints, same-theory bindings, margins, and the explicit bar against finite-to-continuum promotion.",
+              "authority_boundary": "May integrate a bounded Route-A result into the parent manuscript workflow; may not promote a finite packet past the common validation tail.",
+              "consumes": [
+                "PaperDraft"
+              ],
+              "produces": [
+                "RouteAAttackPlan"
+              ],
+              "when": null
+            },
+            {
+              "step_id": "routea_open_points",
+              "skill": "routea-open-point-orchestrator",
+              "mode": "required",
+              "disposition": "semantic_event_required",
+              "event_family": "transformation",
+              "inference_operator": "artifact_grounded_transformation",
+              "required_fields": [
+                "public_inference.question",
+                "public_inference.premises",
+                "public_inference.warrant",
+                "public_inference.conclusion",
+                "public_inference.scope",
+                "evidence",
+                "authority"
+              ],
+              "evidence_roles": [
+                "supports",
+                "constrains",
+                "refutes"
+              ],
+              "required_contrast": "Expose failed identities, endpoints, same-theory bindings, margins, and the explicit bar against finite-to-continuum promotion.",
+              "authority_boundary": "May integrate a bounded Route-A result into the parent manuscript workflow; may not promote a finite packet past the common validation tail.",
+              "consumes": [
+                "RouteAAttackPlan"
+              ],
+              "produces": [
+                "RouteAOpenPointPlan"
+              ],
+              "when": null
+            },
+            {
+              "step_id": "routea_symbolic_audit",
+              "skill": "routea-symbolic-cas-auditor",
+              "mode": "conditional",
+              "disposition": "conditional_event_or_justified_na",
+              "event_family": "validation",
+              "inference_operator": "verify_symbolic_identity",
+              "required_fields": [
+                "public_inference.question",
+                "public_inference.premises",
+                "public_inference.warrant",
+                "public_inference.conclusion",
+                "public_inference.scope",
+                "evidence",
+                "authority"
+              ],
+              "evidence_roles": [
+                "supports",
+                "constrains",
+                "refutes"
+              ],
+              "required_contrast": "Expose failed identities, endpoints, same-theory bindings, margins, and the explicit bar against finite-to-continuum promotion.",
+              "authority_boundary": "May integrate a bounded Route-A result into the parent manuscript workflow; may not promote a finite packet past the common validation tail.",
+              "consumes": [
+                "ResultCandidatePacket"
+              ],
+              "produces": [
+                "SymbolicCASAudit"
+              ],
+              "when": "exact_algebra_required"
+            },
+            {
+              "step_id": "routea_integrate_result",
+              "skill": "routea-paper-result-integrator",
+              "mode": "required",
+              "disposition": "semantic_event_required",
+              "event_family": "handoff",
+              "inference_operator": "apply_traceable_artifact_delta",
+              "required_fields": [
+                "public_inference.question",
+                "public_inference.premises",
+                "public_inference.warrant",
+                "public_inference.conclusion",
+                "public_inference.scope",
+                "evidence",
+                "authority"
+              ],
+              "evidence_roles": [
+                "supports",
+                "constrains",
+                "refutes"
+              ],
+              "required_contrast": "Expose failed identities, endpoints, same-theory bindings, margins, and the explicit bar against finite-to-continuum promotion.",
+              "authority_boundary": "May integrate a bounded Route-A result into the parent manuscript workflow; may not promote a finite packet past the common validation tail.",
+              "consumes": [
+                "ResultCandidatePacket"
+              ],
+              "produces": [
+                "RouteAIntegratedResult"
+              ],
+              "when": null
+            },
+            {
+              "step_id": "routea_second_wave",
+              "skill": "routea-second-wave-manuscript-integrator",
+              "mode": "required",
+              "disposition": "semantic_event_required",
+              "event_family": "transformation",
+              "inference_operator": "artifact_grounded_transformation",
+              "required_fields": [
+                "public_inference.question",
+                "public_inference.premises",
+                "public_inference.warrant",
+                "public_inference.conclusion",
+                "public_inference.scope",
+                "evidence",
+                "authority"
+              ],
+              "evidence_roles": [
+                "supports",
+                "constrains",
+                "refutes"
+              ],
+              "required_contrast": "Expose failed identities, endpoints, same-theory bindings, margins, and the explicit bar against finite-to-continuum promotion.",
+              "authority_boundary": "May integrate a bounded Route-A result into the parent manuscript workflow; may not promote a finite packet past the common validation tail.",
+              "consumes": [
+                "RouteAIntegratedResult"
+              ],
+              "produces": [
+                "IntegratedPaperDraft"
+              ],
+              "when": null
+            }
+          ],
+          "specialists": [
+            {
+              "step_id": "routea_geometric_collar_builder",
+              "skill": "routea-geometric-collar-builder",
+              "mode": "specialist",
+              "disposition": "specialist_event_required",
+              "event_family": "transformation",
+              "inference_operator": "verify_bounded_specialist_obligation",
+              "required_fields": [
+                "public_inference.question",
+                "public_inference.premises",
+                "public_inference.warrant",
+                "public_inference.conclusion",
+                "public_inference.scope",
+                "evidence",
+                "authority"
+              ],
+              "evidence_roles": [
+                "supports",
+                "constrains",
+                "refutes"
+              ],
+              "required_contrast": "Expose failed identities, endpoints, same-theory bindings, margins, and the explicit bar against finite-to-continuum promotion.",
+              "authority_boundary": "May integrate a bounded Route-A result into the parent manuscript workflow; may not promote a finite packet past the common validation tail.",
+              "consumes": [],
+              "produces": [
+                "ResultCandidatePacket"
+              ],
+              "when": null
+            },
+            {
+              "step_id": "routea_same_theory_normalization_certifier",
+              "skill": "routea-same-theory-normalization-certifier",
+              "mode": "specialist",
+              "disposition": "specialist_event_required",
+              "event_family": "validation",
+              "inference_operator": "artifact_grounded_transformation",
+              "required_fields": [
+                "public_inference.question",
+                "public_inference.premises",
+                "public_inference.warrant",
+                "public_inference.conclusion",
+                "public_inference.scope",
+                "evidence",
+                "authority"
+              ],
+              "evidence_roles": [
+                "supports",
+                "constrains",
+                "refutes"
+              ],
+              "required_contrast": "Expose failed identities, endpoints, same-theory bindings, margins, and the explicit bar against finite-to-continuum promotion.",
+              "authority_boundary": "May integrate a bounded Route-A result into the parent manuscript workflow; may not promote a finite packet past the common validation tail.",
+              "consumes": [],
+              "produces": [
+                "ResultCandidatePacket"
+              ],
+              "when": null
+            },
+            {
+              "step_id": "routea_geometric_coefficient_extractor",
+              "skill": "routea-geometric-coefficient-extractor",
+              "mode": "specialist",
+              "disposition": "specialist_event_required",
+              "event_family": "transformation",
+              "inference_operator": "artifact_grounded_transformation",
+              "required_fields": [
+                "public_inference.question",
+                "public_inference.premises",
+                "public_inference.warrant",
+                "public_inference.conclusion",
+                "public_inference.scope",
+                "evidence",
+                "authority"
+              ],
+              "evidence_roles": [
+                "supports",
+                "constrains",
+                "refutes"
+              ],
+              "required_contrast": "Expose failed identities, endpoints, same-theory bindings, margins, and the explicit bar against finite-to-continuum promotion.",
+              "authority_boundary": "May integrate a bounded Route-A result into the parent manuscript workflow; may not promote a finite packet past the common validation tail.",
+              "consumes": [],
+              "produces": [
+                "ResultCandidatePacket"
+              ],
+              "when": null
+            },
+            {
+              "step_id": "routea_finite_margin_evaluator",
+              "skill": "routea-finite-margin-evaluator",
+              "mode": "specialist",
+              "disposition": "specialist_event_required",
+              "event_family": "transformation",
+              "inference_operator": "verify_bounded_specialist_obligation",
+              "required_fields": [
+                "public_inference.question",
+                "public_inference.premises",
+                "public_inference.warrant",
+                "public_inference.conclusion",
+                "public_inference.scope",
+                "evidence",
+                "authority"
+              ],
+              "evidence_roles": [
+                "supports",
+                "constrains",
+                "refutes"
+              ],
+              "required_contrast": "Expose failed identities, endpoints, same-theory bindings, margins, and the explicit bar against finite-to-continuum promotion.",
+              "authority_boundary": "May integrate a bounded Route-A result into the parent manuscript workflow; may not promote a finite packet past the common validation tail.",
+              "consumes": [],
+              "produces": [
+                "ResultCandidatePacket"
+              ],
+              "when": null
+            },
+            {
+              "step_id": "routea_margin_endpoint_certifier",
+              "skill": "routea-margin-endpoint-certifier",
+              "mode": "specialist",
+              "disposition": "specialist_event_required",
+              "event_family": "validation",
+              "inference_operator": "verify_bounded_specialist_obligation",
+              "required_fields": [
+                "public_inference.question",
+                "public_inference.premises",
+                "public_inference.warrant",
+                "public_inference.conclusion",
+                "public_inference.scope",
+                "evidence",
+                "authority"
+              ],
+              "evidence_roles": [
+                "supports",
+                "constrains",
+                "refutes"
+              ],
+              "required_contrast": "Expose failed identities, endpoints, same-theory bindings, margins, and the explicit bar against finite-to-continuum promotion.",
+              "authority_boundary": "May integrate a bounded Route-A result into the parent manuscript workflow; may not promote a finite packet past the common validation tail.",
+              "consumes": [],
+              "produces": [
+                "ResultCandidatePacket"
+              ],
+              "when": null
+            },
+            {
+              "step_id": "routea_endpoint_error_budget_certifier",
+              "skill": "routea-endpoint-error-budget-certifier",
+              "mode": "specialist",
+              "disposition": "specialist_event_required",
+              "event_family": "validation",
+              "inference_operator": "verify_bounded_specialist_obligation",
+              "required_fields": [
+                "public_inference.question",
+                "public_inference.premises",
+                "public_inference.warrant",
+                "public_inference.conclusion",
+                "public_inference.scope",
+                "evidence",
+                "authority"
+              ],
+              "evidence_roles": [
+                "supports",
+                "constrains",
+                "refutes"
+              ],
+              "required_contrast": "Expose failed identities, endpoints, same-theory bindings, margins, and the explicit bar against finite-to-continuum promotion.",
+              "authority_boundary": "May integrate a bounded Route-A result into the parent manuscript workflow; may not promote a finite packet past the common validation tail.",
+              "consumes": [],
+              "produces": [
+                "ResultCandidatePacket"
+              ],
+              "when": null
+            },
+            {
+              "step_id": "routea_endpoint_local_integral_calculator",
+              "skill": "routea-endpoint-local-integral-calculator",
+              "mode": "specialist",
+              "disposition": "specialist_event_required",
+              "event_family": "transformation",
+              "inference_operator": "verify_bounded_specialist_obligation",
+              "required_fields": [
+                "public_inference.question",
+                "public_inference.premises",
+                "public_inference.warrant",
+                "public_inference.conclusion",
+                "public_inference.scope",
+                "evidence",
+                "authority"
+              ],
+              "evidence_roles": [
+                "supports",
+                "constrains",
+                "refutes"
+              ],
+              "required_contrast": "Expose failed identities, endpoints, same-theory bindings, margins, and the explicit bar against finite-to-continuum promotion.",
+              "authority_boundary": "May integrate a bounded Route-A result into the parent manuscript workflow; may not promote a finite packet past the common validation tail.",
+              "consumes": [],
+              "produces": [
+                "ResultCandidatePacket"
+              ],
+              "when": null
+            },
+            {
+              "step_id": "routea_same_theory_factorization_hunter",
+              "skill": "routea-same-theory-factorization-hunter",
+              "mode": "specialist",
+              "disposition": "specialist_event_required",
+              "event_family": "falsification",
+              "inference_operator": "verify_bounded_specialist_obligation",
+              "required_fields": [
+                "public_inference.question",
+                "public_inference.premises",
+                "public_inference.warrant",
+                "public_inference.conclusion",
+                "public_inference.scope",
+                "evidence",
+                "authority"
+              ],
+              "evidence_roles": [
+                "supports",
+                "constrains",
+                "refutes"
+              ],
+              "required_contrast": "Expose failed identities, endpoints, same-theory bindings, margins, and the explicit bar against finite-to-continuum promotion.",
+              "authority_boundary": "May integrate a bounded Route-A result into the parent manuscript workflow; may not promote a finite packet past the common validation tail.",
+              "consumes": [],
+              "produces": [
+                "ResultCandidatePacket"
+              ],
+              "when": null
+            },
+            {
+              "step_id": "routea_collar_redesign_forger",
+              "skill": "routea-collar-redesign-forger",
+              "mode": "specialist",
+              "disposition": "specialist_event_required",
+              "event_family": "transformation",
+              "inference_operator": "generate_independent_alternatives",
+              "required_fields": [
+                "public_inference.question",
+                "public_inference.premises",
+                "public_inference.warrant",
+                "public_inference.conclusion",
+                "public_inference.scope",
+                "evidence",
+                "authority"
+              ],
+              "evidence_roles": [
+                "supports",
+                "constrains",
+                "refutes"
+              ],
+              "required_contrast": "Expose failed identities, endpoints, same-theory bindings, margins, and the explicit bar against finite-to-continuum promotion.",
+              "authority_boundary": "May integrate a bounded Route-A result into the parent manuscript workflow; may not promote a finite packet past the common validation tail.",
+              "consumes": [],
+              "produces": [
+                "ResultCandidatePacket"
+              ],
+              "when": null
+            },
+            {
+              "step_id": "routea_continuum_gap_gatekeeper",
+              "skill": "routea-continuum-gap-gatekeeper",
+              "mode": "specialist",
+              "disposition": "specialist_event_required",
+              "event_family": "validation",
+              "inference_operator": "adversarially_test_or_split",
+              "required_fields": [
+                "public_inference.question",
+                "public_inference.premises",
+                "public_inference.warrant",
+                "public_inference.conclusion",
+                "public_inference.scope",
+                "evidence",
+                "authority"
+              ],
+              "evidence_roles": [
+                "supports",
+                "constrains",
+                "refutes"
+              ],
+              "required_contrast": "Expose failed identities, endpoints, same-theory bindings, margins, and the explicit bar against finite-to-continuum promotion.",
+              "authority_boundary": "May integrate a bounded Route-A result into the parent manuscript workflow; may not promote a finite packet past the common validation tail.",
+              "consumes": [],
+              "produces": [
+                "ResultCandidatePacket"
+              ],
+              "when": null
+            }
+          ],
+          "validation_tail_start": "certify_scope",
+          "validation_tail_adapter": {
+            "from": "ResultCandidatePacket",
+            "to": "RefinedResultCandidates"
+          }
+        }
+      ]
+    },
+    {
+      "id": "deep_review_and_reorientation",
+      "version": "1.0.0",
+      "trace_spine": [
+        "immutable_snapshot",
+        "framework_state",
+        "independent_lenses",
+        "findings",
+        "agreements_disagreements",
+        "meta_synthesis",
+        "understanding_delta",
+        "repair_queue"
+      ],
+      "expert_question": "What did independent reviewers agree and disagree about, and how did that evidence govern the repair route?",
+      "steps": [
+        {
+          "step_id": "formalize_framework_state",
+          "skill": "kb-framework-state-formalizer",
+          "mode": "required",
+          "disposition": "semantic_event_required",
+          "event_family": "transformation",
+          "inference_operator": "derive_formal_obligations",
+          "required_fields": [
+            "public_inference.question",
+            "public_inference.premises",
+            "public_inference.warrant",
+            "public_inference.conclusion",
+            "public_inference.scope",
+            "evidence",
+            "authority"
+          ],
+          "evidence_roles": [
+            "supports",
+            "constrains",
+            "refutes"
+          ],
+          "required_contrast": "Retain minority findings and unresolved disagreement rather than averaging them away in the meta-review.",
+          "authority_boundary": "May diagnose and route repairs; has no authority to prove claims, release artifacts, or perform epistemic upgrades.",
+          "consumes": [
+            "RunEvidenceBundle"
+          ],
+          "produces": [
+            "FrameworkState"
+          ],
+          "when": null
+        },
+        {
+          "step_id": "review_discovery_science",
+          "skill": "review-reasoner-discovery-scientist",
+          "mode": "advisory",
+          "disposition": "semantic_event_required",
+          "event_family": "adjudication",
+          "inference_operator": "evidence_bound_review_synthesis",
+          "required_fields": [
+            "public_inference.question",
+            "public_inference.premises",
+            "public_inference.warrant",
+            "public_inference.conclusion",
+            "public_inference.scope",
+            "evidence",
+            "authority"
+          ],
+          "evidence_roles": [
+            "supports",
+            "constrains",
+            "refutes"
+          ],
+          "required_contrast": "Retain minority findings and unresolved disagreement rather than averaging them away in the meta-review.",
+          "authority_boundary": "May diagnose and route repairs; has no authority to prove claims, release artifacts, or perform epistemic upgrades.",
+          "consumes": [
+            "FrameworkState"
+          ],
+          "produces": [
+            "ReviewFindingSet"
+          ],
+          "when": null
+        },
+        {
+          "step_id": "review_concept_logic",
+          "skill": "review-reasoner-concept-logician",
+          "mode": "advisory",
+          "disposition": "semantic_event_required",
+          "event_family": "adjudication",
+          "inference_operator": "evidence_bound_review_synthesis",
+          "required_fields": [
+            "public_inference.question",
+            "public_inference.premises",
+            "public_inference.warrant",
+            "public_inference.conclusion",
+            "public_inference.scope",
+            "evidence",
+            "authority"
+          ],
+          "evidence_roles": [
+            "supports",
+            "constrains",
+            "refutes"
+          ],
+          "required_contrast": "Retain minority findings and unresolved disagreement rather than averaging them away in the meta-review.",
+          "authority_boundary": "May diagnose and route repairs; has no authority to prove claims, release artifacts, or perform epistemic upgrades.",
+          "consumes": [
+            "FrameworkState"
+          ],
+          "produces": [
+            "ReviewFindingSet"
+          ],
+          "when": null
+        },
+        {
+          "step_id": "review_epistemology",
+          "skill": "review-reasoner-epistemologist",
+          "mode": "advisory",
+          "disposition": "semantic_event_required",
+          "event_family": "adjudication",
+          "inference_operator": "evidence_bound_review_synthesis",
+          "required_fields": [
+            "public_inference.question",
+            "public_inference.premises",
+            "public_inference.warrant",
+            "public_inference.conclusion",
+            "public_inference.scope",
+            "evidence",
+            "authority"
+          ],
+          "evidence_roles": [
+            "supports",
+            "constrains",
+            "refutes"
+          ],
+          "required_contrast": "Retain minority findings and unresolved disagreement rather than averaging them away in the meta-review.",
+          "authority_boundary": "May diagnose and route repairs; has no authority to prove claims, release artifacts, or perform epistemic upgrades.",
+          "consumes": [
+            "FrameworkState"
+          ],
+          "produces": [
+            "ReviewFindingSet"
+          ],
+          "when": null
+        },
+        {
+          "step_id": "review_fields",
+          "skill": "review-reasoner-fields-medalist",
+          "mode": "advisory",
+          "disposition": "semantic_event_required",
+          "event_family": "adjudication",
+          "inference_operator": "evidence_bound_review_synthesis",
+          "required_fields": [
+            "public_inference.question",
+            "public_inference.premises",
+            "public_inference.warrant",
+            "public_inference.conclusion",
+            "public_inference.scope",
+            "evidence",
+            "authority"
+          ],
+          "evidence_roles": [
+            "supports",
+            "constrains",
+            "refutes"
+          ],
+          "required_contrast": "Retain minority findings and unresolved disagreement rather than averaging them away in the meta-review.",
+          "authority_boundary": "May diagnose and route repairs; has no authority to prove claims, release artifacts, or perform epistemic upgrades.",
+          "consumes": [
+            "FrameworkState"
+          ],
+          "produces": [
+            "ReviewFindingSet"
+          ],
+          "when": null
+        },
+        {
+          "step_id": "review_radical_design",
+          "skill": "review-reasoner-radical-designer",
+          "mode": "advisory",
+          "disposition": "semantic_event_required",
+          "event_family": "adjudication",
+          "inference_operator": "evidence_bound_review_synthesis",
+          "required_fields": [
+            "public_inference.question",
+            "public_inference.premises",
+            "public_inference.warrant",
+            "public_inference.conclusion",
+            "public_inference.scope",
+            "evidence",
+            "authority"
+          ],
+          "evidence_roles": [
+            "supports",
+            "constrains",
+            "refutes"
+          ],
+          "required_contrast": "Retain minority findings and unresolved disagreement rather than averaging them away in the meta-review.",
+          "authority_boundary": "May diagnose and route repairs; has no authority to prove claims, release artifacts, or perform epistemic upgrades.",
+          "consumes": [
+            "FrameworkState"
+          ],
+          "produces": [
+            "ReviewFindingSet"
+          ],
+          "when": null
+        },
+        {
+          "step_id": "synthesize_meta_review",
+          "skill": "meta",
+          "mode": "required",
+          "disposition": "semantic_event_required",
+          "event_family": "adjudication",
+          "inference_operator": "revise_and_synthesize",
+          "required_fields": [
+            "public_inference.question",
+            "public_inference.premises",
+            "public_inference.warrant",
+            "public_inference.conclusion",
+            "public_inference.scope",
+            "evidence",
+            "authority"
+          ],
+          "evidence_roles": [
+            "supports",
+            "constrains",
+            "refutes"
+          ],
+          "required_contrast": "Retain minority findings and unresolved disagreement rather than averaging them away in the meta-review.",
+          "authority_boundary": "May diagnose and route repairs; has no authority to prove claims, release artifacts, or perform epistemic upgrades.",
+          "consumes": [
+            "ReviewFindingSet"
+          ],
+          "produces": [
+            "MetaReview"
+          ],
+          "when": null
+        },
+        {
+          "step_id": "govern_repairs",
+          "skill": "looper-workflow-contract-governor",
+          "mode": "validator_only",
+          "disposition": "validator_event_required",
+          "event_family": "validation",
+          "inference_operator": "artifact_grounded_transformation",
+          "required_fields": [
+            "public_inference.question",
+            "public_inference.premises",
+            "public_inference.warrant",
+            "public_inference.conclusion",
+            "public_inference.scope",
+            "evidence",
+            "authority"
+          ],
+          "evidence_roles": [
+            "supports",
+            "constrains",
+            "refutes"
+          ],
+          "required_contrast": "Retain minority findings and unresolved disagreement rather than averaging them away in the meta-review.",
+          "authority_boundary": "May diagnose and route repairs; has no authority to prove claims, release artifacts, or perform epistemic upgrades.",
+          "consumes": [
+            "MetaReview"
+          ],
+          "produces": [
+            "GovernedRepairQueue"
+          ],
+          "when": null
+        }
+      ],
+      "profiles": []
+    }
+  ]
+}

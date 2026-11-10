@@ -1,0 +1,485 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://abducer.local/spec/research_worker_execution_receipt.schema.json",
+  "title": "Isolated research worker execution receipt",
+  "description": "Exact local-process receipt for candidate, high-risk, finite formal-lens, and blind-judge workers. Operational isolation and byte identity are recorded separately from hidden-input, cognitive-independence, semantic-independence, efficacy, theorem, continuum, and physics-value authority, all of which remain denied.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "receipt_id", "receipt_ref", "study_id", "role", "operation",
+    "invocation_id", "request_payload", "request_byte_length", "request_sha256",
+    "response_payload", "response_byte_length", "response_sha256", "command_authority",
+    "command_authority_observation", "environment_authority", "isolation_assurance",
+    "workspace", "budget_digest", "process_status", "protocol_status", "outcome_status",
+    "process_event", "resource_receipt", "resource_receipt_digest", "failure",
+    "authority_boundaries", "content_digest"
+  ],
+  "properties": {
+    "schema_version": {"enum": [1, 2]},
+    "receipt_id": {"type": "string", "pattern": "^research-worker-receipt\\.[a-f0-9]{24}$"},
+    "receipt_ref": {"type": "string", "pattern": "^receipts/(candidate|high_risk|formal_lens|judge)/research-worker-receipt\\.[a-f0-9]{24}\\.json$"},
+    "study_id": {"$ref": "#/$defs/id"},
+    "role": {"$ref": "#/$defs/role"},
+    "operation": {"$ref": "#/$defs/operation"},
+    "invocation_id": {"type": "string", "pattern": "^research-worker-invocation\\.[a-f0-9]{24}$"},
+    "request_payload": {"$ref": "#/$defs/request"},
+    "request_byte_length": {"type": "integer", "minimum": 1},
+    "request_sha256": {"$ref": "#/$defs/digest"},
+    "response_payload": {"oneOf": [{"$ref": "#/$defs/response"}, {"type": "null"}]},
+    "response_byte_length": {"oneOf": [{"type": "integer", "minimum": 1}, {"type": "null"}]},
+    "response_sha256": {"oneOf": [{"$ref": "#/$defs/digest"}, {"type": "null"}]},
+    "command_authority": {"$ref": "benchmark_external_process_receipt.schema.json#/$defs/commandAuthority"},
+    "command_authority_observation": {"$ref": "benchmark_external_process_receipt.schema.json#/$defs/commandAuthorityObservation"},
+    "environment_authority": {"$ref": "#/$defs/environmentAuthority"},
+    "isolation_assurance": {"$ref": "#/$defs/isolationAssurance"},
+    "workspace": {"$ref": "#/$defs/workspace"},
+    "budget_digest": {"$ref": "#/$defs/digest"},
+    "process_status": {"$ref": "benchmark_external_process_receipt.schema.json#/$defs/processStatus"},
+    "protocol_status": {"enum": ["accepted", "process_failed", "input_exhausted", "output_exhausted", "invalid_utf8", "invalid_json", "non_object", "response_envelope_mismatch", "environment_mismatch", "authority_mismatch", "isolation_unavailable", "authority_or_launch_failed", "request_encoding_failed"]},
+    "outcome_status": {"enum": ["accepted", "operational_failure", "protocol_failure"]},
+    "process_event": {"$ref": "#/$defs/processEvent"},
+    "resource_receipt": {"$ref": "#/$defs/resourceReceipt"},
+    "resource_receipt_digest": {"$ref": "#/$defs/digest"},
+    "failure": {"oneOf": [{"$ref": "#/$defs/failure"}, {"type": "null"}]},
+    "authority_boundaries": {"$ref": "#/$defs/authorityBoundaries"},
+    "content_digest": {"$ref": "#/$defs/digest"}
+  },
+  "oneOf": [
+    {
+      "required": ["schema_version", "process_event", "resource_receipt"],
+      "properties": {
+        "schema_version": {"const": 1},
+        "process_event": {"$ref": "#/$defs/processEventV1"},
+        "resource_receipt": {"$ref": "#/$defs/resourceReceiptV1"}
+      }
+    },
+    {
+      "required": ["schema_version", "process_event", "resource_receipt"],
+      "properties": {
+        "schema_version": {"const": 2},
+        "process_event": {"$ref": "#/$defs/processEventV2"},
+        "resource_receipt": {"$ref": "#/$defs/resourceReceiptV2"}
+      }
+    }
+  ],
+  "allOf": [
+    {
+      "if": {"properties": {"outcome_status": {"const": "accepted"}}, "required": ["outcome_status"]},
+      "then": {
+        "properties": {
+          "process_status": {"const": "succeeded"},
+          "protocol_status": {"const": "accepted"},
+          "response_payload": {"$ref": "#/$defs/response"},
+          "response_byte_length": {"type": "integer", "minimum": 1},
+          "response_sha256": {"$ref": "#/$defs/digest"},
+          "failure": {"type": "null"},
+          "process_event": {"properties": {"status": {"const": "succeeded"}}}
+        }
+      },
+      "else": {
+        "properties": {
+          "response_payload": {"type": "null"},
+          "response_byte_length": {"type": "null"},
+          "response_sha256": {"type": "null"},
+          "failure": {"$ref": "#/$defs/failure"}
+        }
+      }
+    },
+    {
+      "if": {"properties": {"schema_version": {"const": 2}, "outcome_status": {"const": "accepted"}}, "required": ["schema_version", "outcome_status"]},
+      "then": {
+        "properties": {
+          "environment_authority": {"properties": {"observation_status": {"const": "matched"}}},
+          "process_event": {
+            "properties": {
+              "supervision_attempt": {"properties": {"status": {"const": "succeeded"}}},
+              "resource_limit_execution": {"properties": {"supervised_transport_exact": {"const": true}, "replacement_environment_used": {"const": true}, "observation_status": {"const": "exact_match"}}},
+              "post_supervision_acceptance": {"properties": {"status": {"const": "accepted"}}}
+            }
+          }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "id": {"type": "string", "minLength": 1, "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$"},
+    "digest": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
+    "role": {"enum": ["candidate", "high_risk", "formal_lens", "judge"]},
+    "operation": {"enum": ["candidate_generation", "high_risk_generation", "parallel_maturation", "formal_lens", "reflection", "blind_judgment", "convergence", "isolation_probe"]},
+    "request": {
+      "type": "object", "additionalProperties": false,
+      "required": ["schema_version", "study_id", "role", "operation", "request_nonce", "invocation_context", "payload", "payload_digest", "isolation_requirement", "fault_mode"],
+      "properties": {
+        "schema_version": {"const": 1},
+        "study_id": {"$ref": "#/$defs/id"},
+        "role": {"$ref": "#/$defs/role"},
+        "operation": {"$ref": "#/$defs/operation"},
+        "request_nonce": {"$ref": "#/$defs/id"},
+        "invocation_context": {"type": "object"},
+        "payload": {"type": "object"},
+        "payload_digest": {"$ref": "#/$defs/digest"},
+        "isolation_requirement": {"$ref": "#/$defs/isolationRequirement"},
+        "fault_mode": {"enum": [null, "exit_nonzero", "invalid_json", "hang"]}
+      }
+    },
+    "isolationRequirement": {
+      "type": "object", "additionalProperties": false,
+      "required": ["schema_version", "kernel_isolation_required", "minimum_accepted_status", "selected_backend", "selected_backend_probe_status", "content_digest"],
+      "properties": {
+        "schema_version": {"const": 1},
+        "kernel_isolation_required": {"type": "boolean"},
+        "minimum_accepted_status": {"enum": ["strongest_available", "kernel_policy_enforced"]},
+        "selected_backend": {"enum": ["macos_sandbox_exec", "linux_bubblewrap", "process_group_only"]},
+        "selected_backend_probe_status": {"enum": ["passed", "unavailable", "failed"]},
+        "content_digest": {"$ref": "#/$defs/digest"}
+      },
+      "allOf": [
+        {
+          "if": {"properties": {"kernel_isolation_required": {"const": true}}, "required": ["kernel_isolation_required"]},
+          "then": {"properties": {"minimum_accepted_status": {"const": "kernel_policy_enforced"}}},
+          "else": {"properties": {"minimum_accepted_status": {"const": "strongest_available"}}}
+        }
+      ]
+    },
+    "response": {
+      "type": "object", "additionalProperties": false,
+      "required": ["schema_version", "role", "operation", "request_nonce", "environment_observation", "output"],
+      "properties": {
+        "schema_version": {"const": 1},
+        "role": {"$ref": "#/$defs/role"},
+        "operation": {"$ref": "#/$defs/operation"},
+        "request_nonce": {"$ref": "#/$defs/id"},
+        "environment_observation": {"$ref": "#/$defs/environmentObservation"},
+        "output": {"type": "object"}
+      }
+    },
+    "environmentObservation": {
+      "type": "object", "additionalProperties": false,
+      "required": ["names", "values_digest", "working_directory"],
+      "properties": {
+        "names": {"type": "array", "items": {"type": "string", "minLength": 1}, "uniqueItems": true},
+        "values_digest": {"$ref": "#/$defs/digest"},
+        "working_directory": {"type": "string", "minLength": 1}
+      }
+    },
+    "fileAuthority": {
+      "type": "object", "additionalProperties": false,
+      "required": ["canonical_path", "sha256", "byte_length"],
+      "properties": {
+        "canonical_path": {"type": "string", "minLength": 1},
+        "sha256": {"$ref": "#/$defs/digest"},
+        "byte_length": {"type": "integer", "minimum": 1}
+      }
+    },
+    "environmentBinding": {
+      "type": "object", "additionalProperties": false,
+      "required": ["name", "value_sha256", "plaintext_omitted_from_binding_row"],
+      "properties": {
+        "name": {"type": "string", "minLength": 1},
+        "value_sha256": {"$ref": "#/$defs/digest"},
+        "plaintext_omitted_from_binding_row": {"const": true}
+      }
+    },
+    "environmentAuthority": {
+      "type": "object", "additionalProperties": false,
+      "required": ["schema_version", "launcher", "clear_environment", "allowed_names", "bindings", "observation_status", "observed_names", "observed_values_digest", "secret_environment_inheritance", "platform", "python", "content_digest"],
+      "properties": {
+        "schema_version": {"const": 1},
+        "launcher": {"$ref": "#/$defs/fileAuthority"},
+        "clear_environment": {"const": true},
+        "allowed_names": {"type": "array", "minItems": 4, "items": {"type": "string", "minLength": 1}, "uniqueItems": true},
+        "bindings": {"type": "array", "minItems": 4, "items": {"$ref": "#/$defs/environmentBinding"}},
+        "observation_status": {"enum": ["matched", "not_observed", "mismatch"]},
+        "observed_names": {"type": "array", "items": {"type": "string", "minLength": 1}, "uniqueItems": true},
+        "observed_values_digest": {"oneOf": [{"$ref": "#/$defs/digest"}, {"type": "null"}]},
+        "secret_environment_inheritance": {"const": "denied_by_env_i_allowlist"},
+        "platform": {
+          "type": "object", "additionalProperties": false,
+          "required": ["system", "release", "machine"],
+          "properties": {
+            "system": {"type": "string", "minLength": 1},
+            "release": {"type": "string", "minLength": 1},
+            "machine": {"type": "string", "minLength": 1}
+          }
+        },
+        "python": {
+          "type": "object", "additionalProperties": false,
+          "required": ["version", "executable"],
+          "properties": {
+            "version": {"type": "string", "minLength": 1},
+            "executable": {"$ref": "#/$defs/fileAuthority"}
+          }
+        },
+        "content_digest": {"$ref": "#/$defs/digest"}
+      }
+    },
+    "isolationMechanism": {
+      "type": "object", "additionalProperties": false,
+      "required": ["backend", "executable", "probe_status", "policy_text", "policy_digest", "fallback_reason"],
+      "properties": {
+        "backend": {"enum": ["macos_sandbox_exec", "linux_bubblewrap", "process_group_only"]},
+        "executable": {"oneOf": [{"$ref": "#/$defs/fileAuthority"}, {"type": "null"}]},
+        "probe_status": {"enum": ["passed", "unavailable", "failed"]},
+        "policy_text": {"oneOf": [{"type": "string", "minLength": 1}, {"type": "null"}]},
+        "policy_digest": {"oneOf": [{"$ref": "#/$defs/digest"}, {"type": "null"}]},
+        "fallback_reason": {"oneOf": [{"type": "string", "minLength": 1}, {"type": "null"}]}
+      },
+      "oneOf": [
+        {
+          "properties": {
+            "backend": {"const": "macos_sandbox_exec"},
+            "executable": {"$ref": "#/$defs/fileAuthority"},
+            "probe_status": {"const": "passed"},
+            "policy_text": {"type": "string", "minLength": 1},
+            "policy_digest": {"$ref": "#/$defs/digest"},
+            "fallback_reason": {"type": "null"}
+          }
+        },
+        {
+          "properties": {
+            "backend": {"const": "linux_bubblewrap"},
+            "executable": {"$ref": "#/$defs/fileAuthority"},
+            "probe_status": {"const": "passed"},
+            "policy_text": {"type": "string", "minLength": 1},
+            "policy_digest": {"$ref": "#/$defs/digest"},
+            "fallback_reason": {"type": "null"}
+          }
+        },
+        {
+          "properties": {
+            "backend": {"const": "process_group_only"},
+            "executable": {"type": "null"},
+            "probe_status": {"enum": ["unavailable", "failed"]},
+            "policy_text": {"type": "null"},
+            "policy_digest": {"type": "null"},
+            "fallback_reason": {"type": "string", "minLength": 1}
+          }
+        }
+      ]
+    },
+    "isolationChannels": {
+      "type": "object", "additionalProperties": false,
+      "required": ["filesystem_read", "filesystem_write", "network", "environment", "process_lifecycle", "undeclared_access_audit"],
+      "properties": {
+        "filesystem_read": {"enum": ["kernel_allowlist_enforced", "kernel_sibling_run_data_denied_host_read_scope_unrestricted", "host_read_scope_unrestricted"]},
+        "filesystem_write": {"enum": ["kernel_workspace_only", "protocol_workspace_only"]},
+        "network": {"enum": ["kernel_denied", "unavailable_no_kernel_network_policy"]},
+        "environment": {"const": "env_i_allowlist_enforced"},
+        "process_lifecycle": {"const": "isolated_session_process_group_supervised"},
+        "undeclared_access_audit": {"const": "unavailable_no_complete_syscall_trace"}
+      }
+    },
+    "isolationAssurance": {
+      "type": "object", "additionalProperties": false,
+      "required": ["schema_version", "status", "mechanism", "deny_by_construction", "channels", "hidden_input_independence_authorized", "cognitive_independence_authorized", "semantic_independence_authorized", "external_efficacy_eligible", "limitation", "content_digest"],
+      "properties": {
+        "schema_version": {"const": 1},
+        "status": {"enum": ["kernel_policy_enforced", "process_only_strongest_available"]},
+        "mechanism": {"$ref": "#/$defs/isolationMechanism"},
+        "deny_by_construction": {"type": "boolean"},
+        "channels": {"$ref": "#/$defs/isolationChannels"},
+        "hidden_input_independence_authorized": {"const": false},
+        "cognitive_independence_authorized": {"const": false},
+        "semantic_independence_authorized": {"const": false},
+        "external_efficacy_eligible": {"const": false},
+        "limitation": {"type": "string", "minLength": 1},
+        "content_digest": {"$ref": "#/$defs/digest"}
+      }
+    },
+    "workspace": {
+      "type": "object", "additionalProperties": false,
+      "required": ["run_directory", "workspace_ref", "resolved_path", "invocation_id", "workspace_digest"],
+      "properties": {
+        "run_directory": {"type": "string", "minLength": 1},
+        "workspace_ref": {"type": "string", "pattern": "^workspaces/(candidate|high_risk|formal_lens|judge)/research-worker-invocation\\.[a-f0-9]{24}$"},
+        "resolved_path": {"type": "string", "minLength": 1},
+        "invocation_id": {"type": "string", "pattern": "^research-worker-invocation\\.[a-f0-9]{24}$"},
+        "workspace_digest": {"$ref": "#/$defs/digest"}
+      }
+    },
+    "processEvent": {
+      "type": "object", "additionalProperties": false,
+      "required": ["event", "role", "command", "pid", "started_at", "completed_at", "elapsed_seconds", "returncode", "status", "terminal_dimension", "terminal_used", "terminal_limit", "termination", "stdin_bytes", "stdin_sha256", "stdin_limit_bytes", "stdin_written_bytes", "stdin_write_incomplete", "stdin_write_error", "stdout", "stderr", "stdout_bytes", "stderr_bytes", "stdout_retained_bytes", "stderr_retained_bytes", "stdout_sha256", "stderr_sha256", "stdout_utf8_valid", "stderr_utf8_valid", "stdout_truncated", "stderr_truncated", "stdout_drain_incomplete", "stderr_drain_incomplete", "stdout_limit_bytes", "stderr_limit_bytes", "descendant_leak_detected", "capture_limit_bytes", "resource_measurement", "epistemic_effect"],
+      "properties": {
+        "event_schema_version": {"const": 2},
+        "event": {"const": "process_terminal"},
+        "role": {"const": "worker"},
+        "command": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
+        "pid": {"oneOf": [{"type": "integer", "minimum": 1}, {"type": "null"}]},
+        "started_at": {"type": "string", "minLength": 1},
+        "completed_at": {"type": "string", "minLength": 1},
+        "elapsed_seconds": {"type": "number", "minimum": 0},
+        "returncode": {"oneOf": [{"type": "integer"}, {"type": "null"}]},
+        "status": {"$ref": "benchmark_external_process_receipt.schema.json#/$defs/processStatus"},
+        "terminal_dimension": {"oneOf": [{"type": "string", "minLength": 1}, {"type": "null"}]},
+        "terminal_used": {"oneOf": [{"type": "number", "minimum": 0}, {"type": "null"}]},
+        "terminal_limit": {"oneOf": [{"type": "number", "minimum": 0}, {"type": "null"}]},
+        "termination": {"oneOf": [{"type": "string", "minLength": 1}, {"type": "null"}]},
+        "stdin_bytes": {"type": "integer", "minimum": 0},
+        "stdin_sha256": {"$ref": "#/$defs/digest"},
+        "stdin_limit_bytes": {"oneOf": [{"type": "integer", "minimum": 1}, {"type": "null"}]},
+        "stdin_written_bytes": {"type": "integer", "minimum": 0},
+        "stdin_write_incomplete": {"type": "boolean"},
+        "stdin_write_error": {"oneOf": [{"type": "string", "minLength": 1}, {"type": "null"}]},
+        "stdout": {"type": "string"},
+        "stderr": {"type": "string"},
+        "stdout_bytes": {"type": "integer", "minimum": 0},
+        "stderr_bytes": {"type": "integer", "minimum": 0},
+        "stdout_retained_bytes": {"type": "integer", "minimum": 0},
+        "stderr_retained_bytes": {"type": "integer", "minimum": 0},
+        "stdout_sha256": {"$ref": "#/$defs/digest"},
+        "stderr_sha256": {"$ref": "#/$defs/digest"},
+        "stdout_utf8_valid": {"type": "boolean"},
+        "stderr_utf8_valid": {"type": "boolean"},
+        "stdout_truncated": {"type": "boolean"},
+        "stderr_truncated": {"type": "boolean"},
+        "stdout_drain_incomplete": {"type": "boolean"},
+        "stderr_drain_incomplete": {"type": "boolean"},
+        "stdout_limit_bytes": {"oneOf": [{"type": "integer", "minimum": 1}, {"type": "null"}]},
+        "stderr_limit_bytes": {"oneOf": [{"type": "integer", "minimum": 1}, {"type": "null"}]},
+        "descendant_leak_detected": {"type": "boolean"},
+        "capture_limit_bytes": {"type": "integer", "minimum": 1},
+        "resource_measurement": {"$ref": "benchmark_external_process_receipt.schema.json#/$defs/measurement"},
+        "supervision_attempt": {"oneOf": [{"$ref": "benchmark_external_process_receipt.schema.json#/$defs/supervisionAttemptV2"}, {"type": "null"}]},
+        "resource_limit_execution": {"oneOf": [{"$ref": "benchmark_external_process_receipt.schema.json#/$defs/resourceLimitExecutionV2"}, {"type": "null"}]},
+        "post_supervision_acceptance": {"$ref": "benchmark_external_process_receipt.schema.json#/$defs/postSupervisionAcceptanceV2"},
+        "epistemic_effect": {"enum": ["awaiting_output_validation", "none_operational_outcome_only"]}
+      },
+      "allOf": [
+        {
+          "if": {"required": ["event_schema_version"]},
+          "then": {"required": ["event_schema_version", "supervision_attempt", "resource_limit_execution", "post_supervision_acceptance"]},
+          "else": {
+            "not": {
+              "anyOf": [
+                {"required": ["supervision_attempt"]},
+                {"required": ["resource_limit_execution"]},
+                {"required": ["post_supervision_acceptance"]}
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "processEventV1": {
+      "allOf": [
+        {"$ref": "#/$defs/processEvent"},
+        {"not": {"required": ["event_schema_version"]}},
+        {
+          "properties": {
+            "resource_measurement": {"$ref": "benchmark_external_process_receipt.schema.json#/$defs/measurementV1"}
+          }
+        }
+      ]
+    },
+    "processEventV2": {
+      "allOf": [
+        {"$ref": "#/$defs/processEvent"},
+        {"required": ["event_schema_version", "supervision_attempt", "resource_limit_execution", "post_supervision_acceptance"]},
+        {
+          "properties": {
+            "event_schema_version": {"const": 2},
+            "stdin_limit_bytes": {"type": "integer", "minimum": 1},
+            "resource_measurement": {"$ref": "benchmark_external_process_receipt.schema.json#/$defs/measurementV2"}
+          }
+        },
+        {
+          "oneOf": [
+            {
+              "properties": {
+                "pid": {"type": "null"},
+                "returncode": {"type": "null"},
+                "termination": {"const": "not_started"},
+                "supervision_attempt": {"type": "null"},
+                "resource_limit_execution": {"type": "null"},
+                "post_supervision_acceptance": {"properties": {"status": {"const": "not_run"}}},
+                "epistemic_effect": {"const": "none_operational_outcome_only"}
+              }
+            },
+            {
+              "properties": {
+                "supervision_attempt": {"$ref": "benchmark_external_process_receipt.schema.json#/$defs/supervisionAttemptV2"},
+                "resource_limit_execution": {"$ref": "benchmark_external_process_receipt.schema.json#/$defs/resourceLimitExecutionV2"},
+                "post_supervision_acceptance": {"properties": {"status": {"enum": ["accepted", "rejected", "snapshot_failed", "deadline_overrun"]}}},
+                "termination": {"oneOf": [{"enum": ["terminated", "killed"]}, {"type": "null"}]}
+              }
+            }
+          ]
+        },
+        {
+          "if": {"properties": {"status": {"const": "succeeded"}}, "required": ["status"]},
+          "then": {"properties": {"epistemic_effect": {"const": "awaiting_output_validation"}}},
+          "else": {"properties": {"epistemic_effect": {"const": "none_operational_outcome_only"}}}
+        }
+      ]
+    },
+    "resourceReceipt": {
+      "type": "object", "additionalProperties": false,
+      "required": ["budget", "usage", "status", "events", "deadline", "resource_measurement"],
+      "properties": {
+        "budget": {"$ref": "benchmark_external_process_receipt.schema.json#/$defs/budget"},
+        "usage": {"$ref": "benchmark_external_process_receipt.schema.json#/$defs/usage"},
+        "status": {"$ref": "benchmark_external_process_receipt.schema.json#/$defs/processStatus"},
+        "events": {"type": "array", "minItems": 1, "maxItems": 1, "items": {"$ref": "#/$defs/processEvent"}},
+        "deadline": {"type": "string", "minLength": 1},
+        "resource_measurement": {"$ref": "benchmark_external_process_receipt.schema.json#/$defs/measurement"}
+      }
+    },
+    "resourceReceiptV1": {
+      "allOf": [
+        {"$ref": "#/$defs/resourceReceipt"},
+        {
+          "properties": {
+            "events": {
+              "items": {"$ref": "#/$defs/processEventV1"}
+            },
+            "resource_measurement": {"$ref": "benchmark_external_process_receipt.schema.json#/$defs/measurementV1"}
+          }
+        }
+      ]
+    },
+    "resourceReceiptV2": {
+      "allOf": [
+        {"$ref": "#/$defs/resourceReceipt"},
+        {
+          "properties": {
+            "events": {
+              "items": {"$ref": "#/$defs/processEventV2"}
+            },
+            "resource_measurement": {"$ref": "benchmark_external_process_receipt.schema.json#/$defs/measurementV2"}
+          }
+        }
+      ]
+    },
+    "failure": {
+      "type": "object", "additionalProperties": false,
+      "required": ["stage", "error_type", "message", "message_digest"],
+      "properties": {
+        "stage": {"type": "string", "minLength": 1},
+        "error_type": {"type": "string", "minLength": 1},
+        "message": {"type": "string", "minLength": 1},
+        "message_digest": {"$ref": "#/$defs/digest"}
+      }
+    },
+    "authorityBoundaries": {
+      "type": "object", "additionalProperties": false,
+      "required": ["epistemic_effect", "publication_authorized", "advantage_inference_authorized", "creativity_authorized", "conceptual_depth_authorized", "unification_power_authorized", "physics_value_authorized", "truth_authorized", "theorem_authorized", "continuum_authorized", "hidden_input_independence_authorized", "cognitive_independence_authorized", "semantic_independence_authorized", "external_human_authority_status"],
+      "properties": {
+        "epistemic_effect": {"const": "none_operational_execution_and_internal_calibration_only"},
+        "publication_authorized": {"const": false},
+        "advantage_inference_authorized": {"const": false},
+        "creativity_authorized": {"const": false},
+        "conceptual_depth_authorized": {"const": false},
+        "unification_power_authorized": {"const": false},
+        "physics_value_authorized": {"const": false},
+        "truth_authorized": {"const": false},
+        "theorem_authorized": {"const": false},
+        "continuum_authorized": {"const": false},
+        "hidden_input_independence_authorized": {"const": false},
+        "cognitive_independence_authorized": {"const": false},
+        "semantic_independence_authorized": {"const": false},
+        "external_human_authority_status": {"const": "unavailable"}
+      }
+    }
+  }
+}

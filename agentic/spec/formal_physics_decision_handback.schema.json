@@ -1,0 +1,122 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://abducer.local/spec/formal_physics_decision_handback.schema.json",
+  "title": "Exact finite-formal-to-physics decision handback",
+  "description": "Compares a declared incumbent with one relation-triggered candidate. Unchanged, missing, inapplicable, or non-physics decisions are quarantined. Every status denies theorem, Yang--Mills, physics-value, and investment authority.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "handback_kind", "handback_status", "lens", "case_id",
+    "target_id", "task_relation_compilation_digest", "task_derived_formal_delta_digest",
+    "physical_carrier", "formal_carrier", "regime", "quantifiers", "lens_consequences",
+    "incumbent_decision", "proposed_next_decision", "decision_comparison",
+    "changed_next_physics_decision", "changed_next_theory_decision", "quarantine_reason",
+    "route_control_disposition", "investment_disposition", "falsifier", "correction",
+    "untouched_physics_gates", "experiment_role", "authority_nulls",
+    "formal_elegance_authorized", "theorem_authorized", "yang_mills_authorized",
+    "physics_value_authorized", "investment_authorized", "content_digest"
+  ],
+  "$defs": {
+    "text": {"type": "string", "minLength": 1},
+    "id": {"type": "string", "minLength": 1, "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$"},
+    "digest": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
+    "decision": {"$ref": "task_relation_compilation.schema.json#/$defs/decision"},
+    "quantifier": {"$ref": "task_relation_compilation.schema.json#/$defs/quantifier"}
+  },
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "handback_kind": {"const": "finite_formal_witness_to_exact_physics_decision"},
+    "handback_status": {
+      "enum": [
+        "decision_changed", "quarantined_non_physics", "quarantined_lens_inapplicable",
+        "quarantined_missing_decision_declaration", "quarantined_no_decision_change"
+      ]
+    },
+    "lens": {"enum": ["categorical", "hott"]},
+    "case_id": {"$ref": "#/$defs/id"},
+    "target_id": {"$ref": "#/$defs/id"},
+    "task_relation_compilation_digest": {"$ref": "#/$defs/digest"},
+    "task_derived_formal_delta_digest": {"$ref": "#/$defs/digest"},
+    "physical_carrier": {"anyOf": [{"$ref": "#/$defs/text"}, {"type": "null"}]},
+    "formal_carrier": {"$ref": "#/$defs/text"},
+    "regime": {
+      "type": "object", "additionalProperties": false,
+      "required": ["statement", "origin"],
+      "properties": {
+        "statement": {"$ref": "#/$defs/text"},
+        "origin": {"enum": ["declared", "pressure_boundary"]}
+      }
+    },
+    "quantifiers": {
+      "type": "array", "minItems": 1, "items": {"$ref": "#/$defs/quantifier"}
+    },
+    "lens_consequences": {
+      "type": "array", "items": {"$ref": "task_relation_compilation.schema.json#/$defs/consequence"}
+    },
+    "incumbent_decision": {"anyOf": [{"$ref": "#/$defs/decision"}, {"type": "null"}]},
+    "proposed_next_decision": {"anyOf": [{"$ref": "task_relation_compilation.schema.json#/$defs/lensDecision"}, {"type": "null"}]},
+    "decision_comparison": {
+      "type": "object", "additionalProperties": false,
+      "required": [
+        "incumbent_basis_digest", "candidate_basis_digest", "substantive_change",
+        "comparison_rule"
+      ],
+      "properties": {
+        "incumbent_basis_digest": {"$ref": "#/$defs/digest"},
+        "candidate_basis_digest": {"$ref": "#/$defs/digest"},
+        "substantive_change": {"type": "boolean"},
+        "comparison_rule": {"const": "decision_kind + normalized action + target_burden_id"}
+      }
+    },
+    "changed_next_physics_decision": {"anyOf": [{"$ref": "#/$defs/text"}, {"type": "null"}]},
+    "changed_next_theory_decision": {"$ref": "#/$defs/text"},
+    "quarantine_reason": {"anyOf": [{"$ref": "#/$defs/text"}, {"type": "null"}]},
+    "route_control_disposition": {"enum": ["return_to_reflective_theory", "quarantine_non_investment"]},
+    "investment_disposition": {"const": "non_investment_formal_evidence_only"},
+    "falsifier": {"$ref": "#/$defs/text"},
+    "correction": {"$ref": "#/$defs/text"},
+    "untouched_physics_gates": {
+      "type": "array", "minItems": 1, "uniqueItems": true, "items": {"$ref": "#/$defs/text"}
+    },
+    "experiment_role": {"const": "secondary_precommitted_falsifier_test_only"},
+    "authority_nulls": {
+      "const": [
+        "physical_equivalence", "continuum", "OS_reconstruction", "theorem",
+        "spectral_result", "mass_gap", "Yang-Mills_result", "physics_value"
+      ]
+    },
+    "formal_elegance_authorized": {"const": false},
+    "theorem_authorized": {"const": false},
+    "yang_mills_authorized": {"const": false},
+    "physics_value_authorized": {"const": false},
+    "investment_authorized": {"const": false},
+    "content_digest": {"$ref": "#/$defs/digest"}
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"handback_status": {"const": "decision_changed"}}},
+      "then": {
+        "properties": {
+          "proposed_next_decision": {"$ref": "task_relation_compilation.schema.json#/$defs/lensDecision"},
+          "changed_next_physics_decision": {"$ref": "#/$defs/text"},
+          "quarantine_reason": {"type": "null"},
+          "route_control_disposition": {"const": "return_to_reflective_theory"},
+          "decision_comparison": {
+            "properties": {"substantive_change": {"const": true}}
+          }
+        }
+      },
+      "else": {
+        "properties": {
+          "proposed_next_decision": {"type": "null"},
+          "changed_next_physics_decision": {"type": "null"},
+          "quarantine_reason": {"$ref": "#/$defs/text"},
+          "route_control_disposition": {"const": "quarantine_non_investment"},
+          "decision_comparison": {
+            "properties": {"substantive_change": {"const": false}}
+          }
+        }
+      }
+    }
+  ]
+}

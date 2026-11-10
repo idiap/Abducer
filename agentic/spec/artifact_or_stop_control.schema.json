@@ -1,0 +1,95 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Artifact-Or-Stop Control",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "version",
+    "target_id",
+    "blocker_signature",
+    "repetition_count",
+    "required_artifact",
+    "allowed_next_modes",
+    "forbidden_next_modes",
+    "promotion_condition",
+    "demotion_condition",
+    "quarantine_condition",
+    "clay_progress_boundary",
+    "control_decision"
+  ],
+  "properties": {
+    "version": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "target_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "blocker_signature": {
+      "type": "string",
+      "minLength": 1
+    },
+    "repetition_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "required_artifact": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "allowed_next_modes": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "enum": [
+          "artifact_sprint",
+          "falsifier_sprint",
+          "publication_demotion",
+          "quarantine",
+          "conceptual_exploration_after_release"
+        ]
+      }
+    },
+    "forbidden_next_modes": {
+      "type": "array",
+      "items": {
+        "enum": [
+          "broad_api_reasoning",
+          "ordinary_proof_search",
+          "unbounded_publication_consolidation"
+        ]
+      }
+    },
+    "promotion_condition": {
+      "type": "string",
+      "minLength": 1
+    },
+    "demotion_condition": {
+      "type": "string",
+      "minLength": 1
+    },
+    "quarantine_condition": {
+      "type": "string",
+      "minLength": 1
+    },
+    "clay_progress_boundary": {
+      "type": "string",
+      "minLength": 1
+    },
+    "control_decision": {
+      "enum": [
+        "reasoning_allowed",
+        "artifact_sprint_required",
+        "falsifier_sprint_required",
+        "publication_demotion_required",
+        "quarantine_required",
+        "released_to_conceptual_exploration"
+      ]
+    }
+  }
+}

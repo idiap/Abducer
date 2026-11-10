@@ -1,0 +1,48 @@
+# lunar-runtime: {"declaration":"MaterializedTimelinePaperIndependentWorkflow","entry_argument":"timeline_outputs","execute_hook":"abducer-workflow-execute","id":"timeline-paper-independent-workflow","input_schema":{"additionalProperties":false,"default":{"timeline_ref":"mk-reasoning-timeline-01"},"properties":{"timeline_ref":{"default":"mk-reasoning-timeline-01","maxLength":16000,"minLength":1,"type":"string"}},"required":["timeline_ref"],"type":"object"},"metadata":{"completion_contract":{"allowed_final_statuses":["passed","completed"],"forbid_blockers":true,"reasoning_complete":true,"reasoning_events_min":4,"terminal_state":"completed"},"description":"produce a claim-bounded presentation of accumulated reasoning","model_required":true,"network_required":false,"provenance_contract":{"agent_invocations":[{"activated_skill_ids":["timeline-paper-workflow-orchestrator"],"agent_name":"bounded_claim_set_material_agent","workflow_occurrence":"bounded_claim_set"},{"activated_skill_ids":["epistemic-status-ledger"],"agent_name":"paper_disposition_material_agent","workflow_occurrence":"paper_disposition"}],"required_source_reads":[]},"reasoning_contract":{"steps":["bounded_claim_set","paper_disposition"],"workflow":"TimelinePaperIndependentWorkflow"},"reasoning_required":true,"required_host_capabilities":["model","prism-engine","reasoning-events"],"scientific_truth_verified":false,"semantic_mode":"operational-model-generated","source_materialization_status":"blocked_unresolved_projection_gap","timeout_seconds":1800},"output_schema":{"additionalProperties":false,"properties":{"analysis_results":{"type":"object"},"compact_prism_input":{"type":"object"},"markdown":{"minLength":1,"type":"string"},"narrative_slots":{"type":"array"},"report_verification":{"properties":{"reasoning_complete":{"const":true},"status":{"const":"passed"}},"required":["status","reasoning_complete"],"type":"object"},"structured_value":{"properties":{"execution_provenance":{"type":"object"},"final_disposition":{"properties":{"blockers":{"maxItems":0,"type":"array"},"reasoning_complete":{"const":true},"status":{"const":"passed"}},"required":["status","reasoning_complete","blockers"],"type":"object"},"reasoning_result":{"type":"object"}},"required":["final_disposition","reasoning_result","execution_provenance"],"type":"object"}},"required":["markdown","structured_value","analysis_results","compact_prism_input","narrative_slots","report_verification"],"type":"object"},"prepare_hook":"abducer-workflow-prepare","verify_hook":"abducer-workflow-verify"}
+
+# Host-executed material graph for the complete reviewed reasoning path.
+# Generated values retain the source epistemic boundary and are not native proof or experiment receipts.
+
+from types import (
+    BoundedManuscriptClaimSet,
+    TimelinePaperDisposition,
+    TimelineReasoningOutputs,
+)
+
+from generated.bounded_claim_set_skill_1 import bounded_claim_set_skill_1
+from generated.paper_disposition_skill_1 import paper_disposition_skill_1
+
+# Real model capability for source occurrence bounded_claim_set:UnresolvedManuscriptClaimSetProjection.
+agent bounded_claim_set_material_agent(
+    task: TimelineReasoningOutputs,
+) -> Result[Generated[BoundedManuscriptClaimSet], ModelFailure]
+    ! {AI.Generate, Context.Disclose}:
+    skills: Skills[TimelineReasoningOutputs] = [bounded_claim_set_skill_1]
+
+# Real model capability for source occurrence paper_disposition:EvidentialTimelinePaperDispositionAssessment.
+agent paper_disposition_material_agent(
+    task: BoundedManuscriptClaimSet,
+) -> Result[Generated[String], ModelFailure]
+    ! {AI.Generate, Context.Disclose}:
+    skills: Skills[BoundedManuscriptClaimSet] = [paper_disposition_skill_1]
+
+workflow MaterializedTimelinePaperIndependentWorkflow(
+    timeline_outputs: TimelineReasoningOutputs,
+) -> Generated[String]
+    fails ModelFailure
+    ! {AI.Generate, Context.Disclose}:
+    sequence:
+        # Projection creates presentation input but no new claim or evidence.
+        [bounded_claim_set: bounded_claim_set_material_agent(timeline_outputs)]
+        # The paper gate evaluates whether the bounded set supports assembly.
+        [paper_disposition: paper_disposition_material_agent(bounded_claim_set.value)]
+
+    return paper_disposition
+
+
+def main(
+    timeline_outputs: TimelineReasoningOutputs,
+    model_access: ModelGenerate,
+    disclosure: ContextDisclose,
+) -> Result[Generated[String], ModelFailure] ! {AI.Generate, Context.Disclose}:
+    return solve MaterializedTimelinePaperIndependentWorkflow(timeline_outputs)

@@ -1,0 +1,95 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,booktabs}
+\newtheorem{theorem}{Theorem}
+\newtheorem{corollary}{Corollary}
+\newtheorem{remark}{Remark}
+\title{Certified Coherent-Collar Partition Optimization}
+\author{}
+\date{21 July 2026}
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We optimize the complete finite-time coherent-staple conditional estimate,
+including its exact $SU(2)$ Haar denominator and Poisson-image prefactors.  A
+unique stationarity equation replaces the earlier unproved numerical-search
+optimality.  Re-optimizing the local $K+R$ radius gives a nonempty conditional
+coherent-channel budget inside the certified nonlinear window.  Collar
+occurrence for the complete measure remains open.
+\end{abstract}
+
+Let $v(\delta)$ be normalized Haar mass of an $SU(2)$ geodesic ball.  For
+$m$ staples in a common $\eta$-ball, heat time $t$, and target curvature
+$\rho$, Stage 15 gives
+\[
+ \mathbb P\{d(I,VQ_j)\ge\rho\mid\text{coherent collar}\}
+ \le \exp L_{t,\rho,\eta}(\delta),
+\]
+where
+\[
+ L_{t,\rho,\eta}(\delta)=
+ -\log v(\delta)+\log\frac{\rho}{\sin\rho}
+ +(m+1)\log c_t
+ -\frac{\rho^2-m(\eta+\delta)^2}{2t},
+\]
+and $0<\delta<\rho/\sqrt m-\eta$.
+
+\begin{theorem}[Unique denominator optimizer]
+On every admissible interval containing its stationary point,
+$L_{t,\rho,\eta}$ has a unique global interior minimum $\delta_*$, determined
+by
+\[
+ \frac{v'(\delta_*)}{v(\delta_*)}
+ =\frac{m(\eta+\delta_*)}{t}.
+\]
+The optimizer is independent of $\rho$.
+\end{theorem}
+
+\begin{proof}
+Differentiation gives
+\[
+ L'(\delta)=-\frac{v'(\delta)}{v(\delta)}
+             +\frac{m(\eta+\delta)}{t}.
+\]
+The radial density $\sin^2\delta$ is strictly log-concave on the local
+interval.  Its primitive $v(\delta)$ is log-concave, so $v'/v$ is decreasing;
+the right side of the stationarity equation is strictly increasing.  Near
+zero $v'/v\sim3/\delta$, and hence a sign change gives exactly one root.  The
+derivative changes from negative to positive there.  Terms containing $\rho$
+are constant in $\delta$, proving the final assertion.
+\end{proof}
+
+The executable certificate brackets the root with 120 bisections and records
+both sides of the equation.  At $t=3\cdot10^{-6}$ and $m=6$, it treats both
+the ideal $\eta=0$ envelope and the declared $\eta=10^{-3}$ collar.
+
+\begin{theorem}[Conditional coherent-channel closure]
+Let $q=0.002430277501841998$ be the Stage 25 weighted target.  There exists an
+explicit local radius $r_*$, printed in the accompanying calibration, such
+that
+\[
+ e^{\ell(r_*)}\,q_{\rm ref}(r_*)
+ +q_{\rm coh}(2r_*,10^{-3})<q,
+ \qquad r_*<0.011453785959974176.
+\]
+Here $q_{\rm ref}$ and $\ell$ are the certified local-reference complement and
+comparison loss, while $q_{\rm coh}$ is the optimized finite-time bound above.
+\end{theorem}
+
+\begin{proof}
+All three functions are evaluated by the prior exact/certified modules.  The
+calibration first brackets the crossing in the sharp nonlinear window and
+then uses 120 bisections, moving into the strict feasible side.  The tests
+independently verify the stationarity residual, local minimality, crossing,
+strict budget, and radius inclusion.
+\end{proof}
+
+\begin{remark}[Logical scope]
+The second theorem is conditional on collar coherence.  It proves neither the
+probability of the coherence event nor the incoherent complement numerator.
+It also does not identify the abstract $K+R$ split with the complete nonlinear
+finite-volume kernel.  Those missing statements are exactly the target of the
+next stage.
+\end{remark}
+\end{document}

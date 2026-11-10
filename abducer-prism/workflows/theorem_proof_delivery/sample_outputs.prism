@@ -1,0 +1,49 @@
+# Simulated sample payloads for theorem_proof_delivery; documentary only, not execution evidence.
+# One marker and one typed payload literal align to every reasoning binding in source order.
+from workflows.theorem_proof_delivery.types import (
+    ExactTheoremClaim,
+    ExplicitPremises,
+    FormalProofObligations,
+    ExactClaimRefutationAssessment,
+    FormalProofGateDecision,
+    ProofFailureCertificate,
+    TheoremProofDispositionAssessment,
+    ProofAccepted,
+)
+
+# @sample workflow=theorem_proof_delivery reasoning=TheoremProofDelivery binding=d0 occurrence=DeductiveExactTheoremClaimDerivation output=Generated[ExactTheoremClaim] stage=1 branch=main mode=simulated example_set=finite-support-lemma projection_status=resolved
+# The generated occurrence would expose this payload through `.value`.
+sample_d0_value: ExactTheoremClaim = ExactTheoremClaim(
+    statement = "For every finite tree with n vertices, the edge count is n - 1.",
+    premises = ExplicitPremises(
+        premise_set_id = "finite-tree-lemma-premises",
+        exact_statement = "T is finite, connected, and acyclic.",
+    ),
+    obligations = FormalProofObligations(
+        obligation_set_id = "finite-tree-lemma-obligations",
+        open_obligations = ["Induct on the number of vertices using a leaf removal."],
+    ),
+)
+
+# @sample workflow=theorem_proof_delivery reasoning=TheoremProofDelivery binding=r0 occurrence=RefutationalExactTheoremClaimAssessment output=Generated[ExactClaimRefutationAssessment] stage=2 branch=main mode=simulated example_set=finite-support-lemma projection_status=resolved
+# The generated occurrence would expose this payload through `.value`.
+sample_r0_value: ExactClaimRefutationAssessment = ExactClaimRefutationAssessment(
+    refutation_assessment_id = "finite-tree-lemma-refutation",
+)
+
+# @sample workflow=theorem_proof_delivery reasoning=TheoremProofDelivery binding=e0 occurrence=EvidentialTheoremProofDispositionAssessment output=Generated[TheoremProofDispositionAssessment] stage=3 branch=main mode=simulated example_set=finite-support-lemma projection_status=resolved
+# The optional field is intentionally constructed by a pure typed builder below;
+# it is not a forged Generated value or a claim of kernel-checked proof.
+def sample_e0_value_builder() -> TheoremProofDispositionAssessment:
+    return TheoremProofDispositionAssessment(
+        disposition = ProofAccepted(),
+        theorem_claim = sample_d0_value,
+        refutation_assessment = sample_r0_value,
+        gate = FormalProofGateDecision(
+            proof_gate_decision_id = "finite-tree-lemma-gate-open-obligation",
+        ),
+        failure_certificate = sample_optional_failure_certificate(),
+    )
+
+def sample_optional_failure_certificate() -> Option[ProofFailureCertificate]:
+    return sample_optional_failure_certificate()

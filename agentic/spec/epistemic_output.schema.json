@@ -1,0 +1,44 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://abducer.local/spec/epistemic_output.schema.json",
+  "title": "Epistemic Output",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "output_id", "kind", "reasoning_occurrence_id",
+    "epistemic_modality", "claim_effect", "scope", "provenance",
+    "taints", "open_obligations", "mutability", "terminality", "payload"
+  ],
+  "properties": {
+    "schema_version": {"const": "0.1"},
+    "output_id": {"type": "string", "pattern": "^out-[a-z0-9][a-z0-9-]*$"},
+    "kind": {"enum": ["KnowledgeBase", "Claim", "Evidence", "Decision", "Model", "Relation", "Obligation", "Plan", "Presentation", "Bundle"]},
+    "reasoning_occurrence_id": {"type": "string", "minLength": 1},
+    "epistemic_modality": {"type": ["string", "null"]},
+    "claim_effect": {"enum": ["introduce", "condition", "qualify", "revise", "supersede", "calibrate", "gate", "select", "demote", "connect", "restrict", "none", "componentwise"]},
+    "scope": {"type": "object"},
+    "provenance": {"type": "array", "items": {"type": "string", "minLength": 1}},
+    "taints": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+    "open_obligations": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+    "mutability": {"enum": ["immutable", "versioned", "regenerable_view"]},
+    "terminality": {"enum": ["nonterminal", "claim_terminal", "branch_terminal", "workflow_terminal"]},
+    "payload": {"type": "object"}
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"kind": {"const": "Claim"}}},
+      "then": {
+        "properties": {"epistemic_modality": {"type": "string", "minLength": 1}},
+        "required": ["epistemic_modality"]
+      }
+    },
+    {
+      "if": {"properties": {"kind": {"enum": ["Evidence", "Model", "Plan", "Presentation"]}}},
+      "then": {"properties": {"claim_effect": {"const": "none"}}}
+    },
+    {
+      "if": {"properties": {"kind": {"const": "Presentation"}}},
+      "then": {"properties": {"epistemic_modality": {"type": "null"}}}
+    }
+  ]
+}

@@ -1,0 +1,104 @@
+# SPDX-FileCopyrightText: © 2026 Idiap Research Institute <contact@idiap.ch>
+#
+# SPDX-FileContributor: Andre Freitas <andre.freitas@idiap.ch>
+# Neuro-symbolic AI Group
+#
+# SPDX-FileContributor: Danilo Gusicuma <danilo.gusicuma@idiap.ch>
+# Neuro-symbolic AI Group
+#
+# SPDX-License-Identifier: MIT
+metadata:
+  request_slug: "<request-slug>"
+  agent_id: "<request-slug>-agent"
+  name: ""
+  description: ""
+  source_project: ""
+  source_skill_path: ""
+  semantic_folder: ""
+  semantic_tags: []
+
+planner:
+  invocation_condition: ""
+  use_cases: []
+  not_applicable_when: []
+  selection_role: "analysis"
+  selection_priority: 50
+  companion_skill_ids: []
+
+runtime_adapter:
+  adapter_kind: "prompt-contract"
+  workdir: "."
+  entry_subcommand: []
+  prompt_asset_path: null
+  workspace_mounts:
+    - mount_id: "request-workspace"
+      mount_kind: "project-subtree"
+      root_strategy: "project-root"
+      required_relative_paths:
+        - ".prism/<request-slug>"
+      ensure_relative_dirs: []
+      writable: true
+      notes: ""
+  route_registry_path: null
+  capability_source_paths: []
+  reasoning_log_mode: "normalized+upstream"
+  metadata: {}
+
+typed_contract:
+  invocation:
+    mode: "planner-routed"
+    invocation_condition: ""
+    primary_entrypoint: ""
+    execution_entrypoint: ""
+    trigger_event: null
+    cadence: "on demand"
+    threshold: null
+    preconditions: []
+    not_applicable_when: []
+  inputs:
+    - port_id: "goal_context"
+      payload_kind: ""
+      transport: "inline-json"
+      description: ""
+      required: true
+      cardinality: "one"
+      path_hint: null
+      json_schema: {}
+  outputs:
+    - port_id: "primary_output"
+      payload_kind: ""
+      transport: "document-link"
+      description: ""
+      required: true
+      cardinality: "one"
+      path_hint: ""
+      json_schema: {}
+    - port_id: "reasoning_log"
+      payload_kind: "reasoning-log"
+      transport: "sidecar"
+      description: "Self-contained reasoning log sidecar."
+      required: true
+      cardinality: "one"
+      path_hint: ".prism/<request-slug>/reasoning-log.md"
+      json_schema: {}
+  coordination:
+    organization_group: "inference"
+    lifecycle_stage: "execution"
+    role: "analysis"
+    execution_model: "workflow"
+    companion_agent_ids: []
+    allowed_upstream_agent_kinds: []
+    allowed_downstream_agent_kinds: []
+    coordination_notes: ""
+  reasoning_log:
+    format: "json+markdown"
+    self_contained: true
+    default_root: ".prism/<request-slug>"
+    required_sections:
+      - "invocation"
+      - "input_summary"
+      - "reasoning_steps"
+      - "outputs"
+      - "open_questions"
+      - "remaining_uncertainty"
+      - "metadata_snapshot"

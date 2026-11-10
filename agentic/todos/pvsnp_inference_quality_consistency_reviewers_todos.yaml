@@ -1,0 +1,539 @@
+# SPDX-FileCopyrightText: © 2026 Idiap Research Institute <contact@idiap.ch>
+#
+# SPDX-FileContributor: Andre Freitas <andre.freitas@idiap.ch>
+# Neuro-symbolic AI Group
+#
+# SPDX-FileContributor: Danilo Gusicuma <danilo.gusicuma@idiap.ch>
+# Neuro-symbolic AI Group
+#
+# SPDX-License-Identifier: MIT
+version: 1
+target_id: p-vs-np-target
+created_at: "2026-07-11"
+status: resolved
+completed_at: "2026-07-11"
+implementation_status:
+  status: completed
+  completed_at: "2026-07-11"
+implementation_summary:
+  - Created seven P vs NP inference-quality skills covering central inference control, proof derivation, reduction consistency, quantifier/uniformity consistency, barrier specificity, proof-complexity transfer, and meta-complexity carriers.
+  - Added the inference-quality packet schema, valid and invalid fixtures, a deterministic validator, standard-library tests, and a live report builder.
+  - Wired inference-quality review into the discovery-marathon dispatch matrix, P vs NP target-specific skill traces, repo-wide agentic proof gate, report payload, visible HTML report panel, report validator, skill projections, and documentation.
+  - Validated skill depth, TODO schema, dispatch compatibility, taxonomy projections, and focused inference-quality validation.
+source_artifacts:
+  conceptual_pressure_skill: skills/evaluation/pvsnp-conceptual-pressure-localizer/SKILL.md
+  symbolic_auditor: skills/reasoning/pvsnp-symbolic-complexity-auditor/SKILL.md
+  negative_tactic_selector: skills/orchestration/pvsnp-negative-tactic-selector/SKILL.md
+  impossibility_theorem_forger: skills/reasoning/pvsnp-impossibility-theorem-forger/SKILL.md
+  end_to_end_proof_critic: skills/evaluation/kb-end-to-end-proof-critic/SKILL.md
+  entailment_gap_auditor: skills/evaluation/entailment-gap-auditor/SKILL.md
+  contribution_detector: skills/evaluation/scientific-contribution-detector/SKILL.md
+  dispatch_matrix: agentic/registries/discovery_marathon_skill_dispatch.yaml
+  proof_gate: agentic/scripts/agentic_check.py
+reflection:
+  purpose: >
+    Add a P vs NP-specific inference quality and consistency-review layer that
+    sits between creative branch generation and report/paper claims. The
+    workflow already has useful skills for pressure localization, symbolic
+    auditing, negative tactics, and end-to-end proof criticism, but it still
+    needs a controller that treats every nontrivial complexity-theoretic
+    inference as a typed mathematical object with source statement, target
+    statement, inference rule, model, quantifiers, side conditions, barrier
+    status, proof status, and reviewer verdict.
+  core_principle: >
+    A P vs NP claim is not allowed to advance because it sounds plausible or
+    aligns with a promising route. It advances only when the inference preserves
+    the stated source and target objects, reduction direction, complexity class
+    boundary, uniformity/advice regime, quantifier strength, theorem
+    applicability, and proof obligations. When the claim is theorem-shaped, the
+    loop must either derive it, localize the missing lemma, or demote it to a
+    conjectural pressure note.
+  quality_bar: >
+    The quality layer must be generative where mathematical interpretation is
+    needed and deterministic where structural invariants can be validated. It
+    should derive proofs or proof skeletons when necessary, but it must also
+    reject overclaims: changed models, reversed reductions, hidden advice,
+    all-exponent claims from fixed-exponent evidence, generic barrier labels,
+    and paper-level novelty claims unsupported by theorem-shaped content.
+  correctness_dimensions:
+    - Exact source and target statement typing, including language/problem, class, circuit model, proof system, oracle status, and promise/domain constraints.
+    - Reduction and transfer correctness: direction, type, length map, parameter propagation, padding/projection effects, and completeness assumptions.
+    - Quantifier correctness: all lengths versus infinitely often, all exponents versus one exponent, uniform versus nonuniform, algorithm versus family, and advice-free versus advice-bearing claims.
+    - Barrier correctness: relativization, algebrization, natural-proofs, black-boxness, diagonalization, and proof-complexity barriers must be branch-specific rather than used as generic labels.
+    - Derivation correctness: theorem-shaped claims must expose definitions, assumptions, lemmas, proof steps, missing obligations, and counterexample classes.
+    - Epistemic correctness: distinguish proof, conditional theorem, proof obligation, heuristic pressure, falsifier, no-go theorem, and paper-ready contribution.
+todos:
+  - id: pvsnp-iq-001
+    type: workflow_todo
+    phase: inference-quality-control
+    owner: skills/orchestration
+    priority: critical
+    risk_class: pvsnp_inference_overclaim
+    title: Create the P vs NP inference quality controller skill
+    intent: >
+      Build `pvsnp-inference-quality-controller` as the central gate that
+      converts every serious P vs NP branch claim into an auditable inference
+      packet before it can promote, enter the proof queue, or appear in a
+      paper-facing narrative.
+    use_skills:
+      - pvsnp-conceptual-pressure-localizer
+      - pvsnp-symbolic-complexity-auditor
+      - entailment-gap-auditor
+      - epistemic-status-ledger
+    required_artifact:
+      - skills/orchestration/pvsnp-inference-quality-controller/SKILL.md
+      - skills/orchestration/pvsnp-inference-quality-controller/agents/openai.yaml
+    acceptance_criteria:
+      - The skill requires source statement, target statement, inference rule, model context, quantifier context, parameter map, theorem citation or proof obligation, barrier status, and decision.
+      - The skill decides one of `accept_for_derivation`, `needs_repair`, `review_only`, `quarantine`, or `reject_overclaim`.
+      - The skill explicitly routes theorem-shaped claims to proof derivation rather than allowing narrative restatement.
+      - The skill names the next validator, reviewer, or proof obligation controlling the branch.
+    blocked_by: []
+    evidence:
+      - Existing P vs NP skills audit pieces of the problem but do not yet impose a unified inference packet.
+    review_date: "2026-07-11"
+    failure_modes:
+      - The controller becomes a generic checklist and fails to reason in P vs NP objects.
+      - The controller allows claims to pass without reduction direction, quantifier regime, or uniformity/advice status.
+    status: resolved
+
+  - id: pvsnp-iq-002
+    type: workflow_todo
+    phase: proof-derivation
+    owner: skills/reasoning
+    priority: critical
+    risk_class: underived_theorem_claim
+    title: Create the P vs NP proof derivation builder skill
+    intent: >
+      Build `pvsnp-proof-derivation-builder` for cases where the loop claims a
+      theorem, lemma, transfer inequality, contradiction, or no-go statement.
+      The skill must derive the result as far as possible and precisely locate
+      remaining proof debt.
+    use_skills:
+      - kb-proof-sketcher
+      - kb-proof-connector
+      - pvsnp-symbolic-complexity-auditor
+      - theorem-body-normalizer
+    required_artifact:
+      - skills/reasoning/pvsnp-proof-derivation-builder/SKILL.md
+      - skills/reasoning/pvsnp-proof-derivation-builder/agents/openai.yaml
+    acceptance_criteria:
+      - Output contains theorem statement, definitions, hypotheses, lemma chain, proof steps, where each assumption is used, and exact blocked step if incomplete.
+      - Derivations preserve circuit model, proof system, oracle status, promise restrictions, and length parameters.
+      - Failed derivations produce a named proof obligation and counterexample search target rather than prose confidence.
+      - The skill distinguishes rigorous proof, conditional theorem, proof sketch, heuristic argument, and invalid derivation.
+    blocked_by:
+      - pvsnp-iq-001
+    evidence:
+      - The current workflow can generate proof sketches but needs a stronger derivation-specific layer before paper-level claims.
+    review_date: "2026-07-11"
+    failure_modes:
+      - The skill returns a plausible narrative without deriving definitions-to-conclusion.
+      - The skill hides an equivalent-to-P-vs-NP premise inside a local lemma.
+    status: resolved
+
+  - id: pvsnp-iq-003
+    type: workflow_todo
+    phase: consistency-review
+    owner: skills/evaluation
+    priority: critical
+    risk_class: reduction_transfer_error
+    title: Add a reduction and transfer consistency reviewer
+    intent: >
+      Create `pvsnp-reduction-consistency-reviewer` to audit reduction
+      direction, reduction type, completeness assumptions, promise/domain
+      conditions, length maps, parameter propagation, padding/projection
+      effects, and target-class preservation.
+    use_skills:
+      - pvsnp-symbolic-complexity-auditor
+      - bridge-object-equivalence-checker
+      - entailment-gap-auditor
+    required_artifact:
+      - skills/evaluation/pvsnp-reduction-consistency-reviewer/SKILL.md
+      - skills/evaluation/pvsnp-reduction-consistency-reviewer/agents/openai.yaml
+    acceptance_criteria:
+      - Reviewer rejects reversed implications such as treating source-carrier hardness as direct SAT hardness without a proved transfer.
+      - Reviewer records many-one, Turing, oracle, projection, padding, black-box-substitution, and nonblackbox transfer distinctions.
+      - Reviewer computes or requests parameter inequalities when transfer exponents determine whether the branch can preserve all-exponent strength.
+    blocked_by:
+      - pvsnp-iq-001
+    evidence:
+      - P vs NP branches repeatedly depend on transfer inequalities and source-to-target preservation.
+    review_date: "2026-07-11"
+    failure_modes:
+      - Reviewer only says "reduction needed" without naming direction, model, and parameter map.
+      - Reviewer ignores promise restrictions or sparse-valid-length effects.
+    status: resolved
+
+  - id: pvsnp-iq-004
+    type: workflow_todo
+    phase: consistency-review
+    owner: skills/evaluation
+    priority: critical
+    risk_class: quantifier_uniformity_error
+    title: Add a quantifier and uniformity consistency reviewer
+    intent: >
+      Create `pvsnp-quantifier-uniformity-reviewer` to stop branches from
+      silently changing all-exponent claims into fixed-exponent claims, all
+      lengths into infinitely-often claims, uniform algorithms into circuit
+      families, or advice-free reasoning into advice-bearing reasoning.
+    use_skills:
+      - pvsnp-symbolic-complexity-auditor
+      - epistemic-status-ledger
+      - entailment-gap-auditor
+    required_artifact:
+      - skills/evaluation/pvsnp-quantifier-uniformity-reviewer/SKILL.md
+      - skills/evaluation/pvsnp-quantifier-uniformity-reviewer/agents/openai.yaml
+    acceptance_criteria:
+      - Reviewer emits a quantifier table covering length set, exponent range, uniformity, advice, randomness, oracle status, and circuit-family versus algorithmic form.
+      - Reviewer rejects promotion when the conclusion has stronger quantifiers than the premises.
+      - Reviewer identifies the minimum extra lemma needed to repair quantifier loss.
+    blocked_by:
+      - pvsnp-iq-001
+    evidence:
+      - P vs NP work is especially vulnerable to all-exponent, nonuniformity, and advice leakage errors.
+    review_date: "2026-07-11"
+    failure_modes:
+      - Reviewer gives generic caveats instead of a concrete quantifier mismatch.
+      - Reviewer treats P/poly, P, NP, coNP, PH, and restricted circuit models as interchangeable.
+    status: resolved
+
+  - id: pvsnp-iq-005
+    type: workflow_todo
+    phase: consistency-review
+    owner: skills/evaluation
+    priority: high
+    risk_class: generic_barrier_labeling
+    title: Add a barrier specificity reviewer
+    intent: >
+      Create `pvsnp-barrier-specificity-reviewer` to determine whether a branch
+      is relativizing, algebrizing, natural, black-box, diagonalizing,
+      proof-complexity-specific, or outside known barrier templates, with
+      escape conditions stated branch-by-branch.
+    use_skills:
+      - pvsnp-negative-tactic-selector
+      - pvsnp-impossibility-theorem-forger
+      - pvsnp-conceptual-pressure-localizer
+    required_artifact:
+      - skills/evaluation/pvsnp-barrier-specificity-reviewer/SKILL.md
+      - skills/evaluation/pvsnp-barrier-specificity-reviewer/agents/openai.yaml
+    acceptance_criteria:
+      - Barrier diagnoses name the exact property of the branch that triggers the barrier.
+      - Outputs state escape conditions such as nonblackbox use, non-largeness, nonconstructivity, nonrelativizing step, or advice-free carrier certificate.
+      - Reviewer rejects barrier labels that are used as pessimistic slogans or as proofs against the target itself.
+    blocked_by:
+      - pvsnp-iq-001
+    evidence:
+      - Existing negative-tactic policy calls for route-specific barriers, but a dedicated reviewer is needed for consistency.
+    review_date: "2026-07-11"
+    failure_modes:
+      - Barrier status is copied from literature without checking the branch's actual inference mechanism.
+      - Reviewer suppresses high-reward nonblackbox or non-natural escape routes prematurely.
+    status: resolved
+
+  - id: pvsnp-iq-006
+    type: workflow_todo
+    phase: consistency-review
+    owner: skills/evaluation
+    priority: high
+    risk_class: proof_complexity_transfer_error
+    title: Add a proof-complexity transfer reviewer
+    intent: >
+      Create `pvsnp-proof-complexity-transfer-reviewer` for claims that proof
+      lower bounds, proof-system simulations, algebraic proof systems, or
+      tautology families imply language or circuit lower bounds.
+    use_skills:
+      - pvsnp-symbolic-complexity-auditor
+      - pvsnp-reduction-consistency-reviewer
+      - pvsnp-proof-derivation-builder
+    required_artifact:
+      - skills/evaluation/pvsnp-proof-complexity-transfer-reviewer/SKILL.md
+      - skills/evaluation/pvsnp-proof-complexity-transfer-reviewer/agents/openai.yaml
+    acceptance_criteria:
+      - Reviewer names the proof system, tautology family, semantic target, circuit class, and simulation/transfer theorem.
+      - Reviewer separates proof-length lower bound, automatability lower bound, language hardness, and circuit lower bound.
+      - Reviewer checks shortcut models such as Gaussian elimination, algebraic certificates, semantic bypasses, and recognition overhead.
+    blocked_by:
+      - pvsnp-iq-002
+      - pvsnp-iq-003
+    evidence:
+      - Proof-complexity branches need specialized consistency checks beyond generic entailment auditing.
+    review_date: "2026-07-11"
+    failure_modes:
+      - Reviewer treats proof lower bounds as direct NP circuit lower bounds.
+      - Reviewer fails to identify where the semantic bridge is unproved.
+    status: resolved
+
+  - id: pvsnp-iq-007
+    type: workflow_todo
+    phase: consistency-review
+    owner: skills/evaluation
+    priority: high
+    risk_class: meta_complexity_carrier_error
+    title: Add a meta-complexity carrier reviewer
+    intent: >
+      Create `pvsnp-meta-complexity-carrier-reviewer` for MCSP, MKtP, truth
+      table, row-hardness, and Kolmogorov-style branches, where the main risk
+      is confusing aggregate or advice-selected hardness with target-language
+      hardness.
+    use_skills:
+      - pvsnp-symbolic-complexity-auditor
+      - pvsnp-qualitative-complexity-reasoner
+      - pvsnp-reduction-consistency-reviewer
+    required_artifact:
+      - skills/evaluation/pvsnp-meta-complexity-carrier-reviewer/SKILL.md
+      - skills/evaluation/pvsnp-meta-complexity-carrier-reviewer/agents/openai.yaml
+    acceptance_criteria:
+      - Reviewer names carrier object, table length, row/instance selection rule, verifier overhead, density regime, and advice-free status.
+      - Reviewer distinguishes direct language lower bound, average-case witness, compression obstruction, and nonuniform row selection.
+      - Reviewer requires a transfer certificate before treating carrier hardness as progress toward P vs NP.
+    blocked_by:
+      - pvsnp-iq-003
+      - pvsnp-iq-004
+    evidence:
+      - Current P vs NP exploration uses meta-complexity carriers and needs carrier-specific correctness criteria.
+    review_date: "2026-07-11"
+    failure_modes:
+      - Reviewer allows advice-selected rows to masquerade as uniform language hardness.
+      - Reviewer ignores verifier overhead or valid-length sparsity.
+    status: resolved
+
+  - id: pvsnp-iq-008
+    type: dependency_todo
+    phase: schema-and-packets
+    owner: agentic/spec
+    priority: critical
+    risk_class: untyped_inference_packet
+    title: Define the P vs NP inference quality packet schema
+    intent: >
+      Add a deterministic schema for inference-quality packets so generative
+      reviewers produce comparable, machine-checkable artifacts across cycles.
+    use_skills:
+      - pvsnp-inference-quality-controller
+      - pvsnp-proof-derivation-builder
+    required_artifact:
+      - agentic/spec/pvsnp_inference_quality_packet.schema.json
+      - agentic/fixtures/pvsnp_inference_quality/valid_transfer_packet.json
+      - agentic/fixtures/pvsnp_inference_quality/invalid_reversed_transfer_packet.json
+      - agentic/fixtures/pvsnp_inference_quality/invalid_advice_leak_packet.json
+      - agentic/fixtures/pvsnp_inference_quality/invalid_generic_barrier_packet.json
+    acceptance_criteria:
+      - Schema includes inference id, branch id, source statement, target statement, inference rule, model context, quantifier context, parameter map, side conditions, barrier status, derivation status, proof obligations, reviewer findings, decision, and validation handoff.
+      - Schema has enums for epistemic status, decision, reduction type, uniformity, advice status, length regime, barrier family, and derivation status.
+      - Invalid fixtures fail for missing source/target typing, generic barrier labels, hidden advice, and theorem claims without derivation status.
+    blocked_by:
+      - pvsnp-iq-001
+    evidence:
+      - Existing branch outputs need a typed artifact for cross-skill consistency and report rendering.
+    review_date: "2026-07-11"
+    failure_modes:
+      - Schema records prose fields but cannot enforce the invariants that matter for complexity theory.
+      - Schema becomes too narrow for proof complexity, meta-complexity, and hardness magnification routes.
+    status: resolved
+
+  - id: pvsnp-iq-009
+    type: test_todo
+    phase: deterministic-validation
+    owner: agentic/scripts
+    priority: critical
+    risk_class: unvalidated_quality_gate
+    title: Implement deterministic inference-quality validation
+    intent: >
+      Add `validate_pvsnp_inference_quality.py` to reject structurally invalid
+      inference packets and make inference quality visible to CI-style local
+      checks.
+    use_skills:
+      - pvsnp-inference-quality-controller
+      - pvsnp-reduction-consistency-reviewer
+      - pvsnp-quantifier-uniformity-reviewer
+      - pvsnp-barrier-specificity-reviewer
+    required_artifact:
+      - agentic/scripts/validate_pvsnp_inference_quality.py
+      - tests/formal/test_pvsnp_inference_quality_validation.py
+    acceptance_criteria:
+      - Validator accepts valid packets and rejects fixtures for reversed transfer, missing quantifiers, hidden advice, generic barrier labels, and theorem claims lacking derivation status.
+      - Validator reports actionable field-level errors, not only pass/fail.
+      - Validator can run on latest P vs NP report artifacts without requiring Yang-Mills artifacts.
+    blocked_by:
+      - pvsnp-iq-008
+    evidence:
+      - New deterministic validators should be wired into the repo-wide proof gate rather than left standalone.
+    review_date: "2026-07-11"
+    failure_modes:
+      - Validator checks only JSON shape and misses mathematical consistency invariants.
+      - Validator is too strict for early conjectural branches and blocks explicitly marked heuristic pressure notes.
+    status: resolved
+
+  - id: pvsnp-iq-010
+    type: hook_todo
+    phase: discovery-workflow-integration
+    owner: agentic/registries
+    priority: critical
+    risk_class: quality_layer_not_invoked
+    title: Integrate inference quality review into the P vs NP discovery loop
+    intent: >
+      Update the marathon skill dispatch and P vs NP branch lifecycle so the
+      inference quality controller runs after branch generation, before branch
+      promotion, before proof-queue insertion, and after every tenth cycle as a
+      consistency review.
+    use_skills:
+      - pvsnp-inference-quality-controller
+      - pvsnp-proof-derivation-builder
+      - pvsnp-reduction-consistency-reviewer
+      - pvsnp-quantifier-uniformity-reviewer
+      - pvsnp-barrier-specificity-reviewer
+    required_artifact:
+      - agentic/registries/discovery_marathon_skill_dispatch.yaml
+      - agentic/scripts/run_discovery_marathon.py
+      - agentic/scripts/parallel_discovery_orchestrator.py
+    acceptance_criteria:
+      - P vs NP cycles attach an inference-quality packet when a branch makes a transfer, theorem, contradiction, no-go, or paper-level claim.
+      - Branch promotion is blocked or demoted when quality reviewers identify model changes, quantifier strengthening, hidden advice, or missing derivation.
+      - Historical cycles that lack packets remain renderable while new cycles are required to provide packets when appropriate.
+    blocked_by:
+      - pvsnp-iq-001
+      - pvsnp-iq-008
+      - pvsnp-iq-009
+    evidence:
+      - The dispatch matrix already routes P vs NP skills, but inference quality is not yet a first-class phase.
+    review_date: "2026-07-11"
+    failure_modes:
+      - Quality review is added only as documentation and not invoked by runs.
+      - Review runs on every trivial note and wastes budget instead of triggering on theorem-shaped or transfer-shaped claims.
+    status: resolved
+
+  - id: pvsnp-iq-011
+    type: report_todo
+    phase: report-rendering
+    owner: agentic/reports
+    priority: high
+    risk_class: invisible_quality_state
+    title: Surface inference-quality and consistency review in the P vs NP report
+    intent: >
+      Add an expert-readable report section that shows which claims passed
+      inference quality review, which require derivation, which were repaired,
+      and which were quarantined, without dumping raw JSON or pipeline jargon.
+    use_skills:
+      - pvsnp-inference-quality-controller
+      - pvsnp-proof-derivation-builder
+      - scientific-contribution-detector
+    required_artifact:
+      - agentic/scripts/render_discovery_marathon_report.py
+      - agentic/reports/discovery_marathon/p-vs-np/latest.html
+    acceptance_criteria:
+      - Report explains source claim, target claim, decisive inference issue, reviewer decision, proof status, and next proof obligation in complexity-theory language.
+      - Paper-level or high-reward subgoals show whether the contribution is theorem-ready, derivation-needed, or only heuristic pressure.
+      - Mathematical expressions render correctly in the report and do not leak HTML tags or raw packet syntax.
+    blocked_by:
+      - pvsnp-iq-010
+    evidence:
+      - The user wants visible report surfaces for quality control and contribution readiness.
+    review_date: "2026-07-11"
+    failure_modes:
+      - Report exposes bureaucratic packet fields instead of a readable expert diagnosis.
+      - Report hides failed reviews and makes branch progress look cleaner than it is.
+    status: resolved
+
+  - id: pvsnp-iq-012
+    type: documentation_todo
+    phase: documentation
+    owner: docs
+    priority: high
+    risk_class: implicit_correctness_criteria
+    title: Document P vs NP inference correctness criteria
+    intent: >
+      Write a self-contained guide that explains the quality criteria used by
+      the inference controller and reviewers, with examples of valid and
+      invalid P vs NP inference patterns.
+    use_skills:
+      - pvsnp-inference-quality-controller
+      - pvsnp-reduction-consistency-reviewer
+      - pvsnp-quantifier-uniformity-reviewer
+      - pvsnp-barrier-specificity-reviewer
+    required_artifact:
+      - docs/case-studies/pvsnp/pvsnp-inference-quality.md
+      - docs/reference/skills.md
+    acceptance_criteria:
+      - Guide includes class/model typing, reduction direction, quantifier discipline, uniformity/advice, barriers, proof derivation, and epistemic-status examples.
+      - Guide states what counts as proof, conditional theorem, useful no-go result, heuristic pressure, falsifier, and overclaim.
+      - Skills documentation links to the new reviewers without exposing raw filesystem paths.
+    blocked_by:
+      - pvsnp-iq-001
+      - pvsnp-iq-003
+      - pvsnp-iq-004
+      - pvsnp-iq-005
+    evidence:
+      - Correctness criteria need to be visible and reusable, not buried inside skill prompts.
+    review_date: "2026-07-11"
+    failure_modes:
+      - Documentation becomes generic proof advice and not P vs NP-specific.
+      - Documentation fails to distinguish discovery usefulness from proof validity.
+    status: resolved
+
+  - id: pvsnp-iq-013
+    type: hook_todo
+    phase: repo-wide-proof-gate
+    owner: agentic/scripts
+    priority: critical
+    risk_class: validator_not_enforced
+    title: Wire inference-quality validation into the repo-wide agentic check
+    intent: >
+      Add the new deterministic inference-quality validator to
+      `agentic/scripts/agentic_check.py` so it runs with the same proof-gate
+      mechanism as the rest of the agentic framework.
+    use_skills:
+      - pvsnp-inference-quality-controller
+    required_artifact:
+      - agentic/scripts/agentic_check.py
+      - agentic/scripts/validate_pvsnp_inference_quality.py
+    acceptance_criteria:
+      - `python agentic/scripts/agentic_check.py` invokes the P vs NP inference-quality validator when P vs NP packets or reports exist.
+      - Check output distinguishes validation failure from absent historical packets.
+      - Existing Yang-Mills and results-elaboration report checks continue to run unchanged.
+    blocked_by:
+      - pvsnp-iq-009
+    evidence:
+      - Repo memory identifies `agentic/scripts/agentic_check.py` as the repo-wide proof gate for new deterministic validators.
+    review_date: "2026-07-11"
+    failure_modes:
+      - Validator remains a standalone script and is skipped during normal checks.
+      - Agentic check fails on old artifacts that predate the packet schema.
+    status: resolved
+
+  - id: pvsnp-iq-014
+    type: test_todo
+    phase: generative-validation
+    owner: tests/generative
+    priority: high
+    risk_class: shallow_reviewer_behavior
+    title: Add generative quality probes for the reviewers
+    intent: >
+      Create adversarial prompt fixtures that force the reviewers to catch
+      subtle P vs NP inference errors and derive or demote claims instead of
+      producing fluent but invalid explanations.
+    use_skills:
+      - pvsnp-inference-quality-controller
+      - pvsnp-proof-derivation-builder
+      - pvsnp-reduction-consistency-reviewer
+      - pvsnp-quantifier-uniformity-reviewer
+      - pvsnp-barrier-specificity-reviewer
+    required_artifact:
+      - tests/generative/test_pvsnp_inference_quality_reviewers.md
+      - agentic/fixtures/pvsnp_inference_quality/generative_cases.json
+    acceptance_criteria:
+      - Fixtures cover reversed reductions, fixed-to-all exponent inflation, hidden advice, natural-proofs overreach, proof-complexity transfer overclaim, MCSP row-selection leakage, and generic barrier slogans.
+      - Expected reviewer outputs include exact source/target correction, demotion reason, and next proof obligation.
+      - Tests require content-specific complexity-theory language rather than generic quality-control wording.
+    blocked_by:
+      - pvsnp-iq-001
+      - pvsnp-iq-002
+      - pvsnp-iq-003
+      - pvsnp-iq-004
+      - pvsnp-iq-005
+    evidence:
+      - The user's recent concern is that repeated payoff and control language can become generic unless branch-specific quality probes enforce specificity.
+    review_date: "2026-07-11"
+    failure_modes:
+      - Probes only test formatting and not mathematical judgment.
+      - Reviewers pass cases by adding caveats without identifying the invalid inference.
+    status: resolved

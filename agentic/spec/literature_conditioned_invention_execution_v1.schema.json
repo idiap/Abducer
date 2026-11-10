@@ -1,0 +1,438 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://abducer.local/schemas/literature_conditioned_invention_execution_v1.schema.json",
+  "title": "Literature-conditioned invention execution",
+  "description": "Closes a pre-output semantic literature request, supervised high-risk worker receipt, independently derived task-grounded family contracts, and ancestry-ready conditioned freeze.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "artifact_kind",
+    "execution_id",
+    "request",
+    "request_digest",
+    "registered_receipt",
+    "receipt_file_sha256",
+    "receipt_byte_length",
+    "worker_output",
+    "source_invention_freeze",
+    "derived_causal_family_contracts",
+    "conditioned_invention_freeze",
+    "task_grounded_family_assessment",
+    "causal_order",
+    "direct_theory_preference_proof_schedule_experiment_effect",
+    "authority_nulls",
+    "authority_boundary",
+    "content_digest"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "artifact_kind": {"const": "literature_conditioned_invention_execution"},
+    "execution_id": {"$ref": "#/$defs/id"},
+    "request": {"$ref": "#/$defs/request"},
+    "request_digest": {"$ref": "#/$defs/digest"},
+    "registered_receipt": {
+      "type": "object",
+      "required": [
+        "schema_version",
+        "receipt_id",
+        "role",
+        "operation",
+        "request_payload",
+        "response_payload",
+        "outcome_status",
+        "content_digest"
+      ]
+    },
+    "receipt_file_sha256": {"$ref": "#/$defs/digest"},
+    "receipt_byte_length": {"type": "integer", "minimum": 1},
+    "worker_output": {"$ref": "#/$defs/workerOutput"},
+    "source_invention_freeze": {
+      "type": "object",
+      "required": [
+        "artifact_kind",
+        "generator_authority_digest",
+        "raw_inventions",
+        "content_digest"
+      ],
+      "properties": {
+        "artifact_kind": {"const": "pre_taxonomy_invention_freeze"}
+      }
+    },
+    "derived_causal_family_contracts": {
+      "type": "array",
+      "minItems": 6,
+      "maxItems": 8,
+      "uniqueItems": true,
+      "items": {"$ref": "#/$defs/familyContract"}
+    },
+    "conditioned_invention_freeze": {
+      "type": "object",
+      "required": [
+        "artifact_kind",
+        "source_freeze_digest",
+        "literature_derived_invention_input_digest",
+        "causal_family_contracts",
+        "content_digest"
+      ],
+      "properties": {
+        "artifact_kind": {
+          "const": "literature_conditioned_pre_taxonomy_invention_freeze"
+        }
+      }
+    },
+    "task_grounded_family_assessment": {
+      "$ref": "#/$defs/familyAssessment"
+    },
+    "causal_order": {
+      "const": [
+        "semantic_literature_and_target_request_sealed",
+        "registered_worker_invoked",
+        "raw_inventions_authored",
+        "independent_family_structure_derived",
+        "conditioned_freeze_sealed"
+      ]
+    },
+    "direct_theory_preference_proof_schedule_experiment_effect": {
+      "const": false
+    },
+    "authority_nulls": {"$ref": "#/$defs/authorityNulls"},
+    "authority_boundary": {"$ref": "#/$defs/text"},
+    "content_digest": {"$ref": "#/$defs/digest"}
+  },
+  "$defs": {
+    "id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"
+    },
+    "digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "text": {"type": "string", "minLength": 1},
+    "textList": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {"$ref": "#/$defs/text"}
+    },
+    "authorityNulls": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_truth_authority",
+        "global_latestness_authority",
+        "semantic_entailment_authority",
+        "novelty_authority",
+        "creativity_authority",
+        "conceptual_merit_authority",
+        "literature_benefit_authority",
+        "physics_value_authority",
+        "truth_authority"
+      ],
+      "properties": {
+        "source_truth_authority": {"type": "null"},
+        "global_latestness_authority": {"type": "null"},
+        "semantic_entailment_authority": {"type": "null"},
+        "novelty_authority": {"type": "null"},
+        "creativity_authority": {"type": "null"},
+        "conceptual_merit_authority": {"type": "null"},
+        "literature_benefit_authority": {"type": "null"},
+        "physics_value_authority": {"type": "null"},
+        "truth_authority": {"type": "null"}
+      }
+    },
+    "request": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "artifact_kind",
+        "request_id",
+        "namespace",
+        "target_constraints",
+        "requested_count",
+        "minimum_distinct_family_count",
+        "literature_derived_invention_input",
+        "literature_derived_invention_input_digest",
+        "literature_authority",
+        "known_taxonomy_commitment_digest",
+        "taxonomy_visibility",
+        "required_output_contract",
+        "caller_supplied_inventions",
+        "caller_supplied_family_labels",
+        "authority_nulls",
+        "content_digest"
+      ],
+      "properties": {
+        "schema_version": {"const": "1.0.0"},
+        "artifact_kind": {
+          "const": "literature_conditioned_invention_request"
+        },
+        "request_id": {"$ref": "#/$defs/id"},
+        "namespace": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["target_id", "run_id", "state_version"],
+          "properties": {
+            "target_id": {"$ref": "#/$defs/id"},
+            "run_id": {"$ref": "#/$defs/id"},
+            "state_version": {"type": "integer", "minimum": 0}
+          }
+        },
+        "target_constraints": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "target_pressure",
+            "root_contradictions",
+            "protected_successes"
+          ],
+          "properties": {
+            "target_pressure": {"$ref": "#/$defs/text"},
+            "root_contradictions": {"$ref": "#/$defs/textList"},
+            "protected_successes": {"$ref": "#/$defs/textList"}
+          }
+        },
+        "requested_count": {
+          "type": "integer",
+          "minimum": 6,
+          "maximum": 8
+        },
+        "minimum_distinct_family_count": {"const": 6},
+        "literature_derived_invention_input": {
+          "type": "object",
+          "required": [
+            "artifact_kind",
+            "input_id",
+            "causal_inputs",
+            "content_digest"
+          ],
+          "properties": {
+            "artifact_kind": {
+              "const": "literature_derived_invention_input"
+            },
+            "causal_inputs": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "type": "object",
+                "required": [
+                  "causal_input_id",
+                  "source_id",
+                  "claim_digest",
+                  "semantic_warrant_set_digest",
+                  "assimilation_delta"
+                ]
+              }
+            }
+          }
+        },
+        "literature_derived_invention_input_digest": {
+          "$ref": "#/$defs/digest"
+        },
+        "literature_authority": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "authority_kind",
+            "governed_present_use_at",
+            "literature_bundle",
+            "literature_bundle_digest",
+            "literature_projection",
+            "literature_projection_digest",
+            "raw_capture_sha256",
+            "semantic_bridge_digest",
+            "semantic_snapshot_digest",
+            "global_latestness_authority",
+            "source_truth_authority",
+            "literature_benefit_authority",
+            "clock_attestation_authority",
+            "content_digest"
+          ],
+          "properties": {
+            "authority_kind": {
+              "const": "transitively_reopened_bounded_literature_v1"
+            },
+            "governed_present_use_at": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "literature_bundle": {
+              "type": "object",
+              "required": [
+                "artifact_kind",
+                "bundle_id",
+                "capture_descriptor",
+                "currentness",
+                "content_digest"
+              ]
+            },
+            "literature_bundle_digest": {"$ref": "#/$defs/digest"},
+            "literature_projection": {
+              "type": "object",
+              "required": [
+                "artifact_kind",
+                "source_bundle_digest",
+                "semantic_bridge",
+                "semantic_snapshot",
+                "literature_derived_invention_input",
+                "content_digest"
+              ]
+            },
+            "literature_projection_digest": {"$ref": "#/$defs/digest"},
+            "raw_capture_sha256": {"$ref": "#/$defs/digest"},
+            "semantic_bridge_digest": {"$ref": "#/$defs/digest"},
+            "semantic_snapshot_digest": {"$ref": "#/$defs/digest"},
+            "global_latestness_authority": {"type": "null"},
+            "source_truth_authority": {"type": "null"},
+            "literature_benefit_authority": {"type": "null"},
+            "clock_attestation_authority": {"type": "null"},
+            "content_digest": {"$ref": "#/$defs/digest"}
+          }
+        },
+        "known_taxonomy_commitment_digest": {"$ref": "#/$defs/digest"},
+        "taxonomy_visibility": {"const": "withheld_by_commitment_only"},
+        "required_output_contract": {
+          "const": "literature-conditioned-pre-taxonomy-invention.v1"
+        },
+        "caller_supplied_inventions": {"const": false},
+        "caller_supplied_family_labels": {"const": false},
+        "authority_nulls": {"$ref": "#/$defs/authorityNulls"},
+        "content_digest": {"$ref": "#/$defs/digest"}
+      }
+    },
+    "workerOutput": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "output_kind",
+        "output_contract",
+        "request_id",
+        "request_digest",
+        "literature_derived_invention_input_digest",
+        "known_taxonomy_commitment_digest",
+        "caller_supplied_inventions_consumed",
+        "caller_supplied_family_labels_consumed",
+        "raw_inventions",
+        "family_evidence",
+        "semantic_output_signature",
+        "identity_erased_conceptual_signature",
+        "literature_effect_null",
+        "authority_boundary"
+      ],
+      "properties": {
+        "output_kind": {"const": "high_risk_generation"},
+        "output_contract": {
+          "const": "literature-conditioned-pre-taxonomy-invention.v1"
+        },
+        "request_id": {"$ref": "#/$defs/id"},
+        "request_digest": {"$ref": "#/$defs/digest"},
+        "literature_derived_invention_input_digest": {
+          "$ref": "#/$defs/digest"
+        },
+        "known_taxonomy_commitment_digest": {"$ref": "#/$defs/digest"},
+        "caller_supplied_inventions_consumed": {"const": false},
+        "caller_supplied_family_labels_consumed": {"const": false},
+        "raw_inventions": {
+          "type": "array",
+          "minItems": 6,
+          "maxItems": 8,
+          "items": {"type": "object"}
+        },
+        "family_evidence": {
+          "type": "array",
+          "minItems": 6,
+          "maxItems": 8,
+          "items": {"type": "object"}
+        },
+        "semantic_output_signature": {"$ref": "#/$defs/digest"},
+        "identity_erased_conceptual_signature": {"$ref": "#/$defs/digest"},
+        "literature_effect_null": {
+          "oneOf": [
+            {"type": "null"},
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["status", "reason"],
+              "properties": {
+                "status": {
+                  "const": "explicit_no_literature_counterfactual"
+                },
+                "reason": {"$ref": "#/$defs/text"}
+              }
+            }
+          ]
+        },
+        "authority_boundary": {"$ref": "#/$defs/text"}
+      }
+    },
+    "familyContract": {
+      "type": "object",
+      "required": [
+        "invention_id",
+        "source_invention_digest",
+        "primitive_kind",
+        "relation_kind",
+        "mechanism_kind",
+        "intervention_kind",
+        "prediction_direction",
+        "correction_kind",
+        "target_grounding_paths",
+        "literature_causal_input_ids",
+        "contract_digest"
+      ]
+    },
+    "familyAssessment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "assessment_kind",
+        "semantic_signatures",
+        "semantic_signature_count",
+        "minimum_required",
+        "status",
+        "bounded_satisfiability",
+        "worker_family_labels_consumed",
+        "authority_nulls",
+        "content_digest"
+      ],
+      "properties": {
+        "assessment_kind": {
+          "const": "independently_derived_task_grounded_families"
+        },
+        "semantic_signatures": {
+          "type": "array",
+          "minItems": 6,
+          "maxItems": 8,
+          "items": {"type": "object"}
+        },
+        "semantic_signature_count": {"type": "integer", "minimum": 6},
+        "minimum_required": {"const": 6},
+        "status": {
+          "enum": [
+            "six_or_more_semantically_distinct_families",
+            "bounded_target_constraint_unsat"
+          ]
+        },
+        "bounded_satisfiability": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "feasible_signature_count",
+            "unsat_certificate"
+          ],
+          "properties": {
+            "feasible_signature_count": {"type": "integer", "minimum": 0},
+            "unsat_certificate": {
+              "oneOf": [{"type": "null"}, {"type": "object"}]
+            }
+          }
+        },
+        "worker_family_labels_consumed": {"const": false},
+        "authority_nulls": {"$ref": "#/$defs/authorityNulls"},
+        "content_digest": {"$ref": "#/$defs/digest"}
+      }
+    }
+  }
+}

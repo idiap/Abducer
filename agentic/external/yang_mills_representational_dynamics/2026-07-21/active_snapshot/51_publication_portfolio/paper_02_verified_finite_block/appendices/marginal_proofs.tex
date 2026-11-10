@@ -1,0 +1,60 @@
+\section{Conditional transport and effective Hessian}\label{app:marginal}
+
+We justify the two analytic tools used in Theorem~\ref{thm:main} with the
+hard fiber ball $\cD_r$.  Let $D\subset\R^n$ be compact, convex, and have
+nonempty interior.  Suppose $V_y\in C^2$ on a neighborhood of
+$Y\times D$ and $D_z^2V_y\succeq\alpha\Id$.
+
+\begin{lemma}[Differentiation and Hessian identity]\label{lem:hessian-identity}
+For $Z(y)=\int_De^{-V_y(z)}\dd z$ and $F=-\log Z$,
+\[
+ DF=\E_y[D_yV_y],\qquad
+ D^2F=\E_y[D_y^2V_y]-\Cov_y(D_yV_y,D_yV_y).
+\]
+\end{lemma}
+
+\begin{proof}
+On the compact product, the integrand and its first two $y$ derivatives are
+uniformly bounded.  Dominated differentiation gives the first formula.
+Differentiating the normalized expectation gives the covariance correction
+and hence the second formula.  The boundary does not depend on $y$.
+\end{proof}
+
+\begin{lemma}[Covariance bound on a convex body]\label{lem:bl-body}
+If $D_z^2V_y\succeq\alpha\Id$, then for every smooth scalar $f$,
+\[
+ \operatorname{Var}_{\nu_y}(f)
+ \le\E_{\nu_y}\!\left[\ip{\nabla f}{(D_z^2V_y)^{-1}\nabla f}\right]
+ \le\alpha^{-1}\E_{\nu_y}\norm{\nabla f}^2.
+\]
+\end{lemma}
+
+\begin{proof}
+Approximate the indicator of $D$ by $e^{-b_m}$, where $b_m$ is a smooth convex
+barrier increasing to $+\infty$ off $D$.  The usual Brascamp--Lieb inequality
+\cite{BrascampLieb1976} applies to $V_y+b_m$ and its inverse Hessian is bounded
+above by $(D_z^2V_y)^{-1}$.  Monotone localization and dominated convergence
+give the claim.
+\end{proof}
+
+Apply Lemma~\ref{lem:bl-body} to
+$f=v\cdot D_yS_t$ for a unit retained vector $v$.  The mixed derivative bound
+is $\norm{D_zD_yS_t}\le(1/80)/t$, while
+$D_z^2S_t\succeq(3/80)/t$.  Consequently
+\[
+ t\operatorname{Var}(v\cdot D_yS_t)
+ \le\frac{(1/80)^2}{3/80}.
+\]
+Together with Lemma~\ref{lem:hessian-identity}, this gives
+\eqref{eq:effective-hessian-bound}.
+
+For transport, the Bakry--\'{E}mery argument with the same convex barriers
+gives a logarithmic Sobolev constant $1/\alpha$.  If
+$\norm{\nabla_zV_y-\nabla_zV_{y'}}\le L\norm{y-y'}$, the logarithmic Sobolev
+inequality bounds the relative entropy by
+$L^2\norm{y-y'}^2/(2\alpha)$.  Its quadratic transport consequence
+\cite{OttoVillani2000} yields
+\[
+ W_2(\nu_y,\nu_{y'})\le\frac L\alpha\norm{y-y'}.
+\]
+Here $L=(1/80)/t$ and $\alpha=(3/80)/t$, giving $1/3$.

@@ -1,0 +1,44 @@
+{
+  "incident_id": "INC-2041",
+  "question": "What best explains the checkout latency increase?",
+  "statements": [
+    {
+      "statement_id": "stmt-17",
+      "text": "Latency rose immediately after the catalog deployment.",
+      "speaker": "on-call-operator",
+      "channel": "incident-room",
+      "asserted_at": "2026-08-19T10:04:00Z"
+    }
+  ],
+  "observations": [
+    {
+      "observation_id": "obs-db-p95",
+      "kind": "database_latency",
+      "value": 840,
+      "unit": "milliseconds",
+      "sampling_window": "2026-08-19T10:00:00Z/2026-08-19T10:05:00Z",
+      "method": "metrics-query:p95(database.query.duration)",
+      "source": "production-metrics",
+      "limitations": ["aggregated across database operations"]
+    },
+    {
+      "observation_id": "obs-pool",
+      "kind": "connection_pool_utilization",
+      "value": 0.97,
+      "unit": "ratio",
+      "sampling_window": "2026-08-19T10:00:00Z/2026-08-19T10:05:00Z",
+      "method": "metrics-query:max(pool.in_use/pool.capacity)",
+      "source": "production-metrics",
+      "limitations": ["five-minute maximum is not request-correlated"]
+    }
+  ],
+  "constraints": {
+    "maximum_customer_impact_minutes": 15,
+    "prohibited_actions": ["primary_database_restart"]
+  },
+  "ranking_criteria": [
+    {"criterion": "explanatory_coverage", "scale": "0_to_1", "direction": "higher_is_better", "normalization": "identity", "weight": 0.5},
+    {"criterion": "contradiction_count", "scale": "non_negative_count", "direction": "lower_is_better", "normalization": "max(0, 1 - count/3)", "weight": 0.3},
+    {"criterion": "discriminating_test_cost", "scale": "estimated_minutes", "direction": "lower_is_better", "normalization": "max(0, 1 - minutes/15)", "weight": 0.2}
+  ]
+}

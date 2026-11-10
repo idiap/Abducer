@@ -1,0 +1,105 @@
+\section{Uniform product heat-kernel Laplace bounds}
+\label{app:laplace}
+
+We record the compact-space argument behind Lemma~\ref{lem:varadhan} and the
+uniform estimate used in Theorem~\ref{thm:open-stability}.
+
+\begin{lemma}[Compact Laplace bounds]\label{lem:compact-laplace}
+Let $X$ be a compact metric space carrying a probability measure $\lambda$
+that is positive on every nonempty open set.  Suppose $q_t:X\to(0,\infty)$
+and a continuous $F:X\to\R$ obey
+\begin{equation}\label{eq:uniform-log-density}
+ \varepsilon_t:=\sup_{x\in X}|2t\log q_t(x)+F(x)|\longrightarrow0.
+\end{equation}
+Let $Q_t=q_t\lambda/\int q_t\dd\lambda$.  For every open $O$ and closed $C$,
+\begin{align}
+ \liminf_{t\downarrow0}2t\log Q_t(O)
+ &\geq-\inf_O(F-\min F),\label{eq:ldp-lower}\\
+ \limsup_{t\downarrow0}2t\log Q_t(C)
+ &\leq-\inf_C(F-\min F).\label{eq:ldp-upper}
+\end{align}
+\end{lemma}
+
+\begin{proof}
+From \eqref{eq:uniform-log-density},
+\begin{equation}\label{eq:exponential-sandwich}
+ \exp\left(-\frac{F(x)+\varepsilon_t}{2t}\right)
+ \leq q_t(x)\leq
+ \exp\left(-\frac{F(x)-\varepsilon_t}{2t}\right).
+\end{equation}
+The upper bound for an integral over any measurable $A$ is
+\[
+ \int_Aq_t\dd\lambda
+ \leq \exp\left[-\frac{\inf_AF-\varepsilon_t}{2t}\right].
+\]
+For a nonempty open $O$, choose $x\in O$ with
+$F(x)<\inf_OF+\delta$.  Continuity gives a nonempty open neighborhood
+$N\subset O$ on which $F<\inf_OF+2\delta$.  Since $\lambda(N)>0$,
+\[
+ \int_Oq_t\dd\lambda
+ \geq\lambda(N)
+ \exp\left[-\frac{\inf_OF+2\delta+\varepsilon_t}{2t}\right].
+\]
+After multiplying logarithms by $2t$, the fixed factor $\lambda(N)$
+vanishes.  Letting $\delta\downarrow0$ yields the unnormalized Laplace lower
+bound.  Applying the two bounds to $A=X$ shows
+\[
+ \lim_{t\downarrow0}2t\log\int_Xq_t\dd\lambda=-\min F.
+\]
+Subtracting this normalization proves
+\eqref{eq:ldp-lower}--\eqref{eq:ldp-upper}.
+\end{proof}
+
+For the heat-kernel product
+\[
+ q_{t,s}(U)=\prod_{i=1}^m p_t(Us_i),
+\]
+the uniform Varadhan limit \eqref{eq:uniform-varadhan} gives
+\begin{equation}\label{eq:product-uniform-limit}
+ \sup_{U\in G}\left|2t\log q_{t,s}(U)+F_s(U)\right|
+ \leq m\sup_{V\in G}
+ \left|2t\log p_t(V)+\dist(\one,V)^2\right|.
+\end{equation}
+The right side is independent of $s$.  Lemma~\ref{lem:compact-laplace} with
+$X=G$ and $\lambda$ equal to Haar measure therefore proves the fixed-staple
+large deviation principle.
+
+For completeness, we isolate the uniform gap consequence.
+
+\begin{lemma}[Uniform energy gap implies uniform exponential rarity]
+\label{lem:uniform-gap}
+Let $K\subset G^m$ be compact, and for each $s\in K$ let $A_s\subset G$ be
+measurable.  Suppose
+\begin{equation}\label{eq:uniform-gap-assumption}
+ \inf_{s\in K}\left(\inf_{U\in A_s}F_s(U)-\min_VF_s(V)\right)\geq\eta>0.
+\end{equation}
+Then there is $t_0>0$ such that
+\begin{equation}\label{eq:uniform-gap-result}
+ \sup_{s\in K}\gamma_{t,s}(A_s)
+ \leq\exp\left(-\frac{\eta}{8t}\right),
+ \qquad 0<t<t_0.
+\end{equation}
+\end{lemma}
+
+\begin{proof}
+The numerator upper bound from \eqref{eq:exponential-sandwich} is uniform by
+\eqref{eq:product-uniform-limit}.  For the denominator, choose a minimizer
+$U_s$ of $F_s$.  The family $(F_s)_{s\in K}$ is uniformly continuous on
+$G$: for a fixed small radius $r>0$,
+\[
+  F_s(U)\leq\min F_s+\eta/4
+  \quad\text{whenever }\dist(U,U_s)<r,
+\]
+uniformly in $s$.  Bi-invariance makes the Haar volume of this ball
+independent of $U_s$ and strictly positive.  The denominator lower bound on
+that ball and the numerator upper bound over $A_s$ leave an exponential gap
+of at least $3\eta/4$, before the uniform errors in
+\eqref{eq:product-uniform-limit}.  For small $t$ those errors and the fixed
+ball-volume prefactor are absorbed by weakening the exponent to
+$\eta/(8t)$.
+\end{proof}
+
+In Theorem~\ref{thm:open-stability}, take $K=\closure{\mathcal V}$ and
+$A_s=\{U:\dist(\one,Us_m)<\rho\}$.  The neighborhood is chosen so that its
+closure satisfies the same strict inequalities; the energy comparison in
+that theorem verifies \eqref{eq:uniform-gap-assumption}.

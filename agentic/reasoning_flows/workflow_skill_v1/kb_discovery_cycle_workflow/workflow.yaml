@@ -1,0 +1,226 @@
+# SPDX-FileCopyrightText: © 2026 Idiap Research Institute <contact@idiap.ch>
+#
+# SPDX-FileContributor: Danilo Gusicuma <danilo.gusicuma@idiap.ch>
+# Neuro-symbolic AI Group
+#
+# SPDX-License-Identifier: MIT
+# REUSE-IgnoreStart
+schema_version: workflow-skill/v1
+namespace: abducer
+id: kb_discovery_cycle_workflow
+version: 1.0.0
+kind: workflow
+description: Draft interface projection of kb-discovery-cycle; native execution and authority remain unchanged.
+aliases:
+- kb-discovery-cycle
+lifecycle: draft
+activation:
+  mode: explicit
+  prerequisites: []
+types:
+  NativeRequest:
+    schema:
+      type: object
+      description: Skill-defined request; consult preserved source text for inputs and conditions.
+    representation: value
+  NativeResult:
+    schema:
+      type: object
+      description: Skill-defined durable artifact bundle; no invented runtime output shape.
+    representation: value
+inputs:
+  request:
+    type: NativeRequest
+outputs:
+  result:
+    type: NativeResult
+    value:
+      ref: steps.native.outputs.result
+operations:
+  native_workflow:
+    inputs:
+      request:
+        type: NativeRequest
+    outputs:
+      result:
+        type: NativeResult
+    execution:
+      mode: specification_only
+      reason: No workflow-skill/v1 host adapter is supplied. Native skill/hook/CLI interfaces exist, but
+        payload materialization, guard evidence, execution effects and receipt translation are not qualified
+        for this format.
+flow:
+  kind: sequence
+  steps:
+  - id: native
+    kind: call
+    operation: native_workflow
+    description: Opaque native workflow boundary; internal ordering, guards and handoffs are retained
+      in abducer.native_contract.
+    arguments:
+      request:
+        ref: inputs.request
+    on_failure: blocked
+policy:
+  effects:
+    filesystem:
+      read:
+      - native_sources
+      - inputs
+      write: []
+    network: []
+    external_write: []
+  authority:
+    allowed:
+    - describe_native_interface
+    forbidden:
+    - execute_scientific_workflow
+    - approve
+    - prove
+    - publish
+    - promote
+  limits:
+    wall_time_seconds: 1800
+    max_operation_calls: 1
+  failure:
+    default: blocked
+    retry:
+      max_attempts: 1
+      retryable_codes: []
+  resume:
+    mode: none
+    require_matching_definition_and_inputs: true
+  claim_ceiling: Interface description only; no proof, scientific validity, runtime qualification, promotion
+    or approval.
+observability:
+  receipts: required
+  artifact_digests: sha256
+  provenance: required
+  events:
+  - workflow_started
+  - step_failed
+  - workflow_completed
+provenance:
+  coverage: interface_only
+  sources:
+  - path: skills/discovery/kb-discovery-cycle/SKILL.md
+    digest: sha256:54a112697017465dab141437d71dfe5161ef872db8c6c9bd0ac4f1762887d957
+  - path: skills/discovery/kb-discovery-cycle/references/prompt-template.md
+    digest: sha256:e12301765e863d0da88b4c32997a67d3cdd1780c5de583df912fe540d0181153
+  - path: skills/discovery/kb-discovery-cycle/references/queue-policy.md
+    digest: sha256:4adea4114f0436976c6a4dc65a15f848e8d3aac344686522ba1137c1244898e8
+  - path: skills/discovery/kb-discovery-cycle/scripts/enqueue_discovery_programmes.py
+    digest: sha256:15ee7d1d5b75b55012840447256ed2187e4729e5d0c2ec4a2b4b736e8667c4a3
+  - path: skills/discovery/kb-discovery-cycle/scripts/enqueue_proof_candidates.py
+    digest: sha256:185bb697df6e6556186a1c8dea95f9a5f3e703e2a80cb480f7ea89086fede045
+  - path: skills/discovery/kb-discovery-cycle/scripts/execute_discovery_branches.py
+    digest: sha256:cef84aec8536b6c586ff9e10052d55d72fca4e47b91f1544e05237dc8d416e54
+  - path: skills/discovery/kb-discovery-cycle/scripts/generate_discovery_branch_synthesis.py
+    digest: sha256:dad0d90a9cf9928f1432d6f8e487fdd0cdfd3d6d48bab9af561fce8f81bbb002
+  - path: skills/discovery/kb-discovery-cycle/scripts/generate_expert_conjectures.py
+    digest: sha256:aeeb3baa2455d8c1c58da8ed44bc5a89a0cc3a8b7192b95522533aad5dce170e
+  - path: agentic/registries/skill_registry.yaml
+    digest: sha256:15076ed8d1bd4c10895060ab485353fe520421c44e1fc6f506508d2d566eacf0
+  - path: pyproject.toml
+    digest: sha256:69325c4805f66033ce7f7e0e68f4a0996913728c6041bb3cee656571693b2f1e
+  - path: uv.lock
+    digest: sha256:a6c77e5d86a93915eeb0f129f80bc8c45d572be387872e3ace7460a3d6ada9ae
+  - path: prism_me/shared/references/codex-control-stack.md
+    digest: sha256:4e8e7a5cdbc0572cf9b0d4ffc4a41c8f4f9c9a304fae3bcee99d8af3553be30e
+  gaps:
+  - No workflow-skill/v1 host adapter is supplied. Native skill/hook/CLI interfaces exist, but payload
+    materialization, guard evidence, execution effects and receipt translation are not qualified for this
+    format.
+  - Native control flow remains opaque; coverage is interface_only, not source-equivalence certification.
+  - One or more native payloads have no exact JSON Schema; object-only types remain explicitly underspecified.
+extensions:
+  abducer.owner:
+    path: skills/discovery/kb-discovery-cycle/SKILL.md
+  abducer.native_identity:
+    id: kb-discovery-cycle
+  abducer.native_contract:
+    source_skill: skills/discovery/kb-discovery-cycle/SKILL.md
+    source_text: "---\nname: kb-discovery-cycle\ndescription: Run the discovery cycle that turns completed\
+      \ reasoning artifacts into a persistent proof queue of concrete prove-or-disprove targets. Use when\
+      \ the user wants to queue the next informal proof tasks, prioritize discovery outputs into a file-backed\
+      \ queue, or prepare theorem-pair-specific claims for later proof work.\n---\n\n# KB Discovery Cycle\n\
+      \n## Conceptual Role\n\nThis skill converts the output of discovery-stage artifacts into a persistent\
+      \ queue of concrete proof targets.\nEach queued item should read as a self-contained conjecture,\
+      \ with the route lemma recorded as the specific step to test.\n\n## When To Use It\n\nUse it after\
+      \ a KB run already produced route-level artifacts such as:\n\n1. `expert-hypothesis-paper.json`\n\
+      2. `search-space-tree.json`\n\nUse it when the user asks to:\n\n1. create or refresh a queue of\
+      \ proof targets;\n2. turn promising directions into explicit prove-or-disprove tasks;\n3. avoid\
+      \ rediscovering the same next-step proof agenda repeatedly.\n\n## Workflow\n\n1. Read the final\
+      \ bridge-first artifacts.\n2. Keep only theorem-pair-specific targets with a clear claim under test.\n\
+      3. State each queued item as a self-contained conjecture rather than an internal route fragment.\n\
+      4. If the bridge object is still only a placeholder, escalate back to non-immediate bridge search\
+      \ before promoting the route.\n5. If the route is shallow, definition-built, fragmented, or representation-limited,\
+      \ run\n   `mathematical-concept-gap-revisitor`, `abstraction-fit-gap-auditor`, and\n   `efficient-representation-requirements-elicitor`\
+      \ before a proof-queue item is promoted.\n6. Preserve the missing route lemma, declared conceptual\
+      \ tension, abstraction-fit verdict,\n   efficient-representation requirements, and supporting obligations\
+      \ as proof context beneath the conjecture.\n7. Materialize the queue in `artifacts/<kb-ref>/proof-queue.json`\
+      \ and `proof-queue.md`.\n8. Preserve prior queue state so completed or blocked items are not recreated\
+      \ as fresh work.\n9. When the queue is locally exhausted, emit `discovery-breakthrough-profile.*`,\
+      \ `discovery-family-prompts.*`,\n   `discovery-pattern-routing.*`, and `discovery-branch-queue.*`\
+      \ so the next discovery pass is routed by breakthrough family and epistemic pattern.\n10. Materialize\
+      \ one dossier per routed discovery branch in `artifacts/<kb-ref>/discovery-branches/` so the search\
+      \ frontier becomes a persistent set of separate discovery briefs rather than only a static routing\
+      \ report.\n11. Execute active routed branches as separate search runs when the user wants discovery\
+      \ to continue beyond routing; persist the resulting execution briefs in `artifacts/<kb-ref>/discovery-branch-executions/`.\n\
+      \nRead [references/queue-policy.md](references/queue-policy.md) for prioritization rules.\nRead\
+      \ [references/prompt-template.md](references/prompt-template.md) when a prompt-led discovery pass\
+      \ is needed before writing queue items.\nUse [../kb-concept-bridge-planner/references/non-immediate-bridge-search.md](../kb-concept-bridge-planner/references/non-immediate-bridge-search.md)\
+      \ when the discovery pass cannot yet name a typed bridge object.\nUse [../kb-discovery-governor/SKILL.md](../kb-discovery-governor/SKILL.md)\
+      \ when the question is no longer \"what is the next route?\" but \"which routes still deserve depth\
+      \ at all?\".\nUse [../kb-discovery-breakthrough-profiler/SKILL.md](../kb-discovery-breakthrough-profiler/SKILL.md)\
+      \ when the frontier is blocked and discovery must first classify the kind of conceptual breakthrough\
+      \ or abstraction required.\nUse [../../evaluation/mathematical-concept-gap-revisitor/SKILL.md](../../evaluation/mathematical-concept-gap-revisitor/SKILL.md),\
+      \ [../../evaluation/abstraction-fit-gap-auditor/SKILL.md](../../evaluation/abstraction-fit-gap-auditor/SKILL.md),\
+      \ and [../../reasoning/efficient-representation-requirements-elicitor/SKILL.md](../../reasoning/efficient-representation-requirements-elicitor/SKILL.md)\
+      \ when a candidate needs conceptual-abstraction revision before queue promotion.\n\n## Guardrails\n\
+      \n- Do not enqueue items that are only topical labels.\n- Do not enqueue routes marked `re-encode-before-retrying`\
+      \ unless the user explicitly asks for them.\n- Prefer claims that can end in either a positive or\
+      \ negative mathematical result.\n- Keep queue items grounded in statement IDs, bridge IDs, invariants,\
+      \ and missing lemmas.\n- Treat under-typed bridge objects as unresolved discovery work, not as mature\
+      \ proof tasks.\n- Do not enqueue representation-limited routes unless the declarative tension,\n\
+      \  abstraction-fit verdict, and efficient-representation requirements are\n  included as visible\
+      \ queue context.\n\n## Deterministic Path\n\nUse `scripts/enqueue_proof_candidates.py`.\nUse `scripts/execute_discovery_branches.py`\
+      \ to consume the currently active discovery branches.\n\nExample:\n\n```text\npython skills/discovery/kb-discovery-cycle/scripts/enqueue_proof_candidates.py\
+      \ --artifacts-dir artifacts/p-vs-np\npython skills/discovery/kb-discovery-cycle/scripts/execute_discovery_branches.py\
+      \ --artifacts-dir artifacts/p-vs-np --limit 4\n```\n\n<!-- ABducer skill-depth contract v1 -->\n\
+      \n## Guardrails\n\n- Novelty is not value; generated hypotheses must carry status labels and disconfirming\
+      \ observations before receiving active attention.\n- Cite KB IDs, dependency node IDs, target packet\
+      \ IDs, artifact paths, validator output, or explicit unknowns for every substantive claim.\n- Keep\
+      \ workflow validity, artifact existence, and mathematical progress as separate statuses.\n\n## Mathematical\
+      \ Invariants\n\n- Mathematical object: candidate bridge, conjecture, entrypoint, proof sketch, route\
+      \ family, or conceptual transformation.\n- Preserved invariants: target commitments, source-grounded\
+      \ definitions, bridge compatibility, and explicit proof obligations.\n- Name broken invariants,\
+      \ edge cases, counterexample classes, or boundary regimes whenever a route changes representation\
+      \ or scope.\n\n## Epistemic Discipline\n\n- Label claims as conjectural, evidence-backed, proof-obligation,\
+      \ blocked, refuted, promoted, quarantined, or watch/archive.\n- Record uncertainty, source limits,\
+      \ disconfirming observations, and demotion triggers before recommending continuation.\n- Treat explicit\
+      \ unknowns as first-class outputs rather than smoothing them into prose.\n\n## Codex Exec Protocol\n\
+      \nFollow `docs/reference/codex-exec-skill-protocol.md` when execution can ground the answer. Run\
+      \ the relevant local script(s), especially `enqueue_discovery_programmes.py, enqueue_proof_candidates.py,\
+      \ execute_discovery_branches.py`; inspect the produced artifacts before interpreting them. After\
+      \ execution, state the mathematical consequence, epistemic status, unresolved obligations, and next\
+      \ action.\n\n## Output Contract\n\nReturn: candidate route, mathematical object, cited source artifacts\
+      \ or unknowns, epistemic status, disconfirming observations, validation requirements, and next action.\
+      \ Include executed commands and produced artifacts when a deterministic run occurs; otherwise state\
+      \ why execution was not appropriate.\n\n## Failure/Demotion\n\nDemote to watch/archive, revision,\
+      \ quarantine, or reject when relevance is low, assumptions shift, source grounding disappears, or\
+      \ a counterexample/boundary regime breaks the route.\n\n## Validation Handoff\n\nEnd by naming the\
+      \ validator, artifact, TODO, proof obligation, or stop condition that should control the next loop.\
+      \ Do not leave shallow deterministic output uninterpreted when generative mathematical or epistemic\
+      \ interpretation is needed.\n"
+  abducer.environment:
+    python: pyproject.toml
+    lock: uv.lock
+    native_controls: .codex/config.toml
+    native_controls_optional: true
+    control_policy: prism_me/shared/references/codex-control-stack.md
+  abducer.execution_boundary:
+    status: specification_only
+    notes: Source inspection only. Effects above deny native execution until a separately reviewed adapter
+      exists.
+# REUSE-IgnoreEnd

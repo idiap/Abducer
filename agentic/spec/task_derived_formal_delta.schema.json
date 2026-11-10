@@ -1,0 +1,90 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://abducer.local/spec/task_derived_formal_delta.schema.json",
+  "title": "Task-derived finite formal consequence",
+  "description": "A strict consequence record derived from a meaning-bound finite countermodel. It is finite local routing evidence, not theorem or physics-value evidence.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "delta_kind", "compilation_digest", "model_identity",
+    "countermodel_result", "counterexample_count", "counterexamples_digest",
+    "formal_carrier", "physical_carrier", "regime", "quantifiers",
+    "selected_relation_ids", "lens_consequences", "changed_theoretical_burden",
+    "falsifier", "correction", "physics_decision_status", "finite_only",
+    "content_digest"
+  ],
+  "$defs": {
+    "text": {"type": "string", "minLength": 1},
+    "id": {"type": "string", "minLength": 1, "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$"},
+    "digest": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
+    "modelIdentity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "model_digest", "witness_digest", "task_relation_binding_digest",
+        "canonical_isomorphism_digest", "formal_projection_digest"
+      ],
+      "properties": {
+        "model_digest": {"$ref": "#/$defs/digest"},
+        "witness_digest": {"$ref": "#/$defs/digest"},
+        "task_relation_binding_digest": {"$ref": "#/$defs/digest"},
+        "canonical_isomorphism_digest": {"$ref": "#/$defs/digest"},
+        "formal_projection_digest": {"$ref": "#/$defs/digest"}
+      }
+    },
+    "quantifier": {
+      "type": "object", "additionalProperties": false,
+      "required": ["quantifier_id", "statement", "origin"],
+      "properties": {
+        "quantifier_id": {"$ref": "#/$defs/id"},
+        "statement": {"$ref": "#/$defs/text"},
+        "origin": {"enum": ["declared", "finite_translation_boundary"]}
+      }
+    }
+  },
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "delta_kind": {
+      "enum": [
+        "task_relation_finite_categorical_obstruction",
+        "task_relation_finite_hott_obstruction"
+      ]
+    },
+    "compilation_digest": {"$ref": "#/$defs/digest"},
+    "model_identity": {"$ref": "#/$defs/modelIdentity"},
+    "countermodel_result": {"enum": ["noncommuting", "noncoherent"]},
+    "counterexample_count": {"type": "integer", "minimum": 1},
+    "counterexamples_digest": {"$ref": "#/$defs/digest"},
+    "formal_carrier": {"$ref": "#/$defs/text"},
+    "physical_carrier": {"anyOf": [{"$ref": "#/$defs/text"}, {"type": "null"}]},
+    "regime": {
+      "type": "object", "additionalProperties": false,
+      "required": ["statement", "origin"],
+      "properties": {
+        "statement": {"$ref": "#/$defs/text"},
+        "origin": {"enum": ["declared", "pressure_boundary"]}
+      }
+    },
+    "quantifiers": {
+      "type": "array", "minItems": 1, "items": {"$ref": "#/$defs/quantifier"}
+    },
+    "selected_relation_ids": {
+      "type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/id"}
+    },
+    "lens_consequences": {
+      "type": "array",
+      "items": {"$ref": "task_relation_compilation.schema.json#/$defs/consequence"}
+    },
+    "changed_theoretical_burden": {"$ref": "#/$defs/text"},
+    "falsifier": {"$ref": "#/$defs/text"},
+    "correction": {"$ref": "#/$defs/text"},
+    "physics_decision_status": {
+      "enum": [
+        "decision_changed", "quarantined_non_physics", "quarantined_lens_inapplicable",
+        "quarantined_missing_decision_declaration", "quarantined_no_decision_change"
+      ]
+    },
+    "finite_only": {"const": true},
+    "content_digest": {"$ref": "#/$defs/digest"}
+  }
+}

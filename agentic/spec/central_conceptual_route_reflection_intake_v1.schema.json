@@ -1,0 +1,277 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://abducer.local/schemas/central_conceptual_route_reflection_intake_v1.schema.json",
+  "title": "Descendant reflective intake for central conceptual routes",
+  "description": "A five-route, set-valued accounting of how one detached-valid central conceptual reflection request was handled by operator-generated systems and reflection rounds in exactly generation N+1. The intake records causal use and preserved negative knowledge only; it grants no preference, truth, proof, schedule, experiment, evidence-relation, merit, or physics authority.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "artifact_kind",
+    "intake_id",
+    "target_id",
+    "run_id",
+    "source_theory_generation",
+    "descendant_theory_generation",
+    "source_request",
+    "source_request_id",
+    "source_request_digest",
+    "selection_is_set_valued_local_input",
+    "source_selected_route_ids",
+    "route_accounts",
+    "changed_route_ids",
+    "unresolved_route_ids",
+    "negative_knowledge_route_ids",
+    "direct_authority",
+    "authority_nulls",
+    "authority_boundary",
+    "content_digest"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "artifact_kind": {
+      "const": "central_conceptual_route_reflection_intake"
+    },
+    "intake_id": {
+      "$ref": "#/$defs/id"
+    },
+    "target_id": {
+      "$ref": "#/$defs/id"
+    },
+    "run_id": {
+      "$ref": "#/$defs/id"
+    },
+    "source_theory_generation": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "descendant_theory_generation": {
+      "type": "integer",
+      "minimum": 2
+    },
+    "source_request": {
+      "$ref": "./central_conceptual_route_reflection_request_v1.schema.json"
+    },
+    "source_request_id": {
+      "$ref": "#/$defs/id"
+    },
+    "source_request_digest": {
+      "$ref": "#/$defs/digest"
+    },
+    "selection_is_set_valued_local_input": {
+      "const": true
+    },
+    "source_selected_route_ids": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/route"
+      }
+    },
+    "route_accounts": {
+      "type": "array",
+      "minItems": 5,
+      "maxItems": 5,
+      "items": {
+        "$ref": "#/$defs/routeAccount"
+      }
+    },
+    "changed_route_ids": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/route"
+      }
+    },
+    "unresolved_route_ids": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/route"
+      }
+    },
+    "negative_knowledge_route_ids": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/route"
+      }
+    },
+    "direct_authority": {
+      "$ref": "#/$defs/directAuthority"
+    },
+    "authority_nulls": {
+      "$ref": "#/$defs/authorityNulls"
+    },
+    "authority_boundary": {
+      "type": "string",
+      "minLength": 240
+    },
+    "content_digest": {
+      "$ref": "#/$defs/digest"
+    }
+  },
+  "$defs": {
+    "id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,199}$"
+    },
+    "digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "route": {
+      "enum": [
+        "categorical",
+        "hott",
+        "category_then_hott",
+        "hott_then_category",
+        "capable_nonformal"
+      ]
+    },
+    "routeAccount": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "route_id",
+        "source_observation",
+        "selected_candidate_binding",
+        "descendant_disposition",
+        "referenced_system_ids",
+        "referenced_round_ids",
+        "changed_paths",
+        "reflection_note"
+      ],
+      "properties": {
+        "route_id": {
+          "$ref": "#/$defs/route"
+        },
+        "source_observation": {
+          "$ref": "./central_conceptual_route_reflection_request_v1.schema.json#/$defs/routeObservation"
+        },
+        "selected_candidate_binding": {
+          "oneOf": [
+            {
+              "$ref": "./central_conceptual_route_reflection_request_v1.schema.json#/$defs/selectedCandidate"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "descendant_disposition": {
+          "enum": [
+            "incorporated",
+            "mutated",
+            "synthesized",
+            "demoted",
+            "unresolved",
+            "no_change",
+            "preserved_unselected_candidate",
+            "preserved_negative_knowledge"
+          ]
+        },
+        "referenced_system_ids": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/id"
+          }
+        },
+        "referenced_round_ids": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/id"
+          }
+        },
+        "changed_paths": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "pattern": "^/(conceptual_systems|reflection_rounds)/(0|[1-9][0-9]*)(/([^~/]|~[01])*)*$"
+          }
+        },
+        "reflection_note": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "directAuthority": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "preference_authorized",
+        "truth_authorized",
+        "proof_authorized",
+        "schedule_authorized",
+        "experiment_authorized",
+        "evidence_relation_authorized"
+      ],
+      "properties": {
+        "preference_authorized": {
+          "const": false
+        },
+        "truth_authorized": {
+          "const": false
+        },
+        "proof_authorized": {
+          "const": false
+        },
+        "schedule_authorized": {
+          "const": false
+        },
+        "experiment_authorized": {
+          "const": false
+        },
+        "evidence_relation_authorized": {
+          "const": false
+        }
+      }
+    },
+    "authorityNulls": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "preference_authority",
+        "truth_authority",
+        "proof_authority",
+        "schedule_authority",
+        "experiment_authority",
+        "evidence_relation_authority",
+        "conceptual_merit_authority",
+        "physics_value_authority"
+      ],
+      "properties": {
+        "preference_authority": {
+          "type": "null"
+        },
+        "truth_authority": {
+          "type": "null"
+        },
+        "proof_authority": {
+          "type": "null"
+        },
+        "schedule_authority": {
+          "type": "null"
+        },
+        "experiment_authority": {
+          "type": "null"
+        },
+        "evidence_relation_authority": {
+          "type": "null"
+        },
+        "conceptual_merit_authority": {
+          "type": "null"
+        },
+        "physics_value_authority": {
+          "type": "null"
+        }
+      }
+    }
+  }
+}

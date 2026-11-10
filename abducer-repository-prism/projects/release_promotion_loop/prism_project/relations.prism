@@ -1,0 +1,11 @@
+# Relation layer for release_promotion_loop.
+# Owns edge/certificate contracts only; builders belong to future materialization.
+
+type ReleasePromotionDependency[SourceValue, TargetValue]:
+    source: SourceValue
+    target: Generated[TargetValue]
+
+relation ReleaseProposalEnablesPromotionDisposition[SourceValue, TargetValue](
+    source: SourceValue,
+    target: Generated[TargetValue],
+) -> ReleasePromotionDependency[SourceValue, TargetValue]

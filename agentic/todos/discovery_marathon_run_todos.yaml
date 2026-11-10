@@ -1,0 +1,837 @@
+[
+  {
+    "id": "DMR-001",
+    "type": "workflow_todo",
+    "phase": "marathon-state-contract",
+    "owner": "agentic/spec",
+    "priority": "critical",
+    "risk_class": "one-shot-artifact-mistaken-for-long-horizon-discovery",
+    "title": "Define the persistent discovery marathon state contract",
+    "intent": "Give Abducer a durable state object for multi-hour or multi-day discovery runs rather than treating a generated report as a long stretch.",
+    "conceptual_model": "A real long stretch is a research process with memory, branch history, mathematical learning, failed attempts, and checkpointed control decisions. The run object should preserve target identity, wall-clock/cycle budgets, active branches, paused/quarantined branches, accumulated lemmas, failed subgoals, and validator history across interruptions.",
+    "use_skills": [
+      "long-horizon-route-portfolio-manager",
+      "looper-target-goal-enricher",
+      "epistemic-status-ledger",
+      "abducer-obligation-gatekeeper"
+    ],
+    "implementation_steps": [
+      "Create `agentic/spec/discovery_marathon_run.schema.json` with run_id, target_id, target_object_contract, created_utc, updated_utc, wall_clock_budget_minutes, cycle_budget, cycle_minutes, status, active_branch_ids, branch_registry, checkpoint_policy, validator_history, and artifact_lineage fields.",
+      "Create `agentic/spec/discovery_marathon_cycle.schema.json` with cycle_id, run_id, cycle_index, started_utc, completed_utc, selected_branch_ids, inputs, generated_outputs, mathematical_learning, failed_attempts, subgoal_control_updates, machinery_updates, validator_results, and next_queue fields.",
+      "Create `agentic/spec/discovery_branch_state.schema.json` with branch_id, title, target_commitments, machinery_role, controlled_interface, local_memory_path, status, attempt_count, last_new_learning_utc, promotion_signal, pivot_signal, quarantine_signal, and evidence_artifacts fields.",
+      "Store active runs under `agentic/runs/discovery_marathons/<run_id>/run_state.json` and immutable cycle snapshots under `agentic/runs/discovery_marathons/<run_id>/cycles/cycle-XXXX.json`."
+    ],
+    "validation_commands": [
+      "python agentic/scripts/validate_discovery_marathon_state.py",
+      "python agentic/scripts/validate_todos.py"
+    ],
+    "required_artifact": [
+      "agentic/spec/discovery_marathon_run.schema.json",
+      "agentic/spec/discovery_marathon_cycle.schema.json",
+      "agentic/spec/discovery_branch_state.schema.json",
+      "agentic/runs/discovery_marathons/README.md"
+    ],
+    "acceptance_criteria": [
+      "A marathon run can be resumed from disk without relying on implicit conversation state.",
+      "Every branch has local memory and a controlled interface tied to the active target-object contract.",
+      "Every cycle records what changed mathematically, what failed, and what validator or review decided next.",
+      "The schema distinguishes run status, branch status, and theorem/proof status."
+    ],
+    "blocked_by": [],
+    "evidence": [
+      "file:agentic/todos/discovery_marathon_run_todos.yaml",
+      "cmd:python agentic/scripts/validate_todos.py"
+    ],
+    "review_date": "2026-08-09",
+    "failure_modes": [
+      "The run state becomes a latest-report pointer rather than durable research memory.",
+      "Branches are only labels and do not carry local mathematical history.",
+      "Interrupted runs cannot resume safely because cycle state is not checkpointed."
+    ],
+    "exit_criteria": [
+      "A discovery marathon has a durable, inspectable, target-linked state object that can survive interruption and resume."
+    ],
+    "status": "resolved"
+  },
+  {
+    "id": "DMR-002",
+    "type": "workflow_todo",
+    "phase": "branch-registry-bootstrap",
+    "owner": "agentic/scripts",
+    "priority": "critical",
+    "risk_class": "unbounded-route-sprawl",
+    "title": "Bootstrap a target-specific discovery branch registry",
+    "intent": "Initialize a marathon run from the active hypothesis map, machinery portfolio, abstraction chain, and discovery stretch programs.",
+    "conceptual_model": "A marathon should not start from a blank prompt. It should inherit Abducer's current target-controlled branch structure and convert each high-value interface into a persistent branch with local memory, status, budgets, and falsifiers.",
+    "use_skills": [
+      "abducer-mediation-candidate-generator",
+      "long-horizon-route-portfolio-manager",
+      "abducer-conceptual-pressure-formalizer",
+      "abducer-failure-signal-cartographer"
+    ],
+    "implementation_steps": [
+      "Create `agentic/scripts/init_discovery_marathon.py --target <target> --hours <n> --cycle-minutes <n>`.",
+      "Seed branches from `agentic/reports/discovery_stretch/latest.json`, `artifacts/hegelian/hypothesis_exploration_map.json`, and `agentic/reports/abstraction_chains/latest.json`.",
+      "For Yang-Mills, initialize the six existing branch families: reflection-positivity closedness, nontriviality witness, observable density, Laplace support, cutoff-uniform mass scale, and no-gap reductio carrier.",
+      "Write one branch local-memory file per branch under `agentic/runs/discovery_marathons/<run_id>/branches/<branch_id>.md` with initial hypothesis, controlled interface, equations, falsifiers, promotion signal, pivot signal, and first next experiments."
+    ],
+    "validation_commands": [
+      "python agentic/scripts/init_discovery_marathon.py --target yang-mills-existence-and-mass-gap-target --hours 1 --cycle-minutes 20 --dry-run",
+      "python agentic/scripts/validate_discovery_marathon_state.py"
+    ],
+    "required_artifact": [
+      "agentic/scripts/init_discovery_marathon.py",
+      "agentic/runs/discovery_marathons/<run_id>/run_state.json",
+      "agentic/runs/discovery_marathons/<run_id>/branches/"
+    ],
+    "acceptance_criteria": [
+      "A new marathon run has branch state for each high-value discovery interface.",
+      "Every branch records equations, falsifiers, target commitments, controlled interface, and machinery role.",
+      "The initializer can run in dry-run mode without mutating active state.",
+      "The initializer refuses to create branches if the active target workspace has stale critical findings."
+    ],
+    "blocked_by": [
+      "DMR-001"
+    ],
+    "evidence": [
+      "file:agentic/scripts/init_discovery_marathon.py",
+      "cmd:python agentic/scripts/validate_discovery_marathon_state.py"
+    ],
+    "review_date": "2026-08-09",
+    "failure_modes": [
+      "The marathon starts from generic route names instead of current target-specific interfaces.",
+      "Branches lack falsifiers and therefore cannot teach the loop when they fail.",
+      "Initialization silently overwrites an active run."
+    ],
+    "exit_criteria": [
+      "A target-specific branch registry can be created, inspected, resumed, and validated before any long-running work starts."
+    ],
+    "status": "resolved"
+  },
+  {
+    "id": "DMR-003",
+    "type": "workflow_todo",
+    "phase": "marathon-runner",
+    "owner": "agentic/scripts",
+    "priority": "critical",
+    "risk_class": "manual-loop-without-real-duration",
+    "title": "Implement the long-running discovery marathon runner",
+    "intent": "Run Abducer discovery for real wall-clock duration with cycle-level checkpointing, branch selection, validation, and safe resumption.",
+    "conceptual_model": "A long stretch should be a controlled research engine. It must allocate time to branches, perform substantive generative exploration, save checkpoints after each cycle, validate outputs, and stop or pause cleanly under budget, failure, or user interruption.",
+    "use_skills": [
+      "work",
+      "kb-orchestrator",
+      "kb-abduce",
+      "kb-deduce",
+      "long-horizon-route-portfolio-manager"
+    ],
+    "implementation_steps": [
+      "Create `agentic/scripts/run_discovery_marathon.py` with CLI options `--run-id`, `--target`, `--hours`, `--cycle-minutes`, `--max-cycles`, `--max-active-branches`, `--resume`, `--stop-after-cycle`, and `--dry-run`.",
+      "At the start of each cycle, select 1-3 branches using target relevance, branch aging, last_new_learning_utc, proof debt, and portfolio balance.",
+      "Before branch exploration, refresh or validate the existing target-navigation-control-plane artifacts: current target, dependency graph, hypothesis exploration map, machinery selection packets, abstraction chain, and long-horizon probe.",
+      "During each cycle, route work through the existing conceptual-obstruction-refinement workflow rather than introducing a parallel discovery stack.",
+      "Execute a cycle by calling a branch exploration engine that produces candidate lemmas, attempted derivations, counterexamples/falsifiers, evidence requests, and route-control updates.",
+      "Checkpoint run_state before and after each cycle and write a cycle JSON plus Markdown report.",
+      "Handle SIGINT or command failure by writing a paused state with the last completed cycle and resumable next queue."
+    ],
+    "validation_commands": [
+      "python agentic/scripts/run_discovery_marathon.py --target yang-mills-existence-and-mass-gap-target --max-cycles 1 --cycle-minutes 1 --dry-run",
+      "python agentic/scripts/validate_discovery_marathon_state.py"
+    ],
+    "required_artifact": [
+      "agentic/scripts/run_discovery_marathon.py",
+      "agentic/runs/discovery_marathons/<run_id>/cycles/cycle-0001.json",
+      "agentic/runs/discovery_marathons/<run_id>/cycles/cycle-0001.md"
+    ],
+    "acceptance_criteria": [
+      "The runner can execute at least one cycle and write durable cycle artifacts.",
+      "The runner can resume an interrupted or paused run without duplicating completed cycles.",
+      "Branch selection is explicit and recorded with reasons.",
+      "The runner records which existing workflows and skills were invoked for every cycle.",
+      "The runner never marks mathematical success from elapsed time or report generation alone."
+    ],
+    "blocked_by": [
+      "DMR-001",
+      "DMR-002"
+    ],
+    "evidence": [
+      "file:agentic/scripts/run_discovery_marathon.py",
+      "cmd:python agentic/scripts/run_discovery_marathon.py --target yang-mills-existence-and-mass-gap-target --max-cycles 1 --cycle-minutes 1 --dry-run"
+    ],
+    "review_date": "2026-08-09",
+    "failure_modes": [
+      "The runner loops quickly over report regeneration instead of doing branch-local exploration.",
+      "The runner bypasses target navigation, hypothesis exploration, or Looper gate artifacts and becomes an insular project.",
+      "A crash loses the current research state.",
+      "Branch selection repeatedly starves hard but essential branches."
+    ],
+    "exit_criteria": [
+      "A real multi-cycle discovery run can execute, pause, resume, and leave an inspectable artifact trail."
+    ],
+    "status": "resolved"
+  },
+  {
+    "id": "DMR-004",
+    "type": "workflow_todo",
+    "phase": "branch-exploration-engine",
+    "owner": "agentic/scripts",
+    "priority": "critical",
+    "risk_class": "shallow-cycle-output",
+    "title": "Build the branch-local generative exploration engine",
+    "intent": "Make each marathon cycle produce substantive mathematical content for selected branches instead of boilerplate status updates.",
+    "conceptual_model": "Discovery at scale requires branch-local work: trying derivations, sharpening definitions, testing falsifiers, generating candidate lemmas, and explaining what each failed attempt taught. The output should be content-rich enough that later cycles can build on it.",
+    "use_skills": [
+      "kb-abduce",
+      "kb-deduce",
+      "kb-contradiction-strategist",
+      "abducer-obligation-gatekeeper",
+      "entailment-gap-auditor"
+    ],
+    "implementation_steps": [
+      "Create `agentic/scripts/run_branch_exploration_cycle.py` or an internal module consumed by `run_discovery_marathon.py`.",
+      "For each selected branch, generate at least one candidate lemma statement, one attempted derivation outline, one falsifier or counter-scenario, one dependency update, and one next experiment.",
+      "For each branch, select skills from an explicit dispatch matrix: abduction for missing-premise generation, deduction for consequences, contradiction strategist for negated worlds, obligation gatekeeper for proof debt, entailment auditor for invalid transfers, evidence planner for empirical/lattice clues, and report renderer for human-facing summaries.",
+      "Write a `skill_dispatch_trace` for each branch cycle with invoked_skills, skipped_skills_with_reason, queued_conditional_skills, input_artifacts, output_artifacts, and validation_handoff.",
+      "Require equations to include definitions and validity conditions before entering branch memory.",
+      "Classify outputs as candidate_lemma, failed_attempt, sharpened_definition, falsifier, evidence_request, proof_obligation, or branch_control_update.",
+      "Append outputs to the branch local-memory file and cycle JSON; do not overwrite prior branch memory."
+    ],
+    "validation_commands": [
+      "python agentic/scripts/run_branch_exploration_cycle.py --fixture tests/fixtures/discovery_marathon/yang_mills_branch_fixture.json",
+      "python agentic/scripts/validate_discovery_marathon_cycle.py"
+    ],
+    "required_artifact": [
+      "agentic/scripts/run_branch_exploration_cycle.py",
+      "agentic/spec/discovery_marathon_branch_output.schema.json",
+      "tests/fixtures/discovery_marathon/yang_mills_branch_fixture.json"
+    ],
+    "acceptance_criteria": [
+      "Each branch cycle produces mathematical content beyond a summary paragraph.",
+      "Each branch cycle records skill dispatch decisions and uses all phase-relevant existing skills unless a reason for skipping is recorded.",
+      "Failed derivations are recorded with what they taught and what they rule out.",
+      "Every equation states definitions, assumptions, and validity conditions.",
+      "Outputs are typed so validators and synthesis steps can consume them."
+    ],
+    "blocked_by": [
+      "DMR-001",
+      "DMR-003"
+    ],
+    "evidence": [
+      "file:agentic/scripts/run_branch_exploration_cycle.py",
+      "cmd:python agentic/scripts/validate_discovery_marathon_cycle.py"
+    ],
+    "review_date": "2026-08-09",
+    "failure_modes": [
+      "The cycle only restates the branch hypothesis.",
+      "The branch cycle uses a monolithic generator and drops existing skill responsibilities.",
+      "Equations appear without assumptions or target-object link.",
+      "Failed attempts are discarded instead of becoming future learning."
+    ],
+    "exit_criteria": [
+      "A selected branch can accumulate reusable mathematical memory across many cycles."
+    ],
+    "status": "resolved"
+  },
+  {
+    "id": "DMR-005",
+    "type": "workflow_todo",
+    "phase": "cycle-validation",
+    "owner": "agentic/scripts",
+    "priority": "critical",
+    "risk_class": "unvalidated-generative-research-log",
+    "title": "Validate marathon cycle outputs for mathematical and epistemic depth",
+    "intent": "Prevent long runs from accumulating fluent but low-value generated notes.",
+    "conceptual_model": "A marathon run will create many artifacts. Validators must reject cycles that lack target-object links, controlled interfaces, equations with assumptions, falsifiers, learning from failure, or branch-control updates.",
+    "use_skills": [
+      "abducer-obligation-gatekeeper",
+      "entailment-gap-auditor",
+      "review-reasoner-epistemologist",
+      "review-reasoner-mathematician"
+    ],
+    "implementation_steps": [
+      "Create `agentic/scripts/validate_discovery_marathon_cycle.py` to validate a cycle JSON against schema and content-quality criteria.",
+      "Require every selected branch to have at least one nontrivial output and one control update.",
+      "Reject cycles where candidate lemmas lack assumptions, definitions, equations, or falsifiers.",
+      "Reject cycles that contain stale generic phrases such as `factor the opaque obligation` or method-name-only explanations.",
+      "Require a `skill_dispatch_trace` for every selected branch and fail cycles where phase-relevant skills were neither invoked nor explicitly skipped with a mathematical reason.",
+      "Validate that the cycle consumed current workflow artifacts from target navigation, hypothesis exploration, machinery selection, long-horizon probe, and branch memory.",
+      "Require every failed attempt to state what was learned and whether it triggers persist, adapt, backtrack, pivot, quarantine, or stop."
+    ],
+    "validation_commands": [
+      "python agentic/scripts/validate_discovery_marathon_cycle.py agentic/runs/discovery_marathons/<run_id>/cycles/cycle-0001.json",
+      "python agentic/scripts/validate_discovery_marathon_state.py"
+    ],
+    "required_artifact": [
+      "agentic/scripts/validate_discovery_marathon_cycle.py",
+      "tests/fixtures/discovery_marathon/valid_cycle.json",
+      "tests/fixtures/discovery_marathon/invalid_shallow_cycle.json"
+    ],
+    "acceptance_criteria": [
+      "A shallow generated cycle fixture fails validation.",
+      "A content-rich Yang-Mills branch cycle fixture passes validation.",
+      "A fixture with missing or shallow skill dispatch trace fails validation.",
+      "Validators check both deterministic shape and generative mathematical quality signals.",
+      "Cycle validation results are written back into run_state.validator_history."
+    ],
+    "blocked_by": [
+      "DMR-001",
+      "DMR-004"
+    ],
+    "evidence": [
+      "file:agentic/scripts/validate_discovery_marathon_cycle.py",
+      "cmd:python agentic/scripts/validate_discovery_marathon_cycle.py tests/fixtures/discovery_marathon/valid_cycle.json"
+    ],
+    "review_date": "2026-08-09",
+    "failure_modes": [
+      "Validation checks only field presence and lets generic content pass.",
+      "Generative branch notes are trusted without falsifiers.",
+      "Cycle outputs are accepted even though they bypass existing Abducer workflow artifacts.",
+      "Validator failures do not affect branch status or next-cycle selection."
+    ],
+    "exit_criteria": [
+      "Every marathon cycle is either validated as mathematically useful or rejected with repair instructions."
+    ],
+    "status": "resolved"
+  },
+  {
+    "id": "DMR-006",
+    "type": "workflow_todo",
+    "phase": "branch-control-and-aging",
+    "owner": "agentic/scripts",
+    "priority": "high",
+    "risk_class": "stale-branch-persistence",
+    "title": "Add branch aging, starvation, and stale-learning controls",
+    "intent": "Ensure marathon runs do not repeatedly spend time on branches that fail to produce new mathematical learning.",
+    "conceptual_model": "A long-running system needs a notion of branch aging. A hard branch can persist, but only if attempts produce sharper premises, better counter-scenarios, clearer definitions, or useful negative results. A branch that repeats itself should backtrack, pivot, quarantine, or stop.",
+    "use_skills": [
+      "long-horizon-route-portfolio-manager",
+      "abducer-refinement-route-ranker",
+      "counterfactual-route-prober",
+      "epistemic-status-ledger"
+    ],
+    "implementation_steps": [
+      "Extend branch state with attempt_count, consecutive_low_learning_cycles, last_new_learning_utc, starvation_count, and branch_priority.",
+      "Add a branch scheduler that balances essential target coverage, aging, role diversity, and recent learning yield.",
+      "Define low-learning signals: repeated same blocker, no new definitions, no falsifier refinement, no dependency update, and no sharper next experiment.",
+      "Force branch-control updates when consecutive_low_learning_cycles crosses a configured threshold.",
+      "Record starvation warnings when a target-essential branch is not selected for too many cycles."
+    ],
+    "validation_commands": [
+      "python agentic/scripts/validate_discovery_marathon_state.py",
+      "python -m unittest tests.discovery.test_discovery_marathon_scheduler -q"
+    ],
+    "required_artifact": [
+      "agentic/scripts/discovery_marathon_scheduler.py",
+      "tests/discovery/test_discovery_marathon_scheduler.py"
+    ],
+    "acceptance_criteria": [
+      "The scheduler can explain why each branch was selected or skipped.",
+      "Repeated low-learning cycles force a branch-control decision.",
+      "Essential branches cannot be starved silently.",
+      "The scheduler preserves machinery-role diversity across construction, transfer, witness, obstruction, and validation."
+    ],
+    "blocked_by": [
+      "DMR-001",
+      "DMR-003",
+      "DMR-005"
+    ],
+    "evidence": [
+      "file:agentic/scripts/discovery_marathon_scheduler.py",
+      "cmd:python -m unittest tests.discovery.test_discovery_marathon_scheduler -q"
+    ],
+    "review_date": "2026-08-09",
+    "failure_modes": [
+      "The scheduler always selects the top-ranked route and ignores aging.",
+      "Hard essential branches are starved because they produce fewer easy outputs.",
+      "A branch repeats the same blocker across cycles without demotion."
+    ],
+    "exit_criteria": [
+      "Long runs can explain branch persistence, adaptation, backtracking, pivoting, quarantine, and stop in terms of accumulated learning."
+    ],
+    "status": "resolved"
+  },
+  {
+    "id": "DMR-007",
+    "type": "report_todo",
+    "phase": "cycle-and-run-reporting",
+    "owner": "agentic/scripts",
+    "priority": "high",
+    "risk_class": "long-run-uninspectable",
+    "title": "Generate cycle reports and cumulative marathon synthesis reports",
+    "intent": "Make long discovery runs inspectable at cycle, branch, and run levels.",
+    "conceptual_model": "A sustained research process needs readable intermediate reports. Each cycle report should say what was tried, what failed, what changed, which branches moved, and what the next cycle should do. The cumulative report should identify real mathematical learning over time.",
+    "use_skills": [
+      "show-reasoning",
+      "reasoning-report-renderer",
+      "kb-explain",
+      "epistemic-status-ledger"
+    ],
+    "implementation_steps": [
+      "Create `agentic/scripts/build_discovery_marathon_report.py` to generate `latest.json`, `latest.md`, and per-run `summary.md` reports.",
+      "For every cycle, render selected branches, attempted derivations, candidate lemmas, failed attempts, learning, validator results, and next queue.",
+      "For cumulative reports, group learning by branch and by machinery role.",
+      "Add a `What Actually Changed` section that compares current branch state against the initial branch registry.",
+      "Add a `No Breakthrough Yet` explanation when no major milestone is reached, so absence of proof is communicated honestly."
+    ],
+    "validation_commands": [
+      "python agentic/scripts/build_discovery_marathon_report.py --run-id <run_id>",
+      "python agentic/scripts/validate_discovery_marathon_report.py"
+    ],
+    "required_artifact": [
+      "agentic/scripts/build_discovery_marathon_report.py",
+      "agentic/scripts/validate_discovery_marathon_report.py",
+      "agentic/reports/discovery_marathon/latest.json",
+      "agentic/reports/discovery_marathon/latest.md"
+    ],
+    "acceptance_criteria": [
+      "Reports distinguish activity volume from mathematical progress.",
+      "Each cycle report names concrete mathematical learning and unresolved debt.",
+      "Cumulative reports show branch evolution and stale branches.",
+      "Reports cite underlying cycle artifacts and validator results."
+    ],
+    "blocked_by": [
+      "DMR-003",
+      "DMR-004",
+      "DMR-005"
+    ],
+    "evidence": [
+      "file:agentic/scripts/build_discovery_marathon_report.py",
+      "cmd:python agentic/scripts/validate_discovery_marathon_report.py"
+    ],
+    "review_date": "2026-08-09",
+    "failure_modes": [
+      "Reports become motivational summaries rather than evidence-backed research logs.",
+      "The cumulative report cannot tell whether the run learned anything new.",
+      "Failed branches disappear from the narrative."
+    ],
+    "exit_criteria": [
+      "A user can inspect a long run and understand exactly what changed mathematically over many cycles."
+    ],
+    "status": "resolved"
+  },
+  {
+    "id": "DMR-008",
+    "type": "report_todo",
+    "phase": "reasoning-monitor-integration",
+    "owner": "agentic/scripts",
+    "priority": "high",
+    "risk_class": "marathon-hidden-from-monitor",
+    "title": "Integrate active marathon state into the dynamic reasoning monitor",
+    "intent": "Expose long-running discovery state in the HTML monitor so branch evolution can be watched without opening raw JSON files.",
+    "conceptual_model": "The monitor should show the marathon as an evolving research process: active run, current cycle, branch aging, recent learning, stale branches, promoted lemmas, pivot/quarantine events, and next queue.",
+    "use_skills": [
+      "show-reasoning",
+      "reasoning-report-renderer",
+      "long-horizon-route-portfolio-manager"
+    ],
+    "implementation_steps": [
+      "Add a `discovery_marathon` section to `agentic/reports/reasoning_monitor/latest.json`.",
+      "Add a `Marathon` tab to `agentic/scripts/generate_reasoning_monitor_html.py`.",
+      "Render active run status, cycle count, elapsed/budget usage, branch cards, recent learning, stale branches, validator history, and next run queue.",
+      "Add filters for branch status and machinery role.",
+      "Ensure the monitor links to cycle reports and branch local-memory files."
+    ],
+    "validation_commands": [
+      "python agentic/scripts/build_reasoning_monitor_packet.py",
+      "python agentic/scripts/generate_reasoning_monitor_html.py",
+      "python agentic/scripts/validate_reasoning_monitor.py",
+      "python -m unittest tests.reporting.test_reasoning_monitor_html -q"
+    ],
+    "required_artifact": [
+      "agentic/scripts/build_reasoning_monitor_packet.py",
+      "agentic/scripts/generate_reasoning_monitor_html.py",
+      "agentic/reports/reasoning_monitor/latest.html",
+      "tests/reporting/test_reasoning_monitor_html.py"
+    ],
+    "acceptance_criteria": [
+      "The monitor displays active marathon state when a run exists.",
+      "Branch aging, stale-learning warnings, and next queue are visible.",
+      "The monitor distinguishes marathon progress from proof completion.",
+      "HTML remains self-contained and validator-checked."
+    ],
+    "blocked_by": [
+      "DMR-001",
+      "DMR-007"
+    ],
+    "evidence": [
+      "file:agentic/reports/reasoning_monitor/latest.html",
+      "cmd:python agentic/scripts/validate_reasoning_monitor.py"
+    ],
+    "review_date": "2026-08-09",
+    "failure_modes": [
+      "The monitor only shows latest generated reports and hides branch history.",
+      "Marathon status is displayed without cycle artifacts.",
+      "The UI suggests a theorem breakthrough when only exploration progress occurred."
+    ],
+    "exit_criteria": [
+      "The dynamic monitor can support watching a real multi-hour discovery run."
+    ],
+    "status": "resolved"
+  },
+  {
+    "id": "DMR-009",
+    "type": "workflow_todo",
+    "phase": "periodic-deep-review",
+    "owner": "agentic/scripts",
+    "priority": "high",
+    "risk_class": "long-run-without-reflective-compression",
+    "title": "Add periodic multi-lens deep review and synthesis",
+    "intent": "Periodically compress many cycle outputs into higher-level mathematical and epistemic judgments.",
+    "conceptual_model": "Long runs generate too much local detail. Every N cycles, the system needs a reflective synthesis: mathematician review, epistemologist review, physics explanation review, proof-safety review, and discovery-system review. This is where route pivots and breakthrough candidates should be judged.",
+    "use_skills": [
+      "review-reasoner-mathematician",
+      "review-reasoner-epistemologist",
+      "review-reasoner-discovery-scientist",
+      "kb-end-to-end-proof-critic",
+      "kb-discovery-breakthrough-profiler"
+    ],
+    "implementation_steps": [
+      "Create `agentic/scripts/run_marathon_deep_review.py --run-id <run_id> --every-cycles <n>`.",
+      "Review accumulated branch memory and cycle reports for new definitions, candidate lemmas, failed assumptions, stale branches, and possible breakthroughs.",
+      "Emit `agentic/runs/discovery_marathons/<run_id>/reviews/review-XXXX.json` and `.md` with findings ordered by severity and promise.",
+      "Require each review finding to cite cycle IDs and branch IDs.",
+      "Update run_state with review recommendations: continue, adapt, backtrack, pivot, quarantine, promote-to-milestone-candidate, or stop."
+    ],
+    "validation_commands": [
+      "python agentic/scripts/run_marathon_deep_review.py --run-id <run_id> --dry-run",
+      "python agentic/scripts/validate_marathon_deep_review.py"
+    ],
+    "required_artifact": [
+      "agentic/scripts/run_marathon_deep_review.py",
+      "agentic/scripts/validate_marathon_deep_review.py",
+      "agentic/runs/discovery_marathons/<run_id>/reviews/"
+    ],
+    "acceptance_criteria": [
+      "Deep reviews cite concrete cycle and branch evidence.",
+      "Reviews distinguish mathematical promise from workflow activity.",
+      "Reviews can recommend branch promotion, pivot, quarantine, or stop.",
+      "Review recommendations update run_state and affect future branch selection."
+    ],
+    "blocked_by": [
+      "DMR-003",
+      "DMR-007"
+    ],
+    "evidence": [
+      "file:agentic/scripts/run_marathon_deep_review.py",
+      "cmd:python agentic/scripts/validate_marathon_deep_review.py"
+    ],
+    "review_date": "2026-08-09",
+    "failure_modes": [
+      "Deep reviews summarize without making branch-control decisions.",
+      "Reviews are not evidence-backed by cycle artifacts.",
+      "The system continues unchanged after a severe review finding."
+    ],
+    "exit_criteria": [
+      "Long runs periodically produce evidence-backed reflective compression that changes future search behavior."
+    ],
+    "status": "resolved"
+  },
+  {
+    "id": "DMR-010",
+    "type": "hook_todo",
+    "phase": "canonical-gate-integration",
+    "owner": "agentic/scripts",
+    "priority": "critical",
+    "risk_class": "marathon-outside-looper-governance",
+    "title": "Wire discovery marathon validation into canonical Looper gates",
+    "intent": "Make marathon state, cycle outputs, reports, and validators part of the governed Abducer workflow.",
+    "conceptual_model": "A long-running research engine is risky if it lives outside the gate. Canonical checks should validate active marathon state, cycle integrity, branch memory, report quality, and monitor integration without requiring a marathon to be currently running.",
+    "use_skills": [
+      "looper-workflow-contract-governor",
+      "looper-hook-policy-maintainer",
+      "looper-release-promoter"
+    ],
+    "implementation_steps": [
+      "Add marathon schemas, scripts, reports, and validators to `agentic/registries/workflow_contracts.yaml`.",
+      "Add a visible `discovery-marathon-control` workflow to the appropriate task registry or create `registry/tasks/discovery-marathon/task_registry.json` that composes existing control-plane, conceptual-refinement, evidence, review, and reporting skills.",
+      "Update skill taxonomy/projection generation so marathon workflows appear in `registry/skill_projections/abducer_skill_projections.json` and long-horizon skill coherence checks.",
+      "Add `validate_discovery_marathon_state.py` to `agentic/scripts/agentic_check.py` in a mode that passes when no active run exists and validates fully when one exists.",
+      "Add optional `validate_discovery_marathon_report.py` and `validate_marathon_deep_review.py` steps when corresponding artifacts exist.",
+      "Extend `apply_gate_policy.py` so release promotion blocks if an active marathon has invalid state, failed cycle validation, or stale high-priority branch decisions.",
+      "Update `skills/control-plane/looper-release-promoter/SKILL.md` to cite marathon status and unresolved long-run debt."
+    ],
+    "validation_commands": [
+      "python agentic/scripts/validate_workflow_contracts.py",
+      "python agentic/scripts/apply_gate_policy.py",
+      "python agentic/scripts/agentic_check.py"
+    ],
+    "required_artifact": [
+      "agentic/registries/workflow_contracts.yaml",
+      "agentic/scripts/agentic_check.py",
+      "agentic/scripts/apply_gate_policy.py",
+      "registry/tasks/discovery-marathon/task_registry.json",
+      "skills/control-plane/looper-release-promoter/SKILL.md"
+    ],
+    "acceptance_criteria": [
+      "Canonical checks validate marathon artifacts when present.",
+      "The marathon appears as a visible workflow composed from existing skills and handoff contracts.",
+      "The absence of an active marathon is represented explicitly and does not fail ordinary runs.",
+      "Release promotion cites active marathon status and unresolved branch debt.",
+      "Invalid marathon cycles or stale branch states can block promotion."
+    ],
+    "blocked_by": [
+      "DMR-001",
+      "DMR-005",
+      "DMR-007",
+      "DMR-008"
+    ],
+    "evidence": [
+      "file:agentic/scripts/agentic_check.py",
+      "cmd:python agentic/scripts/agentic_check.py"
+    ],
+    "review_date": "2026-08-09",
+    "failure_modes": [
+      "Marathon runs produce artifacts that canonical gates ignore.",
+      "The marathon is implemented as an isolated project outside task registries and skill projections.",
+      "Canonical checks fail when no marathon is active.",
+      "Release reports omit stale or failed marathon branches."
+    ],
+    "exit_criteria": [
+      "Discovery marathons are first-class governed workflow artifacts."
+    ],
+    "status": "resolved"
+  },
+  {
+    "id": "DMR-011",
+    "type": "test_todo",
+    "phase": "marathon-test-suite",
+    "owner": "tests",
+    "priority": "critical",
+    "risk_class": "long-run-regression-undetected",
+    "title": "Add deterministic and generative tests for marathon behavior",
+    "intent": "Ensure the marathon engine can initialize, run, resume, validate, and reject shallow cycles.",
+    "conceptual_model": "Long-running code needs regression tests that simulate time, interruption, branch aging, stale outputs, and validation failures. The tests should not wait hours; they should use short-cycle fixtures while preserving the same state transitions.",
+    "use_skills": [
+      "looper-workflow-contract-governor",
+      "abducer-obligation-gatekeeper",
+      "review-reasoner-mathematician",
+      "review-reasoner-epistemologist"
+    ],
+    "implementation_steps": [
+      "Create `tests/discovery/test_discovery_marathon_runner.py` for initialization, one-cycle run, resume, and checkpoint behavior.",
+      "Create `tests/discovery/test_discovery_marathon_scheduler.py` for branch aging, starvation, role-balance, and stale-learning controls.",
+      "Create `tests/generative/test_discovery_marathon_quality.md` with probes for shallow cycle output, repeated blocker loops, false breakthrough claims, and proxy-problem drift.",
+      "Add fixtures under `tests/fixtures/discovery_marathon/` for valid and invalid run states, cycles, branch states, and deep reviews.",
+      "Ensure tests never require long wall-clock sleeps; use injected clock or max-cycles test modes."
+    ],
+    "validation_commands": [
+      "python -m unittest tests.discovery.test_discovery_marathon_runner tests.discovery.test_discovery_marathon_scheduler -q",
+      "python agentic/scripts/validate_todos.py"
+    ],
+    "required_artifact": [
+      "tests/discovery/test_discovery_marathon_runner.py",
+      "tests/discovery/test_discovery_marathon_scheduler.py",
+      "tests/generative/test_discovery_marathon_quality.md",
+      "tests/fixtures/discovery_marathon/"
+    ],
+    "acceptance_criteria": [
+      "Tests cover initialization, one-cycle execution, resume, and validation failure.",
+      "Tests cover branch aging and stale-learning demotion.",
+      "Generative probes reject shallow or repetitive marathon cycles.",
+      "The test suite is fast enough for canonical checks."
+    ],
+    "blocked_by": [
+      "DMR-001",
+      "DMR-003",
+      "DMR-005",
+      "DMR-006"
+    ],
+    "evidence": [
+      "file:tests/discovery/test_discovery_marathon_runner.py",
+      "cmd:python -m unittest tests.discovery.test_discovery_marathon_runner tests.discovery.test_discovery_marathon_scheduler -q"
+    ],
+    "review_date": "2026-08-09",
+    "failure_modes": [
+      "Tests only check files exist and not marathon semantics.",
+      "Tests depend on real multi-hour sleeps.",
+      "Invalid shallow cycles accidentally pass."
+    ],
+    "exit_criteria": [
+      "The marathon implementation has fast regression coverage for its core long-horizon behaviors."
+    ],
+    "status": "resolved"
+  },
+  {
+    "id": "DMR-012",
+    "type": "documentation_todo",
+    "phase": "operator-docs",
+    "owner": "docs",
+    "priority": "high",
+    "risk_class": "unsafe-or-uninterpretable-long-run-operation",
+    "title": "Document how to operate a discovery marathon safely",
+    "intent": "Give users clear instructions for starting, monitoring, pausing, resuming, validating, and interpreting long discovery runs.",
+    "conceptual_model": "Long-running discovery systems are operational tools. Users need to know what a run can and cannot claim, how to inspect progress, how to stop safely, and how to interpret no-breakthrough outcomes.",
+    "use_skills": [
+      "show-reasoning",
+      "looper-release-promoter",
+      "reasoning-report-renderer"
+    ],
+    "implementation_steps": [
+      "Create `docs/operations/discovery-marathon-operations.md`.",
+      "Document recommended commands for 1-hour smoke runs, 8-hour runs, resume, stop-after-cycle, dry-run, validation, and report generation.",
+      "Explain the difference between activity, mathematical learning, milestone candidate, and proof result.",
+      "Document expected artifact locations under `agentic/runs/discovery_marathons/` and `agentic/reports/discovery_marathon/`.",
+      "Include a Yang-Mills example run plan with branch budget and first three queued actions."
+    ],
+    "validation_commands": [
+      "python agentic/scripts/validate_workflow_contracts.py",
+      "python agentic/scripts/validate_todos.py"
+    ],
+    "required_artifact": [
+      "docs/operations/discovery-marathon-operations.md"
+    ],
+    "acceptance_criteria": [
+      "The docs include exact commands for start, resume, pause, validate, and inspect.",
+      "The docs warn that marathon output is not theorem proof without certification.",
+      "The docs explain artifact paths and cleanup/archival expectations.",
+      "The docs include a concrete Yang-Mills marathon example."
+    ],
+    "blocked_by": [
+      "DMR-003",
+      "DMR-007",
+      "DMR-008"
+    ],
+    "evidence": [
+      "file:docs/operations/discovery-marathon-operations.md",
+      "cmd:python agentic/scripts/validate_todos.py"
+    ],
+    "review_date": "2026-08-09",
+    "failure_modes": [
+      "Docs encourage interpreting generated exploration as proof.",
+      "Docs omit resume and stop behavior.",
+      "Docs do not identify where long-run artifacts are stored."
+    ],
+    "exit_criteria": [
+      "A user can safely operate a multi-hour discovery marathon and interpret its outputs."
+    ],
+    "status": "resolved"
+  },
+  {
+    "id": "DMR-013",
+    "type": "release_todo",
+    "phase": "marathon-smoke-and-scale-readiness",
+    "owner": "agentic/reports",
+    "priority": "high",
+    "risk_class": "unproven-scale-readiness",
+    "title": "Run and certify a first bounded Yang-Mills marathon smoke run",
+    "intent": "Demonstrate that the marathon system works end to end on Yang-Mills before attempting long wall-clock runs.",
+    "conceptual_model": "Before an 8-hour run, the system should prove it can run a bounded smoke marathon: initialize, execute a few short cycles, validate cycles, update branch memory, render reports, integrate monitor state, and pass canonical checks.",
+    "use_skills": [
+      "work",
+      "long-horizon-route-portfolio-manager",
+      "show-reasoning",
+      "looper-release-promoter"
+    ],
+    "implementation_steps": [
+      "Run `run_discovery_marathon.py` on Yang-Mills with `--max-cycles 3 --cycle-minutes 2` or equivalent injected-clock test mode.",
+      "Validate run state, every cycle, branch memory, cumulative report, monitor integration, and canonical gate.",
+      "Generate `agentic/reports/discovery_marathon/smoke_yang_mills.md` summarizing what changed, what failed, and whether the system is ready for a real 8-hour run.",
+      "Record scale-readiness verdict: ready_for_long_run, needs_repair, or blocked.",
+      "If ready, write the recommended 8-hour command and branch budget."
+    ],
+    "validation_commands": [
+      "python agentic/scripts/run_discovery_marathon.py --target yang-mills-existence-and-mass-gap-target --max-cycles 3 --cycle-minutes 2",
+      "python agentic/scripts/agentic_check.py"
+    ],
+    "required_artifact": [
+      "agentic/reports/discovery_marathon/smoke_yang_mills.md",
+      "agentic/reports/discovery_marathon/latest.json",
+      "agentic/runs/discovery_marathons/<run_id>/"
+    ],
+    "acceptance_criteria": [
+      "The smoke run completes with at least three validated cycles.",
+      "At least two branches record new mathematical learning or a validated failure.",
+      "The monitor displays active or completed marathon state.",
+      "The scale-readiness report gives an honest verdict and next command."
+    ],
+    "blocked_by": [
+      "DMR-003",
+      "DMR-005",
+      "DMR-007",
+      "DMR-008",
+      "DMR-010",
+      "DMR-011",
+      "DMR-012"
+    ],
+    "evidence": [
+      "file:agentic/reports/discovery_marathon/smoke_yang_mills.md",
+      "cmd:python agentic/scripts/agentic_check.py"
+    ],
+    "review_date": "2026-08-09",
+    "failure_modes": [
+      "The smoke run passes by regenerating existing reports without branch-local learning.",
+      "The scale-readiness verdict is optimistic despite validation warnings.",
+      "The smoke run cannot resume from interruption."
+    ],
+    "exit_criteria": [
+      "The system is demonstrably ready for a real multi-hour Yang-Mills discovery marathon or has explicit blockers."
+    ],
+    "status": "resolved"
+  },
+  {
+    "id": "DMR-014",
+    "type": "workflow_todo",
+    "phase": "skill-dispatch-maximization",
+    "owner": "agentic/registries",
+    "priority": "critical",
+    "risk_class": "marathon-underuses-existing-skills",
+    "title": "Create a marathon skill-dispatch matrix over existing workflows",
+    "intent": "Ensure every marathon cycle maximally uses the existing Abducer skill ecosystem in a coherent phase-specific way.",
+    "conceptual_model": "Maximal skill use does not mean calling every skill every cycle. It means each phase invokes all relevant skills for that phase and records why any available skill was skipped. The marathon should compose existing target navigation, conceptual refinement, proof/evidence, contradiction, review, and reporting skills rather than becoming a separate agent.",
+    "use_skills": [
+      "looper-workflow-contract-governor",
+      "long-horizon-route-portfolio-manager",
+      "abducer-mediation-candidate-generator",
+      "abducer-obligation-gatekeeper",
+      "kb-orchestrator",
+      "show-reasoning"
+    ],
+    "implementation_steps": [
+      "Create `agentic/registries/discovery_marathon_skill_dispatch.yaml` mapping marathon phases to existing skills, required input artifacts, expected output artifacts, and skip conditions.",
+      "Define phase groups: preflight/target-navigation, branch-selection, branch-exploration, contradiction-and-falsifier-generation, evidence-acquisition, obligation-gating, review-and-synthesis, report-rendering, release-promotion.",
+      "For each phase, list required skills, conditional skills, and forbidden bypasses. For example, branch exploration must consider `kb-abduce`, `kb-deduce`, `kb-contradiction-strategist`, `entailment-gap-auditor`, and `abducer-obligation-gatekeeper`; review phases must consider mathematician, epistemologist, discovery-scientist, and proof-critic skills.",
+      "Add a runtime `skill_dispatch_trace` object to marathon cycles with invoked_skills, skipped_skills_with_reason, queued_conditional_skills, and missing_required_skills.",
+      "Create `agentic/scripts/validate_discovery_marathon_skill_dispatch.py` to reject cycles that underuse phase-required skills or omit skip reasons.",
+      "Integrate dispatch validation into marathon cycle validation, long-horizon skill coherence checks, and workflow contracts."
+    ],
+    "validation_commands": [
+      "python agentic/scripts/validate_discovery_marathon_skill_dispatch.py",
+      "python agentic/scripts/validate_workflow_contracts.py",
+      "python agentic/scripts/validate_todos.py"
+    ],
+    "required_artifact": [
+      "agentic/registries/discovery_marathon_skill_dispatch.yaml",
+      "agentic/scripts/validate_discovery_marathon_skill_dispatch.py",
+      "tests/fixtures/discovery_marathon/skill_dispatch_valid.json",
+      "tests/fixtures/discovery_marathon/skill_dispatch_missing_required.json"
+    ],
+    "acceptance_criteria": [
+      "Every marathon phase has an explicit map to existing skills and workflow artifacts.",
+      "Cycle artifacts record invoked, skipped, and queued skills with reasons.",
+      "Validators fail if required phase skills are missing without a mathematically meaningful skip reason.",
+      "The skill-dispatch matrix is visible in workflow contracts and can be rendered in marathon reports.",
+      "The design maximizes skill use by relevance and phase coverage, not by indiscriminate invocation."
+    ],
+    "blocked_by": [
+      "DMR-001",
+      "DMR-003",
+      "DMR-004",
+      "DMR-010"
+    ],
+    "evidence": [
+      "file:agentic/registries/discovery_marathon_skill_dispatch.yaml",
+      "cmd:python agentic/scripts/validate_discovery_marathon_skill_dispatch.py"
+    ],
+    "review_date": "2026-08-09",
+    "failure_modes": [
+      "The marathon runner directly generates outputs and bypasses skill contracts.",
+      "The system calls many skills without phase relevance and creates noise instead of coverage.",
+      "Skipped skills are not explained, so underuse cannot be audited.",
+      "The skill-dispatch matrix drifts from registry/task workflow definitions."
+    ],
+    "exit_criteria": [
+      "Every marathon cycle can prove that it used the right existing skills for its phase or recorded why a skill was not appropriate."
+    ],
+    "status": "resolved"
+  }
+]

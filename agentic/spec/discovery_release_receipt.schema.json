@@ -1,0 +1,177 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://abducer.local/schemas/discovery_release_receipt.schema.json",
+  "title": "Discovery release receipt",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "release_id", "target_id", "run_id", "state_version",
+    "literature_snapshot_id", "literature_snapshot_digest", "assimilation_receipt_id",
+    "created_utc", "gate_results", "validator_receipts", "trace_digest",
+    "authorization_scope", "authority_exclusions", "decision", "receipt_digest"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "release_id": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{2,127}$"},
+    "target_id": {"type": "string", "minLength": 1},
+    "run_id": {"type": "string", "minLength": 1},
+    "state_version": {"type": "integer", "minimum": 0},
+    "literature_snapshot_id": {"type": "string", "minLength": 1},
+    "literature_snapshot_digest": {"$ref": "#/$defs/digest"},
+    "assimilation_receipt_id": {"type": "string", "minLength": 1},
+    "created_utc": {"type": "string", "format": "date-time"},
+    "gate_results": {
+      "type": "array", "minItems": 1,
+      "items": {"$ref": "#/$defs/gate"}
+    },
+    "validator_receipts": {
+      "type": "array", "minItems": 1,
+      "items": {"$ref": "#/$defs/validatorReceipt"}
+    },
+    "trace_digest": {"$ref": "#/$defs/digest"},
+    "operator_trace_path": {"type": ["string", "null"]},
+    "authorization_scope": {
+      "enum": ["target_navigation_continuation", "no_continuation_authorized"]
+    },
+    "authority_exclusions": {
+      "type": "array", "minItems": 3, "uniqueItems": true,
+      "items": {
+        "enum": [
+          "theorem_or_truth_promotion",
+          "literature_novelty_promotion",
+          "experiment_theory_selection"
+        ]
+      }
+    },
+    "canonical_theory_evidence": {
+      "anyOf": [
+        {"$ref": "#/$defs/canonicalTheoryEvidence"},
+        {"type": "null"}
+      ]
+    },
+    "decision": {"enum": ["promote", "hold", "quarantine", "rollback"]},
+    "decision_reasons": {"type": "array", "items": {"type": "string", "minLength": 1}},
+    "receipt_digest": {"$ref": "#/$defs/digest"}
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {"decision": {"const": "promote"}},
+        "required": ["decision"]
+      },
+      "then": {
+        "required": ["canonical_theory_evidence"],
+        "properties": {
+          "authorization_scope": {"const": "target_navigation_continuation"},
+          "canonical_theory_evidence": {"$ref": "#/$defs/canonicalTheoryEvidence"}
+        }
+      }
+    },
+    {
+      "if": {
+        "not": {"properties": {"decision": {"const": "promote"}}}
+      },
+      "then": {
+        "properties": {
+          "authorization_scope": {"const": "no_continuation_authorized"}
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "gate": {
+      "type": "object", "additionalProperties": false,
+      "required": ["gate_id", "required", "status", "controlling_receipt_ids"],
+      "properties": {
+        "gate_id": {"type": "string", "minLength": 1},
+        "required": {"type": "boolean"},
+        "status": {"enum": ["pass", "fail", "unknown", "not_applicable"]},
+        "controlling_receipt_ids": {"type": "array", "items": {"type": "string", "minLength": 1}},
+        "waiver_reason": {"type": ["string", "null"]}
+      }
+    },
+    "validatorReceipt": {
+      "type": "object", "additionalProperties": false,
+      "required": ["receipt_id", "target_id", "run_id", "state_version", "status", "completed_utc", "output_digest"],
+      "properties": {
+        "receipt_id": {"type": "string", "minLength": 1},
+        "target_id": {"type": "string", "minLength": 1},
+        "run_id": {"type": "string", "minLength": 1},
+        "state_version": {"type": "integer", "minimum": 0},
+        "status": {"enum": ["completed", "failed", "timeout", "cancelled", "invalid"]},
+        "valid": {"type": "boolean"},
+        "completed_utc": {"type": "string", "format": "date-time"},
+        "output_digest": {"$ref": "#/$defs/digest"}
+      }
+    },
+    "canonicalTheoryEvidence": {
+      "type": "object", "additionalProperties": false,
+      "required": [
+        "status", "authoritative", "target_id", "canonical_run_id", "cycle_id",
+        "prior_state_version", "committed_state_version", "commit_id",
+        "manifest_digest", "projection_digest", "operator_evidence_digest",
+        "literature_snapshot_id",
+        "literature_snapshot_digest", "operator_count",
+        "all_operators_feedback_effective", "operator_bindings", "schedule_id",
+        "branch_authorizations", "authorization_semantics", "evidence_digest"
+      ],
+      "properties": {
+        "status": {"const": "verified_active_current"},
+        "authoritative": {"const": true},
+        "target_id": {"type": "string", "minLength": 1},
+        "canonical_run_id": {"type": "string", "minLength": 1},
+        "cycle_id": {"type": "string", "minLength": 1},
+        "prior_state_version": {"type": "integer", "minimum": 0},
+        "committed_state_version": {"type": "integer", "minimum": 1},
+        "commit_id": {"type": "string", "minLength": 1},
+        "manifest_digest": {"$ref": "#/$defs/digest"},
+        "projection_digest": {"$ref": "#/$defs/digest"},
+        "operator_evidence_digest": {"$ref": "#/$defs/digest"},
+        "literature_snapshot_id": {"type": "string", "minLength": 1},
+        "literature_snapshot_digest": {"$ref": "#/$defs/digest"},
+        "operator_count": {"const": 6},
+        "all_operators_feedback_effective": {"const": true},
+        "operator_bindings": {
+          "type": "array", "minItems": 6, "maxItems": 6,
+          "items": {
+            "type": "object", "additionalProperties": false,
+            "required": ["operator_id", "receipt_ids", "feedback_event_ids"],
+            "properties": {
+              "operator_id": {"type": "string", "minLength": 1},
+              "receipt_ids": {
+                "type": "array", "minItems": 1,
+                "items": {"type": "string", "minLength": 1}
+              },
+              "feedback_event_ids": {
+                "type": "array", "minItems": 1,
+                "items": {"type": "string", "minLength": 1}
+              }
+            }
+          }
+        },
+        "schedule_id": {"type": "string", "minLength": 1},
+        "branch_authorizations": {
+          "type": "array", "minItems": 1,
+          "items": {
+            "type": "object", "additionalProperties": false,
+            "required": ["branch_id", "action_ids", "action_kinds"],
+            "properties": {
+              "branch_id": {"type": "string", "minLength": 1},
+              "action_ids": {
+                "type": "array", "minItems": 1, "uniqueItems": true,
+                "items": {"type": "string", "minLength": 1}
+              },
+              "action_kinds": {
+                "type": "array", "minItems": 1, "uniqueItems": true,
+                "items": {"type": "string", "minLength": 1}
+              }
+            }
+          }
+        },
+        "authorization_semantics": {"type": "string", "minLength": 1},
+        "evidence_digest": {"$ref": "#/$defs/digest"}
+      }
+    }
+  }
+}

@@ -1,0 +1,156 @@
+# SPDX-FileCopyrightText: © 2026 Idiap Research Institute <contact@idiap.ch>
+#
+# SPDX-FileContributor: Andre Freitas <andre.freitas@idiap.ch>
+# Neuro-symbolic AI Group
+#
+# SPDX-FileContributor: Danilo Gusicuma <danilo.gusicuma@idiap.ch>
+# Neuro-symbolic AI Group
+#
+# SPDX-License-Identifier: MIT
+# Materialization layer for discovery_marathon_loop.
+# Compiled modules snapshot current linked skill bytes without writing source trees;
+# the manifest records paths/hashes. Fake execution proves typed integration only.
+from workflows.discovery_marathon_loop.types import (
+    BoundedDiscoveryScope,
+    DiscoveryRoutingAssessment,
+    DiscoveryRunContext,
+    DiscriminatingDiscoveryHypothesis,
+    HypothesisContrastAssessment,
+    HypothesisModelImplications,
+    HypothesisRefutationAssessment,
+    ProvisionalDiscoveryPattern,
+)
+from workflows.discovery_marathon_loop.occurrences import (
+    DiscoveryHypothesisProbeInput,
+    DiscoveryRefutationInput,
+    DiscoveryRoutingInput,
+)
+from workflows.discovery_marathon_loop.reasoning import DiscoveryMarathonLoop
+from workflows.discovery_marathon_loop.relations import (
+    DiscoveryFormationScope,
+    DiscoveryProbeBasis,
+    DiscoveryRefutationBasis,
+    DiscoveryRoutingCalibration,
+)
+from workflows.discovery_marathon_loop.generated.search_scope_reasoning_skill_1 import epistemic_status_ledger_skill as search_scope_reasoning_skill_1
+from workflows.discovery_marathon_loop.generated.discovery_hypothesis_reasoning_skill_1 import kb_abduce_skill as discovery_hypothesis_reasoning_skill_1
+from workflows.discovery_marathon_loop.generated.discovery_pattern_reasoning_skill_1 import kb_induce_skill as discovery_pattern_reasoning_skill_1
+from workflows.discovery_marathon_loop.generated.model_implications_reasoning_skill_1 import dynamic_symbolic_simulation_experimenter_skill as model_implications_reasoning_skill_1
+from workflows.discovery_marathon_loop.generated.contrast_assessment_reasoning_skill_1 import counterfactual_route_prober_skill as contrast_assessment_reasoning_skill_1
+from workflows.discovery_marathon_loop.generated.refutation_assessment_reasoning_skill_1 import counterexample_hunter_skill as refutation_assessment_reasoning_skill_1
+from workflows.discovery_marathon_loop.generated.routing_assessment_reasoning_skill_1 import epistemic_status_ledger_skill as routing_assessment_reasoning_skill_1
+
+def discovery_hypothesis_reasoning_relation_builder[SourceValue, TargetValue](
+    source: SourceValue,
+    target: Generated[TargetValue],
+) -> DiscoveryFormationScope[SourceValue, TargetValue]:
+    return DiscoveryFormationScope(source = source, target = target)
+
+def discovery_pattern_reasoning_relation_builder[SourceValue, TargetValue](
+    source: SourceValue,
+    target: Generated[TargetValue],
+) -> DiscoveryFormationScope[SourceValue, TargetValue]:
+    return DiscoveryFormationScope(source = source, target = target)
+
+def model_implications_reasoning_relation_builder[SourceValue, TargetValue](
+    source: SourceValue,
+    target: Generated[TargetValue],
+) -> DiscoveryProbeBasis[SourceValue, TargetValue]:
+    return DiscoveryProbeBasis(source = source, target = target)
+
+def contrast_assessment_reasoning_relation_builder[SourceValue, TargetValue](
+    source: SourceValue,
+    target: Generated[TargetValue],
+) -> DiscoveryProbeBasis[SourceValue, TargetValue]:
+    return DiscoveryProbeBasis(source = source, target = target)
+
+def refutation_assessment_reasoning_relation_builder[SourceValue, TargetValue](
+    source: SourceValue,
+    target: Generated[TargetValue],
+) -> DiscoveryRefutationBasis[SourceValue, TargetValue]:
+    return DiscoveryRefutationBasis(source = source, target = target)
+
+def routing_assessment_reasoning_relation_builder[SourceValue, TargetValue](
+    source: SourceValue,
+    target: Generated[TargetValue],
+) -> DiscoveryRoutingCalibration[SourceValue, TargetValue]:
+    return DiscoveryRoutingCalibration(source = source, target = target)
+
+# EvidentialDiscoveryScopeGrounding performs the reviewed calibrate boundary.
+# Granularity: The source exposes EvidentialGrounding as a separately consumed typed result in the discovery_marathon_loop occurrence graph.
+# Linked source skill: skills/evaluation/epistemic-status-ledger/SKILL.md (sha256:980ad92b1f190316a941b8124eaffc6c414680666d2960ebcc8bd21444b4d454).
+agent search_scope_reasoning_agent(
+    task: DiscoveryRunContext,
+) -> Result[Generated[BoundedDiscoveryScope], ModelFailure]
+    ! {AI.Generate, Context.Disclose}:
+    skills: Skills[DiscoveryRunContext] = [search_scope_reasoning_skill_1]
+
+# AbductiveDiscoveryHypothesisFormation performs the reviewed abduct boundary.
+# Granularity: The source exposes AbductiveCandidateFormation as a separately consumed typed result in the discovery_marathon_loop occurrence graph.
+# Linked source skill: skills/reasoning/kb-abduce/SKILL.md (sha256:3c0985794a9e14c75a8edc7a3ecccfa4ef28a51cd1b096985359d6cdab534a03).
+agent discovery_hypothesis_reasoning_agent(
+    task: BoundedDiscoveryScope,
+) -> Result[Generated[DiscriminatingDiscoveryHypothesis], ModelFailure]
+    ! {AI.Generate, Context.Disclose}:
+    skills: Skills[BoundedDiscoveryScope] = [discovery_hypothesis_reasoning_skill_1]
+
+# InductiveDiscoveryPatternFormation performs the reviewed generalize boundary.
+# Granularity: The source exposes InductivePatternFormation as a separately consumed typed result in the discovery_marathon_loop occurrence graph.
+# Linked source skill: skills/reasoning/kb-induce/SKILL.md (sha256:e5ce4f89d33f1189379b51f0ea45acfb297c9bfc9e8fa6fcd73edcb3c0eca806).
+agent discovery_pattern_reasoning_agent(
+    task: BoundedDiscoveryScope,
+) -> Result[Generated[ProvisionalDiscoveryPattern], ModelFailure]
+    ! {AI.Generate, Context.Disclose}:
+    skills: Skills[BoundedDiscoveryScope] = [discovery_pattern_reasoning_skill_1]
+
+# ModelBasedDiscoveryHypothesisProbe performs the reviewed model_probe boundary.
+# Granularity: The source exposes ModelBasedCandidateProbe as a separately consumed typed result in the discovery_marathon_loop occurrence graph.
+# Linked source skill: skills/reasoning/dynamic-symbolic-simulation-experimenter/SKILL.md (sha256:5961d2cc5dcbd36be9ed32181e92f42234021cf8a2484fc341b32a87fe8b0f6a).
+agent model_implications_reasoning_agent(
+    task: DiscoveryHypothesisProbeInput,
+) -> Result[Generated[HypothesisModelImplications], ModelFailure]
+    ! {AI.Generate, Context.Disclose}:
+    skills: Skills[DiscoveryHypothesisProbeInput] = [model_implications_reasoning_skill_1]
+
+# ContrastiveDiscoveryHypothesisProbe performs the reviewed compare boundary.
+# Granularity: The source exposes ContrastiveCandidateProbe as a separately consumed typed result in the discovery_marathon_loop occurrence graph.
+# Linked source skill: skills/evaluation/counterfactual-route-prober/SKILL.md (sha256:417c863db8e5fe85987f55a5837f41eeee4caf7bc082737b3de181db5375bb77).
+agent contrast_assessment_reasoning_agent(
+    task: DiscoveryHypothesisProbeInput,
+) -> Result[Generated[HypothesisContrastAssessment], ModelFailure]
+    ! {AI.Generate, Context.Disclose}:
+    skills: Skills[DiscoveryHypothesisProbeInput] = [contrast_assessment_reasoning_skill_1]
+
+# RefutationalDiscoveryHypothesisAssessment performs the reviewed refute boundary.
+# Granularity: The source exposes RefutationalCandidateTest as a separately consumed typed result in the discovery_marathon_loop occurrence graph.
+# Linked source skill: skills/evaluation/counterexample-hunter/SKILL.md (sha256:413eb19c3dcdc59f53bac734b6a9864e1252095063f1cbb3674dcab3445c748d).
+agent refutation_assessment_reasoning_agent(
+    task: DiscoveryRefutationInput,
+) -> Result[Generated[HypothesisRefutationAssessment], ModelFailure]
+    ! {AI.Generate, Context.Disclose}:
+    skills: Skills[DiscoveryRefutationInput] = [refutation_assessment_reasoning_skill_1]
+
+# EvidentialDiscoveryRoutingAssessment performs the reviewed calibrate boundary.
+# Granularity: The source exposes EvidentialDiscoveryCalibration as a separately consumed typed result in the discovery_marathon_loop occurrence graph.
+# Linked source skill: skills/evaluation/epistemic-status-ledger/SKILL.md (sha256:980ad92b1f190316a941b8124eaffc6c414680666d2960ebcc8bd21444b4d454).
+agent routing_assessment_reasoning_agent(
+    task: DiscoveryRoutingInput,
+) -> Result[Generated[DiscoveryRoutingAssessment], ModelFailure]
+    ! {AI.Generate, Context.Disclose}:
+    skills: Skills[DiscoveryRoutingInput] = [routing_assessment_reasoning_skill_1]
+
+converted_reasoning = DiscoveryMarathonLoop(
+    search_scope = search_scope_reasoning_agent,
+    discovery_hypothesis = discovery_hypothesis_reasoning_agent,
+    discovery_hypothesis_by = discovery_hypothesis_reasoning_relation_builder,
+    discovery_pattern = discovery_pattern_reasoning_agent,
+    discovery_pattern_by = discovery_pattern_reasoning_relation_builder,
+    model_implications = model_implications_reasoning_agent,
+    model_implications_by = model_implications_reasoning_relation_builder,
+    contrast_assessment = contrast_assessment_reasoning_agent,
+    contrast_assessment_by = contrast_assessment_reasoning_relation_builder,
+    refutation_assessment = refutation_assessment_reasoning_agent,
+    refutation_assessment_by = refutation_assessment_reasoning_relation_builder,
+    routing_assessment = routing_assessment_reasoning_agent,
+    routing_assessment_by = routing_assessment_reasoning_relation_builder,
+)

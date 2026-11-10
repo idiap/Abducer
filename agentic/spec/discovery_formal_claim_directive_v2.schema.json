@@ -1,0 +1,95 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://abducer.local/spec/discovery_formal_claim_directive_v2.schema.json",
+  "title": "Closed typed formal-claim directive v2",
+  "description": "The exact canonical-JSON body permitted after the abducer-formal-claim-v2 marker. It identifies a claim and proposed checking plan but grants no execution, proof, truth, theorem, theory-selection, or physics-value authority.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "display_statement",
+    "formal_claim",
+    "proof_adapter",
+    "execution_plan"
+  ],
+  "properties": {
+    "display_statement": {"type": "string", "minLength": 1},
+    "formal_claim": {
+      "$ref": "./discovery_proof_handoff.schema.json#/$defs/formalClaim"
+    },
+    "proof_adapter": {
+      "enum": ["exact", "finite_model", "lean", "command"]
+    },
+    "execution_plan": {
+      "$ref": "./discovery_proof_handoff.schema.json#/$defs/executionPlan"
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {"proof_adapter": {"const": "exact"}},
+        "required": ["proof_adapter"]
+      },
+      "then": {
+        "properties": {
+          "formal_claim": {
+            "oneOf": [
+              {"$ref": "./discovery_proof_handoff.schema.json#/$defs/exactEqualityClaim"},
+              {"$ref": "./discovery_proof_handoff.schema.json#/$defs/exactIntegerPredicateClaim"}
+            ]
+          },
+          "execution_plan": {
+            "$ref": "./discovery_proof_handoff.schema.json#/$defs/builtinWorkerPlan"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {"proof_adapter": {"const": "finite_model"}},
+        "required": ["proof_adapter"]
+      },
+      "then": {
+        "properties": {
+          "formal_claim": {
+            "$ref": "./discovery_proof_handoff.schema.json#/$defs/finiteModelClaim"
+          },
+          "execution_plan": {
+            "$ref": "./discovery_proof_handoff.schema.json#/$defs/builtinWorkerPlan"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {"proof_adapter": {"const": "lean"}},
+        "required": ["proof_adapter"]
+      },
+      "then": {
+        "properties": {
+          "formal_claim": {
+            "$ref": "./discovery_proof_handoff.schema.json#/$defs/leanPropositionClaim"
+          },
+          "execution_plan": {
+            "$ref": "./discovery_proof_handoff.schema.json#/$defs/leanPlan"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {"proof_adapter": {"const": "command"}},
+        "required": ["proof_adapter"]
+      },
+      "then": {
+        "properties": {
+          "formal_claim": {
+            "$ref": "./discovery_proof_handoff.schema.json#/$defs/externalCheckerClaim"
+          },
+          "execution_plan": {
+            "$ref": "./discovery_proof_handoff.schema.json#/$defs/externalCheckerPlan"
+          }
+        }
+      }
+    }
+  ]
+}

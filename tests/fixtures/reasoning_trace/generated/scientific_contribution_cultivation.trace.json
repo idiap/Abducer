@@ -1,0 +1,1342 @@
+{
+  "declared_route": [
+    {
+      "condition": null,
+      "consumes": [
+        "ResultAtlasSlice"
+      ],
+      "control_event_ids": [
+        "scientific_contribution_cultivation.base.maintain_atlas.control"
+      ],
+      "inference_event_ids": [
+        "scientific_contribution_cultivation.base.maintain_atlas.inference"
+      ],
+      "mode": "required",
+      "observability_gap": "",
+      "order": 10,
+      "produces": [
+        "UpdatedResultAtlas"
+      ],
+      "semantic_complete_event_ids": [
+        "scientific_contribution_cultivation.base.maintain_atlas.inference"
+      ],
+      "skill": "result-atlas-maintainer",
+      "status": "observed",
+      "step_id": "maintain_atlas",
+      "trace_requirement": {
+        "authority_boundary": "May classify and package supported contribution candidates; may not inflate novelty, target alignment, or paper readiness.",
+        "consumes": [
+          "ResultAtlasSlice"
+        ],
+        "disposition": "semantic_event_required",
+        "event_family": "transformation",
+        "evidence_roles": [
+          "supports",
+          "constrains",
+          "refutes"
+        ],
+        "inference_operator": "compute_result_atlas_delta",
+        "mode": "required",
+        "produces": [
+          "UpdatedResultAtlas"
+        ],
+        "required_contrast": "Contrast target-critical novelty with local, supporting, prior-art-covered, or non-enabling interpretations.",
+        "required_fields": [
+          "public_inference.question",
+          "public_inference.premises",
+          "public_inference.warrant",
+          "public_inference.conclusion",
+          "public_inference.scope",
+          "evidence",
+          "authority"
+        ],
+        "skill": "result-atlas-maintainer",
+        "step_id": "maintain_atlas",
+        "when": null
+      }
+    },
+    {
+      "condition": null,
+      "consumes": [
+        "UpdatedResultAtlas"
+      ],
+      "control_event_ids": [
+        "scientific_contribution_cultivation.base.manage_subgoal.control"
+      ],
+      "inference_event_ids": [
+        "scientific_contribution_cultivation.base.manage_subgoal.inference"
+      ],
+      "mode": "required",
+      "observability_gap": "",
+      "order": 20,
+      "produces": [
+        "ContributionSubgoalPacket"
+      ],
+      "semantic_complete_event_ids": [
+        "scientific_contribution_cultivation.base.manage_subgoal.inference"
+      ],
+      "skill": "contribution-oriented-subgoal-manager",
+      "status": "observed",
+      "step_id": "manage_subgoal",
+      "trace_requirement": {
+        "authority_boundary": "May classify and package supported contribution candidates; may not inflate novelty, target alignment, or paper readiness.",
+        "consumes": [
+          "UpdatedResultAtlas"
+        ],
+        "disposition": "semantic_event_required",
+        "event_family": "planning",
+        "evidence_roles": [
+          "supports",
+          "constrains",
+          "refutes"
+        ],
+        "inference_operator": "classify_and_assess_contribution",
+        "mode": "required",
+        "produces": [
+          "ContributionSubgoalPacket"
+        ],
+        "required_contrast": "Contrast target-critical novelty with local, supporting, prior-art-covered, or non-enabling interpretations.",
+        "required_fields": [
+          "public_inference.question",
+          "public_inference.premises",
+          "public_inference.warrant",
+          "public_inference.conclusion",
+          "public_inference.scope",
+          "evidence",
+          "authority"
+        ],
+        "skill": "contribution-oriented-subgoal-manager",
+        "step_id": "manage_subgoal",
+        "when": null
+      }
+    },
+    {
+      "condition": null,
+      "consumes": [
+        "ContributionSubgoalPacket"
+      ],
+      "control_event_ids": [
+        "scientific_contribution_cultivation.base.detect_contribution.control"
+      ],
+      "inference_event_ids": [
+        "scientific_contribution_cultivation.base.detect_contribution.inference"
+      ],
+      "mode": "required",
+      "observability_gap": "",
+      "order": 30,
+      "produces": [
+        "ContributionCandidate"
+      ],
+      "semantic_complete_event_ids": [
+        "scientific_contribution_cultivation.base.detect_contribution.inference"
+      ],
+      "skill": "scientific-contribution-detector",
+      "status": "observed",
+      "step_id": "detect_contribution",
+      "trace_requirement": {
+        "authority_boundary": "May classify and package supported contribution candidates; may not inflate novelty, target alignment, or paper readiness.",
+        "consumes": [
+          "ContributionSubgoalPacket"
+        ],
+        "disposition": "semantic_event_required",
+        "event_family": "transformation",
+        "evidence_roles": [
+          "supports",
+          "constrains",
+          "refutes"
+        ],
+        "inference_operator": "classify_and_assess_contribution",
+        "mode": "required",
+        "produces": [
+          "ContributionCandidate"
+        ],
+        "required_contrast": "Contrast target-critical novelty with local, supporting, prior-art-covered, or non-enabling interpretations.",
+        "required_fields": [
+          "public_inference.question",
+          "public_inference.premises",
+          "public_inference.warrant",
+          "public_inference.conclusion",
+          "public_inference.scope",
+          "evidence",
+          "authority"
+        ],
+        "skill": "scientific-contribution-detector",
+        "step_id": "detect_contribution",
+        "when": null
+      }
+    },
+    {
+      "condition": null,
+      "consumes": [
+        "ContributionCandidate"
+      ],
+      "control_event_ids": [
+        "scientific_contribution_cultivation.base.assess_value.control"
+      ],
+      "inference_event_ids": [
+        "scientific_contribution_cultivation.base.assess_value.inference"
+      ],
+      "mode": "required",
+      "observability_gap": "",
+      "order": 40,
+      "produces": [
+        "ContributionValueAssessment"
+      ],
+      "semantic_complete_event_ids": [
+        "scientific_contribution_cultivation.base.assess_value.inference"
+      ],
+      "skill": "contribution-value-assessor",
+      "status": "observed",
+      "step_id": "assess_value",
+      "trace_requirement": {
+        "authority_boundary": "May classify and package supported contribution candidates; may not inflate novelty, target alignment, or paper readiness.",
+        "consumes": [
+          "ContributionCandidate"
+        ],
+        "disposition": "semantic_event_required",
+        "event_family": "transformation",
+        "evidence_roles": [
+          "supports",
+          "constrains",
+          "refutes"
+        ],
+        "inference_operator": "classify_and_assess_contribution",
+        "mode": "required",
+        "produces": [
+          "ContributionValueAssessment"
+        ],
+        "required_contrast": "Contrast target-critical novelty with local, supporting, prior-art-covered, or non-enabling interpretations.",
+        "required_fields": [
+          "public_inference.question",
+          "public_inference.premises",
+          "public_inference.warrant",
+          "public_inference.conclusion",
+          "public_inference.scope",
+          "evidence",
+          "authority"
+        ],
+        "skill": "contribution-value-assessor",
+        "step_id": "assess_value",
+        "when": null
+      }
+    },
+    {
+      "condition": null,
+      "consumes": [
+        "ContributionValueAssessment"
+      ],
+      "control_event_ids": [
+        "scientific_contribution_cultivation.base.audit_alignment.control",
+        "scientific_contribution_cultivation.base.audit_alignment.inference"
+      ],
+      "inference_event_ids": [
+        "scientific_contribution_cultivation.base.audit_alignment.inference"
+      ],
+      "mode": "validator_only",
+      "observability_gap": "",
+      "order": 50,
+      "produces": [
+        "MainProblemAlignmentAudit"
+      ],
+      "semantic_complete_event_ids": [
+        "scientific_contribution_cultivation.base.audit_alignment.inference"
+      ],
+      "skill": "main-problem-alignment-auditor",
+      "status": "observed",
+      "step_id": "audit_alignment",
+      "trace_requirement": {
+        "authority_boundary": "May classify and package supported contribution candidates; may not inflate novelty, target alignment, or paper readiness.",
+        "consumes": [
+          "ContributionValueAssessment"
+        ],
+        "disposition": "validator_event_required",
+        "event_family": "validation",
+        "evidence_roles": [
+          "supports",
+          "constrains",
+          "refutes"
+        ],
+        "inference_operator": "audit_main_target_alignment",
+        "mode": "validator_only",
+        "produces": [
+          "MainProblemAlignmentAudit"
+        ],
+        "required_contrast": "Contrast target-critical novelty with local, supporting, prior-art-covered, or non-enabling interpretations.",
+        "required_fields": [
+          "public_inference.question",
+          "public_inference.premises",
+          "public_inference.warrant",
+          "public_inference.conclusion",
+          "public_inference.scope",
+          "evidence",
+          "authority"
+        ],
+        "skill": "main-problem-alignment-auditor",
+        "step_id": "audit_alignment",
+        "when": null
+      }
+    },
+    {
+      "condition": null,
+      "consumes": [
+        "ContributionValueAssessment"
+      ],
+      "control_event_ids": [
+        "scientific_contribution_cultivation.base.audit_enablement.control"
+      ],
+      "inference_event_ids": [
+        "scientific_contribution_cultivation.base.audit_enablement.inference"
+      ],
+      "mode": "required",
+      "observability_gap": "",
+      "order": 60,
+      "produces": [
+        "EnablementAudit"
+      ],
+      "semantic_complete_event_ids": [
+        "scientific_contribution_cultivation.base.audit_enablement.inference"
+      ],
+      "skill": "completed-subgoal-enablement-auditor",
+      "status": "observed",
+      "step_id": "audit_enablement",
+      "trace_requirement": {
+        "authority_boundary": "May classify and package supported contribution candidates; may not inflate novelty, target alignment, or paper readiness.",
+        "consumes": [
+          "ContributionValueAssessment"
+        ],
+        "disposition": "semantic_event_required",
+        "event_family": "validation",
+        "evidence_roles": [
+          "supports",
+          "constrains",
+          "refutes"
+        ],
+        "inference_operator": "evaluate_counterfactual_enablement",
+        "mode": "required",
+        "produces": [
+          "EnablementAudit"
+        ],
+        "required_contrast": "Contrast target-critical novelty with local, supporting, prior-art-covered, or non-enabling interpretations.",
+        "required_fields": [
+          "public_inference.question",
+          "public_inference.premises",
+          "public_inference.warrant",
+          "public_inference.conclusion",
+          "public_inference.scope",
+          "evidence",
+          "authority"
+        ],
+        "skill": "completed-subgoal-enablement-auditor",
+        "step_id": "audit_enablement",
+        "when": null
+      }
+    },
+    {
+      "condition": "enablement_non_empty",
+      "consumes": [
+        "EnablementAudit"
+      ],
+      "control_event_ids": [
+        "scientific_contribution_cultivation.base.package_enablement.control"
+      ],
+      "inference_event_ids": [
+        "scientific_contribution_cultivation.base.package_enablement.inference"
+      ],
+      "mode": "conditional",
+      "observability_gap": "",
+      "order": 70,
+      "produces": [
+        "EnablementHandoff"
+      ],
+      "semantic_complete_event_ids": [
+        "scientific_contribution_cultivation.base.package_enablement.inference"
+      ],
+      "skill": "subgoal-enablement-handoff-packager",
+      "status": "observed",
+      "step_id": "package_enablement",
+      "trace_requirement": {
+        "authority_boundary": "May classify and package supported contribution candidates; may not inflate novelty, target alignment, or paper readiness.",
+        "consumes": [
+          "EnablementAudit"
+        ],
+        "disposition": "conditional_event_or_justified_na",
+        "event_family": "handoff",
+        "evidence_roles": [
+          "supports",
+          "constrains",
+          "refutes"
+        ],
+        "inference_operator": "evaluate_counterfactual_enablement",
+        "mode": "conditional",
+        "produces": [
+          "EnablementHandoff"
+        ],
+        "required_contrast": "Contrast target-critical novelty with local, supporting, prior-art-covered, or non-enabling interpretations.",
+        "required_fields": [
+          "public_inference.question",
+          "public_inference.premises",
+          "public_inference.warrant",
+          "public_inference.conclusion",
+          "public_inference.scope",
+          "evidence",
+          "authority"
+        ],
+        "skill": "subgoal-enablement-handoff-packager",
+        "step_id": "package_enablement",
+        "when": "enablement_non_empty"
+      }
+    },
+    {
+      "condition": "contribution_paper_ready",
+      "consumes": [
+        "ContributionValueAssessment",
+        "MainProblemAlignmentAudit"
+      ],
+      "control_event_ids": [
+        "scientific_contribution_cultivation.base.paper_handoff.control"
+      ],
+      "inference_event_ids": [
+        "scientific_contribution_cultivation.base.paper_handoff.inference"
+      ],
+      "mode": "conditional",
+      "observability_gap": "",
+      "order": 80,
+      "produces": [
+        "PaperArgumentHandoff"
+      ],
+      "semantic_complete_event_ids": [
+        "scientific_contribution_cultivation.base.paper_handoff.inference"
+      ],
+      "skill": "scientific-contribution-paper-handoff",
+      "status": "observed",
+      "step_id": "paper_handoff",
+      "trace_requirement": {
+        "authority_boundary": "May classify and package supported contribution candidates; may not inflate novelty, target alignment, or paper readiness.",
+        "consumes": [
+          "ContributionValueAssessment",
+          "MainProblemAlignmentAudit"
+        ],
+        "disposition": "conditional_event_or_justified_na",
+        "event_family": "handoff",
+        "evidence_roles": [
+          "supports",
+          "constrains",
+          "refutes"
+        ],
+        "inference_operator": "classify_and_assess_contribution",
+        "mode": "conditional",
+        "produces": [
+          "PaperArgumentHandoff"
+        ],
+        "required_contrast": "Contrast target-critical novelty with local, supporting, prior-art-covered, or non-enabling interpretations.",
+        "required_fields": [
+          "public_inference.question",
+          "public_inference.premises",
+          "public_inference.warrant",
+          "public_inference.conclusion",
+          "public_inference.scope",
+          "evidence",
+          "authority"
+        ],
+        "skill": "scientific-contribution-paper-handoff",
+        "step_id": "paper_handoff",
+        "when": "contribution_paper_ready"
+      }
+    }
+  ],
+  "diagnostics": [],
+  "events": [
+    {
+      "alternatives": [],
+      "artifact_validation_status": "unknown",
+      "artifacts": [],
+      "assumptions": [],
+      "attempt": 1,
+      "authority": {},
+      "claim_epistemic_status": "unknown",
+      "conclusion": "",
+      "event_family": "authorization",
+      "event_id": "scientific_contribution_cultivation.base.maintain_atlas.control",
+      "evidence": [],
+      "falsifiers": [],
+      "handoff": {},
+      "obligations": [],
+      "operator": "",
+      "parent_artifact_ids": [],
+      "parent_event_ids": [],
+      "phase": "",
+      "premises": [],
+      "question": "",
+      "run_id": "fixture.scientific_contribution_cultivation.base",
+      "scope": {},
+      "sequence": 1,
+      "skill": "result-atlas-maintainer",
+      "step_id": "maintain_atlas",
+      "timestamp": "",
+      "trace_incomplete": false,
+      "uncertainty": "unknown",
+      "warrant": "",
+      "workflow_disposition": "authorized"
+    },
+    {
+      "alternatives": [
+        {
+          "candidate": "Do not emit UpdatedResultAtlas: Demote the novelty claim because the mechanism is known and only the downstream enablement is new.",
+          "disposition": "rejected",
+          "reason": "Contrast target-critical novelty with local, supporting, prior-art-covered, or non-enabling interpretations. Negative evidence controls promotion."
+        }
+      ],
+      "artifact_validation_status": "integrity_valid",
+      "artifacts": [],
+      "assumptions": [],
+      "attempt": 1,
+      "authority": {
+        "absent": [
+          "unscoped-epistemic-upgrade"
+        ],
+        "exercised": [
+          "maintain_atlas-assessment"
+        ],
+        "prohibitions_checked": [
+          "no hidden scope promotion"
+        ]
+      },
+      "claim_epistemic_status": "evidence_backed",
+      "conclusion": "maintain_atlas produces UpdatedResultAtlas: Classify the result as enabling rather than a main contribution.",
+      "event_family": "inference",
+      "event_id": "scientific_contribution_cultivation.base.maintain_atlas.inference",
+      "evidence": [
+        {
+          "artifact_type": "ResultAtlasSlice",
+          "digest": "61c8ddbab2b6d4dded3cbe6cf9348c5fd6c658796985c80675774399043f4a90",
+          "path": "tests/fixtures/reasoning_trace/evidence/workflow-evidence.json",
+          "relation": "supports"
+        }
+      ],
+      "falsifiers": [
+        "Prior work showing the same enablement removes the contribution claim."
+      ],
+      "handoff": {},
+      "obligations": [],
+      "operator": "compute_result_atlas_delta",
+      "parent_artifact_ids": [],
+      "parent_event_ids": [
+        "scientific_contribution_cultivation.base.maintain_atlas.control"
+      ],
+      "phase": "",
+      "premises": [
+        {
+          "statement": "ResultAtlasSlice: The atlas records a correct scoped result with mechanism evidence.",
+          "type": "artifact"
+        }
+      ],
+      "question": "At maintain_atlas, how does ResultAtlasSlice bear on UpdatedResultAtlas? Is the result a main contribution, an enabling result, or support-only evidence?",
+      "run_id": "fixture.scientific_contribution_cultivation.base",
+      "scope": {
+        "after": "enablement handoff",
+        "before": "result candidate",
+        "model": "main-problem alignment",
+        "regime": "result atlas"
+      },
+      "sequence": 2,
+      "skill": "result-atlas-maintainer",
+      "step_id": "maintain_atlas",
+      "timestamp": "",
+      "trace_incomplete": false,
+      "uncertainty": "bounded by the declared artifact and open obligations",
+      "warrant": "At maintain_atlas, compute_result_atlas_delta checks ResultAtlasSlice before emitting UpdatedResultAtlas. Authority boundary: May classify and package supported contribution candidates; may not inflate novelty, target alignment, or paper readiness.",
+      "workflow_disposition": "accepted"
+    },
+    {
+      "alternatives": [],
+      "artifact_validation_status": "unknown",
+      "artifacts": [],
+      "assumptions": [],
+      "attempt": 1,
+      "authority": {},
+      "claim_epistemic_status": "unknown",
+      "conclusion": "",
+      "event_family": "authorization",
+      "event_id": "scientific_contribution_cultivation.base.manage_subgoal.control",
+      "evidence": [],
+      "falsifiers": [],
+      "handoff": {},
+      "obligations": [],
+      "operator": "",
+      "parent_artifact_ids": [],
+      "parent_event_ids": [
+        "scientific_contribution_cultivation.base.maintain_atlas.inference"
+      ],
+      "phase": "",
+      "premises": [],
+      "question": "",
+      "run_id": "fixture.scientific_contribution_cultivation.base",
+      "scope": {},
+      "sequence": 3,
+      "skill": "contribution-oriented-subgoal-manager",
+      "step_id": "manage_subgoal",
+      "timestamp": "",
+      "trace_incomplete": false,
+      "uncertainty": "unknown",
+      "warrant": "",
+      "workflow_disposition": "authorized"
+    },
+    {
+      "alternatives": [
+        {
+          "candidate": "Do not emit ContributionSubgoalPacket: Demote the novelty claim because the mechanism is known and only the downstream enablement is new.",
+          "disposition": "rejected",
+          "reason": "Contrast target-critical novelty with local, supporting, prior-art-covered, or non-enabling interpretations. Negative evidence controls promotion."
+        }
+      ],
+      "artifact_validation_status": "integrity_valid",
+      "artifacts": [],
+      "assumptions": [],
+      "attempt": 1,
+      "authority": {
+        "absent": [
+          "unscoped-epistemic-upgrade"
+        ],
+        "exercised": [
+          "manage_subgoal-assessment"
+        ],
+        "prohibitions_checked": [
+          "no hidden scope promotion"
+        ]
+      },
+      "claim_epistemic_status": "evidence_backed",
+      "conclusion": "manage_subgoal produces ContributionSubgoalPacket: Classify the result as enabling rather than a main contribution.",
+      "event_family": "inference",
+      "event_id": "scientific_contribution_cultivation.base.manage_subgoal.inference",
+      "evidence": [
+        {
+          "artifact_type": "UpdatedResultAtlas",
+          "digest": "61c8ddbab2b6d4dded3cbe6cf9348c5fd6c658796985c80675774399043f4a90",
+          "path": "tests/fixtures/reasoning_trace/evidence/workflow-evidence.json",
+          "relation": "supports"
+        }
+      ],
+      "falsifiers": [
+        "Prior work showing the same enablement removes the contribution claim."
+      ],
+      "handoff": {},
+      "obligations": [],
+      "operator": "classify_and_assess_contribution",
+      "parent_artifact_ids": [],
+      "parent_event_ids": [
+        "scientific_contribution_cultivation.base.manage_subgoal.control"
+      ],
+      "phase": "",
+      "premises": [
+        {
+          "statement": "UpdatedResultAtlas: The atlas records a correct scoped result with mechanism evidence.",
+          "type": "artifact"
+        }
+      ],
+      "question": "At manage_subgoal, how does UpdatedResultAtlas bear on ContributionSubgoalPacket? Is the result a main contribution, an enabling result, or support-only evidence?",
+      "run_id": "fixture.scientific_contribution_cultivation.base",
+      "scope": {
+        "after": "enablement handoff",
+        "before": "result candidate",
+        "model": "main-problem alignment",
+        "regime": "result atlas"
+      },
+      "sequence": 4,
+      "skill": "contribution-oriented-subgoal-manager",
+      "step_id": "manage_subgoal",
+      "timestamp": "",
+      "trace_incomplete": false,
+      "uncertainty": "bounded by the declared artifact and open obligations",
+      "warrant": "At manage_subgoal, classify_and_assess_contribution checks UpdatedResultAtlas before emitting ContributionSubgoalPacket. Authority boundary: May classify and package supported contribution candidates; may not inflate novelty, target alignment, or paper readiness.",
+      "workflow_disposition": "accepted"
+    },
+    {
+      "alternatives": [],
+      "artifact_validation_status": "unknown",
+      "artifacts": [],
+      "assumptions": [],
+      "attempt": 1,
+      "authority": {},
+      "claim_epistemic_status": "unknown",
+      "conclusion": "",
+      "event_family": "authorization",
+      "event_id": "scientific_contribution_cultivation.base.detect_contribution.control",
+      "evidence": [],
+      "falsifiers": [],
+      "handoff": {},
+      "obligations": [],
+      "operator": "",
+      "parent_artifact_ids": [],
+      "parent_event_ids": [
+        "scientific_contribution_cultivation.base.manage_subgoal.inference"
+      ],
+      "phase": "",
+      "premises": [],
+      "question": "",
+      "run_id": "fixture.scientific_contribution_cultivation.base",
+      "scope": {},
+      "sequence": 5,
+      "skill": "scientific-contribution-detector",
+      "step_id": "detect_contribution",
+      "timestamp": "",
+      "trace_incomplete": false,
+      "uncertainty": "unknown",
+      "warrant": "",
+      "workflow_disposition": "authorized"
+    },
+    {
+      "alternatives": [
+        {
+          "candidate": "Do not emit ContributionCandidate: Demote the novelty claim because the mechanism is known and only the downstream enablement is new.",
+          "disposition": "rejected",
+          "reason": "Contrast target-critical novelty with local, supporting, prior-art-covered, or non-enabling interpretations. Negative evidence controls promotion."
+        }
+      ],
+      "artifact_validation_status": "integrity_valid",
+      "artifacts": [],
+      "assumptions": [],
+      "attempt": 1,
+      "authority": {
+        "absent": [
+          "unscoped-epistemic-upgrade"
+        ],
+        "exercised": [
+          "detect_contribution-assessment"
+        ],
+        "prohibitions_checked": [
+          "no hidden scope promotion"
+        ]
+      },
+      "claim_epistemic_status": "evidence_backed",
+      "conclusion": "detect_contribution produces ContributionCandidate: Classify the result as enabling rather than a main contribution.",
+      "event_family": "inference",
+      "event_id": "scientific_contribution_cultivation.base.detect_contribution.inference",
+      "evidence": [
+        {
+          "artifact_type": "ContributionSubgoalPacket",
+          "digest": "61c8ddbab2b6d4dded3cbe6cf9348c5fd6c658796985c80675774399043f4a90",
+          "path": "tests/fixtures/reasoning_trace/evidence/workflow-evidence.json",
+          "relation": "supports"
+        }
+      ],
+      "falsifiers": [
+        "Prior work showing the same enablement removes the contribution claim."
+      ],
+      "handoff": {},
+      "obligations": [],
+      "operator": "classify_and_assess_contribution",
+      "parent_artifact_ids": [],
+      "parent_event_ids": [
+        "scientific_contribution_cultivation.base.detect_contribution.control"
+      ],
+      "phase": "",
+      "premises": [
+        {
+          "statement": "ContributionSubgoalPacket: The atlas records a correct scoped result with mechanism evidence.",
+          "type": "artifact"
+        }
+      ],
+      "question": "At detect_contribution, how does ContributionSubgoalPacket bear on ContributionCandidate? Is the result a main contribution, an enabling result, or support-only evidence?",
+      "run_id": "fixture.scientific_contribution_cultivation.base",
+      "scope": {
+        "after": "enablement handoff",
+        "before": "result candidate",
+        "model": "main-problem alignment",
+        "regime": "result atlas"
+      },
+      "sequence": 6,
+      "skill": "scientific-contribution-detector",
+      "step_id": "detect_contribution",
+      "timestamp": "",
+      "trace_incomplete": false,
+      "uncertainty": "bounded by the declared artifact and open obligations",
+      "warrant": "At detect_contribution, classify_and_assess_contribution checks ContributionSubgoalPacket before emitting ContributionCandidate. Authority boundary: May classify and package supported contribution candidates; may not inflate novelty, target alignment, or paper readiness.",
+      "workflow_disposition": "accepted"
+    },
+    {
+      "alternatives": [],
+      "artifact_validation_status": "unknown",
+      "artifacts": [],
+      "assumptions": [],
+      "attempt": 1,
+      "authority": {},
+      "claim_epistemic_status": "unknown",
+      "conclusion": "",
+      "event_family": "authorization",
+      "event_id": "scientific_contribution_cultivation.base.assess_value.control",
+      "evidence": [],
+      "falsifiers": [],
+      "handoff": {},
+      "obligations": [],
+      "operator": "",
+      "parent_artifact_ids": [],
+      "parent_event_ids": [
+        "scientific_contribution_cultivation.base.detect_contribution.inference"
+      ],
+      "phase": "",
+      "premises": [],
+      "question": "",
+      "run_id": "fixture.scientific_contribution_cultivation.base",
+      "scope": {},
+      "sequence": 7,
+      "skill": "contribution-value-assessor",
+      "step_id": "assess_value",
+      "timestamp": "",
+      "trace_incomplete": false,
+      "uncertainty": "unknown",
+      "warrant": "",
+      "workflow_disposition": "authorized"
+    },
+    {
+      "alternatives": [
+        {
+          "candidate": "Do not emit ContributionValueAssessment: Demote the novelty claim because the mechanism is known and only the downstream enablement is new.",
+          "disposition": "rejected",
+          "reason": "Contrast target-critical novelty with local, supporting, prior-art-covered, or non-enabling interpretations. Negative evidence controls promotion."
+        }
+      ],
+      "artifact_validation_status": "integrity_valid",
+      "artifacts": [],
+      "assumptions": [],
+      "attempt": 1,
+      "authority": {
+        "absent": [
+          "unscoped-epistemic-upgrade"
+        ],
+        "exercised": [
+          "assess_value-assessment"
+        ],
+        "prohibitions_checked": [
+          "no hidden scope promotion"
+        ]
+      },
+      "claim_epistemic_status": "evidence_backed",
+      "conclusion": "assess_value produces ContributionValueAssessment: Classify the result as enabling rather than a main contribution.",
+      "event_family": "inference",
+      "event_id": "scientific_contribution_cultivation.base.assess_value.inference",
+      "evidence": [
+        {
+          "artifact_type": "ContributionCandidate",
+          "digest": "61c8ddbab2b6d4dded3cbe6cf9348c5fd6c658796985c80675774399043f4a90",
+          "path": "tests/fixtures/reasoning_trace/evidence/workflow-evidence.json",
+          "relation": "supports"
+        }
+      ],
+      "falsifiers": [
+        "Prior work showing the same enablement removes the contribution claim."
+      ],
+      "handoff": {},
+      "obligations": [],
+      "operator": "classify_and_assess_contribution",
+      "parent_artifact_ids": [],
+      "parent_event_ids": [
+        "scientific_contribution_cultivation.base.assess_value.control"
+      ],
+      "phase": "",
+      "premises": [
+        {
+          "statement": "ContributionCandidate: The atlas records a correct scoped result with mechanism evidence.",
+          "type": "artifact"
+        }
+      ],
+      "question": "At assess_value, how does ContributionCandidate bear on ContributionValueAssessment? Is the result a main contribution, an enabling result, or support-only evidence?",
+      "run_id": "fixture.scientific_contribution_cultivation.base",
+      "scope": {
+        "after": "enablement handoff",
+        "before": "result candidate",
+        "model": "main-problem alignment",
+        "regime": "result atlas"
+      },
+      "sequence": 8,
+      "skill": "contribution-value-assessor",
+      "step_id": "assess_value",
+      "timestamp": "",
+      "trace_incomplete": false,
+      "uncertainty": "bounded by the declared artifact and open obligations",
+      "warrant": "At assess_value, classify_and_assess_contribution checks ContributionCandidate before emitting ContributionValueAssessment. Authority boundary: May classify and package supported contribution candidates; may not inflate novelty, target alignment, or paper readiness.",
+      "workflow_disposition": "accepted"
+    },
+    {
+      "alternatives": [],
+      "artifact_validation_status": "unknown",
+      "artifacts": [],
+      "assumptions": [],
+      "attempt": 1,
+      "authority": {},
+      "claim_epistemic_status": "unknown",
+      "conclusion": "",
+      "event_family": "authorization",
+      "event_id": "scientific_contribution_cultivation.base.audit_alignment.control",
+      "evidence": [],
+      "falsifiers": [],
+      "handoff": {},
+      "obligations": [],
+      "operator": "",
+      "parent_artifact_ids": [],
+      "parent_event_ids": [
+        "scientific_contribution_cultivation.base.assess_value.inference"
+      ],
+      "phase": "",
+      "premises": [],
+      "question": "",
+      "run_id": "fixture.scientific_contribution_cultivation.base",
+      "scope": {},
+      "sequence": 9,
+      "skill": "main-problem-alignment-auditor",
+      "step_id": "audit_alignment",
+      "timestamp": "",
+      "trace_incomplete": false,
+      "uncertainty": "unknown",
+      "warrant": "",
+      "workflow_disposition": "authorized"
+    },
+    {
+      "alternatives": [
+        {
+          "candidate": "Do not emit MainProblemAlignmentAudit: Demote the novelty claim because the mechanism is known and only the downstream enablement is new.",
+          "disposition": "accepted",
+          "reason": "Contrast target-critical novelty with local, supporting, prior-art-covered, or non-enabling interpretations. Negative evidence controls promotion."
+        }
+      ],
+      "artifact_validation_status": "integrity_valid",
+      "artifacts": [],
+      "assumptions": [],
+      "attempt": 1,
+      "authority": {
+        "absent": [
+          "unscoped-epistemic-upgrade"
+        ],
+        "exercised": [
+          "audit_alignment-assessment"
+        ],
+        "prohibitions_checked": [
+          "no hidden scope promotion"
+        ]
+      },
+      "claim_epistemic_status": "quarantined",
+      "conclusion": "audit_alignment rejects MainProblemAlignmentAudit: Demote the novelty claim because the mechanism is known and only the downstream enablement is new.",
+      "event_family": "failure",
+      "event_id": "scientific_contribution_cultivation.base.audit_alignment.inference",
+      "evidence": [
+        {
+          "artifact_type": "ContributionValueAssessment",
+          "digest": "61c8ddbab2b6d4dded3cbe6cf9348c5fd6c658796985c80675774399043f4a90",
+          "path": "tests/fixtures/reasoning_trace/evidence/workflow-evidence.json",
+          "relation": "refutes"
+        }
+      ],
+      "falsifiers": [
+        "Prior work showing the same enablement removes the contribution claim."
+      ],
+      "handoff": {},
+      "obligations": [
+        {
+          "requirement": "Prior work showing the same enablement removes the contribution claim.",
+          "status": "open"
+        }
+      ],
+      "operator": "audit_main_target_alignment",
+      "parent_artifact_ids": [],
+      "parent_event_ids": [
+        "scientific_contribution_cultivation.base.audit_alignment.control"
+      ],
+      "phase": "",
+      "premises": [
+        {
+          "statement": "ContributionValueAssessment: The atlas records a correct scoped result with mechanism evidence.",
+          "type": "artifact"
+        }
+      ],
+      "question": "At audit_alignment, how does ContributionValueAssessment bear on MainProblemAlignmentAudit? Is the result a main contribution, an enabling result, or support-only evidence?",
+      "run_id": "fixture.scientific_contribution_cultivation.base",
+      "scope": {
+        "after": "enablement handoff",
+        "before": "result candidate",
+        "model": "main-problem alignment",
+        "regime": "result atlas"
+      },
+      "sequence": 10,
+      "skill": "main-problem-alignment-auditor",
+      "step_id": "audit_alignment",
+      "timestamp": "",
+      "trace_incomplete": false,
+      "uncertainty": "bounded by the declared artifact and open obligations",
+      "warrant": "At audit_alignment, audit_main_target_alignment checks ContributionValueAssessment before emitting MainProblemAlignmentAudit. Authority boundary: May classify and package supported contribution candidates; may not inflate novelty, target alignment, or paper readiness.",
+      "workflow_disposition": "failed"
+    },
+    {
+      "alternatives": [],
+      "artifact_validation_status": "unknown",
+      "artifacts": [],
+      "assumptions": [],
+      "attempt": 1,
+      "authority": {},
+      "claim_epistemic_status": "unknown",
+      "conclusion": "",
+      "event_family": "authorization",
+      "event_id": "scientific_contribution_cultivation.base.audit_enablement.control",
+      "evidence": [],
+      "falsifiers": [],
+      "handoff": {},
+      "obligations": [],
+      "operator": "",
+      "parent_artifact_ids": [],
+      "parent_event_ids": [
+        "scientific_contribution_cultivation.base.audit_alignment.inference"
+      ],
+      "phase": "",
+      "premises": [],
+      "question": "",
+      "run_id": "fixture.scientific_contribution_cultivation.base",
+      "scope": {},
+      "sequence": 11,
+      "skill": "completed-subgoal-enablement-auditor",
+      "step_id": "audit_enablement",
+      "timestamp": "",
+      "trace_incomplete": false,
+      "uncertainty": "unknown",
+      "warrant": "",
+      "workflow_disposition": "authorized"
+    },
+    {
+      "alternatives": [
+        {
+          "candidate": "Do not emit EnablementAudit: Demote the novelty claim because the mechanism is known and only the downstream enablement is new.",
+          "disposition": "rejected",
+          "reason": "Contrast target-critical novelty with local, supporting, prior-art-covered, or non-enabling interpretations. Negative evidence controls promotion."
+        }
+      ],
+      "artifact_validation_status": "integrity_valid",
+      "artifacts": [],
+      "assumptions": [],
+      "attempt": 1,
+      "authority": {
+        "absent": [
+          "unscoped-epistemic-upgrade"
+        ],
+        "exercised": [
+          "audit_enablement-assessment"
+        ],
+        "prohibitions_checked": [
+          "no hidden scope promotion"
+        ]
+      },
+      "claim_epistemic_status": "evidence_backed",
+      "conclusion": "audit_enablement produces EnablementAudit: Classify the result as enabling rather than a main contribution.",
+      "event_family": "inference",
+      "event_id": "scientific_contribution_cultivation.base.audit_enablement.inference",
+      "evidence": [
+        {
+          "artifact_type": "ContributionValueAssessment",
+          "digest": "61c8ddbab2b6d4dded3cbe6cf9348c5fd6c658796985c80675774399043f4a90",
+          "path": "tests/fixtures/reasoning_trace/evidence/workflow-evidence.json",
+          "relation": "supports"
+        }
+      ],
+      "falsifiers": [
+        "Prior work showing the same enablement removes the contribution claim."
+      ],
+      "handoff": {},
+      "obligations": [],
+      "operator": "evaluate_counterfactual_enablement",
+      "parent_artifact_ids": [],
+      "parent_event_ids": [
+        "scientific_contribution_cultivation.base.audit_enablement.control"
+      ],
+      "phase": "",
+      "premises": [
+        {
+          "statement": "ContributionValueAssessment: The atlas records a correct scoped result with mechanism evidence.",
+          "type": "artifact"
+        }
+      ],
+      "question": "At audit_enablement, how does ContributionValueAssessment bear on EnablementAudit? Is the result a main contribution, an enabling result, or support-only evidence?",
+      "run_id": "fixture.scientific_contribution_cultivation.base",
+      "scope": {
+        "after": "enablement handoff",
+        "before": "result candidate",
+        "model": "main-problem alignment",
+        "regime": "result atlas"
+      },
+      "sequence": 12,
+      "skill": "completed-subgoal-enablement-auditor",
+      "step_id": "audit_enablement",
+      "timestamp": "",
+      "trace_incomplete": false,
+      "uncertainty": "bounded by the declared artifact and open obligations",
+      "warrant": "At audit_enablement, evaluate_counterfactual_enablement checks ContributionValueAssessment before emitting EnablementAudit. Authority boundary: May classify and package supported contribution candidates; may not inflate novelty, target alignment, or paper readiness.",
+      "workflow_disposition": "accepted"
+    },
+    {
+      "alternatives": [],
+      "artifact_validation_status": "unknown",
+      "artifacts": [],
+      "assumptions": [],
+      "attempt": 1,
+      "authority": {},
+      "claim_epistemic_status": "unknown",
+      "conclusion": "",
+      "event_family": "authorization",
+      "event_id": "scientific_contribution_cultivation.base.package_enablement.control",
+      "evidence": [],
+      "falsifiers": [],
+      "handoff": {},
+      "obligations": [],
+      "operator": "",
+      "parent_artifact_ids": [],
+      "parent_event_ids": [
+        "scientific_contribution_cultivation.base.audit_enablement.inference"
+      ],
+      "phase": "",
+      "premises": [],
+      "question": "",
+      "run_id": "fixture.scientific_contribution_cultivation.base",
+      "scope": {},
+      "sequence": 13,
+      "skill": "subgoal-enablement-handoff-packager",
+      "step_id": "package_enablement",
+      "timestamp": "",
+      "trace_incomplete": false,
+      "uncertainty": "unknown",
+      "warrant": "",
+      "workflow_disposition": "authorized"
+    },
+    {
+      "alternatives": [
+        {
+          "candidate": "Do not emit EnablementHandoff: Demote the novelty claim because the mechanism is known and only the downstream enablement is new.",
+          "disposition": "rejected",
+          "reason": "Contrast target-critical novelty with local, supporting, prior-art-covered, or non-enabling interpretations. Negative evidence controls promotion."
+        }
+      ],
+      "artifact_validation_status": "integrity_valid",
+      "artifacts": [],
+      "assumptions": [],
+      "attempt": 1,
+      "authority": {
+        "absent": [
+          "unscoped-epistemic-upgrade"
+        ],
+        "exercised": [
+          "package_enablement-assessment"
+        ],
+        "prohibitions_checked": [
+          "no hidden scope promotion"
+        ]
+      },
+      "claim_epistemic_status": "evidence_backed",
+      "conclusion": "package_enablement produces EnablementHandoff: Classify the result as enabling rather than a main contribution.",
+      "event_family": "inference",
+      "event_id": "scientific_contribution_cultivation.base.package_enablement.inference",
+      "evidence": [
+        {
+          "artifact_type": "EnablementAudit",
+          "digest": "61c8ddbab2b6d4dded3cbe6cf9348c5fd6c658796985c80675774399043f4a90",
+          "path": "tests/fixtures/reasoning_trace/evidence/workflow-evidence.json",
+          "relation": "supports"
+        }
+      ],
+      "falsifiers": [
+        "Prior work showing the same enablement removes the contribution claim."
+      ],
+      "handoff": {},
+      "obligations": [],
+      "operator": "evaluate_counterfactual_enablement",
+      "parent_artifact_ids": [],
+      "parent_event_ids": [
+        "scientific_contribution_cultivation.base.package_enablement.control"
+      ],
+      "phase": "",
+      "premises": [
+        {
+          "statement": "EnablementAudit: The atlas records a correct scoped result with mechanism evidence.",
+          "type": "artifact"
+        }
+      ],
+      "question": "At package_enablement, how does EnablementAudit bear on EnablementHandoff? Is the result a main contribution, an enabling result, or support-only evidence?",
+      "run_id": "fixture.scientific_contribution_cultivation.base",
+      "scope": {
+        "after": "enablement handoff",
+        "before": "result candidate",
+        "model": "main-problem alignment",
+        "regime": "result atlas"
+      },
+      "sequence": 14,
+      "skill": "subgoal-enablement-handoff-packager",
+      "step_id": "package_enablement",
+      "timestamp": "",
+      "trace_incomplete": false,
+      "uncertainty": "bounded by the declared artifact and open obligations",
+      "warrant": "At package_enablement, evaluate_counterfactual_enablement checks EnablementAudit before emitting EnablementHandoff. Authority boundary: May classify and package supported contribution candidates; may not inflate novelty, target alignment, or paper readiness.",
+      "workflow_disposition": "accepted"
+    },
+    {
+      "alternatives": [],
+      "artifact_validation_status": "unknown",
+      "artifacts": [],
+      "assumptions": [],
+      "attempt": 1,
+      "authority": {},
+      "claim_epistemic_status": "unknown",
+      "conclusion": "",
+      "event_family": "authorization",
+      "event_id": "scientific_contribution_cultivation.base.paper_handoff.control",
+      "evidence": [],
+      "falsifiers": [],
+      "handoff": {},
+      "obligations": [],
+      "operator": "",
+      "parent_artifact_ids": [],
+      "parent_event_ids": [
+        "scientific_contribution_cultivation.base.package_enablement.inference"
+      ],
+      "phase": "",
+      "premises": [],
+      "question": "",
+      "run_id": "fixture.scientific_contribution_cultivation.base",
+      "scope": {},
+      "sequence": 15,
+      "skill": "scientific-contribution-paper-handoff",
+      "step_id": "paper_handoff",
+      "timestamp": "",
+      "trace_incomplete": false,
+      "uncertainty": "unknown",
+      "warrant": "",
+      "workflow_disposition": "authorized"
+    },
+    {
+      "alternatives": [
+        {
+          "candidate": "Do not emit PaperArgumentHandoff: Demote the novelty claim because the mechanism is known and only the downstream enablement is new.",
+          "disposition": "rejected",
+          "reason": "Contrast target-critical novelty with local, supporting, prior-art-covered, or non-enabling interpretations. Negative evidence controls promotion."
+        }
+      ],
+      "artifact_validation_status": "integrity_valid",
+      "artifacts": [],
+      "assumptions": [],
+      "attempt": 1,
+      "authority": {
+        "absent": [
+          "unscoped-epistemic-upgrade"
+        ],
+        "exercised": [
+          "paper_handoff-assessment"
+        ],
+        "prohibitions_checked": [
+          "no hidden scope promotion"
+        ]
+      },
+      "claim_epistemic_status": "evidence_backed",
+      "conclusion": "paper_handoff produces PaperArgumentHandoff: Classify the result as enabling rather than a main contribution.",
+      "event_family": "inference",
+      "event_id": "scientific_contribution_cultivation.base.paper_handoff.inference",
+      "evidence": [
+        {
+          "artifact_type": "ContributionValueAssessment",
+          "digest": "61c8ddbab2b6d4dded3cbe6cf9348c5fd6c658796985c80675774399043f4a90",
+          "path": "tests/fixtures/reasoning_trace/evidence/workflow-evidence.json",
+          "relation": "supports"
+        }
+      ],
+      "falsifiers": [
+        "Prior work showing the same enablement removes the contribution claim."
+      ],
+      "handoff": {},
+      "obligations": [],
+      "operator": "classify_and_assess_contribution",
+      "parent_artifact_ids": [],
+      "parent_event_ids": [
+        "scientific_contribution_cultivation.base.paper_handoff.control"
+      ],
+      "phase": "",
+      "premises": [
+        {
+          "statement": "ContributionValueAssessment: The atlas records a correct scoped result with mechanism evidence.",
+          "type": "artifact"
+        }
+      ],
+      "question": "At paper_handoff, how does ContributionValueAssessment bear on PaperArgumentHandoff? Is the result a main contribution, an enabling result, or support-only evidence?",
+      "run_id": "fixture.scientific_contribution_cultivation.base",
+      "scope": {
+        "after": "enablement handoff",
+        "before": "result candidate",
+        "model": "main-problem alignment",
+        "regime": "result atlas"
+      },
+      "sequence": 16,
+      "skill": "scientific-contribution-paper-handoff",
+      "step_id": "paper_handoff",
+      "timestamp": "",
+      "trace_incomplete": false,
+      "uncertainty": "bounded by the declared artifact and open obligations",
+      "warrant": "At paper_handoff, classify_and_assess_contribution checks ContributionValueAssessment before emitting PaperArgumentHandoff. Authority boundary: May classify and package supported contribution candidates; may not inflate novelty, target alignment, or paper readiness.",
+      "workflow_disposition": "accepted"
+    },
+    {
+      "alternatives": [],
+      "artifact_validation_status": "unknown",
+      "artifacts": [],
+      "assumptions": [],
+      "attempt": 1,
+      "authority": {},
+      "claim_epistemic_status": "unknown",
+      "conclusion": "Typed handoff to manuscript_result_elaboration",
+      "event_family": "handoff",
+      "event_id": "scientific_contribution_cultivation.handoff",
+      "evidence": [],
+      "falsifiers": [],
+      "handoff": {
+        "accepted": true,
+        "destination_workflow_id": "manuscript_result_elaboration"
+      },
+      "obligations": [],
+      "operator": "",
+      "parent_artifact_ids": [],
+      "parent_event_ids": [
+        "scientific_contribution_cultivation.base.paper_handoff.inference"
+      ],
+      "phase": "",
+      "premises": [],
+      "question": "",
+      "run_id": "fixture.scientific_contribution_cultivation.base",
+      "scope": {},
+      "sequence": 17,
+      "skill": "",
+      "step_id": "",
+      "timestamp": "",
+      "trace_incomplete": false,
+      "uncertainty": "unknown",
+      "warrant": "The exit disposition and open obligations are explicit.",
+      "workflow_disposition": "handed_off"
+    }
+  ],
+  "handoff_contracts": [
+    {
+      "adapter": "paper_argument_to_draft",
+      "artifact_type": "PaperArgumentHandoff",
+      "when": "paper_ready",
+      "workflow": "manuscript_result_elaboration"
+    }
+  ],
+  "identity": {
+    "profile_id": "",
+    "profile_name": "",
+    "run_id": "fixture.scientific_contribution_cultivation.base",
+    "target": "scientific",
+    "trace_id": "trace.f4d2776bd2e9d716",
+    "workflow_id": "scientific_contribution_cultivation",
+    "workflow_name": "Scientific Contribution Cultivation",
+    "workflow_version": "1.0.0"
+  },
+  "observability_gaps": [],
+  "profile_topology": {},
+  "prohibitions": [
+    "No novelty inflation",
+    "No support-only result promoted as a main result",
+    "No paper claim without mechanism evidence"
+  ],
+  "schema_version": "2.0",
+  "specialist_skills": [],
+  "validation_tail_start": ""
+}

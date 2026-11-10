@@ -1,0 +1,24 @@
+# Submission checklist
+
+- [x] Blinded modular manuscript complete.
+- [x] Abstract claims map to a numbered theorem, corollary, or countermodel.
+- [x] Ontology, semantics, epistemology, and proof methodology are separated.
+- [x] Representation, physical information, recovery, and uniformity are typed.
+- [x] Category-theoretic vocabulary is restricted to proved structure.
+- [x] Central recovery-to-spectrum theorem has a full appendix proof.
+- [x] Hidden-sector, collapsing-gap, and limit-order countermodels are explicit.
+- [x] Yang--Mills case distinguishes lattice, quotient, RG, continuum, OS, and spectral interfaces.
+- [x] Primary-source literature and novelty ledgers complete.
+- [x] No “first” or priority claim is made.
+- [x] Thirteen exact supplement tests pass.
+- [x] Strict manuscript lint reports zero errors and zero warnings.
+- [x] PDF has no unresolved references/citations or overfull boxes.
+- [x] Title, theorem, diagrams, ontology, certificate table, and bibliography pages visually inspected.
+- [x] Data/code statement, venue memo, and cover letter drafted.
+- [x] Conservative Yang--Mills frontier audit complete.
+- [x] Portable submission archive and checksum created.
+- [ ] Author name, affiliation, ORCID, and email supplied.
+- [ ] Funding, acknowledgements, conflicts, and AI-use statement supplied as required.
+- [ ] Journal-specific word count confirmed under the target venue's rules.
+- [ ] Subscription-database novelty search refreshed immediately before submission.
+- [ ] External submission authorized by the user.

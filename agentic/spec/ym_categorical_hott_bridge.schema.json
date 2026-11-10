@@ -1,0 +1,605 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://abducer.local/spec/ym_categorical_hott_bridge.schema.json",
+  "title": "Receipt-bound Yang--Mills categorical/HoTT physics bridge",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "bridge_id", "target_id", "dependency_authority", "literature_basis", "upstream_packet_bindings", "continuum_authority",
+    "lens", "claim_level", "epistemic_status", "target_contract", "quantifier_contract", "quantifier_contract_digest",
+    "evidence_registry", "evidence_registry_digest", "representation_package",
+    "physical_diagram", "carrier_translations", "same_domain_transfer", "failure_witness", "physics_handback",
+    "audit_receipts", "theorem_obligations", "correction_tests", "calibration_matrix",
+    "value_ablation", "physics_evaluation", "downstream_handoffs", "evidence_citations",
+    "explicit_unknowns", "non_claims", "validation_handoff"
+  ],
+  "$defs": {
+    "text": {"type": "string", "minLength": 8},
+    "id": {"type": "string", "minLength": 1, "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$"},
+    "digest": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
+    "formal_dependency_authority": {
+      "type": "object", "additionalProperties": false,
+      "required": ["authority_version", "scope", "declared_roots", "entries", "schema_closure", "import_boundary", "runtime_dependencies", "authority_boundary", "content_digest"],
+      "properties": {
+        "authority_version": {"const": "2.0.0"}, "scope": {"const": "finite_formal_abstraction_local_closure"},
+        "declared_roots": {"type": "array", "minItems": 2, "uniqueItems": true, "items": {"type": "object", "additionalProperties": false, "required": ["kind", "path", "roles"], "properties": {"kind": {"enum": ["entry_python", "semantic"]}, "path": {"type": "string", "minLength": 3}, "roles": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "minLength": 3}}}}},
+        "entries": {"type": "array", "minItems": 15, "uniqueItems": true, "items": {"type": "object", "additionalProperties": false, "required": ["path", "roles", "byte_size", "content_digest"], "properties": {"path": {"type": "string", "minLength": 3}, "roles": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "minLength": 3}}, "byte_size": {"type": "integer", "minimum": 0}, "content_digest": {"$ref": "#/$defs/digest"}}}},
+        "schema_closure": {"type": "object", "additionalProperties": false, "required": ["literal_paths", "referenced_paths"], "properties": {"literal_paths": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "minLength": 3}}, "referenced_paths": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 3}}}},
+        "import_boundary": {"type": "object", "additionalProperties": false, "required": ["policy", "repository_local_python_paths", "stdlib_modules", "third_party_modules"], "properties": {"policy": {"const": "conservative_repository_local_ast_import_closure_v2"}, "repository_local_python_paths": {"type": "array", "minItems": 4, "uniqueItems": true, "items": {"type": "string", "minLength": 3}}, "stdlib_modules": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1}}, "third_party_modules": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "object", "additionalProperties": false, "required": ["module", "distribution", "version"], "properties": {"module": {"type": "string", "minLength": 1}, "distribution": {"type": "string", "minLength": 1}, "version": {"type": "string", "minLength": 1}}}}}},
+        "runtime_dependencies": {"type": "array", "minItems": 2, "uniqueItems": true, "items": {"type": "object", "additionalProperties": false, "required": ["name", "version"], "properties": {"name": {"type": "string", "minLength": 1}, "version": {"type": "string", "minLength": 1}}}},
+        "authority_boundary": {"$ref": "#/$defs/text"}, "content_digest": {"$ref": "#/$defs/digest"}
+      }
+    },
+    "id_list": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"$ref": "#/$defs/id"}},
+    "id_set": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/id"}},
+    "string_list": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"$ref": "#/$defs/text"}},
+    "quantifier_contract": {
+      "const": {
+        "coupling": {
+          "value_domain": "renormalized coupling trajectories fixed by physical normalization",
+          "statement": "Along every declared renormalized coupling trajectory with physical normalization held fixed."
+        },
+        "cutoff": {
+          "value_domain": "strictly positive ultraviolet regulators directed toward zero",
+          "statement": "For every sufficiently small positive ultraviolet cutoff in the declared directed removal net."
+        },
+        "distance": {
+          "value_domain": "strictly positive physical Euclidean temporal separations",
+          "statement": "For every declared strictly positive physical Euclidean temporal separation."
+        },
+        "observable_class": {
+          "value_domain": "the declared state-separating gauge-invariant observable core",
+          "statement": "For every observable in the declared state-separating gauge-invariant core."
+        },
+        "volume": {
+          "value_domain": "finite regulated volumes directed toward the infinite-volume limit",
+          "statement": "Uniformly over the declared finite regulated volumes before the infinite-volume limit."
+        }
+      }
+    },
+    "ym_evidence_registry_entry": {
+      "type": "object", "additionalProperties": false,
+      "required": ["evidence_ref", "evidence_kind", "source_ref", "source_digest", "subject_structure_id", "claim_id", "inference_type", "exact_claim", "polarity", "conclusion", "quantified_domain_coverage", "authority_scope", "content_digest"],
+      "properties": {
+        "evidence_ref": {"$ref": "#/$defs/id"},
+        "evidence_kind": {"enum": ["target_declaration", "validated_finite_forge", "finite_negative_witness", "calibration_symbolic_replay", "calibration_countermodel_replay", "calibration_boundary_fixture"]},
+        "source_ref": {"$ref": "#/$defs/id"},
+        "source_digest": {"$ref": "#/$defs/digest"},
+        "subject_structure_id": {"enum": ["four_dimensional_pure_yang_mills", "compact_simple_gauge_group_scope", "gauge_invariance", "observable_algebra", "regulator_ledger", "volume_ledger", "coupling_trajectory", "physical_normalization", "locality", "reflection_positivity", "theory_identity", "continuum_limit_order", "os_reconstruction_burden", "positive_hamiltonian_gap_target"]},
+        "claim_id": {"$ref": "#/$defs/id"},
+        "inference_type": {"enum": ["scope_declaration", "finite_transport_support", "finite_obstruction", "restricted_symbolic_calibration", "restricted_countermodel", "boundary_calibration"]},
+        "exact_claim": {"$ref": "#/$defs/text"},
+        "polarity": {"enum": ["declares", "supports", "challenges", "calibrates", "bounds"]},
+        "conclusion": {"enum": ["target_declaration_only", "finite_bridge_support_only", "finite_bridge_obstruction_only", "restricted_symbolic_boundary_only", "restricted_countermodel_only", "declared_boundary_fixture_only"]},
+        "quantified_domain_coverage": {"$ref": "#/$defs/id_set"},
+        "authority_scope": {"const": "sealed_bridge_representation_only"},
+        "content_digest": {"$ref": "#/$defs/digest"}
+      }
+    },
+    "ym_continuum_authority": {
+      "type": "object", "additionalProperties": false,
+      "required": ["authority_version", "status", "reason_code", "target_id", "claim_ids", "authority_scope", "content_digest"],
+      "properties": {
+        "authority_version": {"const": "1.0.0"},
+        "status": {"const": "unavailable"},
+        "reason_code": {"const": "no_approved_continuum_checker_registered"},
+        "target_id": {"const": "yang-mills-existence-and-mass-gap-target"},
+        "claim_ids": {"type": "array", "maxItems": 0},
+        "authority_scope": {"const": "no_continuum_claim_authority"},
+        "content_digest": {"$ref": "#/$defs/digest"}
+      }
+    },
+    "ym_evidence_registry": {
+      "type": "array", "minItems": 1, "uniqueItems": true,
+      "items": {"$ref": "#/$defs/ym_evidence_registry_entry"}
+    },
+    "ym_structure_row": {
+      "type": "object", "additionalProperties": false,
+      "required": ["structure_id", "structure_kind", "status", "authority_scope", "target_contract_refs", "quantifier_refs", "quantifier_binding_digest", "evidence_refs", "evidence_binding_digest", "obligation_ids", "correction_test_ids", "status_rationale"],
+      "properties": {
+        "structure_id": {"enum": ["four_dimensional_pure_yang_mills", "compact_simple_gauge_group_scope", "gauge_invariance", "observable_algebra", "regulator_ledger", "volume_ledger", "coupling_trajectory", "physical_normalization", "locality", "reflection_positivity", "theory_identity", "continuum_limit_order", "os_reconstruction_burden", "positive_hamiltonian_gap_target"]},
+        "structure_kind": {"enum": ["fixed_target_commitment", "transport_invariant", "open_reconstruction_burden", "desired_consequence"]},
+        "status": {"enum": ["required", "proved", "conditional", "open", "failed"]},
+        "authority_scope": {"const": "sealed_bridge_representation_only"},
+        "target_contract_refs": {"$ref": "#/$defs/id_list"},
+        "quantifier_refs": {"$ref": "#/$defs/id_list"},
+        "quantifier_binding_digest": {"$ref": "#/$defs/digest"},
+        "evidence_refs": {"$ref": "#/$defs/id_list"},
+        "evidence_binding_digest": {"$ref": "#/$defs/digest"},
+        "obligation_ids": {"$ref": "#/$defs/id_list"},
+        "correction_test_ids": {"$ref": "#/$defs/id_list"},
+        "status_rationale": {"$ref": "#/$defs/text"}
+      },
+      "allOf": [
+        {"if": {"properties": {"structure_kind": {"const": "fixed_target_commitment"}}}, "then": {"properties": {"status": {"const": "required"}}}},
+        {"if": {"properties": {"structure_kind": {"const": "transport_invariant"}}}, "then": {"properties": {"status": {"enum": ["proved", "conditional", "open", "failed"]}}}},
+        {"if": {"properties": {"structure_kind": {"enum": ["open_reconstruction_burden", "desired_consequence"]}}}, "then": {"properties": {"status": {"enum": ["proved", "open", "failed"]}}}}
+      ]
+    },
+    "ym_structure_ledger": {
+      "type": "array", "minItems": 14, "maxItems": 14,
+      "prefixItems": [
+        {"allOf": [{"$ref": "#/$defs/ym_structure_row"}, {"properties": {"structure_id": {"const": "four_dimensional_pure_yang_mills"}}}]},
+        {"allOf": [{"$ref": "#/$defs/ym_structure_row"}, {"properties": {"structure_id": {"const": "compact_simple_gauge_group_scope"}}}]},
+        {"allOf": [{"$ref": "#/$defs/ym_structure_row"}, {"properties": {"structure_id": {"const": "gauge_invariance"}}}]},
+        {"allOf": [{"$ref": "#/$defs/ym_structure_row"}, {"properties": {"structure_id": {"const": "observable_algebra"}}}]},
+        {"allOf": [{"$ref": "#/$defs/ym_structure_row"}, {"properties": {"structure_id": {"const": "regulator_ledger"}}}]},
+        {"allOf": [{"$ref": "#/$defs/ym_structure_row"}, {"properties": {"structure_id": {"const": "volume_ledger"}}}]},
+        {"allOf": [{"$ref": "#/$defs/ym_structure_row"}, {"properties": {"structure_id": {"const": "coupling_trajectory"}}}]},
+        {"allOf": [{"$ref": "#/$defs/ym_structure_row"}, {"properties": {"structure_id": {"const": "physical_normalization"}}}]},
+        {"allOf": [{"$ref": "#/$defs/ym_structure_row"}, {"properties": {"structure_id": {"const": "locality"}}}]},
+        {"allOf": [{"$ref": "#/$defs/ym_structure_row"}, {"properties": {"structure_id": {"const": "reflection_positivity"}}}]},
+        {"allOf": [{"$ref": "#/$defs/ym_structure_row"}, {"properties": {"structure_id": {"const": "theory_identity"}}}]},
+        {"allOf": [{"$ref": "#/$defs/ym_structure_row"}, {"properties": {"structure_id": {"const": "continuum_limit_order"}}}]},
+        {"allOf": [{"$ref": "#/$defs/ym_structure_row"}, {"properties": {"structure_id": {"const": "os_reconstruction_burden"}}}]},
+        {"allOf": [{"$ref": "#/$defs/ym_structure_row"}, {"properties": {"structure_id": {"const": "positive_hamiltonian_gap_target"}}}]}
+      ],
+      "items": false
+    },
+    "ym_certificate_status_basis": {
+      "type": "object", "additionalProperties": false,
+      "required": ["lattice_order", "required_structure_ids", "proved_structure_ids", "conditional_structure_ids", "open_structure_ids", "failed_structure_ids", "proved_carrier_translation_ids", "conditional_carrier_translation_ids", "open_carrier_translation_ids", "failed_carrier_translation_ids"],
+      "properties": {
+        "lattice_order": {
+          "type": "array", "minItems": 4, "maxItems": 4,
+          "prefixItems": [{"const": "failed"}, {"const": "open"}, {"const": "conditional"}, {"const": "proved"}],
+          "items": false
+        },
+        "required_structure_ids": {"$ref": "#/$defs/id_set"},
+        "proved_structure_ids": {"$ref": "#/$defs/id_set"},
+        "conditional_structure_ids": {"$ref": "#/$defs/id_set"},
+        "open_structure_ids": {"$ref": "#/$defs/id_set"},
+        "failed_structure_ids": {"$ref": "#/$defs/id_set"},
+        "proved_carrier_translation_ids": {"$ref": "#/$defs/id_set"},
+        "conditional_carrier_translation_ids": {"$ref": "#/$defs/id_set"},
+        "open_carrier_translation_ids": {"$ref": "#/$defs/id_set"},
+        "failed_carrier_translation_ids": {"$ref": "#/$defs/id_set"}
+      }
+    },
+    "ym_theorem_obligation": {
+      "type": "object", "additionalProperties": false,
+      "required": ["obligation_id", "preservation_structure_ids", "target_contract_refs", "quantifier_refs", "quantifier_binding_digest", "quantifiers", "evidence_refs", "evidence_binding_digest", "correction_test_ids", "claim_level", "observable_or_theorem", "statement", "status", "authority_scope"],
+      "properties": {
+        "obligation_id": {"$ref": "#/$defs/id"},
+        "preservation_structure_ids": {"$ref": "#/$defs/id_list"},
+        "target_contract_refs": {"$ref": "#/$defs/id_list"},
+        "quantifier_refs": {"$ref": "#/$defs/id_list"},
+        "quantifier_binding_digest": {"$ref": "#/$defs/digest"},
+        "quantifiers": {"$ref": "#/$defs/quantifier_contract"},
+        "evidence_refs": {"$ref": "#/$defs/id_list"},
+        "evidence_binding_digest": {"$ref": "#/$defs/digest"},
+        "correction_test_ids": {"$ref": "#/$defs/id_list"},
+        "claim_level": {"enum": ["C0", "C1", "C2", "C3"]},
+        "observable_or_theorem": {"enum": ["observable", "theorem", "both"]},
+        "statement": {"$ref": "#/$defs/text"},
+        "status": {"enum": ["required", "proved", "conditional", "open", "failed"]},
+        "authority_scope": {"const": "sealed_bridge_representation_only"}
+      }
+    },
+    "ym_theorem_obligation_ledger": {
+      "type": "array", "minItems": 14, "maxItems": 14,
+      "prefixItems": [
+        {"allOf": [{"$ref": "#/$defs/ym_theorem_obligation"}, {"properties": {"obligation_id": {"const": "ym.obligation.four_dimensional_pure_yang_mills"}}}]},
+        {"allOf": [{"$ref": "#/$defs/ym_theorem_obligation"}, {"properties": {"obligation_id": {"const": "ym.obligation.compact_simple_gauge_group_scope"}}}]},
+        {"allOf": [{"$ref": "#/$defs/ym_theorem_obligation"}, {"properties": {"obligation_id": {"const": "ym.obligation.gauge_invariance"}}}]},
+        {"allOf": [{"$ref": "#/$defs/ym_theorem_obligation"}, {"properties": {"obligation_id": {"const": "ym.obligation.observable_algebra"}}}]},
+        {"allOf": [{"$ref": "#/$defs/ym_theorem_obligation"}, {"properties": {"obligation_id": {"const": "ym.obligation.regulator_ledger"}}}]},
+        {"allOf": [{"$ref": "#/$defs/ym_theorem_obligation"}, {"properties": {"obligation_id": {"const": "ym.obligation.volume_ledger"}}}]},
+        {"allOf": [{"$ref": "#/$defs/ym_theorem_obligation"}, {"properties": {"obligation_id": {"const": "ym.obligation.coupling_trajectory"}}}]},
+        {"allOf": [{"$ref": "#/$defs/ym_theorem_obligation"}, {"properties": {"obligation_id": {"const": "ym.obligation.physical_normalization"}}}]},
+        {"allOf": [{"$ref": "#/$defs/ym_theorem_obligation"}, {"properties": {"obligation_id": {"const": "ym.obligation.locality"}}}]},
+        {"allOf": [{"$ref": "#/$defs/ym_theorem_obligation"}, {"properties": {"obligation_id": {"const": "ym.obligation.reflection_positivity"}}}]},
+        {"allOf": [{"$ref": "#/$defs/ym_theorem_obligation"}, {"properties": {"obligation_id": {"const": "ym.obligation.theory_identity"}}}]},
+        {"allOf": [{"$ref": "#/$defs/ym_theorem_obligation"}, {"properties": {"obligation_id": {"const": "ym.obligation.continuum_limit_order"}}}]},
+        {"allOf": [{"$ref": "#/$defs/ym_theorem_obligation"}, {"properties": {"obligation_id": {"const": "ym.obligation.os_reconstruction_burden"}}}]},
+        {"allOf": [{"$ref": "#/$defs/ym_theorem_obligation"}, {"properties": {"obligation_id": {"const": "ym.obligation.positive_hamiltonian_gap_target"}}}]}
+      ],
+      "items": false
+    },
+    "ym_physics_burden_row": {
+      "type": "object", "additionalProperties": false,
+      "required": ["structure_id", "obligation_id", "status", "carrier_translation_ids", "target_contract_refs", "quantifier_refs", "evidence_refs", "correction_test_ids", "continuum_authority_digest", "content_digest"],
+      "properties": {
+        "structure_id": {"enum": ["four_dimensional_pure_yang_mills", "compact_simple_gauge_group_scope", "gauge_invariance", "observable_algebra", "regulator_ledger", "volume_ledger", "coupling_trajectory", "physical_normalization", "locality", "reflection_positivity", "theory_identity", "continuum_limit_order", "os_reconstruction_burden", "positive_hamiltonian_gap_target"]},
+        "obligation_id": {"$ref": "#/$defs/id"},
+        "status": {"enum": ["required", "proved", "conditional", "open", "failed"]},
+        "carrier_translation_ids": {"$ref": "#/$defs/id_set"},
+        "target_contract_refs": {"$ref": "#/$defs/id_list"},
+        "quantifier_refs": {"$ref": "#/$defs/id_list"},
+        "evidence_refs": {"$ref": "#/$defs/id_list"},
+        "correction_test_ids": {"$ref": "#/$defs/id_list"},
+        "continuum_authority_digest": {"$ref": "#/$defs/digest"},
+        "content_digest": {"$ref": "#/$defs/digest"}
+      }
+    },
+    "ym_physics_burden_matrix": {
+      "type": "array", "minItems": 14, "maxItems": 14,
+      "prefixItems": [
+        {"allOf": [{"$ref": "#/$defs/ym_physics_burden_row"}, {"properties": {"structure_id": {"const": "four_dimensional_pure_yang_mills"}}}]},
+        {"allOf": [{"$ref": "#/$defs/ym_physics_burden_row"}, {"properties": {"structure_id": {"const": "compact_simple_gauge_group_scope"}}}]},
+        {"allOf": [{"$ref": "#/$defs/ym_physics_burden_row"}, {"properties": {"structure_id": {"const": "gauge_invariance"}}}]},
+        {"allOf": [{"$ref": "#/$defs/ym_physics_burden_row"}, {"properties": {"structure_id": {"const": "observable_algebra"}}}]},
+        {"allOf": [{"$ref": "#/$defs/ym_physics_burden_row"}, {"properties": {"structure_id": {"const": "regulator_ledger"}}}]},
+        {"allOf": [{"$ref": "#/$defs/ym_physics_burden_row"}, {"properties": {"structure_id": {"const": "volume_ledger"}}}]},
+        {"allOf": [{"$ref": "#/$defs/ym_physics_burden_row"}, {"properties": {"structure_id": {"const": "coupling_trajectory"}}}]},
+        {"allOf": [{"$ref": "#/$defs/ym_physics_burden_row"}, {"properties": {"structure_id": {"const": "physical_normalization"}}}]},
+        {"allOf": [{"$ref": "#/$defs/ym_physics_burden_row"}, {"properties": {"structure_id": {"const": "locality"}}}]},
+        {"allOf": [{"$ref": "#/$defs/ym_physics_burden_row"}, {"properties": {"structure_id": {"const": "reflection_positivity"}}}]},
+        {"allOf": [{"$ref": "#/$defs/ym_physics_burden_row"}, {"properties": {"structure_id": {"const": "theory_identity"}}}]},
+        {"allOf": [{"$ref": "#/$defs/ym_physics_burden_row"}, {"properties": {"structure_id": {"const": "continuum_limit_order"}}}]},
+        {"allOf": [{"$ref": "#/$defs/ym_physics_burden_row"}, {"properties": {"structure_id": {"const": "os_reconstruction_burden"}}}]},
+        {"allOf": [{"$ref": "#/$defs/ym_physics_burden_row"}, {"properties": {"structure_id": {"const": "positive_hamiltonian_gap_target"}}}]}
+      ],
+      "items": false
+    },
+    "scorecard": {
+      "type": "object", "additionalProperties": false,
+      "required": ["burden_closure", "obstruction_localization", "consequence_yield", "unification_without_erasure", "correction_specificity"],
+      "properties": {
+        "burden_closure": {"type": "number", "minimum": 0, "maximum": 5},
+        "obstruction_localization": {"type": "number", "minimum": 0, "maximum": 5},
+        "consequence_yield": {"type": "number", "minimum": 0, "maximum": 5},
+        "unification_without_erasure": {"type": "number", "minimum": 0, "maximum": 5},
+        "correction_specificity": {"type": "number", "minimum": 0, "maximum": 5}
+      }
+    },
+    "repeatability": {
+      "type": "object", "additionalProperties": false,
+      "required": ["descriptive_mean", "minimum", "maximum", "range", "unique_values", "n_executions", "all_replays_identical", "unit", "iid_assumption", "population_inference_authorized", "method"],
+      "properties": {"descriptive_mean": {"type": "number"}, "minimum": {"type": "number"}, "maximum": {"type": "number"}, "range": {"type": "number", "minimum": 0}, "unique_values": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "number"}}, "n_executions": {"type": "integer", "minimum": 5}, "all_replays_identical": {"type": "boolean"}, "unit": {"const": "same_sealed_task_execution"}, "iid_assumption": {"const": false}, "population_inference_authorized": {"const": false}, "method": {"const": "deterministic-repeatability-diagnostic"}}
+    },
+    "evidence_item": {
+      "type": "object", "additionalProperties": false,
+      "required": ["evidence_id", "artifact_path", "claim", "payload", "content_digest"],
+      "properties": {
+        "evidence_id": {"$ref": "#/$defs/id"}, "artifact_path": {"$ref": "#/$defs/text"},
+        "claim": {"$ref": "#/$defs/text"}, "payload": {"type": "object", "minProperties": 1},
+        "content_digest": {"$ref": "#/$defs/digest"}
+      }
+    },
+    "validator_receipt": {
+      "type": "object", "additionalProperties": false,
+      "required": ["validator_id", "receipt_id", "validated_output_digest", "status"],
+      "properties": {
+        "validator_id": {"$ref": "#/$defs/id"}, "receipt_id": {"$ref": "#/$defs/id"},
+        "validated_output_digest": {"$ref": "#/$defs/digest"}, "status": {"const": "passed"}
+      }
+    },
+    "audit_receipt": {
+      "type": "object", "additionalProperties": false,
+      "required": ["skill_id", "receipt_id", "target_id", "subject_digest", "output", "output_digest", "validator_receipt"],
+      "properties": {
+        "skill_id": {"enum": ["abstraction-fit-gap-auditor", "proof-same-domain-transfer-certifier", "physical-relevance-impact-auditor"]},
+        "receipt_id": {"$ref": "#/$defs/id"}, "target_id": {"$ref": "#/$defs/id"},
+        "subject_digest": {"$ref": "#/$defs/digest"}, "output": {"type": "object", "minProperties": 4},
+        "output_digest": {"$ref": "#/$defs/digest"}, "validator_receipt": {"$ref": "#/$defs/validator_receipt"}
+      }
+    },
+    "witness": {
+      "type": "object", "additionalProperties": false,
+      "required": ["witness_kind", "diagram_id", "step_namespace", "source_id", "target_id", "left_path_ids", "right_path_ids", "left_composite_id", "right_composite_id", "exact_obstruction", "boundary_conditions", "exact", "evidence", "certificate"],
+      "properties": {
+        "witness_kind": {"enum": ["noncommutativity", "noncoherence"]}, "diagram_id": {"$ref": "#/$defs/id"},
+        "step_namespace": {"enum": ["morphism", "transport"]}, "source_id": {"$ref": "#/$defs/id"},
+        "target_id": {"$ref": "#/$defs/id"}, "left_path_ids": {"$ref": "#/$defs/id_list"},
+        "right_path_ids": {"$ref": "#/$defs/id_list"}, "left_composite_id": {"$ref": "#/$defs/id"},
+        "right_composite_id": {"$ref": "#/$defs/id"}, "exact_obstruction": {"$ref": "#/$defs/text"},
+        "boundary_conditions": {"$ref": "#/$defs/string_list"}, "exact": {"const": true},
+        "evidence": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/evidence_item"}},
+        "certificate": {
+          "type": "object", "additionalProperties": false,
+          "required": ["certificate_id", "kind", "result", "witness_digest", "evidence_digest", "validator_receipt"],
+          "properties": {
+            "certificate_id": {"$ref": "#/$defs/id"}, "kind": {"enum": ["symbolic_normal_form", "countermodel", "theorem_reference", "proof_assistant"]},
+            "result": {"enum": ["noncommuting", "noncoherent"]}, "witness_digest": {"$ref": "#/$defs/digest"},
+            "evidence_digest": {"$ref": "#/$defs/digest"},
+            "validator_receipt": {
+              "type": "object", "additionalProperties": false,
+              "required": ["validator_id", "validator_version", "validator_kind", "executable_digest", "input_digest", "receipt_id", "validated_witness_digest", "validated_evidence_digest", "validated_output_digest", "dependency_authority_digest", "status"],
+              "properties": {
+                "validator_id": {"const": "finite-physical-diagram-countermodel.v1"},
+                "validator_version": {"const": "1.0.0"}, "validator_kind": {"const": "local_symbolic_countermodel"},
+                "executable_digest": {"$ref": "#/$defs/digest"}, "input_digest": {"$ref": "#/$defs/digest"},
+                "receipt_id": {"$ref": "#/$defs/id"},
+                "validated_witness_digest": {"$ref": "#/$defs/digest"}, "validated_evidence_digest": {"$ref": "#/$defs/digest"},
+                "validated_output_digest": {"$ref": "#/$defs/digest"},
+                "dependency_authority_digest": {"$ref": "#/$defs/digest"},
+                "status": {"const": "passed"}
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "properties": {
+    "schema_version": {"const": "7.0.0"}, "bridge_id": {"$ref": "#/$defs/id"},
+    "dependency_authority": {"$ref": "#/$defs/formal_dependency_authority"},
+    "target_id": {"const": "yang-mills-existence-and-mass-gap-target"},
+    "literature_basis": {
+      "type": "object", "additionalProperties": false,
+      "required": ["target_id", "snapshot_id", "snapshot_digest", "search_completed_at", "coverage_cutoff", "freshness_status", "target_match", "active_investment_gate", "snapshot_validator_receipt", "assimilation_packet_id", "assimilation_digest", "assimilation_input_snapshot_digest", "hypothesis_rebase_status", "source_mapping_ids", "pressure_mapping_digest", "assimilation_validator_receipt"],
+      "properties": {
+        "target_id": {"const": "yang-mills-existence-and-mass-gap-target"}, "snapshot_id": {"$ref": "#/$defs/id"},
+        "snapshot_digest": {"$ref": "#/$defs/digest"}, "search_completed_at": {"type": "string", "format": "date-time"},
+        "coverage_cutoff": {"$ref": "#/$defs/text"}, "freshness_status": {"const": "current"},
+        "target_match": {"const": "pass"}, "active_investment_gate": {"const": "pass"},
+        "snapshot_validator_receipt": {
+          "type": "object", "additionalProperties": false,
+          "required": ["validator_id", "receipt_id", "target_id", "validated_digest", "status"],
+          "properties": {
+            "validator_id": {"const": "target-literature-snapshot-validator.v1"}, "receipt_id": {"$ref": "#/$defs/id"},
+            "target_id": {"const": "yang-mills-existence-and-mass-gap-target"}, "validated_digest": {"$ref": "#/$defs/digest"}, "status": {"const": "passed"}
+          }
+        },
+        "assimilation_packet_id": {"$ref": "#/$defs/id"}, "assimilation_digest": {"$ref": "#/$defs/digest"},
+        "assimilation_input_snapshot_digest": {"$ref": "#/$defs/digest"}, "hypothesis_rebase_status": {"const": "current"},
+        "source_mapping_ids": {"$ref": "#/$defs/id_list"}, "pressure_mapping_digest": {"$ref": "#/$defs/digest"},
+        "assimilation_validator_receipt": {
+          "type": "object", "additionalProperties": false,
+          "required": ["validator_id", "receipt_id", "target_id", "validated_assimilation_digest", "validated_snapshot_digest", "status"],
+          "properties": {
+            "validator_id": {"const": "literature-assimilation-validator.v1"}, "receipt_id": {"$ref": "#/$defs/id"},
+            "target_id": {"const": "yang-mills-existence-and-mass-gap-target"}, "validated_assimilation_digest": {"$ref": "#/$defs/digest"},
+            "validated_snapshot_digest": {"$ref": "#/$defs/digest"}, "status": {"const": "passed"}
+          }
+        }
+      }
+    },
+    "upstream_packet_bindings": {
+      "type": "array", "minItems": 1, "uniqueItems": true,
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["packet_id", "packet_digest", "lens", "model_digest", "witness_certificate_digest", "validation_receipt_id", "formal_lens_execution_receipt"],
+        "properties": {
+          "packet_id": {"$ref": "#/$defs/id"}, "packet_digest": {"$ref": "#/$defs/digest"},
+          "lens": {"enum": ["categorical", "hott"]}, "model_digest": {"$ref": "#/$defs/digest"},
+          "witness_certificate_digest": {"$ref": "#/$defs/digest"}, "validation_receipt_id": {"$ref": "#/$defs/id"},
+          "formal_lens_execution_receipt": {"$ref": "formal_lens_execution_receipt.schema.json"}
+        }
+      }
+    },
+    "lens": {"enum": ["categorical", "hott", "categorical_hott"]}, "claim_level": {"enum": ["C0", "C1", "C2", "C3"]},
+    "epistemic_status": {"enum": ["concept_candidate", "provisional", "conditional", "refuted", "blocked"]},
+    "target_contract": {
+      "type": "object", "additionalProperties": false,
+      "required": ["spacetime_dimension", "pure_gauge", "gauge_group_scope", "continuum_required", "mass_gap_required"],
+      "properties": {
+        "spacetime_dimension": {"const": 4}, "pure_gauge": {"const": true},
+        "gauge_group_scope": {"const": "every declared compact simple gauge group"},
+        "continuum_required": {"const": true}, "mass_gap_required": {"const": true}
+      }
+    },
+    "quantifier_contract": {"$ref": "#/$defs/quantifier_contract"},
+    "quantifier_contract_digest": {"$ref": "#/$defs/digest"},
+    "evidence_registry": {"$ref": "#/$defs/ym_evidence_registry"},
+    "evidence_registry_digest": {"$ref": "#/$defs/digest"},
+    "continuum_authority": {"$ref": "#/$defs/ym_continuum_authority"},
+    "representation_package": {
+      "type": "object", "additionalProperties": false,
+      "required": ["K", "A_phys", "S", "D", "G", "L", "Q"],
+      "properties": {"K": {"$ref": "#/$defs/text"}, "A_phys": {"$ref": "#/$defs/text"}, "S": {"$ref": "#/$defs/text"}, "D": {"$ref": "#/$defs/text"}, "G": {"$ref": "#/$defs/text"}, "L": {"$ref": "#/$defs/text"}, "Q": {"$ref": "#/$defs/text"}}
+    },
+    "physical_diagram": {
+      "type": "object", "additionalProperties": false,
+      "required": ["objects", "steps", "compositions"],
+      "properties": {
+        "objects": {
+          "type": "array", "minItems": 3,
+          "items": {"type": "object", "additionalProperties": false, "required": ["object_id", "physical_carrier", "element_ids", "invariants"], "properties": {"object_id": {"$ref": "#/$defs/id"}, "physical_carrier": {"$ref": "#/$defs/text"}, "element_ids": {"$ref": "#/$defs/id_list"}, "invariants": {"$ref": "#/$defs/string_list"}}}
+        },
+        "steps": {
+          "type": "array", "minItems": 4,
+          "items": {"type": "object", "additionalProperties": false, "required": ["step_id", "kind", "domain_id", "codomain_id", "physical_map", "action", "is_identity"], "properties": {"step_id": {"$ref": "#/$defs/id"}, "kind": {"enum": ["identity", "morphism", "transport"]}, "domain_id": {"$ref": "#/$defs/id"}, "codomain_id": {"$ref": "#/$defs/id"}, "physical_map": {"$ref": "#/$defs/text"}, "action": {"type": "array", "minItems": 1, "items": {"type": "object", "additionalProperties": false, "required": ["source_element_id", "target_element_id"], "properties": {"source_element_id": {"$ref": "#/$defs/id"}, "target_element_id": {"$ref": "#/$defs/id"}}}}, "is_identity": {"type": "boolean"}}}
+        },
+        "compositions": {
+          "type": "array", "minItems": 2,
+          "items": {"type": "object", "additionalProperties": false, "required": ["composition_id", "path_morphism_ids", "result_morphism_id", "associativity_obligation_id"], "properties": {"composition_id": {"$ref": "#/$defs/id"}, "path_morphism_ids": {"type": "array", "minItems": 2, "maxItems": 2, "items": {"$ref": "#/$defs/id"}}, "result_morphism_id": {"$ref": "#/$defs/id"}, "associativity_obligation_id": {"$ref": "#/$defs/id"}}}
+        }
+      }
+    },
+    "carrier_translations": {
+      "type": "array", "minItems": 2,
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["abstract_entity_id", "abstract_entity", "entity_kind", "physical_carrier_id", "physical_carrier", "preservation_structure_ids", "preservation_status", "preservation_status_basis", "preservation_status_basis_digest", "evidence_refs", "evidence_binding_digest", "structure_ledger_digest", "evidence_registry_digest", "correction_test_ids", "preserved_invariants", "broken_or_open_invariants", "target_burden"],
+        "properties": {
+          "abstract_entity_id": {"$ref": "#/$defs/id"}, "abstract_entity": {"$ref": "#/$defs/text"},
+          "entity_kind": {"enum": ["object", "morphism", "functor", "equivalence", "path", "coherence_cell", "universal_property"]},
+          "physical_carrier_id": {"$ref": "#/$defs/id"}, "physical_carrier": {"$ref": "#/$defs/text"},
+          "preservation_structure_ids": {"$ref": "#/$defs/id_list"},
+          "preservation_status": {"enum": ["proved", "conditional", "failed", "open"]},
+          "preservation_status_basis": {
+            "type": "object", "additionalProperties": false,
+            "required": ["evidence_matrix_version", "lattice_order", "structure_statuses", "finite_authority_cap", "derivation_rule"],
+            "properties": {
+              "evidence_matrix_version": {"const": "1.0.0"},
+              "lattice_order": {"type": "array", "minItems": 4, "maxItems": 4, "prefixItems": [{"const": "failed"}, {"const": "open"}, {"const": "conditional"}, {"const": "proved"}], "items": false},
+              "structure_statuses": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "object", "additionalProperties": false, "required": ["structure_id", "status"], "properties": {"structure_id": {"$ref": "#/$defs/id"}, "status": {"enum": ["proved", "conditional", "open", "failed"]}}}},
+              "finite_authority_cap": {"const": "conditional"},
+              "derivation_rule": {"const": "minimum_structure_status_then_cap_finite_authority_at_conditional"}
+            }
+          },
+          "preservation_status_basis_digest": {"$ref": "#/$defs/digest"},
+          "evidence_refs": {"$ref": "#/$defs/id_list"},
+          "evidence_binding_digest": {"$ref": "#/$defs/digest"},
+          "structure_ledger_digest": {"$ref": "#/$defs/digest"},
+          "evidence_registry_digest": {"$ref": "#/$defs/digest"},
+          "correction_test_ids": {"$ref": "#/$defs/id_list"},
+          "preserved_invariants": {"$ref": "#/$defs/string_list"}, "broken_or_open_invariants": {"$ref": "#/$defs/string_list"},
+          "target_burden": {"$ref": "#/$defs/text"}
+        }
+      }
+    },
+    "same_domain_transfer": {
+      "type": "object", "additionalProperties": false,
+      "required": ["source_domain", "target_domain", "structure_ledger", "structure_ledger_digest", "changed_structures", "certificate_status", "certificate_status_basis", "quantifier_contract_digest", "evidence_registry_digest", "carrier_translation_digest", "continuum_authority_digest", "evidence_matrix_version", "consequence_delta", "authority_boundary"],
+      "properties": {
+        "source_domain": {"$ref": "#/$defs/text"}, "target_domain": {"$ref": "#/$defs/text"},
+        "structure_ledger": {"$ref": "#/$defs/ym_structure_ledger"},
+        "structure_ledger_digest": {"$ref": "#/$defs/digest"},
+        "changed_structures": {"$ref": "#/$defs/string_list"},
+        "certificate_status": {"enum": ["proved", "conditional", "open", "failed"]},
+        "certificate_status_basis": {"$ref": "#/$defs/ym_certificate_status_basis"},
+        "quantifier_contract_digest": {"$ref": "#/$defs/digest"},
+        "evidence_registry_digest": {"$ref": "#/$defs/digest"},
+        "carrier_translation_digest": {"$ref": "#/$defs/digest"},
+        "continuum_authority_digest": {"$ref": "#/$defs/digest"},
+        "evidence_matrix_version": {"const": "1.0.0"},
+        "consequence_delta": {"$ref": "#/$defs/text"},
+        "authority_boundary": {"const": "The certificate orders only this sealed finite bridge representation; categorical or HoTT equivalence is not physical equivalence and proves no continuum construction or mass gap."}
+      }
+    },
+    "failure_witness": {"$ref": "#/$defs/witness"},
+    "physics_handback": {
+      "type": "object", "additionalProperties": false,
+      "required": ["handback_status", "authority_class", "target_id", "domain_kind", "physical_carrier", "target_burden_ids", "target_burdens_digest", "correction_test_ids", "correction_tests_digest", "failure_witness_digest", "failure_conditions", "physics_value_language_status", "continuum_authority", "authority_distinct_physics_value_evidence_status", "authority_distinct_physics_value_evidence_ids", "physics_value_authorized", "investment_authorized", "next_route", "target_contract", "target_contract_digest", "quantifier_contract", "quantifier_contract_digest", "preservation_evidence_registry", "preservation_evidence_registry_digest", "carrier_translations", "carrier_translation_digest", "physics_burden_matrix", "physics_burden_matrix_digest", "preservation_structure_ledger", "preservation_structure_ledger_digest", "changed_structures", "transfer_certificate_status", "transfer_certificate_status_basis", "continuum_authority_digest", "evidence_matrix_version", "preservation_transfer_digest", "preservation_binding_digest", "content_digest"],
+      "properties": {
+        "handback_status": {"const": "returned_to_reflective_theory"}, "authority_class": {"const": "internal_finite_local_refinement_only"},
+        "target_id": {"const": "yang-mills-existence-and-mass-gap-target"}, "domain_kind": {"const": "physics"}, "physical_carrier": {"$ref": "#/$defs/text"},
+        "target_burden_ids": {"$ref": "#/$defs/id_list"}, "target_burdens_digest": {"$ref": "#/$defs/digest"},
+        "correction_test_ids": {"$ref": "#/$defs/id_list"}, "correction_tests_digest": {"$ref": "#/$defs/digest"},
+        "failure_witness_digest": {"$ref": "#/$defs/digest"}, "failure_conditions": {"$ref": "#/$defs/string_list"},
+        "physics_value_language_status": {"const": "internal_hypothesis_only_after_handback"},
+        "continuum_authority": {"$ref": "#/$defs/ym_continuum_authority"},
+        "authority_distinct_physics_value_evidence_status": {"const": "unavailable"},
+        "authority_distinct_physics_value_evidence_ids": {"type": "array", "maxItems": 0},
+        "physics_value_authorized": {"const": false}, "investment_authorized": {"const": false},
+        "target_contract": {"$ref": "#/properties/target_contract"},
+        "target_contract_digest": {"$ref": "#/$defs/digest"},
+        "quantifier_contract": {"$ref": "#/$defs/quantifier_contract"},
+        "quantifier_contract_digest": {"$ref": "#/$defs/digest"},
+        "preservation_evidence_registry": {"$ref": "#/$defs/ym_evidence_registry"},
+        "preservation_evidence_registry_digest": {"$ref": "#/$defs/digest"},
+        "carrier_translations": {"$ref": "#/properties/carrier_translations"},
+        "carrier_translation_digest": {"$ref": "#/$defs/digest"},
+        "physics_burden_matrix": {"$ref": "#/$defs/ym_physics_burden_matrix"},
+        "physics_burden_matrix_digest": {"$ref": "#/$defs/digest"},
+        "preservation_structure_ledger": {"$ref": "#/$defs/ym_structure_ledger"},
+        "preservation_structure_ledger_digest": {"$ref": "#/$defs/digest"},
+        "changed_structures": {"$ref": "#/$defs/string_list"},
+        "transfer_certificate_status": {"enum": ["proved", "conditional", "open", "failed"]},
+        "transfer_certificate_status_basis": {"$ref": "#/$defs/ym_certificate_status_basis"},
+        "continuum_authority_digest": {"$ref": "#/$defs/digest"},
+        "evidence_matrix_version": {"const": "1.0.0"},
+        "preservation_transfer_digest": {"$ref": "#/$defs/digest"},
+        "preservation_binding_digest": {"$ref": "#/$defs/digest"},
+        "next_route": {"const": "reflective-theory-synthesizer"}, "content_digest": {"$ref": "#/$defs/digest"}
+      }
+    },
+    "audit_receipts": {
+      "type": "object", "additionalProperties": false,
+      "required": ["subject_digest", "fit_gap", "same_domain", "physical_relevance"],
+      "properties": {
+        "subject_digest": {"$ref": "#/$defs/digest"}, "fit_gap": {"$ref": "#/$defs/audit_receipt"},
+        "same_domain": {"$ref": "#/$defs/audit_receipt"}, "physical_relevance": {"$ref": "#/$defs/audit_receipt"}
+      }
+    },
+    "theorem_obligations": {"$ref": "#/$defs/ym_theorem_obligation_ledger"},
+    "correction_tests": {
+      "type": "array", "minItems": 2,
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["test_id", "kind", "preservation_structure_ids", "intervention", "expected_if_useful", "demotion_trigger", "theory_question"],
+        "properties": {
+          "test_id": {"$ref": "#/$defs/id"}, "kind": {"enum": ["theorem", "countermodel", "symbolic", "simulation", "literature"]},
+          "preservation_structure_ids": {"$ref": "#/$defs/id_list"},
+          "intervention": {"$ref": "#/$defs/text"}, "expected_if_useful": {"$ref": "#/$defs/text"},
+          "demotion_trigger": {"$ref": "#/$defs/text"}, "theory_question": {"$ref": "#/$defs/text"}
+        }
+      }
+    },
+    "calibration_matrix": {
+      "type": "array", "minItems": 9, "maxItems": 9,
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["case_id", "predicted_outcome", "pass_condition", "runner_id", "runner_version", "runner_kind", "theory_commission", "dependency_authority", "input", "input_digest", "output", "output_digest", "result_status", "evidence", "validator_receipt"],
+        "properties": {
+          "case_id": {"enum": ["finite_transfer_matrix", "massive_gaussian", "massless_gaussian", "finite_volume_gap_collapse", "hidden_gapless_direct_sum", "spatial_only_decay", "topological_theory", "regulated_4d_lattice", "noncommuting_limit_order"]},
+          "predicted_outcome": {"$ref": "#/$defs/text"}, "pass_condition": {"$ref": "#/$defs/text"},
+          "runner_id": {"$ref": "#/$defs/id"}, "runner_version": {"const": "1.0.0"},
+          "runner_kind": {"enum": ["symbolic", "countermodel", "boundary_fixture", "simulation"]},
+          "dependency_authority": {"$ref": "#/$defs/formal_dependency_authority"},
+          "theory_commission": {"anyOf": [{"type": "null"}, {"type": "object", "additionalProperties": false, "required": ["theory_programme_digest", "reflection_packet_digest", "question_digest", "status"], "properties": {"theory_programme_digest": {"$ref": "#/$defs/digest"}, "reflection_packet_digest": {"$ref": "#/$defs/digest"}, "question_digest": {"$ref": "#/$defs/digest"}, "status": {"const": "commissioned"}}}]},
+          "input": {"type": "object", "minProperties": 1}, "input_digest": {"$ref": "#/$defs/digest"},
+          "output": {"anyOf": [{"type": "object", "minProperties": 1}, {"type": "null"}]},
+          "output_digest": {"anyOf": [{"$ref": "#/$defs/digest"}, {"type": "null"}]},
+          "result_status": {"enum": ["planned", "passed", "failed", "blocked"]},
+          "evidence": {"anyOf": [{"$ref": "#/$defs/evidence_item"}, {"type": "null"}]},
+          "validator_receipt": {
+            "anyOf": [
+              {"type": "null"},
+              {
+                "type": "object", "additionalProperties": false,
+                "required": ["validator_id", "validator_version", "runner_id", "runner_version", "runner_kind", "runner_executable_digest", "receipt_id", "validated_input_digest", "validated_output_digest", "validated_evidence_digest", "dependency_authority_digest", "status"],
+                "properties": {"validator_id": {"const": "ym-local-calibration-replay-validator.v1"}, "validator_version": {"const": "1.0.0"}, "runner_id": {"$ref": "#/$defs/id"}, "runner_version": {"const": "1.0.0"}, "runner_kind": {"enum": ["symbolic", "countermodel", "boundary_fixture", "simulation"]}, "runner_executable_digest": {"$ref": "#/$defs/digest"}, "receipt_id": {"$ref": "#/$defs/id"}, "validated_input_digest": {"$ref": "#/$defs/digest"}, "validated_output_digest": {"$ref": "#/$defs/digest"}, "validated_evidence_digest": {"$ref": "#/$defs/digest"}, "dependency_authority_digest": {"$ref": "#/$defs/digest"}, "status": {"const": "passed"}}
+              }
+            ]
+          }
+        }
+      }
+    },
+    "value_ablation": {
+      "type": "object", "additionalProperties": false,
+      "required": ["same_target_and_evidence", "evaluation_report", "with_abstraction", "without_abstraction", "paired_repeatability_diagnostics", "net_new_value", "frozen_suite_refinement_signal", "changed_investment_decision"],
+      "properties": {
+        "same_target_and_evidence": {"const": true},
+        "evaluation_report": {
+          "type": "object", "additionalProperties": false,
+          "required": ["schema_version", "evaluation_id", "content_digest", "target_id", "case_suite_id", "literature_snapshot_digest", "assimilation_digest", "condition_arm", "baseline_arm", "repetitions_completed", "minimum_required_matched_repetitions", "calibration_status", "runtime_portfolio_digest", "evaluator_receipt_id", "partial_failure_status", "task_cluster_count", "population_inference_authorized", "external_human_status"],
+          "properties": {
+            "schema_version": {"const": "4.0.0"}, "evaluation_id": {"$ref": "#/$defs/id"}, "content_digest": {"$ref": "#/$defs/digest"},
+            "target_id": {"const": "yang-mills-existence-and-mass-gap-target"}, "case_suite_id": {"$ref": "#/$defs/id"},
+            "literature_snapshot_digest": {"$ref": "#/$defs/digest"},
+            "assimilation_digest": {"$ref": "#/$defs/digest"}, "condition_arm": {"const": "combined"}, "baseline_arm": {"const": "no_abstraction"},
+            "repetitions_completed": {"type": "integer", "minimum": 0},
+            "minimum_required_matched_repetitions": {"const": 5},
+            "calibration_status": {"enum": ["sufficient_internal_calibration", "insufficient_internal_calibration"]},
+            "runtime_portfolio_digest": {"$ref": "#/$defs/digest"},
+            "evaluator_receipt_id": {"$ref": "#/$defs/id"}, "partial_failure_status": {"const": "siblings_preserved"},
+            "task_cluster_count": {"type": "integer", "minimum": 2}, "population_inference_authorized": {"const": false},
+            "external_human_status": {"enum": ["unavailable", "available"]}
+          }
+        },
+        "with_abstraction": {"$ref": "#/$defs/scorecard"}, "without_abstraction": {"$ref": "#/$defs/scorecard"},
+        "paired_repeatability_diagnostics": {"anyOf": [{"type": "null"}, {"type": "object", "minProperties": 5, "maxProperties": 5, "additionalProperties": {"$ref": "#/$defs/repeatability"}}]},
+        "net_new_value": {"anyOf": [{"type": "null"}, {"type": "number", "minimum": -25, "maximum": 25}]}, "frozen_suite_refinement_signal": {"type": "boolean"},
+        "changed_investment_decision": {"const": false}
+      },
+      "allOf": [
+        {
+          "if": {"properties": {"evaluation_report": {"properties": {"calibration_status": {"const": "sufficient_internal_calibration"}}}}},
+          "then": {"properties": {
+            "evaluation_report": {"properties": {"repetitions_completed": {"minimum": 5}}},
+            "paired_repeatability_diagnostics": {"type": "object"},
+            "net_new_value": {"type": "number"}
+          }}
+        },
+        {
+          "if": {"properties": {"evaluation_report": {"properties": {"calibration_status": {"const": "insufficient_internal_calibration"}}}}},
+          "then": {"properties": {
+            "evaluation_report": {"properties": {"repetitions_completed": {"maximum": 4}}},
+            "paired_repeatability_diagnostics": {"type": "null"},
+            "net_new_value": {"type": "null"},
+            "frozen_suite_refinement_signal": {"const": false}
+          }}
+        }
+      ]
+    },
+    "physics_evaluation": {
+      "type": "object", "additionalProperties": false,
+      "required": ["essential_relevance", "unification_power", "conceptual_depth", "physical_reward", "general_physics_impact", "elegance_only", "assessment_status", "physics_value_authorized", "investment_authorized", "decision", "decision_rationale"],
+      "properties": {
+        "essential_relevance": {"enum": ["high", "medium", "low"]}, "unification_power": {"enum": ["high", "medium", "low"]},
+        "conceptual_depth": {"enum": ["high", "medium", "low"]}, "physical_reward": {"enum": ["high", "medium", "low", "none"]},
+        "general_physics_impact": {"$ref": "#/$defs/text"}, "elegance_only": {"const": false},
+        "assessment_status": {"const": "post_handback_internal_hypothesis"}, "physics_value_authorized": {"const": false}, "investment_authorized": {"const": false},
+        "decision": {"enum": ["refine_bridge", "demote_decorative", "quarantine_domain_break"]},
+        "decision_rationale": {"$ref": "#/$defs/text"}
+      }
+    },
+    "downstream_handoffs": {"$ref": "#/$defs/id_list"}, "evidence_citations": {"$ref": "#/$defs/string_list"},
+    "explicit_unknowns": {"$ref": "#/$defs/string_list"}, "non_claims": {"$ref": "#/$defs/string_list"},
+    "validation_handoff": {"$ref": "#/$defs/text"}
+  }
+}

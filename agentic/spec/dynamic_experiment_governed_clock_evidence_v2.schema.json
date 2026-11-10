@@ -1,0 +1,76 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://abducer.local/spec/dynamic_experiment_governed_clock_evidence_v2.schema.json",
+  "title": "Immutable governed clock and committed evidence path witness v2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "contract_version",
+    "evidence_authority_id",
+    "binding_id",
+    "binding_digest",
+    "stage_id",
+    "producer_role",
+    "target_id",
+    "run_id",
+    "state_version",
+    "declared_output_path",
+    "immutable_history_path",
+    "committed_paths",
+    "governed_timestamps",
+    "clock_evidence_digest"
+  ],
+  "properties": {
+    "schema_version": {"const": "2.0.0"},
+    "contract_version": {"const": "experiment-governed-clock-evidence/2.0.0"},
+    "evidence_authority_id": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/identifier"},
+    "binding_id": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/identifier"},
+    "binding_digest": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/digest"},
+    "stage_id": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/identifier"},
+    "producer_role": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/identifier"},
+    "target_id": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/identifier"},
+    "run_id": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/identifier"},
+    "state_version": {"type": "integer", "minimum": 0},
+    "declared_output_path": {"type": "string", "minLength": 1},
+    "immutable_history_path": {"type": "string", "minLength": 1},
+    "committed_paths": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["producer_request", "producer_receipt", "artifact", "immutable_history", "governed_clock"],
+      "properties": {
+        "producer_request": {"type": "string", "minLength": 1},
+        "producer_receipt": {"type": "string", "minLength": 1},
+        "artifact": {"type": "string", "minLength": 1},
+        "immutable_history": {"type": "string", "minLength": 1},
+        "governed_clock": {"type": "string", "minLength": 1}
+      }
+    },
+    "committed_derivation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "contract_version",
+        "derivation_kind",
+        "source_clock_evidence_digest",
+        "source_bytes_sha256",
+        "source_size_bytes",
+        "source_semantic_digest",
+        "derivation_digest"
+      ],
+      "properties": {
+        "schema_version": {"const": "1.0.0"},
+        "contract_version": {"const": "committed-governed-clock-derivation/1.0.0"},
+        "derivation_kind": {"const": "portable-relative-path-rebinding"},
+        "source_clock_evidence_digest": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/digest"},
+        "source_bytes_sha256": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/digest"},
+        "source_size_bytes": {"type": "integer", "minimum": 1},
+        "source_semantic_digest": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/digest"},
+        "derivation_digest": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/digest"}
+      }
+    },
+    "governed_timestamps": {"$ref": "./dynamic_experiment_causal_producer_binding_v2.schema.json#/$defs/governedTimestamps"},
+    "clock_evidence_digest": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/digest"}
+  }
+}

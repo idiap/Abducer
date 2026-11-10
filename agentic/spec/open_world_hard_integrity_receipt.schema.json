@@ -1,0 +1,68 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://abducer.local/schemas/open_world_hard_integrity_receipt.schema.json",
+  "title": "Open-world hard-integrity receipt",
+  "description": "A merit-free replay receipt for exact portfolio, worker request/response/receipt, branch, barrier, nonredundancy, and authority-null integrity.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "artifact_kind", "receipt_id", "portfolio_id",
+    "portfolio_digest", "freeze_digest", "classification_digest",
+    "checked_branch_record_digests", "checked_worker_request_sha256s",
+    "checked_worker_response_sha256s", "barrier_receipt_digest", "checks",
+    "status", "integrity_authority", "authority_nulls", "content_digest"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "artifact_kind": {"const": "open_world_hard_integrity_receipt"},
+    "receipt_id": {"$ref": "#/$defs/id"},
+    "portfolio_id": {"$ref": "#/$defs/id"},
+    "portfolio_digest": {"$ref": "#/$defs/digest"},
+    "freeze_digest": {"$ref": "#/$defs/digest"},
+    "classification_digest": {"$ref": "#/$defs/digest"},
+    "checked_branch_record_digests": {"$ref": "#/$defs/digestSet"},
+    "checked_worker_request_sha256s": {"$ref": "#/$defs/digestSet"},
+    "checked_worker_response_sha256s": {"$ref": "#/$defs/digestSet"},
+    "barrier_receipt_digest": {"$ref": "#/$defs/digest"},
+    "checks": {
+      "type": "array",
+      "prefixItems": [
+        {"const": "portfolio_schema_closed"},
+        {"const": "portfolio_content_digest_replayed"},
+        {"const": "matured_worker_response_bytes_replayed"},
+        {"const": "worker_receipt_bytes_replayed"},
+        {"const": "terminal_barrier_bytes_replayed"},
+        {"const": "branch_namespace_and_sibling_inputs_replayed"},
+        {"const": "content_nonredundancy_replayed"},
+        {"const": "authority_nulls_replayed"}
+      ],
+      "items": false
+    },
+    "status": {"const": "passed"},
+    "integrity_authority": {"const": "local_exact_byte_replay_only"},
+    "authority_nulls": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "worker_cognitive_independence", "semantic_independence",
+        "truth_authority", "physics_value_authority", "conceptual_merit_authority"
+      ],
+      "properties": {
+        "worker_cognitive_independence": {"const": "unavailable"},
+        "semantic_independence": {"const": "unavailable"},
+        "truth_authority": {"const": "unavailable"},
+        "physics_value_authority": {"const": "unavailable"},
+        "conceptual_merit_authority": {"const": "unavailable"}
+      }
+    },
+    "content_digest": {"$ref": "#/$defs/digest"}
+  },
+  "$defs": {
+    "id": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"},
+    "digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "digestSet": {
+      "type": "array", "minItems": 3, "uniqueItems": true,
+      "items": {"$ref": "#/$defs/digest"}
+    }
+  }
+}

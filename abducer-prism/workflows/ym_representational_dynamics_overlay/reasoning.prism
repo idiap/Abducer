@@ -1,0 +1,42 @@
+# SPDX-FileCopyrightText: © 2026 Idiap Research Institute <contact@idiap.ch>
+#
+# SPDX-FileContributor: Andre Freitas <andre.freitas@idiap.ch>
+# Neuro-symbolic AI Group
+#
+# SPDX-FileContributor: Danilo Gusicuma <danilo.gusicuma@idiap.ch>
+# Neuro-symbolic AI Group
+#
+# SPDX-License-Identifier: MIT
+# Function: decide whether a Yang--Mills representation candidate respects the continuum boundary.
+# Input: YangMillsTargetContext identifies the target and boundary reference.
+# Types: ContinuumBoundaryAuditInput adds the representation candidate to be checked.
+# Output: YangMillsOverlayDisposition is Accepted, Quarantined, or Stalled.
+# Boundary: finite or representational evidence cannot cross the continuum boundary by projection.
+# Layer: high-level epistemic topology only.
+# Metadata: workflows/manifest.json (`ym-representational-dynamics-overlay`).
+
+from workflows.ym_representational_dynamics_overlay.types import (
+    ContinuumBoundaryAuditInput,
+    YangMillsOverlayDisposition,
+    YangMillsTargetContext,
+)
+
+from workflows.ym_representational_dynamics_overlay.occurrences import (
+    UnresolvedContinuumAuditInputProjection,
+    EvidentialYangMillsOverlayDispositionAssessment,
+)
+
+from workflows.ym_representational_dynamics_overlay.relations import (
+    AuditInputEnablesOverlayDisposition,
+)
+
+reasoning YmRepresentationalDynamicsOverlay(
+    yang_mills_target: YangMillsTargetContext,
+) -> Generated[YangMillsOverlayDisposition]:
+    sequence:
+        # The unresolved projection prepares an audit input but cannot cross the boundary.
+        [continuum_audit_input: UnresolvedContinuumAuditInputProjection(yang_mills_target)]
+        # The evidential gate determines whether the overlay remains boundary-safe.
+        [overlay_disposition: EvidentialYangMillsOverlayDispositionAssessment(continuum_audit_input.value)] by AuditInputEnablesOverlayDisposition
+
+    return overlay_disposition

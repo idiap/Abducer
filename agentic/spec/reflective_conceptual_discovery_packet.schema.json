@@ -1,0 +1,367 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://abducer.local/schemas/reflective_conceptual_discovery_packet.schema.json",
+  "title": "Reflective conceptual discovery packet",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "packet_id", "target_id", "run_id", "branch_id", "state_version",
+    "prior_conceptual_state_ref", "discovery_charter", "conceptual_genealogy", "literature_basis",
+    "root_tensions", "conceptual_systems", "high_risk_hypothesis_portfolio", "parallel_portfolio",
+    "reflection_rounds", "provisional_synthesis", "theory_quality_pareto", "understanding_delta",
+    "theoretical_programme", "support_probe", "stage_gates", "truth_convergence_status", "plateau",
+    "next_reflective_action", "generation_mode", "operator_receipt_ids", "evaluation_receipt_ids", "conceptual_adjudication_evidence", "ledger_events", "created_utc", "packet_digest"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "packet_id": {"$ref": "#/$defs/id"},
+    "target_id": {"$ref": "#/$defs/id"},
+    "run_id": {"$ref": "#/$defs/id"},
+    "branch_id": {"$ref": "#/$defs/id"},
+    "state_version": {"type": "integer", "minimum": 0},
+    "prior_conceptual_state_ref": {"type": "string", "minLength": 1},
+    "discovery_charter": {"$ref": "#/$defs/charter"},
+    "conceptual_genealogy": {"$ref": "#/$defs/genealogy"},
+    "literature_basis": {"$ref": "#/$defs/literature"},
+    "root_tensions": {"type": "array", "items": {"$ref": "#/$defs/tension"}},
+    "conceptual_systems": {"type": "array", "items": {"$ref": "#/$defs/system"}},
+    "high_risk_hypothesis_portfolio": {"$ref": "#/$defs/highRiskRef"},
+    "parallel_portfolio": {"$ref": "#/$defs/parallelRef"},
+    "reflection_rounds": {"type": "array", "items": {"$ref": "#/$defs/reflection"}},
+    "provisional_synthesis": {"$ref": "#/$defs/synthesis"},
+    "theory_quality_pareto": {"$ref": "#/$defs/pareto"},
+    "understanding_delta": {"$ref": "#/$defs/understanding"},
+    "theoretical_programme": {"$ref": "#/$defs/programme"},
+    "support_probe": {"$ref": "#/$defs/support"},
+    "stage_gates": {"$ref": "#/$defs/gates"},
+    "truth_convergence_status": {"$ref": "#/$defs/truth"},
+    "plateau": {"$ref": "#/$defs/plateau"},
+    "next_reflective_action": {"$ref": "#/$defs/action"},
+    "generation_mode": {"enum": ["not_applicable", "local_structural_fallback", "operator_generated"]},
+    "operator_receipt_ids": {"type": "array", "items": {"$ref": "#/$defs/id"}},
+    "evaluation_receipt_ids": {"type": "array", "items": {"$ref": "#/$defs/id"}},
+    "independent_evaluation_evidence": {"type": "array", "maxItems": 0, "items": {"$ref": "./conceptual_adjudication_evidence.schema.json"}},
+    "conceptual_adjudication_evidence": {"oneOf": [{"$ref": "./conceptual_adjudication_evidence.schema.json"}, {"type": "null"}]},
+    "parent_adjudication_evidence": {"$ref": "./conceptual_adjudication_evidence.schema.json"},
+    "central_conceptual_route_reflection_intake": {"$ref": "./central_conceptual_route_reflection_intake_v2.schema.json"},
+    "ledger_events": {"type": "array", "items": {"type": "object"}},
+    "explicit_unknowns": {"type": "array", "items": {"type": "string"}},
+    "created_utc": {"type": "string", "format": "date-time"},
+    "packet_digest": {"$ref": "#/$defs/digest"}
+  },
+  "$defs": {
+    "id": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"},
+    "digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "nonemptyStrings": {"type": "array", "items": {"type": "string", "minLength": 1}},
+    "charter": {
+      "type": "object", "additionalProperties": false,
+      "required": ["essential_question", "desired_understanding", "bottleneck_diagnosis", "bottleneck_evidence", "target_commitments", "relevance_horizon", "incumbent_framework", "conceptual_opacity", "non_claim_boundary"],
+      "properties": {
+        "essential_question": {"type": "string", "minLength": 1},
+        "desired_understanding": {"type": "string", "minLength": 1},
+        "bottleneck_diagnosis": {"enum": ["conceptual", "representational", "explanatory", "formalization", "proof", "empirical", "mixed", "not_conceptual"]},
+        "bottleneck_evidence": {"type": "string", "minLength": 1},
+        "target_commitments": {"$ref": "#/$defs/nonemptyStrings"},
+        "relevance_horizon": {"type": "string", "minLength": 1},
+        "incumbent_framework": {"type": "string", "minLength": 1},
+        "conceptual_opacity": {"type": "string", "minLength": 1},
+        "non_claim_boundary": {"type": "string", "minLength": 1}
+      }
+    },
+    "genealogy": {
+      "type": "object", "additionalProperties": false,
+      "required": ["inherited_concepts", "historical_or_logical_formation", "protected_successes", "rejected_or_retired_ancestors", "hidden_assumptions"],
+      "properties": {
+        "inherited_concepts": {"$ref": "#/$defs/nonemptyStrings"},
+        "historical_or_logical_formation": {"$ref": "#/$defs/nonemptyStrings"},
+        "protected_successes": {"$ref": "#/$defs/nonemptyStrings"},
+        "rejected_or_retired_ancestors": {"$ref": "#/$defs/nonemptyStrings"},
+        "hidden_assumptions": {"$ref": "#/$defs/nonemptyStrings"}
+      }
+    },
+    "literature": {
+      "type": "object", "additionalProperties": false,
+      "required": ["selected_snapshot_id", "snapshot_target_id", "selected_snapshot_digest", "search_completed_utc", "freshness_status", "search_receipt_ids", "assimilation_packet_ref", "source_to_theory_delta_summary", "literature_generated_questions", "coverage_limitations", "superseded_snapshot_ids"],
+      "properties": {
+        "selected_snapshot_id": {"type": ["string", "null"]},
+        "snapshot_target_id": {"type": ["string", "null"]},
+        "selected_snapshot_digest": {"anyOf": [{"$ref": "#/$defs/digest"}, {"type": "null"}]},
+        "search_completed_utc": {"type": ["string", "null"], "format": "date-time"},
+        "freshness_status": {"enum": ["current", "stale", "local_only", "refresh_required", "literature_blind_incubation"]},
+        "search_receipt_ids": {"type": "array", "items": {"$ref": "#/$defs/id"}},
+        "assimilation_packet_ref": {"type": ["string", "null"]},
+        "source_to_theory_delta_summary": {"$ref": "#/$defs/nonemptyStrings"},
+        "literature_generated_questions": {"$ref": "#/$defs/nonemptyStrings"},
+        "coverage_limitations": {"$ref": "#/$defs/nonemptyStrings"},
+        "superseded_snapshot_ids": {"type": "array", "items": {"$ref": "#/$defs/id"}}
+      }
+    },
+    "tension": {
+      "type": "object", "additionalProperties": false,
+      "required": ["tension_id", "opposed_commitments", "strongest_form_of_each_side", "minimal_incompatibility_or_missing_mediation", "regime", "why_root_level"],
+      "properties": {
+        "tension_id": {"$ref": "#/$defs/id"},
+        "opposed_commitments": {"$ref": "#/$defs/nonemptyStrings"},
+        "strongest_form_of_each_side": {"$ref": "#/$defs/nonemptyStrings"},
+        "minimal_incompatibility_or_missing_mediation": {"type": "string", "minLength": 1},
+        "regime": {"type": "string", "minLength": 1},
+        "why_root_level": {"type": "string", "minLength": 1}
+      }
+    },
+    "system": {
+      "type": "object", "additionalProperties": false,
+      "required": ["system_id", "relation", "lifecycle_state", "structural_identity", "conceptual_ancestors", "transformation_operations", "primitives", "ontological_commitments", "identities_and_differences", "relations_operations_and_dynamics", "explanatory_ideal", "mechanism_or_principle", "protected_successes", "target_pressures_addressed", "formerly_inexpressible_now_visible", "unification_claims", "implications_and_new_questions", "formalization_seeds", "correction_conditions", "residual_contradictions", "non_claims"],
+      "properties": {
+        "system_id": {"$ref": "#/$defs/id"},
+        "relation": {"enum": ["incumbent", "rival", "synthesis", "challenger"]},
+        "lifecycle_state": {"enum": ["seed", "articulated", "reflectively_revised", "synthesized", "theoretically_preferred", "support_ready", "formalization_ready", "proof_ready", "validated", "refuted", "retired"]},
+        "structural_identity": {
+          "type": "object", "additionalProperties": false,
+          "required": ["primitive_ids", "relation_ids", "mechanism_id", "maturation_question_id", "genealogy_ids"],
+          "properties": {
+            "primitive_ids": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"$ref": "#/$defs/id"}},
+            "relation_ids": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"$ref": "#/$defs/id"}},
+            "mechanism_id": {"$ref": "#/$defs/id"},
+            "maturation_question_id": {"$ref": "#/$defs/id"},
+            "genealogy_ids": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/id"}}
+          }
+        },
+        "conceptual_ancestors": {"type": "array", "items": {"$ref": "#/$defs/id"}},
+        "transformation_operations": {"$ref": "#/$defs/nonemptyStrings"},
+        "primitives": {"$ref": "#/$defs/nonemptyStrings"},
+        "ontological_commitments": {"$ref": "#/$defs/nonemptyStrings"},
+        "identities_and_differences": {"$ref": "#/$defs/nonemptyStrings"},
+        "relations_operations_and_dynamics": {"$ref": "#/$defs/nonemptyStrings"},
+        "explanatory_ideal": {"enum": ["mechanism", "constraint", "structure", "process", "unification", "mixed"]},
+        "mechanism_or_principle": {"type": "string", "minLength": 1},
+        "protected_successes": {"$ref": "#/$defs/nonemptyStrings"},
+        "target_pressures_addressed": {"$ref": "#/$defs/nonemptyStrings"},
+        "formerly_inexpressible_now_visible": {"$ref": "#/$defs/nonemptyStrings"},
+        "unification_claims": {"$ref": "#/$defs/unification"},
+        "implications_and_new_questions": {"$ref": "#/$defs/nonemptyStrings"},
+        "formalization_seeds": {"$ref": "#/$defs/nonemptyStrings"},
+        "correction_conditions": {"$ref": "#/$defs/nonemptyStrings"},
+        "residual_contradictions": {"$ref": "#/$defs/nonemptyStrings"},
+        "non_claims": {"$ref": "#/$defs/nonemptyStrings"}
+      }
+    },
+    "unification": {
+      "oneOf": [
+        {"$ref": "#/$defs/legacyUnification"},
+        {"$ref": "./conceptual_adjudication_evidence.schema.json#/$defs/typedUnificationClaims"}
+      ]
+    },
+    "legacyUnification": {
+      "type": "object", "additionalProperties": false,
+      "required": ["unified_cases_or_routes", "common_principle", "differences_preserved", "erasure_risks"],
+      "properties": {
+        "unified_cases_or_routes": {"$ref": "#/$defs/nonemptyStrings"},
+        "common_principle": {"type": "string", "minLength": 1},
+        "differences_preserved": {"$ref": "#/$defs/nonemptyStrings"},
+        "erasure_risks": {"$ref": "#/$defs/nonemptyStrings"}
+      }
+    },
+    "highRiskRef": {
+      "type": "object", "additionalProperties": false,
+      "required": ["disposition", "portfolio_ref", "corner_families", "selected_hypothesis_ids", "protected_wildcard_ids", "control_hypothesis_ids", "literature_rebase_status"],
+      "properties": {
+        "disposition": {"enum": ["not_requested", "generated", "literature_rebased", "routed", "incubating"]},
+        "portfolio_ref": {"type": ["string", "null"]},
+        "corner_families": {"$ref": "#/$defs/nonemptyStrings"},
+        "selected_hypothesis_ids": {"type": "array", "items": {"$ref": "#/$defs/id"}},
+        "protected_wildcard_ids": {"type": "array", "items": {"$ref": "#/$defs/id"}},
+        "control_hypothesis_ids": {"type": "array", "items": {"$ref": "#/$defs/id"}},
+        "literature_rebase_status": {"enum": ["not_requested", "pending", "current", "superseded"]}
+      }
+    },
+    "parallelRef": {
+      "type": "object", "additionalProperties": false,
+      "required": ["disposition", "manifest_ref", "frozen_theory_digest", "frozen_literature_digest", "branch_ids", "valid_receipt_ids", "failed_or_invalid_receipt_ids", "retained_dissent_ids", "literature_rebase_status", "reducer_receipt_id"],
+      "properties": {
+        "disposition": {"enum": ["not_needed", "planned", "running", "partially_valid", "validated", "rebased", "merge_conflict"]},
+        "manifest_ref": {"type": ["string", "null"]},
+        "frozen_theory_digest": {"anyOf": [{"$ref": "#/$defs/digest"}, {"type": "null"}]},
+        "frozen_literature_digest": {"anyOf": [{"$ref": "#/$defs/digest"}, {"type": "null"}]},
+        "branch_ids": {"type": "array", "items": {"$ref": "#/$defs/id"}},
+        "valid_receipt_ids": {"type": "array", "items": {"$ref": "#/$defs/id"}},
+        "failed_or_invalid_receipt_ids": {"type": "array", "items": {"$ref": "#/$defs/id"}},
+        "retained_dissent_ids": {"type": "array", "items": {"$ref": "#/$defs/id"}},
+        "literature_rebase_status": {"enum": ["not_requested", "current", "superseded", "rebased"]},
+        "reducer_receipt_id": {"type": ["string", "null"]}
+      }
+    },
+    "reflection": {
+      "type": "object", "additionalProperties": false,
+      "required": ["round_id", "system_ids", "lenses_used", "strongest_objections", "blind_spots", "mutation_or_synthesis", "result", "no_change_reason"],
+      "properties": {
+        "round_id": {"$ref": "#/$defs/id"},
+        "system_ids": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/id"}},
+        "lenses_used": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
+        "strongest_objections": {"$ref": "#/$defs/nonemptyStrings"},
+        "correction_tests": {"$ref": "#/$defs/nonemptyStrings"},
+        "semantic_patch_links": {
+          "type": "array",
+          "items": {
+            "type": "object", "additionalProperties": false,
+            "required": ["candidate_ref", "objection", "correction_test", "changed_paths"],
+            "properties": {
+              "candidate_ref": {"$ref": "#/$defs/id"},
+              "objection": {"type": "string", "minLength": 1},
+              "correction_test": {"type": "string", "minLength": 1},
+              "changed_paths": {
+                "type": "array", "minItems": 1, "uniqueItems": true,
+                "items": {"type": "string", "pattern": "^/"}
+              }
+            }
+          }
+        },
+        "blind_spots": {"$ref": "#/$defs/nonemptyStrings"},
+        "mutation_or_synthesis": {
+          "type": "object", "additionalProperties": false,
+          "required": ["operation", "changed_primitives_relations_or_explanation", "preserved_content", "lost_content"],
+          "properties": {
+            "operation": {"type": "string", "minLength": 1},
+            "changed_primitives_relations_or_explanation": {"$ref": "#/$defs/nonemptyStrings"},
+            "preserved_content": {"$ref": "#/$defs/nonemptyStrings"},
+            "lost_content": {"$ref": "#/$defs/nonemptyStrings"}
+          }
+        },
+        "result": {"enum": ["mutated", "synthesized", "demoted", "no_change"]},
+        "no_change_reason": {"type": ["string", "null"]}
+      }
+    },
+    "synthesis": {
+      "type": "object", "additionalProperties": false,
+      "required": ["authority_status", "investment_authorized", "preferred_system_id", "preferred_system_ids", "diagnostic_synthesis_system_ids", "nondominated_system_ids", "preference_authority_evidence_id", "retained_challenger_ids", "stable_conceptual_core", "unresolved_dissent", "why_not_premature_convergence"],
+      "properties": {
+        "authority_status": {"enum": ["sealed_unique", "sealed_plural", "sealed_revise_all_diagnostic_only", "absent_diagnostic_only", "not_conceptual"]},
+        "investment_authorized": {"type": "boolean"},
+        "preferred_system_id": {"type": ["string", "null"]},
+        "preferred_system_ids": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/id"}},
+        "diagnostic_synthesis_system_ids": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/id"}},
+        "nondominated_system_ids": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/id"}},
+        "preference_authority_evidence_id": {"oneOf": [{"$ref": "#/$defs/id"}, {"type": "null"}]},
+        "retained_challenger_ids": {"type": "array", "items": {"$ref": "#/$defs/id"}},
+        "stable_conceptual_core": {"$ref": "#/$defs/nonemptyStrings"},
+        "unresolved_dissent": {"$ref": "#/$defs/nonemptyStrings"},
+        "why_not_premature_convergence": {"type": "string", "minLength": 1}
+      }
+    },
+    "pareto": {
+      "type": "object", "additionalProperties": false,
+      "required": ["dimension_definitions", "system_assessments", "nondominated_system_ids", "dominated_or_demoted_systems"],
+      "properties": {
+        "dimension_definitions": {"type": "array", "minItems": 9, "uniqueItems": true, "items": {"type": "string"}},
+        "system_assessments": {"type": "array", "items": {"type": "object"}},
+        "nondominated_system_ids": {"type": "array", "items": {"$ref": "#/$defs/id"}},
+        "dominated_or_demoted_systems": {"type": "array", "items": {"type": "object"}}
+      }
+    },
+    "understanding": {
+      "type": "object", "additionalProperties": false,
+      "required": ["authority_status", "conceptual_system_ids", "authority_distinct_merit_evidence", "claim_boundary", "system_deltas", "before", "after", "perspective_shifts", "explanatory_compressions", "new_distinctions", "productive_contradictions", "remaining_opacity"],
+      "properties": {
+        "authority_status": {"enum": ["sealed_unique", "sealed_plural", "sealed_revise_all_diagnostic_only", "absent_diagnostic_only", "not_conceptual"]},
+        "conceptual_system_ids": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/id"}},
+        "authority_distinct_merit_evidence": {"const": false},
+        "claim_boundary": {"enum": ["internal_correlated_structural_change_only", "ordinary_bottleneck_localization_only"]},
+        "system_deltas": {"type": "array", "items": {"$ref": "#/$defs/systemUnderstandingDelta"}},
+        "before": {"type": "string", "minLength": 1}, "after": {"type": "string", "minLength": 1},
+        "perspective_shifts": {"$ref": "#/$defs/nonemptyStrings"}, "explanatory_compressions": {"$ref": "#/$defs/nonemptyStrings"},
+        "new_distinctions": {"$ref": "#/$defs/nonemptyStrings"}, "productive_contradictions": {"$ref": "#/$defs/nonemptyStrings"},
+        "remaining_opacity": {"$ref": "#/$defs/nonemptyStrings"}
+      }
+    },
+    "systemUnderstandingDelta": {
+      "type": "object", "additionalProperties": false,
+      "required": ["conceptual_system_id", "before", "after", "perspective_shifts", "explanatory_compressions", "new_distinctions", "productive_contradictions", "remaining_opacity"],
+      "properties": {
+        "conceptual_system_id": {"$ref": "#/$defs/id"},
+        "before": {"type": "string", "minLength": 1},
+        "after": {"type": "string", "minLength": 1},
+        "perspective_shifts": {"$ref": "#/$defs/nonemptyStrings"},
+        "explanatory_compressions": {"$ref": "#/$defs/nonemptyStrings"},
+        "new_distinctions": {"$ref": "#/$defs/nonemptyStrings"},
+        "productive_contradictions": {"$ref": "#/$defs/nonemptyStrings"},
+        "remaining_opacity": {"$ref": "#/$defs/nonemptyStrings"}
+      }
+    },
+    "programme": {
+      "type": "object", "additionalProperties": false,
+      "required": ["programme_id", "authority_status", "conceptual_system_ids", "investment_authorized", "component_programmes", "definitions_to_build", "relations_or_mechanisms_to_formalize", "consequences_to_derive", "proof_or_model_obligations", "literature_questions", "next_theory_actions"],
+      "properties": {
+        "programme_id": {"$ref": "#/$defs/id"},
+        "authority_status": {"enum": ["sealed_unique", "sealed_plural", "sealed_revise_all_diagnostic_only", "absent_diagnostic_only", "not_conceptual"]},
+        "conceptual_system_ids": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/id"}},
+        "investment_authorized": {"type": "boolean"},
+        "component_programmes": {"type": "array", "items": {"$ref": "#/$defs/componentProgramme"}},
+        "definitions_to_build": {"$ref": "#/$defs/nonemptyStrings"}, "relations_or_mechanisms_to_formalize": {"$ref": "#/$defs/nonemptyStrings"},
+        "consequences_to_derive": {"$ref": "#/$defs/nonemptyStrings"}, "proof_or_model_obligations": {"$ref": "#/$defs/nonemptyStrings"},
+        "literature_questions": {"$ref": "#/$defs/nonemptyStrings"}, "next_theory_actions": {"$ref": "#/$defs/nonemptyStrings"}
+      }
+    },
+    "componentProgramme": {
+      "type": "object", "additionalProperties": false,
+      "required": ["component_programme_id", "conceptual_system_id", "investment_authorized", "definitions_to_build", "relations_or_mechanisms_to_formalize", "consequences_to_derive", "proof_or_model_obligations", "next_theory_actions"],
+      "properties": {
+        "component_programme_id": {"$ref": "#/$defs/id"},
+        "conceptual_system_id": {"$ref": "#/$defs/id"},
+        "investment_authorized": {"type": "boolean"},
+        "definitions_to_build": {"$ref": "#/$defs/nonemptyStrings"},
+        "relations_or_mechanisms_to_formalize": {"$ref": "#/$defs/nonemptyStrings"},
+        "consequences_to_derive": {"$ref": "#/$defs/nonemptyStrings"},
+        "proof_or_model_obligations": {"$ref": "#/$defs/nonemptyStrings"},
+        "next_theory_actions": {"$ref": "#/$defs/nonemptyStrings"}
+      }
+    },
+    "support": {
+      "type": "object", "additionalProperties": false,
+      "required": ["disposition", "theory_programme_id", "theoretical_question_id", "conceptual_system_ids", "theoretical_question", "role", "why_theory_alone_is_currently_insufficient", "possible_theory_updates", "receipt_ids", "reflective_assimilation_event_ids"],
+      "properties": {
+        "disposition": {"enum": ["no_probe_needed", "proposed", "commissioned", "assimilated"]},
+        "theory_programme_id": {"type": ["string", "null"]}, "theoretical_question_id": {"type": ["string", "null"]},
+        "conceptual_system_ids": {"type": "array", "items": {"$ref": "#/$defs/id"}},
+        "theoretical_question": {"type": ["string", "null"]},
+        "role": {"enum": ["none", "conceptual_counterfactual", "symbolic_derivation", "finite_countermodel", "proof_attempt", "literature_inquiry", "simulation"]},
+        "why_theory_alone_is_currently_insufficient": {"type": ["string", "null"]},
+        "possible_theory_updates": {"$ref": "#/$defs/nonemptyStrings"},
+        "receipt_ids": {"type": "array", "items": {"$ref": "#/$defs/id"}},
+        "reflective_assimilation_event_ids": {"type": "array", "items": {"$ref": "#/$defs/id"}}
+      }
+    },
+    "gates": {
+      "type": "object", "additionalProperties": false,
+      "required": ["G0_essential_relevance", "G0L_literature_rebase", "G1_genuine_transformation", "G2_philosophical_depth", "G3_unification", "G4_understanding_gain", "G5_reflective_resilience", "G6_truth_apt_articulation", "G7_claim_promotion"],
+      "properties": {
+        "G0_essential_relevance": {"enum": ["pass", "fail", "open"]},
+        "G0L_literature_rebase": {"enum": ["pass", "fail", "open", "not_required"]},
+        "G1_genuine_transformation": {"enum": ["pass", "fail", "open"]}, "G2_philosophical_depth": {"enum": ["pass", "fail", "open"]},
+        "G3_unification": {"enum": ["pass", "fail", "open"]}, "G4_understanding_gain": {"enum": ["pass", "fail", "open"]},
+        "G5_reflective_resilience": {"enum": ["pass", "fail", "open"]}, "G6_truth_apt_articulation": {"enum": ["pass", "fail", "open"]},
+        "G7_claim_promotion": {"enum": ["pass", "fail", "not_requested"]}
+      }
+    },
+    "truth": {
+      "type": "object", "additionalProperties": false,
+      "required": ["conceptual_preference", "internal_coherence", "formal_support", "model_or_experimental_support", "proof_status"],
+      "properties": {
+        "conceptual_preference": {"type": "string", "minLength": 1}, "internal_coherence": {"type": "string", "minLength": 1},
+        "formal_support": {"type": "string", "minLength": 1}, "model_or_experimental_support": {"type": "string", "minLength": 1},
+        "proof_status": {"type": "string", "minLength": 1}
+      }
+    },
+    "plateau": {
+      "type": "object", "additionalProperties": false,
+      "required": ["materially_empty_rounds", "equivalence_basis", "action"],
+      "properties": {"materially_empty_rounds": {"type": "integer", "minimum": 0}, "equivalence_basis": {"type": "string", "minLength": 1}, "action": {"enum": ["continue", "reframe", "incubate", "retire"]}}
+    },
+    "action": {
+      "type": "object", "additionalProperties": false,
+      "required": ["kind", "question", "expected_conceptual_change"],
+      "properties": {
+        "kind": {"enum": ["reflect", "reframe", "differentiate", "synthesize", "formalize", "derive", "compare", "read", "prove", "probe", "incubate", "retire", "empirical"]},
+        "question": {"type": "string", "minLength": 1}, "expected_conceptual_change": {"type": "string", "minLength": 1}
+      }
+    }
+  }
+}

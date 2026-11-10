@@ -1,0 +1,38 @@
+\section{Exact incidence certificate}
+\label{app:incidence}
+
+The proof of Proposition~\ref{prop:central-surjectivity} is geometric and
+does not depend on computation.  This appendix states an exact finite-matrix
+cross-check.
+
+On $B_d$, the numbers of vertices, positively oriented links, and plaquettes
+are
+\begin{equation}\label{eq:block-counts}
+  3^d,qquad 2d\,3^{d-1},\qquad
+  4\binom d2 3^{d-2},
+\end{equation}
+respectively.  Let $D$ be the unsigned plaquette--link incidence matrix.
+Restrict $D$ to the $m$ rows incident to $e$ and delete the column of $e$.
+Call the resulting matrix $C_d$.  If $o_p$ is the private opposite link of
+$p$, then
+\begin{equation}\label{eq:identity-minor}
+  (C_d)_{p,o_{p'}}=\delta_{p,p'}.
+\end{equation}
+Thus $C_d$ has full row rank $m$ over every field.  For center signs in
+$\SUtwo$, this is precisely surjectivity of the map
+\[
+  \mathbb F_2^{\,2d3^{d-1}-1}\longrightarrow\mathbb F_2^{\,m}.
+\]
+
+The supplementary program \texttt{supplement/verify\_incidence.py}
+constructs the complete cubical complex using integer tuples, forms $C_d$,
+computes its rank by exact Gaussian elimination over $\mathbb F_2$, verifies
+the identity minor, and repeats the rank calculation after reversing row and
+column order.  The shipped certificate covers $2\leq d\leq6$; these finite
+checks illustrate the dimension-independent proof and are not logical inputs
+to it.
+
+For $d=4$, \eqref{eq:block-counts} gives $81$ vertices, $216$ links, and
+$216$ plaquettes.  The selected full-degree link has $m=6$ incident
+plaquettes, and the six private opposite columns give an exact $6\times6$
+identity minor.

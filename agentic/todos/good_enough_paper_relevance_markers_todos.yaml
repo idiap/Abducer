@@ -1,0 +1,180 @@
+# SPDX-FileCopyrightText: © 2026 Idiap Research Institute <contact@idiap.ch>
+#
+# SPDX-FileContributor: Andre Freitas <andre.freitas@idiap.ch>
+# Neuro-symbolic AI Group
+#
+# SPDX-FileContributor: Danilo Gusicuma <danilo.gusicuma@idiap.ch>
+# Neuro-symbolic AI Group
+#
+# SPDX-License-Identifier: MIT
+version: 1
+title: Good-enough paper relevance markers
+created_at: "2026-07-11"
+implementation_status:
+  status: completed
+  completed_at: "2026-07-11"
+source_artifacts:
+  monitor: agentic/reports/scientific_contribution_monitor/latest.json
+  report: agentic/reports/discovery_marathon/full_timeline.html
+  marker_fixture_validator: agentic/scripts/validate_paper_relevance_marker_fixtures.py
+context:
+  problem: >
+    Publishable stepping-stone detection needs clearer markers of why a candidate is relevant to
+    establishing a good enough paper, especially in the P vs NP problem space. A high score or
+    interesting branch is insufficient unless it improves conceptual depth, novelty, unblocking
+    power, applicability, and understanding in target-specific terms.
+  p_vs_np_specificity: >
+    For P vs NP, paper relevance must be expressed through source carriers/languages, target
+    classes, circuit models, transfer inequalities, quantifier regimes, nonuniform/advice leakage,
+    barrier status, MCSP/MKtP or proof-complexity interfaces, and exact route-level no-go or bridge
+    obligations.
+criteria:
+  good_enough_paper_relevance:
+    dimensions:
+      - conceptual_depth
+      - conceptual_novelty
+      - unblocking_power
+      - applicability
+      - understanding_gain
+    rule: >
+      A candidate is good enough for paper shaping only when every marker is at least adequate,
+      decisive markers are strong, and hard gates prevent overclaiming. If hard gates remain open,
+      the strongest status is strong_relevance_certification_pending, not paper_relevance_ready.
+todos:
+  - id: GEPR-001
+    type: workflow_todo
+    phase: scientific-contribution-monitor
+    owner: agentic/scripts
+    priority: critical
+    risk_class: paper_overpromotion_risk
+    title: Define target-specific good-enough paper relevance criteria
+    intent: >
+      Add explicit criteria for conceptual depth, conceptual novelty, unblocking power,
+      applicability, and understanding gain, with P vs NP-specific definitions.
+    use_skills:
+      - paper-contribution-readiness-judge
+      - main-problem-alignment-auditor
+    required_artifact:
+      - agentic/scripts/target_profiles.py
+    acceptance_criteria:
+      - "P vs NP criteria mention source carriers/languages, target classes, circuit models, transfer inequalities, quantifiers, advice/nonuniformity, and barrier status."
+      - "Generic fallback criteria exist for future targets."
+    blocked_by: []
+    evidence:
+      - agentic/scripts/target_profiles.py
+    review_date: "2026-07-11"
+    failure_modes:
+      - "Criteria stay generic and do not constrain P vs NP paper relevance."
+    status: resolved
+
+  - id: GEPR-002
+    type: workflow_todo
+    phase: scientific-contribution-monitor
+    owner: agentic/scripts
+    priority: critical
+    risk_class: marker_computation_risk
+    title: Emit paper relevance marker packets per candidate
+    intent: >
+      Attach structured marker packets to every contribution candidate, including score, status,
+      criterion, evidence, and missing work.
+    use_skills:
+      - scientific-contribution-detector
+      - contribution-value-assessor
+    required_artifact:
+      - agentic/reports/scientific_contribution_monitor/latest.json
+    acceptance_criteria:
+      - "Every candidate has exactly five paper_relevance_markers."
+      - "Every marker contains target-specific criterion, evidence, score, status, and missing work when weak."
+    blocked_by:
+      - GEPR-001
+    evidence:
+      - agentic/scripts/build_scientific_contribution_monitor.py
+      - agentic/reports/scientific_contribution_monitor/latest.json
+    review_date: "2026-07-11"
+    failure_modes:
+      - "Markers become decorative scores without problem-space evidence."
+    status: resolved
+
+  - id: GEPR-003
+    type: workflow_todo
+    phase: scientific-contribution-monitor
+    owner: agentic/scripts
+    priority: critical
+    risk_class: paper_handoff_risk
+    title: Add a good-enough paper relevance verdict
+    intent: >
+      Aggregate marker packets into paper_relevance_ready, strong_relevance_certification_pending,
+      moderate_relevance_needs_sharpening, or weak_relevance.
+    use_skills:
+      - paper-contribution-readiness-judge
+      - contribution-oriented-subgoal-manager
+    required_artifact:
+      - agentic/reports/scientific_contribution_monitor/latest.json
+    acceptance_criteria:
+      - "paper_relevance_ready is impossible unless hard gates are also ready."
+      - "Strong relevance with open gates is represented as certification pending, not handoff ready."
+    blocked_by:
+      - GEPR-002
+    evidence:
+      - agentic/scripts/build_scientific_contribution_monitor.py
+    review_date: "2026-07-11"
+    failure_modes:
+      - "A conceptually exciting candidate bypasses prior-art, validation, or overclaim gates."
+    status: resolved
+
+  - id: GEPR-004
+    type: report_todo
+    phase: discovery-marathon-report
+    owner: agentic/scripts
+    priority: high
+    risk_class: report_ux_risk
+    title: Expose paper relevance markers in HTML, Markdown, and LaTeX report surfaces
+    intent: >
+      Make the markers visible as explanatory scientific criteria rather than hidden model fields.
+    use_skills:
+      - timeline-report-latex-composer
+      - paper-contribution-readiness-judge
+    required_artifact:
+      - agentic/reports/discovery_marathon/full_timeline.html
+      - agentic/reports/timeline_latex_sections/latest_report.tex
+    acceptance_criteria:
+      - "Report surfaces show marker criteria, marker scores/statuses, missing work, and good-enough paper relevance decision."
+      - "Report language remains target-specific and avoids generic enthusiasm."
+    blocked_by:
+      - GEPR-002
+      - GEPR-003
+    evidence:
+      - agentic/scripts/generate_discovery_marathon_html.py
+      - agentic/scripts/build_timeline_latex_sections.py
+    review_date: "2026-07-11"
+    failure_modes:
+      - "The report hides the paper relevance reasoning or reduces it to a score."
+    status: resolved
+
+  - id: GEPR-005
+    type: test_todo
+    phase: validation
+    owner: agentic/scripts
+    priority: critical
+    risk_class: regression_risk
+    title: Add deterministic marker regression fixtures
+    intent: >
+      Prevent regression from target-specific marker reasoning into vague paper relevance.
+    use_skills:
+      - paper-contribution-readiness-judge
+      - progression-payoff-judge
+    required_artifact:
+      - agentic/scripts/validate_paper_relevance_marker_fixtures.py
+    acceptance_criteria:
+      - "Rich P vs NP fixture reaches strong_relevance_certification_pending when hard gates are open."
+      - "Ready fixture reaches paper_relevance_ready only when gates and novelty status are ready."
+      - "Vague progress fixture is not overpromoted."
+    blocked_by:
+      - GEPR-003
+    evidence:
+      - agentic/scripts/validate_paper_relevance_marker_fixtures.py
+      - agentic/scripts/agentic_check.py
+    review_date: "2026-07-11"
+    failure_modes:
+      - "Future scoring changes promote vague progress or block proper paper relevance."
+    status: resolved

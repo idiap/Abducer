@@ -1,0 +1,122 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://abducer.local/spec/abstraction_evaluation_failure.schema.json",
+  "title": "Replayable hard-floor abstraction evaluation failure",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "failure_id", "status", "target_id", "factorial_arms",
+    "repetitions_scheduled_per_arm", "minimum_required_per_arm", "case_suite_id",
+    "held_out_cases", "held_out_case_suite_digest", "literature_snapshot",
+    "literature_snapshot_digest", "assimilation_packet", "assimilation_digest",
+    "source_portfolio", "source_portfolio_digest", "precommitted_failures",
+    "common_input_digest", "rubric_digest", "dependency_authority",
+    "dependency_authority_digest", "runtime_portfolio", "runtime_portfolio_digest",
+    "attempt_receipts", "completed_sibling_branch_ids", "unexpected_failure_branch_ids", "completed_by_arm",
+    "under_retained_arms", "failed_attempts", "content_digest"
+  ],
+  "$defs": {
+    "id": {"type": "string", "minLength": 1, "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$"},
+    "digest": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
+    "arm": {"enum": ["categorical", "hott", "combined", "incumbent", "no_abstraction"]},
+    "budget": {
+      "type": "object", "additionalProperties": false,
+      "required": ["wall_seconds", "cost_units", "storage_bytes"],
+      "properties": {
+        "wall_seconds": {"type": "number", "exclusiveMinimum": 0},
+        "cost_units": {"type": "number", "minimum": 0},
+        "storage_bytes": {"type": "integer", "minimum": 0}
+      }
+    },
+    "attempt": {
+      "type": "object", "additionalProperties": false,
+      "required": [
+        "arm", "repetition", "case_suite_id", "branch_id", "request_digest",
+        "seed_digest", "cell_binding_digest", "status", "input_digest",
+        "sealed_output_digest", "branch_receipt_digest", "opportunity_budget",
+        "validator_receipt_ids", "is_dissent", "failure_class", "failure_detail"
+      ],
+      "properties": {
+        "arm": {"$ref": "#/$defs/arm"},
+        "repetition": {"type": "integer", "minimum": 1},
+        "case_suite_id": {"$ref": "#/$defs/id"},
+        "branch_id": {"$ref": "#/$defs/id"},
+        "request_digest": {"$ref": "#/$defs/digest"},
+        "seed_digest": {"$ref": "#/$defs/digest"},
+        "cell_binding_digest": {"$ref": "#/$defs/digest"},
+        "status": {"enum": ["completed", "failed", "timeout", "invalid", "cancelled", "dependency_blocked"]},
+        "input_digest": {"$ref": "#/$defs/digest"},
+        "sealed_output_digest": {"anyOf": [{"$ref": "#/$defs/digest"}, {"type": "null"}]},
+        "branch_receipt_digest": {"$ref": "#/$defs/digest"},
+        "opportunity_budget": {"$ref": "#/$defs/budget"},
+        "validator_receipt_ids": {"type": "array", "items": {"$ref": "#/$defs/id"}},
+        "is_dissent": {"type": "boolean"},
+        "failure_class": {"type": ["string", "null"]},
+        "failure_detail": {"type": ["string", "null"]}
+      }
+    },
+    "arm_counts": {
+      "type": "object", "additionalProperties": false,
+      "required": ["categorical", "hott", "combined", "incumbent", "no_abstraction"],
+      "properties": {
+        "categorical": {"type": "integer", "minimum": 0},
+        "hott": {"type": "integer", "minimum": 0},
+        "combined": {"type": "integer", "minimum": 0},
+        "incumbent": {"type": "integer", "minimum": 0},
+        "no_abstraction": {"type": "integer", "minimum": 0}
+      }
+    }
+  },
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "failure_id": {"$ref": "#/$defs/id"},
+    "status": {"const": "insufficient_retained_executions"},
+    "target_id": {"$ref": "#/$defs/id"},
+    "factorial_arms": {"type": "array", "minItems": 5, "maxItems": 5, "uniqueItems": true, "items": {"$ref": "#/$defs/arm"}},
+    "repetitions_scheduled_per_arm": {"type": "integer", "minimum": 6},
+    "minimum_required_per_arm": {"const": 5},
+    "case_suite_id": {"$ref": "#/$defs/id"},
+    "held_out_cases": {"type": "array", "minItems": 2, "items": {"type": "object"}},
+    "held_out_case_suite_digest": {"$ref": "#/$defs/digest"},
+    "literature_snapshot": {"type": "object"},
+    "literature_snapshot_digest": {"$ref": "#/$defs/digest"},
+    "assimilation_packet": {"type": "object"},
+    "assimilation_digest": {"$ref": "#/$defs/digest"},
+    "source_portfolio": {"type": "object"},
+    "source_portfolio_digest": {"$ref": "#/$defs/digest"},
+    "precommitted_failures": {
+      "type": "array", "minItems": 1, "uniqueItems": true,
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["arm", "repetition", "branch_id"],
+        "properties": {
+          "arm": {"$ref": "#/$defs/arm"},
+          "repetition": {"type": "integer", "minimum": 1},
+          "branch_id": {"$ref": "#/$defs/id"}
+        }
+      }
+    },
+    "common_input_digest": {"$ref": "#/$defs/digest"},
+    "rubric_digest": {"$ref": "#/$defs/digest"},
+    "dependency_authority": {"$ref": "abstraction_parallel_evaluation.schema.json#/$defs/formal_dependency_authority"},
+    "dependency_authority_digest": {"$ref": "#/$defs/digest"},
+    "runtime_portfolio": {"$ref": "parallel_hypothesis_portfolio.schema.json"},
+    "runtime_portfolio_digest": {"$ref": "#/$defs/digest"},
+    "attempt_receipts": {"type": "array", "minItems": 30, "items": {"$ref": "#/$defs/attempt"}},
+    "completed_sibling_branch_ids": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"$ref": "#/$defs/id"}},
+    "unexpected_failure_branch_ids": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/id"}},
+    "completed_by_arm": {"$ref": "#/$defs/arm_counts"},
+    "under_retained_arms": {
+      "type": "object", "additionalProperties": false, "minProperties": 1,
+      "properties": {
+        "categorical": {"type": "integer", "minimum": 0, "maximum": 4},
+        "hott": {"type": "integer", "minimum": 0, "maximum": 4},
+        "combined": {"type": "integer", "minimum": 0, "maximum": 4},
+        "incumbent": {"type": "integer", "minimum": 0, "maximum": 4},
+        "no_abstraction": {"type": "integer", "minimum": 0, "maximum": 4}
+      }
+    },
+    "failed_attempts": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/attempt"}},
+    "content_digest": {"$ref": "#/$defs/digest"}
+  }
+}

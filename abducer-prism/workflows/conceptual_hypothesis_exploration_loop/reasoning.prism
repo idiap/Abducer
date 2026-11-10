@@ -1,0 +1,63 @@
+# SPDX-FileCopyrightText: © 2026 Idiap Research Institute <contact@idiap.ch>
+#
+# SPDX-FileContributor: Andre Freitas <andre.freitas@idiap.ch>
+# Neuro-symbolic AI Group
+#
+# SPDX-FileContributor: Danilo Gusicuma <danilo.gusicuma@idiap.ch>
+# Neuro-symbolic AI Group
+#
+# SPDX-License-Identifier: MIT
+# Function: replace a conceptual obstruction with a testable mediated route.
+# Input: ConceptualFailureState records the obstruction being repaired.
+# Types: pressure bounds the problem; mediation and bridge types propose a repair; consequence and refutation test it.
+# Output: ConceptualRefinementRoutingAssessment selects work, promotion, or refutation with a basis.
+# Layer: high-level epistemic topology only.
+# Metadata: workflows/manifest.json (`conceptual_hypothesis_exploration_loop`).
+
+from workflows.conceptual_hypothesis_exploration_loop.types import (
+    BridgeDerivedConsequence,
+    MediatingConceptualBridge,
+    ConceptualFailureState,
+    ConceptualObstructionPressure,
+    BridgeConsequenceRefutationAssessment,
+    ConceptualMediationHypothesis,
+    ConceptualRefinementDisposition,
+    ConceptualRefinementRoutingAssessment,
+)
+
+from workflows.conceptual_hypothesis_exploration_loop.occurrences import (
+    AbductiveMediationHypothesisFormation,
+    AnalogicalConceptualBridgeTransfer,
+    DeductiveConceptualBridgeConsequenceDerivation,
+    EvidentialConceptualObstructionAssessment,
+    EvidentialConceptualRefinementRoutingAssessment,
+    ConceptualRefinementRoutingInput,
+    RefutationalBridgeConsequenceAssessment,
+)
+
+from workflows.conceptual_hypothesis_exploration_loop.relations import (
+    TreatsBridgeAsConsequencePremise,
+    CalibratesConceptualRefinementRouting,
+    BoundsConceptualObstructionPressure,
+    TestsBridgeConsequence,
+    TransfersMediationIntoBridge,
+)
+
+reasoning ConceptualHypothesisExplorationLoop(
+    failure_state: ConceptualFailureState,
+) -> Generated[ConceptualRefinementRoutingAssessment]:
+    sequence:
+        # Diagnosis bounds what the abductive repair must explain.
+        [obstruction_pressure: EvidentialConceptualObstructionAssessment(failure_state)]
+        [mediation_hypothesis: AbductiveMediationHypothesisFormation(obstruction_pressure.value)] by BoundsConceptualObstructionPressure
+        # Analogy constructs a bridge; deduction exposes a consequence that can fail.
+        [conceptual_bridge: AnalogicalConceptualBridgeTransfer(mediation_hypothesis.value)] by TransfersMediationIntoBridge
+        [bridge_consequence: DeductiveConceptualBridgeConsequenceDerivation(conceptual_bridge.value)] by TreatsBridgeAsConsequencePremise
+        # Refutation tests the consequence before the final routing calibration.
+        [refutation_assessment: RefutationalBridgeConsequenceAssessment(bridge_consequence.value)] by TestsBridgeConsequence
+        [refinement_routing: EvidentialConceptualRefinementRoutingAssessment(ConceptualRefinementRoutingInput(
+            conceptual_bridge = conceptual_bridge.value,
+            refutation_assessment = refutation_assessment.value,
+        ))] by CalibratesConceptualRefinementRouting
+
+    return refinement_routing

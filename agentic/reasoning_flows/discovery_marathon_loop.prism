@@ -1,0 +1,13 @@
+erfl 0.2
+reasoning discovery_marathon_loop {
+  goal "find a discriminating candidate across bounded discovery cycles" -> discovery_status
+  steps e0:E[run_context->scope] -constrain> ...
+        (a0:A[scope->candidate] & i0:I[scope->pattern]) -probe> ...
+        (m0:M[candidate,pattern->model_result] & c0:C[candidate,pattern->contrast_result]) -test> ...
+        r0:R[model_result,contrast_result->verdict] -calibrate> ...
+        e1:E[candidate,pattern,verdict->discovery_status]
+  on e1.promotable => switch @release_promotion_loop
+  on e1.reorient => switch @conceptual_hypothesis_exploration_loop
+  on e1.target_reset => switch @target_navigation_loop
+  on reasoning.stalled => stop
+}

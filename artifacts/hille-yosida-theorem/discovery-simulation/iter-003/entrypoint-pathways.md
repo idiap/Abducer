@@ -1,0 +1,180 @@
+# Entry Point Pathways
+
+## Stats
+
+- Pathways: 8
+- Entry points considered: 8
+
+## Ranked Pathways
+
+### path.001 - st.thm.hille-yosida-general
+- Rank: 1
+- Phase: Current Bridge Agenda
+- Entry concepts: c0-generation-implies-closed-dense-generator, resolvent-approximants-converge-to-generated-semigroup, closed-dense-plus-resolvent-powers-imply-c0-generation, closed-dense-operator-with-resolvent-power-bounds, resolvent-family-at-large-lambda
+- Entry score: 0.7908
+- Pathway score: 0.7127
+- Goal: Develop a proof pathway centered on st.thm.hille-yosida-general.
+- Supporting hypotheses:
+  - phyp.hille-yosida-theorem.021 (intervention-focus, priority=0.7885)
+  - phyp.hille-yosida-theorem.002 (bridge-link, priority=0.6538)
+  - phyp.hille-yosida-theorem.003 (bridge-link, priority=0.6468)
+  - phyp.hille-yosida-theorem.034 (intermediate-invariant, priority=0.6245)
+- Supporting links:
+  - st.def.generator -> st.thm.hille-yosida-general (score=0.6153)
+  - st.def.c0-semigroup -> st.thm.hille-yosida-general (score=0.6075)
+  - st.thm.hille-yosida-general -> st.thm.hille-yosida-contraction (score=0.4835)
+- Execution plan:
+  - Run kb-abduce on target st.thm.hille-yosida-general using top related hypotheses as seeds.
+  - Inject top 1-2 tentative links touching st.thm.hille-yosida-general in a scratch KB and run kb-deduce.
+  - Keep only hypothesis/link sets that improve conditional entailment coverage.
+  - If no improvement, move to next-ranked pathway.
+
+### path.002 - st.def.generator
+- Rank: 2
+- Phase: Current Bridge Agenda
+- Entry concepts: c0-semigroup-definition, generator-definition, C0-semigroup-model, operator-theoretic-Banach-space, unbounded-generator-graph
+- Entry score: 0.7278
+- Pathway score: 0.6746
+- Goal: Develop a proof pathway centered on st.def.generator.
+- Supporting hypotheses:
+  - phyp.hille-yosida-theorem.023 (intervention-focus, priority=0.6854)
+  - phyp.hille-yosida-theorem.002 (bridge-link, priority=0.6538)
+  - phyp.hille-yosida-theorem.004 (bridge-link, priority=0.6331)
+  - phyp.hille-yosida-theorem.034 (intermediate-invariant, priority=0.6245)
+- Supporting links:
+  - st.def.generator -> st.thm.hille-yosida-general (score=0.6153)
+  - st.def.generator -> st.thm.cauchy-problem-equivalence (score=0.5923)
+  - st.def.generator -> st.thm.lumer-phillips (score=0.5312)
+- Execution plan:
+  - Run kb-abduce on target st.def.generator using top related hypotheses as seeds.
+  - Inject top 1-2 tentative links touching st.def.generator in a scratch KB and run kb-deduce.
+  - Keep only hypothesis/link sets that improve conditional entailment coverage.
+  - If no improvement, move to next-ranked pathway.
+
+### path.003 - st.def.c0-semigroup
+- Rank: 3
+- Phase: Current Bridge Agenda
+- Entry concepts: c0-semigroup-definition, C0-semigroup-model, operator-theoretic-Banach-space, Banach-space, C0-semigroup
+- Entry score: 0.7041
+- Pathway score: 0.6689
+- Goal: Develop a proof pathway centered on st.def.c0-semigroup.
+- Supporting hypotheses:
+  - phyp.hille-yosida-theorem.001 (bridge-link, priority=0.6777)
+  - phyp.hille-yosida-theorem.024 (intervention-focus, priority=0.661)
+  - phyp.hille-yosida-theorem.003 (bridge-link, priority=0.6468)
+  - phyp.hille-yosida-theorem.033 (representation-shift, priority=0.6464)
+- Supporting links:
+  - st.def.c0-semigroup -> st.thm.cauchy-problem-equivalence (score=0.6419)
+  - st.def.c0-semigroup -> st.thm.hille-yosida-general (score=0.6075)
+  - st.def.c0-semigroup -> st.thm.lumer-phillips (score=0.5427)
+- Execution plan:
+  - Run kb-abduce on target st.def.c0-semigroup using top related hypotheses as seeds.
+  - Inject top 1-2 tentative links touching st.def.c0-semigroup in a scratch KB and run kb-deduce.
+  - Keep only hypothesis/link sets that improve conditional entailment coverage.
+  - If no improvement, move to next-ranked pathway.
+
+### path.004 - st.thm.cauchy-problem-equivalence
+- Rank: 4
+- Phase: Current Bridge Agenda
+- Entry concepts: c0-generation-iff-cauchy-well-posedness, closed-operator-or-semigroup-generator, well-posed-abstract-cauchy-problem, cauchy-problem-equivalence, C0-semigroup-model
+- Entry score: 0.6542
+- Pathway score: 0.6325
+- Goal: Develop a proof pathway centered on st.thm.cauchy-problem-equivalence.
+- Supporting hypotheses:
+  - phyp.hille-yosida-theorem.001 (bridge-link, priority=0.6777)
+  - phyp.hille-yosida-theorem.033 (representation-shift, priority=0.6464)
+  - phyp.hille-yosida-theorem.004 (bridge-link, priority=0.6331)
+  - phyp.hille-yosida-theorem.025 (intervention-focus, priority=0.6298)
+- Supporting links:
+  - st.def.c0-semigroup -> st.thm.cauchy-problem-equivalence (score=0.6419)
+  - st.def.generator -> st.thm.cauchy-problem-equivalence (score=0.5923)
+  - st.thm.cauchy-problem-equivalence -> st.thm.lumer-phillips (score=0.4362)
+- Execution plan:
+  - Run kb-abduce on target st.thm.cauchy-problem-equivalence using top related hypotheses as seeds.
+  - Inject top 1-2 tentative links touching st.thm.cauchy-problem-equivalence in a scratch KB and run kb-deduce.
+  - Keep only hypothesis/link sets that improve conditional entailment coverage.
+  - If no improvement, move to next-ranked pathway.
+
+### path.005 - st.thm.hille-yosida-contraction
+- Rank: 5
+- Phase: Current Bridge Agenda
+- Entry concepts: c0-generation-implies-closed-dense-generator, closed-dense-plus-first-resolvent-bound-imply-contraction-generation, resolvent-approximants-converge-to-generated-semigroup, closed-dense-operator-with-first-resolvent-bound, resolvent-family-at-large-lambda
+- Entry score: 0.6483
+- Pathway score: 0.6019
+- Goal: Develop a proof pathway centered on st.thm.hille-yosida-contraction.
+- Supporting hypotheses:
+  - phyp.hille-yosida-theorem.022 (intervention-focus, priority=0.7283)
+  - phyp.hille-yosida-theorem.007 (bridge-link, priority=0.5675)
+  - phyp.hille-yosida-theorem.039 (intermediate-invariant, priority=0.546)
+  - phyp.hille-yosida-theorem.008 (bridge-link, priority=0.538)
+- Supporting links:
+  - st.def.c0-semigroup -> st.thm.hille-yosida-contraction (score=0.5195)
+  - st.def.generator -> st.thm.hille-yosida-contraction (score=0.4867)
+  - st.thm.hille-yosida-general -> st.thm.hille-yosida-contraction (score=0.4835)
+- Execution plan:
+  - Run kb-abduce on target st.thm.hille-yosida-contraction using top related hypotheses as seeds.
+  - Inject top 1-2 tentative links touching st.thm.hille-yosida-contraction in a scratch KB and run kb-deduce.
+  - Keep only hypothesis/link sets that improve conditional entailment coverage.
+  - If no improvement, move to next-ranked pathway.
+
+### path.006 - st.thm.lumer-phillips
+- Rank: 6
+- Phase: Additional KB-Specific Phases
+- Entry concepts: closed-dense-plus-first-resolvent-bound-imply-contraction-generation, dissipativity-plus-range-condition-imply-contraction-generation, densely-defined-dissipative-operator-with-surjective-shift, closed-dense-operator-with-first-resolvent-bound, contraction-semigroup-via-dissipativity
+- Entry score: 0.5674
+- Pathway score: 0.5607
+- Goal: Develop a proof pathway centered on st.thm.lumer-phillips.
+- Supporting hypotheses:
+  - phyp.hille-yosida-theorem.027 (intervention-focus, priority=0.6192)
+  - phyp.hille-yosida-theorem.005 (bridge-link, priority=0.5884)
+  - phyp.hille-yosida-theorem.006 (bridge-link, priority=0.5781)
+  - phyp.hille-yosida-theorem.037 (intermediate-invariant, priority=0.565)
+- Supporting links:
+  - st.def.c0-semigroup -> st.thm.lumer-phillips (score=0.5427)
+  - st.def.generator -> st.thm.lumer-phillips (score=0.5312)
+  - st.thm.cauchy-problem-equivalence -> st.thm.lumer-phillips (score=0.4362)
+- Execution plan:
+  - Run kb-abduce on target st.thm.lumer-phillips using top related hypotheses as seeds.
+  - Inject top 1-2 tentative links touching st.thm.lumer-phillips in a scratch KB and run kb-deduce.
+  - Keep only hypothesis/link sets that improve conditional entailment coverage.
+  - If no improvement, move to next-ranked pathway.
+
+### path.008 - st.der.yosida-approximation
+- Rank: 8
+- Phase: Current Bridge Agenda
+- Entry concepts: resolvent-approximants-converge-to-generated-semigroup, resolvent-family-at-large-lambda, contraction-semigroup-generator, bounded-generator-approximation-scheme, resolvent-monotonicity
+- Entry score: 0.4986
+- Pathway score: 0.5079
+- Goal: Develop a proof pathway centered on st.der.yosida-approximation.
+- Supporting hypotheses:
+  - phyp.hille-yosida-theorem.026 (intervention-focus, priority=0.6196)
+- Supporting links:
+  - st.thm.hille-yosida-general -> st.der.yosida-approximation (score=0.384)
+  - st.def.c0-semigroup -> st.der.yosida-approximation (score=0.3695)
+  - st.def.generator -> st.der.yosida-approximation (score=0.338)
+- Execution plan:
+  - Run kb-abduce on target st.der.yosida-approximation using top related hypotheses as seeds.
+  - Inject top 1-2 tentative links touching st.der.yosida-approximation in a scratch KB and run kb-deduce.
+  - Keep only hypothesis/link sets that improve conditional entailment coverage.
+  - If no improvement, move to next-ranked pathway.
+
+### path.007 - st.def.resolvent
+- Rank: 7
+- Phase: Foundational Gauge-Theoretic Definitions
+- Entry concepts: resolvent-approximants-converge-to-generated-semigroup, resolvent-family-at-large-lambda, bounded-generator-approximation-scheme, yosida-approximation-convergence, resolvent-definition
+- Entry score: 0.5023
+- Pathway score: 0.4834
+- Goal: Develop a proof pathway centered on st.def.resolvent.
+- Supporting hypotheses:
+  - phyp.hille-yosida-theorem.029 (intervention-focus, priority=0.5373)
+  - phyp.hille-yosida-theorem.011 (bridge-link, priority=0.5079)
+  - phyp.hille-yosida-theorem.043 (intermediate-invariant, priority=0.4916)
+- Supporting links:
+  - st.def.resolvent -> st.thm.hille-yosida-general (score=0.4532)
+  - st.def.c0-semigroup -> st.def.resolvent (score=0.3675)
+  - st.def.resolvent -> st.thm.hille-yosida-contraction (score=0.3586)
+- Execution plan:
+  - Run kb-abduce on target st.def.resolvent using top related hypotheses as seeds.
+  - Inject top 1-2 tentative links touching st.def.resolvent in a scratch KB and run kb-deduce.
+  - Keep only hypothesis/link sets that improve conditional entailment coverage.
+  - If no improvement, move to next-ranked pathway.

@@ -1,0 +1,51 @@
+{
+  "schema_version": "abducer.repository-adoption-operations/v1",
+  "description": "Additive discovery contracts; implementation owners and fixed resolvers retain execution authority.",
+  "canonical_registries": ["agentic/registries/skill_registry.yaml", "proj_skills/catalog.yaml"],
+  "operations": [
+    {
+      "operation_id": "validate-project-skills",
+      "owner": "proj_skills",
+      "implementation": "proj_skills/scripts/validate_proj_skills.py",
+      "adapter": "proj_skills/scripts/repository_adoption_adapter.py",
+      "invocation_mode": "cli",
+      "input_contract": {"argv": "Unmodified legacy CLI argument vector after --; --root PATH defaults to canonical proj_skills."},
+      "output_contract": {"stdout": "bytes", "stderr": "bytes", "exit_code": "integer"},
+      "side_effects": "Read-only validation; optional adapter trace emits native evidence.",
+      "provenance": "proj_skills/scripts/validate_proj_skills.py"
+    },
+    {
+      "operation_id": "render-history",
+      "owner": "proj_skills",
+      "implementation": "proj_skills/scripts/repository_adoption_views.py",
+      "adapter": null,
+      "invocation_mode": "cli",
+      "input_contract": {"argv": "render-history --source PATH --output-dir NEWDIR"},
+      "output_contract": {"artifacts": "Versioned manifest and read-only historical views referencing immutable source digest."},
+      "side_effects": "Writes new projection directory; never executes described capabilities.",
+      "provenance": "proj_skills/scripts/repository_adoption_views.py"
+    },
+    {
+      "operation_id": "verify-view",
+      "owner": "proj_skills",
+      "implementation": "proj_skills/scripts/repository_adoption_views.py",
+      "adapter": null,
+      "invocation_mode": "cli",
+      "input_contract": {"argv": "verify-view --manifest PATH"},
+      "output_contract": {"result": "Manifest/source integrity verification."},
+      "side_effects": "Read-only verification.",
+      "provenance": "proj_skills/scripts/repository_adoption_views.py"
+    },
+    {
+      "operation_id": "release-probe",
+      "owner": "proj_skills",
+      "implementation": "proj_skills/scripts/repository_adoption_views.py",
+      "adapter": null,
+      "invocation_mode": "cli",
+      "input_contract": {"argv": "release-probe --repository-root PATH"},
+      "output_contract": {"result": "Read-only release workflow semantic probe; no execution or promotion authority."},
+      "side_effects": "Read-only representation verification.",
+      "provenance": "proj_skills/scripts/repository_adoption_views.py"
+    }
+  ]
+}

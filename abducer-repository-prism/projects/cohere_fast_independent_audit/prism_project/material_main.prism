@@ -1,0 +1,58 @@
+# lunar-runtime: {"declaration":"MaterializedCohereFastIndependentAudit","entry_argument":"conditional_derivation","execute_hook":"abducer-workflow-execute","id":"cohere_fast_independent_audit","input_schema":{"additionalProperties":false,"default":{"claim_ceiling":"no continuum mass-gap claim without discharged obligations","derivation_ref":"conditional-finite-regulator-derivation","domain_id":"yang-mills","open_obligations_ref":"continuum-limit-and-uniformity-obligations"},"properties":{"claim_ceiling":{"default":"no continuum mass-gap claim without discharged obligations","maxLength":16000,"minLength":1,"type":"string"},"derivation_ref":{"default":"conditional-finite-regulator-derivation","maxLength":16000,"minLength":1,"type":"string"},"domain_id":{"default":"yang-mills","maxLength":16000,"minLength":1,"type":"string"},"open_obligations_ref":{"default":"continuum-limit-and-uniformity-obligations","maxLength":16000,"minLength":1,"type":"string"}},"required":["domain_id","derivation_ref","open_obligations_ref","claim_ceiling"],"type":"object"},"metadata":{"completion_contract":{"allowed_final_statuses":["passed","completed"],"forbid_blockers":true,"reasoning_complete":true,"reasoning_events_min":4,"terminal_state":"completed"},"description":"adversarially test and calibrate the bounded domain derivation","model_required":true,"network_required":false,"provenance_contract":{"agent_invocations":[{"activated_skill_ids":["counterexample-hunter"],"agent_name":"refutation_assessment_material_agent","workflow_occurrence":"refutation_assessment"},{"activated_skill_ids":["epistemic-status-ledger"],"agent_name":"audit_disposition_material_agent","workflow_occurrence":"audit_disposition"}],"required_source_reads":[]},"reasoning_contract":{"steps":["refutation_assessment","audit_disposition"],"workflow":"CohereFastIndependentAudit"},"reasoning_required":true,"required_host_capabilities":["model","prism-engine","reasoning-events"],"scientific_truth_verified":false,"semantic_mode":"operational-model-generated","source_materialization_status":"linked_fake_handler_smoke","timeout_seconds":1800},"output_schema":{"additionalProperties":false,"properties":{"analysis_results":{"type":"object"},"compact_prism_input":{"type":"object"},"markdown":{"minLength":1,"type":"string"},"narrative_slots":{"type":"array"},"report_verification":{"properties":{"reasoning_complete":{"const":true},"status":{"const":"passed"}},"required":["status","reasoning_complete"],"type":"object"},"structured_value":{"properties":{"execution_provenance":{"type":"object"},"final_disposition":{"properties":{"blockers":{"maxItems":0,"type":"array"},"reasoning_complete":{"const":true},"status":{"const":"passed"}},"required":["status","reasoning_complete","blockers"],"type":"object"},"reasoning_result":{"type":"object"}},"required":["final_disposition","reasoning_result","execution_provenance"],"type":"object"}},"required":["markdown","structured_value","analysis_results","compact_prism_input","narrative_slots","report_verification"],"type":"object"},"prepare_hook":"abducer-workflow-prepare","verify_hook":"abducer-workflow-verify"}
+
+# Host-executed material graph for the complete reviewed reasoning path.
+# Generated values retain the source epistemic boundary and are not native proof or experiment receipts.
+
+from types import (
+    ConditionalDerivationPacket,
+    IndependentAuditDisposition,
+    IndependentRefutationAssessment,
+)
+from occurrences import (
+    IndependentAuditDispositionInput,
+)
+
+from generated.material_types import (
+    MaterialIndependentAuditDispositionInput,
+)
+
+from generated.audit_disposition_skill_1 import audit_disposition_skill_1
+from generated.refutation_assessment_skill_1 import refutation_assessment_skill_1
+
+# Real model capability for source occurrence refutation_assessment:RefutationalIndependentDerivationAudit.
+agent refutation_assessment_material_agent(
+    task: ConditionalDerivationPacket,
+) -> Result[Generated[String], ModelFailure]
+    ! {AI.Generate, Context.Disclose}:
+    skills: Skills[ConditionalDerivationPacket] = [refutation_assessment_skill_1]
+
+# Real model capability for source occurrence audit_disposition:EvidentialIndependentAuditDispositionAssessment.
+agent audit_disposition_material_agent(
+    task: MaterialIndependentAuditDispositionInput,
+) -> Result[Generated[String], ModelFailure]
+    ! {AI.Generate, Context.Disclose}:
+    skills: Skills[MaterialIndependentAuditDispositionInput] = [audit_disposition_skill_1]
+
+workflow MaterializedCohereFastIndependentAudit(
+    conditional_derivation: ConditionalDerivationPacket,
+) -> Generated[String]
+    fails ModelFailure
+    ! {AI.Generate, Context.Disclose}:
+    sequence:
+        # The audit searches for a defeater but cannot turn non-refutation into proof.
+        [refutation_assessment: refutation_assessment_material_agent(conditional_derivation)]
+        # Calibration explicitly joins source packet and audit result before routing.
+        [audit_disposition: audit_disposition_material_agent(MaterialIndependentAuditDispositionInput(
+            derivation = conditional_derivation,
+            refutation_assessment = refutation_assessment.value,
+        ))]
+
+    return audit_disposition
+
+
+def main(
+    conditional_derivation: ConditionalDerivationPacket,
+    model_access: ModelGenerate,
+    disclosure: ContextDisclose,
+) -> Result[Generated[String], ModelFailure] ! {AI.Generate, Context.Disclose}:
+    return solve MaterializedCohereFastIndependentAudit(conditional_derivation)

@@ -1,0 +1,367 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://abducer.local/spec/dynamic_experiment_v3_common.schema.json",
+  "title": "Closed portable definitions for dynamic experiment v3",
+  "$defs": {
+    "digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "identifier": {"type": "string", "minLength": 1},
+    "jsonValue": {
+      "oneOf": [
+        {"type": "null"}, {"type": "boolean"}, {"type": "number"}, {"type": "string"},
+        {"type": "array", "items": {"$ref": "#/$defs/jsonValue"}},
+        {"type": "object", "additionalProperties": {"$ref": "#/$defs/jsonValue"}}
+      ]
+    },
+    "jsonObject": {"type": "object", "additionalProperties": {"$ref": "#/$defs/jsonValue"}},
+    "stringArray": {"type": "array", "items": {"type": "string", "minLength": 1}, "uniqueItems": true},
+    "testedTheoryClaim": {
+      "type": "object", "additionalProperties": false,
+      "required": ["claim_id", "claim_kind", "target_relation", "statement", "theory_programme_id", "conceptual_system_ids", "source_theory_programme_digest", "source_reflection_packet_digest", "claim_digest"],
+      "properties": {
+        "claim_id": {"$ref": "#/$defs/identifier"},
+        "claim_kind": {"enum": ["theory_premise", "model_consequence", "calibration", "boundary_condition"]},
+        "target_relation": {"enum": ["exact_target_consequence", "necessary_not_sufficient", "toy_or_proxy", "calibration_only"]},
+        "statement": {"type": "string", "minLength": 1},
+        "theory_programme_id": {"$ref": "#/$defs/identifier"},
+        "conceptual_system_ids": {"$ref": "#/$defs/stringArray"},
+        "source_theory_programme_digest": {"$ref": "#/$defs/digest"},
+        "source_reflection_packet_digest": {"$ref": "#/$defs/digest"},
+        "claim_digest": {"$ref": "#/$defs/digest"}
+      }
+    },
+    "decisionRule": {
+      "type": "object", "additionalProperties": false, "minProperties": 1,
+      "properties": {
+        "comparator": {"enum": ["<", "<=", ">", ">=", "==", "ci_above", "ci_below"]},
+        "threshold": {"type": "number"},
+        "aggregation": {"enum": ["all", "any", "mean"]},
+        "relative_tolerance": {"type": "number", "minimum": 0},
+        "absolute_tolerance": {"type": "number", "minimum": 0}
+      }
+    },
+    "preregistration": {
+      "type": "object", "additionalProperties": false,
+      "required": ["hypothesis", "decision_rule", "stopping_rule", "analysis_plan", "registered_at"],
+      "properties": {
+        "hypothesis": {"type": "string", "minLength": 1},
+        "decision_rule": {"$ref": "#/$defs/decisionRule"},
+        "stopping_rule": {"type": "string", "minLength": 1},
+        "analysis_plan": {"type": "string", "minLength": 1},
+        "registered_at": {"type": "string", "format": "date-time"},
+        "estimand": {"type": "string", "minLength": 1},
+        "sample_size": {"type": "integer", "minimum": 1},
+        "uncertainty_method": {"enum": ["normal_95", "wilson_95"]}
+      }
+    },
+    "control": {
+      "type": "object", "additionalProperties": false,
+      "required": ["control_id", "variable", "value", "role"],
+      "properties": {
+        "control_id": {"$ref": "#/$defs/identifier"},
+        "variable": {"type": "string", "minLength": 1},
+        "value": {"$ref": "#/$defs/jsonValue"},
+        "role": {"enum": ["held_fixed", "negative", "positive", "baseline", "calibration"]}
+      }
+    },
+    "seedPolicy": {
+      "type": "object", "additionalProperties": false,
+      "required": ["stochastic", "policy"],
+      "properties": {
+        "stochastic": {"type": "boolean"},
+        "policy": {"enum": ["not_applicable", "fixed_master_seed", "enumerated_seeds"]},
+        "master_seed": {"type": "integer"},
+        "seeds": {"type": "array", "items": {"type": "integer"}, "minItems": 1, "uniqueItems": true}
+      },
+      "allOf": [
+        {"if": {"properties": {"stochastic": {"const": false}}, "required": ["stochastic"]}, "then": {"properties": {"policy": {"const": "not_applicable"}}, "not": {"anyOf": [{"required": ["master_seed"]}, {"required": ["seeds"]}]}}},
+        {"if": {"properties": {"stochastic": {"const": true}, "policy": {"const": "fixed_master_seed"}}, "required": ["stochastic", "policy"]}, "then": {"required": ["master_seed"], "not": {"required": ["seeds"]}}},
+        {"if": {"properties": {"stochastic": {"const": true}, "policy": {"const": "enumerated_seeds"}}, "required": ["stochastic", "policy"]}, "then": {"required": ["seeds"], "not": {"required": ["master_seed"]}}}
+      ]
+    },
+    "resourceBudget": {
+      "type": "object", "additionalProperties": false,
+      "required": ["budget_id", "wall_time_seconds", "grace_period_seconds", "cpu_seconds", "memory_bytes", "disk_bytes", "network_bytes", "token_count", "request_count", "cost_usd"],
+      "properties": {
+        "budget_id": {"$ref": "#/$defs/identifier"},
+        "wall_time_seconds": {"type": "number", "exclusiveMinimum": 0},
+        "grace_period_seconds": {"type": "number", "minimum": 0},
+        "cpu_seconds": {"type": "number", "exclusiveMinimum": 0},
+        "memory_bytes": {"type": "integer", "minimum": 1},
+        "disk_bytes": {"type": "integer", "minimum": 0},
+        "network_bytes": {"type": "integer", "minimum": 0},
+        "token_count": {"type": "integer", "minimum": 0},
+        "request_count": {"type": "integer", "minimum": 0},
+        "cost_usd": {"type": "number", "minimum": 0},
+        "absolute_deadline": {"type": ["string", "null"], "format": "date-time"}
+      }
+    },
+    "theoryEffectContract": {
+      "type": "object", "additionalProperties": false,
+      "required": ["tested_claim_id", "tested_claim_kind", "target_relation", "if_supported", "if_falsified", "theory_identity_locked", "automatic_theory_selection", "automatic_proof"],
+      "properties": {
+        "tested_claim_id": {"$ref": "#/$defs/identifier"},
+        "tested_claim_kind": {"enum": ["theory_premise", "model_consequence", "calibration", "boundary_condition"]},
+        "target_relation": {"enum": ["exact_target_consequence", "necessary_not_sufficient", "toy_or_proxy", "calibration_only"]},
+        "if_supported": {"enum": ["record_scoped_consistency_only", "no_change"]},
+        "if_falsified": {"enum": ["request_registered_premise_revision", "record_scoped_counterexample_only", "no_change"]},
+        "theory_identity_locked": {"const": true},
+        "automatic_theory_selection": {"const": false},
+        "automatic_proof": {"const": false}
+      }
+    },
+    "declaredRoot": {
+      "type": "object", "additionalProperties": false,
+      "required": ["kind", "path", "roles"],
+      "properties": {
+        "kind": {"enum": ["entry_python", "semantic"]},
+        "path": {"type": "string", "minLength": 1},
+        "roles": {"$ref": "#/$defs/stringArray"}
+      }
+    },
+    "dependencyEntry": {
+      "type": "object", "additionalProperties": false,
+      "required": ["path", "roles", "byte_size", "content_digest"],
+      "properties": {
+        "path": {"type": "string", "minLength": 1},
+        "roles": {"$ref": "#/$defs/stringArray"},
+        "byte_size": {"type": "integer", "minimum": 0},
+        "content_digest": {"$ref": "#/$defs/digest"}
+      }
+    },
+    "thirdPartyModule": {
+      "type": "object", "additionalProperties": false,
+      "required": ["module", "distribution", "version"],
+      "properties": {"module": {"$ref": "#/$defs/identifier"}, "distribution": {"$ref": "#/$defs/identifier"}, "version": {"type": "string", "minLength": 1}}
+    },
+    "runtimeDependency": {
+      "type": "object", "additionalProperties": false,
+      "required": ["name", "version"],
+      "properties": {"name": {"$ref": "#/$defs/identifier"}, "version": {"type": "string", "minLength": 1}}
+    },
+    "dependencyAuthority": {
+      "type": "object", "additionalProperties": false,
+      "required": ["authority_version", "scope", "declared_roots", "entries", "schema_closure", "import_boundary", "runtime_dependencies", "authority_boundary", "content_digest"],
+      "properties": {
+        "authority_version": {"const": "2.0.0"},
+        "scope": {"const": "dynamic-experiment-runtime-v3"},
+        "declared_roots": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/declaredRoot"}},
+        "entries": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/dependencyEntry"}},
+        "schema_closure": {
+          "type": "object", "additionalProperties": false,
+          "required": ["literal_paths", "referenced_paths"],
+          "properties": {"literal_paths": {"$ref": "#/$defs/stringArray"}, "referenced_paths": {"type": "array", "items": {"type": "string", "minLength": 1}, "uniqueItems": true}}
+        },
+        "import_boundary": {
+          "type": "object", "additionalProperties": false,
+          "required": ["policy", "repository_local_python_paths", "stdlib_modules", "third_party_modules"],
+          "properties": {
+            "policy": {"const": "conservative_repository_local_ast_import_closure_v2"},
+            "repository_local_python_paths": {"$ref": "#/$defs/stringArray"},
+            "stdlib_modules": {"$ref": "#/$defs/stringArray"},
+            "third_party_modules": {"type": "array", "items": {"$ref": "#/$defs/thirdPartyModule"}}
+          }
+        },
+        "runtime_dependencies": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/runtimeDependency"}},
+        "authority_boundary": {"const": "exact_local_dependency_environment_and_executable_identity_only_not_external_truth_theorem_or_physics_authority"},
+        "content_digest": {"$ref": "#/$defs/digest"}
+      }
+    },
+    "executable": {
+      "type": "object", "additionalProperties": false,
+      "required": ["resolved_path", "byte_size", "content_digest"],
+      "properties": {"resolved_path": {"type": "string", "minLength": 1}, "byte_size": {"type": "integer", "minimum": 1}, "content_digest": {"$ref": "#/$defs/digest"}}
+    },
+    "optionalCapability": {
+      "type": "object", "additionalProperties": false,
+      "required": ["available", "distribution", "version"],
+      "properties": {"available": {"type": "boolean"}, "distribution": {"type": "string", "minLength": 1}, "version": {"type": ["string", "null"]}}
+    },
+    "leanRequest": {
+      "type": "object", "additionalProperties": false,
+      "required": ["stage", "requested", "available", "executable"],
+      "properties": {"stage": {"$ref": "#/$defs/identifier"}, "requested": {"type": "string", "minLength": 1}, "available": {"type": "boolean"}, "executable": {"oneOf": [{"$ref": "#/$defs/executable"}, {"type": "null"}]}}
+    },
+    "observedEnvironment": {
+      "type": "object", "additionalProperties": false,
+      "required": ["environment_version", "python", "platform", "capabilities", "content_digest"],
+      "properties": {
+        "environment_version": {"const": "dynamic-experiment-observed-environment/3.0.0"},
+        "python": {
+          "type": "object", "additionalProperties": false,
+          "required": ["version", "implementation", "cache_tag", "executable"],
+          "properties": {"version": {"type": "string", "minLength": 1}, "implementation": {"type": "string", "minLength": 1}, "cache_tag": {"type": ["string", "null"]}, "executable": {"$ref": "#/$defs/executable"}}
+        },
+        "platform": {
+          "type": "object", "additionalProperties": false,
+          "required": ["system", "release", "machine"],
+          "properties": {"system": {"type": "string"}, "release": {"type": "string"}, "machine": {"type": "string"}}
+        },
+        "capabilities": {
+          "type": "object", "additionalProperties": false,
+          "required": ["sympy", "lean"],
+          "properties": {
+            "sympy": {"$ref": "#/$defs/optionalCapability"},
+            "lean": {
+              "type": "object", "additionalProperties": false,
+              "required": ["requests", "all_available", "any_available"],
+              "properties": {"requests": {"type": "array", "items": {"$ref": "#/$defs/leanRequest"}}, "all_available": {"type": "boolean"}, "any_available": {"type": "boolean"}}
+            }
+          }
+        },
+        "content_digest": {"$ref": "#/$defs/digest"}
+      }
+    },
+    "executionAuthority": {
+      "type": "object", "additionalProperties": false,
+      "required": ["authority_version", "dependency_authority", "observed_environment", "authority_boundary", "content_digest"],
+      "properties": {
+        "authority_version": {"const": "dynamic-experiment-authority/3.0.0"},
+        "dependency_authority": {"$ref": "#/$defs/dependencyAuthority"},
+        "observed_environment": {"$ref": "#/$defs/observedEnvironment"},
+        "authority_boundary": {"const": "exact_local_dependency_environment_and_executable_identity_only_not_external_truth_theorem_or_physics_authority"},
+        "content_digest": {"$ref": "#/$defs/digest"}
+      }
+    },
+    "exactModel": {
+      "type": "object", "additionalProperties": false,
+      "properties": {"operation": {"type": "string", "minLength": 1}, "left": {"type": "string"}, "right": {"type": "string"}, "expression": {"type": "string"}, "expected": {"type": "string"}, "variables": {"$ref": "#/$defs/jsonObject"}, "predicate": {"type": "string"}}
+    },
+    "sympyModel": {
+      "type": "object", "additionalProperties": false,
+      "properties": {"left": {"type": "string"}, "right": {"type": "string"}, "symbols": {"type": "array", "items": {"type": "string"}, "uniqueItems": true}}
+    },
+    "finiteModel": {
+      "type": "object", "additionalProperties": false,
+      "properties": {"variables": {"type": "object", "additionalProperties": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/jsonValue"}}}, "predicate": {"type": "string"}, "quantifier": {"enum": ["forall", "exists"]}, "max_states": {"type": "integer", "minimum": 1}}
+    },
+    "sweepRange": {
+      "type": "object", "additionalProperties": false, "required": ["start", "stop", "count"],
+      "properties": {"start": {"type": "number"}, "stop": {"type": "number"}, "count": {"type": "integer", "minimum": 1}}
+    },
+    "distribution": {
+      "type": "object", "additionalProperties": false,
+      "required": ["kind"],
+      "properties": {"kind": {"enum": ["bernoulli", "uniform", "normal"]}, "probability": {"type": "number", "minimum": 0, "maximum": 1}, "low": {"type": "number"}, "high": {"type": "number"}, "mean": {"type": "number"}, "sigma": {"type": "number", "minimum": 0}}
+    },
+    "numericModel": {
+      "type": "object", "additionalProperties": false,
+      "properties": {
+        "expression": {"type": "string"},
+        "parameters": {"type": "object", "additionalProperties": {"type": "number"}},
+        "sweep": {"type": "object", "additionalProperties": {"oneOf": [{"type": "array", "minItems": 1, "items": {"type": "number"}}, {"$ref": "#/$defs/sweepRange"}]}},
+        "max_points": {"type": "integer", "minimum": 1},
+        "distribution": {"$ref": "#/$defs/distribution"}
+      }
+    },
+    "leanModel": {
+      "type": "object", "additionalProperties": false,
+      "properties": {"source": {"type": "string"}, "proposition": {"type": "string"}, "executable": {"type": "string", "minLength": 1}}
+    },
+    "hybridStage": {
+      "type": "object", "additionalProperties": false,
+      "required": ["adapter", "model"],
+      "properties": {"adapter": {"enum": ["exact", "sympy", "finite_model", "numeric", "sweep", "lean"]}, "model": {"$ref": "#/$defs/jsonObject"}, "preregistration": {"$ref": "#/$defs/preregistration"}, "seed_policy": {"$ref": "#/$defs/seedPolicy"}}
+    },
+    "hybridModel": {
+      "type": "object", "additionalProperties": false,
+      "required": ["stages"],
+      "properties": {"stages": {"type": "array", "minItems": 2, "items": {"$ref": "#/$defs/hybridStage"}}}
+    },
+    "measurement": {
+      "$ref": "./resource_governor_process_event_v2.schema.json#/$defs/measurementV2"
+    },
+    "processEvent": {
+      "allOf": [
+        {"$ref": "./resource_governor_process_event_v2.schema.json#/$defs/processEventV2"},
+        {"properties": {"role": {"const": "solver"}}}
+      ]
+    },
+    "usage": {
+      "type": "object", "additionalProperties": false,
+      "required": ["wall_time_seconds", "cpu_seconds", "peak_memory_bytes", "disk_bytes", "network_bytes", "token_count", "request_count", "cost_usd"],
+      "properties": {"wall_time_seconds": {"type": "number", "minimum": 0}, "cpu_seconds": {"type": "number", "minimum": 0}, "peak_memory_bytes": {"type": "integer", "minimum": 0}, "disk_bytes": {"type": "integer", "minimum": 0}, "network_bytes": {"type": "integer", "minimum": 0}, "token_count": {"type": "integer", "minimum": 0}, "request_count": {"type": "integer", "minimum": 0}, "cost_usd": {"type": "number", "minimum": 0}}
+    },
+    "resourceUsage": {
+      "type": "object", "additionalProperties": false,
+      "required": ["budget", "usage", "status", "events", "deadline", "resource_measurement"],
+      "properties": {"budget": {"$ref": "#/$defs/resourceBudget"}, "usage": {"$ref": "#/$defs/usage"}, "status": {"enum": ["succeeded", "worker_failed"]}, "events": {"type": "array", "items": {"$ref": "#/$defs/processEvent"}}, "deadline": {"type": "string", "format": "date-time"}, "resource_measurement": {"$ref": "#/$defs/measurement"}}
+    },
+    "result": {
+      "oneOf": [
+        {"type": "object", "additionalProperties": false, "required": ["error"], "properties": {"error": {"type": "string", "minLength": 1}}},
+        {"type": "object", "additionalProperties": false, "required": ["available", "capability"], "properties": {"available": {"const": false}, "capability": {"enum": ["sympy", "lean"]}}},
+        {"type": "object", "additionalProperties": false, "required": ["available", "error"], "properties": {"available": {"const": true}, "error": {"type": "string", "minLength": 1}}},
+        {"type": "object", "additionalProperties": false, "required": ["claim_holds", "exact_values"], "properties": {"claim_holds": {"type": "boolean"}, "exact_values": {"type": "object", "additionalProperties": false, "required": ["left", "right", "difference"], "properties": {"left": {"type": "string"}, "right": {"type": "string"}, "difference": {"type": "string"}}}}},
+        {"type": "object", "additionalProperties": false, "required": ["claim_holds", "assignment"], "properties": {"claim_holds": {"type": "boolean"}, "assignment": {"$ref": "#/$defs/jsonObject"}}},
+        {"type": "object", "additionalProperties": false, "required": ["claim_holds", "normal_form", "sympy_version"], "properties": {"claim_holds": {"type": "boolean"}, "normal_form": {"type": "string"}, "sympy_version": {"type": "string"}}},
+        {"type": "object", "additionalProperties": false, "required": ["claim_holds", "explored", "state_count"], "properties": {"claim_holds": {"type": "null"}, "explored": {"type": "integer", "minimum": 0}, "state_count": {"type": "integer", "minimum": 1}}},
+        {"type": "object", "additionalProperties": false, "required": ["claim_holds", "witness", "counterexample"], "properties": {"claim_holds": {"type": "boolean"}, "witness": {"oneOf": [{"$ref": "#/$defs/jsonObject"}, {"type": "null"}]}, "counterexample": {"oneOf": [{"$ref": "#/$defs/jsonObject"}, {"type": "null"}]}}},
+        {"type": "object", "additionalProperties": false, "required": ["claim_holds", "estimate", "sample_count", "sample_digest_material"], "properties": {"claim_holds": {"type": "boolean"}, "estimate": {"type": "number"}, "sample_count": {"type": "integer", "minimum": 1}, "sample_digest_material": {"type": "array", "items": {"type": "number"}}}},
+        {"type": "object", "additionalProperties": false, "required": ["claim_holds", "samples", "minimum", "maximum"], "properties": {"claim_holds": {"type": "boolean"}, "samples": {"type": "array", "items": {"type": "object", "additionalProperties": false, "required": ["parameters", "value"], "properties": {"parameters": {"type": "object", "additionalProperties": {"type": "number"}}, "value": {"type": "number"}}}}, "minimum": {"type": "number"}, "maximum": {"type": "number"}}},
+        {"type": "object", "additionalProperties": false, "required": ["available", "proposition", "process"], "properties": {"available": {"const": true}, "proposition": {"type": "string"}, "process": {"$ref": "#/$defs/processEvent"}}},
+        {"type": "object", "additionalProperties": false, "required": ["budget_status", "dimension", "used", "limit"], "properties": {"budget_status": {"type": "string"}, "dimension": {"type": "string"}, "used": {"type": "number"}, "limit": {"type": "number"}}},
+        {"type": "object", "additionalProperties": false, "required": ["stages", "all_stages_completed"], "properties": {"stages": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/adapterOutput"}}, "all_stages_completed": {"type": "boolean"}}}
+      ]
+    },
+    "certificate": {
+      "oneOf": [
+        {"type": "null"},
+        {"type": "object", "additionalProperties": false, "required": ["kind", "expression", "left", "right", "difference", "verification"], "properties": {"kind": {"const": "normalized_rational_equality"}, "expression": {"type": "string"}, "left": {"type": "string"}, "right": {"type": "string"}, "difference": {"type": "string"}, "verification": {"type": "string"}}},
+        {"type": "object", "additionalProperties": false, "required": ["kind", "predicate", "assignment", "value"], "properties": {"kind": {"const": "exact_integer_predicate"}, "predicate": {"type": "string"}, "assignment": {"$ref": "#/$defs/jsonObject"}, "value": {"type": "boolean"}}},
+        {"type": "object", "additionalProperties": false, "required": ["kind", "left", "right", "normal_form", "sympy_version"], "properties": {"kind": {"const": "sympy_exact_normal_form"}, "left": {"type": "string"}, "right": {"type": "string"}, "normal_form": {"type": "string"}, "sympy_version": {"type": "string"}}},
+        {"type": "object", "additionalProperties": false, "required": ["kind", "quantifier", "predicate", "domains", "witness", "counterexample", "explored", "state_count", "decisive_early_witness"], "properties": {"kind": {"const": "finite_model_exhaustion"}, "quantifier": {"enum": ["forall", "exists"]}, "predicate": {"type": "string"}, "domains": {"type": "object", "additionalProperties": {"type": "array", "items": {"$ref": "#/$defs/jsonValue"}}}, "witness": {"oneOf": [{"$ref": "#/$defs/jsonObject"}, {"type": "null"}]}, "counterexample": {"oneOf": [{"$ref": "#/$defs/jsonObject"}, {"type": "null"}]}, "explored": {"type": "integer", "minimum": 0}, "state_count": {"type": "integer", "minimum": 1}, "decisive_early_witness": {"type": "boolean"}}},
+        {"type": "object", "additionalProperties": false, "required": ["kind", "seed_policy", "sample_count", "decision_rule"], "properties": {"kind": {"const": "seeded_stochastic_replay"}, "seed_policy": {"$ref": "#/$defs/seedPolicy"}, "sample_count": {"type": "integer", "minimum": 1}, "decision_rule": {"$ref": "#/$defs/decisionRule"}}},
+        {"type": "object", "additionalProperties": false, "required": ["kind", "expression", "decision_rule", "points"], "properties": {"kind": {"const": "deterministic_numeric_replay"}, "expression": {"type": "string"}, "decision_rule": {"$ref": "#/$defs/decisionRule"}, "points": {"type": "integer", "minimum": 1}}},
+        {"type": "object", "additionalProperties": false, "required": ["kind", "source", "proposition", "executable"], "properties": {"kind": {"const": "lean_kernel_checked"}, "source": {"type": "string"}, "proposition": {"type": "string"}, "executable": {"type": "string"}}},
+        {"type": "object", "additionalProperties": false, "required": ["kind", "stage_certificates"], "properties": {"kind": {"const": "hybrid_stage_chain"}, "stage_certificates": {"type": "array", "items": {"$ref": "#/$defs/certificate"}}}}
+      ]
+    },
+    "uncertainty": {
+      "oneOf": [
+        {"type": "null"},
+        {"type": "object", "additionalProperties": false, "required": ["kind", "roundoff"], "properties": {"kind": {"const": "none_exact_arithmetic"}, "roundoff": {"const": 0}}},
+        {"type": "object", "additionalProperties": false, "required": ["kind"], "properties": {"kind": {"enum": ["symbolic_exact_no_numeric_roundoff", "none_finite_deterministic", "none_deterministic_but_incomplete", "none_kernel_check"]}}},
+        {"type": "object", "additionalProperties": false, "required": ["method", "estimate", "lower", "upper"], "properties": {"method": {"enum": ["normal_95", "wilson_95"]}, "estimate": {"type": "number"}, "standard_error": {"type": "number", "minimum": 0}, "lower": {"type": "number"}, "upper": {"type": "number"}}},
+        {"type": "object", "additionalProperties": false, "required": ["kind", "absolute_tolerance", "relative_tolerance", "does_not_establish_exact_equality"], "properties": {"kind": {"const": "floating_point"}, "absolute_tolerance": {"type": "number", "minimum": 0}, "relative_tolerance": {"type": "number", "minimum": 0}, "does_not_establish_exact_equality": {"const": true}}},
+        {"type": "object", "additionalProperties": false, "required": ["stage_uncertainties"], "properties": {"stage_uncertainties": {"type": "array", "items": {"$ref": "#/$defs/uncertainty"}}}}
+      ]
+    },
+    "completeness": {
+      "oneOf": [
+        {"type": "null"},
+        {"type": "object", "additionalProperties": false, "required": ["complete"], "properties": {"complete": {"const": false}}},
+        {"type": "object", "additionalProperties": false, "required": ["complete", "scope"], "properties": {"complete": {"type": "boolean"}, "scope": {"type": "string", "minLength": 1}}},
+        {"type": "object", "additionalProperties": false, "required": ["complete", "explored", "state_count", "scope"], "properties": {"complete": {"const": true}, "explored": {"type": "integer", "minimum": 0}, "state_count": {"type": "integer", "minimum": 1}, "scope": {"type": "string", "minLength": 1}}},
+        {"type": "object", "additionalProperties": false, "required": ["complete", "explored", "state_count", "max_states"], "properties": {"complete": {"const": false}, "explored": {"type": "integer", "minimum": 0}, "state_count": {"type": "integer", "minimum": 1}, "max_states": {"type": "integer", "minimum": 1}}},
+        {"type": "object", "additionalProperties": false, "required": ["complete", "scope", "stopping_rule"], "properties": {"complete": {"const": true}, "scope": {"type": "string", "minLength": 1}, "stopping_rule": {"type": "string", "minLength": 1}}},
+        {"type": "object", "additionalProperties": false, "required": ["complete", "scope", "points"], "properties": {"complete": {"const": true}, "scope": {"type": "string", "minLength": 1}, "points": {"type": "integer", "minimum": 1}}},
+        {"type": "object", "additionalProperties": false, "required": ["complete", "completed_stages", "planned_stages"], "properties": {"complete": {"type": "boolean"}, "completed_stages": {"type": "integer", "minimum": 1}, "planned_stages": {"type": "integer", "minimum": 2}}}
+      ]
+    },
+    "adapterOutput": {
+      "type": "object", "additionalProperties": false,
+      "required": ["status", "epistemic_outcome", "result", "certificate", "uncertainty_analysis", "completeness"],
+      "properties": {"status": {"enum": ["succeeded", "counterexample", "capability_unavailable", "deadline_exhausted", "resource_exhausted", "solver_failure", "invalid_spec", "operational_failure"]}, "epistemic_outcome": {"enum": ["supports_within_scope", "falsifies_claim", "maps_boundary", "inconclusive", "not_evaluated"]}, "result": {"$ref": "#/$defs/result"}, "certificate": {"$ref": "#/$defs/certificate"}, "uncertainty_analysis": {"$ref": "#/$defs/uncertainty"}, "completeness": {"$ref": "#/$defs/completeness"}}
+    },
+    "theoryEffect": {
+      "type": "object", "additionalProperties": false,
+      "required": ["effect_kind", "tested_claim_id", "tested_claim_kind", "target_relation", "contract_digest", "automatic_hypothesis_relation", "premise_revision_status", "theory_identity_changed", "theory_selected", "proof_authorized", "physical_target_support_authorized", "experiment_subordinate_to_theory"],
+      "properties": {
+        "effect_kind": {"enum": ["bounded_consistency_signal_only", "registered_premise_revision_requested", "scoped_counterexample_only", "scoped_boundary_map_only", "no_theory_effect_preregistered", "no_theory_effect_inconclusive", "no_theory_effect_operational"]},
+        "tested_claim_id": {"$ref": "#/$defs/identifier"}, "tested_claim_kind": {"enum": ["theory_premise", "model_consequence", "calibration", "boundary_condition"]}, "target_relation": {"enum": ["exact_target_consequence", "necessary_not_sufficient", "toy_or_proxy", "calibration_only"]}, "contract_digest": {"$ref": "#/$defs/digest"},
+        "automatic_hypothesis_relation": {"const": "none"}, "premise_revision_status": {"enum": ["not_authorized", "requires_reflective_review"]}, "theory_identity_changed": {"const": false}, "theory_selected": {"const": false}, "proof_authorized": {"const": false}, "physical_target_support_authorized": {"const": false}, "experiment_subordinate_to_theory": {"const": true}
+      }
+    },
+    "reflectiveRecommendation": {
+      "type": "object", "additionalProperties": false,
+      "required": ["conceptual_system_id", "recommendation", "authority_boundary"],
+      "properties": {"conceptual_system_id": {"$ref": "#/$defs/identifier"}, "recommendation": {"type": "string", "minLength": 1}, "authority_boundary": {"const": "reflective_assimilation_required_runtime_does_not_select_theory_or_prove_theorem"}}
+    },
+    "failure": {
+      "oneOf": [
+        {"type": "null"},
+        {"type": "object", "additionalProperties": false, "required": ["kind", "message", "epistemic_effect"], "properties": {"kind": {"enum": ["capability_unavailable", "deadline_exhausted", "resource_exhausted", "solver_failure", "invalid_spec", "operational_failure"]}, "message": {"type": "string", "minLength": 1}, "epistemic_effect": {"const": "none"}}}
+      ]
+    }
+  }
+}

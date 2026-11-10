@@ -1,0 +1,107 @@
+{
+  "stage": 69,
+  "stream": "H2 state-dependent tempered equivalence",
+  "claim_level": "C2",
+  "nodes": [
+    {
+      "id": "H2-TE-DEF",
+      "status": "proved",
+      "claim": "Sharp constants a_n and b_n give pointwise two-sided equivalence of V_n and W_n."
+    },
+    {
+      "id": "H2-TE-STEP",
+      "status": "proved",
+      "depends_on": ["H2-TE-DEF", "POSITIVITY"],
+      "claim": "qV_n a_(n+1)/b_n <= qW_n <= qV_n b_(n+1)/a_n."
+    },
+    {
+      "id": "H2-TE-PRODUCT",
+      "status": "proved",
+      "depends_on": ["H2-TE-STEP"],
+      "claim": "The two-sided step distortions multiply over changing state spaces."
+    },
+    {
+      "id": "H2-TE-DECOMPOSE",
+      "status": "proved",
+      "depends_on": ["H2-TE-PRODUCT"],
+      "claim": "Log product distortion is an endpoint scalar coboundary plus a remainder bounded by cumulative projective width."
+    },
+    {
+      "id": "H2-TE-TEMPERED",
+      "status": "conditional",
+      "depends_on": ["H2-TE-DECOMPOSE", "PHYSICAL-LENGTH"],
+      "claim": "Uniform sublinear endpoint coboundary and cumulative projective width preserve the physical exponent."
+    },
+    {
+      "id": "H2-TE-SCALAR",
+      "status": "proved",
+      "depends_on": ["H2-TE-DECOMPOSE"],
+      "claim": "For W_n=c_n V_n, projective width vanishes and product distortion telescopes exactly to c_N/c_0."
+    },
+    {
+      "id": "H2-AD-DUHAMEL",
+      "status": "proved",
+      "claim": "Additive defects unroll into homogeneous transport plus tail-propagated injections."
+    },
+    {
+      "id": "H2-AD-BUDGET",
+      "status": "conditional",
+      "depends_on": ["H2-AD-DUHAMEL", "HOMOGENEOUS-RATE", "TAIL-RATE"],
+      "claim": "A homogeneous product rate, all post-injection tail rates, and a uniform exponentially weighted additive-error budget preserve the target rate."
+    },
+    {
+      "id": "H2-CM-NONTEMPERED",
+      "status": "proved_countermodel",
+      "depends_on": ["H2-TE-SCALAR"],
+      "claim": "A non-tempered chart manufactures a raw exponent for identity transport."
+    },
+    {
+      "id": "H2-CM-ADDITIVE",
+      "status": "proved_countermodel",
+      "depends_on": ["H2-AD-DUHAMEL"],
+      "claim": "Ordinary summability of additive errors does not preserve terminal exponential decay."
+    },
+    {
+      "id": "H2-CM-ZERO-ERROR",
+      "status": "proved_countermodel",
+      "depends_on": ["H2-AD-DUHAMEL"],
+      "claim": "Zero additive error does not imply decay when the homogeneous product has no positive rate."
+    },
+    {
+      "id": "H2-CM-SUPPORT",
+      "status": "proved_countermodel",
+      "claim": "Exponential observable reconstruction growth subtracts directly from the transport exponent."
+    },
+    {
+      "id": "H2-SAME-MEASURE",
+      "status": "open",
+      "depends_on": ["H2-TE-TEMPERED", "H2-AD-BUDGET"],
+      "claim": "A reflection-positive same-measure calibration supplies transport and observable domination."
+    },
+    {
+      "id": "H2-YM-KERNEL",
+      "status": "open",
+      "claim": "A normalized nonlinear Yang--Mills retained kernel satisfies the physical-length inequalities uniformly."
+    },
+    {
+      "id": "H2-OS-GAP",
+      "status": "open",
+      "depends_on": ["H2-SAME-MEASURE", "H2-YM-KERNEL", "OS-CONTINUUM"],
+      "claim": "The controlled dense observable core reconstructs a positive continuum Hamiltonian gap."
+    }
+  ],
+  "external_assumptions": [
+    {"id": "POSITIVITY", "status": "assumed", "claim": "Every finite kernel is nonnegative."},
+    {"id": "PHYSICAL-LENGTH", "status": "open_physical_identification", "claim": "Cocycle increments equal physical Euclidean separations."},
+    {"id": "HOMOGENEOUS-RATE", "status": "conditional", "claim": "The complete homogeneous product has the declared uniform rate."},
+    {"id": "TAIL-RATE", "status": "conditional", "claim": "Every post-injection tail has the declared uniform rate."},
+    {"id": "OS-CONTINUUM", "status": "open", "claim": "Nontrivial continuum Schwinger functions satisfy OS reconstruction hypotheses."}
+  ],
+  "guardrails": {
+    "physical_yang_mills_kernel": false,
+    "uniform_tempered_chart_atlas": false,
+    "observable_pullback_control": false,
+    "os_reconstruction": false,
+    "continuum_mass_gap": false
+  }
+}

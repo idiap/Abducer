@@ -1,0 +1,485 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://abducer.local/schemas/non_saturating_conceptual_merit.schema.json",
+  "title": "Non-saturating blinded conceptual merit",
+  "description": "Exact-source-replayed, integrity-separated, categorical pairwise and best-worst conceptual merit with dissent, uncertainty-correct Pareto relations, and no aggregate scalar.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "artifact_kind", "evaluation_id", "source_portfolio",
+    "control_set", "hard_integrity_receipt", "blind_packet", "unblinding_receipt",
+    "evaluator_reports", "pairwise_consensus", "best_worst_consensus",
+    "discrimination_evidence", "dimension_profiles", "pareto_relations",
+    "dominance_cycles", "exploration_dispositions", "merit_protocol",
+    "authority_nulls", "content_digest"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "artifact_kind": {"const": "non_saturating_conceptual_merit"},
+    "evaluation_id": {"$ref": "#/$defs/id"},
+    "source_portfolio": {"$ref": "open_world_maturation_portfolio.schema.json"},
+    "control_set": {
+      "type": "array", "minItems": 3, "maxItems": 3,
+      "items": {"$ref": "#/$defs/control"}
+    },
+    "hard_integrity_receipt": {"$ref": "open_world_hard_integrity_receipt.schema.json"},
+    "blind_packet": {"$ref": "#/$defs/blindPacket"},
+    "unblinding_receipt": {"$ref": "#/$defs/unblindingReceipt"},
+    "evaluator_reports": {
+      "type": "array", "minItems": 3, "items": {"$ref": "#/$defs/report"}
+    },
+    "pairwise_consensus": {
+      "type": "array", "minItems": 1, "items": {"$ref": "#/$defs/consensus"}
+    },
+    "best_worst_consensus": {
+      "type": "array", "minItems": 8, "maxItems": 8,
+      "items": {"$ref": "#/$defs/bestWorstConsensus"}
+    },
+    "discrimination_evidence": {
+      "type": "array", "minItems": 8, "maxItems": 8,
+      "items": {"$ref": "#/$defs/discrimination"}
+    },
+    "dimension_profiles": {
+      "type": "array", "minItems": 6, "items": {"$ref": "#/$defs/profile"}
+    },
+    "pareto_relations": {
+      "type": "array", "minItems": 3, "items": {"$ref": "#/$defs/paretoRelation"}
+    },
+    "dominance_cycles": {
+      "type": "array", "items": {"$ref": "#/$defs/dominanceCycle"}
+    },
+    "exploration_dispositions": {
+      "type": "array", "minItems": 3, "items": {"$ref": "#/$defs/disposition"}
+    },
+    "merit_protocol": {
+      "type": "object", "additionalProperties": false,
+      "required": [
+        "dimensions", "base_dominance_dimensions", "aggregation",
+        "integrity_and_merit_separated", "restatement_invariance_required",
+        "sham_sensitivity_required", "capable_same_task_control_required",
+        "discrimination_floor", "uncertainty_rule", "cycle_rule", "wildcard_rule"
+      ],
+      "properties": {
+        "dimensions": {"$ref": "#/$defs/dimensions"},
+        "base_dominance_dimensions": {"$ref": "#/$defs/baseDimensions"},
+        "aggregation": {"const": "categorical_pairwise_and_best_worst_plurality_without_scalar"},
+        "integrity_and_merit_separated": {"const": "yes"},
+        "restatement_invariance_required": {"const": "yes"},
+        "sham_sensitivity_required": {"const": "yes"},
+        "capable_same_task_control_required": {"const": "yes"},
+        "discrimination_floor": {"const": "majority_of_invention_pairs_per_dimension_and_resolved_best_worst"},
+        "uncertainty_rule": {"const": "insufficient_blocks_dominance"},
+        "cycle_rule": {"const": "dominance_cycles_are_incomparable_not_frontier_authority"},
+        "wildcard_rule": {"const": "retain_if_base_dominated_but_high_upside_beats_a_dominator"}
+      }
+    },
+    "authority_nulls": {
+      "type": "object", "additionalProperties": false,
+      "required": [
+        "external_merit_authority", "evaluator_independence",
+        "creativity_efficacy_authority", "truth_authority",
+        "physics_value_authority", "generalization_authority", "selection_scope"
+      ],
+      "properties": {
+        "external_merit_authority": {"const": "unavailable"},
+        "evaluator_independence": {"const": "unavailable"},
+        "creativity_efficacy_authority": {"const": "unavailable"},
+        "truth_authority": {"const": "unavailable"},
+        "physics_value_authority": {"const": "unavailable"},
+        "generalization_authority": {"const": "unavailable"},
+        "selection_scope": {"const": "internal_exploration_only"}
+      }
+    },
+    "content_digest": {"$ref": "#/$defs/digest"}
+  },
+  "$defs": {
+    "id": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"},
+    "digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "text": {"type": "string", "minLength": 1},
+    "nullableId": {"oneOf": [{"$ref": "#/$defs/id"}, {"type": "null"}]},
+    "dimension": {
+      "enum": [
+        "essential_relevance", "explanatory_compression",
+        "unification_with_preserved_differences", "conceptual_depth",
+        "philosophical_understanding", "correction_quality",
+        "high_risk_upside", "physics_decision_relevance"
+      ]
+    },
+    "dimensions": {
+      "type": "array",
+      "prefixItems": [
+        {"const": "essential_relevance"}, {"const": "explanatory_compression"},
+        {"const": "unification_with_preserved_differences"}, {"const": "conceptual_depth"},
+        {"const": "philosophical_understanding"}, {"const": "correction_quality"},
+        {"const": "high_risk_upside"}, {"const": "physics_decision_relevance"}
+      ],
+      "items": false
+    },
+    "baseDimensions": {
+      "type": "array",
+      "prefixItems": [
+        {"const": "essential_relevance"}, {"const": "explanatory_compression"},
+        {"const": "unification_with_preserved_differences"}, {"const": "conceptual_depth"},
+        {"const": "philosophical_understanding"}, {"const": "correction_quality"},
+        {"const": "physics_decision_relevance"}
+      ],
+      "items": false
+    },
+    "control": {
+      "type": "object", "additionalProperties": false,
+      "required": ["control_id", "control_kind", "source_invention_id", "target_id", "content"],
+      "properties": {
+        "control_id": {"$ref": "#/$defs/id"},
+        "control_kind": {"enum": ["capable", "restatement", "sham"]},
+        "source_invention_id": {"$ref": "#/$defs/nullableId"},
+        "target_id": {"$ref": "#/$defs/id"},
+        "content": {
+          "$ref": "open_world_maturation_portfolio.schema.json#/$defs/maturedContent"
+        }
+      }
+    },
+    "blindRiskReward": {
+      "type": "object", "additionalProperties": false,
+      "required": ["risk_case", "high_upside_case", "learning_if_false", "cost_of_unification"],
+      "properties": {
+        "risk_case": {"$ref": "#/$defs/text"},
+        "high_upside_case": {"$ref": "#/$defs/text"},
+        "learning_if_false": {"$ref": "#/$defs/text"},
+        "cost_of_unification": {"$ref": "#/$defs/text"}
+      }
+    },
+    "blindContent": {
+      "type": "object", "additionalProperties": false,
+      "required": ["statement", "semantic_core", "deep_reflection", "risk_reward", "physics_handback"],
+      "properties": {
+        "statement": {"$ref": "#/$defs/text"},
+        "semantic_core": {
+          "$ref": "open_world_maturation_portfolio.schema.json#/$defs/semanticCore"
+        },
+        "deep_reflection": {
+          "$ref": "open_world_maturation_portfolio.schema.json#/$defs/deepReflection"
+        },
+        "risk_reward": {"$ref": "#/$defs/blindRiskReward"},
+        "physics_handback": {
+          "$ref": "open_world_maturation_portfolio.schema.json#/$defs/physicsHandback"
+        }
+      }
+    },
+    "blindCandidate": {
+      "type": "object", "additionalProperties": false,
+      "required": ["candidate_alias", "content", "content_digest"],
+      "properties": {
+        "candidate_alias": {"$ref": "#/$defs/id"},
+        "content": {"$ref": "#/$defs/blindContent"},
+        "content_digest": {"$ref": "#/$defs/digest"}
+      }
+    },
+    "blindPacket": {
+      "type": "object", "additionalProperties": false,
+      "required": [
+        "schema_version", "packet_id", "target_id", "portfolio_digest",
+        "hard_integrity_receipt_digest", "candidate_order", "candidates",
+        "dimensions", "counterbalance_seed_digest", "blinding_audit",
+        "integrity_screen", "authority_boundary", "packet_digest"
+      ],
+      "properties": {
+        "schema_version": {"const": "1.0.0"},
+        "packet_id": {"$ref": "#/$defs/id"},
+        "target_id": {"$ref": "#/$defs/id"},
+        "portfolio_digest": {"$ref": "#/$defs/digest"},
+        "hard_integrity_receipt_digest": {"$ref": "#/$defs/digest"},
+        "candidate_order": {
+          "type": "array", "minItems": 6, "uniqueItems": true,
+          "items": {"$ref": "#/$defs/id"}
+        },
+        "candidates": {
+          "type": "array", "minItems": 6, "items": {"$ref": "#/$defs/blindCandidate"}
+        },
+        "dimensions": {"$ref": "#/$defs/dimensions"},
+        "counterbalance_seed_digest": {"$ref": "#/$defs/digest"},
+        "blinding_audit": {
+          "type": "object", "additionalProperties": false,
+          "required": ["status", "marker_set_digest"],
+          "properties": {
+            "status": {"const": "identity_treatment_role_and_protected_flag_fields_removed"},
+            "marker_set_digest": {"$ref": "#/$defs/digest"}
+          }
+        },
+        "integrity_screen": {
+          "type": "object", "additionalProperties": false,
+          "required": [
+            "status", "hard_integrity_receipt_digest",
+            "candidate_aliases", "merit_authority"
+          ],
+          "properties": {
+            "status": {"const": "passed_before_merit"},
+            "hard_integrity_receipt_digest": {"$ref": "#/$defs/digest"},
+            "candidate_aliases": {
+              "type": "array", "minItems": 6, "uniqueItems": true,
+              "items": {"$ref": "#/$defs/id"}
+            },
+            "merit_authority": {"const": "none"}
+          }
+        },
+        "authority_boundary": {"$ref": "#/$defs/text"},
+        "packet_digest": {"$ref": "#/$defs/digest"}
+      }
+    },
+    "binding": {
+      "type": "object", "additionalProperties": false,
+      "required": [
+        "candidate_alias", "source_kind", "source_id", "source_invention_id",
+        "target_id", "exploration_role", "control_kind",
+        "source_content_digest", "blind_content_digest"
+      ],
+      "properties": {
+        "candidate_alias": {"$ref": "#/$defs/id"},
+        "source_kind": {"enum": ["invention", "control"]},
+        "source_id": {"$ref": "#/$defs/id"},
+        "source_invention_id": {"$ref": "#/$defs/nullableId"},
+        "target_id": {"$ref": "#/$defs/id"},
+        "exploration_role": {
+          "oneOf": [{"enum": ["candidate", "wildcard"]}, {"type": "null"}]
+        },
+        "control_kind": {
+          "oneOf": [{"enum": ["capable", "restatement", "sham"]}, {"type": "null"}]
+        },
+        "source_content_digest": {"$ref": "#/$defs/digest"},
+        "blind_content_digest": {"$ref": "#/$defs/digest"}
+      }
+    },
+    "unblindingReceipt": {
+      "type": "object", "additionalProperties": false,
+      "required": ["packet_digest", "bindings", "binding_digest"],
+      "properties": {
+        "packet_digest": {"$ref": "#/$defs/digest"},
+        "bindings": {
+          "type": "array", "minItems": 6, "items": {"$ref": "#/$defs/binding"}
+        },
+        "binding_digest": {"$ref": "#/$defs/digest"}
+      }
+    },
+    "comparison": {
+      "type": "object", "additionalProperties": false,
+      "required": [
+        "left_alias", "right_alias", "dimension", "verdict",
+        "left_warrant_paths", "right_warrant_paths", "rationale",
+        "strongest_objection", "correction_test"
+      ],
+      "properties": {
+        "left_alias": {"$ref": "#/$defs/id"},
+        "right_alias": {"$ref": "#/$defs/id"},
+        "dimension": {"$ref": "#/$defs/dimension"},
+        "verdict": {"enum": ["left", "right", "tie", "insufficient"]},
+        "left_warrant_paths": {"$ref": "#/$defs/warrantPaths"},
+        "right_warrant_paths": {"$ref": "#/$defs/warrantPaths"},
+        "rationale": {"$ref": "#/$defs/text"},
+        "strongest_objection": {"$ref": "#/$defs/text"},
+        "correction_test": {"$ref": "#/$defs/text"}
+      }
+    },
+    "warrantPaths": {
+      "type": "array", "minItems": 1, "uniqueItems": true,
+      "items": {"type": "string", "pattern": "^/"}
+    },
+    "bestWorstChoice": {
+      "type": "object", "additionalProperties": false,
+      "required": [
+        "dimension", "best_alias", "worst_alias",
+        "best_warrant_paths", "worst_warrant_paths", "rationale",
+        "strongest_objection", "correction_test"
+      ],
+      "properties": {
+        "dimension": {"$ref": "#/$defs/dimension"},
+        "best_alias": {"$ref": "#/$defs/id"},
+        "worst_alias": {"$ref": "#/$defs/id"},
+        "best_warrant_paths": {"$ref": "#/$defs/warrantPaths"},
+        "worst_warrant_paths": {"$ref": "#/$defs/warrantPaths"},
+        "rationale": {"$ref": "#/$defs/text"},
+        "strongest_objection": {"$ref": "#/$defs/text"},
+        "correction_test": {"$ref": "#/$defs/text"}
+      }
+    },
+    "report": {
+      "type": "object", "additionalProperties": false,
+      "required": [
+        "evaluator_id", "evaluator_authority_digest", "authority_status",
+        "blind_packet_digest", "comparisons", "best_worst_choices", "report_digest"
+      ],
+      "properties": {
+        "evaluator_id": {"$ref": "#/$defs/id"},
+        "evaluator_authority_digest": {"$ref": "#/$defs/digest"},
+        "authority_status": {"const": "internally_correlated"},
+        "blind_packet_digest": {"$ref": "#/$defs/digest"},
+        "comparisons": {
+          "type": "array", "minItems": 1, "items": {"$ref": "#/$defs/comparison"}
+        },
+        "best_worst_choices": {
+          "type": "array", "minItems": 8, "maxItems": 8,
+          "items": {"$ref": "#/$defs/bestWorstChoice"}
+        },
+        "report_digest": {"$ref": "#/$defs/digest"}
+      }
+    },
+    "verdictCounts": {
+      "type": "object", "additionalProperties": false,
+      "required": ["left", "right", "tie", "insufficient"],
+      "properties": {
+        "left": {"type": "integer", "minimum": 0},
+        "right": {"type": "integer", "minimum": 0},
+        "tie": {"type": "integer", "minimum": 0},
+        "insufficient": {"type": "integer", "minimum": 0}
+      }
+    },
+    "consensus": {
+      "type": "object", "additionalProperties": false,
+      "required": ["left_alias", "right_alias", "dimension", "verdict", "verdict_counts"],
+      "properties": {
+        "left_alias": {"$ref": "#/$defs/id"},
+        "right_alias": {"$ref": "#/$defs/id"},
+        "dimension": {"$ref": "#/$defs/dimension"},
+        "verdict": {"enum": ["left", "right", "tie", "insufficient"]},
+        "verdict_counts": {"$ref": "#/$defs/verdictCounts"}
+      }
+    },
+    "candidateVotes": {
+      "type": "object", "additionalProperties": false,
+      "required": ["candidate_alias", "best_selections", "worst_selections"],
+      "properties": {
+        "candidate_alias": {"$ref": "#/$defs/id"},
+        "best_selections": {"type": "integer", "minimum": 0},
+        "worst_selections": {"type": "integer", "minimum": 0}
+      }
+    },
+    "bestWorstConsensus": {
+      "type": "object", "additionalProperties": false,
+      "required": [
+        "dimension", "consensus_best_alias", "consensus_worst_alias",
+        "dissent_status", "candidate_votes"
+      ],
+      "properties": {
+        "dimension": {"$ref": "#/$defs/dimension"},
+        "consensus_best_alias": {"$ref": "#/$defs/nullableId"},
+        "consensus_worst_alias": {"$ref": "#/$defs/nullableId"},
+        "dissent_status": {
+          "enum": ["unanimous", "plurality_with_dissent", "unresolved_tie"]
+        },
+        "candidate_votes": {
+          "type": "array", "minItems": 6, "items": {"$ref": "#/$defs/candidateVotes"}
+        }
+      }
+    },
+    "discrimination": {
+      "type": "object", "additionalProperties": false,
+      "required": [
+        "dimension", "decisive_invention_pairs",
+        "required_decisive_invention_pairs",
+        "best_worst_consensus_resolved", "status"
+      ],
+      "properties": {
+        "dimension": {"$ref": "#/$defs/dimension"},
+        "decisive_invention_pairs": {"type": "integer", "minimum": 1},
+        "required_decisive_invention_pairs": {"type": "integer", "minimum": 1},
+        "best_worst_consensus_resolved": {"const": "yes"},
+        "status": {"const": "passed"}
+      }
+    },
+    "outcomeCounts": {
+      "type": "object", "additionalProperties": false,
+      "required": ["win", "loss", "tie", "insufficient"],
+      "properties": {
+        "win": {"type": "integer", "minimum": 0},
+        "loss": {"type": "integer", "minimum": 0},
+        "tie": {"type": "integer", "minimum": 0},
+        "insufficient": {"type": "integer", "minimum": 0}
+      }
+    },
+    "profile": {
+      "type": "object", "additionalProperties": false,
+      "required": ["candidate_alias", "source_kind", "source_id", "dimension_outcomes"],
+      "properties": {
+        "candidate_alias": {"$ref": "#/$defs/id"},
+        "source_kind": {"enum": ["invention", "control"]},
+        "source_id": {"$ref": "#/$defs/id"},
+        "dimension_outcomes": {
+          "type": "object", "additionalProperties": false,
+          "required": [
+            "essential_relevance", "explanatory_compression",
+            "unification_with_preserved_differences", "conceptual_depth",
+            "philosophical_understanding", "correction_quality",
+            "high_risk_upside", "physics_decision_relevance"
+          ],
+          "properties": {
+            "essential_relevance": {"$ref": "#/$defs/outcomeCounts"},
+            "explanatory_compression": {"$ref": "#/$defs/outcomeCounts"},
+            "unification_with_preserved_differences": {"$ref": "#/$defs/outcomeCounts"},
+            "conceptual_depth": {"$ref": "#/$defs/outcomeCounts"},
+            "philosophical_understanding": {"$ref": "#/$defs/outcomeCounts"},
+            "correction_quality": {"$ref": "#/$defs/outcomeCounts"},
+            "high_risk_upside": {"$ref": "#/$defs/outcomeCounts"},
+            "physics_decision_relevance": {"$ref": "#/$defs/outcomeCounts"}
+          }
+        }
+      }
+    },
+    "paretoRelation": {
+      "type": "object", "additionalProperties": false,
+      "required": ["left_alias", "right_alias", "status", "blocking_dimensions"],
+      "properties": {
+        "left_alias": {"$ref": "#/$defs/id"},
+        "right_alias": {"$ref": "#/$defs/id"},
+        "status": {
+          "enum": [
+            "left_dominates", "right_dominates", "tradeoff_incomparable",
+            "uncertainty_incomparable", "equivalent_on_base_dimensions"
+          ]
+        },
+        "blocking_dimensions": {
+          "type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/dimension"}
+        }
+      }
+    },
+    "dominanceCycle": {
+      "type": "object", "additionalProperties": false,
+      "required": ["cycle_id", "member_aliases", "status"],
+      "properties": {
+        "cycle_id": {"$ref": "#/$defs/id"},
+        "member_aliases": {
+          "type": "array", "minItems": 2, "uniqueItems": true,
+          "items": {"$ref": "#/$defs/id"}
+        },
+        "status": {"const": "dominance_cycle_incomparable"}
+      }
+    },
+    "disposition": {
+      "type": "object", "additionalProperties": false,
+      "required": [
+        "candidate_alias", "invention_id", "exploration_role", "status",
+        "dominated_by_aliases", "tradeoff_with_aliases",
+        "uncertain_against_aliases", "dominance_cycle_ids",
+        "high_upside_against_a_dominator", "investment_authority"
+      ],
+      "properties": {
+        "candidate_alias": {"$ref": "#/$defs/id"},
+        "invention_id": {"$ref": "#/$defs/id"},
+        "exploration_role": {"enum": ["candidate", "wildcard"]},
+        "status": {
+          "enum": [
+            "pareto_frontier", "protected_high_upside_wildcard",
+            "dominated_internal_merit", "uncertainty_incomparable",
+            "dominance_cycle_incomparable"
+          ]
+        },
+        "dominated_by_aliases": {"$ref": "#/$defs/idSet"},
+        "tradeoff_with_aliases": {"$ref": "#/$defs/idSet"},
+        "uncertain_against_aliases": {"$ref": "#/$defs/idSet"},
+        "dominance_cycle_ids": {"$ref": "#/$defs/idSet"},
+        "high_upside_against_a_dominator": {"enum": ["yes", "no"]},
+        "investment_authority": {"const": "none_internal_exploration_only"}
+      }
+    },
+    "idSet": {
+      "type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/id"}
+    }
+  }
+}

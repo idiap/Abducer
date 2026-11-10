@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://abducer.local/spec/dynamic_experiment_committed_object_descriptor_v1.schema.json",
+  "title": "Strict descriptor for one immutable committed world object",
+  "description": "A portable reference to bytes owned by the same immutable discovery commit. object_kind is a closed storage role, not by itself semantic authority. Runtime validation additionally requires a canonical safe relative path, exact manifest coverage, canonical JSON bytes, the declared semantic digest, and role-registry validation before a semantic claim is consumed.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "path",
+    "sha256",
+    "size_bytes",
+    "semantic_digest",
+    "object_kind"
+  ],
+  "properties": {
+    "path": {"type": "string", "minLength": 1},
+    "sha256": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/digest"},
+    "size_bytes": {"type": "integer", "minimum": 1},
+    "semantic_digest": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/digest"},
+    "object_kind": {
+      "$ref": "./dynamic_experiment_content_object_kind_v1.schema.json"
+    }
+  }
+}

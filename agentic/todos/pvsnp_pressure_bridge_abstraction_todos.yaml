@@ -1,0 +1,150 @@
+# SPDX-FileCopyrightText: © 2026 Idiap Research Institute <contact@idiap.ch>
+#
+# SPDX-FileContributor: Andre Freitas <andre.freitas@idiap.ch>
+# Neuro-symbolic AI Group
+#
+# SPDX-FileContributor: Danilo Gusicuma <danilo.gusicuma@idiap.ch>
+# Neuro-symbolic AI Group
+#
+# SPDX-License-Identifier: MIT
+version: 1
+target_id: p-vs-np-target
+created_at: "2026-07-11"
+source_artifacts:
+  pressure_skill: skills/evaluation/pvsnp-conceptual-pressure-localizer/SKILL.md
+  qualitative_skill: skills/reasoning/pvsnp-qualitative-complexity-reasoner/SKILL.md
+  symbolic_skill: skills/reasoning/pvsnp-symbolic-complexity-auditor/SKILL.md
+  no_go_skill: skills/reasoning/pvsnp-impossibility-theorem-forger/SKILL.md
+implementation_status:
+  status: completed
+  completed_at: "2026-07-11"
+todos:
+  - id: pvsnp-pressure-bridge-001
+    type: workflow_todo
+    phase: pvsnp-pressure-to-bridge-abstraction
+    owner: skills/reasoning/pvsnp-pressure-bridge-forger
+    priority: critical
+    risk_class: conceptual_pressure_to_abstraction_gap
+    title: Create a P vs NP bridge-forging skill between pressure diagnosis and formal route work.
+    intent: >
+      Add a generative skill that takes localized P vs NP conceptual pressures
+      and difficulty hypotheses, then turns them into target-preserving bridge
+      abstractions with source object, target object, controlled interface,
+      preserved invariants, proof obligations, falsifiers, and validation
+      handoffs.
+    use_skills:
+      - pvsnp-pressure-bridge-forger
+      - pvsnp-conceptual-pressure-localizer
+      - pvsnp-qualitative-complexity-reasoner
+    required_artifact:
+      - skills/reasoning/pvsnp-pressure-bridge-forger/SKILL.md
+      - skills/reasoning/pvsnp-pressure-bridge-forger/agents/openai.yaml
+    acceptance_criteria:
+      - The skill is P vs NP specific rather than a generic bridge planner.
+      - The skill states how to move from difficulty hypotheses to bridge abstractions.
+      - The output contract requires proof obligations, falsifiers, persist/pivot conditions, and paper-safe narrative.
+      - It explicitly routes formula-shaped obligations, no-go candidates, qualitative relation maps, and contribution-shaped subgoals to the right downstream skills.
+    blocked_by: []
+    evidence:
+      - skills/reasoning/pvsnp-pressure-bridge-forger/SKILL.md
+      - skills/reasoning/pvsnp-pressure-bridge-forger/agents/openai.yaml
+    review_date: "2026-07-11"
+    failure_modes:
+      - The workflow keeps diagnosing barriers without proposing bridge objects.
+      - The skill repeats known P vs NP barriers without source and target objects.
+      - Bridge candidates lack stop conditions and keep branches alive indefinitely.
+    status: resolved
+  - id: pvsnp-pressure-bridge-002
+    type: workflow_todo
+    phase: pvsnp-pressure-to-bridge-abstraction
+    owner: skills/reasoning/pvsnp-pressure-bridge-forger/scripts/build_pressure_bridges.py
+    priority: critical
+    risk_class: bridge_candidate_grounding
+    title: Add a deterministic scouting helper for P vs NP bridge abstractions.
+    intent: >
+      Provide a script that reads the P vs NP KB and recent marathon artifacts,
+      extracts pressure signals, and emits ranked bridge candidates with
+      difficulty hypotheses, interfaces, proof obligations, falsifiers, and
+      validation handoffs.
+    use_skills:
+      - pvsnp-pressure-bridge-forger
+      - pvsnp-symbolic-complexity-auditor
+      - pvsnp-impossibility-theorem-forger
+    required_artifact:
+      - skills/reasoning/pvsnp-pressure-bridge-forger/scripts/build_pressure_bridges.py
+      - agentic/reports/pvsnp_pressure_bridges/latest.json
+      - agentic/reports/pvsnp_pressure_bridges/latest.md
+    acceptance_criteria:
+      - The script reads current P vs NP artifacts rather than emitting empty template text.
+      - The candidate set includes positive bridge abstractions and negative/no-go bridge abstractions.
+      - The recommended next move includes a payoff criterion and a stop condition.
+      - Each bridge candidate has content-specific P vs NP language and validation handoffs.
+    blocked_by:
+      - pvsnp-pressure-bridge-001
+    evidence:
+      - skills/reasoning/pvsnp-pressure-bridge-forger/scripts/build_pressure_bridges.py
+      - command: .venv-pmp/bin/python skills/reasoning/pvsnp-pressure-bridge-forger/scripts/build_pressure_bridges.py
+    review_date: "2026-07-11"
+    failure_modes:
+      - The output degenerates into generic queue advice.
+      - The script ignores current marathon learning about beta ceilings, MCSP carriers, proof-complexity certificates, and naturalness.
+      - The recommended bridge cannot name the next theorem or computation.
+    status: resolved
+  - id: pvsnp-pressure-bridge-003
+    type: test_todo
+    phase: pvsnp-pressure-to-bridge-abstraction
+    owner: agentic/scripts/validate_pvsnp_pressure_bridges.py
+    priority: high
+    risk_class: validation_control
+    title: Validate the bridge abstraction artifact before using it in P vs NP runs.
+    intent: >
+      Add a validator that fails if the bridge report is not target-specific,
+      lacks source/target/interface/proof obligations, omits symbolic or no-go
+      handoffs, or gives vague continuation criteria.
+    use_skills:
+      - pvsnp-pressure-bridge-forger
+    required_artifact:
+      - agentic/scripts/validate_pvsnp_pressure_bridges.py
+    acceptance_criteria:
+      - The validator requires at least five P vs NP bridge candidates.
+      - The validator checks falsifiers, persist/pivot conditions, payoff criteria, and stop conditions.
+      - The validator requires handoffs to symbolic, no-go, qualitative, and contradiction skills.
+    blocked_by:
+      - pvsnp-pressure-bridge-002
+    evidence:
+      - agentic/scripts/validate_pvsnp_pressure_bridges.py
+      - command: .venv-pmp/bin/python agentic/scripts/validate_pvsnp_pressure_bridges.py
+    review_date: "2026-07-11"
+    failure_modes:
+      - A bridge report is accepted without domain-specific P vs NP content.
+      - Continuation criteria remain generic and allow infinite branch progression.
+      - No-go contributions are excluded even when a route-specific obstruction is the best outcome.
+    status: resolved
+  - id: pvsnp-pressure-bridge-004
+    type: hook_todo
+    phase: pvsnp-pressure-to-bridge-abstraction
+    owner: agentic/scripts/agentic_check.py
+    priority: high
+    risk_class: workflow_integration
+    title: Wire the P vs NP pressure bridge builder into the standard validation path.
+    intent: >
+      Ensure the pressure-to-bridge layer remains maintained by running the
+      builder and validator in the standard Abducer check sequence.
+    use_skills:
+      - pvsnp-pressure-bridge-forger
+    required_artifact:
+      - agentic/scripts/agentic_check.py
+    acceptance_criteria:
+      - agentic_check.py runs the bridge builder.
+      - agentic_check.py runs the bridge validator after the builder.
+      - The full check path fails if bridge candidates become stale or generic.
+    blocked_by:
+      - pvsnp-pressure-bridge-002
+      - pvsnp-pressure-bridge-003
+    evidence:
+      - agentic/scripts/agentic_check.py
+    review_date: "2026-07-11"
+    failure_modes:
+      - The skill exists but is not exercised by validation.
+      - Future P vs NP runs can bypass the bridge layer and return to vague branch exploration.
+    status: resolved

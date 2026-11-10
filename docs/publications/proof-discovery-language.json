@@ -1,0 +1,447 @@
+{
+  "metadata": {
+    "title": "Proof Discovery Language",
+    "short_name": "PDL",
+    "thesis": "PDL is a language for discovery programmes rather than only arguments of correctness. It treats coherence, conceptual nexus, material inference, obstruction, and governed recursion as first-class logical objects, and it distinguishes structural notation from the operations that materially transform one epistemic state into another."
+  },
+  "design_principles": [
+    "Prioritize conceptual nexus before closure.",
+    "Represent tensions and obstructions explicitly.",
+    "Treat bridge objects as typed inferential interfaces.",
+    "Make negative and impossibility reasoning first-class.",
+    "Make the underlying material-inference operators explicit rather than hiding them in prose.",
+    "Embed persistence, aggregation, and loops into the logic itself."
+  ],
+  "notation_layers": [
+    {
+      "id": "structural",
+      "title": "Structural Layer",
+      "role": "Names the epistemic objects under search: anchors, targets, tensions, nexuses, bridge objects, obstructions, programmes, debt, and gates.",
+      "binding": "This layer says what kind of thing is currently in play."
+    },
+    {
+      "id": "material-inference",
+      "title": "Material-Inference Layer",
+      "role": "Names the operations that transform one epistemic object into another by licensed, non-monotonic, theorem-grounded moves.",
+      "binding": "This layer says what inferential move is being performed underneath the structural notation."
+    },
+    {
+      "id": "governance",
+      "title": "Governance Layer",
+      "role": "Names persistence, aggregation, revision, continuation, and stop-control over discovery programmes.",
+      "binding": "This layer says how the process keeps state, loops, and changes direction without losing epistemic discipline."
+    }
+  ],
+  "primitives": [
+    {
+      "id": "anchor",
+      "symbol": "A",
+      "title": "Anchor",
+      "role": "Grounded theorem body, definition, axiom, or imported result that licenses later moves.",
+      "binding": "Material inference starts from anchors, not from topic labels.",
+      "platform_binding": "KB statements and InformalMathLib entries."
+    },
+    {
+      "id": "target",
+      "symbol": "T",
+      "title": "Target",
+      "role": "The smallest nontrivial payoff or consequence worth organizing the search around.",
+      "binding": "Discovery is guided by consequence pressure rather than free exploration.",
+      "platform_binding": "Route target claims and queued conjectures."
+    },
+    {
+      "id": "tension",
+      "symbol": "X",
+      "title": "Tension",
+      "role": "A typed gap showing why anchors do not yet reach the target: model mismatch, invariant weakness, transport loss, or barrier pressure.",
+      "binding": "Tension is the primitive of discovery, because it identifies where reasoning must change form.",
+      "platform_binding": "Statement deltas, obstruction classes, and failure diagnoses."
+    },
+    {
+      "id": "nexus",
+      "symbol": "N",
+      "title": "Conceptual Nexus",
+      "role": "A coherent local cluster of anchors, tensions, bridge objects, and barriers that can be reasoned over together.",
+      "binding": "Discovery first asks whether there is a coherent nexus before demanding correctness-style closure.",
+      "platform_binding": "Bridge portfolios, conceptual dynamics, and discovery branches."
+    },
+    {
+      "id": "bridge_object",
+      "symbol": "B",
+      "title": "Bridge Object",
+      "role": "A witness, invariant, certificate, transport law, normal form, or surrogate problem that could make the target reachable.",
+      "binding": "Bridge objects express the conceptual breakthrough required by the search.",
+      "platform_binding": "Bridge plans, abstraction conjectures, and candidate carriers."
+    },
+    {
+      "id": "obstruction",
+      "symbol": "O",
+      "title": "Obstruction",
+      "role": "A barrier, counterexample pattern, impossibility theorem, or non-realization diagnosis that blocks a route.",
+      "binding": "Negative mathematics is first-class discovery content, not only a failed proof attempt.",
+      "platform_binding": "Blocked results, negative programs, and obstruction maps."
+    },
+    {
+      "id": "discovery_program",
+      "symbol": "P",
+      "title": "Discovery Program",
+      "role": "A paired positive/negative route over a nexus, together with proof debt, decision criteria, and revision triggers.",
+      "binding": "A discovery program is the unit of guided scientific work, not an isolated proposition.",
+      "platform_binding": "Proof sketches, queue entries, and branch dossiers."
+    },
+    {
+      "id": "proof_debt",
+      "symbol": "D",
+      "title": "Proof Debt",
+      "role": "The set of missing lemmas, unrealized carriers, transport laws, and closure obligations still required for completion.",
+      "binding": "Debt is what makes discovery governable instead of open-ended.",
+      "platform_binding": "Macro-strategy reports, proof obligations, and critique findings."
+    },
+    {
+      "id": "decision_gate",
+      "symbol": "G",
+      "title": "Decision Gate",
+      "role": "A criterion for continue, revise, import prior art, split regimes, or stop.",
+      "binding": "Scientific discovery requires explicit transition rules, not only local generation.",
+      "platform_binding": "Work loop, web-search gate, high-reward watch, and meta triggers."
+    }
+  ],
+  "material_inference_operations": [
+    {
+      "id": "extract",
+      "symbol": "ext",
+      "latex_form": "\\mathsf{ext}(A \\Rightarrow c)",
+      "form": "ext(A => c)",
+      "title": "Extract",
+      "role": "Read a theorem body, definition, or axiom as a usable local commitment rather than as raw text.",
+      "effect": "Turns a grounded anchor into claim-bearing content.",
+      "universal_binding": "licensed material consequence extraction",
+      "platform_binding": "Phase 0 normalization, statement excerpts, theorem-body normalizer"
+    },
+    {
+      "id": "focus",
+      "symbol": "foc",
+      "latex_form": "\\mathsf{foc}(A, T \\Rightarrow X)",
+      "form": "foc(A, T => X)",
+      "title": "Focus",
+      "role": "Localize the exact tension between grounded anchors and the intended target.",
+      "effect": "Turns diffuse mismatch into a typed tension object.",
+      "universal_binding": "problem localization / abductive targeting",
+      "platform_binding": "statement deltas, failure diagnoses, obstruction classes"
+    },
+    {
+      "id": "concretize",
+      "symbol": "conc",
+      "latex_form": "\\mathsf{conc}(N \\Rightarrow B)",
+      "form": "conc(N => B)",
+      "title": "Concretize",
+      "role": "Turn a coherent conceptual nexus into a candidate bridge object, interface, or surrogate problem.",
+      "effect": "Moves from coherence pressure to an inspectable candidate object.",
+      "universal_binding": "abductive bridge-object formation",
+      "platform_binding": "abstraction conjectures, expert conjectures, branch-to-definition outputs"
+    },
+    {
+      "id": "transport",
+      "symbol": "tr",
+      "latex_form": "\\mathsf{tr}_I(B, s \\leadsto t)",
+      "form": "tr_I(B, s ~> t)",
+      "title": "Transport",
+      "role": "Move an invariant, witness condition, or theorem payload across a regime shift, representation change, or equivalence.",
+      "effect": "Makes cross-model or cross-language claims explicit and testable.",
+      "universal_binding": "material transfer / invariant-preserving passage",
+      "platform_binding": "transport lemmas, alignment work, HoTT/coherence routes"
+    },
+    {
+      "id": "factor",
+      "symbol": "fac",
+      "latex_form": "\\mathsf{fac}(r \\Rightarrow r_1 \\circ r_2)",
+      "form": "fac(r => r1 o r2)",
+      "title": "Factor",
+      "role": "Split one overloaded route into smaller theorem-sized interfaces or intermediate programmes.",
+      "effect": "Exposes hidden composition and missing middle objects.",
+      "universal_binding": "decomposition / factorization reasoning",
+      "platform_binding": "route decomposition, macro-strategy repair, categorical reframing"
+    },
+    {
+      "id": "compose",
+      "symbol": "comp",
+      "latex_form": "\\mathsf{comp}(B_1, B_2 \\Rightarrow B)",
+      "form": "comp(B1, B2 => B)",
+      "title": "Compose",
+      "role": "Assemble several partial bridges, lemmas, or regime results into one route.",
+      "effect": "Promotes local inferential fragments into an end-to-end programme.",
+      "universal_binding": "compositional synthesis",
+      "platform_binding": "bridge portfolios, hybridization-of-partial-bridges, route composition"
+    },
+    {
+      "id": "obstruct",
+      "symbol": "obs",
+      "latex_form": "\\mathsf{obs}(B \\Rightarrow O)",
+      "form": "obs(B => O)",
+      "title": "Obstruct",
+      "role": "Derive the barrier, counterexample pattern, incoherence, or non-realization result that blocks a bridge.",
+      "effect": "Turns failed progress into explicit negative mathematics.",
+      "universal_binding": "barrier derivation / impossibility localization",
+      "platform_binding": "negative routes, blocked local theorems, contradiction-first probes"
+    },
+    {
+      "id": "revise",
+      "symbol": "rev",
+      "latex_form": "\\mathsf{rev}(P, O \\Rightarrow P')",
+      "form": "rev(P, O => P')",
+      "title": "Revise",
+      "role": "Update a discovery programme after an obstruction, failed proof step, or new prior-art import.",
+      "effect": "Makes conceptual change itself explicit rather than leaving it as narrative drift.",
+      "universal_binding": "non-monotonic theory revision",
+      "platform_binding": "revision loops, branch regeneration, meta-guided restarts"
+    },
+    {
+      "id": "aggregate",
+      "symbol": "agg",
+      "latex_form": "\\mathsf{agg}(\\{R_i\\} \\Rightarrow N^*)",
+      "form": "agg({Ri} => N*)",
+      "title": "Aggregate",
+      "role": "Combine many local results, failed routes, or branch outcomes into a single higher-order nexus or search diagnosis.",
+      "effect": "Produces a global picture rather than isolated route state.",
+      "universal_binding": "scientific synthesis / evidence aggregation",
+      "platform_binding": "branch synthesis, breakthrough profiles, plausibility aggregation"
+    },
+    {
+      "id": "persist",
+      "symbol": "mem",
+      "latex_form": "\\mathsf{mem}(R \\Rightarrow M)",
+      "form": "mem(R => M)",
+      "title": "Persist",
+      "role": "Turn a proved, disproved, blocked, or imported result into durable problem memory.",
+      "effect": "Stops the system from rediscovering the same local mathematics repeatedly.",
+      "universal_binding": "epistemic memory consolidation",
+      "platform_binding": "InformalMathLib persistence, queue state, produced papers, prior-art imports"
+    },
+    {
+      "id": "route",
+      "symbol": "route",
+      "latex_form": "\\mathsf{route}(P \\Rightarrow \\text{next})",
+      "form": "route(P => next)",
+      "title": "Route",
+      "role": "Send a discovery programme to prove, further discovery, prior-art search, or stop.",
+      "effect": "Connects local reasoning to governance decisions.",
+      "universal_binding": "controlled transition / research governance",
+      "platform_binding": "work loop, meta triggers, high-reward continuation, queue promotion"
+    }
+  ],
+  "relations": [
+    {
+      "id": "grounds",
+      "symbol": "|-",
+      "meaning": "An anchor licenses a claim or program component."
+    },
+    {
+      "id": "coheres",
+      "symbol": "~",
+      "meaning": "Items form a stable conceptual nexus under the current representation."
+    },
+    {
+      "id": "bridges",
+      "symbol": "~>",
+      "meaning": "A bridge object makes a route from anchor side to target side materially available."
+    },
+    {
+      "id": "preserves",
+      "symbol": "[]",
+      "meaning": "An invariant survives a transport or re-encoding step."
+    },
+    {
+      "id": "obstructs",
+      "symbol": "-|",
+      "meaning": "A barrier or impossibility pattern blocks a route or object."
+    },
+    {
+      "id": "reframes",
+      "symbol": "=>",
+      "meaning": "A representation shift or decomposition changes the search unit."
+    },
+    {
+      "id": "composes",
+      "symbol": "o",
+      "meaning": "Several partial bridges or programmes combine into one route."
+    },
+    {
+      "id": "persists",
+      "symbol": "||",
+      "meaning": "A discovery result becomes durable memory."
+    },
+    {
+      "id": "loops",
+      "symbol": "@",
+      "meaning": "The process re-enters discovery/prove under governed recursion."
+    }
+  ],
+  "judgments": [
+    {
+      "form": "K ; M |- A : grounded",
+      "meaning": "The KB plus InformalMathLib licenses anchor A as a grounded theorem-body object."
+    },
+    {
+      "form": "A, X => N : coherent",
+      "meaning": "Anchors and tensions form a coherent conceptual nexus worth exploring."
+    },
+    {
+      "form": "N ~> B",
+      "meaning": "The nexus suggests a bridge object B as the best conceptual move."
+    },
+    {
+      "form": "B [] I",
+      "meaning": "Bridge object B preserves invariant I across the intended route."
+    },
+    {
+      "form": "B ~> T",
+      "meaning": "If realized, bridge object B materially supports the target consequence T."
+    },
+    {
+      "form": "B -| O",
+      "meaning": "Bridge object B is blocked or sharpened by obstruction O."
+    },
+    {
+      "form": "N ; B |- P",
+      "meaning": "A coherent nexus and bridge object together induce a discovery program P."
+    },
+    {
+      "form": "P |- D",
+      "meaning": "A discovery program exposes its proof debt explicitly."
+    },
+    {
+      "form": "P ; O |- impossibility(T)",
+      "meaning": "A negative route yields a theorem-shaped impossibility or non-realization claim."
+    },
+    {
+      "form": "P ; G @ next",
+      "meaning": "A decision gate routes the programme into prove, revision, prior-art import, or stop."
+    }
+  ],
+  "operational_judgments": [
+    {
+      "form": "A ; T |-m X",
+      "meaning": "Materially focus the mismatch between anchors and target into an explicit tension X."
+    },
+    {
+      "form": "A ; X |-m N",
+      "meaning": "Stabilize anchors and tensions into a coherent conceptual nexus N."
+    },
+    {
+      "form": "N |-m B",
+      "meaning": "Concretize the nexus into a bridge object, map, witness family, or surrogate problem B."
+    },
+    {
+      "form": "B ; I ; s->t |-m tr_I(B)",
+      "meaning": "Transport invariant I through bridge B from source regime s to target regime t."
+    },
+    {
+      "form": "r |-m fac(r1,...,rn)",
+      "meaning": "Factor a route r into smaller theorem-sized route fragments."
+    },
+    {
+      "form": "B |-m O",
+      "meaning": "Derive an obstruction O from the current bridge or route proposal."
+    },
+    {
+      "form": "P ; O |-m P'",
+      "meaning": "Revise programme P into a new programme P' after a negative result or barrier localization."
+    },
+    {
+      "form": "{Ri} |-m N*",
+      "meaning": "Aggregate many local route outcomes into a higher-order nexus or diagnosis N*."
+    },
+    {
+      "form": "R |-m M",
+      "meaning": "Persist result R into durable memory object M."
+    }
+  ],
+  "coordination_principles": [
+    {
+      "title": "Coherence Before Closure",
+      "detail": "A route is first judged as a coherent nexus of anchors, tensions, and bridge commitments before it is judged as correct."
+    },
+    {
+      "title": "Positive/Negative Symmetry",
+      "detail": "Every discovery program carries both a constructive route and a negative/impossibility route, each capable of yielding mathematical value."
+    },
+    {
+      "title": "Material Inference First",
+      "detail": "Inference moves are justified by theorem bodies, model regimes, barriers, and transport obligations before any correctness-style closure is attempted."
+    },
+    {
+      "title": "Persistent Scientific Memory",
+      "detail": "Queues, InformalMathLib, logs, and branch states are part of the logic itself because discovery depends on not forgetting failed and partial routes."
+    },
+    {
+      "title": "Governed Recursion",
+      "detail": "Loops are legitimate only when proof debt, obstruction pressure, or high-value subresults justify another cycle."
+    }
+  ],
+  "control_objects": [
+    {
+      "id": "kb",
+      "title": "Problem KB",
+      "role": "Anchor store and source corpus."
+    },
+    {
+      "id": "mathlib",
+      "title": "InformalMathLib",
+      "role": "Persistent theorem memory and imported prior art."
+    },
+    {
+      "id": "proof_queue",
+      "title": "Proof Queue",
+      "role": "Theorem-shaped frontier for proof or disproof."
+    },
+    {
+      "id": "discovery_branch_queue",
+      "title": "Discovery Branch Queue",
+      "role": "Pattern-shaped frontier for conceptual exploration."
+    },
+    {
+      "id": "high_reward_watch",
+      "title": "High-Reward Watch",
+      "role": "Continuation control for major subresults."
+    },
+    {
+      "id": "meta",
+      "title": "Meta Reflection",
+      "role": "Interpretive layer over what changed in understanding."
+    }
+  ],
+  "well_formed_program_requirements": [
+    "At least one grounded anchor and one explicit target.",
+    "A typed tension explaining why the route is not immediate.",
+    "A coherent nexus rather than a bag of related statements.",
+    "A positive route, a negative route, and explicit proof debt.",
+    "A decision gate specifying continue, revise, import, split, or stop."
+  ],
+  "example_program": {
+    "anchor_set": [
+      "A1: source theorem body",
+      "A2: target theorem body",
+      "A3: local barrier theorem"
+    ],
+    "tension": "X1: transport from source regime to target regime loses the intended invariant",
+    "nexus": "N1 := cohere(A1, A2, X1, barrier=A3)",
+    "bridge": "B1 := witness family preserving the source-side hardness profile",
+    "operations": [
+      "ext(A1 => c1): extract the usable lower-bound content from the source theorem body",
+      "foc(A1, T1 => X1): isolate the exact transport loss between source and target",
+      "conc(N1 => B1): propose the witness family as the bridge object demanded by the nexus",
+      "tr_I(B1, source ~> target): test whether the invariant survives the intended transport",
+      "obs(B1 => O1): derive the non-realization barrier if the witness family collapses",
+      "rev(P1, O1 => P2): revise the route into a transport-obstruction programme",
+      "mem(O1 => M1): persist the blocked result into InformalMathLib as negative local theorem memory"
+    ],
+    "positive_route": "If B1 is realizable and preserves the invariant, reduce target T to one route lemma L",
+    "negative_route": "If every realization of B1 collapses into the barrier, derive impossibility(B1 -> T)",
+    "proof_debt": [
+      "L1: carrier realization",
+      "L2: transport theorem",
+      "L3: payoff forcing theorem"
+    ],
+    "decision_gate": "If L1 sharpens but L2 fails under barrier A3, reframe as transport-obstruction rather than continue constructive forcing"
+  }
+}

@@ -1,0 +1,102 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://abducer.local/schemas/discovery_feedback_edge.schema.json",
+  "title": "Committed operator-output feedback edge",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "feedback_edge_id",
+    "target_id",
+    "run_id",
+    "prior_state_version",
+    "committed_state_generation",
+    "producer_receipt_id",
+    "producer_request_id",
+    "producer_operator_id",
+    "producer_output_artifacts",
+    "consumer_event_id",
+    "consumer_event_hash",
+    "artifact_roles",
+    "semantic_event_projections",
+    "consumed",
+    "state_edge_committed",
+    "authority_boundary"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "feedback_edge_id": {"$ref": "#/$defs/identifier"},
+    "target_id": {"$ref": "#/$defs/identifier"},
+    "run_id": {"$ref": "#/$defs/identifier"},
+    "prior_state_version": {"type": "integer", "minimum": 0},
+    "committed_state_generation": {"type": "integer", "minimum": 1},
+    "producer_receipt_id": {"$ref": "#/$defs/identifier"},
+    "producer_request_id": {"$ref": "#/$defs/identifier"},
+    "producer_operator_id": {"$ref": "#/$defs/identifier"},
+    "producer_output_artifacts": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["path", "sha256", "size_bytes"],
+        "properties": {
+          "path": {"type": "string", "minLength": 1},
+          "sha256": {"$ref": "#/$defs/digest"},
+          "size_bytes": {"type": "integer", "minimum": 0}
+        }
+      }
+    },
+    "consumer_event_id": {"$ref": "#/$defs/identifier"},
+    "consumer_event_hash": {"$ref": "#/$defs/digest"},
+    "artifact_roles": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {"type": "string", "minLength": 1}
+    },
+    "semantic_event_projections": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "output_path", "semantic_kind", "semantic_id", "row_digest",
+          "consumer_event_id", "consumer_event_hash"
+        ],
+        "properties": {
+          "output_path": {"type": "string", "minLength": 1},
+          "semantic_kind": {
+            "enum": [
+              "assimilation_mapping", "hypothesis", "attempt",
+              "material_reflection_round", "reflection_plateau_round", "synthesis_consequence",
+              "conceptual_adjudication_evidence",
+              "conceptual_preference_set", "experiment_assimilation",
+              "formal_claim_production",
+              "source_routing_pre_map_policy",
+              "source_routing_realization"
+            ]
+          },
+          "semantic_id": {"$ref": "#/$defs/identifier"},
+          "row_digest": {"$ref": "#/$defs/digest"},
+          "consumer_event_id": {"$ref": "#/$defs/identifier"},
+          "consumer_event_hash": {"$ref": "#/$defs/digest"}
+        }
+      }
+    },
+    "consumed": {"const": true},
+    "state_edge_committed": {"const": true},
+    "authority_boundary": {"type": "string", "minLength": 1}
+  },
+  "$defs": {
+    "identifier": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]*$",
+      "not": {"enum": ["latest", "current", "global"]}
+    },
+    "digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"}
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://abducer.local/spec/dynamic_experiment_world_request_v2.schema.json",
+  "title": "World request consuming an exact producer-bound commission v2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "contract_version", "request_id", "world_id", "execution_disposition", "commission_input", "commission_input_digest", "commission_producer_binding", "world_plan_digest", "planned_spec_id", "planned_spec_digest", "request_digest"],
+  "properties": {
+    "schema_version": {"const": "2.0.0"},
+    "contract_version": {"const": "experiment-world-request/2.0.0"},
+    "request_id": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/identifier"},
+    "world_id": {"enum": ["no_probe", "neutral_inconclusive", "misleading_toy_positive", "registered_premise_falsifier", "operational_failure"]},
+    "execution_disposition": {"enum": ["not_executed", "executed"]},
+    "commission_input": {"$ref": "./dynamic_experiment_world_matrix_commission_v2.schema.json"},
+    "commission_input_digest": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/digest"},
+    "commission_producer_binding": {"$ref": "./dynamic_experiment_causal_producer_binding_v2.schema.json"},
+    "world_plan_digest": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/digest"},
+    "planned_spec_id": {"oneOf": [{"type": "null"}, {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/identifier"}]},
+    "planned_spec_digest": {"oneOf": [{"type": "null"}, {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/digest"}]},
+    "request_digest": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/digest"}
+  }
+}

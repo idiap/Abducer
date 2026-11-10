@@ -1,0 +1,55 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://abducer.local/spec/discovery_resource_budget.schema.json",
+  "title": "Enforced discovery job resource budget",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "budget_id",
+    "wall_time_seconds",
+    "grace_period_seconds",
+    "cpu_seconds",
+    "memory_bytes",
+    "disk_bytes",
+    "network_bytes",
+    "token_count",
+    "request_count",
+    "cost_usd",
+    "portfolio_reserve_fraction",
+    "per_branch"
+  ],
+  "properties": {
+    "schema_version": {"const": 1},
+    "budget_id": {"type": "string", "minLength": 1},
+    "absolute_deadline": {"type": "string", "format": "date-time"},
+    "wall_time_seconds": {"type": "number", "exclusiveMinimum": 0},
+    "grace_period_seconds": {"type": "number", "minimum": 0, "maximum": 30},
+    "cpu_seconds": {"type": "number", "exclusiveMinimum": 0},
+    "memory_bytes": {"type": "integer", "minimum": 1048576},
+    "disk_bytes": {"type": "integer", "minimum": 0},
+    "network_bytes": {"type": "integer", "minimum": 0},
+    "token_count": {"type": "integer", "minimum": 0},
+    "request_count": {"type": "integer", "minimum": 0},
+    "cost_usd": {"type": "number", "minimum": 0},
+    "portfolio_reserve_fraction": {"type": "number", "minimum": 0, "exclusiveMaximum": 1},
+    "per_branch": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["wall_time_seconds", "cpu_seconds", "memory_bytes", "disk_bytes", "network_bytes", "token_count", "request_count", "cost_usd"],
+        "properties": {
+          "wall_time_seconds": {"type": "number", "exclusiveMinimum": 0},
+          "cpu_seconds": {"type": "number", "exclusiveMinimum": 0},
+          "memory_bytes": {"type": "integer", "minimum": 1048576},
+          "disk_bytes": {"type": "integer", "minimum": 0},
+          "network_bytes": {"type": "integer", "minimum": 0},
+          "token_count": {"type": "integer", "minimum": 0},
+          "request_count": {"type": "integer", "minimum": 0},
+          "cost_usd": {"type": "number", "minimum": 0}
+        }
+      }
+    }
+  }
+}

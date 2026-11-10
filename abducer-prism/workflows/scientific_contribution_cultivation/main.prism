@@ -1,0 +1,24 @@
+# SPDX-FileCopyrightText: © 2026 Idiap Research Institute <contact@idiap.ch>
+#
+# SPDX-FileContributor: Andre Freitas <andre.freitas@idiap.ch>
+# Neuro-symbolic AI Group
+#
+# SPDX-FileContributor: Danilo Gusicuma <danilo.gusicuma@idiap.ch>
+# Neuro-symbolic AI Group
+#
+# SPDX-License-Identifier: MIT
+# Fixture-backed typed smoke entrypoint for scientific_contribution_cultivation.
+# Routing comments and linked validators remain outside this executable boundary.
+from workflows.scientific_contribution_cultivation.materialization import converted_reasoning
+from workflows.scientific_contribution_cultivation.reasoning import ScientificContributionCultivation
+from workflows.scientific_contribution_cultivation.types import ContributionReadinessAssessment, ResultAtlasSlice
+
+def main(
+    model_access: ModelGenerate,
+    disclosure: ContextDisclose,
+) -> Result[Generated[ContributionReadinessAssessment], ModelFailure] ! {AI.Generate, Context.Disclose}:
+    result = ResultAtlasSlice(
+        result_id = "fixture:scientific_contribution_cultivation:result.result_id",
+    )
+    flow = converted_reasoning(result)
+    return solve ScientificContributionCultivation(result) using flow

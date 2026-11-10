@@ -1,0 +1,94 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://abducer.local/schemas/pre_taxonomy_invention_freeze.schema.json",
+  "title": "Pre-taxonomy open-world invention freeze",
+  "description": "Freezes raw inventions before any known-corner taxonomy is exposed; the taxonomy is present only by commitment digest.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "artifact_kind", "freeze_id", "namespace",
+    "invention_request", "taxonomy_visibility", "generator_authority_digest",
+    "raw_inventions", "raw_invention_set_digest", "authority_nulls", "content_digest"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "artifact_kind": {"const": "pre_taxonomy_invention_freeze"},
+    "freeze_id": {"$ref": "#/$defs/id"},
+    "namespace": {
+      "type": "object", "additionalProperties": false,
+      "required": ["target_id", "run_id", "state_version"],
+      "properties": {
+        "target_id": {"$ref": "#/$defs/id"},
+        "run_id": {"$ref": "#/$defs/id"},
+        "state_version": {"type": "integer", "minimum": 0}
+      }
+    },
+    "invention_request": {
+      "type": "object", "additionalProperties": false,
+      "required": ["target_pressure", "root_contradictions", "protected_successes", "requested_invention_count", "generation_question"],
+      "properties": {
+        "target_pressure": {"$ref": "#/$defs/text"},
+        "root_contradictions": {"$ref": "#/$defs/textList"},
+        "protected_successes": {"$ref": "#/$defs/textList"},
+        "requested_invention_count": {"type": "integer", "minimum": 3},
+        "generation_question": {"$ref": "#/$defs/text"}
+      }
+    },
+    "taxonomy_visibility": {
+      "type": "object", "additionalProperties": false,
+      "required": ["phase", "exposure_status", "known_taxonomy_commitment_digest"],
+      "properties": {
+        "phase": {"const": "pre_taxonomy"},
+        "exposure_status": {"const": "withheld_by_commitment_only"},
+        "known_taxonomy_commitment_digest": {"$ref": "#/$defs/digest"}
+      }
+    },
+    "generator_authority_digest": {"$ref": "#/$defs/digest"},
+    "raw_inventions": {
+      "type": "array", "minItems": 3,
+      "items": {"$ref": "#/$defs/rawInvention"}
+    },
+    "raw_invention_set_digest": {"$ref": "#/$defs/digest"},
+    "authority_nulls": {
+      "type": "object", "additionalProperties": false,
+      "required": ["taxonomy_hiddenness_scope", "generator_cognitive_independence", "creativity_authority", "truth_authority", "physics_value_authority"],
+      "properties": {
+        "taxonomy_hiddenness_scope": {"const": "artifact_payload_only"},
+        "generator_cognitive_independence": {"const": "unavailable"},
+        "creativity_authority": {"const": "unavailable"},
+        "truth_authority": {"const": "unavailable"},
+        "physics_value_authority": {"const": "unavailable"}
+      }
+    },
+    "content_digest": {"$ref": "#/$defs/digest"}
+  },
+  "$defs": {
+    "id": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"},
+    "digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "text": {"type": "string", "minLength": 1},
+    "textList": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"$ref": "#/$defs/text"}},
+    "rawInvention": {
+      "type": "object", "additionalProperties": false,
+      "required": [
+        "invention_id", "conjecture", "primitive_hunches", "relation_hunches",
+        "mechanism_hunch", "root_tension_contact", "counterfactual_world",
+        "protected_successes", "risk_if_wrong", "upside_if_right",
+        "first_falsifier", "correction_path"
+      ],
+      "properties": {
+        "invention_id": {"$ref": "#/$defs/id"},
+        "conjecture": {"$ref": "#/$defs/text"},
+        "primitive_hunches": {"$ref": "#/$defs/textList"},
+        "relation_hunches": {"$ref": "#/$defs/textList"},
+        "mechanism_hunch": {"$ref": "#/$defs/text"},
+        "root_tension_contact": {"$ref": "#/$defs/text"},
+        "counterfactual_world": {"$ref": "#/$defs/text"},
+        "protected_successes": {"$ref": "#/$defs/textList"},
+        "risk_if_wrong": {"$ref": "#/$defs/text"},
+        "upside_if_right": {"$ref": "#/$defs/text"},
+        "first_falsifier": {"$ref": "#/$defs/text"},
+        "correction_path": {"$ref": "#/$defs/text"}
+      }
+    }
+  }
+}

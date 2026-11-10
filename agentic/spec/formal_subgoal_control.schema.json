@@ -1,0 +1,35 @@
+{
+  "version": 1,
+  "purpose": "Universal control packet for deciding whether a formal subgoal should persist by adaptation, backtrack, pivot, quarantine, or stop.",
+  "allowed_decisions": [
+    "persist_adapt",
+    "backtrack",
+    "pivot",
+    "quarantine",
+    "stop"
+  ],
+  "required_fields": [
+    "control_id",
+    "decision",
+    "target_object_link",
+    "essential_commitments_preserved",
+    "current_blocker",
+    "adaptation_history",
+    "learning_from_failure",
+    "next_action",
+    "backtrack_trigger",
+    "pivot_trigger",
+    "quarantine_trigger",
+    "stop_condition",
+    "repeated_blocker_count",
+    "decision_rationale"
+  ],
+  "decision_policy": {
+    "persist_adapt": "Continue by adaptation only when the subgoal remains target-linked and failure teaches a sharper premise, object, regime, or bridge.",
+    "backtrack": "Move backward when the subgoal uses an object, theorem, representation, limit, or premise before it has been constructed or certified.",
+    "pivot": "Change route family when certified obstruction repeats after adaptation without new target-relevant mathematical information.",
+    "quarantine": "Keep the route visible as evidence or analogy when it lacks target-object identity, transfer certification, source grounding, or commitment preservation.",
+    "stop": "Stop active-loop spending when the route has no meaningful target-object link or produces no new learning after repeated attempts."
+  },
+  "validation_policy": "Every active proof_queue, discovery_branch, revision_loop, or evidence_task route must carry this packet. Deterministic validators check shape and compatibility; generative review checks whether the rationale is mathematically substantive."
+}

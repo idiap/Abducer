@@ -1,0 +1,81 @@
+\section{Positive spectral transport}
+\label{app:spectral}
+
+\begin{lemma}[Positive Laplace support]
+\label{lem:laplace}
+Let $\mu$ be a finite positive Borel measure on $[0,\infty)$.  If some
+$m>0$ and $M<\infty$ satisfy
+\[
+ \int\e^{-t\lambda}\,d\mu(\lambda)\leq M\e^{-mt}
+ \quad\text{for all }t\geq0,
+\]
+then $\mu([0,m))=0$.
+\end{lemma}
+
+\begin{proof}
+Fix $\delta\in(0,m)$.  If
+$c=\mu([0,m-\delta])>0$, positivity gives
+\[
+ \int\e^{-t\lambda}\,d\mu(\lambda)
+ \geq c\e^{-(m-\delta)t}.
+\]
+Combining both bounds yields $c\e^{\delta t}\leq M$ for all $t$, a
+contradiction.  Hence $\mu([0,m-\delta])=0$.  Taking a countable union over
+rational $\delta\downarrow0$ proves the claim.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:recovery-spectrum}]
+Fix $x\in\mathcal D$.  Semigroup recovery and the uniform regulated bound
+imply, for every fixed $t\geq0$,
+\[
+ \langle x,\e^{-tH}x\rangle
+ =\lim_i\langle J_i x,\e^{-tH_i}J_i x\rangle
+ \leq M_x\e^{-mt}.
+\]
+Let $E_H$ be the projection-valued spectral measure of $H$ and define
+$\mu_x(S)=\langle x,E_H(S)x\rangle$.  It is positive and finite, and the
+spectral theorem gives
+\[
+ \langle x,\e^{-tH}x\rangle
+ =\int_{[0,\infty)}\e^{-t\lambda}\,d\mu_x(\lambda).
+\]
+Lemma~\ref{lem:laplace} shows $\mu_x([0,m))=0$.  Because
+$x\perp\ker H=\mathbb C\vac$, the point $0$ already has zero weight; in
+particular
+\[
+ \|E_H((0,m))x\|^2=\langle x,E_H((0,m))x\rangle=0.
+\]
+Thus the bounded projection $E_H((0,m))$ vanishes on the dense subspace
+$\mathcal D\subset\vac^\perp$.  It also vanishes on $\vac$, so it is zero on
+$\Hilb$.  Therefore $\spec(H)\cap(0,m)=\varnothing$.
+\end{proof}
+
+\begin{proposition}[Recovery with explicit errors]
+\label{prop:error-recovery}
+Theorem~\ref{thm:recovery-spectrum} remains valid if
+Equation~\eqref{eq:semigroup-recovery} is replaced by
+\[
+ \left|\langle J_i x,\e^{-tH_i}J_i x\rangle-
+ \langle x,\e^{-tH}x\rangle\right|\leq\rho_i(x,t),
+\]
+where $\rho_i(x,t)\to0$ along the directed set for every fixed $x,t$.
+\end{proposition}
+
+\begin{proof}
+The error condition implies Equation~\eqref{eq:semigroup-recovery}; the proof
+of the theorem then applies.  Notice that the exponential rate must still be
+uniform in $i$.  Pointwise vanishing of $\rho_i$ does not provide that rate.
+\end{proof}
+
+\begin{proof}[Proof of Corollary~\ref{cor:os}]
+OS reconstruction supplies a Hilbert space, vacuum, and positive contraction
+semigroup whose quadratic forms agree with reflected Euclidean two-point
+forms on the reconstructed observable vectors.  The assumed convergence
+provides the maps $J_i$ and Equation~\eqref{eq:semigroup-recovery}; the
+physical decay estimate provides Equation~\eqref{eq:uniform-rigidity}; and
+the assumed density gives completeness.  Theorem
+\ref{thm:recovery-spectrum} yields the spectral exclusion.  Unique vacuum is
+used as stated in Definition~\ref{def:recovery}; if reconstruction has extra
+zero-energy states, the theorem only excludes positive spectrum below $m$ and
+does not establish vacuum uniqueness.
+\end{proof}

@@ -1,0 +1,23 @@
+{
+  "schema_version": "1.0.0",
+  "workflow_id": "cohere_fast",
+  "public_alias": "cohere-fast",
+  "activation": "explicit_only",
+  "feature_flag": "ABDUCER_ENABLE_COHERE_FAST",
+  "default_enabled": true,
+  "run_root_template": "artifacts/cohere-fast/{domain_id}/{run_id}",
+  "artifact_prefix_template": "cohere-fast/{domain_id}/{run_id}/",
+  "canonical_state_authority": "abducer",
+  "forbidden_control_planes": ["tdr", "discover_cli", "source_sqlite"],
+  "invariants": [
+    "No prompt activates cohere_fast without the exact public command grammar.",
+    "A run may use only its registered domain bundle and child workflows.",
+    "All writes resolve beneath the run root.",
+    "No handoff to or mutation of another workflow is permitted.",
+    "Disabling cohere_fast leaves all pre-existing workflow contracts unchanged."
+  ],
+  "rollback": {
+    "remove_only": ["cohere_fast registry projections", "cohere-fast run artifacts"],
+    "preserve": ["legacy workflows", "named workflows", "global skill catalog"]
+  }
+}

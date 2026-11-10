@@ -1,0 +1,154 @@
+# SPDX-FileCopyrightText: © 2026 Idiap Research Institute <contact@idiap.ch>
+#
+# SPDX-FileContributor: Andre Freitas <andre.freitas@idiap.ch>
+# Neuro-symbolic AI Group
+#
+# SPDX-FileContributor: Danilo Gusicuma <danilo.gusicuma@idiap.ch>
+# Neuro-symbolic AI Group
+#
+# SPDX-License-Identifier: MIT
+version: 1
+target_id: yang-mills-routea-su2-finite-wilson-block-paper
+created_at: "2026-07-11"
+source_artifacts:
+  active_paper: agentic/reports/results_ellaboration/a-finite-schur-feshbach-test-for-reflected-wilson-blocks-an-explicit-four-dimens/finite_wilson_os_routeA_SU2_attack_integrated.tex
+  skill: skills/results_ellaboration/routea-symbolic-cas-auditor/SKILL.md
+  script: skills/results_ellaboration/routea-symbolic-cas-auditor/scripts/audit_routea_symbolic_cas.py
+  report: agentic/reports/results_ellaboration/a-finite-schur-feshbach-test-for-reflected-wilson-blocks-an-explicit-four-dimens/routea_symbolic_cas_audit.json
+implementation_status:
+  status: completed
+  completed_at: "2026-07-11"
+todos:
+  - id: routea-symbolic-cas-001
+    type: planning_todo
+    phase: routea-symbolic-cas-layer
+    owner: skills/results_ellaboration/routea-symbolic-cas-auditor
+    priority: critical
+    risk_class: routea_claim_boundary
+    title: Define the symbolic reasoning regimes needed by the Route A paper.
+    intent: >
+      Localize the exact symbolic work that is legitimate for this paper:
+      Schur-Feshbach algebra, source-collision coefficient checks,
+      same-theory normalization gates, geometric-collar coefficient obligations,
+      endpoint incidence identities, endpoint certificate inequalities, and
+      TeX-safe manuscript integration.
+    use_skills:
+      - routea-symbolic-cas-auditor
+      - routea-geometric-coefficient-extractor
+      - routea-paper-result-integrator
+    required_artifact:
+      - skills/results_ellaboration/routea-symbolic-cas-auditor/SKILL.md
+    acceptance_criteria:
+      - The skill distinguishes finite source-collision algebra from geometric-collar coefficient claims.
+      - The skill names endpoint and normalization symbolic checks specific to the paper.
+      - The skill states that CAS outputs do not imply continuum reconstruction or a mass gap.
+    blocked_by: []
+    evidence:
+      - skills/results_ellaboration/routea-symbolic-cas-auditor/SKILL.md
+    review_date: "2026-07-11"
+    failure_modes:
+      - CAS is treated as generic exploration rather than paper-specific proof control.
+      - The finite/geometric/endpoint/continuum boundary is blurred.
+      - Manuscript prose receives process language instead of mathematical result language.
+    status: resolved
+  - id: routea-symbolic-cas-002
+    type: workflow_todo
+    phase: routea-symbolic-cas-layer
+    owner: skills/results_ellaboration/routea-symbolic-cas-auditor
+    priority: critical
+    risk_class: exact_symbolic_certificate
+    title: Implement a deterministic Route A symbolic CAS audit.
+    intent: >
+      Produce an exact symbolic report checking the source-collision Schur block,
+      determinant, reduced eigenvalues, Schur correction, endpoint null-channel
+      identity, two-sided endpoint certificate logic, normalization quotient
+      counterexample, and geometric coefficient obligations.
+    use_skills:
+      - routea-symbolic-cas-auditor
+    required_artifact:
+      - skills/results_ellaboration/routea-symbolic-cas-auditor/scripts/audit_routea_symbolic_cas.py
+      - agentic/reports/results_ellaboration/a-finite-schur-feshbach-test-for-reflected-wilson-blocks-an-explicit-four-dimens/routea_symbolic_cas_audit.json
+    acceptance_criteria:
+      - The report marks the source-collision block as an exact symbolic certificate.
+      - The report verifies the endpoint identity 2*R12 - 4*R13 - 4*R23.
+      - The report includes a finite counterexample to unsupported pair-dependent entrywise quotient normalization.
+      - The report records geometric-collar coefficient extraction as a proof obligation, not a completed theorem.
+    blocked_by:
+      - routea-symbolic-cas-001
+    evidence:
+      - skills/results_ellaboration/routea-symbolic-cas-auditor/scripts/audit_routea_symbolic_cas.py
+      - agentic/reports/results_ellaboration/a-finite-schur-feshbach-test-for-reflected-wilson-blocks-an-explicit-four-dimens/routea_symbolic_cas_audit.json
+    review_date: "2026-07-11"
+    failure_modes:
+      - The script checks only file existence rather than symbolic formulas.
+      - The report overclaims beyond finite algebra.
+      - Endpoint sign claims are inferred from incidence algebra alone.
+    status: resolved
+  - id: routea-symbolic-cas-003
+    type: test_todo
+    phase: routea-symbolic-cas-layer
+    owner: agentic/scripts/validate_routea_symbolic_cas_audit.py
+    priority: high
+    risk_class: validator_gate
+    title: Add a validator for the Route A symbolic CAS report.
+    intent: >
+      Make the symbolic layer release-safe by failing if exact Schur checks,
+      endpoint identity, normalization counterexample, claim boundary, or skill
+      depth signals are missing.
+    use_skills:
+      - routea-symbolic-cas-auditor
+      - results-expansion-validator
+    required_artifact:
+      - agentic/scripts/validate_routea_symbolic_cas_audit.py
+    acceptance_criteria:
+      - The validator checks exact symbolic booleans for A, C, determinant, reduced margins, and Schur correction.
+      - The validator rejects reports without finite/source-collision claim boundaries.
+      - The validator is included in the full agentic check.
+    blocked_by:
+      - routea-symbolic-cas-002
+    evidence:
+      - agentic/scripts/validate_routea_symbolic_cas_audit.py
+      - agentic/scripts/agentic_check.py
+    review_date: "2026-07-11"
+    failure_modes:
+      - The report is generated but never validated.
+      - Full checks can pass while the symbolic layer silently disappears.
+      - Skill quality requirements are not enforced for the script-backed skill.
+    status: resolved
+  - id: routea-symbolic-cas-004
+    type: documentation_todo
+    phase: routea-symbolic-cas-layer
+    owner: docs/reference/skills.md
+    priority: medium
+    risk_class: skill_visibility
+    title: Register the Route A symbolic CAS skill in docs and registries.
+    intent: >
+      Make the skill visible to future Route A paper workflows and route exact
+      symbolic outputs to coefficient, normalization, endpoint, and manuscript
+      integration skills.
+    use_skills:
+      - routea-symbolic-cas-auditor
+    required_artifact:
+      - docs/reference/skills.md
+      - registry/skill_projections/abducer_skill_projections.json
+      - agentic/registries/skill_registry.yaml
+      - agentic/registries/skill_quality_registry.yaml
+    acceptance_criteria:
+      - docs/reference/skills.md lists routea-symbolic-cas-auditor under results_ellaboration.
+      - Skill taxonomy projections include the new skill.
+      - Skill depth validation reports zero critical findings.
+    blocked_by:
+      - routea-symbolic-cas-001
+      - routea-symbolic-cas-002
+      - routea-symbolic-cas-003
+    evidence:
+      - docs/reference/skills.md
+      - registry/skill_projections/abducer_skill_projections.json
+      - agentic/registries/skill_registry.yaml
+      - agentic/registries/skill_quality_registry.yaml
+    review_date: "2026-07-11"
+    failure_modes:
+      - The skill exists only as a filesystem path.
+      - Documentation hides the deterministic/generative split.
+      - Future paper edits bypass symbolic claim-boundary checks.
+    status: resolved

@@ -1,0 +1,175 @@
+% SPDX-FileCopyrightText: © 2026 Idiap Research Institute <contact@idiap.ch>
+%
+% SPDX-FileContributor: Andre Freitas <andre.freitas@idiap.ch>
+% Neuro-symbolic AI Group
+%
+% SPDX-FileContributor: Danilo Gusicuma <danilo.gusicuma@idiap.ch>
+% Neuro-symbolic AI Group
+%
+% SPDX-License-Identifier: MIT
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{enumitem}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\hypersetup{colorlinks=true,linkcolor=blue!50!black,urlcolor=blue!50!black,pdftitle={Current Abducer Framework State}}
+\title{A Succinct Formalization of the Current Abducer Reasoning Framework}
+\author{Neuro-symbolic AI Group\\Idiap Research Institute}
+\date{March 12, 2026}
+\newtheorem{definition}{Definition}
+\begin{document}
+\maketitle
+\begin{abstract}
+This note formalizes the current implementation state of the Abducer framework as a typed inferential system over mathematical knowledge bases, stage artifacts, and reasoning logs. The formalization is intentionally brief: it records the KB state, the implemented pipeline, the current scoring semantics, and the observability contract, then exemplifies them through one end-to-end theorem-discovery run.
+\end{abstract}
+\section{Framework Signature}
+We model the current framework state by the tuple
+\[
+\mathfrak{F} = (\mathcal{K}, \mathcal{A}, \mathcal{M}, \mathcal{T}, \Lambda),
+\]
+where $\mathcal{K}$ is the current problem KB, $\mathcal{A}$ is the structured artifact state, $\mathcal{M}$ is the set of inference modes, $\mathcal{T}$ is the set of deterministic stage operators, and $\Lambda$ is the reasoning-log trace family.
+\begin{definition}[KB state]
+The current KB state is represented as
+\[
+\mathcal{K} = (S, C, M, B, R, H, O),
+\]
+where $S$ is the statement set, $C$ the concept set, $M$ the method/proof-regime set, $B$ the barrier set, $R$ the typed relation set, $H$ the proof-hypothesis set, and $O$ the current open obligations.
+\end{definition}
+The derived artifact state is represented as
+\[
+\begin{aligned}
+\mathcal{A} &= (A^{\mathrm{conn}}, A^{\mathrm{coh}}, A^{\mathrm{ent}}, A^{\mathrm{path}}, A^{\mathrm{hard}}, A^{\mathrm{bridge}},\\
+&\quad A^{\mathrm{conj}}, A^{\mathrm{strat}}, A^{\mathrm{sketch}}, A^{\mathrm{eval}}, A^{\mathrm{loop}}, A^{\mathrm{paper}})
+\end{aligned}
+\]
+\section{Current Mode Sets}
+The current user-facing primary inference modes are
+\[
+\begin{aligned}
+\mathcal{M}_{\mathrm{primary}} &= \{\texttt{cohere}, \texttt{explain}, \texttt{deduce}, \texttt{abduce},\\
+&\quad \texttt{conjecture}, \texttt{proof-sketch}, \texttt{expert-paper}\}
+\end{aligned}
+\]
+The current prompt-driven auxiliary modes are
+\[
+\begin{aligned}
+\mathcal{M}_{\mathrm{prompt}} &= \{\texttt{kb-explain}, \texttt{kb-deduce}, \texttt{kb-abduce}, \texttt{kb-induce}\}
+\end{aligned}
+\]
+The current orchestrator intents are
+\[
+\begin{aligned}
+\mathcal{M}_{\mathrm{orch}} &= \{\texttt{cohere}, \texttt{connect}, \texttt{coherence-eval}, \texttt{interpretation-reports},\\
+&\quad \texttt{process-graph}, \texttt{reasoning-dynamics}, \texttt{entrypoints}, \texttt{hardness},\\
+&\quad \texttt{bridge-plan}, \texttt{conjecture}, \texttt{strategies}, \texttt{proof-sketch},\\
+&\quad \texttt{expert-paper}, \texttt{hypothesis-eval}, \texttt{hypothesis-loop}, \texttt{revision-loop},\\
+&\quad \texttt{abductive-loop}, \texttt{pipeline}\}
+\end{aligned}
+\]
+The composite relation \(\mathsf{Cohere} = \mathsf{Coherence} \circ \mathsf{Connect}\) remains the preferred entry operator for relational plus coherentist formation.
+\section{Pipeline Semantics}
+The implemented end-to-end pipeline can be written as
+\[
+\begin{aligned}\mathsf{Pipeline} &= \mathsf{Paper} \circ \mathsf{Revise} \circ \mathsf{HypLoop} \circ \mathsf{HypEval} \\&\circ \mathsf{Sketch} \circ \mathsf{Strategize} \circ \mathsf{Conjecture} \circ \mathsf{Bridge} \\&\circ \mathsf{Hardness} \circ \mathsf{Path} \circ \mathsf{Entry} \circ \mathsf{Coherence} \circ \mathsf{Connect}\end{aligned}
+\]
+with the revision operator closing the loop by returning a revised KB and revised hypothesis state whenever the hypothesis loop stalls or damages global coherence.
+The current run state at step $t$ can therefore be written as
+\[
+\mathcal{X}_t = (\mathcal{K}_t, \mathcal{A}_t, \Lambda_t), \qquad \mathcal{X}_{t+1} = \mathsf{Revise}(\mathcal{X}_t) \ \text{when revision is triggered}.
+\]
+The core operator family is grouped below by function rather than by stage table, since the framework is best understood through its end-to-end execution rather than a flat catalogue of scripts.
+\begin{itemize}[leftmargin=*,itemsep=0.25em]
+\item \textbf{Formation layer}: $\mathsf{Connect}$, $\mathsf{Coherence}$, $\mathsf{Entry}$, and $\mathsf{Path}$ transform a raw KB into a connected, scored, and ordered inferential frontier.
+\item \textbf{Discovery layer}: $\mathsf{Hardness}$, $\mathsf{Bridge}$, and $\mathsf{Conjecture}$ identify the blocking gap and propose the bridge object or abstraction family that would resolve it.
+\item \textbf{Program layer}: $\mathsf{Strategize}$ and $\mathsf{Sketch}$ turn bridge objects into candidate proof programs with obligations, invariants, and abort conditions.
+\item \textbf{Revision layer}: $\mathsf{HypEval}$, $\mathsf{HypLoop}$, $\mathsf{Revise}$, and $\mathsf{Paper}$ evaluate the current bridge set, revise the KB when necessary, and emit the expert-facing synthesis.
+\end{itemize}
+\section{Worked End-to-End Example}
+As a concrete witness of the current framework behavior, we use the masked-bridge discovery simulation for the \textit{Markov Kakutani Fixed Point Theorem}. In this run the working KB hides the central bridge concept while the pipeline attempts to recover a proof-relevant route to the target theorem.
+\[
+\mathcal{K}^{\mathrm{work}}_{\mathrm{ex}} = \mathcal{K}_{\mathrm{ex}} \setminus \{\text{explicit bridge-concept annotations}\},
+\qquad
+\mathsf{Pipeline}(\mathcal{K}^{\mathrm{work}}_{\mathrm{ex}}) \rightsquigarrow (\mathcal{A}^{\star}, H^{\star}, \Lambda^{\star}).
+\]
+The selected example uses target statement \texttt{st.thm.markov-kakutani}, knockout profile \texttt{bridge-concept}, executes 8 iterations, and reaches best replication score 0.909892.
+If the bridge concept is denoted by $b^{\star}$, the hidden bridge family in the current run is
+\[
+b^{\star} \in \{\texttt{cnc.invariant-fixed-point-subset}\},
+\]
+with hidden bridge terms \texttt{fixed-point subset}.
+The recovered discovery chain for the best iteration is:
+\begin{enumerate}[leftmargin=*,itemsep=0.2em]
+\item \texttt{st.def.compact-convex-set}
+\item \texttt{st.def.commuting-affine-family}
+\item \texttt{st.def.fixed-point-subset}
+\item \texttt{st.lem.cesaro-averages}
+\item \texttt{st.lem.single-map-fixed-point}
+\item \texttt{st.prop.fixed-point-subset-structure}
+\item \texttt{st.lem.commuting-preserves-fixed-point-subset}
+\item \texttt{st.lem.finite-family-common-fixed-point}
+\item \texttt{st.thm.markov-kakutani}
+\end{enumerate}
+The theorem-local conceptual phases recovered by the framework are:
+\begin{itemize}[leftmargin=*,itemsep=0.2em]
+\item \textbf{Foundational Definitions}: st.def.compact-convex-set (definition): The theorem lives on a nonempty compact convex subset because averaging and compactness both need this ambient geometry.
+\item \textbf{Affine Averaging}: st.lem.cesaro-averages (lemma): Cesaro averages of a single affine orbit stay inside K and provide the averaging mechanism behind single-map fixed-point extraction.
+\item \textbf{Single-Map Fixed-Point Extraction}: st.lem.single-map-fixed-point (lemma): A single continuous affine self-map of a nonempty compact convex set has at least one fixed point.
+\item \textbf{Invariant Fixed-Point Subset}: st.prop.fixed-point-subset-structure (proposition): The [hidden bridge concept] of a single map is itself a nonempty compact convex set.
+\item \textbf{Commuting Invariance}: st.lem.commuting-preserves-fixed-point-subset (lemma): If two affine maps commute, then one preserves the [hidden bridge concept] of the other.
+\item \textbf{Finite-Family Lift}: st.lem.finite-family-common-fixed-point (lemma): One can build a common fixed point for any finite commuting subfamily by iteratively restricting to invariant [hidden bridge concept]s.
+\item \textbf{Common Fixed-Point Theorem}: st.thm.markov-kakutani (theorem): A commuting family of continuous affine self-maps on a nonempty compact convex set has a common fixed point.
+\item \textbf{Examples and Interpretation}: st.ex.interval-commuting-projections (example): On a compact interval, commuting affine self-maps illustrate the theorem in the simplest convex setting.
+\end{itemize}
+The example operationally illustrates the full pipeline in four grouped moves:
+\begin{enumerate}[leftmargin=*,itemsep=0.25em]
+\item $\mathsf{Connect}$, $\mathsf{Coherence}$, $\mathsf{Entry}$, and $\mathsf{Path}$ isolate the highest-leverage statements and expose the missing bridge region rather than treating the theorem as a flat statement-retrieval task.
+\item $\mathsf{Hardness}$ and $\mathsf{Bridge}$ localize the inferential bottleneck as the absent bridge object that connects single-map fixed-point extraction to the finite-family lift.
+\item $\mathsf{Conjecture}$, $\mathsf{Strategize}$, and $\mathsf{Sketch}$ turn that missing bridge into explicit bridge-object proposals, strategy families, and proof obligations.
+\item $\mathsf{HypEval}$, $\mathsf{HypLoop}$, and $\mathsf{Revise}$ test whether the proposed bridge improves coherence and reconstructs the target route without reintroducing hidden annotations by hand.
+\end{enumerate}
+This witness is the intended meaning of the framework signature: the system is not merely scoring isolated hypotheses, but reconstructing a concept-mediated route through a KB whose proof-relevant center has been partially removed.
+\section{Selection and Scoring Semantics}
+The framework currently uses stage-specific weighted heuristics rather than a single universal scalar objective. A concise common form is
+\[
+\operatorname{score}(h) = \alpha s(h) + \beta c(h) + \gamma e(h) + \delta \ell(h) + \epsilon n(h) - \rho r(h) - \sigma b(h),
+\]
+where $s(h)$ denotes support, $c(h)$ coherence contribution, $e(h)$ explanatory value, $\ell(h)$ structural leverage, $n(h)$ novelty or fertility, $r(h)$ refutation pressure, and $b(h)$ barrier pressure. The expert-paper stage instantiates an explicit transparent variant of this weighted policy.
+\section{Observability Contract}
+Each scripted operator emits a reasoning-log record of the form
+\[
+\lambda_i = (\mathrm{agent}_i, \mathrm{inputs}_i, \mathrm{outputs}_i, \mathrm{summary}_i), \qquad \Lambda = \{\lambda_1, \ldots, \lambda_n\}.
+\]
+This logging contract makes the reasoning process replayable at both the stage level and the run level.
+\begin{itemize}[leftmargin=*,itemsep=0.2em]
+\item $\mathsf{Connect}$ produces connection-analysis.json/.md, phyp/*.proof-hypotheses.yaml.
+\item $\mathsf{Coherence}$ produces coherence-report.json/.md.
+\item $\mathsf{Entry}$ produces entrypoints.json/.md.
+\item $\mathsf{Path}$ produces entrypoint-pathways.json/.md.
+\item $\mathsf{Hardness}$ produces epistemic-hardness.json/.md.
+\item $\mathsf{Bridge}$ produces bridge-plan.json/.md.
+\item $\mathsf{Conjecture}$ produces concept-gap-abstractions.json/.md.
+\item $\mathsf{Strategize}$ produces proof-strategies.json/.md, novelty prompt.
+\item $\mathsf{Sketch}$ produces proof-sketches.json/.md, paper-style-argument.md.
+\item $\mathsf{HypEval}$ produces hypothesis-evaluation.json/.md, optional phyp/*.hypotheses-evaluated.md, optional updated phyp.
+\item $\mathsf{HypLoop}$ produces hypothesis-refutation-loop.json/.md, phyp/*.hypotheses-reviewed.md, reviewed phyp.
+\item $\mathsf{Revise}$ produces revision-loop.json/.md.
+\item $\mathsf{Paper}$ produces expert-hypothesis-paper.json/.md/.tex.
+\item $\mathsf{Interpret}$ supports the generation of generates human-readable interpretation and discovery-process reports.
+\item $\mathsf{ProcessGraph}$ supports the generation of builds the typed dynamic process graph from run-scoped reasoning logs.
+\item $\mathsf{Dynamics}$ supports the generation of summarizes reasoning dynamics, operator counts, and graph-evolution metrics over a run.
+\end{itemize}
+\section{Source Basis}
+This formalization was generated from the current repository documentation sources:
+\begin{itemize}[leftmargin=*,itemsep=0.2em]
+\item \url{README.md}
+\item \url{docs/architecture/architecture.md}
+\item \url{docs/architecture/orchestration.md}
+\item \url{docs/reference/skills.md}
+\item \url{artifacts/markov-kakutani-fixed-point-theorem/discovery-simulation/simulation-report.md}
+\item \url{artifacts/markov-kakutani-fixed-point-theorem/discovery-simulation/iter-008/concept-evolution.md}
+\end{itemize}
+\end{document}

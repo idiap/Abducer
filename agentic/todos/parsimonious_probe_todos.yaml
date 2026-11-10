@@ -1,0 +1,597 @@
+[
+  {
+    "id": "PMP-001",
+    "type": "planning_todo",
+    "phase": "probe-necessity-policy",
+    "owner": "agentic/spec",
+    "priority": "critical",
+    "risk_class": "simulation-used-where-symbolic-estimate-suffices",
+    "title": "Define a parsimonious probe policy for qualitative reasoning",
+    "intent": "Make the discovery loop decide when a symbolic derivation, hand estimate, tiny numeric probe, or no computation is the right next move.",
+    "conceptual_model": "For the current Yang-Mills branch, the main finite-dimensional obstruction is analytically explicit: normalized Hermitian quotient matrices, determinant inequalities, quotient holonomy, and Schur/Hadamard preimage positivity. Simulation is not needed to discover these formulas. Numerical probes are warranted only when they can find counterexample regions, test sharpness of a proposed bound, or rank which analytic estimate is worth proving. Full lattice simulation is outside the proof workflow unless explicitly scoped as evidence-only.",
+    "use_skills": [
+      "qualitative-toy-model-builder",
+      "monotonicity-sensitivity-prober",
+      "limit-convergence-behavior-auditor",
+      "qualitative-physics-falsifier",
+      "next-experiment-queue-ranker"
+    ],
+    "implementation_steps": [
+      "Create a repo-local policy document, e.g. `docs/research-methods/parsimonious-probe-policy.md`, defining the decision ladder: exact symbolic derivation first, analytic estimates second, tiny numeric probe third, full simulation only as evidence-only and out of proof promotion.",
+      "Define probe classes: `symbolic_formula`, `analytic_estimate`, `bounded_numeric_search`, `toy_model_execution`, `external_lattice_evidence`, and `not_needed`.",
+      "State the Yang-Mills-specific current default: use symbolic determinant and PSD inequalities for the finite quotient problem; use numeric search only to find falsifier parameter regions or test bound sharpness.",
+      "Add a proof-safety rule that no numeric result may be promoted beyond `validated_probe`, `calibration_only`, or `evidence_task` without an analytic transfer certificate.",
+      "Add explicit examples: three-by-three quotient determinant, quotient phase holonomy, boundary OPE coefficient estimates, noncommuting limit toy functions, and spectral-measure tail examples."
+    ],
+    "validation_commands": [
+      "python agentic/scripts/validate_todos.py",
+      "python agentic/scripts/validate_skill_depth.py"
+    ],
+    "required_artifact": [
+      "docs/research-methods/parsimonious-probe-policy.md",
+      "agentic/todos/parsimonious_probe_todos.yaml"
+    ],
+    "acceptance_criteria": [
+      "The policy states that symbolic derivation and hand estimates are preferred over simulation when formulas are tractable.",
+      "The policy distinguishes tiny local probes from full lattice gauge simulation.",
+      "The policy defines exact statuses for computation outputs and forbids proof promotion from numerical evidence alone.",
+      "The policy includes Yang-Mills examples and target-agnostic rules."
+    ],
+    "blocked_by": [],
+    "evidence": [
+      "file:agentic/todos/parsimonious_probe_todos.yaml",
+      "cmd:python agentic/scripts/validate_todos.py",
+      "file:docs/research-methods/parsimonious-probe-policy.md",
+      "file:requirements-pmp.txt",
+      "cmd:.venv-pmp/bin/python agentic/scripts/validate_symbolic_matrix_probe.py",
+      "cmd:.venv-pmp/bin/python agentic/scripts/validate_analytic_estimate_obligations.py",
+      "cmd:.venv-pmp/bin/python agentic/scripts/validate_bounded_numeric_probe.py",
+      "cmd:.venv-pmp/bin/python agentic/scripts/validate_parsimonious_probe_integration.py",
+      "cmd:.venv-pmp/bin/python agentic/scripts/validate_discovery_marathon_report.py",
+      "cmd:.venv-pmp/bin/python agentic/scripts/validate_task_skill_registry.py",
+      "cmd:.venv-pmp/bin/python agentic/scripts/validate_todos.py"
+    ],
+    "review_date": "2026-08-09",
+    "failure_modes": [
+      "The workflow starts running simulations because they are available rather than because they answer a decision question.",
+      "Numerical probes are treated as evidence for Yang-Mills instead of as local falsifier or calibration tools.",
+      "The policy is Yang-Mills-specific and cannot guide future qualitative reasoning tasks."
+    ],
+    "status": "resolved",
+    "resolution_summary": "Implemented as the PMP parsimonious probe layer: symbolic-first policy and schema, exact finite-matrix symbolic probe, analytic estimate obligation extraction, guarded bounded numeric probe, graph/report integration, fixtures, validators, registry entries, and full-gate wiring."
+  },
+  {
+    "id": "PMP-002",
+    "type": "workflow_todo",
+    "phase": "probe-decision-contract",
+    "owner": "agentic/spec",
+    "priority": "critical",
+    "risk_class": "uncontrolled-computation-entering-discovery-loop",
+    "title": "Create a probe decision packet schema",
+    "intent": "Represent the decision to derive, estimate, probe numerically, defer, or reject computation as structured data that can enter queue ranking and graph updates.",
+    "conceptual_model": "The loop needs a typed gate before computation. A probe decision packet should state the unresolved qualitative question, mathematical carrier, why symbolic derivation does or does not suffice, what a numeric probe would decide, required dependencies, transfer boundary, and allowed epistemic status. This prevents computation from becoming an unbounded side quest.",
+    "use_skills": [
+      "qualitative-toy-model-builder",
+      "abducer-obligation-gatekeeper",
+      "entailment-gap-auditor",
+      "next-experiment-queue-ranker"
+    ],
+    "implementation_steps": [
+      "Create `agentic/spec/parsimonious_probe_decision.schema.json`.",
+      "Require fields for `decision`, `carrier`, `question`, `symbolic_first_attempt`, `analytic_estimate_target`, `numeric_probe_if_needed`, `dependencies`, `transfer_boundary`, `epistemic_status`, `source_cycle_ids`, and `validation_handoff`.",
+      "Allowed decisions should include `derive_symbolically`, `estimate_analytically`, `run_bounded_numeric_probe`, `defer_until_variables_typed`, `defer_until_framework_available`, `external_evidence_only`, and `not_needed`.",
+      "Require every `run_bounded_numeric_probe` decision to state a bounded parameter domain, stopping condition, expected decision value, and non-proof boundary.",
+      "Require every `external_evidence_only` decision to state why the result cannot affect proof obligations directly."
+    ],
+    "validation_commands": [
+      "python -m json.tool agentic/spec/parsimonious_probe_decision.schema.json",
+      "python agentic/scripts/validate_todos.py"
+    ],
+    "required_artifact": [
+      "agentic/spec/parsimonious_probe_decision.schema.json"
+    ],
+    "acceptance_criteria": [
+      "Probe decisions are represented as data rather than prose.",
+      "Numeric probes cannot be specified without bounded domains and decision criteria.",
+      "The schema distinguishes symbolic formulas, analytic estimates, tiny numeric probes, and external evidence.",
+      "The schema can encode the current quotient determinant and holonomy problem."
+    ],
+    "blocked_by": [
+      "PMP-001"
+    ],
+    "evidence": [
+      "file:agentic/todos/parsimonious_probe_todos.yaml",
+      "cmd:python agentic/scripts/validate_todos.py",
+      "file:agentic/spec/parsimonious_probe_decision.schema.json",
+      "cmd:.venv-pmp/bin/python agentic/scripts/validate_symbolic_matrix_probe.py",
+      "cmd:.venv-pmp/bin/python agentic/scripts/validate_analytic_estimate_obligations.py",
+      "cmd:.venv-pmp/bin/python agentic/scripts/validate_bounded_numeric_probe.py",
+      "cmd:.venv-pmp/bin/python agentic/scripts/validate_parsimonious_probe_integration.py",
+      "cmd:.venv-pmp/bin/python agentic/scripts/validate_discovery_marathon_report.py",
+      "cmd:.venv-pmp/bin/python agentic/scripts/validate_task_skill_registry.py",
+      "cmd:.venv-pmp/bin/python agentic/scripts/validate_todos.py"
+    ],
+    "review_date": "2026-08-09",
+    "failure_modes": [
+      "The packet validates shape but does not force a reason why computation is necessary.",
+      "The schema lacks transfer boundaries and lets computation update proof status directly.",
+      "The decision vocabulary is too generic to control Yang-Mills finite-matrix probes."
+    ],
+    "status": "resolved",
+    "resolution_summary": "Implemented as the PMP parsimonious probe layer: symbolic-first policy and schema, exact finite-matrix symbolic probe, analytic estimate obligation extraction, guarded bounded numeric probe, graph/report integration, fixtures, validators, registry entries, and full-gate wiring."
+  },
+  {
+    "id": "PMP-003",
+    "type": "workflow_todo",
+    "phase": "symbolic-finite-matrix-probes",
+    "owner": "agentic/scripts",
+    "priority": "critical",
+    "risk_class": "numeric-search-before-exact-matrix-algebra",
+    "title": "Implement symbolic finite-matrix probes before numeric search",
+    "intent": "Provide exact symbolic derivations for the current finite quotient problem so the workflow does not simulate formulas that are easy to derive.",
+    "conceptual_model": "The current Yang-Mills progress needs exact finite-matrix algebra: normalized Hermitian quotient matrices, three-by-three determinant conditions, phase holonomy, diagonal rephasing, real modulus quotient, and PSD tests. These can be derived symbolically and should be the first probe layer. Numeric search should only enter after exact formulas identify a parameter region or inequality whose sharpness needs exploration.",
+    "use_skills": [
+      "qualitative-toy-model-builder",
+      "dimensional-symmetry-constraint-checker",
+      "qualitative-physics-falsifier",
+      "kb-deduce"
+    ],
+    "implementation_steps": [
+      "Create a small script such as `agentic/scripts/build_symbolic_matrix_probe.py`.",
+      "Use a symbolic backend if available, ideally SymPy, but keep a no-dependency fallback for the known three-by-three determinant formula.",
+      "Emit `agentic/reports/symbolic_matrix_probe/latest.json` and `.md` with determinant formula, PSD conditions, phase-holonomy definition, coboundary condition, and failure inequalities.",
+      "Mark the report status as `symbolic_formula`, not `simulation`.",
+      "Include the exact formula for `det Q = 1-rho12^2-rho23^2-rho13^2+2 rho12 rho23 rho13 cos(Phi)` and the assumptions under which it is valid."
+    ],
+    "validation_commands": [
+      "python agentic/scripts/build_symbolic_matrix_probe.py",
+      "python agentic/scripts/validate_symbolic_matrix_probe.py",
+      "python agentic/scripts/validate_todos.py"
+    ],
+    "required_artifact": [
+      "agentic/scripts/build_symbolic_matrix_probe.py",
+      "agentic/scripts/validate_symbolic_matrix_probe.py",
+      "agentic/reports/symbolic_matrix_probe/latest.json",
+      "agentic/reports/symbolic_matrix_probe/latest.md"
+    ],
+    "acceptance_criteria": [
+      "The script produces exact formula-level output without requiring numeric sampling.",
+      "The report states validity assumptions, held-fixed variables, and non-proof boundaries.",
+      "The output identifies which analytic Yang-Mills estimates remain: boundary OPE data, additive contact control, quotient phase, and modulus quotient positivity.",
+      "The validator fails if the report calls the formula a simulation or proof."
+    ],
+    "blocked_by": [
+      "PMP-002"
+    ],
+    "evidence": [
+      "file:agentic/todos/parsimonious_probe_todos.yaml",
+      "cmd:python agentic/scripts/validate_todos.py",
+      "file:agentic/scripts/build_symbolic_matrix_probe.py",
+      "file:agentic/scripts/validate_symbolic_matrix_probe.py",
+      "file:agentic/reports/symbolic_matrix_probe/latest.json",
+      "file:agentic/reports/symbolic_matrix_probe/latest.md",
+      "cmd:.venv-pmp/bin/python agentic/scripts/validate_symbolic_matrix_probe.py",
+      "cmd:.venv-pmp/bin/python agentic/scripts/validate_analytic_estimate_obligations.py",
+      "cmd:.venv-pmp/bin/python agentic/scripts/validate_bounded_numeric_probe.py",
+      "cmd:.venv-pmp/bin/python agentic/scripts/validate_parsimonious_probe_integration.py",
+      "cmd:.venv-pmp/bin/python agentic/scripts/validate_discovery_marathon_report.py",
+      "cmd:.venv-pmp/bin/python agentic/scripts/validate_task_skill_registry.py",
+      "cmd:.venv-pmp/bin/python agentic/scripts/validate_todos.py"
+    ],
+    "review_date": "2026-08-09",
+    "failure_modes": [
+      "The probe uses numeric sampling for a determinant formula that should be exact.",
+      "The report omits assumptions for normalized Hermitian three-by-three matrices.",
+      "The symbolic result is treated as Yang-Mills proof rather than finite-matrix bridge algebra."
+    ],
+    "status": "resolved",
+    "resolution_summary": "Implemented as the PMP parsimonious probe layer: symbolic-first policy and schema, exact finite-matrix symbolic probe, analytic estimate obligation extraction, guarded bounded numeric probe, graph/report integration, fixtures, validators, registry entries, and full-gate wiring."
+  },
+  {
+    "id": "PMP-004",
+    "type": "workflow_todo",
+    "phase": "analytic-estimate-targets",
+    "owner": "agentic/scripts",
+    "priority": "high",
+    "risk_class": "formula-without-estimate-obligations",
+    "title": "Extract analytic estimate obligations from symbolic probes",
+    "intent": "Translate symbolic finite-matrix formulas into the exact Yang-Mills estimates the discovery loop should try to prove or falsify.",
+    "conceptual_model": "Once the finite determinant and holonomy formulas are known, the hard work is analytic: estimate boundary OPE factors B, collar correlations N, additive contacts C, quotient phase Phi, and real modulus quotient minors in the same reflected Wilson observable algebra. The workflow should convert formulas into estimate obligations rather than running simulations.",
+    "use_skills": [
+      "limit-convergence-behavior-auditor",
+      "physics-regime-map-builder",
+      "abducer-obligation-gatekeeper",
+      "entailment-gap-auditor"
+    ],
+    "implementation_steps": [
+      "Create a builder such as `agentic/scripts/build_analytic_estimate_obligations.py` that reads symbolic matrix probe output and recent cycle packets.",
+      "Emit obligations for boundary OPE extraction, additive contact vanishing or positivity, quotient phase/coboundary control, modulus quotient PSD, and same-theory observable realization.",
+      "For each obligation, state the mathematical object, validity regime, source cycles, formula dependency, what would certify it, and what would falsify it.",
+      "Feed high-value obligations into the next-experiment queue and qualitative graph as proof obligations or falsifier tasks.",
+      "Require that each obligation distinguish finite-matrix algebra from Yang-Mills analytic content."
+    ],
+    "validation_commands": [
+      "python agentic/scripts/build_analytic_estimate_obligations.py",
+      "python agentic/scripts/validate_analytic_estimate_obligations.py",
+      "python agentic/scripts/validate_discovery_marathon_report.py"
+    ],
+    "required_artifact": [
+      "agentic/scripts/build_analytic_estimate_obligations.py",
+      "agentic/scripts/validate_analytic_estimate_obligations.py",
+      "agentic/reports/analytic_estimate_obligations/latest.json",
+      "agentic/reports/analytic_estimate_obligations/latest.md"
+    ],
+    "acceptance_criteria": [
+      "The report turns symbolic formulas into analytic proof obligations.",
+      "Every obligation cites source cycles and the formula dependency it comes from.",
+      "The queue receives estimate tasks before numeric probes unless a numeric probe has explicit decision value.",
+      "The validator rejects obligations that collapse finite-matrix algebra into Yang-Mills proof."
+    ],
+    "blocked_by": [
+      "PMP-003"
+    ],
+    "evidence": [
+      "file:agentic/todos/parsimonious_probe_todos.yaml",
+      "cmd:python agentic/scripts/validate_todos.py",
+      "file:agentic/scripts/build_analytic_estimate_obligations.py",
+      "file:agentic/scripts/validate_analytic_estimate_obligations.py",
+      "file:agentic/reports/analytic_estimate_obligations/latest.json",
+      "file:agentic/reports/analytic_estimate_obligations/latest.md",
+      "cmd:.venv-pmp/bin/python agentic/scripts/validate_symbolic_matrix_probe.py",
+      "cmd:.venv-pmp/bin/python agentic/scripts/validate_analytic_estimate_obligations.py",
+      "cmd:.venv-pmp/bin/python agentic/scripts/validate_bounded_numeric_probe.py",
+      "cmd:.venv-pmp/bin/python agentic/scripts/validate_parsimonious_probe_integration.py",
+      "cmd:.venv-pmp/bin/python agentic/scripts/validate_discovery_marathon_report.py",
+      "cmd:.venv-pmp/bin/python agentic/scripts/validate_task_skill_registry.py",
+      "cmd:.venv-pmp/bin/python agentic/scripts/validate_todos.py"
+    ],
+    "review_date": "2026-08-09",
+    "failure_modes": [
+      "The workflow stops at the determinant formula and does not say what Yang-Mills estimate is needed.",
+      "Analytic obligations are too broad to rank or test.",
+      "The queue starts with numeric search despite available symbolic estimate targets."
+    ],
+    "status": "resolved",
+    "resolution_summary": "Implemented as the PMP parsimonious probe layer: symbolic-first policy and schema, exact finite-matrix symbolic probe, analytic estimate obligation extraction, guarded bounded numeric probe, graph/report integration, fixtures, validators, registry entries, and full-gate wiring."
+  },
+  {
+    "id": "PMP-005",
+    "type": "workflow_todo",
+    "phase": "bounded-numeric-probe-gate",
+    "owner": "agentic/scripts",
+    "priority": "high",
+    "risk_class": "unbounded-or-low-value-numeric-exploration",
+    "title": "Add a bounded numeric probe gate for rare cases where estimates need calibration",
+    "intent": "Permit tiny numerical probes only when they can answer a concrete qualitative decision question that symbolic formulas and hand estimates have not resolved.",
+    "conceptual_model": "Numerics can be useful after formulas exist: search for parameter regions where pairwise minors pass but determinant fails, test the sharpness of phase or modulus bounds, or illustrate noncommuting-limit traps. The probe must have bounded parameter domains, deterministic seeds if random sampling is used, small runtime, and an explicit demotion/promotion effect. It must never be treated as Yang-Mills evidence.",
+    "use_skills": [
+      "qualitative-toy-model-builder",
+      "qualitative-physics-falsifier",
+      "next-experiment-queue-ranker",
+      "gedanken-followup-planner"
+    ],
+    "implementation_steps": [
+      "Create a script such as `agentic/scripts/run_bounded_numeric_probe.py` with subcommands for `quotient-determinant-search`, `phase-bound-sharpness`, and `noncommuting-limit-toy`.",
+      "Use NumPy/SciPy only if available or declared in the project dependency setup; otherwise provide a pure-Python bounded grid fallback for small parameter searches.",
+      "Require a probe decision packet before execution.",
+      "Emit `agentic/reports/bounded_numeric_probe/latest.json` and `.md` with executed command, bounded domain, result, qualitative lesson, and transfer boundary.",
+      "Add validator checks that runtime scope, parameter bounds, non-proof status, and deterministic reproducibility are present."
+    ],
+    "validation_commands": [
+      "python agentic/scripts/run_bounded_numeric_probe.py --help",
+      "python agentic/scripts/validate_bounded_numeric_probe.py",
+      "python agentic/scripts/validate_todos.py"
+    ],
+    "required_artifact": [
+      "agentic/scripts/run_bounded_numeric_probe.py",
+      "agentic/scripts/validate_bounded_numeric_probe.py",
+      "agentic/reports/bounded_numeric_probe/latest.json",
+      "agentic/reports/bounded_numeric_probe/latest.md"
+    ],
+    "acceptance_criteria": [
+      "Numeric probes cannot run without a bounded domain and decision question.",
+      "The default current Yang-Mills workflow can proceed without numeric dependencies if symbolic and estimate routes suffice.",
+      "Any numeric output is labeled `calibration_only`, `validated_probe`, or `falsifier_candidate`, never proof progress.",
+      "The validator rejects unbounded scans, missing transfer boundaries, and missing source decision packets."
+    ],
+    "blocked_by": [
+      "PMP-002",
+      "PMP-003",
+      "PMP-004"
+    ],
+    "evidence": [
+      "file:agentic/todos/parsimonious_probe_todos.yaml",
+      "cmd:python agentic/scripts/validate_todos.py",
+      "file:agentic/scripts/run_bounded_numeric_probe.py",
+      "file:agentic/scripts/validate_bounded_numeric_probe.py",
+      "file:agentic/reports/bounded_numeric_probe/latest.json",
+      "file:agentic/reports/bounded_numeric_probe/latest.md",
+      "cmd:.venv-pmp/bin/python agentic/scripts/validate_symbolic_matrix_probe.py",
+      "cmd:.venv-pmp/bin/python agentic/scripts/validate_analytic_estimate_obligations.py",
+      "cmd:.venv-pmp/bin/python agentic/scripts/validate_bounded_numeric_probe.py",
+      "cmd:.venv-pmp/bin/python agentic/scripts/validate_parsimonious_probe_integration.py",
+      "cmd:.venv-pmp/bin/python agentic/scripts/validate_discovery_marathon_report.py",
+      "cmd:.venv-pmp/bin/python agentic/scripts/validate_task_skill_registry.py",
+      "cmd:.venv-pmp/bin/python agentic/scripts/validate_todos.py"
+    ],
+    "review_date": "2026-08-09",
+    "failure_modes": [
+      "The numeric gate becomes a general simulation runner.",
+      "The probe scans wide parameter spaces without a mathematical reason.",
+      "The report lets numeric search outrank available analytic estimate obligations."
+    ],
+    "status": "resolved",
+    "resolution_summary": "Implemented as the PMP parsimonious probe layer: symbolic-first policy and schema, exact finite-matrix symbolic probe, analytic estimate obligation extraction, guarded bounded numeric probe, graph/report integration, fixtures, validators, registry entries, and full-gate wiring."
+  },
+  {
+    "id": "PMP-006",
+    "type": "dependency_todo",
+    "phase": "framework-selection",
+    "owner": "config",
+    "priority": "medium",
+    "risk_class": "heavy-framework-installed-before-need-is-proven",
+    "title": "Specify optional external frameworks for symbolic and bounded numeric probes",
+    "intent": "Choose a minimal dependency strategy that supports symbolic finite-matrix work and tiny numeric searches without pulling in inappropriate heavy simulation frameworks.",
+    "conceptual_model": "SymPy is the right optional foundation for exact symbolic finite-matrix algebra. NumPy and SciPy are the right optional foundation for bounded numeric searches and constrained optimization. QuTiP is not a natural foundation for the current Yang-Mills finite quotient problem, because it is oriented toward open quantum system dynamics. Lattice-QCD frameworks such as Chroma, openQCD, Bridge++, or Grid should remain out of scope unless the workflow explicitly creates an evidence-only lattice simulation lane.",
+    "use_skills": [
+      "prism-dependency-cartographer",
+      "qualitative-toy-model-builder",
+      "looper-release-promoter"
+    ],
+    "implementation_steps": [
+      "Document optional dependencies in `docs/research-methods/parsimonious-probe-policy.md` and project config if dependency management exists.",
+      "Prefer optional extras or clear installation notes for `sympy`, `numpy`, and `scipy` rather than making them hard requirements for the whole workflow.",
+      "State that `qutip` is not selected for the current finite-matrix and spectral-measure probe layer.",
+      "State that Chroma, openQCD, Bridge++, Grid, and similar lattice frameworks are evidence-only future integrations and not part of the proof-control loop.",
+      "Add dependency checks that make builders gracefully skip optional symbolic/numeric engines when unavailable and use exact hard-coded formulas or pure-Python fallback where appropriate."
+    ],
+    "validation_commands": [
+      "python agentic/scripts/validate_api_key_config.py",
+      "python agentic/scripts/validate_todos.py"
+    ],
+    "required_artifact": [
+      "docs/research-methods/parsimonious-probe-policy.md",
+      "config/README.md"
+    ],
+    "acceptance_criteria": [
+      "The dependency policy selects SymPy for symbolic algebra and NumPy/SciPy for rare bounded numeric search.",
+      "The dependency policy explicitly excludes QuTiP as the current foundation unless a future quantum-dynamics task justifies it.",
+      "The dependency policy keeps lattice simulation frameworks outside the proof loop.",
+      "The workflow degrades gracefully when optional packages are not installed."
+    ],
+    "blocked_by": [
+      "PMP-001"
+    ],
+    "evidence": [
+      "file:agentic/todos/parsimonious_probe_todos.yaml",
+      "cmd:python agentic/scripts/validate_todos.py",
+      "file:config/README.md",
+      "file:requirements-pmp.txt",
+      "dir:.venv-pmp",
+      "cmd:.venv-pmp/bin/python agentic/scripts/validate_symbolic_matrix_probe.py",
+      "cmd:.venv-pmp/bin/python agentic/scripts/validate_analytic_estimate_obligations.py",
+      "cmd:.venv-pmp/bin/python agentic/scripts/validate_bounded_numeric_probe.py",
+      "cmd:.venv-pmp/bin/python agentic/scripts/validate_parsimonious_probe_integration.py",
+      "cmd:.venv-pmp/bin/python agentic/scripts/validate_discovery_marathon_report.py",
+      "cmd:.venv-pmp/bin/python agentic/scripts/validate_task_skill_registry.py",
+      "cmd:.venv-pmp/bin/python agentic/scripts/validate_todos.py"
+    ],
+    "review_date": "2026-08-09",
+    "failure_modes": [
+      "The project installs a heavy simulation framework before a decision need exists.",
+      "QuTiP is used because it is quantum-flavored rather than because it matches the finite-matrix carrier.",
+      "Optional dependencies become required for unrelated discovery workflows."
+    ],
+    "status": "resolved",
+    "resolution_summary": "Implemented as the PMP parsimonious probe layer: symbolic-first policy and schema, exact finite-matrix symbolic probe, analytic estimate obligation extraction, guarded bounded numeric probe, graph/report integration, fixtures, validators, registry entries, and full-gate wiring."
+  },
+  {
+    "id": "PMP-007",
+    "type": "workflow_todo",
+    "phase": "queue-and-graph-integration",
+    "owner": "agentic/scripts",
+    "priority": "high",
+    "risk_class": "probe-results-not-controlling-next-action",
+    "title": "Integrate symbolic and probe outputs into the queue and qualitative graph",
+    "intent": "Ensure symbolic formulas, analytic estimate obligations, and rare bounded numeric probes affect the discovery loop only through controlled queue items and graph annotations.",
+    "conceptual_model": "The probe layer is useful only if it changes what the loop does next: prove an estimate, test a falsifier, demote a route, quarantine a proxy, or update a graph edge as a conceptual probe. Formula and probe artifacts should not live as isolated reports. They should attach to the qualitative graph and next-experiment queue with epistemic status and anti-drift controls.",
+    "use_skills": [
+      "next-experiment-queue-ranker",
+      "qualitative-physics-falsifier",
+      "limit-convergence-behavior-auditor",
+      "show-reasoning"
+    ],
+    "implementation_steps": [
+      "Extend the qualitative graph builder or a companion integrator to read symbolic matrix probe and analytic estimate obligation reports.",
+      "Attach formula-derived obligations to relevant edges such as `rel-phase-falsifies-gram-transfer` and `rel-boundary-factor-to-phase`.",
+      "Add next-experiment queue entries for analytic estimates before any bounded numeric probe unless the probe decision packet explains why numerics are needed.",
+      "Render symbolic/probe provenance in the discovery marathon HTML or reasoning monitor.",
+      "Validate that probe outputs keep statuses such as `symbolic_formula`, `proof_obligation`, `calibration_only`, or `falsifier_candidate`."
+    ],
+    "validation_commands": [
+      "python agentic/scripts/generate_discovery_marathon_html.py",
+      "python agentic/scripts/validate_discovery_marathon_report.py",
+      "python agentic/scripts/build_subworkflow_integration_tests.py"
+    ],
+    "required_artifact": [
+      "agentic/scripts/generate_discovery_marathon_html.py",
+      "agentic/reports/discovery_marathon/full_timeline.html",
+      "agentic/reports/subworkflow_integration/latest.json"
+    ],
+    "acceptance_criteria": [
+      "Formula and estimate obligations are visible in the queue and graph rather than isolated reports.",
+      "The queue ranks analytic estimate tasks ahead of numeric probes unless numerics have a stronger stated decision value.",
+      "The graph preserves non-proof epistemic status for all probe-derived edges.",
+      "The integration test verifies that current cycle progress feeds the probe layer."
+    ],
+    "blocked_by": [
+      "PMP-003",
+      "PMP-004",
+      "PMP-005"
+    ],
+    "evidence": [
+      "file:agentic/todos/parsimonious_probe_todos.yaml",
+      "cmd:python agentic/scripts/validate_todos.py",
+      "file:agentic/scripts/build_qualitative_mechanistic_graph.py",
+      "file:agentic/scripts/generate_discovery_marathon_html.py",
+      "file:agentic/reports/discovery_marathon/full_timeline.html",
+      "file:agentic/reports/subworkflow_integration/latest.json",
+      "cmd:.venv-pmp/bin/python agentic/scripts/validate_symbolic_matrix_probe.py",
+      "cmd:.venv-pmp/bin/python agentic/scripts/validate_analytic_estimate_obligations.py",
+      "cmd:.venv-pmp/bin/python agentic/scripts/validate_bounded_numeric_probe.py",
+      "cmd:.venv-pmp/bin/python agentic/scripts/validate_parsimonious_probe_integration.py",
+      "cmd:.venv-pmp/bin/python agentic/scripts/validate_discovery_marathon_report.py",
+      "cmd:.venv-pmp/bin/python agentic/scripts/validate_task_skill_registry.py",
+      "cmd:.venv-pmp/bin/python agentic/scripts/validate_todos.py"
+    ],
+    "review_date": "2026-08-09",
+    "failure_modes": [
+      "Formula reports are generated but never influence next-cycle selection.",
+      "Numeric probe results are shown more prominently than analytic obligations.",
+      "Graph edges silently upgrade probe results to established relations."
+    ],
+    "status": "resolved",
+    "resolution_summary": "Implemented as the PMP parsimonious probe layer: symbolic-first policy and schema, exact finite-matrix symbolic probe, analytic estimate obligation extraction, guarded bounded numeric probe, graph/report integration, fixtures, validators, registry entries, and full-gate wiring."
+  },
+  {
+    "id": "PMP-008",
+    "type": "test_todo",
+    "phase": "integration-and-regression-tests",
+    "owner": "tests",
+    "priority": "high",
+    "risk_class": "parsimonious-policy-regresses-under-pressure",
+    "title": "Add integration tests for parsimonious probe decisions",
+    "intent": "Test that the workflow chooses symbolic formulas and analytic estimates before numeric probes on the current Yang-Mills progress, while still permitting bounded numeric probes when they are genuinely useful.",
+    "conceptual_model": "The integration test should situate probe decisions on cycles 198-205. It should verify that the current quotient determinant and holonomy problem routes first to symbolic finite-matrix algebra and analytic estimate obligations. It should also include adversarial cases where a user asks for simulation but the correct decision is `derive_symbolically` or `estimate_analytically`, plus a case where a bounded numeric falsifier search is justified after formulas are known.",
+    "use_skills": [
+      "prism-generative-validation-runner",
+      "qualitative-toy-model-builder",
+      "next-experiment-queue-ranker",
+      "review-reasoner-epistemologist"
+    ],
+    "implementation_steps": [
+      "Create tests or a validator script such as `agentic/scripts/validate_parsimonious_probe_integration.py`.",
+      "Use current discovery marathon cycles 198-205 as live fixtures for the finite quotient problem.",
+      "Assert that determinant/PSD/holonomy cases choose `derive_symbolically` or `estimate_analytically` before numeric search.",
+      "Assert that numeric probe cases include bounded domains, decision value, transfer boundary, and non-proof status.",
+      "Add at least one adversarial fixture where a full lattice simulation request is rejected or marked `external_evidence_only`."
+    ],
+    "validation_commands": [
+      "python agentic/scripts/validate_parsimonious_probe_integration.py",
+      "python agentic/scripts/validate_todos.py",
+      "python agentic/scripts/agentic_check.py"
+    ],
+    "required_artifact": [
+      "agentic/scripts/validate_parsimonious_probe_integration.py",
+      "tests/fixtures/parsimonious_probe/"
+    ],
+    "acceptance_criteria": [
+      "The validator fails if current Yang-Mills determinant formulas are routed to numeric simulation before symbolic derivation.",
+      "The validator passes a bounded numeric probe only when formula and estimate stages have named a decision question.",
+      "The validator rejects full simulation as proof progress.",
+      "The full proof gate includes the parsimonious probe integration checks."
+    ],
+    "blocked_by": [
+      "PMP-001",
+      "PMP-002",
+      "PMP-003",
+      "PMP-004",
+      "PMP-005",
+      "PMP-007"
+    ],
+    "evidence": [
+      "file:agentic/todos/parsimonious_probe_todos.yaml",
+      "cmd:python agentic/scripts/validate_todos.py",
+      "file:agentic/scripts/validate_parsimonious_probe_integration.py",
+      "file:tests/fixtures/parsimonious_probe/symbolic_before_numeric.json",
+      "file:tests/fixtures/parsimonious_probe/bounded_numeric_allowed.json",
+      "file:tests/fixtures/parsimonious_probe/full_simulation_rejected.json",
+      "file:tests/generative/test_parsimonious_probe_quality.md",
+      "cmd:.venv-pmp/bin/python agentic/scripts/validate_symbolic_matrix_probe.py",
+      "cmd:.venv-pmp/bin/python agentic/scripts/validate_analytic_estimate_obligations.py",
+      "cmd:.venv-pmp/bin/python agentic/scripts/validate_bounded_numeric_probe.py",
+      "cmd:.venv-pmp/bin/python agentic/scripts/validate_parsimonious_probe_integration.py",
+      "cmd:.venv-pmp/bin/python agentic/scripts/validate_discovery_marathon_report.py",
+      "cmd:.venv-pmp/bin/python agentic/scripts/validate_task_skill_registry.py",
+      "cmd:.venv-pmp/bin/python agentic/scripts/validate_todos.py"
+    ],
+    "review_date": "2026-08-09",
+    "failure_modes": [
+      "The test only checks file existence and not the symbolic-before-numeric decision.",
+      "The test cannot distinguish tiny numeric probes from full simulations.",
+      "The full gate omits the new parsimonious probe validator."
+    ],
+    "status": "resolved",
+    "resolution_summary": "Implemented as the PMP parsimonious probe layer: symbolic-first policy and schema, exact finite-matrix symbolic probe, analytic estimate obligation extraction, guarded bounded numeric probe, graph/report integration, fixtures, validators, registry entries, and full-gate wiring."
+  },
+  {
+    "id": "PMP-009",
+    "type": "release_todo",
+    "phase": "proof-gate-integration",
+    "owner": "agentic/scripts",
+    "priority": "medium",
+    "risk_class": "probe-layer-regresses-silently",
+    "title": "Wire parsimonious probe checks into the full Abducer gate",
+    "intent": "Protect the symbolic-first and bounded-probe policy with the same release discipline as the qualitative and Gedanken subworkflows.",
+    "conceptual_model": "Once probe decisions affect the queue or graph, the full gate must ensure that symbolic formulas, analytic estimate obligations, optional numeric probes, reports, and dependency policy remain coherent. The gate should fail if numeric probes bypass the decision schema, if proof status is overclaimed, or if dependency choices drift toward heavyweight simulation frameworks without an explicit evidence-only scope.",
+    "use_skills": [
+      "looper-release-promoter",
+      "looper-workflow-contract-governor",
+      "next-experiment-queue-ranker"
+    ],
+    "implementation_steps": [
+      "Add symbolic/probe builders and validators to `agentic/scripts/agentic_check.py` in the correct order.",
+      "Add artifacts and validators to `registry/tasks/discovery-marathon/task_registry.json`.",
+      "Extend release or integration reports to summarize symbolic formula count, analytic obligation count, bounded numeric probe count, and proof-safety status.",
+      "Run the full gate and record evidence in this TODO file when implemented."
+    ],
+    "validation_commands": [
+      "python agentic/scripts/validate_task_skill_registry.py",
+      "python agentic/scripts/agentic_check.py",
+      "python agentic/scripts/validate_todos.py"
+    ],
+    "required_artifact": [
+      "agentic/scripts/agentic_check.py",
+      "registry/tasks/discovery-marathon/task_registry.json",
+      "agentic/reports/subworkflow_integration/latest.json"
+    ],
+    "acceptance_criteria": [
+      "The full gate fails if parsimonious probe decisions or reports are invalid.",
+      "The task registry lists the probe policy, schema, builders, validators, reports, and optional dependency policy.",
+      "Release reporting distinguishes symbolic formulas, analytic obligations, bounded numeric probes, and external evidence.",
+      "Numeric probe artifacts remain non-proof statuses."
+    ],
+    "blocked_by": [
+      "PMP-001",
+      "PMP-002",
+      "PMP-003",
+      "PMP-004",
+      "PMP-005",
+      "PMP-006",
+      "PMP-007",
+      "PMP-008"
+    ],
+    "evidence": [
+      "file:agentic/todos/parsimonious_probe_todos.yaml",
+      "cmd:python agentic/scripts/validate_todos.py",
+      "file:agentic/scripts/agentic_check.py",
+      "file:registry/tasks/discovery-marathon/task_registry.json",
+      "file:agentic/reports/subworkflow_integration/latest.json",
+      "cmd:.venv-pmp/bin/python agentic/scripts/validate_symbolic_matrix_probe.py",
+      "cmd:.venv-pmp/bin/python agentic/scripts/validate_analytic_estimate_obligations.py",
+      "cmd:.venv-pmp/bin/python agentic/scripts/validate_bounded_numeric_probe.py",
+      "cmd:.venv-pmp/bin/python agentic/scripts/validate_parsimonious_probe_integration.py",
+      "cmd:.venv-pmp/bin/python agentic/scripts/validate_discovery_marathon_report.py",
+      "cmd:.venv-pmp/bin/python agentic/scripts/validate_task_skill_registry.py",
+      "cmd:.venv-pmp/bin/python agentic/scripts/validate_todos.py"
+    ],
+    "review_date": "2026-08-09",
+    "failure_modes": [
+      "The probe layer works manually but is skipped by the full gate.",
+      "The registry omits optional dependency policy or validators.",
+      "Release reports blur symbolic formulas and numeric probes into proof progress."
+    ],
+    "status": "resolved",
+    "resolution_summary": "Implemented as the PMP parsimonious probe layer: symbolic-first policy and schema, exact finite-matrix symbolic probe, analytic estimate obligation extraction, guarded bounded numeric probe, graph/report integration, fixtures, validators, registry entries, and full-gate wiring."
+  }
+]

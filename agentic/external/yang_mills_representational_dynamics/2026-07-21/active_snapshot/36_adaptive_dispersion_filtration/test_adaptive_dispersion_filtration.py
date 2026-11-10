@@ -1,0 +1,20 @@
+import unittest
+from adaptive_dispersion_filtration import *
+class Tests(unittest.TestCase):
+ def test_complete_table(self):self.assertTrue(adaptive_certificate({():.1,(0,):.1,(1,):.1},2,.2,1,0).history_uniform)
+ def test_missing_history(self):self.assertFalse(adaptive_certificate({():.1},2,.2,1,0).history_uniform)
+ def test_excess_probability(self):self.assertFalse(adaptive_certificate({():.3},1,.2,1,0).history_uniform)
+ def test_domination(self):self.assertTrue(adaptive_certificate({():.1},1,.2,1,0).bernoulli_domination_certified)
+ def test_subcritical(self):self.assertTrue(adaptive_certificate({():.001},1,.002,18,.1).strict_cluster_subcritical)
+ def test_supercritical(self):self.assertFalse(adaptive_certificate({():.1},1,.2,18,.1).strict_cluster_subcritical)
+ def test_split(self):self.assertTrue(split_ceiling(.001,.001,.003)["target_met"])
+ def test_split_fail(self):self.assertFalse(split_ceiling(.002,.002,.003)["target_met"])
+ def test_schema(self):self.assertTrue(all(RetainedStateSchema().to_dict().values()))
+ def test_moment_counterexample(self):self.assertFalse(moment_only_counterexample()["dominated_by_bernoulli_half"])
+ def test_erasure(self):self.assertFalse(erased_state_counterexample()["state_erasure_preserves_rare_entry"])
+ def test_physical_open(self):self.assertFalse(calibration()["physical_history_table_proved"])
+ def test_invalid_probability(self):
+  with self.assertRaises(ValueError):adaptive_certificate({():2},1,.2)
+ def test_invalid_split(self):
+  with self.assertRaises(ValueError):split_ceiling(-1,0,.2)
+if __name__=="__main__":unittest.main()

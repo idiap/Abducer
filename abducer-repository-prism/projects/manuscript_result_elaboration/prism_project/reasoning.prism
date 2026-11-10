@@ -1,0 +1,61 @@
+# Function: bound a draft, test one admissible extension, and decide manuscript readiness.
+# Input: PaperDraft is assessed into a ManuscriptResultScope.
+# Types: ManuscriptExtensionHypothesis proposes expansion; ExtensionValidityAssessment tests it.
+# Output: ManuscriptReadinessAssessment returns disposition, integrated draft, validation, and readiness decision.
+# Routing: proof-required continues to theorem proof; paper-ready accepts; stalled stops.
+# Boundary: extension cannot silently enlarge the result or erase open obligations.
+# Layer: high-level epistemic topology only.
+# Metadata: workflows/manifest.json (`manuscript_result_elaboration`).
+
+from types import (
+    ManuscriptReadinessAssessment,
+    ExpansionValidation,
+    ExtensionValidityAssessment,
+    IntegratedPaperDraft,
+    ManuscriptReadinessDisposition,
+    PaperDraft,
+    PaperReadinessDecision,
+    ManuscriptExtensionHypothesis,
+    ManuscriptResultScope,
+)
+
+from occurrences import (
+    AbductiveManuscriptExtensionHypothesisFormation,
+    EvidentialManuscriptReadinessAssessment,
+    EvidentialManuscriptResultScopeAssessment,
+    ManuscriptReadinessInput,
+    RefutationalManuscriptExtensionAssessment,
+)
+
+from relations import (
+    CalibratesManuscriptReadiness,
+    ConstrainsManuscriptExtension,
+    TestsManuscriptExtension,
+)
+
+reasoning ManuscriptResultElaboration(
+    paper: PaperDraft,
+) -> Generated[ManuscriptReadinessAssessment]:
+    sequence:
+        # Scope assessment prevents extension from silently enlarging the result.
+        [e0: EvidentialManuscriptResultScopeAssessment(paper)]
+        # Abduction proposes an extension only within that assessed scope.
+        [a0: AbductiveManuscriptExtensionHypothesisFormation(e0.value)] by ConstrainsManuscriptExtension
+        # Refutation tests the extension before readiness can integrate it.
+        [r0: RefutationalManuscriptExtensionAssessment(a0.value)] by TestsManuscriptExtension
+        [e1: EvidentialManuscriptReadinessAssessment(ManuscriptReadinessInput(
+            extension_hypothesis = a0.value,
+            validity_assessment = r0.value,
+        ))] by CalibratesManuscriptReadiness
+
+    return e1
+
+# HANDOFF (non-executable): when e1 finds that a new theorem needs proof, adapt
+# the readiness result to ProofQueueItem and offer it to theorem_proof_delivery.
+# The handoff preserves finite/asymptotic/continuum scope, prior-art boundaries,
+# provenance, taints, and open obligations and adds no proof or truth warrant.
+# ACCEPT (non-executable): paper_ready accepts only after IntegratedPaperDraft,
+# ExpansionValidation, and PaperReadinessDecision pass the declared exit gate;
+# acceptance does not silently remove unresolved markers.
+# STOP (non-executable): a stalled flow stops. Step failures stop or quarantine
+# as declared; rejected or quarantined readiness is not acceptance.

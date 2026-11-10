@@ -1,0 +1,673 @@
+[
+  {
+    "id": "FSC-001",
+    "type": "workflow_todo",
+    "phase": "subgoal-control-contract",
+    "owner": "agentic/spec",
+    "priority": "critical",
+    "risk_class": "uncontrolled-formula-persistence",
+    "title": "Define the universal formal subgoal control contract",
+    "intent": "Make every formula, lemma, route subclaim, or proof obligation carry an explicit decision about whether to persist, adapt, backtrack, pivot, quarantine, or stop.",
+    "conceptual_model": "A formal subgoal is worth continuing only while it remains attached to the essential target object and failed attempts keep producing mathematically informative structure. The control contract should separate hard proof debt from low-value drift: hard proof debt can justify adaptation, but repeated identical blockers without new information must force backtracking, pivoting, quarantine, or stop.",
+    "use_skills": [
+      "long-horizon-route-portfolio-manager",
+      "abducer-refinement-route-ranker",
+      "abducer-obligation-gatekeeper",
+      "epistemic-status-ledger"
+    ],
+    "implementation_steps": [
+      "Create a reusable subgoal_control object shape with decision, target_object_link, essential_commitments_preserved, current_blocker, adaptation_history, learning_from_failure, next_action, pivot_trigger, quarantine_trigger, and stop_condition.",
+      "Define the allowed decisions as persist_adapt, backtrack, pivot, quarantine, and stop.",
+      "State the universal criteria for each decision in documentation and schema-facing validation text.",
+      "Ensure the contract is domain-agnostic: target commitments are supplied by the active target packet rather than hard-coded to any one mathematics or physics problem."
+    ],
+    "validation_commands": [
+      "python agentic/scripts/validate_todos.py"
+    ],
+    "required_artifact": [
+      "agentic/spec/formal_subgoal_control.schema.json",
+      "docs/research-methods/formal-subgoal-control-policy.md",
+      "agentic/todos/formal_subgoal_control_todos.yaml"
+    ],
+    "acceptance_criteria": [
+      "The contract can represent persistence, adaptation, backtracking, pivoting, quarantine, and stop without domain-specific hard-coding.",
+      "The decision criteria explicitly distinguish difficult-but-live proof debt from repeated low-information failure.",
+      "Every decision requires a target-object link, a blocker or success condition, and a next workflow action.",
+      "The contract forbids silent continuation after repeated identical blockers."
+    ],
+    "blocked_by": [],
+    "evidence": [
+      "file:agentic/todos/formal_subgoal_control_todos.yaml",
+      "cmd:python agentic/scripts/validate_todos.py"
+    ],
+    "review_date": "2026-08-09",
+    "failure_modes": [
+      "The policy becomes a prose recommendation that is not represented in artifacts.",
+      "The decision enum becomes a score threshold rather than a generative interpretation of mathematical progress.",
+      "The contract is accidentally tied to Yang-Mills vocabulary instead of the active target ledger."
+    ],
+    "exit_criteria": [
+      "Downstream workflow components can consume a stable subgoal_control object without inventing their own decision language."
+    ],
+    "status": "resolved",
+    "completed_utc": "2026-07-09T00:00:00Z",
+    "resolution_summary": "Implemented through the formal subgoal-control schema, policy docs, candidate and ranking control packets, monitor packet and HTML subgoal tab, reasoning events, long-horizon aggregation, validators, gate policy, skill contracts, workflow contracts, tests, and generative validation probes."
+  },
+  {
+    "id": "FSC-002",
+    "type": "workflow_todo",
+    "phase": "candidate-generation",
+    "owner": "agentic/scripts",
+    "priority": "critical",
+    "risk_class": "inert-obligation-generation",
+    "title": "Attach subgoal control to generated hypothesis candidates",
+    "intent": "Ensure generated candidates and formula-like obligations enter the discovery loop with explicit control semantics instead of becoming unexamined work items.",
+    "conceptual_model": "Candidate generation is the first point where a formula subgoal can become either a genuine mathematical route or a distracting obligation. The generator should not merely state a subclaim; it should say why this subclaim is still attached to the target, what would be learned by trying it, and what failure would teach the loop.",
+    "use_skills": [
+      "abducer-mediation-candidate-generator",
+      "abducer-conceptual-pressure-formalizer",
+      "abducer-obligation-gatekeeper"
+    ],
+    "implementation_steps": [
+      "Extend `agentic/scripts/build_hypothesis_exploration_map.py` so every candidate ranking and route blueprint includes subgoal_control.",
+      "Populate subgoal_control from target commitments, validation packets, route obligations, failure tests, and source grounding.",
+      "Require the generator to name why persistence would be informative before it can assign proof_queue or discovery_branch.",
+      "Add candidate-level adaptation_history and repeated_blocker_count fields when prior run evidence exists."
+    ],
+    "validation_commands": [
+      "python agentic/scripts/build_hypothesis_exploration_map.py",
+      "python agentic/scripts/validate_hypothesis_exploration.py",
+      "python agentic/scripts/validate_todos.py"
+    ],
+    "required_artifact": [
+      "agentic/scripts/build_hypothesis_exploration_map.py",
+      "artifacts/hegelian/hypothesis_exploration_map.json",
+      "artifacts/hegelian/candidate_rankings.json"
+    ],
+    "acceptance_criteria": [
+      "Every generated candidate has a subgoal_control object.",
+      "Candidates promoted to proof_queue or discovery_branch explain why persistence is licensed.",
+      "Candidates whose evidence is analogy-only, transferred, or insufficiently typed are routed to evidence_task, quarantine, reject, or stop.",
+      "The candidate record names the failure that would trigger backtracking or pivoting."
+    ],
+    "blocked_by": [
+      "FSC-001"
+    ],
+    "evidence": [
+      "file:agentic/scripts/build_hypothesis_exploration_map.py",
+      "file:artifacts/hegelian/hypothesis_exploration_map.json",
+      "cmd:python agentic/scripts/validate_hypothesis_exploration.py"
+    ],
+    "review_date": "2026-08-09",
+    "failure_modes": [
+      "Subgoal control is copied as boilerplate and does not reflect the candidate's actual mathematical pressure.",
+      "Route disposition changes but subgoal_control remains unchanged.",
+      "Candidates can still enter the proof queue with no target-object link."
+    ],
+    "exit_criteria": [
+      "Candidate generation produces route objects that already know what would justify persistence, backtracking, pivoting, quarantine, or stop."
+    ],
+    "status": "resolved",
+    "completed_utc": "2026-07-09T00:00:00Z",
+    "resolution_summary": "Implemented through the formal subgoal-control schema, policy docs, candidate and ranking control packets, monitor packet and HTML subgoal tab, reasoning events, long-horizon aggregation, validators, gate policy, skill contracts, workflow contracts, tests, and generative validation probes."
+  },
+  {
+    "id": "FSC-003",
+    "type": "workflow_todo",
+    "phase": "route-ranking-and-disposition",
+    "owner": "skills/orchestration",
+    "priority": "critical",
+    "risk_class": "route-disposition-drift",
+    "title": "Make route disposition depend on subgoal-control decisions",
+    "intent": "Route candidates through proof_queue, discovery_branch, revision_loop, evidence_task, quarantine, reject, or stop using the universal control criteria.",
+    "conceptual_model": "A route disposition is a work-loop promise. If a candidate is marked proof_queue, the loop is promising that the subgoal is target-preserving, proof-relevant, and not merely attractive prose. If it is quarantined, the loop is preserving possible learning while denying proof authority. The route ranker should therefore treat subgoal control as a required input, not an optional explanation.",
+    "use_skills": [
+      "abducer-refinement-route-ranker",
+      "long-horizon-route-portfolio-manager",
+      "counterfactual-route-prober",
+      "regime-shift-auditor"
+    ],
+    "implementation_steps": [
+      "Update the route ranker skill instructions to require a Subgoal Control Decision section.",
+      "Require `route_disposition` and `subgoal_control.decision` to be compatible.",
+      "Add demotion logic for repeated blockers with no new learning.",
+      "Add counterfactual checks showing whether removing target-link or evidence-link information changes the decision."
+    ],
+    "validation_commands": [
+      "python agentic/scripts/validate_hypothesis_exploration.py",
+      "python -m unittest tests.discovery.test_hypothesis_exploration_replay -q",
+      "python agentic/scripts/validate_skill_depth.py"
+    ],
+    "required_artifact": [
+      "skills/orchestration/abducer-refinement-route-ranker/SKILL.md",
+      "skills/orchestration/long-horizon-route-portfolio-manager/SKILL.md",
+      "agentic/scripts/validate_hypothesis_exploration.py"
+    ],
+    "acceptance_criteria": [
+      "Route disposition cannot be assigned without a compatible subgoal_control decision.",
+      "Repeated identical blockers cannot remain proof_queue or discovery_branch without a new adaptation rationale.",
+      "Evidence-only or analogy-only routes cannot enter proof_queue without a transfer certificate.",
+      "Counterfactual evidence-removal tests can demote or quarantine affected candidates."
+    ],
+    "blocked_by": [
+      "FSC-001",
+      "FSC-002"
+    ],
+    "evidence": [
+      "file:skills/orchestration/abducer-refinement-route-ranker/SKILL.md",
+      "file:skills/orchestration/long-horizon-route-portfolio-manager/SKILL.md",
+      "cmd:python agentic/scripts/validate_hypothesis_exploration.py"
+    ],
+    "review_date": "2026-08-09",
+    "failure_modes": [
+      "The workflow ranks candidates by surface relevance while ignoring repeated failure history.",
+      "The ranker mistakes a hard problem for a low-value route without checking whether failures are informative.",
+      "Quarantine is treated as deletion rather than a controlled evidence archive."
+    ],
+    "exit_criteria": [
+      "Every route disposition is explainable as a subgoal-control consequence."
+    ],
+    "status": "resolved",
+    "completed_utc": "2026-07-09T00:00:00Z",
+    "resolution_summary": "Implemented through the formal subgoal-control schema, policy docs, candidate and ranking control packets, monitor packet and HTML subgoal tab, reasoning events, long-horizon aggregation, validators, gate policy, skill contracts, workflow contracts, tests, and generative validation probes."
+  },
+  {
+    "id": "FSC-004",
+    "type": "report_todo",
+    "phase": "reasoning-monitor-packet",
+    "owner": "agentic/scripts",
+    "priority": "critical",
+    "risk_class": "hidden-reorientation-policy",
+    "title": "Embed formal subgoal control in the reasoning monitor packet",
+    "intent": "Make the active monitor packet explain why the loop is adapting, backtracking, pivoting, quarantining, or stopping subgoals.",
+    "conceptual_model": "The monitor is the public control surface for the reasoning loop. It must not merely show candidate routes; it must show the live strategy governing those routes. This is where a user should see why the system is not pivoting too early, why it is not persisting blindly, and what evidence would change the decision.",
+    "use_skills": [
+      "reasoning-log-compiler",
+      "long-horizon-route-portfolio-manager",
+      "epistemic-status-ledger"
+    ],
+    "implementation_steps": [
+      "Extend `agentic/scripts/build_reasoning_monitor_packet.py` with a formal_subgoal_control_policy section.",
+      "Add per-route subgoal_control summaries to reorientation_control.route_assessments.",
+      "Extend bounded_reflection_contract with a no-silent-repetition rule for repeated blockers.",
+      "Require the packet to include active decision counts and stale repeated-blocker warnings."
+    ],
+    "validation_commands": [
+      "python agentic/scripts/build_reasoning_monitor_packet.py",
+      "python agentic/scripts/validate_reasoning_monitor.py",
+      "python agentic/scripts/validate_todos.py"
+    ],
+    "required_artifact": [
+      "agentic/scripts/build_reasoning_monitor_packet.py",
+      "agentic/spec/reasoning_monitor_packet.schema.json",
+      "agentic/reports/reasoning_monitor/latest.json"
+    ],
+    "acceptance_criteria": [
+      "The monitor packet includes universal decision criteria for persist_adapt, backtrack, pivot, quarantine, and stop.",
+      "Each active route assessment includes a current subgoal-control decision and a decision rationale.",
+      "The bounded reflection contract prohibits repeated adaptation without new learning.",
+      "The packet distinguishes strategic hard proof debt from low-value drift."
+    ],
+    "blocked_by": [
+      "FSC-001",
+      "FSC-002",
+      "FSC-003"
+    ],
+    "evidence": [
+      "file:agentic/scripts/build_reasoning_monitor_packet.py",
+      "file:agentic/reports/reasoning_monitor/latest.json",
+      "cmd:python agentic/scripts/validate_reasoning_monitor.py"
+    ],
+    "review_date": "2026-08-09",
+    "failure_modes": [
+      "The monitor renders a strategy recommendation but does not expose the underlying control rule.",
+      "Backtracking and pivoting are explained only in prose and not tied to route IDs.",
+      "The packet can pass even when active routes lack control decisions."
+    ],
+    "exit_criteria": [
+      "The monitor packet can answer for every live subgoal: why continue, why backtrack, why pivot, why quarantine, or why stop."
+    ],
+    "status": "resolved",
+    "completed_utc": "2026-07-09T00:00:00Z",
+    "resolution_summary": "Implemented through the formal subgoal-control schema, policy docs, candidate and ranking control packets, monitor packet and HTML subgoal tab, reasoning events, long-horizon aggregation, validators, gate policy, skill contracts, workflow contracts, tests, and generative validation probes."
+  },
+  {
+    "id": "FSC-005",
+    "type": "workflow_todo",
+    "phase": "reasoning-event-log",
+    "owner": "agentic/scripts",
+    "priority": "high",
+    "risk_class": "uninterpreted-failure",
+    "title": "Record subgoal-control decisions in reasoning events",
+    "intent": "Turn failed or stalled subgoal attempts into explicit strategic learning events.",
+    "conceptual_model": "Failure should not disappear into a score or a changed route label. When a subgoal stalls, the event log should explain what the attempted derivation taught: a missing premise, a regime mismatch, an unsupported transfer, an untyped object, or a reason to pivot. This preserves long-horizon memory without exposing hidden chain-of-thought.",
+    "use_skills": [
+      "reasoning-log-compiler",
+      "epistemic-status-ledger",
+      "premise-completeness-prober"
+    ],
+    "implementation_steps": [
+      "Add `subgoal_control_decision` as a recognized reasoning event type.",
+      "Extend `agentic/scripts/build_reasoning_event_log.py` so failure, reorientation, proof-debt, and candidate events can carry subgoal_control.",
+      "Require each decision event to name attempted_subgoal, observed_blocker, learning_from_failure, decision, next_action, and evidence_paths.",
+      "Preserve the public-summary discipline: log controlled reasoning summaries, not hidden reasoning traces."
+    ],
+    "validation_commands": [
+      "python agentic/scripts/build_reasoning_event_log.py",
+      "python agentic/scripts/validate_reasoning_event_logs.py",
+      "python agentic/scripts/validate_todos.py"
+    ],
+    "required_artifact": [
+      "agentic/spec/reasoning_event_log_schema.json",
+      "agentic/scripts/build_reasoning_event_log.py",
+      "agentic/traces/reasoning_events/ITER-0001.jsonl",
+      "agentic/reports/reasoning_progress/latest.json"
+    ],
+    "acceptance_criteria": [
+      "The event schema accepts subgoal_control_decision events with required control fields.",
+      "The event log includes at least one control decision whenever a route is backtracked, pivot-tested, quarantined, or stopped.",
+      "Failed attempts describe what was learned and what action follows.",
+      "The validator rejects control events without evidence paths or target commitments."
+    ],
+    "blocked_by": [
+      "FSC-001",
+      "FSC-004"
+    ],
+    "evidence": [
+      "file:agentic/scripts/build_reasoning_event_log.py",
+      "file:agentic/spec/reasoning_event_log_schema.json",
+      "cmd:python agentic/scripts/validate_reasoning_event_logs.py"
+    ],
+    "review_date": "2026-08-09",
+    "failure_modes": [
+      "The event log records that a route changed but not why it changed.",
+      "The event log treats failure as a dead end rather than a source of strategic information.",
+      "Subgoal-control events include generic language with no mathematical object or target commitment."
+    ],
+    "exit_criteria": [
+      "A long-horizon reader can reconstruct the strategic learning path from public event logs."
+    ],
+    "status": "resolved",
+    "completed_utc": "2026-07-09T00:00:00Z",
+    "resolution_summary": "Implemented through the formal subgoal-control schema, policy docs, candidate and ranking control packets, monitor packet and HTML subgoal tab, reasoning events, long-horizon aggregation, validators, gate policy, skill contracts, workflow contracts, tests, and generative validation probes."
+  },
+  {
+    "id": "FSC-006",
+    "type": "workflow_todo",
+    "phase": "long-horizon-probe",
+    "owner": "agentic/scripts",
+    "priority": "high",
+    "risk_class": "long-horizon-drift",
+    "title": "Aggregate subgoal-control state in the long-horizon probe",
+    "intent": "Use the long-horizon workflow to detect routes that are persisting without enough new mathematical information.",
+    "conceptual_model": "Long-horizon control is not just keeping many branches alive. It is maintaining an ecology of live, informative subgoals while preventing repeated sterile attempts from occupying the proof queue. The probe should therefore aggregate control decisions across cycles and identify when adaptation has become drift.",
+    "use_skills": [
+      "long-horizon-route-portfolio-manager",
+      "looper-workflow-contract-governor",
+      "counterfactual-route-prober"
+    ],
+    "implementation_steps": [
+      "Extend `agentic/scripts/run_long_horizon_probe.py` to report subgoal_control_summary.",
+      "Track counts for persist_adapt, backtrack, pivot, quarantine, stop, and stale_repeated_blocker.",
+      "Flag any active proof_queue or discovery_branch item lacking a subgoal_control decision.",
+      "Require the probe to recommend a concrete control action when repeated blockers exceed the configured limit."
+    ],
+    "validation_commands": [
+      "python agentic/scripts/run_long_horizon_probe.py",
+      "python agentic/scripts/validate_long_horizon_probe.py",
+      "python -m unittest tests.domains.test_long_horizon_yang_mills_probe -q"
+    ],
+    "required_artifact": [
+      "agentic/scripts/run_long_horizon_probe.py",
+      "agentic/reports/long_horizon/latest.json",
+      "agentic/reports/long_horizon/latest.md"
+    ],
+    "acceptance_criteria": [
+      "The long-horizon report includes decision counts and stale repeated-blocker warnings.",
+      "No active route can remain live without subgoal-control state.",
+      "Repeated blockers trigger backtrack, pivot, quarantine, or stop recommendations unless a new adaptation rationale is attached.",
+      "The report explains what the loop learned from non-paying strategies."
+    ],
+    "blocked_by": [
+      "FSC-004",
+      "FSC-005"
+    ],
+    "evidence": [
+      "file:agentic/scripts/run_long_horizon_probe.py",
+      "file:agentic/reports/long_horizon/latest.json",
+      "cmd:python agentic/scripts/validate_long_horizon_probe.py"
+    ],
+    "review_date": "2026-08-09",
+    "failure_modes": [
+      "The probe reports many active routes but cannot tell which ones are strategically stale.",
+      "The probe recommends pivoting because of difficulty rather than because certified failures repeated.",
+      "The probe preserves low-value routes because they once had high target relevance."
+    ],
+    "exit_criteria": [
+      "The long-horizon workflow actively manages formula subgoals as a controlled portfolio."
+    ],
+    "status": "resolved",
+    "completed_utc": "2026-07-09T00:00:00Z",
+    "resolution_summary": "Implemented through the formal subgoal-control schema, policy docs, candidate and ranking control packets, monitor packet and HTML subgoal tab, reasoning events, long-horizon aggregation, validators, gate policy, skill contracts, workflow contracts, tests, and generative validation probes."
+  },
+  {
+    "id": "FSC-007",
+    "type": "report_todo",
+    "phase": "html-strategy-rendering",
+    "owner": "agentic/scripts",
+    "priority": "high",
+    "risk_class": "invisible-control-plane",
+    "title": "Render formal subgoal control in the strategy HTML",
+    "intent": "Make persistence, adaptation, backtracking, pivoting, quarantine, and stop decisions visible in the dynamic report.",
+    "conceptual_model": "The HTML report should let a user inspect the current strategy as an evolving intellectual story. The formal subgoal-control section should answer: what are we trying, why is it still worth trying, what did not pay off, what did we learn, and what would force a change of route.",
+    "use_skills": [
+      "reasoning-report-renderer",
+      "show-reasoning",
+      "epistemic-status-ledger"
+    ],
+    "implementation_steps": [
+      "Add a Formal Subgoal Control panel or tab to `agentic/scripts/generate_reasoning_monitor_html.py`.",
+      "Render per-route cards with current decision, target link, blocker, learning, next action, pivot trigger, quarantine trigger, and stop condition.",
+      "Include an explanation of why a current route is not being pivoted away from if decision is persist_adapt.",
+      "Ensure LaTeX and escaped comparison symbols render correctly inside control explanations."
+    ],
+    "validation_commands": [
+      "python agentic/scripts/generate_reasoning_monitor_html.py",
+      "python agentic/scripts/validate_reasoning_monitor.py",
+      "python -m unittest tests.reporting.test_reasoning_monitor_html -q"
+    ],
+    "required_artifact": [
+      "agentic/scripts/generate_reasoning_monitor_html.py",
+      "agentic/reports/reasoning_monitor/latest.html",
+      "tests/reporting/test_reasoning_monitor_html.py"
+    ],
+    "acceptance_criteria": [
+      "The HTML report exposes the universal decision table and live per-route subgoal-control cards.",
+      "Each active route explains why persistence, backtracking, pivoting, quarantine, or stop is currently appropriate.",
+      "Failed strategies include what did not pay off and what was learned.",
+      "Equations and comparison symbols in strategy text render correctly."
+    ],
+    "blocked_by": [
+      "FSC-004",
+      "FSC-005",
+      "FSC-006"
+    ],
+    "evidence": [
+      "file:agentic/scripts/generate_reasoning_monitor_html.py",
+      "file:agentic/reports/reasoning_monitor/latest.html",
+      "cmd:python -m unittest tests.reporting.test_reasoning_monitor_html -q"
+    ],
+    "review_date": "2026-08-09",
+    "failure_modes": [
+      "The HTML shows route labels but hides the strategic reason for continuing or pivoting.",
+      "The section becomes a generic checklist rather than a route-specific explanation.",
+      "The renderer breaks mathematical text in control explanations."
+    ],
+    "exit_criteria": [
+      "A user can inspect the report and understand the control logic behind each active mathematical subgoal."
+    ],
+    "status": "resolved",
+    "completed_utc": "2026-07-09T00:00:00Z",
+    "resolution_summary": "Implemented through the formal subgoal-control schema, policy docs, candidate and ranking control packets, monitor packet and HTML subgoal tab, reasoning events, long-horizon aggregation, validators, gate policy, skill contracts, workflow contracts, tests, and generative validation probes."
+  },
+  {
+    "id": "FSC-008",
+    "type": "test_todo",
+    "phase": "validators-and-gates",
+    "owner": "agentic/scripts",
+    "priority": "critical",
+    "risk_class": "unchecked-control-drift",
+    "title": "Validate subgoal-control coverage across the workflow",
+    "intent": "Make the universal criteria enforceable by deterministic validators and repo-wide gates.",
+    "conceptual_model": "Generative reasoning can decide whether a failure is informative, but deterministic validators can still enforce the structural discipline: every active subgoal must name its target link, blocker, decision, next action, and demotion triggers. The validators should fail closed when the loop tries to continue without these fields.",
+    "use_skills": [
+      "looper-workflow-contract-governor",
+      "abducer-obligation-gatekeeper",
+      "kb-end-to-end-proof-critic"
+    ],
+    "implementation_steps": [
+      "Extend `agentic/scripts/validate_hypothesis_exploration.py` to require subgoal_control on candidates and rankings.",
+      "Extend `agentic/scripts/validate_reasoning_monitor.py` to require formal_subgoal_control_policy and per-route decisions.",
+      "Extend `agentic/scripts/validate_reasoning_event_logs.py` to validate subgoal_control_decision events.",
+      "Extend `agentic/scripts/validate_long_horizon_probe.py` to reject stale repeated blockers without action.",
+      "Add focused unit tests for missing target links, repeated blockers, analogy-only proof promotion, and incompatible route dispositions."
+    ],
+    "validation_commands": [
+      "python agentic/scripts/validate_hypothesis_exploration.py",
+      "python agentic/scripts/validate_reasoning_monitor.py",
+      "python agentic/scripts/validate_reasoning_event_logs.py",
+      "python agentic/scripts/validate_long_horizon_probe.py",
+      "python -m unittest tests.discovery.test_hypothesis_exploration_replay tests.reporting.test_reasoning_monitor_html tests.domains.test_long_horizon_yang_mills_probe -q"
+    ],
+    "required_artifact": [
+      "agentic/scripts/validate_hypothesis_exploration.py",
+      "agentic/scripts/validate_reasoning_monitor.py",
+      "agentic/scripts/validate_reasoning_event_logs.py",
+      "agentic/scripts/validate_long_horizon_probe.py",
+      "tests/discovery/test_hypothesis_exploration_replay.py",
+      "tests/reporting/test_reasoning_monitor_html.py",
+      "tests/domains/test_long_horizon_yang_mills_probe.py"
+    ],
+    "acceptance_criteria": [
+      "Validators reject active candidates without subgoal_control.",
+      "Validators reject proof_queue promotion when subgoal_control is quarantine, stop, or incompatible.",
+      "Validators reject repeated blockers without a backtrack, pivot, quarantine, stop, or new adaptation rationale.",
+      "Tests cover both passing and failing control cases."
+    ],
+    "blocked_by": [
+      "FSC-002",
+      "FSC-004",
+      "FSC-005",
+      "FSC-006"
+    ],
+    "evidence": [
+      "file:agentic/scripts/validate_hypothesis_exploration.py",
+      "file:agentic/scripts/validate_reasoning_monitor.py",
+      "file:agentic/scripts/validate_long_horizon_probe.py",
+      "cmd:python agentic/scripts/validate_todos.py"
+    ],
+    "review_date": "2026-08-09",
+    "failure_modes": [
+      "Validators only check field presence and allow generic boilerplate control rationales.",
+      "Validators fail to detect route_disposition and subgoal_control incompatibility.",
+      "The test suite validates the Yang-Mills case but not the universal contract."
+    ],
+    "exit_criteria": [
+      "The repo has deterministic gates that prevent uncontrolled formula-subgoal persistence."
+    ],
+    "status": "resolved",
+    "completed_utc": "2026-07-09T00:00:00Z",
+    "resolution_summary": "Implemented through the formal subgoal-control schema, policy docs, candidate and ranking control packets, monitor packet and HTML subgoal tab, reasoning events, long-horizon aggregation, validators, gate policy, skill contracts, workflow contracts, tests, and generative validation probes."
+  },
+  {
+    "id": "FSC-009",
+    "type": "hook_todo",
+    "phase": "gate-policy-and-agentic-check",
+    "owner": "agentic/scripts",
+    "priority": "high",
+    "risk_class": "optional-control-policy",
+    "title": "Wire subgoal control into gate policy and agentic_check",
+    "intent": "Ensure formal subgoal control is part of the canonical workflow gate rather than an optional report feature.",
+    "conceptual_model": "If subgoal control is not in the gate path, it will regress into commentary. The work loop should refuse to publish or promote a reasoning iteration when active routes lack control decisions, when repeated failures are ignored, or when evidence-only routes masquerade as proof obligations.",
+    "use_skills": [
+      "looper-hook-policy-maintainer",
+      "looper-release-promoter",
+      "looper-workflow-contract-governor"
+    ],
+    "implementation_steps": [
+      "Update `agentic/scripts/apply_gate_policy.py` so missing or incompatible subgoal_control blocks warn or fail depending on route disposition.",
+      "Add subgoal-control validators to `agentic/scripts/agentic_check.py` after hypothesis exploration and before monitor/report validation.",
+      "Register any new schema, report, or validator artifacts in workflow contracts when needed.",
+      "Ensure release promotion summaries cite subgoal-control state before recommending promote, quarantine, rollback, or escalation."
+    ],
+    "validation_commands": [
+      "python agentic/scripts/apply_gate_policy.py",
+      "python agentic/scripts/agentic_check.py",
+      "python agentic/scripts/validate_workflow_contracts.py"
+    ],
+    "required_artifact": [
+      "agentic/scripts/apply_gate_policy.py",
+      "agentic/scripts/agentic_check.py",
+      "agentic/registries/workflow_contracts.yaml",
+      "skills/control-plane/looper-release-promoter/SKILL.md"
+    ],
+    "acceptance_criteria": [
+      "Gate policy can block proof promotion for missing, stale, or incompatible subgoal-control state.",
+      "`agentic_check.py` runs the relevant subgoal-control validators.",
+      "Workflow contracts know about the new artifacts and validators.",
+      "Release promotion includes unresolved mathematical debt and the control action that governs the next loop."
+    ],
+    "blocked_by": [
+      "FSC-008"
+    ],
+    "evidence": [
+      "file:agentic/scripts/apply_gate_policy.py",
+      "file:agentic/scripts/agentic_check.py",
+      "file:agentic/registries/workflow_contracts.yaml",
+      "cmd:python agentic/scripts/validate_workflow_contracts.py"
+    ],
+    "review_date": "2026-08-09",
+    "failure_modes": [
+      "Subgoal control is visible in reports but absent from promotion gates.",
+      "The gate warns forever instead of failing unsafe promotions.",
+      "Release summaries claim progress without naming whether hard subgoals were adapted, backtracked, pivoted, quarantined, or stopped."
+    ],
+    "exit_criteria": [
+      "The canonical agentic check treats subgoal control as a required workflow invariant."
+    ],
+    "status": "resolved",
+    "completed_utc": "2026-07-09T00:00:00Z",
+    "resolution_summary": "Implemented through the formal subgoal-control schema, policy docs, candidate and ranking control packets, monitor packet and HTML subgoal tab, reasoning events, long-horizon aggregation, validators, gate policy, skill contracts, workflow contracts, tests, and generative validation probes."
+  },
+  {
+    "id": "FSC-010",
+    "type": "workflow_todo",
+    "phase": "skill-contract-updates",
+    "owner": "skills",
+    "priority": "high",
+    "risk_class": "skill-output-incoherence",
+    "title": "Update skills to emit Subgoal Control Decision sections",
+    "intent": "Make generative skills participate coherently in the universal subgoal-control loop.",
+    "conceptual_model": "The workflow can only be coherent if the skills that create, critique, rank, and promote mathematical routes speak the same control language. A discovery skill should say what could be learned; an evaluator should say what failed; a ranker should choose a disposition; a release skill should decide whether the iteration can be promoted or must be quarantined.",
+    "use_skills": [
+      "skill-depth-review",
+      "abducer-obligation-gatekeeper",
+      "kb-hypothesis-refutation-loop",
+      "kb-revision-loop",
+      "kb-contradiction-strategist",
+      "contradiction-route-auditor",
+      "show-reasoning",
+      "work"
+    ],
+    "implementation_steps": [
+      "Update discovery, evaluation, orchestration, and control-plane SKILL.md files that generate or route formula subgoals.",
+      "Require a `Subgoal Control Decision` output section with decision, target link, blocker, learning, next action, and demotion triggers.",
+      "Teach contradiction and refutation skills to distinguish informative failure from pivot-worthy failure.",
+      "Teach release and work-loop skills to consume subgoal_control rather than re-deciding from free-form prose."
+    ],
+    "validation_commands": [
+      "python agentic/scripts/validate_skill_depth.py",
+      "python agentic/scripts/validate_task_skill_registry.py",
+      "python agentic/scripts/validate_todos.py"
+    ],
+    "required_artifact": [
+      "skills/orchestration/abducer-refinement-route-ranker/SKILL.md",
+      "skills/orchestration/long-horizon-route-portfolio-manager/SKILL.md",
+      "skills/evaluation/abducer-obligation-gatekeeper/SKILL.md",
+      "skills/evaluation/kb-hypothesis-refutation-loop/SKILL.md",
+      "skills/evaluation/kb-revision-loop/SKILL.md",
+      "skills/reasoning/kb-contradiction-strategist/SKILL.md",
+      "skills/evaluation/contradiction-route-auditor/SKILL.md",
+      "skills/orchestration/show-reasoning/SKILL.md",
+      "skills/orchestration/work/SKILL.md",
+      "skills/control-plane/looper-release-promoter/SKILL.md"
+    ],
+    "acceptance_criteria": [
+      "Route-generating skills emit subgoal-control decisions for generated formula subgoals.",
+      "Evaluation skills can recommend backtrack, pivot, quarantine, or stop with reasons.",
+      "Orchestration skills preserve the decision through work-loop handoff.",
+      "Control-plane skills use subgoal-control evidence in promote, quarantine, rollback, or escalation decisions."
+    ],
+    "blocked_by": [
+      "FSC-001"
+    ],
+    "evidence": [
+      "file:skills/orchestration/abducer-refinement-route-ranker/SKILL.md",
+      "file:skills/orchestration/long-horizon-route-portfolio-manager/SKILL.md",
+      "file:skills/control-plane/looper-release-promoter/SKILL.md",
+      "cmd:python agentic/scripts/validate_skill_depth.py"
+    ],
+    "review_date": "2026-08-09",
+    "failure_modes": [
+      "Only one skill emits control decisions and the workflow loses the signal downstream.",
+      "Skills use the decision labels but omit target links and learning-from-failure.",
+      "The skill contract becomes deterministic boilerplate rather than generative mathematical interpretation."
+    ],
+    "exit_criteria": [
+      "All route-facing generative skills share one subgoal-control vocabulary and can be composed without semantic loss."
+    ],
+    "status": "resolved",
+    "completed_utc": "2026-07-09T00:00:00Z",
+    "resolution_summary": "Implemented through the formal subgoal-control schema, policy docs, candidate and ranking control packets, monitor packet and HTML subgoal tab, reasoning events, long-horizon aggregation, validators, gate policy, skill contracts, workflow contracts, tests, and generative validation probes."
+  },
+  {
+    "id": "FSC-011",
+    "type": "test_todo",
+    "phase": "generative-validation",
+    "owner": "tests/generative",
+    "priority": "high",
+    "risk_class": "shallow-control-language",
+    "title": "Add generative validation probes for subgoal-control quality",
+    "intent": "Validate that subgoal-control decisions are mathematically interpretive, target-aware, and not shallow deterministic placeholders.",
+    "conceptual_model": "A structural validator can require fields, but it cannot fully judge whether a persistence decision is intellectually honest. The generative validation layer should probe whether the loop can explain why a failed subgoal is still informative, why a pivot is warranted, and why an evidence-only route remains quarantined.",
+    "use_skills": [
+      "kb-end-to-end-proof-critic",
+      "review-reasoner-mathematician",
+      "review-reasoner-epistemologist",
+      "prism-generative-validation-runner"
+    ],
+    "implementation_steps": [
+      "Create generative probes covering an informative failed derivation, a repeated sterile blocker, an analogy-only route, and a premise-missing formula.",
+      "Define quality criteria for target-link specificity, mathematical-object specificity, failure-learning quality, and control-decision appropriateness.",
+      "Add a report under `tests/generative` or `agentic/reports/subgoal_control_validation` summarizing pass/fail observations and repair recommendations.",
+      "Ensure probes are universal and can be instantiated for targets beyond Yang-Mills."
+    ],
+    "validation_commands": [
+      "python agentic/scripts/validate_todos.py",
+      "python agentic/scripts/agentic_check.py"
+    ],
+    "required_artifact": [
+      "tests/generative/test_formal_subgoal_control_quality.md",
+      "agentic/reports/subgoal_control_validation/latest.md",
+      "agentic/reports/subgoal_control_validation/latest.json"
+    ],
+    "acceptance_criteria": [
+      "Generative probes distinguish hard-but-live proof debt from low-information repetition.",
+      "The validation report gives concrete examples of valid persistence, backtracking, pivoting, quarantine, and stop.",
+      "The probes reject generic language that lacks mathematical objects or target commitments.",
+      "The probes are written so a non-Yang-Mills target can reuse the same criteria."
+    ],
+    "blocked_by": [
+      "FSC-004",
+      "FSC-005",
+      "FSC-008"
+    ],
+    "evidence": [
+      "file:tests/generative/test_formal_subgoal_control_quality.md",
+      "file:agentic/reports/subgoal_control_validation/latest.md",
+      "cmd:python agentic/scripts/validate_todos.py"
+    ],
+    "review_date": "2026-08-09",
+    "failure_modes": [
+      "The generative probe rewards fluent explanation rather than control correctness.",
+      "The probe examples are too Yang-Mills-specific to validate the universal contract.",
+      "The validation report does not produce actionable repair instructions."
+    ],
+    "exit_criteria": [
+      "The workflow has both deterministic structure checks and generative quality checks for subgoal-control decisions."
+    ],
+    "status": "resolved",
+    "completed_utc": "2026-07-09T00:00:00Z",
+    "resolution_summary": "Implemented through the formal subgoal-control schema, policy docs, candidate and ranking control packets, monitor packet and HTML subgoal tab, reasoning events, long-horizon aggregation, validators, gate policy, skill contracts, workflow contracts, tests, and generative validation probes."
+  }
+]

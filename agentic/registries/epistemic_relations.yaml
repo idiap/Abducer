@@ -1,0 +1,101 @@
+{
+  "schema_version": "0.2",
+  "type_codes": ["D", "A", "I", "T", "C", "M", "R", "E"],
+  "state_conservation": [
+    "claim_identity",
+    "scope",
+    "provenance",
+    "taints",
+    "claim_ceiling",
+    "open_obligations"
+  ],
+  "relations": [
+    {
+      "id": "requires",
+      "source_types": ["*"],
+      "target_types": ["*"],
+      "warrant_effect": "none",
+      "description": "Structural content dependency; never implies support."
+    },
+    {
+      "id": "assume",
+      "source_types": ["A", "I", "T", "C", "M"],
+      "target_types": ["D"],
+      "warrant_effect": "candidate_taint_is_retained",
+      "description": "Use a candidate as an explicit premise without validating it."
+    },
+    {
+      "id": "test",
+      "source_types": ["D", "A", "I", "T", "C", "M"],
+      "target_types": ["R"],
+      "warrant_effect": "claim_becomes_refutation_target",
+      "description": "Submit a claim and its assumptions to bounded adversarial testing."
+    },
+    {
+      "id": "calibrate",
+      "source_types": ["D", "A", "I", "T", "C", "M", "R"],
+      "target_types": ["E"],
+      "warrant_effect": "status_only_no_new_substantive_claim",
+      "description": "Use claims, evidence, verdicts, and obligations to assign status."
+    },
+    {
+      "id": "constrain",
+      "source_types": ["E", "R"],
+      "target_types": ["D", "A", "I", "T", "C", "M", "R"],
+      "warrant_effect": "narrows_admissible_outputs",
+      "description": "Carry calibrated boundaries or defeaters into subsequent reasoning."
+    },
+    {
+      "id": "generalize",
+      "source_types": ["M", "C", "D"],
+      "target_types": ["I"],
+      "warrant_effect": "provisional_with_sampling_scope",
+      "description": "Treat multiple bounded outcomes as a scoped case base."
+    },
+    {
+      "id": "transfer",
+      "source_types": ["A", "I", "M", "D"],
+      "target_types": ["T"],
+      "warrant_effect": "preservation_obligations_added",
+      "description": "Enter an explicit source-target correspondence."
+    },
+    {
+      "id": "probe",
+      "source_types": ["A", "D", "I", "T"],
+      "target_types": ["C", "M"],
+      "warrant_effect": "model_or_contrast_scope_added",
+      "description": "Examine a claim through a controlled contrast or bounded model."
+    },
+    {
+      "id": "revise",
+      "source_types": ["E", "R"],
+      "target_types": ["D", "A", "I", "T", "C", "M"],
+      "warrant_effect": "new_claim_identity_linked_by_revises",
+      "description": "Start a revised occurrence while retaining the prior genealogy."
+    },
+    {
+      "id": "preserve",
+      "source_types": ["="],
+      "target_types": ["="],
+      "warrant_effect": "interface_and_type_conserved",
+      "description": "Explicitly preserve the same reasoning type and state interface."
+    }
+  ],
+  "join_policy": {
+    "choice": "branches_share_inputs_and_expose_unifiable_outputs",
+    "parallel": "scope_intersection_taint_union_obligation_union",
+    "optional": "downstream_accepts_identity_and_executed_paths"
+  },
+  "loop_policy": {
+    "finite_bound_required": true,
+    "observable_progress_measure_required": true,
+    "negative_results_retained": true,
+    "identical_replay_adds_evidence": false
+  },
+  "switch_policy": {
+    "calibrated_guard_required": true,
+    "state_conservation_required": true,
+    "destination_permission_required": true,
+    "global_cycle_budget_required": true
+  }
+}

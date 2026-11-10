@@ -1,0 +1,90 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://abducer.local/spec/discovery_proof_result_reflection_input_v2.schema.json",
+  "title": "Blind later-cycle reflection input derived from a proof-result request v2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "input_kind",
+    "input_id",
+    "content_digest",
+    "producer_operator_id",
+    "producer_receipt_id",
+    "producer_receipt_digest",
+    "source_request_id",
+    "source_request_digest",
+    "source_receipt_index_id",
+    "source_receipt_index_digest",
+    "target_id",
+    "run_id",
+    "consumer_cycle_id",
+    "consumer_prior_state_version",
+    "source_cycle_id",
+    "source_theory_generation",
+    "branch_id",
+    "formal_claim_digest",
+    "verdict_class",
+    "reflection_questions",
+    "preserved_uncertainties",
+    "forbidden_direct_updates",
+    "one_time_consumption",
+    "authority_nulls"
+  ],
+  "properties": {
+    "schema_version": {"const": 2},
+    "input_kind": {"const": "blind_proof_result_reflection_input"},
+    "input_id": {"$ref": "#/$defs/identifier"},
+    "content_digest": {"$ref": "#/$defs/digest"},
+    "producer_operator_id": {"const": "proof-result-reflection-intake"},
+    "producer_receipt_id": {"$ref": "#/$defs/identifier"},
+    "producer_receipt_digest": {"$ref": "#/$defs/digest"},
+    "source_request_id": {"$ref": "#/$defs/identifier"},
+    "source_request_digest": {"$ref": "#/$defs/digest"},
+    "source_receipt_index_id": {"$ref": "#/$defs/identifier"},
+    "source_receipt_index_digest": {"$ref": "#/$defs/digest"},
+    "target_id": {"$ref": "#/$defs/identifier"},
+    "run_id": {"$ref": "#/$defs/identifier"},
+    "consumer_cycle_id": {"$ref": "#/$defs/identifier"},
+    "consumer_prior_state_version": {"type": "integer", "minimum": 1},
+    "source_cycle_id": {"$ref": "#/$defs/identifier"},
+    "source_theory_generation": {"type": "integer", "minimum": 1},
+    "branch_id": {"$ref": "#/$defs/identifier"},
+    "formal_claim_digest": {"$ref": "#/$defs/digest"},
+    "verdict_class": {"enum": ["proof_validated", "counterexample_validated", "failed_premise_validated", "inconclusive", "not_evaluated"]},
+    "reflection_questions": {"type": "array", "minItems": 2, "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+    "preserved_uncertainties": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+    "forbidden_direct_updates": {
+      "type": "array",
+      "const": ["branch_status", "hypothesis_status", "conceptual_preference", "theory_schedule", "physics_claim"]
+    },
+    "one_time_consumption": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["request_status_before", "request_status_after", "consumer_cycle_must_differ", "descendant_commit_required", "active_current_literature_required"],
+      "properties": {
+        "request_status_before": {"const": "pending"},
+        "request_status_after": {"const": "consumed"},
+        "consumer_cycle_must_differ": {"const": true},
+        "descendant_commit_required": {"const": true},
+        "active_current_literature_required": {"const": true}
+      }
+    },
+    "authority_nulls": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["proof_authority", "truth_authority", "theory_selection_authority", "same_cycle_mutation_authority", "physics_authority"],
+      "properties": {
+        "proof_authority": {"const": false},
+        "truth_authority": {"const": false},
+        "theory_selection_authority": {"const": false},
+        "same_cycle_mutation_authority": {"const": false},
+        "physics_authority": {"const": false}
+      }
+    }
+  },
+  "$defs": {
+    "digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "identifier": {"type": "string", "minLength": 1}
+  }
+}

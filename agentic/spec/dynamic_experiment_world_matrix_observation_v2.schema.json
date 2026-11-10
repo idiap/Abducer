@@ -1,0 +1,123 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://abducer.local/spec/dynamic_experiment_world_matrix_observation_v2.schema.json",
+  "title": "Complete post-world authority observation for a v2 five-world commission",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "contract_version",
+    "observation_id",
+    "world_id",
+    "commission_id",
+    "commission_digest",
+    "world_request",
+    "world_request_producer_binding",
+    "observed_authority_projection",
+    "authority_projection_changed_paths",
+    "intervention_changed_paths",
+    "unauthorized_changed_paths",
+    "experiment_spec",
+    "experiment_receipt",
+    "no_probe_decision",
+    "execution_producer_binding",
+    "reflection_receipt",
+    "reflection_producer_binding",
+    "production_bindings_digest",
+    "authority_boundary",
+    "observation_digest"
+  ],
+  "properties": {
+    "schema_version": {"const": "2.0.0"},
+    "contract_version": {"const": "experiment-world-observation/2.0.0"},
+    "observation_id": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/identifier"},
+    "world_id": {"enum": ["no_probe", "neutral_inconclusive", "misleading_toy_positive", "registered_premise_falsifier", "operational_failure"]},
+    "commission_id": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/identifier"},
+    "commission_digest": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/digest"},
+    "world_request": {"$ref": "./dynamic_experiment_world_request_v2.schema.json"},
+    "world_request_producer_binding": {"$ref": "./dynamic_experiment_causal_producer_binding_v2.schema.json"},
+    "observed_authority_projection": {"$ref": "./dynamic_experiment_world_matrix_commission_v2.schema.json#/$defs/authorityProjection"},
+    "authority_projection_changed_paths": {"const": []},
+    "intervention_changed_paths": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {"type": "string", "pattern": "^/experiment_spec/(adapter|model|resource_budget)(/.*)?$"}
+    },
+    "unauthorized_changed_paths": {"const": []},
+    "experiment_spec": {"oneOf": [{"type": "null"}, {"$ref": "./dynamic_experiment_spec_v3.schema.json"}]},
+    "experiment_receipt": {"oneOf": [{"type": "null"}, {"$ref": "./dynamic_experiment_receipt_v3.schema.json"}]},
+    "no_probe_decision": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/noProbeDecision"}]},
+    "execution_producer_binding": {"$ref": "./dynamic_experiment_causal_producer_binding_v2.schema.json"},
+    "reflection_receipt": {"oneOf": [{"type": "null"}, {"$ref": "./dynamic_experiment_reflection_receipt_v1.schema.json"}]},
+    "reflection_producer_binding": {"oneOf": [{"type": "null"}, {"$ref": "./dynamic_experiment_causal_producer_binding_v2.schema.json"}]},
+    "production_bindings_digest": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/digest"},
+    "authority_boundary": {"$ref": "./dynamic_experiment_world_matrix_commission_v2.schema.json#/$defs/authorityBoundary"},
+    "observation_digest": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/digest"}
+  },
+  "$defs": {
+    "noProbeDecision": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["schema_version", "contract_version", "decision_id", "world_id", "commission_id", "commission_digest", "request_id", "request_digest", "request_producer_binding_id", "request_producer_binding_digest", "execution_disposition", "execution_attempted", "experiment_receipt_expected", "decision_digest"],
+      "properties": {
+        "schema_version": {"const": "2.0.0"},
+        "contract_version": {"const": "experiment-no-probe-decision/2.0.0"},
+        "decision_id": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/identifier"},
+        "world_id": {"const": "no_probe"},
+        "commission_id": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/identifier"},
+        "commission_digest": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/digest"},
+        "request_id": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/identifier"},
+        "request_digest": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/digest"},
+        "request_producer_binding_id": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/identifier"},
+        "request_producer_binding_digest": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/digest"},
+        "execution_disposition": {"const": "not_executed"},
+        "execution_attempted": {"const": false},
+        "experiment_receipt_expected": {"const": false},
+        "decision_digest": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/digest"}
+      }
+    },
+    "worldRequest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "contract_version",
+        "request_id",
+        "world_id",
+        "execution_disposition",
+        "commission_input",
+        "commission_input_digest",
+        "world_plan_digest",
+        "planned_spec_id",
+        "planned_spec_digest",
+        "causal_position",
+        "request_digest"
+      ],
+      "properties": {
+        "schema_version": {"const": "2.0.0"},
+        "contract_version": {"const": "experiment-world-request/2.0.0"},
+        "request_id": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/identifier"},
+        "world_id": {"enum": ["no_probe", "neutral_inconclusive", "misleading_toy_positive", "registered_premise_falsifier", "operational_failure"]},
+        "execution_disposition": {"enum": ["not_executed", "executed"]},
+        "commission_input": {"$ref": "./dynamic_experiment_world_matrix_commission_v2.schema.json"},
+        "commission_input_digest": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/digest"},
+        "world_plan_digest": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/digest"},
+        "planned_spec_id": {"oneOf": [{"type": "null"}, {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/identifier"}]},
+        "planned_spec_digest": {"oneOf": [{"type": "null"}, {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/digest"}]},
+        "causal_position": {"const": "commission_consumed_before_execution_or_no_probe_decision"},
+        "request_digest": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/digest"}
+      }
+    },
+    "eventAuditRow": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["ordinal", "event", "artifact_id", "artifact_digest"],
+      "properties": {
+        "ordinal": {"type": "integer", "minimum": 0, "maximum": 3},
+        "event": {"enum": ["commission_sealed", "world_request_consumed_commission", "no_probe_decision_recorded", "experiment_receipt_recorded", "post_result_reflection_recorded"]},
+        "artifact_id": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/identifier"},
+        "artifact_digest": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/digest"}
+      }
+    }
+  }
+}

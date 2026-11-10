@@ -1,0 +1,101 @@
+{
+  "stream": 65,
+  "hypothesis": "H8",
+  "title": "Adaptive retained-state refinement and lumpability",
+  "current_strongest_claim": {
+    "level": "C1",
+    "claim": "The Stage 52 four-state kernel refines from regular/defect labels to a stable four-cell lumpable partition with defect zero.",
+    "physical_scope": false
+  },
+  "next_theorem": {
+    "id": "H8_PHYSICAL_ONE_BLOCK_SUFFICIENCY",
+    "status": "open",
+    "target_level": "C2_restricted",
+    "claim": "For one frozen finite SU(2) heat-kernel block, exact channel-resolved refinement of all positive-mass boundary histories terminates in a gauge-covariant, reflection-compatible, conditionally sufficient retained partition with audited state growth."
+  },
+  "nodes": [
+    {
+      "id": "F",
+      "claim": "Freeze regulator, finite volume, block, exposure order, boundary convention, positive-mass histories, and channels.",
+      "status": "open"
+    },
+    {
+      "id": "BT",
+      "claim": "Construct exact physical boundary-history and channel-transition tables with all normalizers.",
+      "status": "open",
+      "depends_on": ["F"]
+    },
+    {
+      "id": "PR",
+      "claim": "Prove monotone finite partition refinement, termination, coarsest stability, and channelwise lumpability.",
+      "status": "abstract_theorem_to_formalize",
+      "depends_on": ["BT"]
+    },
+    {
+      "id": "PHY",
+      "claim": "Identify stable cells with continuous collar/chart, center, cut/orbit, and integer-topology data, with covariance and reflection compatibility.",
+      "status": "open",
+      "depends_on": ["PR"]
+    },
+    {
+      "id": "SE",
+      "claim": "Bound state count, support, and precision requirements, or certify state explosion.",
+      "status": "open",
+      "depends_on": ["PR", "PHY"]
+    },
+    {
+      "id": "R2",
+      "claim": "Apply one additional block and test closure of labels and controlled growth.",
+      "status": "open",
+      "depends_on": ["SE"]
+    },
+    {
+      "id": "W",
+      "claim": "Construct a positive retained-state weight and prove the Stage 19/24 channelwise weighted ceiling.",
+      "status": "separate_open_dependency",
+      "depends_on": ["PHY"]
+    },
+    {
+      "id": "K",
+      "claim": "Obtain a strict one-scale normalized multichannel kernel contraction.",
+      "status": "open",
+      "depends_on": ["W", "R2"]
+    }
+  ],
+  "counterexample_checks": [
+    {
+      "id": "H8_FOUR_STATE",
+      "guards_against": "assuming regular/defect labels are sufficient",
+      "expected": "two strict refinements and stable discrete partition"
+    },
+    {
+      "id": "STAGE18_MOMENT_ONLY",
+      "guards_against": "replacing positive-history conditionals by intersection moments"
+    },
+    {
+      "id": "STAGE19_WEIGHTED_TWO_STATE",
+      "guards_against": "identifying scalar row smallness with weighted contraction"
+    },
+    {
+      "id": "STAGE24_CHANNEL_PERSISTENCE",
+      "guards_against": "lumping channels with unequal entry, return, or persistence data"
+    }
+  ],
+  "failure_conditions": [
+    "stable partition recovers essentially the full microscopic history",
+    "cell count or support lacks a volume-independent bound",
+    "continuous distinctions require uncontrolled precision",
+    "a second block generates unbounded new label types",
+    "symmetry quotienting breaks kernel equivariance",
+    "hostile positive-mass histories are omitted"
+  ],
+  "guardrails": {
+    "finite_h8_probe_above_C1": false,
+    "conditional_sufficiency_implies_weighted_contraction": false,
+    "physical_uniform_sufficiency": false,
+    "one_scale_basin_entry": false,
+    "repeated_rg": false,
+    "continuum_yang_mills": false,
+    "hamiltonian_mass_gap": false
+  }
+}

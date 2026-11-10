@@ -1,0 +1,433 @@
+\documentclass[11pt]{article}
+\usepackage[letterpaper,margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{booktabs,array,longtable}
+\usepackage{xcolor}
+\usepackage{microtype}
+\usepackage[hidelinks]{hyperref}
+\hypersetup{
+  pdftitle={An ultraviolet overlap benchmark for a nonlinear SU(2) lattice block},
+  pdfsubject={Heat-kernel tails, Haar Jacobians, and restricted polymer activities}
+}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+
+\newcommand{\SU}{\mathrm{SU}(2)}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\norm}[1]{\left\lVert #1\right\rVert}
+\newcommand{\dd}{\,\mathrm{d}}
+\newcommand{\proved}{\textcolor{green!45!black}{\textsf{proved}}}
+\newcommand{\restricted}{\textcolor{blue!65!black}{\textsf{restricted}}}
+\newcommand{\openstatus}{\textcolor{red!70!black}{\textsf{open}}}
+
+\title{An Ultraviolet Overlap Benchmark for a Nonlinear $\SU$ Lattice Block\\
+\large Heat-kernel tails, Haar Jacobians, and the first dependent-measure obstruction}
+\author{Mathematical research dossier}
+\date{20 July 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+The preceding nonlinear block certificate controlled a very small local
+chart, but at heat time $t=10^{-2}$ almost every standalone heat-kernel
+plaquette lay outside it.  We determine whether that mismatch is structural
+or merely a scale mismatch.  First, a cancellation-free Poisson-image
+estimate bounds the standalone $\SU$ curvature tail uniformly at weak
+coupling.  Second, Euler's product for $\sin r/r$ gives explicit Hessian and
+third-derivative bounds for the link Haar Jacobian.  Third, an independent
+connected-set theorem converts a one-plaquette tail into a weighted block
+activity benchmark.
+
+At
+\[
+ t=3\cdot10^{-6},\qquad r=0.0041,\qquad \rho=2r=0.0082,
+ \qquad r_F=10^{-5},
+\]
+all local-action inequalities remain strict after the Haar contribution.  The
+standalone tail is at most $5.51231\cdot10^{-5}$; after a 216-plaquette union
+bound, the weighted independent-block branching factor is at most $0.842163$
+and the rooted weighted activity sum is at most $0.083370$.  Thus local
+nonlinear control and small ultraviolet defect activities are not
+intrinsically incompatible.
+
+This is a restricted coexistence certificate, not full-measure Yang--Mills
+control.  Plaquettes in the four-dimensional link measure share links, obey
+nonabelian constraints, and carry boundary and topological information.  The
+standalone heat-kernel law is not proved here to be their marginal, and block
+independence is false.  The first unproved implication is therefore a
+volume-uniform dependent activity theorem for the complete gauge-invariant
+link measure.
+\end{abstract}
+
+\tableofcontents
+
+\section{Question, conventions, and result}
+
+We use the unit-three-sphere model of $\SU$ and heat generator
+$\tfrac12\Delta$.  A class angle is $\theta\in[0,\pi]$, and the leading
+small-time action is $\theta^2/(2t)$.  The side-two four-dimensional cubical
+block has 216 links and 216 plaquettes.  Stage 08 established the nonlinear
+plaquette-log and local Coulomb-chart constants on this block; its exact
+quaternion calculus is the finite geometric input used below.
+
+The distinction between three measures is essential.
+\begin{enumerate}
+\item The \emph{standalone heat-kernel law} has class density
+  $p_t(\theta)(2/\pi)\sin^2\theta\dd\theta$.
+\item The \emph{independent-block benchmark} assigns independent bad events
+  with a declared block-probability upper bound.
+\item The \emph{four-dimensional link measure} integrates link variables
+  against a product of plaquette weights and link Haar measures.  Its
+  plaquette variables are constrained and dependent.
+\end{enumerate}
+Only the first two enter the probability theorem proved here.  The local
+action inequalities, by contrast, concern the actual finite block action as
+a function of its link coordinates.
+
+\begin{theorem}[Restricted ultraviolet overlap witness]\label{thm:main}
+Let
+\[
+ t=3\cdot10^{-6},\quad r=0.0041,\quad \rho=0.0082,
+ \quad r_F=10^{-5},\quad \Delta=8,\quad \alpha=0.1.
+\]
+Then the following statements hold.
+\begin{enumerate}
+\item On the Stage 08 logarithmic Coulomb chart, the nonlinear physical
+  singular-value lower bound is $1.332871$.
+\item After adding the exponential-link Haar density, the scaled Hessian
+  remainder is at most $0.968684<1$, the centered fiber transport coefficient
+  is at most $0.003941<1$, and the generated reference-base margin is at
+  least $0.060732>0$.
+\item For a standalone heat-kernel plaquette,
+  \[
+    \Pr_t\{\theta\ge\rho\}\le 5.512301\cdot10^{-5}.
+  \]
+\item Let $p_B$ be the union-bound proxy for 216 such plaquette failures.
+  Then $p_B\le0.0119066$.  For independent bad blocks on a graph of maximum
+  degree eight,
+  \[
+   e^\alpha\Delta^2p_B\le0.842163<1
+  \]
+  and
+  \[
+   \sum_{X\ni o}e^{\alpha|X|}\Pr\{X\text{ is all bad}\}
+   \le 0.083370<1.
+  \]
+\end{enumerate}
+Every displayed pass inequality is strict; hence their simultaneous validity
+persists on a nonempty open neighborhood of $(t,r,r_F)$.
+\end{theorem}
+
+The proof is assembled in Sections~\ref{sec:haar}--\ref{sec:overlap}.
+
+\begin{remark}[Logical status]
+Part 4 is an independent-block theorem.  It is not applied to the dependent
+four-dimensional link measure.  Theorem~\ref{thm:main} proves numerical and
+analytic coexistence of the two required regimes, not basin entry for the
+complete theory.
+\end{remark}
+
+\section{The link Haar Jacobian}\label{sec:haar}
+
+For $A\in\R^3$ with $a=\norm A<\pi$, exponential coordinates pull normalized
+Haar measure back, up to a constant independent of $A$, with radial Jacobian
+\[
+ J(A)=\left(\frac{\sin a}{a}\right)^2.
+\]
+Its contribution to the coordinate action is
+\[
+ h(A)=-\log J(A)=-2\log\frac{\sin a}{a}.
+\]
+
+\begin{lemma}[Local Haar derivative bounds]\label{lem:haar}
+For $0\le a\le r<\pi$, put $x=r/\pi$ and $q=x^2$.  Then
+\begin{align}
+ \norm{D^2h(A)}
+ &\le H_2(r):=\frac23\frac{1+q}{(1-q)^2},\label{eq:H2}\\
+ \norm{D^3h(A)}
+ &\le H_3(r):=\frac{2x}{3\pi}
+ \left(\frac{4(1+q)}{(1-q)^3}+\frac{2}{(1-q)^2}\right).
+ \label{eq:H3}
+\end{align}
+At $r=0.0041$ these bounds are $H_2\le0.666671$ and
+$H_3\le0.001662$.
+\end{lemma}
+
+\begin{proof}
+Euler's product and absolute convergence on compact subsets of $(-\pi,\pi)$
+give
+\[
+ h(a)=2\sum_{n\ge1}\frac{\zeta(2n)}{n\pi^{2n}}a^{2n}.
+\]
+For $p=2n$, the Hessian operator norm of $\norm A^p$ is at most
+$p(p-1)a^{p-2}$.  Direct differentiation gives the third tensor as one radial
+cubic term and three mixed terms; the triangle inequality bounds its operator
+norm by $p(p-1)(p-2)a^{p-3}$.  Since
+$\zeta(2n)\le\zeta(2)=\pi^2/6$, termwise differentiation yields
+\[
+ \norm{D^2h}
+ \le \frac23\sum_{n\ge1}(2n-1)q^{n-1}
+ =\frac23\frac{1+q}{(1-q)^2}.
+\]
+Likewise, after writing $m=n-1$,
+\[
+ \norm{D^3h}
+ \le\frac{2}{3\pi x}
+ \sum_{m\ge1}(2m+1)(2m)q^m,
+\]
+and the standard sums for $\sum m q^m$ and $\sum m^2q^m$ give
+\eqref{eq:H3}.
+\end{proof}
+
+The scaled action used in the local norm is $tS$.  Since the link Haar
+potential is a sum of one-link functions, its global Hessian and third-tensor
+bounds are $tH_2(r)$ and $tH_3(r)$; no plaquette-count factor is introduced.
+At the witness these contributions are $2.00002\cdot10^{-6}$ and less than
+$5\cdot10^{-9}$, respectively.
+
+\section{A cancellation-free standalone tail}\label{sec:tail}
+
+The character expansion is exact but becomes a numerically ill-conditioned
+alternating representation when $t$ is extremely small.  The Poisson-image
+representation exposes the ultraviolet concentration directly.  Up to a
+positive factor independent of $\theta$, the heat-kernel shape is
+\begin{equation}\label{eq:image}
+ p_t(\theta)\propto
+ \frac1{\sin\theta}\sum_{k\in\mathbb Z}
+ (\theta+2\pi k)
+ \exp\left[-\frac{(\theta+2\pi k)^2}{2t}\right].
+\end{equation}
+Together with radial Haar density, the unnormalized radial mass is therefore
+$\sin\theta$ times the image sum.
+
+\begin{proposition}[Image tail upper bound]\label{prop:tail}
+Let $0<\rho<\pi$, $t>0$, and
+$L=\min\{\pi/2,3\sqrt t\}$.  Define
+\begin{align*}
+ D_0(t,L)&=\frac{\sin L}{L}
+ \left[\sqrt{\frac\pi2}t^{3/2}
+ \operatorname{erf}\left(\frac{L}{\sqrt{2t}}\right)
+ -tL e^{-L^2/(2t)}\right],\\
+ N_0(t,\rho)&=t\rho e^{-\rho^2/(2t)}
+ +t\sqrt{\frac{\pi t}{2}}
+ \operatorname{erfc}\left(\frac{\rho}{\sqrt{2t}}\right),\\
+ E(t)&=t\frac{e^{-\pi^2/(2t)}+e^{-2\pi^2/t}}
+ {1-e^{-4\pi^2/t}}.
+\end{align*}
+If $D_0(t,L)>E(t)$, then the standalone heat-kernel law satisfies
+\begin{equation}\label{eq:tailbound}
+ \Pr_t\{\theta\ge\rho\}
+ \le \min\left\{1,\frac{N_0(t,\rho)+E(t)}{D_0(t,L)-E(t)}\right\}.
+\end{equation}
+\end{proposition}
+
+\begin{proof}
+For the zero image, $\sin\theta\le\theta$ and extension of the upper
+integration limit to infinity give
+\[
+ \int_\rho^\pi \theta\sin\theta e^{-\theta^2/(2t)}\dd\theta
+ \le\int_\rho^\infty\theta^2e^{-\theta^2/(2t)}\dd\theta=N_0(t,\rho).
+\]
+On $[0,L]$, concavity of sine gives
+$\sin\theta\ge(\sin L/L)\theta$, so the retained zero-image normalization is
+at least $D_0(t,L)$.
+
+It remains to bound every nonzero image in absolute value.  For the negative
+$j$th image, $j\ge1$, substitution gives an integral bounded by
+$t e^{-(2j-1)^2\pi^2/(2t)}$; for the positive image the bound is
+$t e^{-2j^2\pi^2/t}$.  Consecutive terms in both sequences have ratio at most
+$e^{-4\pi^2/t}$.  Summing the geometric majorant gives $E(t)$.  Adding $E$ to
+the tail numerator and subtracting it from the normalization denominator
+proves \eqref{eq:tailbound}.
+\end{proof}
+
+At the witness, $\rho/\sqrt t=4.734272$ and the nonzero-image term is smaller
+than $10^{-714000}$.  Formula~\eqref{eq:tailbound} gives
+$5.512301\cdot10^{-5}$.  An independent character calculation truncated at
+representation index 6000 encloses the actual tail between
+$5.3507587609\cdot10^{-5}$ and $5.3507587704\cdot10^{-5}$, providing a
+cross-representation check without entering the proof of the upper bound.
+
+\section{The restricted weighted-polymer theorem}\label{sec:polymer}
+
+\begin{theorem}[Independent rooted connected sets]\label{thm:polymer}
+Let a graph have maximum degree $\Delta$.  Suppose vertices are bad
+independently with probability at most $p_B$.  For $\alpha\ge0$, if
+$q_\alpha=e^\alpha\Delta^2p_B<1$, then
+\begin{equation}\label{eq:polymer}
+ \sum_{\substack{X\ni o\\X\text{ connected}}}
+ e^{\alpha|X|}\Pr\{X\text{ is all bad}\}
+ \le \frac{e^\alpha p_B}{1-q_\alpha}.
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+A depth-first traversal encodes a rooted connected $n$-set by a walk of
+length at most $2(n-1)$, so the number of such sets is at most
+$\Delta^{2(n-1)}$.  Independence bounds the all-bad probability by $p_B^n$.
+Summing the resulting geometric series proves \eqref{eq:polymer}.
+\end{proof}
+
+For a block containing 216 plaquettes, the union bound gives
+$p_B\le216p$.  No within-block independence is needed for this union bound.
+Independence between bad blocks is, however, indispensable for
+Theorem~\ref{thm:polymer}; it is the assumption that fails in the target
+four-dimensional gauge measure.
+
+\section{Composition and numerical margins}\label{sec:overlap}
+
+Let $\eta_P$ and $\tau_P$ be the Stage 08 scaled plaquette-action remainder
+and third-tensor bound.  Lemma~\ref{lem:haar} gives the augmented quantities
+\[
+ \eta=\eta_P+tH_2(r),\qquad \tau=\tau_P+tH_3(r).
+\]
+In the same Hodge-whitened retained/fiber coordinates, with reference
+curvatures $\lambda_F=2$, $\lambda_Y=1$, the five-component bounds become
+\[
+ \varepsilon_F=\eta,\quad
+ \varepsilon_{FY}=\frac{\eta}{\sqrt2},\quad
+ \varepsilon_Y=\frac\eta2,\quad
+ \tau_F=\tau,\quad \tau_{FY}=\frac\tau{\sqrt2}.
+\]
+Writing $m_F=2-\eta$, the response and generated-action formulas are
+\begin{align*}
+ K_F&=\frac{r_F}{m_F}
+ \left(\frac{\tau}{\sqrt2}
+ +\tau\frac{\eta/\sqrt2}{m_F}\right),\\
+ \eta_{\mathrm{gen}}&=\frac\eta2+
+ \frac{(\eta/\sqrt2)^2}{m_F},
+ \qquad m_Y=1-\eta_{\mathrm{gen}}.
+\end{align*}
+Substitution gives the values in Table~\ref{tab:witness}.
+
+\begin{table}[ht]
+\centering
+\caption{Certified witness values.}\label{tab:witness}
+\begin{tabular}{@{}lll@{}}
+\toprule
+Quantity & Bound & Test \\
+\midrule
+$\eta_P$ & $0.968681008$ & local plaquette input \\
+$tH_2(r)$ & $0.000002001$ & Haar contribution \\
+$\eta$ & $0.968683008$ & $<1$ \\
+$m_F$ & $1.031316992$ & $>0$ \\
+$K_F$ & $0.003940979$ & $<1$ \\
+$m_Y$ & $0.060732040$ & $>0$ \\
+$p$ & $0.0000551231$ & standalone tail \\
+$p_B$ & $0.011906570$ & $216p$ \\
+$e^\alpha\Delta^2p_B$ & $0.842162811$ & $<1$ \\
+rooted weighted sum & $0.083369414$ & $<1$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+This proves Theorem~\ref{thm:main}.  The strict-continuity conclusion follows
+because the denominators in the local inverse, fiber response, image
+normalization, and polymer sum remain positive at the witness.
+
+For comparison, at the Stage 08 point $(t,r)=(10^{-2},0.003)$, the exact
+standalone probability outside $\rho=0.006$ exceeds $0.9999$.  The local
+action remains controlled, but the independent activity proxy fails
+completely.  The successful ultraviolet witness shows that this failure was
+not a universal chart-versus-probability incompatibility.
+
+\section{What the computation does and does not certify}
+
+The executable checker evaluates the exact displayed formulas, performs a
+declared $25\times25$ parameter-grid calibration, and runs positive,
+boundary, monotonicity, cross-representation, and deliberately failing tests.
+Of 625 grid points in
+\[
+ t\in[10^{-6},5\cdot10^{-6}],\qquad
+ r\in[0.0036,0.0042],
+\]
+389 pass the restricted inequalities with $r_F=10^{-5}$.  This demonstrates
+that the witness is not an isolated floating-point accident.  The grid search
+does not claim global optimality, and no proof depends on the selected grid.
+
+The mechanization boundary is equally important.  The checker does not
+formalize the analytic Poisson summation identity, the Stage 08 nonlinear
+inverse theorem, or any infinite-volume cluster expansion.  It checks their
+closed finite consequences and fails closed on invalid radii, nonpositive
+normalizations, exhausted coercivity, and divergent polymer denominators.
+
+\section{First unproved implication and strategic consequence}
+
+The target is now a dependent chart--polymer overlap theorem.  For the actual
+regulated link measure $\mu_{t,L}$ and a gauge-invariant exceptional event,
+one needs activities $z_{t,L}(X)$ satisfying, in the same local-control
+window,
+\begin{equation}\label{eq:target}
+ \sup_L\sup_{o}\sum_{X\ni o}
+ e^{\alpha|X|}|z_{t,L}(X)|<1.
+\end{equation}
+The estimate must retain the following data rather than absorbing them into a
+generic ``large-field error'':
+\begin{itemize}
+\item shared-link dependence and nonabelian Bianchi constraints;
+\item the orbit-space atlas and any Coulomb-slice/Faddeev--Popov density;
+\item conditional boundary holonomy;
+\item center flux, torons, instanton-like sectors, and global topology;
+\item constants uniform in volume, boundary condition, and the repeated RG
+  scale.
+\end{itemize}
+
+The strategic change is sharp.  Enlarging the local chart is no longer the
+only apparent route.  The ultraviolet scale already separates the typical
+curvature, of order $\sqrt t$, from a chart radius that remains small enough
+for nonlinear coercivity.  The next work should exploit the actual
+gauge-covariant dependence structure to prove \eqref{eq:target}, or else show
+precisely why the chosen block event and norm fail under conditioning.
+
+\section{Frontier audit}
+
+\begin{longtable}{@{}p{0.47\textwidth}p{0.16\textwidth}p{0.27\textwidth}@{}}
+\toprule
+Claim & Status & Scope \\
+\midrule
+\endhead
+Poisson-image standalone tail bound & \proved & one $\SU$ heat-kernel law \\
+Link Haar derivative bounds & \proved & local exponential chart \\
+Independent rooted weighted-polymer sum & \proved & independent block events \\
+Simultaneous strict witness & \restricted & coexistence benchmark \\
+Tail for the full 4D plaquette marginal & \openstatus & interacting link measure \\
+Dependent activity bound \eqref{eq:target} & \openstatus & volume-uniform 4D measure \\
+Repeated RG to a finite physical scale & \openstatus & cutoff- and scale-uniform \\
+Continuum construction, OS reconstruction, and gap & \openstatus & Clay endpoint \\
+\bottomrule
+\end{longtable}
+
+The strongest defensible level is \textbf{C2, restricted theorem}.  This
+document does not construct four-dimensional continuum Yang--Mills theory and
+does not prove a Hamiltonian mass gap.  The existence and mass-gap problem
+remains open.
+
+\begin{thebibliography}{9}
+\bibitem{MenottiOnofri1981}
+P.~Menotti and E.~Onofri,
+``The action of $SU(N)$ lattice gauge theory in terms of the heat kernel on the
+group manifold,''
+\emph{Nuclear Physics B} \textbf{190} (1981), 288--300.
+
+\bibitem{Balaban1984}
+T.~Balaban,
+``Propagators and renormalization transformations for lattice gauge
+theories. I,''
+\emph{Communications in Mathematical Physics} \textbf{95} (1984), 17--40.
+
+\bibitem{Balaban1987}
+T.~Balaban,
+``Renormalization group approach to lattice gauge field theories. I.
+Generation of effective actions in a small field approximation and a coupling
+constant renormalization in four dimensions,''
+\emph{Communications in Mathematical Physics} \textbf{109} (1987), 249--301.
+\end{thebibliography}
+
+\end{document}

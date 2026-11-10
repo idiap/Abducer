@@ -1,0 +1,210 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Avenue Literature Gap Warrant",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "schema_version",
+    "target_id",
+    "avenue_id",
+    "avenue_title",
+    "smallest_honest_claim",
+    "mathematical_or_physical_object",
+    "target_commitments_touched",
+    "closest_known_results",
+    "source_search_provenance",
+    "gap_statement",
+    "why_not_already_known",
+    "relevance_threshold",
+    "physics_or_field_impact",
+    "unification_power",
+    "route_decision_power",
+    "novelty_boundary",
+    "disqualifier_matrix",
+    "explicit_unknowns",
+    "allowed_next_modes",
+    "investment_decision",
+    "validation_handoff"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": 1
+    },
+    "target_id": {
+      "type": "string",
+      "minLength": 4
+    },
+    "avenue_id": {
+      "type": "string",
+      "minLength": 4
+    },
+    "avenue_title": {
+      "type": "string",
+      "minLength": 8
+    },
+    "smallest_honest_claim": {
+      "type": "string",
+      "minLength": 40
+    },
+    "mathematical_or_physical_object": {
+      "type": "string",
+      "minLength": 20
+    },
+    "target_commitments_touched": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "minLength": 3
+      }
+    },
+    "closest_known_results": {
+      "type": "array",
+      "minItems": 3,
+      "items": {
+        "type": "object",
+        "required": ["ref_id", "title", "relevance", "limitation_for_this_avenue"],
+        "additionalProperties": true,
+        "properties": {
+          "ref_id": {"type": "string", "minLength": 3},
+          "title": {"type": "string", "minLength": 3},
+          "authors": {"type": "string"},
+          "year": {"type": ["integer", "string"]},
+          "url": {"type": "string"},
+          "relevance": {"type": "string", "minLength": 12},
+          "limitation_for_this_avenue": {"type": "string", "minLength": 12}
+        }
+      }
+    },
+    "source_search_provenance": {
+      "type": "array",
+      "minItems": 2,
+      "items": {
+        "type": "object",
+        "required": ["source", "scope", "finding"],
+        "additionalProperties": true,
+        "properties": {
+          "source": {"type": "string", "minLength": 3},
+          "scope": {"type": "string", "minLength": 8},
+          "finding": {"type": "string", "minLength": 12}
+        }
+      }
+    },
+    "gap_statement": {
+      "type": "string",
+      "minLength": 50
+    },
+    "why_not_already_known": {
+      "type": "string",
+      "minLength": 50
+    },
+    "relevance_threshold": {
+      "type": "object",
+      "required": ["score", "threshold", "criterion", "evidence"],
+      "additionalProperties": true,
+      "properties": {
+        "score": {"type": "integer", "minimum": 0, "maximum": 5},
+        "threshold": {"type": "integer", "minimum": 0, "maximum": 5},
+        "criterion": {"type": "string", "minLength": 20},
+        "evidence": {"type": "string", "minLength": 20}
+      }
+    },
+    "physics_or_field_impact": {
+      "type": "object",
+      "required": ["score", "claim", "evidence", "missing"],
+      "additionalProperties": true,
+      "properties": {
+        "score": {"type": "integer", "minimum": 0, "maximum": 5},
+        "claim": {"type": "string", "minLength": 20},
+        "evidence": {"type": "string", "minLength": 20},
+        "missing": {"type": "string", "minLength": 10}
+      }
+    },
+    "unification_power": {
+      "type": "object",
+      "required": ["score", "mechanism", "compresses", "new_requirement_exposed"],
+      "additionalProperties": true,
+      "properties": {
+        "score": {"type": "integer", "minimum": 0, "maximum": 5},
+        "mechanism": {"type": "string", "minLength": 20},
+        "compresses": {"type": "array", "minItems": 2, "items": {"type": "string"}},
+        "new_requirement_exposed": {"type": "string", "minLength": 20}
+      }
+    },
+    "route_decision_power": {
+      "type": "object",
+      "required": ["score", "decides", "next_decisive_test"],
+      "additionalProperties": true,
+      "properties": {
+        "score": {"type": "integer", "minimum": 0, "maximum": 5},
+        "decides": {"type": "string", "minLength": 20},
+        "next_decisive_test": {"type": "string", "minLength": 20}
+      }
+    },
+    "novelty_boundary": {
+      "type": "string",
+      "minLength": 50
+    },
+    "disqualifier_matrix": {
+      "type": "array",
+      "minItems": 3,
+      "items": {
+        "type": "object",
+        "required": ["disqualifier", "test", "decision_if_triggered"],
+        "additionalProperties": true,
+        "properties": {
+          "disqualifier": {"type": "string", "minLength": 6},
+          "test": {"type": "string", "minLength": 12},
+          "decision_if_triggered": {
+            "enum": [
+              "reframe_gap_before_investment",
+              "do_not_invest_prior_art_collision",
+              "quarantine_low_relevance",
+              "artifact_sprint_only"
+            ]
+          },
+          "status": {"type": "string"}
+        }
+      }
+    },
+    "explicit_unknowns": {
+      "type": "array",
+      "minItems": 2,
+      "items": {"type": "string", "minLength": 12}
+    },
+    "allowed_next_modes": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "enum": [
+          "branch_exploration",
+          "broad_branch_exploration",
+          "artifact_sprint",
+          "falsifier_sprint",
+          "literature_gap_reframe",
+          "proof_delivery",
+          "quarantine"
+        ]
+      }
+    },
+    "investment_decision": {
+      "enum": [
+        "invest_in_avenue",
+        "artifact_sprint_only",
+        "reframe_gap_before_investment",
+        "do_not_invest_prior_art_collision",
+        "quarantine_low_relevance"
+      ]
+    },
+    "validation_handoff": {
+      "type": "object",
+      "required": ["validator", "next_skill", "required_before"],
+      "additionalProperties": true,
+      "properties": {
+        "validator": {"type": "string", "minLength": 8},
+        "next_skill": {"type": "string", "minLength": 4},
+        "required_before": {"type": "string", "minLength": 8}
+      }
+    }
+  }
+}

@@ -1,0 +1,24 @@
+# SPDX-FileCopyrightText: © 2026 Idiap Research Institute <contact@idiap.ch>
+#
+# SPDX-FileContributor: Andre Freitas <andre.freitas@idiap.ch>
+# Neuro-symbolic AI Group
+#
+# SPDX-FileContributor: Danilo Gusicuma <danilo.gusicuma@idiap.ch>
+# Neuro-symbolic AI Group
+#
+# SPDX-License-Identifier: MIT
+# Fixture-backed typed smoke entrypoint for discovery_marathon_loop.
+# Routing comments and linked validators remain outside this executable boundary.
+from workflows.discovery_marathon_loop.materialization import converted_reasoning
+from workflows.discovery_marathon_loop.reasoning import DiscoveryMarathonLoop
+from workflows.discovery_marathon_loop.types import DiscoveryRoutingAssessment, DiscoveryRunContext
+
+def main(
+    model_access: ModelGenerate,
+    disclosure: ContextDisclose,
+) -> Result[Generated[DiscoveryRoutingAssessment], ModelFailure] ! {AI.Generate, Context.Disclose}:
+    run_context = DiscoveryRunContext(
+        context_summary = "fixture:discovery_marathon_loop:run_context.context_summary",
+    )
+    flow = converted_reasoning(run_context)
+    return solve DiscoveryMarathonLoop(run_context) using flow

@@ -1,0 +1,282 @@
+# Proof Sketches
+
+## Stats
+
+- Proof sketches: 6
+- Conjectures used: 34
+- Strategies used: 6
+- Bridges used: 20
+- Hypotheses used: 60
+- Strategy families: barrier-escape-reencoding=6
+
+## Strategy Families
+
+- `invariant-lift-through-intermediate-object`: Introduce a conjectured intermediate object or invariant, prove that the source regime induces it, then force the target consequence through that invariant.
+- `surrogate-reduction-transfer`: Define a surrogate object or promise problem, reduce the source statement into it, and transfer the required consequence through the surrogate interface.
+- `barrier-escape-reencoding`: Re-encode the conjectured bridge concept in a representation that preserves the intended invariant while sidestepping the currently dominant barrier family.
+- `contradiction-via-collapse-or-separation`: Assume the conjectured bridge fails or the target consequence does not hold, then derive a forbidden collapse or contradiction with a known separation profile.
+- `bootstrapped-derandomization-transfer`: Use a derandomization or pseudorandomness-style object as the bridge, then bootstrap it into a lower-bound or separation consequence.
+- `case-split-regime-transfer`: Partition the argument by regime, model, or threshold case, prove each branch against the same bridge concept, and reassemble the target consequence.
+
+## Sketches
+
+| sketch_id | conjecture_id | strategy_id | family | score | target |
+|---|---|---|---|---|---|
+| psk.001 | conj.007 | strat.001 | barrier-escape-reencoding | 0.9269 | generator-of-exponentially-bounded-c0-semigroup |
+| psk.002 | conj.001 | strat.001 | barrier-escape-reencoding | 0.9268 | generator-of-exponentially-bounded-c0-semigroup |
+| psk.003 | conj.013 | strat.001 | barrier-escape-reencoding | 0.9096 | bounded-generator-approximation-scheme |
+| psk.004 | conj.008 | strat.001 | barrier-escape-reencoding | 0.9084 | generator-of-exponentially-bounded-c0-semigroup |
+| psk.005 | conj.002 | strat.001 | barrier-escape-reencoding | 0.9083 | generator-of-exponentially-bounded-c0-semigroup |
+| psk.006 | conj.009 | strat.001 | barrier-escape-reencoding | 0.8936 | generator-of-exponentially-bounded-c0-semigroup |
+
+### psk.001 - barrier + domain-closure-density + powers-of-resolvent-verification evasive representation for closed-dense-operator-with-resolvent-power-bounds via strat.001
+- Conjecture: conj.007
+- Strategy: strat.001 (Cross-Model Strategy around st.thm.hille-yosida-general)
+- Bridge: bridge.003
+- Family: barrier-escape-reencoding
+- Score: 0.9269
+- Target consequence: generator-of-exponentially-bounded-c0-semigroup
+- Antecedent: c0-semigroup-definition
+- Invariant: Yosida approximation convergence in operator-theoretic-Banach-space
+- Barrier scope: barrier + domain-closure-density + powers-of-resolvent-verification
+- Family rationale: Re-encode the conjectured bridge concept in a representation that preserves the intended invariant while sidestepping the currently dominant barrier family.
+- Definitional commitments: realizes antecedent schema `c0-semigroup-definition`, forces target consequence `generator-of-exponentially-bounded-c0-semigroup`, preserves `Yosida approximation convergence in operator-theoretic-Banach-space`, evades barrier scope `barrier + domain-closure-density + powers-of-resolvent-verification`
+- Counterfactual test: Remove `realizes antecedent schema `c0-semigroup-definition`` from the candidate abstraction. => bridge-degrades-or-fails
+- Proof obligations:
+  - obl.01: realizes antecedent schema `c0-semigroup-definition`
+  - obl.02: forces target consequence `generator-of-exponentially-bounded-c0-semigroup`
+  - obl.03: preserves `Yosida approximation convergence in operator-theoretic-Banach-space`
+  - obl.04: evades barrier scope `barrier + domain-closure-density + powers-of-resolvent-verification`
+  - obl.05: Show that the conjectured object preserves `Yosida approximation convergence in operator-theoretic-Banach-space` from the source side.
+  - obl.06: Prove that the conjectured object forces `generator-of-exponentially-bounded-c0-semigroup` once the preserved invariant is realized.
+  - obl.07: Demonstrate that the sketch avoids the `barrier + domain-closure-density + powers-of-resolvent-verification` barrier or explain why the barrier does not apply in this encoding.
+  - obl.08: Keep the argument faithful to the `Current Bridge Agenda` regime while linking to the target bridge consequence.
+- Candidate lemmas:
+  - bridge.003.lemma.01: Definition lemma: the object `barrier + domain-closure-density + powers-of-resolvent-verification evasive representation for closed-dense-operator-with-resolvent-power-bounds` is well-defined and mathematically non-superficial.
+  - bridge.003.lemma.02: Invariant lemma: `barrier + domain-closure-density + powers-of-resolvent-verification evasive representation for closed-dense-operator-with-resolvent-power-bounds` preserves `Yosida approximation convergence in operator-theoretic-Banach-space` from the source statement family.
+  - bridge.003.lemma.03: Payoff lemma: realizing `barrier + domain-closure-density + powers-of-resolvent-verification evasive representation for closed-dense-operator-with-resolvent-power-bounds` implies `generator-of-exponentially-bounded-c0-semigroup`.
+  - bridge.003.lemma.04: Encoding lemma: `barrier + domain-closure-density + powers-of-resolvent-verification evasive representation for closed-dense-operator-with-resolvent-power-bounds` is expressed in a representation that avoids the active barrier while preserving the target invariant.
+- Proof outline:
+  - step.01: Define `barrier + domain-closure-density + powers-of-resolvent-verification evasive representation for closed-dense-operator-with-resolvent-power-bounds` with the necessary attributes extracted in `conj.007`. -> A non-superficial bridge object with theorem-family-specific commitments.
+  - step.02: Show that the source side of `bridge.003` induces `Yosida approximation convergence in operator-theoretic-Banach-space` inside `barrier + domain-closure-density + powers-of-resolvent-verification evasive representation for closed-dense-operator-with-resolvent-power-bounds`. -> An invariant-preservation lemma for the conjectured object.
+  - step.03: Re-express the bridge concept in a representation that blocks the dominant barrier from firing. -> A barrier-aware encoding lemma or a clear failure diagnosis.
+  - step.04: Use the realized bridge object to force `generator-of-exponentially-bounded-c0-semigroup`. -> A payoff theorem candidate or a sharply localized remaining obstruction.
+  - step.05: Run the designated counterfactual probe to verify that the bridge is structurally necessary rather than rhetorically similar. -> A falsifiability check distinguishing a genuine bridge concept from a superficial one.
+- Barrier checkpoints:
+  - barrier.01: Check whether `barrier + domain-closure-density + powers-of-resolvent-verification` blocks the proposed bridge object or proof tactic. / Re-encode the bridge object or abort the route if the barrier remains active.
+- Abort conditions:
+  - Abort if counterfactual probe fails to change bridge behavior: Remove `realizes antecedent schema `c0-semigroup-definition`` from the candidate abstraction. => bridge-degrades-or-fails.
+  - Abort if the sketch still falls inside the `barrier + domain-closure-density + powers-of-resolvent-verification` barrier after re-encoding attempts.
+  - Abort if the conjectured object cannot be defined without collapsing back into a generic topic label.
+  - Abort if the payoff lemma does not improve over the existing bridge consequence or only restates known dependencies.
+- Success signal: A theorem-family-specific payoff lemma is isolated and survives the designated counterfactual probe.
+
+### psk.002 - approximation-limit-control + barrier + domain-closure-density evasive representation for closed-dense-operator-with-resolvent-power-bounds via strat.001
+- Conjecture: conj.001
+- Strategy: strat.001 (Cross-Model Strategy around st.thm.hille-yosida-general)
+- Bridge: bridge.002
+- Family: barrier-escape-reencoding
+- Score: 0.9268
+- Target consequence: generator-of-exponentially-bounded-c0-semigroup
+- Antecedent: c0-semigroup-definition
+- Invariant: Yosida approximation convergence in unbounded-generator-graph
+- Barrier scope: approximation-limit-control + barrier + domain-closure-density
+- Family rationale: Re-encode the conjectured bridge concept in a representation that preserves the intended invariant while sidestepping the currently dominant barrier family.
+- Definitional commitments: realizes antecedent schema `c0-semigroup-definition`, forces target consequence `generator-of-exponentially-bounded-c0-semigroup`, preserves `Yosida approximation convergence in unbounded-generator-graph`, evades barrier scope `approximation-limit-control + barrier + domain-closure-density`
+- Counterfactual test: Remove `realizes antecedent schema `c0-semigroup-definition`` from the candidate abstraction. => bridge-degrades-or-fails
+- Proof obligations:
+  - obl.01: realizes antecedent schema `c0-semigroup-definition`
+  - obl.02: forces target consequence `generator-of-exponentially-bounded-c0-semigroup`
+  - obl.03: preserves `Yosida approximation convergence in unbounded-generator-graph`
+  - obl.04: evades barrier scope `approximation-limit-control + barrier + domain-closure-density`
+  - obl.05: Show that the conjectured object preserves `Yosida approximation convergence in unbounded-generator-graph` from the source side.
+  - obl.06: Prove that the conjectured object forces `generator-of-exponentially-bounded-c0-semigroup` once the preserved invariant is realized.
+  - obl.07: Demonstrate that the sketch avoids the `approximation-limit-control + barrier + domain-closure-density` barrier or explain why the barrier does not apply in this encoding.
+  - obl.08: Keep the argument faithful to the `Current Bridge Agenda` regime while linking to the target bridge consequence.
+- Candidate lemmas:
+  - bridge.002.lemma.01: Definition lemma: the object `approximation-limit-control + barrier + domain-closure-density evasive representation for closed-dense-operator-with-resolvent-power-bounds` is well-defined and mathematically non-superficial.
+  - bridge.002.lemma.02: Invariant lemma: `approximation-limit-control + barrier + domain-closure-density evasive representation for closed-dense-operator-with-resolvent-power-bounds` preserves `Yosida approximation convergence in unbounded-generator-graph` from the source statement family.
+  - bridge.002.lemma.03: Payoff lemma: realizing `approximation-limit-control + barrier + domain-closure-density evasive representation for closed-dense-operator-with-resolvent-power-bounds` implies `generator-of-exponentially-bounded-c0-semigroup`.
+  - bridge.002.lemma.04: Encoding lemma: `approximation-limit-control + barrier + domain-closure-density evasive representation for closed-dense-operator-with-resolvent-power-bounds` is expressed in a representation that avoids the active barrier while preserving the target invariant.
+- Proof outline:
+  - step.01: Define `approximation-limit-control + barrier + domain-closure-density evasive representation for closed-dense-operator-with-resolvent-power-bounds` with the necessary attributes extracted in `conj.001`. -> A non-superficial bridge object with theorem-family-specific commitments.
+  - step.02: Show that the source side of `bridge.002` induces `Yosida approximation convergence in unbounded-generator-graph` inside `approximation-limit-control + barrier + domain-closure-density evasive representation for closed-dense-operator-with-resolvent-power-bounds`. -> An invariant-preservation lemma for the conjectured object.
+  - step.03: Re-express the bridge concept in a representation that blocks the dominant barrier from firing. -> A barrier-aware encoding lemma or a clear failure diagnosis.
+  - step.04: Use the realized bridge object to force `generator-of-exponentially-bounded-c0-semigroup`. -> A payoff theorem candidate or a sharply localized remaining obstruction.
+  - step.05: Run the designated counterfactual probe to verify that the bridge is structurally necessary rather than rhetorically similar. -> A falsifiability check distinguishing a genuine bridge concept from a superficial one.
+- Barrier checkpoints:
+  - barrier.01: Check whether `approximation-limit-control + barrier + domain-closure-density` blocks the proposed bridge object or proof tactic. / Re-encode the bridge object or abort the route if the barrier remains active.
+- Abort conditions:
+  - Abort if counterfactual probe fails to change bridge behavior: Remove `realizes antecedent schema `c0-semigroup-definition`` from the candidate abstraction. => bridge-degrades-or-fails.
+  - Abort if the sketch still falls inside the `approximation-limit-control + barrier + domain-closure-density` barrier after re-encoding attempts.
+  - Abort if the conjectured object cannot be defined without collapsing back into a generic topic label.
+  - Abort if the payoff lemma does not improve over the existing bridge consequence or only restates known dependencies.
+- Success signal: A theorem-family-specific payoff lemma is isolated and survives the designated counterfactual probe.
+
+### psk.003 - barrier + domain-closure-density + powers-of-resolvent-verification evasive representation for c0-generation-implies-closed-dense-generator via strat.001
+- Conjecture: conj.013
+- Strategy: strat.001 (Cross-Model Strategy around st.thm.hille-yosida-general)
+- Bridge: bridge.009
+- Family: barrier-escape-reencoding
+- Score: 0.9096
+- Target consequence: bounded-generator-approximation-scheme
+- Antecedent: closed-dense-operator-with-resolvent-power-bounds
+- Invariant: Yosida approximation convergence in resolvent-generation-criterion
+- Barrier scope: barrier + domain-closure-density + powers-of-resolvent-verification
+- Family rationale: Re-encode the conjectured bridge concept in a representation that preserves the intended invariant while sidestepping the currently dominant barrier family.
+- Definitional commitments: realizes antecedent schema `closed-dense-operator-with-resolvent-power-bounds`, forces target consequence `bounded-generator-approximation-scheme`, preserves `Yosida approximation convergence in resolvent-generation-criterion`, evades barrier scope `barrier + domain-closure-density + powers-of-resolvent-verification`
+- Counterfactual test: Remove `realizes antecedent schema `closed-dense-operator-with-resolvent-power-bounds`` from the candidate abstraction. => bridge-degrades-or-fails
+- Proof obligations:
+  - obl.01: realizes antecedent schema `closed-dense-operator-with-resolvent-power-bounds`
+  - obl.02: forces target consequence `bounded-generator-approximation-scheme`
+  - obl.03: preserves `Yosida approximation convergence in resolvent-generation-criterion`
+  - obl.04: evades barrier scope `barrier + domain-closure-density + powers-of-resolvent-verification`
+  - obl.05: Show that the conjectured object preserves `Yosida approximation convergence in resolvent-generation-criterion` from the source side.
+  - obl.06: Prove that the conjectured object forces `bounded-generator-approximation-scheme` once the preserved invariant is realized.
+  - obl.07: Demonstrate that the sketch avoids the `barrier + domain-closure-density + powers-of-resolvent-verification` barrier or explain why the barrier does not apply in this encoding.
+  - obl.08: Keep the argument faithful to the `Current Bridge Agenda` regime while linking to the target bridge consequence.
+- Candidate lemmas:
+  - bridge.009.lemma.01: Definition lemma: the object `barrier + domain-closure-density + powers-of-resolvent-verification evasive representation for c0-generation-implies-closed-dense-generator` is well-defined and mathematically non-superficial.
+  - bridge.009.lemma.02: Invariant lemma: `barrier + domain-closure-density + powers-of-resolvent-verification evasive representation for c0-generation-implies-closed-dense-generator` preserves `Yosida approximation convergence in resolvent-generation-criterion` from the source statement family.
+  - bridge.009.lemma.03: Payoff lemma: realizing `barrier + domain-closure-density + powers-of-resolvent-verification evasive representation for c0-generation-implies-closed-dense-generator` implies `bounded-generator-approximation-scheme`.
+  - bridge.009.lemma.04: Encoding lemma: `barrier + domain-closure-density + powers-of-resolvent-verification evasive representation for c0-generation-implies-closed-dense-generator` is expressed in a representation that avoids the active barrier while preserving the target invariant.
+- Proof outline:
+  - step.01: Define `barrier + domain-closure-density + powers-of-resolvent-verification evasive representation for c0-generation-implies-closed-dense-generator` with the necessary attributes extracted in `conj.013`. -> A non-superficial bridge object with theorem-family-specific commitments.
+  - step.02: Show that the source side of `bridge.009` induces `Yosida approximation convergence in resolvent-generation-criterion` inside `barrier + domain-closure-density + powers-of-resolvent-verification evasive representation for c0-generation-implies-closed-dense-generator`. -> An invariant-preservation lemma for the conjectured object.
+  - step.03: Re-express the bridge concept in a representation that blocks the dominant barrier from firing. -> A barrier-aware encoding lemma or a clear failure diagnosis.
+  - step.04: Use the realized bridge object to force `bounded-generator-approximation-scheme`. -> A payoff theorem candidate or a sharply localized remaining obstruction.
+  - step.05: Run the designated counterfactual probe to verify that the bridge is structurally necessary rather than rhetorically similar. -> A falsifiability check distinguishing a genuine bridge concept from a superficial one.
+- Barrier checkpoints:
+  - barrier.01: Check whether `barrier + domain-closure-density + powers-of-resolvent-verification` blocks the proposed bridge object or proof tactic. / Re-encode the bridge object or abort the route if the barrier remains active.
+- Abort conditions:
+  - Abort if counterfactual probe fails to change bridge behavior: Remove `realizes antecedent schema `closed-dense-operator-with-resolvent-power-bounds`` from the candidate abstraction. => bridge-degrades-or-fails.
+  - Abort if the sketch still falls inside the `barrier + domain-closure-density + powers-of-resolvent-verification` barrier after re-encoding attempts.
+  - Abort if the conjectured object cannot be defined without collapsing back into a generic topic label.
+  - Abort if the payoff lemma does not improve over the existing bridge consequence or only restates known dependencies.
+- Success signal: A theorem-family-specific payoff lemma is isolated and survives the designated counterfactual probe.
+
+### psk.004 - closed-dense-operator-with-resolvent-power-bounds hitting-set or pseudorandom family via strat.001
+- Conjecture: conj.008
+- Strategy: strat.001 (Cross-Model Strategy around st.thm.hille-yosida-general)
+- Bridge: bridge.003
+- Family: barrier-escape-reencoding
+- Score: 0.9084
+- Target consequence: generator-of-exponentially-bounded-c0-semigroup
+- Antecedent: c0-semigroup-definition
+- Invariant: Yosida approximation convergence in operator-theoretic-Banach-space
+- Barrier scope: barrier + domain-closure-density + powers-of-resolvent-verification
+- Family rationale: Re-encode the conjectured bridge concept in a representation that preserves the intended invariant while sidestepping the currently dominant barrier family.
+- Definitional commitments: realizes antecedent schema `c0-semigroup-definition`, forces target consequence `generator-of-exponentially-bounded-c0-semigroup`, preserves `Yosida approximation convergence in operator-theoretic-Banach-space`, evades barrier scope `barrier + domain-closure-density + powers-of-resolvent-verification`
+- Counterfactual test: Remove `realizes antecedent schema `c0-semigroup-definition`` from the candidate abstraction. => bridge-degrades-or-fails
+- Proof obligations:
+  - obl.01: realizes antecedent schema `c0-semigroup-definition`
+  - obl.02: forces target consequence `generator-of-exponentially-bounded-c0-semigroup`
+  - obl.03: preserves `Yosida approximation convergence in operator-theoretic-Banach-space`
+  - obl.04: evades barrier scope `barrier + domain-closure-density + powers-of-resolvent-verification`
+  - obl.05: Show that the conjectured object preserves `Yosida approximation convergence in operator-theoretic-Banach-space` from the source side.
+  - obl.06: Prove that the conjectured object forces `generator-of-exponentially-bounded-c0-semigroup` once the preserved invariant is realized.
+  - obl.07: Demonstrate that the sketch avoids the `barrier + domain-closure-density + powers-of-resolvent-verification` barrier or explain why the barrier does not apply in this encoding.
+  - obl.08: Keep the argument faithful to the `Current Bridge Agenda` regime while linking to the target bridge consequence.
+- Candidate lemmas:
+  - bridge.003.lemma.01: Definition lemma: the object `closed-dense-operator-with-resolvent-power-bounds hitting-set or pseudorandom family` is well-defined and mathematically non-superficial.
+  - bridge.003.lemma.02: Invariant lemma: `closed-dense-operator-with-resolvent-power-bounds hitting-set or pseudorandom family` preserves `Yosida approximation convergence in operator-theoretic-Banach-space` from the source statement family.
+  - bridge.003.lemma.03: Payoff lemma: realizing `closed-dense-operator-with-resolvent-power-bounds hitting-set or pseudorandom family` implies `generator-of-exponentially-bounded-c0-semigroup`.
+  - bridge.003.lemma.04: Encoding lemma: `closed-dense-operator-with-resolvent-power-bounds hitting-set or pseudorandom family` is expressed in a representation that avoids the active barrier while preserving the target invariant.
+- Proof outline:
+  - step.01: Define `closed-dense-operator-with-resolvent-power-bounds hitting-set or pseudorandom family` with the necessary attributes extracted in `conj.008`. -> A non-superficial bridge object with theorem-family-specific commitments.
+  - step.02: Show that the source side of `bridge.003` induces `Yosida approximation convergence in operator-theoretic-Banach-space` inside `closed-dense-operator-with-resolvent-power-bounds hitting-set or pseudorandom family`. -> An invariant-preservation lemma for the conjectured object.
+  - step.03: Re-express the bridge concept in a representation that blocks the dominant barrier from firing. -> A barrier-aware encoding lemma or a clear failure diagnosis.
+  - step.04: Use the realized bridge object to force `generator-of-exponentially-bounded-c0-semigroup`. -> A payoff theorem candidate or a sharply localized remaining obstruction.
+  - step.05: Run the designated counterfactual probe to verify that the bridge is structurally necessary rather than rhetorically similar. -> A falsifiability check distinguishing a genuine bridge concept from a superficial one.
+- Barrier checkpoints:
+  - barrier.01: Check whether `barrier + domain-closure-density + powers-of-resolvent-verification` blocks the proposed bridge object or proof tactic. / Re-encode the bridge object or abort the route if the barrier remains active.
+- Abort conditions:
+  - Abort if counterfactual probe fails to change bridge behavior: Remove `realizes antecedent schema `c0-semigroup-definition`` from the candidate abstraction. => bridge-degrades-or-fails.
+  - Abort if the sketch still falls inside the `barrier + domain-closure-density + powers-of-resolvent-verification` barrier after re-encoding attempts.
+  - Abort if the conjectured object cannot be defined without collapsing back into a generic topic label.
+  - Abort if the payoff lemma does not improve over the existing bridge consequence or only restates known dependencies.
+- Success signal: A theorem-family-specific payoff lemma is isolated and survives the designated counterfactual probe.
+
+### psk.005 - closed-dense-operator-with-resolvent-power-bounds hitting-set or pseudorandom family via strat.001
+- Conjecture: conj.002
+- Strategy: strat.001 (Cross-Model Strategy around st.thm.hille-yosida-general)
+- Bridge: bridge.002
+- Family: barrier-escape-reencoding
+- Score: 0.9083
+- Target consequence: generator-of-exponentially-bounded-c0-semigroup
+- Antecedent: c0-semigroup-definition
+- Invariant: Yosida approximation convergence in unbounded-generator-graph
+- Barrier scope: approximation-limit-control + barrier + domain-closure-density
+- Family rationale: Re-encode the conjectured bridge concept in a representation that preserves the intended invariant while sidestepping the currently dominant barrier family.
+- Definitional commitments: realizes antecedent schema `c0-semigroup-definition`, forces target consequence `generator-of-exponentially-bounded-c0-semigroup`, preserves `Yosida approximation convergence in unbounded-generator-graph`, evades barrier scope `approximation-limit-control + barrier + domain-closure-density`
+- Counterfactual test: Remove `realizes antecedent schema `c0-semigroup-definition`` from the candidate abstraction. => bridge-degrades-or-fails
+- Proof obligations:
+  - obl.01: realizes antecedent schema `c0-semigroup-definition`
+  - obl.02: forces target consequence `generator-of-exponentially-bounded-c0-semigroup`
+  - obl.03: preserves `Yosida approximation convergence in unbounded-generator-graph`
+  - obl.04: evades barrier scope `approximation-limit-control + barrier + domain-closure-density`
+  - obl.05: Show that the conjectured object preserves `Yosida approximation convergence in unbounded-generator-graph` from the source side.
+  - obl.06: Prove that the conjectured object forces `generator-of-exponentially-bounded-c0-semigroup` once the preserved invariant is realized.
+  - obl.07: Demonstrate that the sketch avoids the `approximation-limit-control + barrier + domain-closure-density` barrier or explain why the barrier does not apply in this encoding.
+  - obl.08: Keep the argument faithful to the `Current Bridge Agenda` regime while linking to the target bridge consequence.
+- Candidate lemmas:
+  - bridge.002.lemma.01: Definition lemma: the object `closed-dense-operator-with-resolvent-power-bounds hitting-set or pseudorandom family` is well-defined and mathematically non-superficial.
+  - bridge.002.lemma.02: Invariant lemma: `closed-dense-operator-with-resolvent-power-bounds hitting-set or pseudorandom family` preserves `Yosida approximation convergence in unbounded-generator-graph` from the source statement family.
+  - bridge.002.lemma.03: Payoff lemma: realizing `closed-dense-operator-with-resolvent-power-bounds hitting-set or pseudorandom family` implies `generator-of-exponentially-bounded-c0-semigroup`.
+  - bridge.002.lemma.04: Encoding lemma: `closed-dense-operator-with-resolvent-power-bounds hitting-set or pseudorandom family` is expressed in a representation that avoids the active barrier while preserving the target invariant.
+- Proof outline:
+  - step.01: Define `closed-dense-operator-with-resolvent-power-bounds hitting-set or pseudorandom family` with the necessary attributes extracted in `conj.002`. -> A non-superficial bridge object with theorem-family-specific commitments.
+  - step.02: Show that the source side of `bridge.002` induces `Yosida approximation convergence in unbounded-generator-graph` inside `closed-dense-operator-with-resolvent-power-bounds hitting-set or pseudorandom family`. -> An invariant-preservation lemma for the conjectured object.
+  - step.03: Re-express the bridge concept in a representation that blocks the dominant barrier from firing. -> A barrier-aware encoding lemma or a clear failure diagnosis.
+  - step.04: Use the realized bridge object to force `generator-of-exponentially-bounded-c0-semigroup`. -> A payoff theorem candidate or a sharply localized remaining obstruction.
+  - step.05: Run the designated counterfactual probe to verify that the bridge is structurally necessary rather than rhetorically similar. -> A falsifiability check distinguishing a genuine bridge concept from a superficial one.
+- Barrier checkpoints:
+  - barrier.01: Check whether `approximation-limit-control + barrier + domain-closure-density` blocks the proposed bridge object or proof tactic. / Re-encode the bridge object or abort the route if the barrier remains active.
+- Abort conditions:
+  - Abort if counterfactual probe fails to change bridge behavior: Remove `realizes antecedent schema `c0-semigroup-definition`` from the candidate abstraction. => bridge-degrades-or-fails.
+  - Abort if the sketch still falls inside the `approximation-limit-control + barrier + domain-closure-density` barrier after re-encoding attempts.
+  - Abort if the conjectured object cannot be defined without collapsing back into a generic topic label.
+  - Abort if the payoff lemma does not improve over the existing bridge consequence or only restates known dependencies.
+- Success signal: A theorem-family-specific payoff lemma is isolated and survives the designated counterfactual probe.
+
+### psk.006 - closed-dense-operator-with-resolvent-power-bounds complexity potential in C0-semigroup-model via strat.001
+- Conjecture: conj.009
+- Strategy: strat.001 (Cross-Model Strategy around st.thm.hille-yosida-general)
+- Bridge: bridge.003
+- Family: barrier-escape-reencoding
+- Score: 0.8936
+- Target consequence: generator-of-exponentially-bounded-c0-semigroup
+- Antecedent: c0-semigroup-definition
+- Invariant: Yosida approximation convergence in operator-theoretic-Banach-space
+- Barrier scope: barrier + domain-closure-density + powers-of-resolvent-verification
+- Family rationale: Re-encode the conjectured bridge concept in a representation that preserves the intended invariant while sidestepping the currently dominant barrier family.
+- Definitional commitments: realizes antecedent schema `c0-semigroup-definition`, forces target consequence `generator-of-exponentially-bounded-c0-semigroup`, preserves `Yosida approximation convergence in operator-theoretic-Banach-space`, evades barrier scope `barrier + domain-closure-density + powers-of-resolvent-verification`
+- Counterfactual test: Remove `realizes antecedent schema `c0-semigroup-definition`` from the candidate abstraction. => bridge-degrades-or-fails
+- Proof obligations:
+  - obl.01: realizes antecedent schema `c0-semigroup-definition`
+  - obl.02: forces target consequence `generator-of-exponentially-bounded-c0-semigroup`
+  - obl.03: preserves `Yosida approximation convergence in operator-theoretic-Banach-space`
+  - obl.04: evades barrier scope `barrier + domain-closure-density + powers-of-resolvent-verification`
+  - obl.05: Show that the conjectured object preserves `Yosida approximation convergence in operator-theoretic-Banach-space` from the source side.
+  - obl.06: Prove that the conjectured object forces `generator-of-exponentially-bounded-c0-semigroup` once the preserved invariant is realized.
+  - obl.07: Demonstrate that the sketch avoids the `barrier + domain-closure-density + powers-of-resolvent-verification` barrier or explain why the barrier does not apply in this encoding.
+  - obl.08: Keep the argument faithful to the `Current Bridge Agenda` regime while linking to the target bridge consequence.
+- Candidate lemmas:
+  - bridge.003.lemma.01: Definition lemma: the object `closed-dense-operator-with-resolvent-power-bounds complexity potential in C0-semigroup-model` is well-defined and mathematically non-superficial.
+  - bridge.003.lemma.02: Invariant lemma: `closed-dense-operator-with-resolvent-power-bounds complexity potential in C0-semigroup-model` preserves `Yosida approximation convergence in operator-theoretic-Banach-space` from the source statement family.
+  - bridge.003.lemma.03: Payoff lemma: realizing `closed-dense-operator-with-resolvent-power-bounds complexity potential in C0-semigroup-model` implies `generator-of-exponentially-bounded-c0-semigroup`.
+  - bridge.003.lemma.04: Encoding lemma: `closed-dense-operator-with-resolvent-power-bounds complexity potential in C0-semigroup-model` is expressed in a representation that avoids the active barrier while preserving the target invariant.
+- Proof outline:
+  - step.01: Define `closed-dense-operator-with-resolvent-power-bounds complexity potential in C0-semigroup-model` with the necessary attributes extracted in `conj.009`. -> A non-superficial bridge object with theorem-family-specific commitments.
+  - step.02: Show that the source side of `bridge.003` induces `Yosida approximation convergence in operator-theoretic-Banach-space` inside `closed-dense-operator-with-resolvent-power-bounds complexity potential in C0-semigroup-model`. -> An invariant-preservation lemma for the conjectured object.
+  - step.03: Re-express the bridge concept in a representation that blocks the dominant barrier from firing. -> A barrier-aware encoding lemma or a clear failure diagnosis.
+  - step.04: Use the realized bridge object to force `generator-of-exponentially-bounded-c0-semigroup`. -> A payoff theorem candidate or a sharply localized remaining obstruction.
+  - step.05: Run the designated counterfactual probe to verify that the bridge is structurally necessary rather than rhetorically similar. -> A falsifiability check distinguishing a genuine bridge concept from a superficial one.
+- Barrier checkpoints:
+  - barrier.01: Check whether `barrier + domain-closure-density + powers-of-resolvent-verification` blocks the proposed bridge object or proof tactic. / Re-encode the bridge object or abort the route if the barrier remains active.
+- Abort conditions:
+  - Abort if counterfactual probe fails to change bridge behavior: Remove `realizes antecedent schema `c0-semigroup-definition`` from the candidate abstraction. => bridge-degrades-or-fails.
+  - Abort if the sketch still falls inside the `barrier + domain-closure-density + powers-of-resolvent-verification` barrier after re-encoding attempts.
+  - Abort if the conjectured object cannot be defined without collapsing back into a generic topic label.
+  - Abort if the payoff lemma does not improve over the existing bridge consequence or only restates known dependencies.
+- Success signal: A theorem-family-specific payoff lemma is isolated and survives the designated counterfactual probe.

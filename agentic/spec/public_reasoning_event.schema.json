@@ -1,0 +1,81 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://abducer.local/spec/public_reasoning_event.schema.json",
+  "title": "Abducer public reasoning event",
+  "description": "A bounded, artifact-grounded public rationale. It must never contain hidden model deliberation or chain-of-thought.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "event_id", "run_id", "workflow_id", "workflow_version", "target", "sequence", "timestamp_utc", "event_family", "phase", "artifact_validation_status", "claim_epistemic_status", "workflow_disposition", "public_inference", "evidence", "authority"],
+  "properties": {
+    "schema_version": {"const": "2.0.0"},
+    "event_id": {"type": "string", "minLength": 1, "pattern": "^[A-Za-z0-9._:-]+$"},
+    "run_id": {"type": "string", "minLength": 1, "pattern": "^[A-Za-z0-9._:-]+$"},
+    "workflow_id": {"type": "string", "minLength": 1},
+    "workflow_version": {"type": "string", "minLength": 1},
+    "profile_id": {"type": ["string", "null"]},
+    "domain_id": {"type": ["string", "null"], "pattern": "^[a-z][a-z0-9_]*$"},
+    "subworkflow_id": {"type": ["string", "null"], "pattern": "^[a-z][a-z0-9_-]*$"},
+    "parent_run_id": {"type": ["string", "null"]},
+    "parent_event_id": {"type": ["string", "null"]},
+    "execution_kind": {"enum": ["live", "synthetic_fixture", "legacy_projection"]},
+    "claim_level": {"type": ["string", "null"], "pattern": "^C[0-6]$"},
+    "target": {"type": "string", "minLength": 1},
+    "activation_receipt_id": {"type": ["string", "null"]},
+    "sequence": {"type": "integer", "minimum": 1},
+    "timestamp_utc": {"type": "string", "format": "date-time"},
+    "phase": {"type": "string", "minLength": 1},
+    "step_id": {"type": ["string", "null"]},
+    "skill": {"type": ["string", "null"]},
+    "attempt": {"type": "integer", "minimum": 1},
+    "branch": {"type": ["string", "null"]},
+    "event_family": {"enum": ["activation", "authorization", "tool_control", "public_inference", "validation", "failure", "obligation", "handoff", "skip", "exit"]},
+    "causal_parent_event_ids": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+    "parent_artifact_ids": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+    "artifact_validation_status": {"enum": ["not_checked", "integrity_valid", "integrity_invalid", "missing", "external_unverified"]},
+    "claim_epistemic_status": {"enum": ["not_applicable", "unknown", "conjectural", "evidence_backed", "proof_obligation", "validated", "refuted", "quarantined"]},
+    "workflow_disposition": {"enum": ["observed", "recommended", "authorized", "accepted", "warned", "blocked", "skipped", "failed", "handed_off", "completed", "archived"]},
+    "public_inference": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["question", "premises", "operator", "warrant", "conclusion", "assumptions", "alternatives", "falsifiers", "uncertainty", "scope", "trace_completeness"],
+      "properties": {
+        "question": {"type": "string"},
+        "premises": {"type": "array", "items": {"$ref": "#/$defs/typedStatement"}},
+        "operator": {"type": "string"},
+        "warrant": {"type": "string"},
+        "conclusion": {"type": "string"},
+        "assumptions": {"type": "array", "items": {"type": "string"}},
+        "alternatives": {"type": "array", "items": {"$ref": "#/$defs/alternative"}},
+        "falsifiers": {"type": "array", "items": {"type": "string"}},
+        "uncertainty": {"type": "string"},
+        "scope": {"$ref": "#/$defs/scope"},
+        "trace_completeness": {"enum": ["complete", "partial", "trace_incomplete", "not_applicable"]}
+      }
+    },
+    "evidence": {"type": "array", "items": {"$ref": "#/$defs/evidence"}},
+    "authority": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["exercised", "absent", "prohibitions_checked"],
+      "properties": {
+        "exercised": {"type": "array", "items": {"type": "string"}},
+        "absent": {"type": "array", "items": {"type": "string"}},
+        "prohibitions_checked": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "control": {"type": "object"},
+    "failure": {"type": "object"},
+    "gate": {"type": "object"},
+    "obligation": {"type": "object"},
+    "handoff": {"$ref": "#/$defs/handoff"},
+    "presentation_hints": {"type": "object"},
+    "idempotency_key": {"type": ["string", "null"]}
+  },
+  "$defs": {
+    "typedStatement": {"type": "object", "additionalProperties": false, "required": ["type", "statement"], "properties": {"type": {"enum": ["fact", "artifact", "assumption", "constraint", "observation", "claim"]}, "statement": {"type": "string", "minLength": 1}, "source_event_id": {"type": ["string", "null"]}}},
+    "alternative": {"type": "object", "additionalProperties": false, "required": ["candidate", "disposition"], "properties": {"candidate": {"type": "string", "minLength": 1}, "disposition": {"enum": ["accepted", "rejected", "deferred", "unknown"]}, "reason": {"type": "string"}}},
+    "scope": {"type": "object", "additionalProperties": false, "required": ["regime", "model", "before", "after"], "properties": {"regime": {"type": "string"}, "model": {"type": "string"}, "before": {"type": "string"}, "after": {"type": "string"}}},
+    "evidence": {"type": "object", "additionalProperties": false, "required": ["relation", "path", "artifact_type", "external"], "properties": {"relation": {"enum": ["supports", "refutes", "constrains", "background"]}, "path": {"type": "string", "minLength": 1}, "digest": {"type": ["string", "null"]}, "receipt_id": {"type": ["string", "null"]}, "artifact_type": {"type": "string", "minLength": 1}, "external": {"type": "boolean"}}, "allOf": [{"if": {"properties": {"external": {"const": false}}}, "then": {"properties": {"path": {"not": {"pattern": "^(?:/|[A-Za-z]:[\\\\/])"}}}}}]},
+    "handoff": {"type": "object", "additionalProperties": false, "required": ["destination_workflow_id", "accepted"], "properties": {"destination_workflow_id": {"type": "string", "minLength": 1}, "destination_step_id": {"type": ["string", "null"]}, "accepted": {"type": "boolean"}, "reason": {"type": "string"}}}
+  }
+}

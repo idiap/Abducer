@@ -1,0 +1,181 @@
+{
+  "version": 2,
+  "contract_schema": "agentic/spec/named_workflow_contract.schema.json",
+  "artifact_schema": "agentic/spec/named_workflow_artifacts.schema.json",
+  "workflows": [
+    {
+      "id": "evidence_to_proof_route_onramp", "version": "1.0.0", "visible_name": "Evidence to Proof Route Onramp", "aliases": ["evidence-to-proof-route-onramp", "kb-route-onramp"],
+      "activation": "opt_in", "owner_skill": "kb-entrypoint-pathfinder", "target_scope": ["mathematical", "p-vs-np"],
+      "trigger": {"all_of": ["source_bundle_present"], "any_of": ["external_mathematical_source", "missing_or_stale_kb", "entrypoint_or_proof_route_requested"], "none_of": ["untrusted_source_without_provenance"]},
+      "input_artifact": {"type": "SourceBundle", "schema": "agentic/spec/named_workflow_artifacts.schema.json"},
+      "steps": [
+        {"id":"ingest","order":10,"skill":"latex-kb-ingest","mode":"required","when":null,"consumes":["SourceBundle"],"produces":["IngestedKnowledgeBase"],"on_failure":"stop"},
+        {"id":"parse_pvsnp","order":20,"skill":"pvsnp-kb-parser","mode":"conditional","when":"target == 'p-vs-np' and source_format == 'latex'","consumes":["IngestedKnowledgeBase"],"produces":["ParsedKnowledgeBase"],"on_failure":"quarantine"},
+        {"id":"normalize_theorems","order":30,"skill":"theorem-body-normalizer","mode":"required","when":null,"consumes":["IngestedKnowledgeBase","ParsedKnowledgeBase"],"produces":["NormalizedTheoremCorpus"],"on_failure":"stop"},
+        {"id":"ground_conjecture","order":40,"skill":"kb-main-conjecture-grounder","mode":"required","when":null,"consumes":["NormalizedTheoremCorpus"],"produces":["GroundedConjecture"],"on_failure":"stop"},
+        {"id":"narrate_literature_evolution","order":45,"skill":"target-literature-evolution-narrator","mode":"conditional","when":"source_bundle_contains_literature_history","consumes":["GroundedConjecture","SourceBundle"],"produces":["TargetLiteratureNarrative"],"on_failure":"quarantine"},
+        {"id":"connect_proof","order":50,"skill":"kb-proof-connector","mode":"required","when":null,"consumes":["GroundedConjecture"],"produces":["ProofConnectionGraph"],"on_failure":"quarantine"},
+        {"id":"evaluate_hypotheses","order":60,"skill":"kb-hypothesis-evaluator","mode":"conditional","when":"hypotheses_present","consumes":["ProofConnectionGraph"],"produces":["HypothesisAssessment"],"on_failure":"quarantine"},
+        {"id":"audit_hubs","order":70,"skill":"hub-bias-auditor","mode":"required","when":null,"consumes":["ProofConnectionGraph"],"produces":["HubBiasAudit"],"on_failure":"stop"},
+        {"id":"find_entrypoint","order":80,"skill":"kb-entrypoint-finder","mode":"required","when":null,"consumes":["ProofConnectionGraph","HubBiasAudit"],"produces":["EntrypointCandidates"],"on_failure":"stop"},
+        {"id":"pathfind","order":90,"skill":"kb-entrypoint-pathfinder","mode":"required","when":null,"consumes":["EntrypointCandidates"],"produces":["ProofRouteCandidates"],"on_failure":"stop"},
+        {"id":"audit_regime_shift","order":100,"skill":"regime-shift-auditor","mode":"conditional","when":"route_crosses_regime_or_model","consumes":["ProofRouteCandidates"],"produces":["RegimeShiftAudit"],"on_failure":"quarantine"},
+        {"id":"hunt_counterexamples","order":110,"skill":"counterexample-hunter","mode":"required","when":null,"consumes":["ProofRouteCandidates"],"produces":["FalsificationPacket"],"on_failure":"stop"},
+        {"id":"expert_handoff","order":120,"skill":"expert-handoff","mode":"required","when":null,"consumes":["ProofRouteCandidates","FalsificationPacket"],"produces":["ExpertRouteDossier"],"on_failure":"stop"}
+      ],
+      "hooks": [
+        {"hook_id":"named-workflow-router","event":"UserPromptSubmit","phase":"activation","condition":"trigger matches","required_inputs":["prompt","target"],"decision":"recommend","emitted_artifact":"WorkflowRecommendation"},
+        {"hook_id":"workflow-membership-policy","event":"PreSkillUse","phase":"steps","condition":"active workflow and step membership validate","required_inputs":["workflow_id","workflow_version","target","step_id","skill","conditional_evidence"],"decision":"block","emitted_artifact":"SkillAuthorization"},
+        {"hook_id":"typed-output-policy","event":"PostSkillUse","phase":"steps","condition":"declared output and receipt validate","required_inputs":["workflow_id","step_id","artifact_type","epistemic_status","receipt"],"decision":"block","emitted_artifact":"SkillReceipt"},
+        {"hook_id":"workflow-tool-policy","event":"PreToolUse","phase":"steps","condition":"path safety mutation and budget validate","required_inputs":["workflow_id","step_id","tool","target_path","mutation_class"],"decision":"block","emitted_artifact":"ToolAuthorization"},
+        {"hook_id":"workflow-exit-policy","event":"Stop","phase":"exit","condition":"exit artifacts and obligations validate","required_inputs":["workflow_id","exit_artifacts","open_obligations"],"decision":"block","emitted_artifact":"WorkflowExitReceipt"}
+      ],
+      "exit_gate": {"validator":"agentic/scripts/validate_workflow_contracts.py","consumes":"ExpertRouteDossier","allowed":["validated","quarantined"],"required_artifacts":["ExpertRouteDossier","FalsificationPacket","HubBiasAudit"],"open_obligations_policy":"allow_declared"},
+      "handoffs": [{"when":"output_is_theorem_shaped","workflow":"theorem_proof_delivery","artifact_type":"ProofQueueItem","adapter":"expert_dossier_to_proof_queue"},{"when":"output_requires_conceptual_refinement","workflow":"conceptual_hypothesis_exploration_loop","artifact_type":"ExpertRouteDossier","adapter":"expert_dossier_to_legacy_conceptual_input"}],
+      "prohibitions": ["No assertion without provenance and assertion license", "No route promotion without a falsifier or stop condition"], "cost_profile": "bounded"
+    },
+    {
+      "id":"conceptual_frontier_deepening","version":"1.0.0","visible_name":"Conceptual Frontier Deepening","aliases":["conceptual-frontier-deepening","deep-conceptual-search"],"activation":"opt_in","owner_skill":"conceptual-frontier-deepening","target_scope":["mathematical","scientific"],
+      "trigger":{"all_of":["frozen_target_theory_literature_context","approved_budget"],"any_of":["repeated_blocker","representation_failure","aggressive_conceptual_search_requested"],"none_of":["unfrozen_context"]},
+      "input_artifact":{"type":"FrozenDiscoveryContext","schema":"agentic/spec/named_workflow_artifacts.schema.json"},
+      "steps":[
+        {"id":"plan_deepening","order":5,"skill":"conceptual-frontier-deepening","mode":"required","when":null,"consumes":["FrozenDiscoveryContext"],"produces":["ConceptualDeepeningPlan"],"on_failure":"stop"},
+        {"id":"assimilate_literature","order":10,"skill":"frontier-literature-assimilator","mode":"required","when":null,"consumes":["FrozenDiscoveryContext"],"produces":["LiteratureFrontierMap"],"on_failure":"stop"},
+        {"id":"forge_invention","order":20,"skill":"literature-conditioned-invention-forger","mode":"required","when":null,"consumes":["LiteratureFrontierMap"],"produces":["InventionCandidates"],"on_failure":"stop"},
+        {"id":"portfolio","order":30,"skill":"parallel-hypothesis-portfolio","mode":"required","when":null,"consumes":["InventionCandidates"],"produces":["HypothesisPortfolio"],"on_failure":"stop"},
+        {"id":"reflect_discovery","order":40,"skill":"reflective-conceptual-discovery","mode":"required","when":null,"consumes":["HypothesisPortfolio"],"produces":["ConceptualReflection"],"on_failure":"quarantine"},
+        {"id":"synthesize","order":50,"skill":"reflective-theory-synthesizer","mode":"required","when":null,"consumes":["ConceptualReflection"],"produces":["TheoryCandidates"],"on_failure":"stop"},
+        {"id":"blind_adjudicate","order":60,"skill":"blind-conceptual-preference-adjudicator","mode":"required","when":null,"consumes":["TheoryCandidates"],"produces":["BlindAdjudication"],"on_failure":"stop"},
+        {"id":"compile_atlas_defects","order":70,"skill":"theory-atlas-defect-compiler","mode":"conditional","when":"category_or_hott_pressure","consumes":["TheoryCandidates"],"produces":["TheoryAtlasDefects"],"on_failure":"quarantine"},
+        {"id":"derive_central_routes","order":80,"skill":"central-formal-conceptual-routes","mode":"required","when":null,"consumes":["BlindAdjudication"],"produces":["CentralConceptualRoutes"],"on_failure":"stop"},
+        {"id":"check_bridge_equivalence","order":90,"skill":"bridge-object-equivalence-checker","mode":"conditional","when":"multiple_carriers_compete","consumes":["CentralConceptualRoutes"],"produces":["BridgeEquivalenceDecision"],"on_failure":"quarantine"},
+        {"id":"produce_formal_claim","order":100,"skill":"formal-claim-producer","mode":"required","when":null,"consumes":["CentralConceptualRoutes","BlindAdjudication"],"produces":["FormalClaimProducerOutputV2"],"on_failure":"stop"}
+      ],
+      "hooks": [
+        {"hook_id":"named-workflow-router","event":"UserPromptSubmit","phase":"activation","condition":"trigger matches and budget approved","required_inputs":["prompt","target","budget"],"decision":"recommend","emitted_artifact":"WorkflowRecommendation"},
+        {"hook_id":"workflow-membership-policy","event":"PreSkillUse","phase":"steps","condition":"active workflow and step membership validate","required_inputs":["workflow_id","workflow_version","target","step_id","skill","conditional_evidence"],"decision":"block","emitted_artifact":"SkillAuthorization"},
+        {"hook_id":"typed-output-policy","event":"PostSkillUse","phase":"steps","condition":"declared output and receipt validate","required_inputs":["workflow_id","step_id","artifact_type","epistemic_status","receipt"],"decision":"block","emitted_artifact":"SkillReceipt"},
+        {"hook_id":"workflow-tool-policy","event":"PreToolUse","phase":"steps","condition":"path safety mutation and budget validate","required_inputs":["workflow_id","step_id","tool","target_path","mutation_class"],"decision":"block","emitted_artifact":"ToolAuthorization"},
+        {"hook_id":"workflow-exit-policy","event":"Stop","phase":"exit","condition":"exit artifacts and obligations validate","required_inputs":["workflow_id","exit_artifacts","open_obligations"],"decision":"block","emitted_artifact":"WorkflowExitReceipt"}
+      ],
+      "exit_gate":{"validator":"agentic/scripts/validate_workflow_contracts.py","consumes":"FormalClaimProducerOutputV2","allowed":["validated","quarantined","rejected"],"required_artifacts":["FormalClaimProducerOutputV2","BlindAdjudication"],"open_obligations_policy":"allow_declared"},
+      "handoffs":[{"when":"formal_claim_ready","workflow":"theorem_proof_delivery","artifact_type":"ProofQueueItem","adapter":"formal_claim_to_proof_queue"},{"when":"candidate_not_ready_or_non_dominated","workflow":"conceptual_hypothesis_exploration_loop","artifact_type":"ConceptualLearningDelta","adapter":"formal_claim_disposition_to_learning_delta"}],
+      "prohibitions":["No theory selection by experiment", "No non-blind route adjudication", "No execution without approved budget"],"cost_profile":"expensive"
+    },
+    {
+      "id":"theorem_proof_delivery","version":"1.0.0","visible_name":"Theorem Proof Delivery","aliases":["theorem-proof-delivery","proof-delivery"],"activation":"conditional","owner_skill":"proof-delivery-workflow-orchestrator","target_scope":["mathematical","p-vs-np"],
+      "trigger":{"all_of":["source_bound","target_bound","exact_theorem_statement"],"any_of":["proof_queue_item_ready"],"none_of":["ambiguous_quantifiers","unresolved_definition"]},
+      "input_artifact":{"type":"ProofQueueItem","schema":"agentic/spec/named_workflow_artifacts.schema.json"},
+      "steps":[
+        {"id":"orchestrate_delivery","order":10,"skill":"proof-delivery-workflow-orchestrator","mode":"required","when":null,"consumes":["ProofQueueItem"],"produces":["ProofDeliveryPlan"],"on_failure":"stop"},
+        {"id":"formalize_obligations","order":20,"skill":"proof-obligation-formalizer","mode":"required","when":null,"consumes":["ProofDeliveryPlan"],"produces":["FormalProofObligations"],"on_failure":"stop"},
+        {"id":"build_lemma_chain","order":30,"skill":"lemma-chain-proof-builder","mode":"required","when":null,"consumes":["FormalProofObligations"],"produces":["LemmaChain"],"on_failure":"quarantine"},
+        {"id":"split_gap_or_countermodel","order":40,"skill":"proof-gap-countermodel-splitter","mode":"conditional","when":"lemma_blocked_or_false","consumes":["LemmaChain"],"produces":["ProofGapDecision"],"on_failure":"stop"},
+        {"id":"control_pvsnp_inference","order":50,"skill":"pvsnp-inference-quality-controller","mode":"conditional","when":"target == 'p-vs-np'","consumes":["LemmaChain"],"produces":["InferenceQualityDecision"],"on_failure":"stop"},
+        {"id":"gate_proof","order":60,"skill":"proof-quality-gatekeeper","mode":"validator_only","when":null,"consumes":["LemmaChain"],"produces":["ProofGateDecision"],"on_failure":"stop"}
+      ],
+      "hooks": [
+        {"hook_id":"named-workflow-router","event":"UserPromptSubmit","phase":"activation","condition":"exact theorem trigger matches","required_inputs":["prompt","target"],"decision":"recommend","emitted_artifact":"WorkflowRecommendation"},
+        {"hook_id":"workflow-membership-policy","event":"PreSkillUse","phase":"steps","condition":"active workflow and step membership validate","required_inputs":["workflow_id","workflow_version","target","step_id","skill","conditional_evidence"],"decision":"block","emitted_artifact":"SkillAuthorization"},
+        {"hook_id":"typed-output-policy","event":"PostSkillUse","phase":"steps","condition":"declared output and receipt validate","required_inputs":["workflow_id","step_id","artifact_type","epistemic_status","receipt"],"decision":"block","emitted_artifact":"SkillReceipt"},
+        {"hook_id":"workflow-tool-policy","event":"PreToolUse","phase":"steps","condition":"path safety mutation and budget validate","required_inputs":["workflow_id","step_id","tool","target_path","mutation_class"],"decision":"block","emitted_artifact":"ToolAuthorization"},
+        {"hook_id":"workflow-exit-policy","event":"Stop","phase":"exit","condition":"proof gate and obligations validate","required_inputs":["workflow_id","exit_artifacts","open_obligations"],"decision":"block","emitted_artifact":"WorkflowExitReceipt"}
+      ],
+      "exit_gate":{"validator":"agentic/scripts/validate_workflow_contracts.py","consumes":"ProofGateDecision","allowed":["validated","quarantined","rejected"],"required_artifacts":["ProofGateDecision","FormalProofObligations"],"open_obligations_policy":"allow_declared"},
+      "handoffs":[{"when":"proof_accepted","workflow":"scientific_contribution_cultivation","artifact_type":"ResultAtlasSlice","adapter":"proof_gate_to_result_atlas_slice"},{"when":"failure_certificate_issued","workflow":"conceptual_hypothesis_exploration_loop","artifact_type":"ProofFailureCertificate","adapter":"proof_gap_to_failure_certificate"}],
+      "prohibitions":["No circular lemma chains", "No silent gap closure", "No proof claim beyond the exact statement"],"cost_profile":"bounded"
+    },
+    {
+      "id":"scientific_contribution_cultivation","version":"1.0.0","visible_name":"Scientific Contribution Cultivation","aliases":["scientific-contribution-cultivation","contribution-cultivation"],"activation":"conditional","owner_skill":"scientific-contribution-detector","target_scope":["mathematical","scientific","manuscript"],
+      "trigger":{"all_of":["result_atlas_slice_present"],"any_of":["result_atlas_changed","subgoal_handoff_ready","contribution_checkpoint","paper_readiness_requested"],"none_of":["unsupported_result"]},
+      "input_artifact":{"type":"ResultAtlasSlice","schema":"agentic/spec/named_workflow_artifacts.schema.json"},
+      "steps":[
+        {"id":"maintain_atlas","order":10,"skill":"result-atlas-maintainer","mode":"required","when":null,"consumes":["ResultAtlasSlice"],"produces":["UpdatedResultAtlas"],"on_failure":"stop"},
+        {"id":"manage_subgoal","order":20,"skill":"contribution-oriented-subgoal-manager","mode":"required","when":null,"consumes":["UpdatedResultAtlas"],"produces":["ContributionSubgoalPacket"],"on_failure":"stop"},
+        {"id":"detect_contribution","order":30,"skill":"scientific-contribution-detector","mode":"required","when":null,"consumes":["ContributionSubgoalPacket"],"produces":["ContributionCandidate"],"on_failure":"stop"},
+        {"id":"assess_value","order":40,"skill":"contribution-value-assessor","mode":"required","when":null,"consumes":["ContributionCandidate"],"produces":["ContributionValueAssessment"],"on_failure":"stop"},
+        {"id":"audit_alignment","order":50,"skill":"main-problem-alignment-auditor","mode":"validator_only","when":null,"consumes":["ContributionValueAssessment"],"produces":["MainProblemAlignmentAudit"],"on_failure":"stop"},
+        {"id":"audit_enablement","order":60,"skill":"completed-subgoal-enablement-auditor","mode":"required","when":null,"consumes":["ContributionValueAssessment"],"produces":["EnablementAudit"],"on_failure":"quarantine"},
+        {"id":"package_enablement","order":70,"skill":"subgoal-enablement-handoff-packager","mode":"conditional","when":"enablement_non_empty","consumes":["EnablementAudit"],"produces":["EnablementHandoff"],"on_failure":"quarantine"},
+        {"id":"paper_handoff","order":80,"skill":"scientific-contribution-paper-handoff","mode":"conditional","when":"contribution_paper_ready","consumes":["ContributionValueAssessment","MainProblemAlignmentAudit"],"produces":["PaperArgumentHandoff"],"on_failure":"quarantine"}
+      ],
+      "hooks": [
+        {"hook_id":"named-workflow-router","event":"UserPromptSubmit","phase":"activation","condition":"contribution trigger matches","required_inputs":["prompt","target"],"decision":"recommend","emitted_artifact":"WorkflowRecommendation"},
+        {"hook_id":"workflow-membership-policy","event":"PreSkillUse","phase":"steps","condition":"active workflow and step membership validate","required_inputs":["workflow_id","workflow_version","target","step_id","skill","conditional_evidence"],"decision":"block","emitted_artifact":"SkillAuthorization"},
+        {"hook_id":"typed-output-policy","event":"PostSkillUse","phase":"steps","condition":"declared output and receipt validate","required_inputs":["workflow_id","step_id","artifact_type","epistemic_status","receipt"],"decision":"block","emitted_artifact":"SkillReceipt"},
+        {"hook_id":"workflow-tool-policy","event":"PreToolUse","phase":"steps","condition":"path safety mutation and budget validate","required_inputs":["workflow_id","step_id","tool","target_path","mutation_class"],"decision":"block","emitted_artifact":"ToolAuthorization"},
+        {"hook_id":"workflow-exit-policy","event":"Stop","phase":"exit","condition":"claim and evidence exit requirements validate","required_inputs":["workflow_id","exit_artifacts","open_obligations"],"decision":"block","emitted_artifact":"WorkflowExitReceipt"}
+      ],
+      "exit_gate":{"validator":"agentic/scripts/validate_workflow_contracts.py","consumes":"EnablementAudit","allowed":["validated","quarantined","archived"],"required_artifacts":["ContributionValueAssessment","MainProblemAlignmentAudit","EnablementAudit"],"open_obligations_policy":"allow_declared"},
+      "handoffs":[{"when":"paper_ready","workflow":"manuscript_result_elaboration","artifact_type":"PaperArgumentHandoff","adapter":"paper_argument_to_draft"}],
+      "prohibitions":["No novelty inflation", "No support-only result promoted as a main result", "No paper claim without mechanism evidence"],"cost_profile":"lightweight"
+    },
+    {
+      "id":"manuscript_result_elaboration","version":"1.0.0","visible_name":"Manuscript Result Elaboration","aliases":["manuscript-result-elaboration","results-elaboration"],"activation":"opt_in","owner_skill":"results-elaboration-workflow-orchestrator","target_scope":["manuscript"],
+      "trigger":{"all_of":["paper_draft_present"],"any_of":["expansion_markers","open_modules","result_elaboration_requested"],"none_of":["discovery_marathon_requested"]},
+      "input_artifact":{"type":"PaperDraft","schema":"agentic/spec/named_workflow_artifacts.schema.json"},
+      "steps":[
+        {"id":"orchestrate_elaboration","order":10,"skill":"results-elaboration-workflow-orchestrator","mode":"required","when":null,"consumes":["PaperDraft"],"produces":["ElaborationPlan"],"on_failure":"stop"},
+        {"id":"interpret_context","order":20,"skill":"results-context-interpreter","mode":"required","when":null,"consumes":["ElaborationPlan"],"produces":["ResultsContext"],"on_failure":"stop"},
+        {"id":"extract_extensions","order":30,"skill":"results-extension-need-extractor","mode":"conditional","when":"expansion_markers","consumes":["ResultsContext"],"produces":["ExtensionNeeds"],"on_failure":"quarantine"},
+        {"id":"decompose_modules","order":40,"skill":"results-open-module-decomposer","mode":"conditional","when":"open_modules","consumes":["ResultsContext"],"produces":["OpenModulePlan"],"on_failure":"quarantine"},
+        {"id":"plan_strategy","order":50,"skill":"results-extension-strategy-planner","mode":"required","when":null,"consumes":["ExtensionNeeds","OpenModulePlan"],"produces":["ExtensionStrategy"],"on_failure":"stop"},
+        {"id":"self_refine","order":60,"skill":"results-critical-self-refiner","mode":"required","when":null,"consumes":["ExtensionStrategy"],"produces":["RefinedResultCandidates"],"on_failure":"stop"},
+        {"id":"certify_scope","order":70,"skill":"results-theorem-scope-certifier","mode":"validator_only","when":null,"consumes":["RefinedResultCandidates"],"produces":["TheoremScopeDecision"],"on_failure":"stop"},
+        {"id":"formalize_finite_object","order":80,"skill":"results-finite-object-formalizer","mode":"conditional","when":"finite_object_required","consumes":["RefinedResultCandidates"],"produces":["FiniteObjectDefinition"],"on_failure":"quarantine"},
+        {"id":"derive_proof_packet","order":90,"skill":"results-proof-packet-deriver","mode":"conditional","when":"proof_class_work","consumes":["RefinedResultCandidates"],"produces":["ResultsProofPacket"],"on_failure":"quarantine"},
+        {"id":"audit_prior_art","order":100,"skill":"results-prior-art-disqualifier-auditor","mode":"validator_only","when":null,"consumes":["RefinedResultCandidates"],"produces":["PriorArtBoundaryAudit"],"on_failure":"stop"},
+        {"id":"integrate_narrative","order":110,"skill":"results-narrative-integrator","mode":"required","when":null,"consumes":["RefinedResultCandidates","PriorArtBoundaryAudit"],"produces":["IntegratedPaperDraft"],"on_failure":"stop"},
+        {"id":"validate_expansion","order":120,"skill":"results-expansion-validator","mode":"validator_only","when":null,"consumes":["IntegratedPaperDraft"],"produces":["ExpansionValidation"],"on_failure":"stop"},
+        {"id":"gate_readiness","order":130,"skill":"results-paper-readiness-gatekeeper","mode":"validator_only","when":null,"consumes":["IntegratedPaperDraft","ExpansionValidation"],"produces":["PaperReadinessDecision"],"on_failure":"stop"}
+      ],
+      "hooks": [
+        {"hook_id":"named-workflow-router","event":"UserPromptSubmit","phase":"activation","condition":"manuscript trigger matches","required_inputs":["prompt","target"],"decision":"recommend","emitted_artifact":"WorkflowRecommendation"},
+        {"hook_id":"workflow-membership-policy","event":"PreSkillUse","phase":"steps","condition":"active workflow and step membership validate","required_inputs":["workflow_id","workflow_version","target","step_id","skill","conditional_evidence","profile"],"decision":"block","emitted_artifact":"SkillAuthorization"},
+        {"hook_id":"typed-output-policy","event":"PostSkillUse","phase":"steps","condition":"declared output and receipt validate","required_inputs":["workflow_id","step_id","artifact_type","epistemic_status","receipt"],"decision":"block","emitted_artifact":"SkillReceipt"},
+        {"hook_id":"workflow-tool-policy","event":"PreToolUse","phase":"steps","condition":"path safety mutation and budget validate","required_inputs":["workflow_id","step_id","tool","target_path","mutation_class"],"decision":"block","emitted_artifact":"ToolAuthorization"},
+        {"hook_id":"workflow-exit-policy","event":"Stop","phase":"exit","condition":"marker coverage and readiness validate","required_inputs":["workflow_id","exit_artifacts","open_obligations"],"decision":"block","emitted_artifact":"WorkflowExitReceipt"}
+      ],
+      "exit_gate":{"validator":"agentic/scripts/validate_workflow_contracts.py","consumes":"PaperReadinessDecision","allowed":["validated","quarantined","rejected"],"required_artifacts":["IntegratedPaperDraft","ExpansionValidation","PaperReadinessDecision"],"open_obligations_policy":"allow_declared"},
+      "handoffs":[{"when":"new_theorem_requires_proof","workflow":"theorem_proof_delivery","artifact_type":"ProofQueueItem","adapter":"paper_readiness_to_proof_queue"}],
+      "prohibitions":["No discovery marathon invocation", "No conflation of finite asymptotic and continuum claims", "No unresolved marker silently removed"],"cost_profile":"bounded",
+      "profiles":[{
+        "id":"route_a","version":"1.0.0","visible_name":"Route A Manuscript Attack","aliases":["route-a","routea"],"activation":"opt_in","target_scope":["manuscript:route-a"],
+        "steps":[
+          {"id":"routea_attack","order":10,"skill":"routea-paper-attack-orchestrator","mode":"required","when":null,"consumes":["PaperDraft"],"produces":["RouteAAttackPlan"],"on_failure":"stop"},
+          {"id":"routea_open_points","order":20,"skill":"routea-open-point-orchestrator","mode":"required","when":null,"consumes":["RouteAAttackPlan"],"produces":["RouteAOpenPointPlan"],"on_failure":"stop"},
+          {"id":"routea_symbolic_audit","order":30,"skill":"routea-symbolic-cas-auditor","mode":"conditional","when":"exact_algebra_required","consumes":["ResultCandidatePacket"],"produces":["SymbolicCASAudit"],"on_failure":"quarantine"},
+          {"id":"routea_integrate_result","order":40,"skill":"routea-paper-result-integrator","mode":"required","when":null,"consumes":["ResultCandidatePacket"],"produces":["RouteAIntegratedResult"],"on_failure":"stop"},
+          {"id":"routea_second_wave","order":50,"skill":"routea-second-wave-manuscript-integrator","mode":"required","when":null,"consumes":["RouteAIntegratedResult"],"produces":["IntegratedPaperDraft"],"on_failure":"stop"}
+        ],
+        "specialist_skills":["routea-geometric-collar-builder","routea-same-theory-normalization-certifier","routea-geometric-coefficient-extractor","routea-finite-margin-evaluator","routea-margin-endpoint-certifier","routea-endpoint-error-budget-certifier","routea-endpoint-local-integral-calculator","routea-same-theory-factorization-hunter","routea-collar-redesign-forger","routea-continuum-gap-gatekeeper"],
+        "specialist_output":"ResultCandidatePacket","specialist_after":"routea_open_points","validation_tail_start":"certify_scope","validation_tail_adapter":{"from":"ResultCandidatePacket","to":"RefinedResultCandidates"}
+      }]
+    },
+    {
+      "id":"deep_review_and_reorientation","version":"1.0.0","visible_name":"Deep Review and Reorientation","aliases":["deep-review-and-reorientation","deep-review"],"activation":"conditional","owner_skill":"review-reasoner","target_scope":["mathematical","scientific","workflow","release"],
+      "trigger":{"all_of":["run_evidence_bundle_present"],"any_of":["repeated_blockage","contradictory_evidence","low_explanatory_power","major_release_gate","deep_review_requested"],"none_of":["proof_acceptance_requested"]},
+      "input_artifact":{"type":"RunEvidenceBundle","schema":"agentic/spec/named_workflow_artifacts.schema.json"},
+      "steps":[
+        {"id":"formalize_framework_state","order":10,"skill":"kb-framework-state-formalizer","mode":"required","when":null,"consumes":["RunEvidenceBundle"],"produces":["FrameworkState"],"on_failure":"stop"},
+        {"id":"review_discovery_science","order":20,"skill":"review-reasoner-discovery-scientist","mode":"advisory","when":null,"consumes":["FrameworkState"],"produces":["ReviewFindingSet"],"on_failure":"quarantine"},
+        {"id":"review_concept_logic","order":30,"skill":"review-reasoner-concept-logician","mode":"advisory","when":null,"consumes":["FrameworkState"],"produces":["ReviewFindingSet"],"on_failure":"quarantine"},
+        {"id":"review_epistemology","order":40,"skill":"review-reasoner-epistemologist","mode":"advisory","when":null,"consumes":["FrameworkState"],"produces":["ReviewFindingSet"],"on_failure":"quarantine"},
+        {"id":"review_fields","order":50,"skill":"review-reasoner-fields-medalist","mode":"advisory","when":null,"consumes":["FrameworkState"],"produces":["ReviewFindingSet"],"on_failure":"quarantine"},
+        {"id":"review_radical_design","order":60,"skill":"review-reasoner-radical-designer","mode":"advisory","when":null,"consumes":["FrameworkState"],"produces":["ReviewFindingSet"],"on_failure":"quarantine"},
+        {"id":"synthesize_meta_review","order":70,"skill":"meta","mode":"required","when":null,"consumes":["ReviewFindingSet"],"produces":["MetaReview"],"on_failure":"stop"},
+        {"id":"govern_repairs","order":80,"skill":"looper-workflow-contract-governor","mode":"validator_only","when":null,"consumes":["MetaReview"],"produces":["GovernedRepairQueue"],"on_failure":"stop"}
+      ],
+      "hooks": [
+        {"hook_id":"named-workflow-router","event":"UserPromptSubmit","phase":"activation","condition":"deep-review trigger matches","required_inputs":["prompt","target"],"decision":"recommend","emitted_artifact":"WorkflowRecommendation"},
+        {"hook_id":"workflow-membership-policy","event":"PreSkillUse","phase":"steps","condition":"active workflow and step membership validate","required_inputs":["workflow_id","workflow_version","target","step_id","skill","conditional_evidence"],"decision":"block","emitted_artifact":"SkillAuthorization"},
+        {"hook_id":"typed-output-policy","event":"PostSkillUse","phase":"steps","condition":"declared output and receipt validate","required_inputs":["workflow_id","step_id","artifact_type","epistemic_status","receipt"],"decision":"block","emitted_artifact":"SkillReceipt"},
+        {"hook_id":"workflow-tool-policy","event":"PreToolUse","phase":"steps","condition":"path safety mutation and budget validate","required_inputs":["workflow_id","step_id","tool","target_path","mutation_class"],"decision":"block","emitted_artifact":"ToolAuthorization"},
+        {"hook_id":"workflow-exit-policy","event":"Stop","phase":"exit","condition":"repair queue and review evidence validate","required_inputs":["workflow_id","exit_artifacts","open_obligations"],"decision":"block","emitted_artifact":"WorkflowExitReceipt"}
+      ],
+      "exit_gate":{"validator":"agentic/scripts/validate_workflow_contracts.py","consumes":"GovernedRepairQueue","allowed":["validated","archived"],"required_artifacts":["FrameworkState","MetaReview","GovernedRepairQueue"],"open_obligations_policy":"allow_declared"},
+      "handoffs":[{"when":"repair_workflow_assigned","workflow":"target_navigation_loop","artifact_type":"GovernedRepairQueue","adapter":"governed_repair_queue_to_legacy_control_input"},{"when":"conceptual_reorientation_required","workflow":"conceptual_hypothesis_exploration_loop","artifact_type":"GovernedRepairQueue","adapter":"governed_repair_queue_to_legacy_control_input"}],
+      "prohibitions":["No proof acceptance authority", "No epistemic upgrade authority", "No release authority"],"cost_profile":"bounded"
+    }
+  ]
+}

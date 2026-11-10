@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema", "$id": "urn:abducer:framework-paper:claim-ledger:1",
+  "title": "PaperClaimLedger", "type": "object", "additionalProperties": false,
+  "required": ["schema_version", "ledger_id", "input_digests", "claims", "ledger_digest"],
+  "properties": {
+    "schema_version": {"const": "1.0.0"}, "ledger_id": {"type": "string", "minLength": 1}, "input_digests": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"$ref": "#/$defs/digest"}},
+    "claims": {"type": "array", "items": {"$ref": "#/$defs/claim"}}, "ledger_digest": {"$ref": "#/$defs/digest"}
+  },
+  "$defs": {
+    "digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"}, "strings": {"type": "array", "items": {"type": "string"}, "uniqueItems": true}, "nonemptyStrings": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}, "uniqueItems": true},
+    "claim": {"type": "object", "additionalProperties": false, "required": ["claim_id", "text", "scope", "claim_class", "status", "evidence_ids", "counterevidence_ids", "assumptions", "limitations", "allowed_verbs", "allowed_sections", "external_citation_required", "named_receipt_required", "freshness", "resolution"], "properties": {
+      "claim_id": {"type": "string", "pattern": "^CL-[A-Z0-9-]+$"}, "text": {"type": "string", "minLength": 1}, "scope": {"type": "string", "minLength": 1},
+      "claim_class": {"enum": ["descriptive", "interpretive", "evaluative", "comparative", "novelty", "proposed"]}, "status": {"enum": ["declared", "observed", "replayed", "inferred", "verified", "unknown", "contested"]},
+      "evidence_ids": {"type": "array", "items": {"type": "string"}, "uniqueItems": true}, "counterevidence_ids": {"$ref": "#/$defs/strings"}, "assumptions": {"$ref": "#/$defs/strings"}, "limitations": {"$ref": "#/$defs/strings"}, "allowed_verbs": {"$ref": "#/$defs/nonemptyStrings"}, "allowed_sections": {"$ref": "#/$defs/nonemptyStrings"},
+      "external_citation_required": {"type": "boolean"}, "named_receipt_required": {"type": "boolean"}, "freshness": {"enum": ["current", "stale", "unknown"]}, "resolution": {"enum": ["accepted", "withheld", "requires_resolution"]}
+    }, "allOf": [
+      {"if": {"properties": {"claim_class": {"enum": ["novelty", "comparative"]}}}, "then": {"properties": {"external_citation_required": {"const": true}}}},
+      {"if": {"properties": {"claim_class": {"const": "evaluative"}, "status": {"enum": ["observed", "replayed", "verified"]}}}, "then": {"properties": {"named_receipt_required": {"const": true}, "evidence_ids": {"minItems": 1}}}},
+      {"if": {"properties": {"status": {"enum": ["unknown", "contested"]}}}, "then": {"properties": {"resolution": {"enum": ["withheld", "requires_resolution"]}}}},
+      {"if": {"properties": {"freshness": {"const": "stale"}}}, "then": {"properties": {"resolution": {"not": {"const": "accepted"}}}}}
+    ]}
+  }
+}

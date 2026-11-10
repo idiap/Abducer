@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://abducer.local/spec/dynamic_experiment_world_request_batch_v1.schema.json",
+  "title": "Ordered pre-execution five-world request batch",
+  "description": "The exact five requests and their distinct producer bindings committed by the world-matrix anchor before any world may execute.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "batch_kind",
+    "commission_id",
+    "commission_digest",
+    "world_order",
+    "requests",
+    "request_producer_bindings",
+    "batch_digest"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "batch_kind": {"const": "ordered_pre_execution_world_requests"},
+    "commission_id": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/identifier"},
+    "commission_digest": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/digest"},
+    "world_order": {
+      "const": [
+        "no_probe",
+        "neutral_inconclusive",
+        "misleading_toy_positive",
+        "registered_premise_falsifier",
+        "operational_failure"
+      ]
+    },
+    "requests": {
+      "type": "array",
+      "minItems": 5,
+      "maxItems": 5,
+      "items": {"$ref": "./dynamic_experiment_world_request_v2.schema.json"}
+    },
+    "request_producer_bindings": {
+      "type": "array",
+      "minItems": 5,
+      "maxItems": 5,
+      "items": {"$ref": "./dynamic_experiment_causal_producer_binding_v2.schema.json"}
+    },
+    "batch_digest": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/digest"}
+  }
+}

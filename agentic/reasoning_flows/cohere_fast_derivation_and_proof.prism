@@ -1,0 +1,8 @@
+erfl 0.2
+reasoning cohere_fast_derivation_and_proof {
+  goal "produce a conditional derivation packet with open obligations retained" -> derivation_status
+  steps pre:_[frontier_state->derivation_candidate] -requires> ...
+        e0:E[derivation_candidate->derivation_status]
+  on e0.accepted => switch @cohere_fast_independent_audit
+  on e0.quarantined => stop
+}

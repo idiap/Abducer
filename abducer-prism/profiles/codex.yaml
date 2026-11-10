@@ -1,0 +1,53 @@
+{
+  "schema_version": 1,
+  "provider": "codex",
+  "profile_version": "2026-08-19",
+  "retrieved_at": "2026-08-19",
+  "sources": [
+    {"title": "Codex hooks", "url": "https://developers.openai.com/codex/hooks/"},
+    {"title": "Codex skills", "url": "https://developers.openai.com/codex/skills/"},
+    {"title": "Codex AGENTS.md", "url": "https://developers.openai.com/codex/guides/agents-md/"},
+    {"title": "Codex subagents", "url": "https://learn.chatgpt.com/docs/agent-configuration/subagents"},
+    {"title": "Codex MCP", "url": "https://learn.chatgpt.com/docs/extend/mcp"}
+  ],
+  "project_markers": [".codex/config.toml", ".codex/hooks.json", ".codex/agents", ".agents/skills", "AGENTS.md", "AGENTS.override.md"],
+  "artifact_rules": [
+    {"id": "instructions", "kind": "instructions", "globs": ["AGENTS.md", "AGENTS.override.md", "**/AGENTS.md", "**/AGENTS.override.md"], "priority": 80},
+    {"id": "configuration", "kind": "configuration", "globs": [".codex/config.toml"], "priority": 100},
+    {"id": "hooks", "kind": "hook_configuration", "globs": [".codex/hooks.json"], "priority": 110},
+    {"id": "agents", "kind": "agent", "globs": [".codex/agents/*.toml", ".codex/agents/**/*.toml"], "priority": 100},
+    {"id": "skills", "kind": "skill", "globs": [".agents/skills/*/SKILL.md", ".agents/skills/**/SKILL.md"], "priority": 100},
+    {"id": "skill_resources", "kind": "skill_resource", "globs": [".agents/skills/*/assets/**", ".agents/skills/*/references/**", ".agents/skills/*/scripts/**"], "priority": 90},
+    {"id": "rules", "kind": "permission_rule", "globs": [".codex/rules/*.rules", ".codex/rules/**/*.rules"], "priority": 90}
+  ],
+  "hooks": {
+    "contract": "declarative_json_or_inline_toml",
+    "configuration_globs": [".codex/hooks.json", ".codex/config.toml"],
+    "events": {
+      "SessionStart": {"matcher": "source", "values": ["startup", "resume", "clear", "compact"], "guard_role": "context"},
+      "SessionEnd": {"matcher": "reason", "values": ["other"], "guard_role": "checkpoint_advisory"},
+      "SubagentStart": {"matcher": "agent_type", "guard_role": "context"},
+      "SubagentStop": {"matcher": "agent_type", "guard_role": "checkpoint"},
+      "PreToolUse": {"matcher": "tool_name", "guard_role": "source_write_execution_secret"},
+      "PermissionRequest": {"matcher": "tool_name", "guard_role": "execution"},
+      "PostToolUse": {"matcher": "tool_name", "guard_role": "post_generation"},
+      "PreCompact": {"matcher": "trigger", "values": ["manual", "auto"], "guard_role": "none"},
+      "PostCompact": {"matcher": "trigger", "values": ["manual", "auto"], "guard_role": "none"},
+      "UserPromptSubmit": {"matcher": null, "guard_role": "none"},
+      "Stop": {"matcher": null, "guard_role": "completion"}
+    },
+    "handler_types": {
+      "command": {"status": "executed"},
+      "prompt": {"status": "parsed_not_executed"},
+      "agent": {"status": "parsed_not_executed"}
+    },
+    "unknown_event": "unsupported"
+  },
+  "limitations": [
+    "Project hooks require the .codex layer to be trusted.",
+    "Only command handlers execute in the documented snapshot; prompt and agent handlers are parsed and skipped.",
+    "Hook commands run with the session cwd and matching command hooks run concurrently.",
+    "The profile records async command hooks as native behavior, but conversion must verify Prism runtime activation separately.",
+    "AGENTS.md prose and custom agent instructions imply behavior but do not establish an executable workflow graph."
+  ]
+}

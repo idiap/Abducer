@@ -1,0 +1,67 @@
+# SPDX-FileCopyrightText: © 2026 Idiap Research Institute <contact@idiap.ch>
+#
+# SPDX-FileContributor: Andre Freitas <andre.freitas@idiap.ch>
+# Neuro-symbolic AI Group
+#
+# SPDX-FileContributor: Danilo Gusicuma <danilo.gusicuma@idiap.ch>
+# Neuro-symbolic AI Group
+#
+# SPDX-License-Identifier: MIT
+# Function: determine what a validated result contributes and whether that contribution is paper-ready.
+# Input: ResultAtlasSlice identifies the result under interpretation.
+# Types: ScientificContributionHypothesis proposes the contribution; ContributionSupportAssessment tests it.
+# Output: ContributionReadinessAssessment returns disposition plus value, alignment, and enablement audits.
+# Routing: paper-ready continues to manuscript elaboration; refuted or stalled work stops.
+# Boundary: interpretation does not inflate novelty or support.
+# Layer: high-level epistemic topology only.
+# Metadata: workflows/manifest.json (`scientific_contribution_cultivation`).
+
+from workflows.scientific_contribution_cultivation.types import (
+    ContributionReadinessAssessment,
+    ScientificContributionHypothesis,
+    ScientificContributionDisposition,
+    ContributionValueAssessment,
+    ContributionSupportAssessment,
+    EnablementAudit,
+    MainProblemAlignmentAudit,
+    ResultAtlasSlice,
+)
+
+from workflows.scientific_contribution_cultivation.occurrences import (
+    AbductiveScientificContributionHypothesisFormation,
+    EvidentialContributionReadinessAssessment,
+    ContributionReadinessInput,
+    RefutationalContributionSupportAssessment,
+)
+
+from workflows.scientific_contribution_cultivation.relations import (
+    CalibratesContributionReadiness,
+    TestsContributionHypothesis,
+)
+
+reasoning ScientificContributionCultivation(
+    result: ResultAtlasSlice,
+) -> Generated[ContributionReadinessAssessment]:
+    sequence:
+        # Abduction interprets the result as a candidate contribution, not a fact.
+        [a0: AbductiveScientificContributionHypothesisFormation(result)]
+        # Refutation tests whether the proposed contribution is actually supported.
+        [r0: RefutationalContributionSupportAssessment(a0.value)] by TestsContributionHypothesis
+        # Readiness joins hypothesis and support assessment and emits all three audits.
+        [e0: EvidentialContributionReadinessAssessment(ContributionReadinessInput(
+            contribution_hypothesis = a0.value,
+            support_assessment = r0.value,
+        ))] by CalibratesContributionReadiness
+
+    return e0
+
+# HANDOFF (non-executable): when e0 is paper-ready, construct the contract's
+# PaperArgumentHandoff through paper_argument_to_draft and offer it to
+# manuscript_result_elaboration. Transport does not inflate novelty, promote a
+# support-only result, or add mechanism evidence or other epistemic warrant.
+# ACCEPT (non-executable): paper_ready is a handoff condition, not a local
+# terminal accept or publication decision.
+# STOP (non-executable): a refuted r0 or stalled workflow stops. Step failures
+# stop or quarantine as declared. Exit validation requires the value,
+# main-problem alignment, and enablement audits represented in e0, while open
+# obligations remain declared; an archived or quarantined result is not accept.

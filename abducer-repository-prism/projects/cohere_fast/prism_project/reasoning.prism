@@ -1,0 +1,31 @@
+# Function: decide whether a domain target can enter the bounded Cohere Fast pipeline.
+# Input: CohereDomainTarget identifies the domain and target.
+# Types: CohereScopeActivation records the unresolved scope activation without adding warrant.
+# Output: CohereIntakeDisposition is Ready, Blocked, or Stalled.
+# Routing: Ready continues to scope-and-ground; Blocked or Stalled stops.
+# Layer: high-level epistemic topology only.
+# Metadata: workflows/manifest.json (`cohere_fast`).
+
+from types import (
+    CohereDomainTarget,
+    CohereIntakeDisposition,
+    CohereScopeActivation,
+)
+
+from occurrences import (
+    EvidentialCohereIntakeDispositionAssessment,
+    UnresolvedCohereScopeProjection,
+)
+
+from relations import (
+    ScopeActivationEnablesCohereIntake,
+)
+
+reasoning CohereFast(domain_target: CohereDomainTarget) -> Generated[CohereIntakeDisposition]:
+    sequence:
+        # The projection only activates a scope; it contributes no object-level warrant.
+        [scope_activation: UnresolvedCohereScopeProjection(domain_target)]
+        # Intake evaluates that activation and emits the pipeline-routing alternative.
+        [intake_disposition: EvidentialCohereIntakeDispositionAssessment(scope_activation.value)] by ScopeActivationEnablesCohereIntake
+
+    return intake_disposition

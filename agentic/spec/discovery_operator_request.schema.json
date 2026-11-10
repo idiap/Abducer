@@ -1,0 +1,102 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://abducer.local/schemas/discovery_operator_request.schema.json",
+  "title": "Executable discovery operator request",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "request_id",
+    "request_digest",
+    "invocation_id",
+    "operator",
+    "identity",
+    "required",
+    "requested_at",
+    "parameters",
+    "input_artifacts",
+    "declared_outputs",
+    "input_digest"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "request_id": {"$ref": "#/$defs/identifier"},
+    "request_digest": {"$ref": "#/$defs/digest"},
+    "invocation_id": {"$ref": "#/$defs/identifier"},
+    "operator": {"$ref": "#/$defs/operator"},
+    "identity": {"$ref": "#/$defs/namespace"},
+    "required": {"type": "boolean"},
+    "requested_at": {"type": "string", "format": "date-time"},
+    "parameters": {"type": "object"},
+    "input_artifacts": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/artifact"}
+    },
+    "declared_outputs": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {"$ref": "#/$defs/safePath"}
+    },
+    "input_digest": {"$ref": "#/$defs/digest"}
+  },
+  "$defs": {
+    "identifier": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]*$",
+      "not": {"enum": ["latest", "current", "global"]}
+    },
+    "digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "safePath": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))(?!.*(?:^|/)(?:latest(?:\\.json)?|current)(?:/|$)).+$"
+    },
+    "namespace": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["target_id", "run_id", "branch_id", "state_version"],
+      "properties": {
+        "target_id": {"$ref": "#/$defs/identifier"},
+        "run_id": {"$ref": "#/$defs/identifier"},
+        "branch_id": {"$ref": "#/$defs/identifier"},
+        "state_version": {"type": "integer", "minimum": 0}
+      }
+    },
+    "operator": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["operator_id", "version", "kind"],
+      "properties": {
+        "operator_id": {"$ref": "#/$defs/identifier"},
+        "version": {"$ref": "#/$defs/identifier"},
+        "kind": {
+          "enum": [
+            "theory",
+            "literature_search",
+            "literature_assimilation",
+            "hypothesis",
+            "proof",
+            "support_probe",
+            "reducer",
+            "evaluation"
+          ]
+        }
+      }
+    },
+    "artifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "sha256", "size_bytes", "namespace"],
+      "properties": {
+        "path": {"$ref": "#/$defs/safePath"},
+        "sha256": {"$ref": "#/$defs/digest"},
+        "size_bytes": {"type": "integer", "minimum": 0},
+        "namespace": {"$ref": "#/$defs/namespace"},
+        "media_type": {"type": "string", "minLength": 1}
+      }
+    }
+  }
+}

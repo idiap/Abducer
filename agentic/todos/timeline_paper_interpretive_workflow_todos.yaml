@@ -1,0 +1,742 @@
+[
+  {
+    "id": "TPI-001",
+    "type": "planning_todo",
+    "phase": "paper-workflow-diagnosis",
+    "owner": "skills/reporting",
+    "priority": "critical",
+    "risk_class": "paper-from-section-dump-instead-of-interpretation",
+    "title": "Replace flat report-to-paper conversion with a full interpretation pipeline",
+    "intent": "Make the paper workflow first interpret the whole timeline report as scientific evidence before writing any section prose.",
+    "conceptual_model": "A physics paper cannot be produced by concatenating timeline tabs. The workflow needs an interpretive layer that asks what each report element does in the argument: motivates the target, defines the active object, supports a theorem, supplies a worked calculation, exposes a failed route, states a transfer obligation, bounds novelty, or belongs only in an appendix. The paper should emerge from this role assignment rather than from a pre-baked thesis or raw chronology.",
+    "use_skills": [
+      "timeline-report-evidence-ingestor",
+      "timeline-paper-argument-architect",
+      "timeline-narrative-coherence-guard",
+      "timeline-report-latex-composer"
+    ],
+    "implementation_steps": [
+      "Create a new skill `timeline-report-evidence-ingestor` that parses the embedded `marathon-data` payload from `agentic/reports/discovery_marathon/full_timeline.html` and the companion JSON reports.",
+      "Define a paper interpretation IR with typed evidence units: problem_context, literature_claim, strategy_shift, mathematical_object, equation, derivation_step, falsifier, worked_calculation, qualitative_mechanism, contribution_candidate, transfer_obligation, stop_rule, and appendix_only.",
+      "Teach the ingestor to preserve source references for each unit: report tab, artifact path, cycle ID, branch title, equation label, and evidence status.",
+      "Add an `argument_role` field to every unit: motivation, definition, theorem_hypothesis, proof_step, calculation_input, calculation_result, validation_boundary, novelty_boundary, failure_learning, future_work, appendix_evidence, or quarantine.",
+      "Reject paper generation when the IR lacks a source-covered active mathematical object, contribution candidate, formal derivation object, and validation boundary."
+    ],
+    "validation_commands": [
+      ".venv-pmp/bin/python agentic/scripts/build_timeline_paper_interpretation.py",
+      ".venv-pmp/bin/python agentic/scripts/validate_timeline_paper_interpretation.py",
+      ".venv-pmp/bin/python agentic/scripts/validate_skill_depth.py",
+      ".venv-pmp/bin/python agentic/scripts/validate_todos.py"
+    ],
+    "required_artifact": [
+      "skills/reporting/timeline-report-evidence-ingestor/SKILL.md",
+      "agentic/spec/timeline_paper_interpretation.schema.json",
+      "agentic/scripts/build_timeline_paper_interpretation.py",
+      "agentic/scripts/validate_timeline_paper_interpretation.py",
+      "agentic/reports/timeline_paper_interpretation/latest.json",
+      "agentic/reports/timeline_paper_interpretation/latest.md"
+    ],
+    "acceptance_criteria": [
+      "The interpretation report covers every major visible report family: summary, timeline, ranked analyses, qualitative graph, Gedanken experiments, parsimonious probes, contribution monitor, problem/literature, macro strategies, strategy judge, physics story, and paper report status.",
+      "Every paper-relevant claim has a source pointer and an argument role.",
+      "Appendix-only material is preserved but does not drive the main paper thesis.",
+      "The validator fails if a section is written from uncited narrative memory rather than from interpreted report units."
+    ],
+    "blocked_by": [],
+    "evidence": [
+      "file:agentic/reports/discovery_marathon/full_timeline.html",
+      "file:agentic/scripts/build_timeline_latex_sections.py",
+      "file:skills/reporting/timeline-report-latex-composer/SKILL.md",
+      "cmd:.venv-pmp/bin/python agentic/scripts/run_timeline_paper_workflow.py --strict",
+      "cmd:.venv-pmp/bin/python agentic/scripts/validate_skill_depth.py",
+      "cmd:.venv-pmp/bin/python agentic/scripts/validate_skill_taxonomy_projections.py",
+      "cmd:.venv-pmp/bin/python agentic/scripts/validate_task_skill_registry.py"
+    ],
+    "review_date": "2026-08-09",
+    "failure_modes": [
+      "The paper remains a section dump with a huge appendix and a thin main argument.",
+      "The workflow hard-codes the current Wilson/OS thesis without deriving it from report evidence.",
+      "Important report tabs are cited as artifacts but not interpreted into argument roles."
+    ],
+    "status": "resolved"
+  },
+  {
+    "id": "TPI-002",
+    "type": "workflow_todo",
+    "phase": "paper-argument-architecture",
+    "owner": "skills/reporting",
+    "priority": "critical",
+    "risk_class": "narrative-without-paper-spine",
+    "title": "Build a paper argument architecture skill over the interpretation IR",
+    "intent": "Construct a coherent paper spine from interpreted report evidence before section drafting begins.",
+    "conceptual_model": "A scientific paper needs an argumentative skeleton: problem pressure, gap, contribution, technical object, assumptions, result or worked calculation, validation boundary, implications, and limitations. The current workflow has many section skills but no single object that decides this spine from all timeline evidence.",
+    "use_skills": [
+      "timeline-paper-argument-architect",
+      "timeline-problem-space-narrator",
+      "timeline-contribution-stater",
+      "timeline-formal-physics-deriver"
+    ],
+    "implementation_steps": [
+      "Create `timeline-paper-argument-architect` as the central synthesis skill.",
+      "Given `timeline_paper_interpretation/latest.json`, output a `paper_argument_blueprint` with title, abstract claim, main thesis, contribution claims, theorem/calculation spine, section responsibilities, source unit IDs, and non-claims.",
+      "Force the blueprint to choose one primary paper mode: theorem_note, worked_calculation_note, obstruction_note, method_note, negative_result_note, or survey_positioning_note.",
+      "Add a contribution-to-evidence matrix that maps each claimed contribution to its supporting cycles, equations, derivation steps, falsifiers, literature references, and missing validation.",
+      "Add a body/appendix/archive partition with explicit reasons. Main body units must support the spine; appendix units preserve evidence; archive units remain available but do not enter the paper.",
+      "Make the architect demote the draft if it cannot identify a smallest honest claim and a decisive validation handoff."
+    ],
+    "validation_commands": [
+      ".venv-pmp/bin/python agentic/scripts/build_timeline_paper_blueprint.py",
+      ".venv-pmp/bin/python agentic/scripts/validate_timeline_paper_blueprint.py",
+      ".venv-pmp/bin/python agentic/scripts/validate_timeline_paper.py"
+    ],
+    "required_artifact": [
+      "skills/reporting/timeline-paper-argument-architect/SKILL.md",
+      "agentic/spec/timeline_paper_blueprint.schema.json",
+      "agentic/scripts/build_timeline_paper_blueprint.py",
+      "agentic/scripts/validate_timeline_paper_blueprint.py",
+      "agentic/reports/timeline_paper_blueprint/latest.json",
+      "agentic/reports/timeline_paper_blueprint/latest.md"
+    ],
+    "acceptance_criteria": [
+      "The blueprint states one primary paper mode and rejects incompatible modes.",
+      "Every main-body section has a purpose in the paper spine and a list of source evidence units.",
+      "The blueprint contains explicit non-claims and validation debts.",
+      "The current Yang-Mills report yields a bounded Wilson/OS finite-obstruction or worked-calculation paper blueprint only if the interpreted evidence supports it."
+    ],
+    "blocked_by": [
+      "TPI-001"
+    ],
+    "evidence": [
+      "file:agentic/reports/timeline_paper/latest.json",
+      "file:agentic/reports/scientific_contribution_monitor/latest.json",
+      "file:agentic/reports/strategy_progression_judge/latest.json",
+      "cmd:.venv-pmp/bin/python agentic/scripts/run_timeline_paper_workflow.py --strict",
+      "cmd:.venv-pmp/bin/python agentic/scripts/validate_skill_depth.py",
+      "cmd:.venv-pmp/bin/python agentic/scripts/validate_skill_taxonomy_projections.py",
+      "cmd:.venv-pmp/bin/python agentic/scripts/validate_task_skill_registry.py"
+    ],
+    "review_date": "2026-08-09",
+    "failure_modes": [
+      "The paper title and thesis are hard-coded before evidence selection.",
+      "Contribution claims are copied from the monitor without integrating literature and derivation evidence.",
+      "The paper includes all timeline material equally instead of assigning body, appendix, archive, or quarantine roles."
+    ],
+    "status": "resolved"
+  },
+  {
+    "id": "TPI-003",
+    "type": "workflow_todo",
+    "phase": "multi-agent-paper-interpretation",
+    "owner": "skills/reporting",
+    "priority": "critical",
+    "risk_class": "single-agent-paper-voice-misses-domain-functions",
+    "title": "Split paper creation into specialized interpretive agents with explicit handoffs",
+    "intent": "Replace generic paper-writing with a coordinated set of physics-paper agents, each responsible for a distinct scientific function.",
+    "conceptual_model": "The paper workflow needs multiple interpretive acts, not just section templates. One agent should reconstruct the problem/literature pressure; another should extract the technical contribution; another should make the formal derivation self-contained; another should turn failed strategies into scientific learning; another should manage references and novelty; another should enforce claim boundaries. Their outputs should be checked against one another before TeX is written.",
+    "use_skills": [
+      "timeline-problem-space-narrator",
+      "timeline-contribution-stater",
+      "timeline-contribution-explainer",
+      "timeline-formal-physics-deriver",
+      "timeline-reference-manager",
+      "timeline-narrative-coherence-guard"
+    ],
+    "implementation_steps": [
+      "Refine existing reporting skills so each one consumes the interpretation IR and paper blueprint, not raw report tabs alone.",
+      "Add `timeline-failed-route-interpreter` to explain why strategies were narrowed, what was learned, and which failures are scientifically meaningful.",
+      "Add `timeline-claim-boundary-auditor` to audit every claim against evidence status, source object, target object, transfer condition, and non-claim boundary.",
+      "Add `timeline-paper-section-synthesizer` to turn agent outputs into coherent prose sections with no tables in the main narrative unless the blueprint explicitly requires them.",
+      "Add `timeline-paper-cross-section-reconciler` to detect duplicate definitions, contradictory claims, missing assumptions, and dangling references across sections.",
+      "Record agent handoffs in the paper report: inputs, outputs, source unit IDs, accepted claims, demoted claims, and unresolved obligations."
+    ],
+    "validation_commands": [
+      ".venv-pmp/bin/python agentic/scripts/build_timeline_paper_sections.py",
+      ".venv-pmp/bin/python agentic/scripts/validate_timeline_paper_sections.py",
+      ".venv-pmp/bin/python agentic/scripts/validate_skill_depth.py"
+    ],
+    "required_artifact": [
+      "skills/reporting/timeline-failed-route-interpreter/SKILL.md",
+      "skills/reporting/timeline-claim-boundary-auditor/SKILL.md",
+      "skills/reporting/timeline-paper-section-synthesizer/SKILL.md",
+      "skills/reporting/timeline-paper-cross-section-reconciler/SKILL.md",
+      "agentic/reports/timeline_paper_sections/latest.json"
+    ],
+    "acceptance_criteria": [
+      "Each generated paper section records which interpretive agent produced it and which evidence units it used.",
+      "Failed or narrowed strategies appear only when they explain the current contribution or validation boundary.",
+      "The formal derivation section is generated from definitions and assumptions, not from loose prose.",
+      "The claim-boundary auditor can demote or rewrite overclaiming sentences before PDF compilation."
+    ],
+    "blocked_by": [
+      "TPI-001",
+      "TPI-002"
+    ],
+    "evidence": [
+      "file:skills/reporting/timeline-paper-workflow-orchestrator/SKILL.md",
+      "file:skills/reporting/timeline-formal-physics-deriver/SKILL.md",
+      "file:skills/reporting/timeline-contribution-stater/SKILL.md",
+      "cmd:.venv-pmp/bin/python agentic/scripts/run_timeline_paper_workflow.py --strict",
+      "cmd:.venv-pmp/bin/python agentic/scripts/validate_skill_depth.py",
+      "cmd:.venv-pmp/bin/python agentic/scripts/validate_skill_taxonomy_projections.py",
+      "cmd:.venv-pmp/bin/python agentic/scripts/validate_task_skill_registry.py"
+    ],
+    "review_date": "2026-08-09",
+    "failure_modes": [
+      "All sections share the same generic voice and repeat the same abstract claim.",
+      "The paper says a route failed without explaining the physics or mathematical reason.",
+      "The formal derivation contains formulas but no assumptions, definitions, or proof boundaries."
+    ],
+    "status": "resolved"
+  },
+  {
+    "id": "TPI-004",
+    "type": "workflow_todo",
+    "phase": "timeline-report-coverage",
+    "owner": "agentic/scripts",
+    "priority": "critical",
+    "risk_class": "partial-report-use",
+    "title": "Guarantee systematic use of all timeline report information",
+    "intent": "Ensure the paper workflow sees every relevant report tab and decides whether each item supports the body, appendix, future work, or quarantine.",
+    "conceptual_model": "Using all report information does not mean putting all report information into the paper body. It means every report family is inspected, classified, and either used or explicitly demoted. The system needs coverage accounting so missing material is visible.",
+    "use_skills": [
+      "timeline-report-evidence-ingestor",
+      "timeline-paper-argument-architect",
+      "timeline-report-latex-composer"
+    ],
+    "implementation_steps": [
+      "Add `report_family_coverage` to `timeline_paper_interpretation/latest.json` with counts and disposition totals for each report family.",
+      "Track coverage for timeline_cycles, timeline_storyline, summary_analysis_control, timeline_ranked_next_experiment_queue, qualitative_mechanistic_graph, gedanken_experiments, parsimonious_probe_layer, scientific_contribution_monitor, target_literature_evolution, macro_strategy_report, strategy_progression_judge, timeline_paper_report, branch_summaries, and deep_reviews.",
+      "Require every family to have at least one of: main_body_units, appendix_units, future_work_units, quarantine_units, or explicit_empty_reason.",
+      "Add a `missing_report_material` warning list when a source exists but no disposition was assigned.",
+      "Surface the coverage table in the Markdown report and the validator output, not necessarily in the final paper body."
+    ],
+    "validation_commands": [
+      ".venv-pmp/bin/python agentic/scripts/validate_timeline_paper_interpretation.py",
+      ".venv-pmp/bin/python agentic/scripts/validate_timeline_paper_blueprint.py"
+    ],
+    "required_artifact": [
+      "agentic/reports/timeline_paper_interpretation/latest.json",
+      "agentic/reports/timeline_paper_interpretation/latest.md",
+      "agentic/scripts/validate_timeline_paper_interpretation.py"
+    ],
+    "acceptance_criteria": [
+      "The validator fails if any populated report family lacks a disposition.",
+      "The paper report explains why major material is excluded, not merely that it is excluded.",
+      "The body remains coherent even when appendix coverage is broad.",
+      "The current full timeline report can be audited from coverage summary to section source units."
+    ],
+    "blocked_by": [
+      "TPI-001"
+    ],
+    "evidence": [
+      "file:agentic/reports/discovery_marathon/full_timeline.html",
+      "file:agentic/scripts/build_timeline_latex_sections.py",
+      "cmd:.venv-pmp/bin/python agentic/scripts/run_timeline_paper_workflow.py --strict",
+      "cmd:.venv-pmp/bin/python agentic/scripts/validate_skill_depth.py",
+      "cmd:.venv-pmp/bin/python agentic/scripts/validate_skill_taxonomy_projections.py",
+      "cmd:.venv-pmp/bin/python agentic/scripts/validate_task_skill_registry.py"
+    ],
+    "review_date": "2026-08-09",
+    "failure_modes": [
+      "The paper claims to use the full report while silently ignoring qualitative graph, strategy judge, or contribution monitor material.",
+      "The workflow dumps all material into appendices without explaining why.",
+      "Coverage accounting becomes bureaucratic rather than shaping the paper argument."
+    ],
+    "status": "resolved"
+  },
+  {
+    "id": "TPI-005",
+    "type": "workflow_todo",
+    "phase": "formal-physics-paper-core",
+    "owner": "skills/reporting",
+    "priority": "critical",
+    "risk_class": "physics-paper-without-derivation-core",
+    "title": "Make the formal physics derivation the center of the paper workflow",
+    "intent": "Ensure the generated paper is a physics/mathematics argument with definitions, assumptions, propositions, derivations, and validation boundaries.",
+    "conceptual_model": "The paper should not merely report that the timeline found an obstruction program. It must expose the mathematical object, define its regime, state a local theorem or calculation, derive the consequences, and say exactly what remains unproved. For Yang-Mills this currently means the reflected Wilson Gram quotient, projection off the rank-one OS direction, first-order positivity, Schur-corrected second-order test, endpoint kappa_4 certificate, and same-theory transfer debt.",
+    "use_skills": [
+      "timeline-formal-physics-deriver",
+      "finite-theorem-section-packager",
+      "endpoint-worked-calculation-packager",
+      "timeline-claim-boundary-auditor"
+    ],
+    "implementation_steps": [
+      "Replace `build_formal_derivation()` hard-coded prose with a derivation builder that consumes blueprint theorem/calculation units.",
+      "Represent definitions, assumptions, propositions, lemmas, proof steps, equations, validity regimes, and unresolved obligations as structured JSON before rendering TeX.",
+      "For the current Yang-Mills paper, require explicit statements for M_eta, P, H, K, PHP, Omega_2, null-sector condition, endpoint kappa_4 source derivative, incidence dominance functional, and tail/remainder terms when evidence exists.",
+      "For non-Yang-Mills targets, require the deriver to choose the active mathematical object from the interpretation IR rather than reusing Wilson/OS language.",
+      "Add a validator that rejects derivations with equations lacking assumptions, naked formulas, or finite-to-continuum overclaims.",
+      "Add source pointers from every derivation block to cycle IDs, equation labels, parsimonious-probe identities, or explicit missing-obligation records."
+    ],
+    "validation_commands": [
+      ".venv-pmp/bin/python agentic/scripts/build_timeline_formal_derivation.py",
+      ".venv-pmp/bin/python agentic/scripts/validate_timeline_formal_derivation.py",
+      ".venv-pmp/bin/python agentic/scripts/build_timeline_paper.py",
+      ".venv-pmp/bin/python agentic/scripts/validate_timeline_paper.py"
+    ],
+    "required_artifact": [
+      "agentic/spec/timeline_formal_derivation.schema.json",
+      "agentic/scripts/build_timeline_formal_derivation.py",
+      "agentic/scripts/validate_timeline_formal_derivation.py",
+      "agentic/reports/timeline_formal_derivation/latest.json",
+      "agentic/reports/timeline_formal_derivation/latest.tex",
+      "skills/reporting/timeline-formal-physics-deriver/SKILL.md"
+    ],
+    "acceptance_criteria": [
+      "The paper has a self-contained formal derivation section generated from structured derivation blocks.",
+      "Every equation in the derivation states validity conditions or assumptions nearby.",
+      "The derivation distinguishes local finite results from continuum Yang-Mills transfer obligations.",
+      "The current Yang-Mills derivation includes the endpoint kappa_4 certificate only if its source evidence is available and scoped."
+    ],
+    "blocked_by": [
+      "TPI-001",
+      "TPI-002"
+    ],
+    "evidence": [
+      "file:agentic/scripts/build_timeline_paper.py",
+      "file:skills/reporting/timeline-formal-physics-deriver/SKILL.md",
+      "file:agentic/reports/endpoint_incidence_certificate/latest.json",
+      "cmd:.venv-pmp/bin/python agentic/scripts/run_timeline_paper_workflow.py --strict",
+      "cmd:.venv-pmp/bin/python agentic/scripts/validate_skill_depth.py",
+      "cmd:.venv-pmp/bin/python agentic/scripts/validate_skill_taxonomy_projections.py",
+      "cmd:.venv-pmp/bin/python agentic/scripts/validate_task_skill_registry.py"
+    ],
+    "review_date": "2026-08-09",
+    "failure_modes": [
+      "The derivation is still a prose essay with displayed equations.",
+      "The paper implies a finite matrix result proves the continuum target.",
+      "The workflow cannot adapt the formal derivation to a different target problem."
+    ],
+    "status": "resolved"
+  },
+  {
+    "id": "TPI-006",
+    "type": "workflow_todo",
+    "phase": "references-and-literature",
+    "owner": "skills/reporting",
+    "priority": "high",
+    "risk_class": "decorative-citations",
+    "title": "Turn reference management into claim-level literature positioning",
+    "intent": "Make citations explain what is known, what is standard, what is novel, and what remains unproved.",
+    "conceptual_model": "References should not be appended as decorative support. A paper needs literature functions: problem statement source, historical route, standard theorem/tool, closest comparator, novelty boundary, and limitation. The current workflow cites reports and references but does not force claim-level positioning.",
+    "use_skills": [
+      "timeline-reference-manager",
+      "timeline-problem-space-narrator",
+      "prior-art-positioning-packager",
+      "timeline-claim-boundary-auditor"
+    ],
+    "implementation_steps": [
+      "Create a `claim_reference_map` in the blueprint linking every literature claim and novelty claim to reference IDs.",
+      "Classify each reference role: target_statement, standard_os_reconstruction, constructive_rg_route, wilson_loop_background, finite_matrix_tool, closest_comparator, or artifact_evidence.",
+      "Require prior-art positioning for every contribution claim before the claim can be marked paper-ready.",
+      "Separate artifact citations from external literature citations in TeX and Markdown.",
+      "Add an unresolved-reference queue for claims that need live literature verification or additional references."
+    ],
+    "validation_commands": [
+      ".venv-pmp/bin/python agentic/scripts/validate_timeline_paper_blueprint.py",
+      ".venv-pmp/bin/python agentic/scripts/validate_timeline_paper.py"
+    ],
+    "required_artifact": [
+      "skills/reporting/timeline-reference-manager/SKILL.md",
+      "skills/reporting/prior-art-positioning-packager/SKILL.md",
+      "agentic/reports/timeline_paper_blueprint/latest.json"
+    ],
+    "acceptance_criteria": [
+      "Every novelty or related-work sentence in the main paper can be traced to a reference role.",
+      "Artifact citations are visibly distinct from external literature.",
+      "The paper states what is standard machinery and what is the candidate contribution.",
+      "The validator flags decorative references that do not support a named claim."
+    ],
+    "blocked_by": [
+      "TPI-002"
+    ],
+    "evidence": [
+      "file:agentic/reports/target_literature_evolution/latest.json",
+      "file:skills/reporting/timeline-reference-manager/SKILL.md",
+      "file:skills/reporting/prior-art-positioning-packager/SKILL.md",
+      "cmd:.venv-pmp/bin/python agentic/scripts/run_timeline_paper_workflow.py --strict",
+      "cmd:.venv-pmp/bin/python agentic/scripts/validate_skill_depth.py",
+      "cmd:.venv-pmp/bin/python agentic/scripts/validate_skill_taxonomy_projections.py",
+      "cmd:.venv-pmp/bin/python agentic/scripts/validate_task_skill_registry.py"
+    ],
+    "review_date": "2026-08-09",
+    "failure_modes": [
+      "The paper cites literature at paragraph ends without explaining each citation's role.",
+      "Novelty is claimed before closest comparators are identified.",
+      "Local artifacts are treated as external scientific references."
+    ],
+    "status": "resolved"
+  },
+  {
+    "id": "TPI-007",
+    "type": "workflow_todo",
+    "phase": "paper-narrative-control",
+    "owner": "skills/reporting",
+    "priority": "high",
+    "risk_class": "infinite-exploration-dragged-into-paper",
+    "title": "Enforce a paper narrative budget and demotion policy",
+    "intent": "Prevent the paper from absorbing endless exploration details while still preserving full report evidence in audit artifacts.",
+    "conceptual_model": "The paper should maximize coherence around a subgoal, not maximize the amount of timeline material shown. Full coverage belongs in the interpretation and appendix artifacts; the main paper body must be selective and argumentative. The system needs a budget that says how many strategy arcs, equations, examples, and open tasks belong in the body.",
+    "use_skills": [
+      "timeline-narrative-coherence-guard",
+      "timeline-paper-argument-architect",
+      "timeline-paper-section-synthesizer",
+      "timeline-paper-cross-section-reconciler"
+    ],
+    "implementation_steps": [
+      "Add narrative budget fields to the blueprint: max_main_cycles, max_failed_routes, max_core_equations, max_open_obligations, max_future_work_items, and appendix_policy.",
+      "Require every included body unit to answer one of: why this problem, what is the object, what is proved/computed, why it matters, what remains blocked.",
+      "Move low-role chronology into the appendix or archive and record the demotion reason.",
+      "Add a validator check that the body does not contain raw cycle-by-cycle chronology beyond the budget.",
+      "Make the conclusion summarize the contribution and validation debt rather than restating the queue."
+    ],
+    "validation_commands": [
+      ".venv-pmp/bin/python agentic/scripts/validate_timeline_paper_blueprint.py",
+      ".venv-pmp/bin/python agentic/scripts/validate_timeline_paper.py"
+    ],
+    "required_artifact": [
+      "agentic/reports/timeline_paper_blueprint/latest.json",
+      "agentic/scripts/validate_timeline_paper.py",
+      "skills/reporting/timeline-narrative-coherence-guard/SKILL.md"
+    ],
+    "acceptance_criteria": [
+      "The main paper body is readable as a coherent argument without needing to scan the full appendix.",
+      "The appendix can still preserve the full translated report material.",
+      "Each demoted detail has a reason: repetitive, operational, unsupported, speculative, archive-only, or future-work.",
+      "The validator fails when body sections become timeline dumps."
+    ],
+    "blocked_by": [
+      "TPI-002"
+    ],
+    "evidence": [
+      "file:agentic/reports/timeline_paper/latest.tex",
+      "file:skills/reporting/timeline-narrative-coherence-guard/SKILL.md",
+      "cmd:.venv-pmp/bin/python agentic/scripts/run_timeline_paper_workflow.py --strict",
+      "cmd:.venv-pmp/bin/python agentic/scripts/validate_skill_depth.py",
+      "cmd:.venv-pmp/bin/python agentic/scripts/validate_skill_taxonomy_projections.py",
+      "cmd:.venv-pmp/bin/python agentic/scripts/validate_task_skill_registry.py"
+    ],
+    "review_date": "2026-08-09",
+    "failure_modes": [
+      "The PDF grows by appending report material rather than sharpening the argument.",
+      "The narrative goal lock exists but is not used to filter body sections.",
+      "The paper conclusion becomes a queue of future experiments rather than a scientific closure."
+    ],
+    "status": "resolved"
+  },
+  {
+    "id": "TPI-008",
+    "type": "workflow_todo",
+    "phase": "diagram-and-mechanism",
+    "owner": "skills/reporting",
+    "priority": "high",
+    "risk_class": "diagram-as-decoration",
+    "title": "Generate organizing diagrams from interpreted mechanism roles",
+    "intent": "Make paper diagrams express the argument structure and mechanism, not a fixed route sketch.",
+    "conceptual_model": "A useful physics-paper diagram should show how the problem commitments, mathematical object, finite test, worked calculation, transfer obligations, and possible outcomes relate. It should be generated from the interpretation IR and blueprint so it changes when the argument changes.",
+    "use_skills": [
+      "timeline-organizing-diagram-builder",
+      "timeline-paper-argument-architect",
+      "timeline-formal-physics-deriver"
+    ],
+    "implementation_steps": [
+      "Replace fixed `build_diagram_tikz()` with a diagram builder that consumes blueprint nodes and edges.",
+      "Represent diagrams in structured JSON with node role, edge meaning, source evidence, and TeX/TikZ rendering.",
+      "Support at least two diagram types: argument-flow diagram and mechanism/transfer diagram.",
+      "For the current Yang-Mills paper, include nodes for Clay target commitments, OS positivity/reconstruction, reflected Wilson quotient, PHP test, Omega_2 test, endpoint kappa_4 certificate, and same-theory transfer debt.",
+      "Validate that every diagram node appears in the paper text and every diagram edge has a conceptual meaning."
+    ],
+    "validation_commands": [
+      ".venv-pmp/bin/python agentic/scripts/build_timeline_paper_diagrams.py",
+      ".venv-pmp/bin/python agentic/scripts/validate_timeline_paper_diagrams.py",
+      ".venv-pmp/bin/python agentic/scripts/build_timeline_paper.py"
+    ],
+    "required_artifact": [
+      "agentic/spec/timeline_paper_diagram.schema.json",
+      "agentic/scripts/build_timeline_paper_diagrams.py",
+      "agentic/scripts/validate_timeline_paper_diagrams.py",
+      "agentic/reports/timeline_paper_diagrams/latest.json",
+      "skills/reporting/timeline-organizing-diagram-builder/SKILL.md"
+    ],
+    "acceptance_criteria": [
+      "The diagram is regenerated from the active paper blueprint.",
+      "Diagram nodes and edges correspond to argument roles, not workflow labels.",
+      "The paper text refers to the diagram as an explanatory map.",
+      "The validator rejects orphan diagram nodes not used in the paper."
+    ],
+    "blocked_by": [
+      "TPI-002"
+    ],
+    "evidence": [
+      "file:agentic/scripts/build_timeline_paper.py",
+      "file:skills/reporting/timeline-organizing-diagram-builder/SKILL.md",
+      "cmd:.venv-pmp/bin/python agentic/scripts/run_timeline_paper_workflow.py --strict",
+      "cmd:.venv-pmp/bin/python agentic/scripts/validate_skill_depth.py",
+      "cmd:.venv-pmp/bin/python agentic/scripts/validate_skill_taxonomy_projections.py",
+      "cmd:.venv-pmp/bin/python agentic/scripts/validate_task_skill_registry.py"
+    ],
+    "review_date": "2026-08-09",
+    "failure_modes": [
+      "The diagram remains hard-coded for one route even when the blueprint changes.",
+      "The diagram uses workflow terms instead of physics or mathematical terms.",
+      "The diagram is not integrated into the explanation."
+    ],
+    "status": "resolved"
+  },
+  {
+    "id": "TPI-009",
+    "type": "test_todo",
+    "phase": "paper-quality-validation",
+    "owner": "agentic/scripts",
+    "priority": "critical",
+    "risk_class": "pdf-compiles-but-paper-is-not-scientific",
+    "title": "Add validators for scientific paper quality, not only compilation",
+    "intent": "Make validation check argument completeness, report coverage, claim boundaries, derivation structure, reference roles, and section coherence.",
+    "conceptual_model": "A PDF can compile while being a bad scientific paper. The validator must inspect the structured artifacts before TeX and the rendered TeX/PDF after composition. It should catch missing thesis, missing derivation, decorative citations, unsupported claims, uncited formulas, appendix dumps, and failure to use report evidence.",
+    "use_skills": [
+      "timeline-claim-boundary-auditor",
+      "timeline-paper-cross-section-reconciler",
+      "timeline-report-latex-composer"
+    ],
+    "implementation_steps": [
+      "Extend `validate_timeline_paper.py` to require interpretation, blueprint, section, derivation, reference, and diagram artifacts.",
+      "Check that main-body sections map to blueprint section responsibilities and source evidence units.",
+      "Check that each contribution claim has evidence, novelty boundary, validation burden, and non-claim text.",
+      "Check that formal derivation includes definitions, assumptions, proposition/calculation statement, proof or computation steps, validity conditions, and unresolved obligations.",
+      "Check that references are role-tagged and used near supported claims.",
+      "Check that no main-body section exceeds the narrative budget with raw timeline chronology.",
+      "Keep compile validation and LaTeX sanity checks as the final gate."
+    ],
+    "validation_commands": [
+      ".venv-pmp/bin/python agentic/scripts/validate_timeline_paper_interpretation.py",
+      ".venv-pmp/bin/python agentic/scripts/validate_timeline_paper_blueprint.py",
+      ".venv-pmp/bin/python agentic/scripts/validate_timeline_paper_sections.py",
+      ".venv-pmp/bin/python agentic/scripts/validate_timeline_formal_derivation.py",
+      ".venv-pmp/bin/python agentic/scripts/validate_timeline_paper.py"
+    ],
+    "required_artifact": [
+      "agentic/scripts/validate_timeline_paper.py",
+      "agentic/scripts/validate_timeline_paper_interpretation.py",
+      "agentic/scripts/validate_timeline_paper_blueprint.py",
+      "agentic/scripts/validate_timeline_paper_sections.py",
+      "agentic/scripts/validate_timeline_formal_derivation.py"
+    ],
+    "acceptance_criteria": [
+      "A compiling but generic or unsupported paper fails validation.",
+      "The validator reports exact missing argument functions, not just generic failure.",
+      "The validator distinguishes fatal overclaiming from appendix/detail-budget issues.",
+      "The current paper must pass only after it has a structured interpretation, blueprint, derivation, and claim audit."
+    ],
+    "blocked_by": [
+      "TPI-001",
+      "TPI-002",
+      "TPI-003",
+      "TPI-005"
+    ],
+    "evidence": [
+      "file:agentic/scripts/validate_timeline_paper.py",
+      "file:agentic/scripts/validate_timeline_latex_sections.py",
+      "cmd:.venv-pmp/bin/python agentic/scripts/run_timeline_paper_workflow.py --strict",
+      "cmd:.venv-pmp/bin/python agentic/scripts/validate_skill_depth.py",
+      "cmd:.venv-pmp/bin/python agentic/scripts/validate_skill_taxonomy_projections.py",
+      "cmd:.venv-pmp/bin/python agentic/scripts/validate_task_skill_registry.py"
+    ],
+    "review_date": "2026-08-09",
+    "failure_modes": [
+      "Validation remains satisfied by presence of keywords and successful PDF compilation.",
+      "The validator cannot explain why a paper is scientifically weak.",
+      "The paper passes despite uncited overclaims or missing derivation assumptions."
+    ],
+    "status": "resolved"
+  },
+  {
+    "id": "TPI-010",
+    "type": "workflow_todo",
+    "phase": "builder-refactor",
+    "owner": "agentic/scripts",
+    "priority": "high",
+    "risk_class": "hard-coded-yang-mills-paper",
+    "title": "Refactor the paper builder around interpretation artifacts instead of hard-coded prose",
+    "intent": "Make `build_timeline_paper.py` assemble the TeX/PDF from structured interpretive artifacts and remain adaptable to other targets.",
+    "conceptual_model": "The current builder contains a fixed title, abstract, diagram, formal derivation, and narrative lock tailored to the current Wilson/OS route. That is useful as a seed, but not systematic. The builder should be a renderer and consistency enforcer; interpretive skills should produce the thesis, sections, derivation, diagrams, references, and boundaries.",
+    "use_skills": [
+      "timeline-paper-workflow-orchestrator",
+      "timeline-paper-argument-architect",
+      "timeline-paper-section-synthesizer",
+      "timeline-report-latex-composer"
+    ],
+    "implementation_steps": [
+      "Make `build_timeline_paper.py` load `timeline_paper_blueprint`, `timeline_paper_sections`, `timeline_formal_derivation`, `timeline_paper_diagrams`, and `timeline_latex_sections` artifacts.",
+      "Remove or demote hard-coded Yang-Mills prose into fallback templates only used when no interpretation artifact exists.",
+      "Render main-body sections from section artifacts in blueprint order.",
+      "Render appendix sections from interpreted appendix units, not automatically from every translated report section.",
+      "Preserve the existing PDF compilation path but make it dependent on the stronger validation chain.",
+      "Add a `paper_build_manifest` containing artifact versions, section order, skill outputs used, skipped report families, and validation status."
+    ],
+    "validation_commands": [
+      ".venv-pmp/bin/python agentic/scripts/build_timeline_paper.py",
+      ".venv-pmp/bin/python agentic/scripts/validate_timeline_paper.py",
+      "git diff --check"
+    ],
+    "required_artifact": [
+      "agentic/scripts/build_timeline_paper.py",
+      "agentic/reports/timeline_paper/latest.json",
+      "agentic/reports/timeline_paper/latest.tex",
+      "agentic/reports/timeline_paper/latest.pdf"
+    ],
+    "acceptance_criteria": [
+      "The paper builder no longer needs to know the Wilson/OS thesis except through the blueprint and derivation artifacts.",
+      "The main paper body follows blueprint order and source-backed section content.",
+      "The appendix is intentional and budgeted, not an automatic full dump.",
+      "A different target can produce a different paper mode without editing hard-coded TeX prose."
+    ],
+    "blocked_by": [
+      "TPI-002",
+      "TPI-003",
+      "TPI-005",
+      "TPI-008"
+    ],
+    "evidence": [
+      "file:agentic/scripts/build_timeline_paper.py",
+      "file:agentic/reports/timeline_paper/latest.tex",
+      "cmd:.venv-pmp/bin/python agentic/scripts/run_timeline_paper_workflow.py --strict",
+      "cmd:.venv-pmp/bin/python agentic/scripts/validate_skill_depth.py",
+      "cmd:.venv-pmp/bin/python agentic/scripts/validate_skill_taxonomy_projections.py",
+      "cmd:.venv-pmp/bin/python agentic/scripts/validate_task_skill_registry.py"
+    ],
+    "review_date": "2026-08-09",
+    "failure_modes": [
+      "The renderer still silently supplies the current thesis when interpretation artifacts are weak.",
+      "The paper becomes target-specific and cannot generalize.",
+      "The appendix remains a 400-page dump by default."
+    ],
+    "status": "resolved"
+  },
+  {
+    "id": "TPI-011",
+    "type": "test_todo",
+    "phase": "forward-testing",
+    "owner": "agentic/evals",
+    "priority": "high",
+    "risk_class": "skills-untested-on-real-report",
+    "title": "Forward-test the paper workflow on the current full timeline report",
+    "intent": "Use the current Yang-Mills report as an integration test for the interpretive paper skills.",
+    "conceptual_model": "The only meaningful test is whether the workflow can read the actual complex report and produce a paper whose main body is coherent, contribution-bounded, mathematically explicit, and source-backed. Toy tests are not enough.",
+    "use_skills": [
+      "timeline-paper-workflow-orchestrator",
+      "timeline-report-evidence-ingestor",
+      "timeline-paper-argument-architect",
+      "timeline-claim-boundary-auditor"
+    ],
+    "implementation_steps": [
+      "Create an integration fixture that points to the current `full_timeline.html` and companion JSON reports.",
+      "Run the full paper workflow on the fixture and produce interpretation, blueprint, sections, derivation, diagrams, TeX, and PDF.",
+      "Compare the resulting main paper body against quality criteria: non-generic physics language, explicit mathematical objects, bounded claims, reference roles, and no raw chronology dump.",
+      "Record failures as structured repair tasks, not informal comments.",
+      "Add at least one adversarial fixture where contribution evidence is insufficient and the workflow must demote the paper to a report or future-work packet."
+    ],
+    "validation_commands": [
+      ".venv-pmp/bin/python agentic/scripts/run_timeline_paper_workflow.py --source agentic/reports/discovery_marathon/full_timeline.html",
+      ".venv-pmp/bin/python agentic/scripts/validate_timeline_paper.py",
+      ".venv-pmp/bin/python agentic/scripts/validate_timeline_paper_forward_eval.py"
+    ],
+    "required_artifact": [
+      "agentic/scripts/run_timeline_paper_workflow.py",
+      "agentic/scripts/validate_timeline_paper_forward_eval.py",
+      "agentic/evals/timeline_paper/current_yang_mills_fixture.json",
+      "agentic/reports/timeline_paper_forward_eval/latest.json"
+    ],
+    "acceptance_criteria": [
+      "The current report produces a coherent main-body paper draft and a bounded appendix.",
+      "The forward eval can point to exact paper weaknesses if it fails.",
+      "The adversarial fixture demotes unsupported claims rather than inventing a paper contribution.",
+      "Forward testing becomes part of the paper-workflow validation handoff."
+    ],
+    "blocked_by": [
+      "TPI-001",
+      "TPI-002",
+      "TPI-003",
+      "TPI-009",
+      "TPI-010"
+    ],
+    "evidence": [
+      "file:agentic/reports/discovery_marathon/full_timeline.html",
+      "file:agentic/reports/timeline_paper/latest.pdf",
+      "cmd:.venv-pmp/bin/python agentic/scripts/run_timeline_paper_workflow.py --strict",
+      "cmd:.venv-pmp/bin/python agentic/scripts/validate_skill_depth.py",
+      "cmd:.venv-pmp/bin/python agentic/scripts/validate_skill_taxonomy_projections.py",
+      "cmd:.venv-pmp/bin/python agentic/scripts/validate_task_skill_registry.py"
+    ],
+    "review_date": "2026-08-09",
+    "failure_modes": [
+      "The workflow only passes on synthetic/simple report inputs.",
+      "The paper still reads like a monitoring report rather than a physics paper.",
+      "The evaluation rewards length instead of argumentative quality."
+    ],
+    "status": "resolved"
+  },
+  {
+    "id": "TPI-012",
+    "type": "workflow_todo",
+    "phase": "workflow-registration",
+    "owner": "agentic/registries",
+    "priority": "medium",
+    "risk_class": "skills-exist-but-not-dispatched",
+    "title": "Register the interpretive paper workflow as an independent workflow",
+    "intent": "Make the improved paper workflow discoverable and invocable independently from the main discovery marathon loop.",
+    "conceptual_model": "The user explicitly wants paper creation skills invoked independently from the discovery loop. Once the interpretive workflow exists, registries and task metadata must point to it as a separate paper-building workflow with its own inputs, outputs, validation, and failure gates.",
+    "use_skills": [
+      "timeline-paper-workflow-orchestrator",
+      "timeline-report-evidence-ingestor",
+      "timeline-paper-argument-architect"
+    ],
+    "implementation_steps": [
+      "Create or update a task registry entry for `timeline-paper-workflow` listing the interpretation, blueprint, section, derivation, diagram, TeX, PDF, and validation stages.",
+      "Update `agentic/registries/skill_registry.yaml` and `agentic/registries/skill_quality_registry.yaml` for the new/updated skills.",
+      "Update `agentic/registries/discovery_marathon_skill_dispatch.yaml` only to point to the independent workflow as a handoff, not to run it inside every discovery cycle.",
+      "Add a command-line entry point `run_timeline_paper_workflow.py` that accepts source report path, target ID, output directory, and strict validation flag.",
+      "Document invocation paths in the task registry and generated paper report."
+    ],
+    "validation_commands": [
+      ".venv-pmp/bin/python agentic/scripts/agentic_check.py",
+      ".venv-pmp/bin/python agentic/scripts/run_timeline_paper_workflow.py --help",
+      ".venv-pmp/bin/python agentic/scripts/validate_skill_registry.py",
+      ".venv-pmp/bin/python agentic/scripts/validate_todos.py"
+    ],
+    "required_artifact": [
+      "registry/tasks/timeline-paper-workflow/task_registry.json",
+      "agentic/registries/skill_registry.yaml",
+      "agentic/registries/skill_quality_registry.yaml",
+      "agentic/scripts/run_timeline_paper_workflow.py"
+    ],
+    "acceptance_criteria": [
+      "The paper workflow can be run without launching a discovery marathon.",
+      "Registries list all new interpretive paper skills and their roles.",
+      "Discovery marathon reports can hand off to the workflow when a paper subgoal is ready.",
+      "Validation commands are discoverable from the task registry."
+    ],
+    "blocked_by": [
+      "TPI-001",
+      "TPI-002",
+      "TPI-003",
+      "TPI-009",
+      "TPI-010"
+    ],
+    "evidence": [
+      "file:registry/tasks/timeline-paper-workflow/task_registry.json",
+      "file:agentic/registries/skill_registry.yaml",
+      "file:agentic/registries/discovery_marathon_skill_dispatch.yaml",
+      "cmd:.venv-pmp/bin/python agentic/scripts/run_timeline_paper_workflow.py --strict",
+      "cmd:.venv-pmp/bin/python agentic/scripts/validate_skill_depth.py",
+      "cmd:.venv-pmp/bin/python agentic/scripts/validate_skill_taxonomy_projections.py",
+      "cmd:.venv-pmp/bin/python agentic/scripts/validate_task_skill_registry.py"
+    ],
+    "review_date": "2026-08-09",
+    "failure_modes": [
+      "New skills exist on disk but are not reachable through workflow tooling.",
+      "The paper workflow gets dragged into every discovery run instead of being a controlled handoff.",
+      "Registry validation misses stale or missing skill entries."
+    ],
+    "status": "resolved"
+  }
+]

@@ -1,0 +1,285 @@
+# Proof Sketches
+
+## Stats
+
+- Proof sketches: 6
+- Conjectures used: 36
+- Strategies used: 6
+- Bridges used: 20
+- Hypotheses used: 46
+- Strategy families: generator-recovery-from-unitary-orbits=3, spectral-calculus-realization=3
+
+## Strategy Families
+
+- `invariant-lift-through-intermediate-object`: Introduce a conjectured intermediate object or invariant, prove that the source regime induces it, then force the target consequence through that invariant.
+- `spectral-calculus-realization`: Use spectral theorem or functional calculus data to realize the hidden bridge object, then exponentiate or reconstruct the target dynamics from that representation.
+- `generator-recovery-from-unitary-orbits`: Recover the infinitesimal generator from strongly continuous orbit data, prove the required domain and closure properties, then identify the target operator.
+- `domain-core-self-adjointness`: Build a dense core on which the hidden operator is well-defined, prove symmetry or closure there, and upgrade the core data to self-adjointness.
+- `surrogate-reduction-transfer`: Define a surrogate object or promise problem, reduce the source statement into it, and transfer the required consequence through the surrogate interface.
+- `barrier-escape-reencoding`: Re-encode the conjectured bridge concept in a representation that preserves the intended invariant while sidestepping the currently dominant barrier family.
+- `contradiction-via-collapse-or-separation`: Assume the conjectured bridge fails or the target consequence does not hold, then derive a forbidden collapse or contradiction with a known separation profile.
+- `bootstrapped-derandomization-transfer`: Use a derandomization or pseudorandomness-style object as the bridge, then bootstrap it into a lower-bound or separation consequence.
+- `case-split-regime-transfer`: Partition the argument by regime, model, or threshold case, prove each branch against the same bridge concept, and reassemble the target consequence.
+
+## Sketches
+
+| sketch_id | conjecture_id | strategy_id | family | score | target |
+|---|---|---|---|---|---|
+| psk.001 | conj.001 | strat.001 | spectral-calculus-realization | 0.912 | self-adjoint-operator-on-hilbert-space |
+| psk.002 | conj.002 | strat.001 | generator-recovery-from-unitary-orbits | 0.9047 | self-adjoint-operator-on-hilbert-space |
+| psk.003 | conj.025 | strat.001 | generator-recovery-from-unitary-orbits | 0.9025 | self-adjoint-operator-on-hilbert-space |
+| psk.004 | conj.003 | strat.001 | spectral-calculus-realization | 0.9 | self-adjoint-operator-on-hilbert-space |
+| psk.005 | conj.027 | strat.001 | generator-recovery-from-unitary-orbits | 0.8982 | self-adjoint-operator-on-hilbert-space |
+| psk.006 | conj.026 | strat.001 | spectral-calculus-realization | 0.8979 | self-adjoint-operator-on-hilbert-space |
+
+### psk.001 - barrier + orbit-differentiability-control + spectral-calculus-interface evasive representation for spectral-theorem-enables-unitary-functional-calculus via strat.001
+- Conjecture: conj.001
+- Strategy: strat.001 (Cross-Model Strategy around st.thm.stone-correspondence)
+- Bridge: bridge.004
+- Family: spectral-calculus-realization
+- Score: 0.912
+- Target consequence: self-adjoint-operator-on-hilbert-space
+- Antecedent: spectral-theorem-and-functional-calculus
+- Invariant: self-adjoint generator recovery in unbounded-generator-graph
+- Barrier scope: barrier + orbit-differentiability-control + spectral-calculus-interface
+- Family rationale: Use spectral theorem or functional calculus data to realize the hidden bridge object, then exponentiate or reconstruct the target dynamics from that representation.
+- Definitional commitments: realizes antecedent schema `spectral-theorem-and-functional-calculus`, forces target consequence `self-adjoint-operator-on-hilbert-space`, preserves `self-adjoint generator recovery in unbounded-generator-graph`, evades barrier scope `barrier + orbit-differentiability-control + spectral-calculus-interface`
+- Counterfactual test: Remove `realizes antecedent schema `spectral-theorem-and-functional-calculus`` from the candidate abstraction. => bridge-degrades-or-fails
+- Proof obligations:
+  - obl.01: realizes antecedent schema `spectral-theorem-and-functional-calculus`
+  - obl.02: forces target consequence `self-adjoint-operator-on-hilbert-space`
+  - obl.03: preserves `self-adjoint generator recovery in unbounded-generator-graph`
+  - obl.04: evades barrier scope `barrier + orbit-differentiability-control + spectral-calculus-interface`
+  - obl.05: Show that the conjectured object preserves `self-adjoint generator recovery in unbounded-generator-graph` from the source side.
+  - obl.06: Prove that the conjectured object forces `self-adjoint-operator-on-hilbert-space` once the preserved invariant is realized.
+  - obl.07: Demonstrate that the sketch avoids the `barrier + orbit-differentiability-control + spectral-calculus-interface` barrier or explain why the barrier does not apply in this encoding.
+  - obl.08: Keep the argument faithful to the `Current Bridge Agenda` regime while linking to the target bridge consequence.
+- Candidate lemmas:
+  - bridge.004.lemma.01: Definition lemma: the object `barrier + orbit-differentiability-control + spectral-calculus-interface evasive representation for spectral-theorem-enables-unitary-functional-calculus` is well-defined and mathematically non-superficial.
+  - bridge.004.lemma.02: Invariant lemma: `barrier + orbit-differentiability-control + spectral-calculus-interface evasive representation for spectral-theorem-enables-unitary-functional-calculus` preserves `self-adjoint generator recovery in unbounded-generator-graph` from the source statement family.
+  - bridge.004.lemma.03: Payoff lemma: realizing `barrier + orbit-differentiability-control + spectral-calculus-interface evasive representation for spectral-theorem-enables-unitary-functional-calculus` implies `self-adjoint-operator-on-hilbert-space`.
+  - bridge.004.lemma.04: Spectral lemma: the self-adjoint or spectral data attached to `barrier + orbit-differentiability-control + spectral-calculus-interface evasive representation for spectral-theorem-enables-unitary-functional-calculus` yields a strongly continuous unitary representation.
+- Proof outline:
+  - step.01: Define `barrier + orbit-differentiability-control + spectral-calculus-interface evasive representation for spectral-theorem-enables-unitary-functional-calculus` with the necessary attributes extracted in `conj.001`. -> A non-superficial bridge object with theorem-family-specific commitments.
+  - step.02: Show that the source side of `bridge.004` induces `self-adjoint generator recovery in unbounded-generator-graph` inside `barrier + orbit-differentiability-control + spectral-calculus-interface evasive representation for spectral-theorem-enables-unitary-functional-calculus`. -> An invariant-preservation lemma for the conjectured object.
+  - step.03: Assemble the spectral theorem or functional-calculus representation needed to exponentiate the hidden operator. -> A spectral representation lemma yielding a strongly continuous unitary family.
+  - step.04: Use the realized bridge object to force `self-adjoint-operator-on-hilbert-space`. -> A payoff theorem candidate or a sharply localized remaining obstruction.
+  - step.05: Run the designated counterfactual probe to verify that the bridge is structurally necessary rather than rhetorically similar. -> A falsifiability check distinguishing a genuine bridge concept from a superficial one.
+- Barrier checkpoints:
+  - barrier.01: Check whether `barrier + orbit-differentiability-control + spectral-calculus-interface` blocks the proposed bridge object or proof tactic. / Re-encode the bridge object or abort the route if the barrier remains active.
+- Abort conditions:
+  - Abort if counterfactual probe fails to change bridge behavior: Remove `realizes antecedent schema `spectral-theorem-and-functional-calculus`` from the candidate abstraction. => bridge-degrades-or-fails.
+  - Abort if the sketch still falls inside the `barrier + orbit-differentiability-control + spectral-calculus-interface` barrier after re-encoding attempts.
+  - Abort if the conjectured object cannot be defined without collapsing back into a generic topic label.
+  - Abort if the payoff lemma does not improve over the existing bridge consequence or only restates known dependencies.
+- Success signal: A theorem-family-specific payoff lemma is isolated and survives the designated counterfactual probe.
+
+### psk.002 - spectral-theorem-enables-unitary-functional-calculus self-adjoint generator core via strat.001
+- Conjecture: conj.002
+- Strategy: strat.001 (Cross-Model Strategy around st.thm.stone-correspondence)
+- Bridge: bridge.004
+- Family: generator-recovery-from-unitary-orbits
+- Score: 0.9047
+- Target consequence: self-adjoint-operator-on-hilbert-space
+- Antecedent: spectral-theorem-and-functional-calculus
+- Invariant: self-adjoint generator recovery in unbounded-generator-graph
+- Barrier scope: barrier + orbit-differentiability-control + spectral-calculus-interface
+- Family rationale: Recover the infinitesimal generator from strongly continuous orbit data, prove the required domain and closure properties, then identify the target operator.
+- Definitional commitments: realizes antecedent schema `spectral-theorem-and-functional-calculus`, forces target consequence `self-adjoint-operator-on-hilbert-space`, preserves `self-adjoint generator recovery in unbounded-generator-graph`, evades barrier scope `barrier + orbit-differentiability-control + spectral-calculus-interface`
+- Counterfactual test: Remove `realizes antecedent schema `spectral-theorem-and-functional-calculus`` from the candidate abstraction. => bridge-degrades-or-fails
+- Proof obligations:
+  - obl.01: realizes antecedent schema `spectral-theorem-and-functional-calculus`
+  - obl.02: forces target consequence `self-adjoint-operator-on-hilbert-space`
+  - obl.03: preserves `self-adjoint generator recovery in unbounded-generator-graph`
+  - obl.04: evades barrier scope `barrier + orbit-differentiability-control + spectral-calculus-interface`
+  - obl.05: Show that the conjectured object preserves `self-adjoint generator recovery in unbounded-generator-graph` from the source side.
+  - obl.06: Prove that the conjectured object forces `self-adjoint-operator-on-hilbert-space` once the preserved invariant is realized.
+  - obl.07: Demonstrate that the sketch avoids the `barrier + orbit-differentiability-control + spectral-calculus-interface` barrier or explain why the barrier does not apply in this encoding.
+  - obl.08: Keep the argument faithful to the `Current Bridge Agenda` regime while linking to the target bridge consequence.
+- Candidate lemmas:
+  - bridge.004.lemma.01: Definition lemma: the object `spectral-theorem-enables-unitary-functional-calculus self-adjoint generator core` is well-defined and mathematically non-superficial.
+  - bridge.004.lemma.02: Invariant lemma: `spectral-theorem-enables-unitary-functional-calculus self-adjoint generator core` preserves `self-adjoint generator recovery in unbounded-generator-graph` from the source statement family.
+  - bridge.004.lemma.03: Payoff lemma: realizing `spectral-theorem-enables-unitary-functional-calculus self-adjoint generator core` implies `self-adjoint-operator-on-hilbert-space`.
+  - bridge.004.lemma.04: Generator lemma: differentiable orbit data for `spectral-theorem-enables-unitary-functional-calculus self-adjoint generator core` determines the hidden infinitesimal generator uniquely.
+- Proof outline:
+  - step.01: Define `spectral-theorem-enables-unitary-functional-calculus self-adjoint generator core` with the necessary attributes extracted in `conj.002`. -> A non-superficial bridge object with theorem-family-specific commitments.
+  - step.02: Show that the source side of `bridge.004` induces `self-adjoint generator recovery in unbounded-generator-graph` inside `spectral-theorem-enables-unitary-functional-calculus self-adjoint generator core`. -> An invariant-preservation lemma for the conjectured object.
+  - step.03: Recover the infinitesimal generator from unitary-orbit data and verify uniqueness at the operator level. -> A generator-recovery lemma with explicit domain and closure commitments.
+  - step.04: Use the realized bridge object to force `self-adjoint-operator-on-hilbert-space`. -> A payoff theorem candidate or a sharply localized remaining obstruction.
+  - step.05: Run the designated counterfactual probe to verify that the bridge is structurally necessary rather than rhetorically similar. -> A falsifiability check distinguishing a genuine bridge concept from a superficial one.
+- Barrier checkpoints:
+  - barrier.01: Check whether `barrier + orbit-differentiability-control + spectral-calculus-interface` blocks the proposed bridge object or proof tactic. / Re-encode the bridge object or abort the route if the barrier remains active.
+- Abort conditions:
+  - Abort if counterfactual probe fails to change bridge behavior: Remove `realizes antecedent schema `spectral-theorem-and-functional-calculus`` from the candidate abstraction. => bridge-degrades-or-fails.
+  - Abort if the sketch still falls inside the `barrier + orbit-differentiability-control + spectral-calculus-interface` barrier after re-encoding attempts.
+  - Abort if the conjectured object cannot be defined without collapsing back into a generic topic label.
+  - Abort if the payoff lemma does not improve over the existing bridge consequence or only restates known dependencies.
+- Success signal: A theorem-family-specific payoff lemma is isolated and survives the designated counterfactual probe.
+
+### psk.003 - spectral-theorem-and-functional-calculus self-adjoint generator core via strat.001
+- Conjecture: conj.025
+- Strategy: strat.001 (Cross-Model Strategy around st.thm.stone-correspondence)
+- Bridge: bridge.006
+- Family: generator-recovery-from-unitary-orbits
+- Score: 0.9025
+- Target consequence: self-adjoint-operator-on-hilbert-space
+- Antecedent: strongly-continuous-unitary-group
+- Invariant: unitary orbit infinitesimal control in strongly-continuous-unitary-group
+- Barrier scope: spectral-calculus-interface
+- Family rationale: Recover the infinitesimal generator from strongly continuous orbit data, prove the required domain and closure properties, then identify the target operator.
+- Definitional commitments: realizes antecedent schema `strongly-continuous-unitary-group`, forces target consequence `self-adjoint-operator-on-hilbert-space`, preserves `unitary orbit infinitesimal control in strongly-continuous-unitary-group`, evades barrier scope `spectral-calculus-interface`
+- Counterfactual test: Remove `realizes antecedent schema `strongly-continuous-unitary-group`` from the candidate abstraction. => bridge-degrades-or-fails
+- Proof obligations:
+  - obl.01: realizes antecedent schema `strongly-continuous-unitary-group`
+  - obl.02: forces target consequence `self-adjoint-operator-on-hilbert-space`
+  - obl.03: preserves `unitary orbit infinitesimal control in strongly-continuous-unitary-group`
+  - obl.04: evades barrier scope `spectral-calculus-interface`
+  - obl.05: Show that the conjectured object preserves `unitary orbit infinitesimal control in strongly-continuous-unitary-group` from the source side.
+  - obl.06: Prove that the conjectured object forces `self-adjoint-operator-on-hilbert-space` once the preserved invariant is realized.
+  - obl.07: Demonstrate that the sketch avoids the `spectral-calculus-interface` barrier or explain why the barrier does not apply in this encoding.
+  - obl.08: Keep the argument faithful to the `Current Bridge Agenda` regime while linking to the target bridge consequence.
+- Candidate lemmas:
+  - bridge.006.lemma.01: Definition lemma: the object `spectral-theorem-and-functional-calculus self-adjoint generator core` is well-defined and mathematically non-superficial.
+  - bridge.006.lemma.02: Invariant lemma: `spectral-theorem-and-functional-calculus self-adjoint generator core` preserves `unitary orbit infinitesimal control in strongly-continuous-unitary-group` from the source statement family.
+  - bridge.006.lemma.03: Payoff lemma: realizing `spectral-theorem-and-functional-calculus self-adjoint generator core` implies `self-adjoint-operator-on-hilbert-space`.
+  - bridge.006.lemma.04: Generator lemma: differentiable orbit data for `spectral-theorem-and-functional-calculus self-adjoint generator core` determines the hidden infinitesimal generator uniquely.
+- Proof outline:
+  - step.01: Define `spectral-theorem-and-functional-calculus self-adjoint generator core` with the necessary attributes extracted in `conj.025`. -> A non-superficial bridge object with theorem-family-specific commitments.
+  - step.02: Show that the source side of `bridge.006` induces `unitary orbit infinitesimal control in strongly-continuous-unitary-group` inside `spectral-theorem-and-functional-calculus self-adjoint generator core`. -> An invariant-preservation lemma for the conjectured object.
+  - step.03: Recover the infinitesimal generator from unitary-orbit data and verify uniqueness at the operator level. -> A generator-recovery lemma with explicit domain and closure commitments.
+  - step.04: Use the realized bridge object to force `self-adjoint-operator-on-hilbert-space`. -> A payoff theorem candidate or a sharply localized remaining obstruction.
+  - step.05: Run the designated counterfactual probe to verify that the bridge is structurally necessary rather than rhetorically similar. -> A falsifiability check distinguishing a genuine bridge concept from a superficial one.
+- Barrier checkpoints:
+  - barrier.01: Check whether `spectral-calculus-interface` blocks the proposed bridge object or proof tactic. / Use anti-barrier change set: Introduce intermediate invariant that is not preserved by the barrier regime., Search for representation-shift that maps target to a non-barrier proof model.
+- Abort conditions:
+  - Abort if counterfactual probe fails to change bridge behavior: Remove `realizes antecedent schema `strongly-continuous-unitary-group`` from the candidate abstraction. => bridge-degrades-or-fails.
+  - Abort if the sketch still falls inside the `spectral-calculus-interface` barrier after re-encoding attempts.
+  - Abort if the conjectured object cannot be defined without collapsing back into a generic topic label.
+  - Abort if the payoff lemma does not improve over the existing bridge consequence or only restates known dependencies.
+- Success signal: A theorem-family-specific payoff lemma is isolated and survives the designated counterfactual probe.
+
+### psk.004 - spectral-theorem-enables-unitary-functional-calculus functional-calculus normal form in self-adjoint-spectral-calculus via strat.001
+- Conjecture: conj.003
+- Strategy: strat.001 (Cross-Model Strategy around st.thm.stone-correspondence)
+- Bridge: bridge.004
+- Family: spectral-calculus-realization
+- Score: 0.9
+- Target consequence: self-adjoint-operator-on-hilbert-space
+- Antecedent: spectral-theorem-and-functional-calculus
+- Invariant: self-adjoint generator recovery in unbounded-generator-graph
+- Barrier scope: barrier + orbit-differentiability-control + spectral-calculus-interface
+- Family rationale: Use spectral theorem or functional calculus data to realize the hidden bridge object, then exponentiate or reconstruct the target dynamics from that representation.
+- Definitional commitments: realizes antecedent schema `spectral-theorem-and-functional-calculus`, forces target consequence `self-adjoint-operator-on-hilbert-space`, preserves `self-adjoint generator recovery in unbounded-generator-graph`, evades barrier scope `barrier + orbit-differentiability-control + spectral-calculus-interface`
+- Counterfactual test: Remove `realizes antecedent schema `spectral-theorem-and-functional-calculus`` from the candidate abstraction. => bridge-degrades-or-fails
+- Proof obligations:
+  - obl.01: realizes antecedent schema `spectral-theorem-and-functional-calculus`
+  - obl.02: forces target consequence `self-adjoint-operator-on-hilbert-space`
+  - obl.03: preserves `self-adjoint generator recovery in unbounded-generator-graph`
+  - obl.04: evades barrier scope `barrier + orbit-differentiability-control + spectral-calculus-interface`
+  - obl.05: Show that the conjectured object preserves `self-adjoint generator recovery in unbounded-generator-graph` from the source side.
+  - obl.06: Prove that the conjectured object forces `self-adjoint-operator-on-hilbert-space` once the preserved invariant is realized.
+  - obl.07: Demonstrate that the sketch avoids the `barrier + orbit-differentiability-control + spectral-calculus-interface` barrier or explain why the barrier does not apply in this encoding.
+  - obl.08: Keep the argument faithful to the `Current Bridge Agenda` regime while linking to the target bridge consequence.
+- Candidate lemmas:
+  - bridge.004.lemma.01: Definition lemma: the object `spectral-theorem-enables-unitary-functional-calculus functional-calculus normal form in self-adjoint-spectral-calculus` is well-defined and mathematically non-superficial.
+  - bridge.004.lemma.02: Invariant lemma: `spectral-theorem-enables-unitary-functional-calculus functional-calculus normal form in self-adjoint-spectral-calculus` preserves `self-adjoint generator recovery in unbounded-generator-graph` from the source statement family.
+  - bridge.004.lemma.03: Payoff lemma: realizing `spectral-theorem-enables-unitary-functional-calculus functional-calculus normal form in self-adjoint-spectral-calculus` implies `self-adjoint-operator-on-hilbert-space`.
+  - bridge.004.lemma.04: Spectral lemma: the self-adjoint or spectral data attached to `spectral-theorem-enables-unitary-functional-calculus functional-calculus normal form in self-adjoint-spectral-calculus` yields a strongly continuous unitary representation.
+- Proof outline:
+  - step.01: Define `spectral-theorem-enables-unitary-functional-calculus functional-calculus normal form in self-adjoint-spectral-calculus` with the necessary attributes extracted in `conj.003`. -> A non-superficial bridge object with theorem-family-specific commitments.
+  - step.02: Show that the source side of `bridge.004` induces `self-adjoint generator recovery in unbounded-generator-graph` inside `spectral-theorem-enables-unitary-functional-calculus functional-calculus normal form in self-adjoint-spectral-calculus`. -> An invariant-preservation lemma for the conjectured object.
+  - step.03: Assemble the spectral theorem or functional-calculus representation needed to exponentiate the hidden operator. -> A spectral representation lemma yielding a strongly continuous unitary family.
+  - step.04: Use the realized bridge object to force `self-adjoint-operator-on-hilbert-space`. -> A payoff theorem candidate or a sharply localized remaining obstruction.
+  - step.05: Run the designated counterfactual probe to verify that the bridge is structurally necessary rather than rhetorically similar. -> A falsifiability check distinguishing a genuine bridge concept from a superficial one.
+- Barrier checkpoints:
+  - barrier.01: Check whether `barrier + orbit-differentiability-control + spectral-calculus-interface` blocks the proposed bridge object or proof tactic. / Re-encode the bridge object or abort the route if the barrier remains active.
+- Abort conditions:
+  - Abort if counterfactual probe fails to change bridge behavior: Remove `realizes antecedent schema `spectral-theorem-and-functional-calculus`` from the candidate abstraction. => bridge-degrades-or-fails.
+  - Abort if the sketch still falls inside the `barrier + orbit-differentiability-control + spectral-calculus-interface` barrier after re-encoding attempts.
+  - Abort if the conjectured object cannot be defined without collapsing back into a generic topic label.
+  - Abort if the payoff lemma does not improve over the existing bridge consequence or only restates known dependencies.
+- Success signal: A theorem-family-specific payoff lemma is isolated and survives the designated counterfactual probe.
+
+### psk.005 - spectral-theorem-and-functional-calculus functional-calculus normal form in operator-theoretic-Hilbert-space via strat.001
+- Conjecture: conj.027
+- Strategy: strat.001 (Cross-Model Strategy around st.thm.stone-correspondence)
+- Bridge: bridge.006
+- Family: generator-recovery-from-unitary-orbits
+- Score: 0.8982
+- Target consequence: self-adjoint-operator-on-hilbert-space
+- Antecedent: strongly-continuous-unitary-group
+- Invariant: unitary orbit infinitesimal control in strongly-continuous-unitary-group
+- Barrier scope: spectral-calculus-interface
+- Family rationale: Recover the infinitesimal generator from strongly continuous orbit data, prove the required domain and closure properties, then identify the target operator.
+- Definitional commitments: realizes antecedent schema `strongly-continuous-unitary-group`, forces target consequence `self-adjoint-operator-on-hilbert-space`, preserves `unitary orbit infinitesimal control in strongly-continuous-unitary-group`, evades barrier scope `spectral-calculus-interface`
+- Counterfactual test: Remove `realizes antecedent schema `strongly-continuous-unitary-group`` from the candidate abstraction. => bridge-degrades-or-fails
+- Proof obligations:
+  - obl.01: realizes antecedent schema `strongly-continuous-unitary-group`
+  - obl.02: forces target consequence `self-adjoint-operator-on-hilbert-space`
+  - obl.03: preserves `unitary orbit infinitesimal control in strongly-continuous-unitary-group`
+  - obl.04: evades barrier scope `spectral-calculus-interface`
+  - obl.05: Show that the conjectured object preserves `unitary orbit infinitesimal control in strongly-continuous-unitary-group` from the source side.
+  - obl.06: Prove that the conjectured object forces `self-adjoint-operator-on-hilbert-space` once the preserved invariant is realized.
+  - obl.07: Demonstrate that the sketch avoids the `spectral-calculus-interface` barrier or explain why the barrier does not apply in this encoding.
+  - obl.08: Keep the argument faithful to the `Current Bridge Agenda` regime while linking to the target bridge consequence.
+- Candidate lemmas:
+  - bridge.006.lemma.01: Definition lemma: the object `spectral-theorem-and-functional-calculus functional-calculus normal form in operator-theoretic-Hilbert-space` is well-defined and mathematically non-superficial.
+  - bridge.006.lemma.02: Invariant lemma: `spectral-theorem-and-functional-calculus functional-calculus normal form in operator-theoretic-Hilbert-space` preserves `unitary orbit infinitesimal control in strongly-continuous-unitary-group` from the source statement family.
+  - bridge.006.lemma.03: Payoff lemma: realizing `spectral-theorem-and-functional-calculus functional-calculus normal form in operator-theoretic-Hilbert-space` implies `self-adjoint-operator-on-hilbert-space`.
+  - bridge.006.lemma.04: Generator lemma: differentiable orbit data for `spectral-theorem-and-functional-calculus functional-calculus normal form in operator-theoretic-Hilbert-space` determines the hidden infinitesimal generator uniquely.
+- Proof outline:
+  - step.01: Define `spectral-theorem-and-functional-calculus functional-calculus normal form in operator-theoretic-Hilbert-space` with the necessary attributes extracted in `conj.027`. -> A non-superficial bridge object with theorem-family-specific commitments.
+  - step.02: Show that the source side of `bridge.006` induces `unitary orbit infinitesimal control in strongly-continuous-unitary-group` inside `spectral-theorem-and-functional-calculus functional-calculus normal form in operator-theoretic-Hilbert-space`. -> An invariant-preservation lemma for the conjectured object.
+  - step.03: Recover the infinitesimal generator from unitary-orbit data and verify uniqueness at the operator level. -> A generator-recovery lemma with explicit domain and closure commitments.
+  - step.04: Use the realized bridge object to force `self-adjoint-operator-on-hilbert-space`. -> A payoff theorem candidate or a sharply localized remaining obstruction.
+  - step.05: Run the designated counterfactual probe to verify that the bridge is structurally necessary rather than rhetorically similar. -> A falsifiability check distinguishing a genuine bridge concept from a superficial one.
+- Barrier checkpoints:
+  - barrier.01: Check whether `spectral-calculus-interface` blocks the proposed bridge object or proof tactic. / Use anti-barrier change set: Introduce intermediate invariant that is not preserved by the barrier regime., Search for representation-shift that maps target to a non-barrier proof model.
+- Abort conditions:
+  - Abort if counterfactual probe fails to change bridge behavior: Remove `realizes antecedent schema `strongly-continuous-unitary-group`` from the candidate abstraction. => bridge-degrades-or-fails.
+  - Abort if the sketch still falls inside the `spectral-calculus-interface` barrier after re-encoding attempts.
+  - Abort if the conjectured object cannot be defined without collapsing back into a generic topic label.
+  - Abort if the payoff lemma does not improve over the existing bridge consequence or only restates known dependencies.
+- Success signal: A theorem-family-specific payoff lemma is isolated and survives the designated counterfactual probe.
+
+### psk.006 - spectral-calculus-interface evasive representation for spectral-theorem-and-functional-calculus via strat.001
+- Conjecture: conj.026
+- Strategy: strat.001 (Cross-Model Strategy around st.thm.stone-correspondence)
+- Bridge: bridge.006
+- Family: spectral-calculus-realization
+- Score: 0.8979
+- Target consequence: self-adjoint-operator-on-hilbert-space
+- Antecedent: strongly-continuous-unitary-group
+- Invariant: unitary orbit infinitesimal control in strongly-continuous-unitary-group
+- Barrier scope: spectral-calculus-interface
+- Family rationale: Use spectral theorem or functional calculus data to realize the hidden bridge object, then exponentiate or reconstruct the target dynamics from that representation.
+- Definitional commitments: realizes antecedent schema `strongly-continuous-unitary-group`, forces target consequence `self-adjoint-operator-on-hilbert-space`, preserves `unitary orbit infinitesimal control in strongly-continuous-unitary-group`, evades barrier scope `spectral-calculus-interface`
+- Counterfactual test: Remove `realizes antecedent schema `strongly-continuous-unitary-group`` from the candidate abstraction. => bridge-degrades-or-fails
+- Proof obligations:
+  - obl.01: realizes antecedent schema `strongly-continuous-unitary-group`
+  - obl.02: forces target consequence `self-adjoint-operator-on-hilbert-space`
+  - obl.03: preserves `unitary orbit infinitesimal control in strongly-continuous-unitary-group`
+  - obl.04: evades barrier scope `spectral-calculus-interface`
+  - obl.05: Show that the conjectured object preserves `unitary orbit infinitesimal control in strongly-continuous-unitary-group` from the source side.
+  - obl.06: Prove that the conjectured object forces `self-adjoint-operator-on-hilbert-space` once the preserved invariant is realized.
+  - obl.07: Demonstrate that the sketch avoids the `spectral-calculus-interface` barrier or explain why the barrier does not apply in this encoding.
+  - obl.08: Keep the argument faithful to the `Current Bridge Agenda` regime while linking to the target bridge consequence.
+- Candidate lemmas:
+  - bridge.006.lemma.01: Definition lemma: the object `spectral-calculus-interface evasive representation for spectral-theorem-and-functional-calculus` is well-defined and mathematically non-superficial.
+  - bridge.006.lemma.02: Invariant lemma: `spectral-calculus-interface evasive representation for spectral-theorem-and-functional-calculus` preserves `unitary orbit infinitesimal control in strongly-continuous-unitary-group` from the source statement family.
+  - bridge.006.lemma.03: Payoff lemma: realizing `spectral-calculus-interface evasive representation for spectral-theorem-and-functional-calculus` implies `self-adjoint-operator-on-hilbert-space`.
+  - bridge.006.lemma.04: Spectral lemma: the self-adjoint or spectral data attached to `spectral-calculus-interface evasive representation for spectral-theorem-and-functional-calculus` yields a strongly continuous unitary representation.
+- Proof outline:
+  - step.01: Define `spectral-calculus-interface evasive representation for spectral-theorem-and-functional-calculus` with the necessary attributes extracted in `conj.026`. -> A non-superficial bridge object with theorem-family-specific commitments.
+  - step.02: Show that the source side of `bridge.006` induces `unitary orbit infinitesimal control in strongly-continuous-unitary-group` inside `spectral-calculus-interface evasive representation for spectral-theorem-and-functional-calculus`. -> An invariant-preservation lemma for the conjectured object.
+  - step.03: Assemble the spectral theorem or functional-calculus representation needed to exponentiate the hidden operator. -> A spectral representation lemma yielding a strongly continuous unitary family.
+  - step.04: Use the realized bridge object to force `self-adjoint-operator-on-hilbert-space`. -> A payoff theorem candidate or a sharply localized remaining obstruction.
+  - step.05: Run the designated counterfactual probe to verify that the bridge is structurally necessary rather than rhetorically similar. -> A falsifiability check distinguishing a genuine bridge concept from a superficial one.
+- Barrier checkpoints:
+  - barrier.01: Check whether `spectral-calculus-interface` blocks the proposed bridge object or proof tactic. / Use anti-barrier change set: Introduce intermediate invariant that is not preserved by the barrier regime., Search for representation-shift that maps target to a non-barrier proof model.
+- Abort conditions:
+  - Abort if counterfactual probe fails to change bridge behavior: Remove `realizes antecedent schema `strongly-continuous-unitary-group`` from the candidate abstraction. => bridge-degrades-or-fails.
+  - Abort if the sketch still falls inside the `spectral-calculus-interface` barrier after re-encoding attempts.
+  - Abort if the conjectured object cannot be defined without collapsing back into a generic topic label.
+  - Abort if the payoff lemma does not improve over the existing bridge consequence or only restates known dependencies.
+- Success signal: A theorem-family-specific payoff lemma is isolated and survives the designated counterfactual probe.

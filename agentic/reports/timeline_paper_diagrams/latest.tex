@@ -1,0 +1,36 @@
+% SPDX-FileCopyrightText: © 2026 Idiap Research Institute <contact@idiap.ch>
+%
+% SPDX-FileContributor: Andre Freitas <andre.freitas@idiap.ch>
+% Neuro-symbolic AI Group
+%
+% SPDX-FileContributor: Danilo Gusicuma <danilo.gusicuma@idiap.ch>
+% Neuro-symbolic AI Group
+%
+% SPDX-License-Identifier: MIT
+
+\begin{figure}[t]
+\centering
+\begin{tikzpicture}[
+  node distance=1.0cm and 0.8cm,
+  box/.style={draw, rounded corners, align=center, text width=2.8cm, minimum height=0.8cm},
+  arrow/.style={-{Latex[length=2mm]}, thick},
+  warn/.style={-{Latex[length=2mm]}, thick, dashed}
+]
+\node[box] (target) {Target commitments};
+\node[box, right=of target] (route) {Route pressure};
+\node[box, right=of route] (object) {Hardness-Magnification Bridge Realization};
+\node[box, below=of object] (finite_test) {Finite criterion};
+\node[box, right=of finite_test] (worked_example) {Worked calculation};
+\node[box, right=of worked_example] (claim) {Smallest honest claim};
+\node[box, above=of claim] (handoff) {Validation handoff};
+\draw[arrow] (target) -- (route);
+\draw[arrow] (route) -- (object);
+\draw[arrow] (object) -- (finite_test);
+\draw[arrow] (finite_test) -- (worked_example);
+\draw[arrow] (worked_example) -- (claim);
+\draw[arrow] (claim) -- (handoff);
+\draw[warn] (handoff) to[bend left=16] (route);
+\end{tikzpicture}
+\caption{Organizing diagram generated from the paper blueprint. It separates target commitments, the active mathematical object, the local criterion, the worked calculation, the smallest honest claim, and the validation handoff. Dashed feedback marks demotion or backtracking if the transfer obligation fails.}
+\label{fig:timeline-paper-blueprint}
+\end{figure}

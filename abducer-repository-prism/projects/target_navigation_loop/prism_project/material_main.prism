@@ -1,0 +1,48 @@
+# lunar-runtime: {"declaration":"MaterializedTargetNavigationLoop","entry_argument":"unscoped_target","execute_hook":"abducer-workflow-execute","id":"target_navigation_loop","input_schema":{"additionalProperties":false,"default":{"target_id":"markov-kakutani-fixed-point-theorem"},"properties":{"target_id":{"default":"markov-kakutani-fixed-point-theorem","maxLength":16000,"minLength":1,"type":"string"}},"required":["target_id"],"type":"object"},"metadata":{"completion_contract":{"allowed_final_statuses":["passed","completed"],"forbid_blockers":true,"reasoning_complete":true,"reasoning_events_min":4,"terminal_state":"completed"},"description":"calibrate a target and its dependency frontier, then route work or release","model_required":true,"network_required":false,"provenance_contract":{"agent_invocations":[{"activated_skill_ids":["looper-target-dependency-cartographer"],"agent_name":"dependency_frontier_material_agent","workflow_occurrence":"dependency_frontier"},{"activated_skill_ids":["epistemic-status-ledger"],"agent_name":"target_disposition_material_agent","workflow_occurrence":"target_disposition"}],"required_source_reads":[]},"reasoning_contract":{"steps":["dependency_frontier","target_disposition"],"workflow":"TargetNavigationLoop"},"reasoning_required":true,"required_host_capabilities":["model","prism-engine","reasoning-events"],"scientific_truth_verified":false,"semantic_mode":"operational-model-generated","source_materialization_status":"blocked_unresolved_projection_gap","timeout_seconds":1800},"output_schema":{"additionalProperties":false,"properties":{"analysis_results":{"type":"object"},"compact_prism_input":{"type":"object"},"markdown":{"minLength":1,"type":"string"},"narrative_slots":{"type":"array"},"report_verification":{"properties":{"reasoning_complete":{"const":true},"status":{"const":"passed"}},"required":["status","reasoning_complete"],"type":"object"},"structured_value":{"properties":{"execution_provenance":{"type":"object"},"final_disposition":{"properties":{"blockers":{"maxItems":0,"type":"array"},"reasoning_complete":{"const":true},"status":{"const":"passed"}},"required":["status","reasoning_complete","blockers"],"type":"object"},"reasoning_result":{"type":"object"}},"required":["final_disposition","reasoning_result","execution_provenance"],"type":"object"}},"required":["markdown","structured_value","analysis_results","compact_prism_input","narrative_slots","report_verification"],"type":"object"},"prepare_hook":"abducer-workflow-prepare","verify_hook":"abducer-workflow-verify"}
+
+# Host-executed material graph for the complete reviewed reasoning path.
+# Generated values retain the source epistemic boundary and are not native proof or experiment receipts.
+
+from types import (
+    TargetDependencyFrontier,
+    TargetNavigationDisposition,
+    UnscopedResearchTarget,
+)
+
+from generated.dependency_frontier_skill_1 import dependency_frontier_skill_1
+from generated.target_disposition_skill_1 import target_disposition_skill_1
+
+# Real model capability for source occurrence dependency_frontier:UnresolvedTargetDependencyProjection.
+agent dependency_frontier_material_agent(
+    task: UnscopedResearchTarget,
+) -> Result[Generated[TargetDependencyFrontier], ModelFailure]
+    ! {AI.Generate, Context.Disclose}:
+    skills: Skills[UnscopedResearchTarget] = [dependency_frontier_skill_1]
+
+# Real model capability for source occurrence target_disposition:EvidentialTargetNavigationDispositionAssessment.
+agent target_disposition_material_agent(
+    task: TargetDependencyFrontier,
+) -> Result[Generated[String], ModelFailure]
+    ! {AI.Generate, Context.Disclose}:
+    skills: Skills[TargetDependencyFrontier] = [target_disposition_skill_1]
+
+workflow MaterializedTargetNavigationLoop(
+    unscoped_target: UnscopedResearchTarget,
+) -> Generated[String]
+    fails ModelFailure
+    ! {AI.Generate, Context.Disclose}:
+    sequence:
+        # The unresolved projection maps dependencies but adds no warrant to the target.
+        [dependency_frontier: dependency_frontier_material_agent(unscoped_target)]
+        # Disposition assessment turns the mapped frontier into the next workflow route.
+        [target_disposition: target_disposition_material_agent(dependency_frontier.value)]
+
+    return target_disposition
+
+
+def main(
+    unscoped_target: UnscopedResearchTarget,
+    model_access: ModelGenerate,
+    disclosure: ContextDisclose,
+) -> Result[Generated[String], ModelFailure] ! {AI.Generate, Context.Disclose}:
+    return solve MaterializedTargetNavigationLoop(unscoped_target)

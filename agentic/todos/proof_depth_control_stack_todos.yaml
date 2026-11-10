@@ -1,0 +1,829 @@
+# SPDX-FileCopyrightText: © 2026 Idiap Research Institute <contact@idiap.ch>
+#
+# SPDX-FileContributor: Andre Freitas <andre.freitas@idiap.ch>
+# Neuro-symbolic AI Group
+#
+# SPDX-FileContributor: Danilo Gusicuma <danilo.gusicuma@idiap.ch>
+# Neuro-symbolic AI Group
+#
+# SPDX-License-Identifier: MIT
+schema: abducer.proof_depth_control_stack_todos.v1
+created_at: "2026-07-20"
+purpose: >
+  Build target-neutral proof-depth skills that prevent locally valid proof
+  cycles from orbiting shallow, trivial, or already-known objects while avoiding
+  the decisive conceptual pressure.
+source_artifacts:
+  plan: docs/plans-and-reviews/proof-depth-control-stack-plan.md
+  ym_attack_plan: agentic/reports/results_ellaboration/a-finite-schur-feshbach-test-for-reflected-wilson-blocks-an-explicit-four-dimens/routea_paper_attack_plan.md
+  ym_current_report: agentic/reports/discovery_marathon/targets/yang-mills-existence-and-mass-gap-target/latest.json
+  skill_catalog: docs/reference/skills.md
+global_controls:
+  transferability_policy: >
+    Each skill must be target-neutral in its core contract. Target-specific
+    examples may appear only as calibration cases, not as hard-coded logic.
+  nontriviality_policy: >
+    A cycle is not promoted merely because it has lemmas, equations,
+    assumptions, falsifiers, or clean validation. It must move a named hard gate
+    or produce a demotion/falsifier that changes the proof state.
+  declarative_learning_policy: >
+    Conceptual learning must be recorded as inference-level facts, not only as
+    strategy prose. Each promoted or support-only cycle must state premises,
+    attempted move, learned constraint, scope condition, invalidated
+    generalization if any, and the future routing consequence.
+  conceptual_quality_policy: >
+    Every promoted, support-only, or lock-in-candidate cycle must expose a
+    heuristic vector for conceptual depth, explanatory power, unification power,
+    mechanism specificity, compression, generativity, transfer reach,
+    falsifiability, boundary sharpness, and literature displacement. These
+    heuristics can guide search and lock-in, but cannot substitute for proof,
+    evidence, or transfer certificates.
+  anti_definitionality_policy: >
+    A principal theorem, especially a transfer theorem, cannot be promoted if
+    its conclusion follows only by expanding definitions, renaming objects, or
+    defining the target predicate as the image of the source predicate. Promotion
+    requires independently specified source and target objects, a target
+    property stated without bridge-specific vocabulary, a nontrivial
+    preservation law, stress and failure cases, consequence delta, and prior-art
+    delta.
+  lockin_balance_policy: >
+    Exploration should continue until there is critical mass in the learning
+    ledger, then temporarily lock into a bounded proof-strategy cycle set for a
+    meaningful publication subgoal. After completion, demotion, or blocked-lemma
+    handoff, the workflow must return to conceptual exploration with the new
+    learning recorded.
+  yang_mills_calibration: >
+    The stack must classify endpoint or OS-positivity refinements as shallow
+    unless they are downstream from geometric-collar realization,
+    same-theory normalization, coefficient extraction, or explicit transfer
+    gates.
+todos:
+  - id: PDC-001
+    type: planning_todo
+    phase: proof-depth-contract
+    owner: docs
+    priority: critical
+    risk_class: shallow-proof-cycle
+    title: Define the reusable proof-depth control contract
+    intent: >
+      Establish the target-neutral contract that every proof-depth skill will
+      share: pressure, hard gate, nontriviality test, transfer audit, outcome,
+      and demotion rule.
+    use_skills:
+      - skill-creator
+      - abducer-conceptual-pressure-formalizer
+      - kb-discovery-breakthrough-profiler
+      - results-critical-self-refiner
+    required_artifact:
+      - docs/plans-and-reviews/proof-depth-control-stack-plan.md
+      - agentic/spec/proof_depth_control.schema.json
+    acceptance_criteria:
+      - The contract defines pressure_kind, hard_gate, proof_object, target_commitment, proposed_move, depth_delta, conceptual_quality_vector, transfer_substance_audit, transfer_status, declarative_learning_event, demotion_trigger, and release_decision.
+      - The contract is domain-neutral and can represent both Yang-Mills geometric-collar pressure and P vs NP carrier-uniformity pressure.
+      - The contract explicitly distinguishes cycle validity from mathematical depth.
+      - The contract defines conceptual quality dimensions: conceptual_depth, explanatory_power, unification_power, mechanism_specificity, compression, generativity, transfer_reach, falsifiability, boundary_sharpness, and literature_displacement.
+      - The contract requires anti-definitionality fields: definition_expansion_test, independent_target_property_test, nontrivial_hypothesis_test, source_variation_test, stress_case, failure_case, consequence_delta, and prior_art_delta.
+      - The contract requires inference-level learning fields: premises_used, attempted_inference, learned_constraint, scope_condition, invalidated_generalization, and future_routing_effect.
+      - The contract contains a demotion path for locally valid but hard-gate-free work.
+    blocked_by: []
+    evidence:
+      - docs/plans-and-reviews/proof-depth-control-stack-plan.md
+      - agentic/reports/results_ellaboration/a-finite-schur-feshbach-test-for-reflected-wilson-blocks-an-explicit-four-dimens/routea_paper_attack_plan.md
+      - docs/operations/discovery-marathon-operations.md
+    review_date: "2026-07-20"
+    failure_modes:
+      - The contract becomes a generic quality rubric without hard-gate semantics.
+      - The contract hard-codes Yang-Mills terminology and cannot transfer.
+      - Conceptual quality becomes a single vibe score rather than dimension-specific evidence.
+      - The contract allows a transfer theorem to pass when the target property is built into the bridge definition.
+      - The contract records learning as high-level narrative rather than reusable declarative inference facts.
+      - The contract lacks explicit demotion or quarantine outcomes.
+    status: resolved
+
+  - id: PDC-002
+    type: workflow_todo
+    phase: pressure-formalization
+    owner: skills/evaluation
+    priority: critical
+    risk_class: hidden-conceptual-tension
+    title: Create proof-depth-pressure-formalizer
+    intent: >
+      Convert a stalled proof route, repeated branch pattern, referee criticism,
+      or weak result ensemble into typed conceptual pressure before any new
+      proof cycle starts.
+    use_skills:
+      - skill-creator
+      - abducer-conceptual-pressure-formalizer
+      - theorem-body-normalizer
+      - target-literature-source-curator
+    required_artifact:
+      - skills/evaluation/proof-depth-pressure-formalizer/SKILL.md
+      - skills/evaluation/proof-depth-pressure-formalizer/agents/openai.yaml
+      - agentic/spec/proof_depth_pressure_packet.schema.json
+    acceptance_criteria:
+      - The skill emits pressure packets with source evidence, target commitment, pressure kind, missing object, and decision value.
+      - The skill rejects pressure packets that only say the problem is hard or that more work is needed.
+      - The skill emits the exact inference question that the pressure packet asks the next cycle to decide.
+      - The skill emits definitional_collapse pressure when a principal theorem appears to follow by definition expansion rather than by a preservation argument.
+      - The skill maps the Yang-Mills diagnosis to geometric-collar realization and same-theory normalization pressure, not endpoint work alone.
+      - The skill can also map a P vs NP loop to carrier, uniformity, barrier, or transfer pressure without changing the skill body.
+    blocked_by:
+      - PDC-001
+    evidence:
+      - docs/plans-and-reviews/proof-depth-control-stack-plan.md
+      - skills/evaluation/abducer-conceptual-pressure-formalizer/SKILL.md
+      - agentic/reports/discovery_marathon/targets/yang-mills-existence-and-mass-gap-target/latest.json
+    review_date: "2026-07-20"
+    failure_modes:
+      - The skill produces mood labels instead of typed proof pressure.
+      - The skill states a broad goal but no declarative inference question.
+      - The skill fails to recognize referee criticism that a transfer theorem is close to definitional as a hard proof-pressure signal.
+      - The skill treats all failures as negative and loses positive discovery signals.
+      - The skill does not cite artifacts or explicit unknowns.
+    status: resolved
+
+  - id: PDC-003
+    type: workflow_todo
+    phase: hard-gate-selection
+    owner: skills/orchestration
+    priority: critical
+    risk_class: gate-free-continuation
+    title: Create proof-hard-gate-selector
+    intent: >
+      Force each proof cycle to name the single bottleneck it attacks and
+      explain how success or failure changes the target proof state.
+    use_skills:
+      - skill-creator
+      - abducer-obligation-gatekeeper
+      - next-experiment-queue-ranker
+      - long-horizon-route-portfolio-manager
+    required_artifact:
+      - skills/orchestration/proof-hard-gate-selector/SKILL.md
+      - skills/orchestration/proof-hard-gate-selector/agents/openai.yaml
+      - agentic/spec/proof_hard_gate_selection.schema.json
+    acceptance_criteria:
+      - The skill accepts target-supplied hard gates rather than hard-coding any one problem.
+      - The skill returns selected_gate, rejected_gates, gate_movement_test, inference_to_learn, promotion_test, pivot_test, and next_experiment.
+      - The skill demotes cycles whose proposed action cannot affect a selected hard gate.
+      - The skill rejects next experiments that cannot produce a declarative learning event even if they may produce more exposition or local algebra.
+      - The skill selects anti-definitionality audit as the next gate when the main risk is that a transfer theorem encodes its conclusion in its definitions.
+      - On Yang-Mills, the skill ranks geometric collar and same-theory normalization above endpoint refinement until their dependencies are discharged.
+    blocked_by:
+      - PDC-001
+      - PDC-002
+    evidence:
+      - docs/plans-and-reviews/proof-depth-control-stack-plan.md
+      - agentic/todos/routea_paper_attack_todos.yaml
+      - skills/evaluation/abducer-obligation-gatekeeper/SKILL.md
+    review_date: "2026-07-20"
+    failure_modes:
+      - The skill lets branches continue with vague goals such as improve proof or explore route.
+      - The selected gate is not tied to a target commitment or proof obligation.
+      - The selected gate does not specify the inference-level fact the next cycle is expected to learn.
+      - The skill lets a near-definitional transfer theorem proceed to writing without first requiring independent preservation evidence.
+      - The skill ranks easy local work above blocked but decisive gates without explanation.
+    status: resolved
+
+  - id: PDC-004
+    type: workflow_todo
+    phase: nontriviality-audit
+    owner: skills/evaluation
+    priority: critical
+    risk_class: theorem-shaped-triviality
+    title: Create proof-nontriviality-auditor
+    intent: >
+      Decide whether a proof object is load-bearing or merely a locally valid
+      restatement, algebraic refinement, validation artifact, or exposition
+      improvement.
+    use_skills:
+      - skill-creator
+      - contribution-value-assessor
+      - progression-payoff-judge
+      - paper-contribution-readiness-judge
+    required_artifact:
+      - skills/evaluation/proof-nontriviality-auditor/SKILL.md
+      - skills/evaluation/proof-nontriviality-auditor/agents/openai.yaml
+      - agentic/spec/proof_nontriviality_audit.schema.json
+    acceptance_criteria:
+      - The skill scores depth by theorem-body change, assumption removal, object construction, invariant discovery, falsifier creation, transfer closure, or literature-boundary shift.
+      - The skill marks proof objects as load_bearing, support_only, exposition_only, validation_only, blocked, demoted, or quarantined.
+      - The skill requires an explicit learned_inference_delta before classifying a cycle as load_bearing.
+      - The skill cites the conceptual_quality_vector and explains which dimensions are genuinely improved versus unchanged.
+      - The skill caps nontriviality at support_only when the result is a definitional restatement, notation-preserving translation, or conservative unpacking.
+      - The skill explains why a valid lemma can still be strategically shallow.
+      - The Yang-Mills endpoint kappa_4 loop is classified as support_only unless tied to validated paths and same-regulator endpoint estimates.
+    blocked_by:
+      - PDC-001
+      - PDC-003
+    evidence:
+      - docs/plans-and-reviews/proof-depth-control-stack-plan.md
+      - skills/evaluation/contribution-value-assessor/SKILL.md
+      - skills/evaluation/progression-payoff-judge/SKILL.md
+    review_date: "2026-07-20"
+    failure_modes:
+      - The skill confuses polish with depth.
+      - The skill penalizes hard unresolved work simply because it is not complete.
+      - The skill accepts a cycle as deep because it sounds strategic but has no learned inference delta.
+      - The skill treats explanatory or unification language as evidence without naming the mechanism or cases unified.
+      - The skill lets a principal transfer theorem count as load-bearing without a consequence delta beyond definitions.
+      - The skill lacks a clear support-only category for useful but non-frontier work.
+    status: resolved
+
+  - id: PDC-005
+    type: workflow_todo
+    phase: bridge-object-design
+    owner: skills/reasoning
+    priority: high
+    risk_class: missing-object-avoidance
+    title: Create proof-bridge-object-forger
+    intent: >
+      Design the missing mathematical object, carrier, representation, invariant,
+      interface, or transfer law when the blocked route is not reducible to one
+      more lemma.
+    use_skills:
+      - skill-creator
+      - kb-concept-bridge-planner
+      - kb-discovery-breakthrough-profiler
+      - gedanken-situation-designer
+    required_artifact:
+      - skills/reasoning/proof-bridge-object-forger/SKILL.md
+      - skills/reasoning/proof-bridge-object-forger/agents/openai.yaml
+      - agentic/spec/proof_bridge_object_packet.schema.json
+    acceptance_criteria:
+      - The skill names the missing object and why existing objects cannot play its role.
+      - The skill returns construction requirements, preserved invariants, broken invariants, validation obligations, and first falsifier.
+      - The skill can propose a YM geometric-collar carrier and a P vs NP transfer carrier using the same output contract.
+      - The skill forbids bridge objects whose definition already includes the target theorem's conclusion; those are routed to transfer-substance audit before reuse.
+      - The skill rejects analogies that do not produce an inspectable object or theorem-shaped obligation.
+    blocked_by:
+      - PDC-002
+      - PDC-003
+    evidence:
+      - docs/plans-and-reviews/proof-depth-control-stack-plan.md
+      - skills/discovery/kb-concept-bridge-planner/SKILL.md
+      - skills/evaluation/kb-discovery-breakthrough-profiler/SKILL.md
+    review_date: "2026-07-20"
+    failure_modes:
+      - The skill invents names without construction requirements.
+      - The proposed object solves a different problem or changes the target domain.
+      - The proposed bridge object hides the desired conclusion inside a predicate, carrier, or normalization definition.
+      - The skill emits broad creative prose with no validation handoff.
+    status: resolved
+
+  - id: PDC-006
+    type: workflow_todo
+    phase: same-domain-transfer
+    owner: skills/evaluation
+    priority: high
+    risk_class: silent-domain-shift
+    title: Create proof-same-domain-transfer-certifier
+    intent: >
+      Generalize the same-theory normalization concern into a reusable check
+      that arguments preserve model, category, regulator, representation,
+      complexity class, semantic regime, and quantifier discipline.
+    use_skills:
+      - skill-creator
+      - bridge-object-equivalence-checker
+      - regime-shift-auditor
+      - entailment-gap-auditor
+    required_artifact:
+      - skills/evaluation/proof-same-domain-transfer-certifier/SKILL.md
+      - skills/evaluation/proof-same-domain-transfer-certifier/agents/openai.yaml
+      - agentic/spec/proof_same_domain_transfer.schema.json
+    acceptance_criteria:
+      - The skill lists source object, target object, preserved structure, changed structure, transfer theorem, and missing certificate.
+      - The skill distinguishes allowed transformations from domain-changing substitutions.
+      - The skill distinguishes same-domain preservation from substantive transfer and marks definition-only transfer as support_only until a preservation law is supplied.
+      - The skill requires the target property to be stated independently of the bridge map, normalization, or carrier construction.
+      - The skill catches YM entrywise normalization without a positivity-preserving certificate.
+      - The skill catches P vs NP proof moves that change uniformity, advice, reduction type, or proof-system carrier.
+    blocked_by:
+      - PDC-001
+    evidence:
+      - docs/plans-and-reviews/proof-depth-control-stack-plan.md
+      - skills/evaluation/bridge-object-equivalence-checker/SKILL.md
+      - skills/evaluation/regime-shift-auditor/SKILL.md
+    review_date: "2026-07-20"
+    failure_modes:
+      - The skill only asks whether terms look similar instead of auditing preserved structure.
+      - The skill treats a heuristic bridge as a transfer theorem.
+      - The skill treats definitional equivalence as enough for transfer without a stress case or failure case.
+      - The skill does not state what certificate would repair the transfer gap.
+    status: resolved
+
+  - id: PDC-017
+    type: workflow_todo
+    phase: transfer-substance-audit
+    owner: skills/evaluation
+    priority: critical
+    risk_class: definitional-transfer-theorem
+    title: Create proof-transfer-substance-auditor
+    intent: >
+      Detect principal transfer theorems that are formally correct but close to
+      definitional, then require independent preservation evidence before they
+      can support a publication claim.
+    use_skills:
+      - skill-creator
+      - proof-same-domain-transfer-certifier
+      - proof-nontriviality-auditor
+      - entailment-gap-auditor
+      - bridge-object-equivalence-checker
+      - results-prior-art-disqualifier-auditor
+    required_artifact:
+      - skills/evaluation/proof-transfer-substance-auditor/SKILL.md
+      - skills/evaluation/proof-transfer-substance-auditor/agents/openai.yaml
+      - agentic/spec/proof_transfer_substance_audit.schema.json
+    acceptance_criteria:
+      - The skill emits definition_expansion_test, independent_source_object_test, independent_target_property_test, nontrivial_hypothesis_test, source_variation_test, stress_case_test, failure_case_test, consequence_delta, prior_art_delta, and verdict.
+      - The skill demotes definitional_restatement, notation_preserving_translation, and conservative_unpacking to support_only unless the cycle explicitly claims exposition rather than transfer depth.
+      - The skill requires the target property to be stateable without bridge-specific vocabulary and without defining it as the image, pullback, normalization, or encoding of the source property.
+      - The skill requires at least one admissible source or target variation where the conclusion can fail unless the substantive transfer hypothesis is added, or records the absence of such a variation as a limitation.
+      - The skill requires a nonidentity example or stress regime where the bridge map performs genuine preservation work rather than acting as a relabeling.
+      - The skill requires a consequence delta explaining what becomes inferable after the theorem that was not already inferable from the definitions.
+      - The skill requires a prior-art delta against known equivalence, embedding, normalization, representation, or transfer theorems.
+      - In the Yang-Mills calibration case, the skill catches a same-theory normalization theorem that defines normalized Wilson observables so positivity or transfer follows by construction.
+      - In the P vs NP calibration case, the skill catches a carrier-transfer theorem whose lower-bound target property is built into the carrier definition.
+    blocked_by:
+      - PDC-001
+      - PDC-004
+      - PDC-006
+    evidence:
+      - docs/plans-and-reviews/proof-depth-control-stack-plan.md
+      - skills/evaluation/entailment-gap-auditor/SKILL.md
+      - skills/evaluation/bridge-object-equivalence-checker/SKILL.md
+    review_date: "2026-07-20"
+    failure_modes:
+      - The skill rejects all definitional work even when it is honestly labeled exposition or setup.
+      - The skill accepts a theorem because its notation is sophisticated while its conclusion follows by expansion.
+      - The skill asks for examples but not failure or stress cases, so the bridge remains untested.
+      - The skill ignores prior-art transfer results and therefore overstates novelty.
+      - The skill cannot explain what certificate would turn a support-only transfer into a substantive one.
+    status: resolved
+
+  - id: PDC-007
+    type: workflow_todo
+    phase: creative-variant-probing
+    owner: skills/reasoning
+    priority: high
+    risk_class: one-story-proof-search
+    title: Create proof-creative-variant-prober
+    intent: >
+      Generate controlled counterfactuals and toy carriers that reveal which
+      assumption, variable, invariant, boundary condition, or regime is doing
+      real proof work.
+    use_skills:
+      - skill-creator
+      - gedanken-situation-designer
+      - gedanken-counterfactual-variant-builder
+      - counterfactual-route-prober
+    required_artifact:
+      - skills/reasoning/proof-creative-variant-prober/SKILL.md
+      - skills/reasoning/proof-creative-variant-prober/agents/openai.yaml
+      - agentic/spec/proof_creative_variant_probe.schema.json
+    acceptance_criteria:
+      - The skill requires a varied variable, held-fixed controls, predicted observation, disconfirming observation, and transfer boundary.
+      - The skill demotes variants that are analogies without decision value.
+      - The skill includes definitional-collapse probes that weaken or vary the bridge definition to see whether the claimed transfer still has independent content.
+      - The skill can probe YM footprint locking by varying collar geometry while holding reflection support fixed.
+      - The skill can probe P vs NP carrier transparency by varying visibility or uniformity while holding the reduction target fixed.
+    blocked_by:
+      - PDC-002
+      - PDC-005
+    evidence:
+      - docs/plans-and-reviews/proof-depth-control-stack-plan.md
+      - skills/reasoning/gedanken-situation-designer/SKILL.md
+      - skills/reasoning/gedanken-counterfactual-variant-builder/SKILL.md
+    review_date: "2026-07-20"
+    failure_modes:
+      - The skill produces examples that cannot affect route ranking.
+      - The variants change too many conditions at once.
+      - The skill never varies definitions, so it cannot expose a theorem whose conclusion is definition-built.
+      - The skill forgets to state what transfers back to the target proof.
+    status: resolved
+
+  - id: PDC-008
+    type: workflow_todo
+    phase: conceptual-quality-heuristics
+    owner: skills/evaluation
+    priority: critical
+    risk_class: vague-depth-judgment
+    title: Create proof-conceptual-quality-heuristic-rater
+    intent: >
+      Rate conceptual depth, explanatory power, unification power, and adjacent
+      discovery-quality dimensions using explicit evidence rather than broad
+      claims of insight.
+    use_skills:
+      - skill-creator
+      - review-reasoner-fields-medalist
+      - review-reasoner-epistemologist
+      - kb-discovery-breakthrough-profiler
+      - scientific-contribution-detector
+      - proof-transfer-substance-auditor
+    required_artifact:
+      - skills/evaluation/proof-conceptual-quality-heuristic-rater/SKILL.md
+      - skills/evaluation/proof-conceptual-quality-heuristic-rater/agents/openai.yaml
+      - agentic/spec/proof_conceptual_quality_vector.schema.json
+      - docs/plans-and-reviews/proof-depth-control-stack-plan.md
+    acceptance_criteria:
+      - The skill emits a vector with conceptual_depth, explanatory_power, unification_power, mechanism_specificity, compression, generativity, transfer_reach, falsifiability, boundary_sharpness, and literature_displacement.
+      - Each dimension includes score, evidence, missing_evidence, scope, and demotion_trigger.
+      - Explanatory power requires a why-because account naming mechanism, mediator, enabling condition, and defeater.
+      - Unification power requires at least two previously separate objects, routes, regimes, or failures and a controlled common principle that does not collapse their distinctions.
+      - Explanatory, unification, transfer_reach, and literature_displacement scores are capped when a principal theorem fails the transfer-substance audit.
+      - The skill refuses to use heuristic score as proof authority; it can only guide search, lock-in readiness, or publication-subgoal value.
+      - The Yang-Mills calibration distinguishes finite source-collision algebra, geometric-collar realization, same-theory normalization, endpoint estimates, and mass-gap transfer as different depth/unification claims.
+      - The P vs NP calibration distinguishes carrier transparency, uniformity, barrier specificity, and proof-complexity transfer as different depth/unification claims.
+    blocked_by:
+      - PDC-001
+    evidence:
+      - docs/plans-and-reviews/proof-depth-control-stack-plan.md
+      - skills/evaluation/scientific-contribution-detector/SKILL.md
+      - skills/evaluation/kb-discovery-breakthrough-profiler/SKILL.md
+    review_date: "2026-07-20"
+    failure_modes:
+      - The skill emits a single depth score with no evidence per dimension.
+      - The skill rewards elegant prose without a mechanism, invariant, or falsifier.
+      - The skill rewards unification that hides object mismatch or transfer failure.
+      - The skill assigns high transfer_reach to a theorem whose conclusion is obtained by definition expansion.
+      - The skill promotes high heuristic quality as if it were a proof.
+    status: resolved
+
+  - id: PDC-009
+    type: workflow_todo
+    phase: release-gating
+    owner: skills/evaluation
+    priority: critical
+    risk_class: unsupported-promotion
+    title: Create proof-depth-release-gate
+    intent: >
+      Decide whether a cycle, result, or queue item should be promoted,
+      retained as support, demoted, quarantined, routed to proof delivery, or
+      stopped based on hard-gate movement.
+    use_skills:
+      - skill-creator
+      - proof-quality-gatekeeper
+      - kb-discovery-governor
+      - results-paper-readiness-gatekeeper
+      - proof-conceptual-quality-heuristic-rater
+      - proof-transfer-substance-auditor
+    required_artifact:
+      - skills/evaluation/proof-depth-release-gate/SKILL.md
+      - skills/evaluation/proof-depth-release-gate/agents/openai.yaml
+      - agentic/spec/proof_depth_release_decision.schema.json
+    acceptance_criteria:
+      - The skill requires pressure packet, selected hard gate, nontriviality audit, conceptual quality vector, transfer substance audit, same-domain transfer audit, and evidence paths before promotion.
+      - The skill outputs promote, support_only, lock_in_candidate, demote, quarantine, proof_delivery, pivot, or stop with explicit reasons.
+      - The skill forbids breakthrough language unless a hard gate changed.
+      - The skill forbids principal-transfer-theorem promotion when definition_expansion_test or independent_target_property_test fails.
+      - The skill recommends lock_in_candidate only when the learning ledger identifies a smallest honest publication subgoal and the conceptual quality vector shows enough depth, explanatory power, or unification power for bounded completion cycles.
+      - The skill sends theorem-shaped survivors to proof delivery and paper-shaped survivors to result elaboration.
+    blocked_by:
+      - PDC-003
+      - PDC-004
+      - PDC-006
+      - PDC-008
+      - PDC-017
+    evidence:
+      - docs/plans-and-reviews/proof-depth-control-stack-plan.md
+      - skills/proof_delivery/proof-quality-gatekeeper/SKILL.md
+      - skills/evaluation/kb-discovery-governor/SKILL.md
+    review_date: "2026-07-20"
+    failure_modes:
+      - The release gate promotes workflow activity as mathematical progress.
+      - The release gate has no support-only path and therefore over-demotes useful calculations.
+      - The release gate treats high conceptual quality as proof rather than search or lock-in evidence.
+      - The release gate lets a close-to-definitional transfer theorem become the paper's main claim.
+      - The release gate keeps exploring after a publication-worthy subgoal has enough critical mass to lock in.
+      - The release gate does not identify the next consumer skill or artifact.
+    status: resolved
+
+  - id: PDC-010
+    type: test_todo
+    phase: validator-and-fixtures
+    owner: agentic/scripts
+    priority: high
+    risk_class: unenforced-depth-policy
+    title: Add schemas, fixtures, and validators for proof-depth artifacts
+    intent: >
+      Make the proof-depth stack enforceable by validating packet shape,
+      hard-gate linkage, demotion paths, and target-neutral calibration fixtures.
+    use_skills:
+      - skill-creator
+      - proof-depth-release-gate
+      - proof-nontriviality-auditor
+      - proof-conceptual-quality-heuristic-rater
+      - proof-transfer-substance-auditor
+    required_artifact:
+      - agentic/spec/proof_depth_control.schema.json
+      - agentic/spec/proof_conceptual_quality_vector.schema.json
+      - agentic/spec/proof_transfer_substance_audit.schema.json
+      - agentic/scripts/validate_proof_depth_control.py
+      - tests/fixtures/proof_depth/definitional_transfer_theorem_reject.json
+      - tests/fixtures/proof_depth/substantive_transfer_theorem_accept.json
+      - tests/fixtures/proof_depth/yang_mills_routea_shallow_endpoint.json
+      - tests/fixtures/proof_depth/yang_mills_routea_geometric_gate.json
+      - tests/fixtures/proof_depth/pvsnp_carrier_uniformity_gate.json
+    acceptance_criteria:
+      - The validator fails packets that have no hard gate, no evidence path, no demotion trigger, or no transfer status.
+      - The validator fails promoted or lock-in-candidate packets whose conceptual quality vector lacks evidence for depth, explanation, and unification claims.
+      - The validator rejects promoted packets whose principal transfer theorem fails definition-expansion, independent-target-property, stress-case, failure-case, consequence-delta, or prior-art-delta checks.
+      - The validator accepts a substantive transfer theorem fixture where preservation is not automatic and rejects a definitional transfer theorem fixture when promoted as breakthrough.
+      - The validator accepts a YM geometric-collar gate packet and rejects a YM endpoint-only packet when upstream gates are missing.
+      - The validator accepts a P vs NP carrier-uniformity packet without YM vocabulary.
+      - The validator is wired into agentic/scripts/agentic_check.py only after representative fixtures pass.
+    blocked_by:
+      - PDC-001
+      - PDC-009
+      - PDC-017
+    evidence:
+      - docs/plans-and-reviews/proof-depth-control-stack-plan.md
+      - agentic/scripts/validate_todos.py
+      - agentic/scripts/agentic_check.py
+    review_date: "2026-07-20"
+    failure_modes:
+      - The validator checks only JSON syntax and not proof-depth semantics.
+      - The validator accepts heuristic dimensions without per-dimension evidence.
+      - The validator accepts a principal transfer theorem whose target predicate is defined as the source predicate's bridge image.
+      - The fixtures leak target-specific assumptions into the universal schema.
+      - The validator blocks exploratory packets that are correctly quarantined rather than promoted.
+    status: resolved
+
+  - id: PDC-011
+    type: workflow_todo
+    phase: declarative-learning-extraction
+    owner: skills/evaluation
+    priority: critical
+    risk_class: narrative-only-learning
+    title: Create proof-inference-learning-extractor
+    intent: >
+      Convert each proof cycle's mathematical output into declarative
+      inference-level learning facts that can be accumulated and reused by
+      later cycles.
+    use_skills:
+      - skill-creator
+      - theorem-body-normalizer
+      - entailment-gap-auditor
+      - proof-nontriviality-auditor
+      - proof-transfer-substance-auditor
+    required_artifact:
+      - skills/evaluation/proof-inference-learning-extractor/SKILL.md
+      - skills/evaluation/proof-inference-learning-extractor/agents/openai.yaml
+      - agentic/spec/proof_inference_learning_event.schema.json
+    acceptance_criteria:
+      - The skill emits one or more learning events with source_cycle_id, premises_used, attempted_inference, observed_result, learned_constraint, scope_condition, invalidated_generalization, and future_routing_effect.
+      - The skill rejects summaries that only say the branch made progress, sharpened understanding, or needs more work.
+      - The skill records negative learning as first-class output: failed transfers, missing objects, false analogies, blocked normalizations, and demoted local calculations.
+      - The skill records definitional transfer collapse as a reusable learned rule: if the target property is defined through the bridge, future cycles must supply independent target semantics before promotion.
+      - In the Yang-Mills calibration case, the skill records the rule that endpoint calculations are support-only until geometric collar, same-theory normalization, and coefficient gates are discharged.
+      - In the P vs NP calibration case, the skill can record a rule that a carrier argument is support-only until uniformity, reduction preservation, or barrier-specificity facts are supplied.
+    blocked_by:
+      - PDC-001
+      - PDC-004
+    evidence:
+      - docs/plans-and-reviews/proof-depth-control-stack-plan.md
+      - agentic/reports/discovery_marathon/targets/yang-mills-existence-and-mass-gap-target/latest.json
+      - skills/evaluation/entailment-gap-auditor/SKILL.md
+    review_date: "2026-07-20"
+    failure_modes:
+      - The skill emits high-level learning prose instead of declarative inference facts.
+      - The skill records action items as learning evidence; an action is not an inference.
+      - The skill loses scope conditions, causing a local lesson to be overgeneralized.
+      - The skill records a definitional-collapse diagnosis as vague criticism rather than an inference rule with a repair condition.
+    status: resolved
+
+  - id: PDC-012
+    type: workflow_todo
+    phase: target-scoped-learning-ledger
+    owner: agentic/scripts
+    priority: critical
+    risk_class: non-cumulative-conceptual-learning
+    title: Build the target-scoped proof learning ledger
+    intent: >
+      Accumulate declarative inference events across cycles so conceptual
+      learning becomes reusable state rather than prose inside isolated reports.
+    use_skills:
+      - proof-inference-learning-extractor
+      - proof-transfer-substance-auditor
+      - proof-hard-gate-selector
+      - proof-depth-release-gate
+      - result-atlas-maintainer
+    required_artifact:
+      - agentic/reports/proof_learning/targets/<target_id>/latest.json
+      - agentic/reports/proof_learning/targets/<target_id>/latest.md
+      - agentic/scripts/build_proof_learning_ledger.py
+      - agentic/scripts/validate_proof_learning_ledger.py
+    acceptance_criteria:
+      - The ledger is target-scoped, append-only by event id, and cannot mix Yang-Mills and P vs NP learning events.
+      - The ledger deduplicates repeated high-level claims but preserves distinct inference events with different premises or scope conditions.
+      - The ledger distinguishes learned_rule, unresolved_question, demoted_generalization, required_certificate, and branch_routing_rule.
+      - The ledger stores transfer_substance_rules for definition-expansion failures, bridge-vocabulary dependency, missing failure cases, and missing consequence delta.
+      - Queueing can consume future_routing_effect so repeated shallow branches are demoted or rerouted automatically.
+      - The Markdown report shows cycle-to-cycle conceptual learning as declarative rules, not as a chronology of activities.
+    blocked_by:
+      - PDC-011
+    evidence:
+      - docs/plans-and-reviews/proof-depth-control-stack-plan.md
+      - agentic/scripts/validate_discovery_marathon_theme_scoping.py
+      - docs/research-methods/result-subgoal-atlas.md
+    review_date: "2026-07-20"
+    failure_modes:
+      - The ledger becomes another timeline summary instead of an inference store.
+      - The ledger overwrites one target's learning with another target's events.
+      - The ledger loses definitional-collapse findings, allowing later cycles to repeat the same theorem-shaped restatement.
+      - The ledger cannot affect future branch selection or demotion.
+    status: resolved
+
+  - id: PDC-013
+    type: workflow_todo
+    phase: exploratory-critical-mass
+    owner: skills/evaluation
+    priority: critical
+    risk_class: endless-exploration
+    title: Create proof-exploration-critical-mass-assessor
+    intent: >
+      Decide when exploratory cycles have produced enough declarative learning
+      to justify locking into a bounded proof-strategy cycle set for a
+      meaningful publication subgoal.
+    use_skills:
+      - skill-creator
+      - proof-learning-ledger-maintainer
+      - proof-conceptual-quality-heuristic-rater
+      - proof-transfer-substance-auditor
+      - paper-contribution-readiness-judge
+      - scientific-contribution-detector
+      - completed-subgoal-enablement-auditor
+    required_artifact:
+      - skills/evaluation/proof-exploration-critical-mass-assessor/SKILL.md
+      - skills/evaluation/proof-exploration-critical-mass-assessor/agents/openai.yaml
+      - agentic/spec/proof_exploration_critical_mass.schema.json
+    acceptance_criteria:
+      - The skill returns exploration_continue, lock_in_ready, premature_lockin, or forced_demote with explicit reasons.
+      - The skill requires a smallest honest publication subgoal, repeated pressure on a named hard gate, at least one candidate object or falsifier, and enough negative learning to rule out shallow variants.
+      - The skill requires evidence of conceptual depth plus explanatory or unification power; purely local or routine algebra cannot trigger lock-in without a publication-quality explanation of why it matters.
+      - The skill refuses lock_in_ready for a publication subgoal whose principal theorem is a transfer theorem that fails transfer-substance audit.
+      - The skill requires a bounded cycle budget, stop condition, non-claims, and target-scoped learning evidence before lock_in_ready.
+      - In the Yang-Mills calibration case, the skill can lock in to a finite geometric-collar theorem, obstruction certificate, same-theory normalization result, or source-collision finite paper, without implying a mass-gap proof.
+      - In the P vs NP calibration case, the skill can lock in to a bounded no-go theorem, transfer obstruction certificate, or carrier-uniformity lemma, without implying P vs NP is solved.
+    blocked_by:
+      - PDC-008
+      - PDC-012
+      - PDC-017
+    evidence:
+      - docs/plans-and-reviews/proof-depth-control-stack-plan.md
+      - docs/research-methods/result-subgoal-atlas.md
+      - skills/evaluation/paper-contribution-readiness-judge/SKILL.md
+      - skills/evaluation/scientific-contribution-detector/SKILL.md
+    review_date: "2026-07-20"
+    failure_modes:
+      - The skill locks in because the route feels promising but lacks a publishable subgoal statement.
+      - The skill locks in on an object with low explanatory and unification value.
+      - The skill locks in on a near-definitional principal theorem because it has clean formal packaging.
+      - The skill keeps exploration open even after a bounded publishable object is available.
+      - The skill treats the main-problem goal as the only valid publication unit.
+    status: resolved
+
+  - id: PDC-014
+    type: workflow_todo
+    phase: proof-strategy-lockin
+    owner: skills/orchestration
+    priority: critical
+    risk_class: premature-or-endless-lockin
+    title: Create proof-strategy-lockin-orchestrator
+    intent: >
+      Run a bounded set of completion cycles for a locked publication subgoal,
+      then release the workflow back to conceptual exploration with the new
+      learning ledger entries.
+    use_skills:
+      - skill-creator
+      - proof-exploration-critical-mass-assessor
+      - proof-conceptual-quality-heuristic-rater
+      - proof-transfer-substance-auditor
+      - proof-delivery-workflow-orchestrator
+      - results-elaboration-workflow-orchestrator
+      - proof-depth-release-gate
+    required_artifact:
+      - skills/orchestration/proof-strategy-lockin-orchestrator/SKILL.md
+      - skills/orchestration/proof-strategy-lockin-orchestrator/agents/openai.yaml
+      - agentic/spec/proof_strategy_lockin_plan.schema.json
+    acceptance_criteria:
+      - The skill freezes subgoal_statement, non_claims, locked_hard_gates, allowed_cycle_types, cycle_budget, stop_conditions, publication_target, and return_to_exploration_trigger.
+      - The lock-in plan records why the subgoal has enough conceptual depth, explanatory power, or unification power to merit publication-focused completion cycles.
+      - If the locked subgoal is a transfer theorem, the skill freezes anti_definitionality_tests, required_failure_cases, consequence_delta, and prior_art_delta as completion obligations.
+      - The skill admits only completion cycles: proof, counterexample, computation, prior-art boundary, transfer certificate, manuscript integration, or demotion.
+      - The skill rejects new broad exploration while lock-in is active unless a stop condition fires.
+      - The skill ends with publication_ready_subgoal, precise_demotion, blocked_named_lemma, or no_publication_result, and writes learning events for the outcome.
+      - The skill explicitly reopens conceptual exploration after the locked subgoal is completed, demoted, or blocked.
+    blocked_by:
+      - PDC-009
+      - PDC-013
+    evidence:
+      - docs/plans-and-reviews/proof-depth-control-stack-plan.md
+      - skills/proof_delivery/proof-delivery-workflow-orchestrator/SKILL.md
+      - skills/results_ellaboration/results-elaboration-workflow-orchestrator/SKILL.md
+    review_date: "2026-07-20"
+    failure_modes:
+      - Lock-in becomes permanent and suppresses needed conceptual exploration.
+      - Lock-in allows exploratory branch hopping instead of completing the frozen subgoal.
+      - Lock-in completes a technically correct but conceptually inert subgoal that does not merit paper focus.
+      - Lock-in completes a transfer theorem whose main result is definition-built and has no independent stress or failure case.
+      - The locked subgoal lacks paper relevance or clear non-claims.
+    status: resolved
+
+  - id: PDC-015
+    type: report_todo
+    phase: publication-cycle-reporting
+    owner: agentic/scripts
+    priority: high
+    risk_class: invisible-lockin-state
+    title: Add publication subgoal cycle reporting
+    intent: >
+      Make the exploration versus lock-in state visible in reports so users can
+      see when the system is exploring, completing a publishable subgoal, or
+      returning to conceptual search.
+    use_skills:
+      - proof-strategy-lockin-orchestrator
+      - proof-learning-ledger-maintainer
+      - proof-conceptual-quality-heuristic-rater
+      - proof-transfer-substance-auditor
+      - scientific-contribution-paper-handoff
+      - timeline-narrative-coherence-guard
+    required_artifact:
+      - agentic/reports/proof_lockin/targets/<target_id>/latest.json
+      - agentic/reports/proof_lockin/targets/<target_id>/latest.md
+      - agentic/scripts/build_proof_lockin_report.py
+      - agentic/scripts/validate_proof_lockin_report.py
+    acceptance_criteria:
+      - The report displays mode as exploratory, lock_in_active, packaging, released_to_exploration, demoted, or blocked.
+      - The report shows the frozen subgoal, conceptual quality vector, paper relevance, non-claims, cycle budget, completed cycles, stop condition, and next allowed action.
+      - The report shows transfer_substance_verdict, definition_expansion_result, failure_case_status, consequence_delta, and prior_art_delta for any transfer-theorem subgoal.
+      - The report links each lock-in decision to learning-ledger evidence and hard-gate movement.
+      - The report is target-scoped and cannot overwrite P vs NP and Yang-Mills states.
+      - The report includes a return-to-exploration note after publication, demotion, or blocked-lemma closure.
+    blocked_by:
+      - PDC-014
+    evidence:
+      - docs/plans-and-reviews/proof-depth-control-stack-plan.md
+      - agentic/scripts/generate_discovery_marathon_html.py
+      - agentic/scripts/validate_discovery_marathon_theme_scoping.py
+    review_date: "2026-07-20"
+    failure_modes:
+      - Users cannot tell whether the run is exploring or locked into a publication subgoal.
+      - Users cannot tell why the locked subgoal is conceptually deep, explanatory, or unifying enough to merit completion.
+      - Users cannot tell whether a principal transfer theorem is substantive or merely definitional.
+      - The report treats a completed subgoal as the main problem solution.
+      - Lock-in state is stored in generic paths and cross-target overwrite returns.
+    status: resolved
+
+  - id: PDC-016
+    type: workflow_todo
+    phase: marathon-integration
+    owner: agentic/scripts
+    priority: high
+    risk_class: depth-stack-bypass
+    title: Wire proof-depth control into discovery marathon queueing
+    intent: >
+      Ensure future marathon cycles cannot be counted as conceptual progress
+      unless they carry proof-depth artifacts and a release decision.
+    use_skills:
+      - proof-depth-pressure-formalizer
+      - proof-hard-gate-selector
+      - proof-nontriviality-auditor
+      - proof-conceptual-quality-heuristic-rater
+      - proof-transfer-substance-auditor
+      - proof-inference-learning-extractor
+      - proof-exploration-critical-mass-assessor
+      - proof-strategy-lockin-orchestrator
+      - proof-depth-release-gate
+    required_artifact:
+      - agentic/scripts/run_discovery_marathon.py
+      - agentic/scripts/build_discovery_marathon_report.py
+      - agentic/scripts/validate_discovery_marathon_report.py
+      - agentic/reports/discovery_marathon/targets/yang-mills-existence-and-mass-gap-target/latest.html
+    acceptance_criteria:
+      - Marathon reports show pressure packet, selected hard gate, inference_to_learn, learned_inference_delta, conceptual quality vector, nontriviality status, transfer_substance_verdict, transfer status, and depth release decision for each promoted or support-only research cycle.
+      - Support-only cycles remain visible but do not inflate breakthrough or paper-readiness claims.
+      - Principal transfer theorem cycles cannot enter breakthrough, proof_delivery, or lock_in_candidate states unless transfer_substance_verdict is substantive_transfer or explicitly scoped as exposition_only.
+      - Each research cycle either adds at least one validated learning event to the target-scoped proof learning ledger or is marked no_new_learning with a demotion reason.
+      - When critical mass is reached, the marathon switches from exploratory branch selection into the locked proof-strategy cycle set and rejects unrelated exploratory cycles until release.
+      - After publication-ready, demoted, or blocked outcome, the marathon records the result and returns to conceptual exploration with updated learning-ledger rules.
+      - YM endpoint cycles are routed behind G1/G2/G3 unless their required upstream evidence is present.
+      - The integration preserves target scoping so P vs NP and Yang-Mills depth artifacts cannot overwrite each other.
+    blocked_by:
+      - PDC-010
+      - PDC-012
+      - PDC-015
+    evidence:
+      - docs/plans-and-reviews/proof-depth-control-stack-plan.md
+      - docs/operations/discovery-marathon-operations.md
+      - agentic/scripts/validate_discovery_marathon_theme_scoping.py
+    review_date: "2026-07-20"
+    failure_modes:
+      - The marathon displays depth fields but does not use them for queueing or promotion.
+      - The marathon hides the explanatory or unification rationale behind lock-in and release decisions.
+      - The marathon advertises a principal transfer theorem as a result after the transfer-substance audit demoted it.
+      - The marathon summarizes conceptual learning at a goal level instead of recording inference-level deltas.
+      - The marathon remains exploratory after publication-subgoal critical mass is reached.
+      - The marathon locks in prematurely before the learning ledger supports a meaningful subgoal.
+      - Target-scoped proof-depth artifacts overwrite one another.
+      - The report hides demoted or support-only cycles instead of making the decision visible.
+    status: resolved

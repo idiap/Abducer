@@ -1,0 +1,599 @@
+% SPDX-FileCopyrightText: © 2026 Idiap Research Institute <contact@idiap.ch>
+%
+% SPDX-FileContributor: Andre Freitas <andre.freitas@idiap.ch>
+% Neuro-symbolic AI Group
+%
+% SPDX-FileContributor: Danilo Gusicuma <danilo.gusicuma@idiap.ch>
+% Neuro-symbolic AI Group
+%
+% SPDX-License-Identifier: MIT
+\documentclass[11pt]{article}
+
+\usepackage[margin=1in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{booktabs}
+\usepackage{enumitem}
+\usepackage{float}
+\usepackage{xcolor}
+\usepackage{hyperref}
+
+\hypersetup{colorlinks=true,linkcolor=blue!45!black,urlcolor=blue!45!black}
+
+\title{Abducer: Contract-Enforced Authority Separation\\for LLM-Based Abductive Workflows}
+\author{Neuro-symbolic AI Group\\Idiap Research Institute}
+\date{August 2026}
+
+\newtheorem{definition}{Definition}
+\newtheorem{invariant}{Design invariant}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Large-language-model workflows can generate scientific hypotheses, but generation alone does not explain how a proposal becomes durable scientific state, how rival explanations remain plural, or how preference is prevented from silently becoming proof or empirical support. We describe Abducer as an \emph{authority-separated abductive transition system} (AATS). Its abductive kernel constructs and transforms competing conceptual systems, exposes missing premises, preserves underdetermination through set-valued adjudication, and uses negative results to constrain later search. Its accountability shell binds operator artifacts to exact identities, semantic consumer events, capability-specific evidence, deterministic reduction, and an atomic state transition. Around this kernel, named workflows provide trigger-governed escalation lanes for target control, source assimilation, conceptual deepening, proof delivery, contribution assessment, manuscript elaboration, deep review, and release without transferring epistemic authority between them. Upstream operators produce a frozen artifact bundle; the canonical cycle validates and semantically consumes that bundle rather than executing the operators itself. Formal-claim packets obtain proof-launch eligibility only after committed ancestry is reopened, while experimental descendants at transaction generations $N$ through $N+8$ have no direct edge into the theory that commissioned them. We contribute an evidence-grounded systems abstraction and conformance analysis, not evidence of scientific efficacy, theorem correctness, autonomous creativity, or novelty relative to prior systems. The integrated release surface is presently unaccepted because its checked-in publication pointer and historical acceptance topology lag the current contracts.
+\end{abstract}
+
+\section{Motivation}
+
+Scientific abduction asks which conceptual system, missing premise, mechanism, or representation would make a difficult body of observations and obligations intelligible. A language model can propose such objects, but an accountable discovery process must answer harder questions: Which version of the problem did the proposal address? Which literature was available? Which rival programmes were considered? Did an evaluator prefer one programme, or did a proof establish a claim? Did a generated artifact actually affect later state? Can a failed route disappear without explanation? Can a stale worker overwrite a newer theory?
+
+Abducer treats these as state-transition and authority questions rather than prompt-engineering details. Its stronger discovery surface is not a linear chain of agents. It is an event-sourced control system in which plural generative operators propose changes, typed validators license transport, an authority-separated evaluator returns a set-valued preference, and exactly one reducer may write canonical state.
+
+We make three contributions:
+\begin{enumerate}[leftmargin=*]
+  \item a typed abductive state-and-event model that preserves rival explanations, genealogy, negative evidence, stale branches, and retired routes;
+  \item a capability-indexed authority model and descendant-lane protocol that keep conceptual preference, canonical state write, checker results, empirical observations, source truth, theorem status, and publication integrity mutually non-escalating; and
+  \item an executable realization with digest-bound semantic consumption, deterministic reduction, durable compare-and-swap commits, and adversarial conformance tests; and
+  \item a portfolio model for composing lightweight, opt-in, conditional, and target-specific workflows through declared handoffs and inspectable control hooks.
+\end{enumerate}
+
+The first contribution is the abductive kernel; the latter contributions form its accountability and composition shell. The repository also contains an older KB-centred loop whose abduction and deduction steps remain manual prompt checkpoints. The named evidence onramp declaratively composes knowledge-preparation skills, but does not make those older checkpoints executable; we keep that interaction protocol outside the canonical systems model below.
+
+\section{Problem Formulation}
+
+Let a discovery process operate at generation $g$ on a target $\tau$ and run $\rho$. The objective is not to maximize an unconstrained language-model score. It is to construct a controlled transition
+\[
+  S_g \xrightarrow{\;\Delta_g\;} S_{g+1}
+\]
+such that every accepted semantic change is bound to the exact input generation, source artifacts, operator receipt, consumer event, authority class, and durable commit.
+
+We formulate Abducer as
+\[
+  \mathcal{W}=(S,\mathcal{O},C,J,Q,\mathcal{G},T,\Gamma),
+\]
+where $S$ is epistemic state, $\mathcal{O}$ typed operators, $C$ causal and identity constraints, $J$ plural adjudication, $Q$ the information scheduler, $\mathcal{G}$ the logical event ledger, $T$ the atomic transaction mechanism, and $\Gamma$ a set of authority capabilities. This separates three questions that are often collapsed:
+
+\begin{enumerate}[leftmargin=*]
+  \item \emph{What was generated or executed?} --- operator receipts and artifacts;
+  \item \emph{What changed the system's scientific memory?} --- typed consumer events and feedback edges;
+  \item \emph{What may be asserted?} --- conceptual, proof, empirical, source, and publication authority.
+\end{enumerate}
+
+\section{Typed Epistemic State}
+
+\begin{definition}[Discovery state]
+The following tuple is a paper-level projection of the schema:
+\[
+S_g=(\mathcal{C}_g,\mathcal{D}_g,\mathcal{H}_g,\mathcal{E}_g,
+\Lambda_g,\mathcal{A}_g,\mathcal{B}_g,\mathcal{X}_g,
+\mathcal{Y}_g,\mathcal{U}_g,\mathcal{R}_g,\mathcal{Z}_g;\mu_g),
+\]
+containing conceptual systems $\mathcal{C}$, concepts $\mathcal{D}$, hypotheses $\mathcal{H}$, evidence $\mathcal{E}$, literature snapshots $\Lambda$, branch attempts $\mathcal{A}$, branches $\mathcal{B}$, transformations $\mathcal{X}$, syntheses $\mathcal{Y}$, understanding deltas $\mathcal{U}$, typed relations $\mathcal{R}$, retired routes $\mathcal{Z}$, and metadata $\mu$. Optional schema collections include predictions, proof obligations, and reflections.
+\end{definition}
+
+Metadata $\mu_g$ records generation, event count, predecessor hash, all active non-retired systems, current literature identity, stale branches, rebase history, and semantic deduplication keys. Negative memory is a derived view across evidence relations, refuted hypotheses, failed attempts, stale branches, and retired routes; it is not one invented state map.
+
+State names such as \texttt{latest}, \texttt{current}, or global aliases are insufficient authority because they do not bind target, run, and generation. Canonical transitions instead reopen an exact immutable predecessor and use its generation in compare-and-swap.
+
+\section{The Abductive Macro-Step}
+
+Let $P_g=(S_g,m_g)$ be the exact verified predecessor and commit manifest. Let $B_g$ be a frozen bundle of independently produced operator requests, receipts, output descriptors, validator authority, and literature projections. Define
+\[
+  \mathsf{Validate}(P_g,B_g)=(E_g,F_g)
+\]
+only when namespace equality, digest closure, predecessor binding, role cardinality, authority compatibility, and semantic-consumption obligations hold. Here $E_g$ is the ordered event suffix and $F_g$ the feedback-edge set. The canonical transition is the partial function
+\[
+  \delta(P_g,B_g)=
+  \mathsf{CAS}_{g}\!\left(
+    \mathsf{Reduce}(S_g,E_g),E_g,F_g,B_g
+  \right).
+\]
+Generative operators construct $B_g$ through a conditional DAG; they do not acquire canonical state-write capability. Only validation, reduction, and a successful compare-and-swap produce $S_{g+1}$.
+
+\begin{figure}[ht]
+\centering
+\fbox{\parbox{0.93\linewidth}{\centering
+$S_g$ + frozen literature $\longrightarrow$ divergent proposals $\longrightarrow$ isolated maturation\\[0.2em]
+$\longrightarrow$ reflection and plural adjudication $\longrightarrow B_g$\\[0.3em]
+$B_g \longrightarrow$ validation $\longrightarrow (E_g,F_g) \longrightarrow$ reducer/CAS $\longrightarrow S_{g+1}$\\[0.3em]
+$S_{g+1}\dashrightarrow$ proof-v3 and descendant experiments (no direct back-edge into $S_g$)
+}}
+\caption{The abductive kernel constructs a frozen bundle; the accountability shell alone commits canonical state.}
+\end{figure}
+
+\subsection{Literature freezing and causal rebase}
+
+The literature operator consumes a target-scoped, versioned search snapshot and an immutable production bundle. A rebase adds new interpretation and marks affected branches stale; it does not rewrite the pre-search intuition. Novelty and investment claims are unavailable when search provenance or freshness is absent. This makes literature causality explicit: later operators must bind the committed literature projection rather than merely include a bibliography.
+
+\subsection{Divergent theory formation}
+
+The high-risk forge deliberately expands structurally different conceptual corners. Candidates carry the proposed ontology change, exact mechanism, assumptions risked, value if correct, learning if wrong, correction conditions, boundary cases, and relation to literature. Early selection is not a lexical novelty score.
+
+\subsection{Isolated parallel maturation}
+
+Candidate programmes mature through an API that deep-copies inputs and gives workers no canonical-state capability. Partial failure does not erase successful siblings, and disagreement is retained for the reducer. This is a capability boundary of the parallel API, not a claim of operating-system sandboxing.
+
+\subsection{Recursive reflection}
+
+Reflection compares programmes through material transformations: differentiating concepts, changing representations, exposing contradictions, splitting overloaded objects, or synthesizing while preserving differences. Validation requires at least two rounds. A round marked mutated, synthesized, or demoted must name structural change; two no-change rounds require an explicit plateau whose action is reframe. Renaming and unification by erasure do not count as conceptual progress.
+
+\subsection{Blind set-valued adjudication}
+
+Adjudication has three distinct layers. A structural G0--G6 evaluator checks typed transition properties. A semantic panel scores essential relevance, explanatory mediation, conceptual depth, unification power, preserved difference, generativity, reflective resilience, and truth-aptness under noncompensatory adequate floors. A blind v3 reducer sees opaque aliases and content digests rather than identities, lifecycle labels, previous preference markers, scores, or self-assessments; it returns the Pareto-nondominated eligible intersection or \texttt{revise\_all}. None of these layers grants theorem authority, and the local panel is not evidence of independent human judgment.
+
+\subsection{Information scheduling}
+
+For each surviving programme, the scheduler constructs a multi-coordinate decision vector covering relevance, tension contact, understanding gain, unification, fertility, programme impact, maturity, cost efficiency, and closure safety. Deterministic Pareto layers replace one scalar objective. Protected wildcards may survive outside the first front, while a sealed plural preference converts premature synthesis into differentiation.
+
+The next action depends on state. Semantic repetition triggers reframe and eventually retirement. Proof-ready claims may enter the proof lane. A support probe requires a mature, formalized theoretical question. Otherwise the system may formalize, differentiate, synthesize, read, or reflect. Independent actions form parallel waves; hard gates remain serial.
+
+\section{Named Workflows as Typed Escalation Lanes}
+\label{sec:named-workflows}
+
+The abductive macro-step defines the canonical state transition, but not every scientific request requires the same depth, cost, or authority. Abducer therefore organizes recurring reasoning patterns as a portfolio of \emph{named workflows}. A named workflow is a versioned orchestration contract rather than a runtime operator route or a sequence of prompts. At paper level, we represent it as
+\[
+  W_i=(\tau_i,I_i,\Delta_i,O_i,H_i,X_i,\Gamma_i),
+\]
+where $\tau_i$ is an activation predicate, $I_i$ and $O_i$ are nominally typed input and output envelopes, $\Delta_i$ is an ordered set of artifact transformations, $H_i$ is a set of control hooks, $X_i$ is an exit gate, and $\Gamma_i$ is an authority boundary. This makes explicit why a workflow starts, what it may transform, what evidence it must leave, and which downstream workflow may receive its result. The type names currently constrain artifact identity and status within a common envelope; they do not yet provide a separate payload schema for every artifact class.
+
+The portfolio has two layers. A small active layer supports routine target control, iterative search, proof-state maintenance, conceptual repair, release, and reporting. More expensive or specialized workflows activate only when their predicates hold. This preserves a lightweight default path. Catalog registration alone is insufficient: integration requires a declared workflow position, handoffs, hook enforcement, and an exit disposition.
+
+\subsection{Active lightweight workflows}
+
+\begin{table}[H]
+\centering\scriptsize
+\begin{tabular}{p{0.19\linewidth}p{0.32\linewidth}p{0.35\linewidth}}
+\toprule
+Workflow & Conceptual transformation & Authority boundary \\
+\midrule
+Target navigation & Open request $\rightarrow$ validated target, acceptance conditions, dependency frontier, and stopping rules. & Governs entry; does not establish a theorem or select a theory. \\
+Discovery marathon & Controlled frontier $\rightarrow$ accumulated plural cycle evidence, retained failures, and next frontier. & Allocates exploration effort; grants neither proof nor truth authority. \\
+Abducer work loop & Concrete obligations, negative results, and queue state $\rightarrow$ updated proof-state bundle. & Coordinates bounded attempts; cannot silently close proof gaps. \\
+Conceptual hypothesis exploration & Structural failure $\rightarrow$ bridge objects, representation changes, claim revisions, and new validation obligations. & Produces hypotheses rather than validated claims. \\
+Release promotion & Validation, dependency, compliance, and drift evidence $\rightarrow$ promote, quarantine, roll back, or escalate disposition. & Owns release disposition, not scientific truth. \\
+Timeline paper & Accumulated evidence and conceptual change $\rightarrow$ claim-bounded historical manuscript. & Cannot modify theory state or upgrade claims. \\
+Yang--Mills representational dynamics & Target state $\rightarrow$ observable, regulated, renormalization, infrared, continuum, and proof-facing packets. & Finite or regulated evidence does not imply continuum or mass-gap claims. \\
+\bottomrule
+\end{tabular}
+\caption{Active workflows preserve a lightweight control path while separating coordination, scientific, and release authority.}
+\label{tab:active-workflows}
+\end{table}
+
+These workflows do not form a mandatory line. Target navigation may invoke a discovery marathon or hand a concrete obligation directly to the work loop. Structural failure may activate conceptual exploration, whose candidate returns with new validation obligations. Release promotion is exceptional and applies only when durable state or official iteration status may change. Timeline writing is observational with respect to theory state, while the Yang--Mills programme is a target-specific overlay rather than a replacement for shared control semantics.
+
+\subsection{Opt-in and conditional workflows}
+
+The second layer houses transformations that would make routine navigation unnecessarily expensive. Activation therefore requires explicit evidence such as a source bundle, repeated conceptual blockage, an exact theorem statement, a result milestone, open manuscript modules, or a deep-review trigger.
+
+\begin{table}[H]
+\centering\scriptsize
+\begin{tabular}{p{0.20\linewidth}p{0.21\linewidth}p{0.31\linewidth}p{0.17\linewidth}}
+\toprule
+Workflow & Activation & Declared transformation & Exit meaning \\
+\midrule
+Evidence-to-proof-route onramp & New sources, stale knowledge base, or proof-entrypoint request. & \texttt{SourceBundle} $\rightarrow$ normalized, grounded, debiased, falsification-tested \texttt{ExpertRouteDossier}. & Routes carry provenance, target implication, and falsifier or stop condition. \\
+Conceptual frontier deepening & Frozen context, approved budget, and blockage, representation failure, or explicit aggressive search. & \texttt{FrozenDiscoveryContext} $\rightarrow$ plural conceptual systems $\rightarrow$ \texttt{FormalClaimProducerOutputV2}. & Claim is ready, rejected, or returned with a learning delta. \\
+Theorem proof delivery & Exact, source- and target-bound theorem-shaped queue item. & \texttt{ProofQueueItem} $\rightarrow$ obligations and lemma chain $\rightarrow$ \texttt{ProofGateDecision}. & Proof candidate, conditional result, repair, countermodel, or rejection. \\
+Scientific contribution cultivation & Result change, completed subgoal, contribution checkpoint, or paper-readiness request. & \texttt{ResultAtlasSlice} $\rightarrow$ value and target-enablement assessment $\rightarrow$ \texttt{EnablementAudit}. & Separates target-critical, reusable, local, side, and negative results. \\
+Manuscript result elaboration & Draft with expansion markers, open modules, or elaboration request. & \texttt{PaperDraft} $\rightarrow$ bounded result packets $\rightarrow$ \texttt{PaperReadinessDecision}. & Integrates results while preserving finite, asymptotic, and continuum scopes. \\
+Deep review and reorientation & Blockage, contradictory evidence, low explanatory power, major gate, or explicit review. & \texttt{RunEvidenceBundle} $\rightarrow$ advisory critiques and meta-review $\rightarrow$ \texttt{GovernedRepairQueue}. & Repair, pivot, quarantine, continuation, or stop; never proof acceptance. \\
+\bottomrule
+\end{tabular}
+\caption{Opt-in and conditional contracts are declared escalation lanes rather than mandatory or necessarily executed stages.}
+\label{tab:escalation-workflows}
+\end{table}
+
+\subsection{Workflow schemas and conceptual roles}
+
+The following schemas provide a deliberately simple structural reading of the
+contracts.  A box denotes an artifact-bearing transformation, a diamond-like
+\texttt{[gate]} denotes a decision that may stop, quarantine, reject, or hand
+off the run, and a branch denotes conditional rather than mandatory execution.
+The diagrams describe the intended control and information flow; they are not
+evidence that every component skill has executed or that a scientific claim is
+correct.  Across all schemas, provenance, scope, open obligations, and
+epistemic status travel with the artifact rather than being inferred from its
+position in the route.
+
+At portfolio level, the workflows form a graph of optional escalation lanes:
+\begin{verbatim}
+ target control
+      |
+      +--> source onramp --------+
+      |                          |
+      +--> conceptual deepening -+--> proof delivery
+                                      |
+                                      v
+                              contribution cultivation
+                                      |
+                                      v
+                              manuscript elaboration
+                                      |
+                            [release/readiness gate]
+
+ Any lane --(blockage, contradiction, major gate)--> deep review
+ Deep review --(governed repair)--> target or conceptual control
+\end{verbatim}
+This is not a required pipeline.  A request activates only the least expensive
+lane whose trigger and authority boundary fit the current obligation.  Typed
+handoffs transport artifacts and unresolved obligations; they do not transfer
+proof, empirical, theory-selection, or release authority.
+
+\paragraph{Evidence-to-proof-route onramp.}
+\begin{verbatim}
+ SourceBundle
+    -> ingest / normalize / ground target
+    -> connect proof routes
+    -> audit hub bias and regime changes
+    -> pressure with counterexamples
+    -> [dossier gate]
+          +--> ProofQueueItem -> theorem proof delivery
+          `--> repair dossier -> conceptual control
+\end{verbatim}
+Conceptually, this workflow is a provenance-preserving compiler from source
+material to a defensible research route.  It prevents a salient citation or a
+high-degree knowledge-graph node from becoming a proof agenda merely by being
+easy to retrieve.  Its output is a route dossier with falsifiers and stopping
+conditions, not a proof.
+
+\paragraph{Conceptual frontier deepening.}
+\begin{verbatim}
+ FrozenDiscoveryContext + approved budget
+    -> assimilate literature frontier
+    -> generate and mature plural hypotheses
+    -> reflect on complete conceptual systems
+    -> blind, set-valued adjudication
+    -> formalize surviving claim candidates
+    -> [claim-readiness gate]
+          +--> ProofQueueItem
+          `--> ConceptualLearningDelta
+\end{verbatim}
+This is the expensive theory-construction lane.  Freezing context makes rival
+programmes comparable, independent maturation reduces premature convergence,
+and blind plural adjudication preserves underdetermination.  Selection means
+``worthy of further formalization,'' never ``true'' or ``proved.''
+
+\paragraph{Theorem proof delivery.}
+\begin{verbatim}
+ ProofQueueItem (exact statement, target, model, quantifiers)
+    -> formalize proof obligations
+    -> construct dependency-ordered lemma chain
+    -> split gaps from countermodels and repairs
+    -> audit inference and circularity
+    -> [proof-quality gate]
+          +--> accepted result packet -> contribution cultivation
+          `--> gap/failure certificate -> conceptual control
+\end{verbatim}
+This workflow turns a theorem-shaped proposal into an inspectable proof state.
+Its primary abstraction is an obligation graph: successful lemmas discharge
+nodes, while failed lemmas, circular dependencies, and countermodels remain
+first-class outcomes.  Only the proof gate may issue a proof disposition, and
+that disposition remains distinct from novelty or publication readiness.
+
+\paragraph{Scientific contribution cultivation.}
+\begin{verbatim}
+ ResultAtlasSlice
+    -> isolate the smallest honest result
+    -> check correctness boundary and prior art
+    -> assess mechanism and reusable enablement
+    -> align with target and paper claims
+    -> [contribution gate]
+          +--> contribution packet -> manuscript elaboration
+          `--> bounded local/negative result or revision obligation
+\end{verbatim}
+The conceptual purpose is valuation without inflation.  A correct local lemma,
+a reusable method, a negative boundary, and a target-resolving result are
+different kinds of contribution.  The workflow records those distinctions and
+requires mechanism evidence before a result is presented as enabling later
+work.
+
+\paragraph{Manuscript result elaboration.}
+\begin{verbatim}
+ PaperDraft + explicit open modules
+    -> turn markers into bounded obligations
+    -> elaborate only supported result candidates
+    -> certify theorem and regime scope
+    -> audit prior-art disqualifiers
+    -> integrate narrative with unresolved markers intact
+    -> [paper-readiness gate]
+          +--> bounded ready draft
+          `--> proof queue, revision, quarantine, or rejection
+\end{verbatim}
+This workflow is a controlled projection from validated scientific state into
+a manuscript.  It may make an argument clearer or connect already supported
+results, but it may not perform hidden discovery or collapse finite,
+asymptotic, and continuum claims.  Readiness therefore concerns faithful
+integration, not scientific truth by editorial fiat.
+
+\paragraph{Route-A manuscript profile.}
+\begin{verbatim}
+ PaperDraft
+    -> attack plan -> open-point plan
+                     |
+                     +--> specialist 1 --+
+                     +--> specialist 2 --+--> typed result join
+                     |        ...         |
+                     `--> specialist n --+
+                                |
+                        [same-theory / scope gate]
+                                |
+                     optional symbolic-CAS audit
+                                |
+                        integrate Route-A result
+                                |
+             adapt ResultCandidatePacket to common validation tail
+                                |
+          scope -> prior art -> narrative -> expansion -> readiness
+\end{verbatim}
+Route-A is a profile, not an independent source of authority.  Its fork permits
+specialists to attack distinct open points without sharing mutable intermediate
+state; the join admits only identity-, scope-, and provenance-compatible
+packets.  The adapter then returns the joined result to the parent workflow's
+ordinary validation tail.  Consequently, specialist agreement cannot bypass
+scope certification, prior-art review, or paper readiness.
+
+\paragraph{Deep review and reorientation.}
+\begin{verbatim}
+ RunEvidenceBundle
+    -> formalize current framework state
+    -> independent advisory reviews
+         {discovery, logic, epistemology, field, design}
+    -> preserve agreement, dissent, and minority findings
+    -> synthesize meta-review
+    -> [repair-governance gate]
+          +--> GovernedRepairQueue -> target/conceptual control
+          `--> continue, quarantine, or stop
+\end{verbatim}
+Deep review reasons about the adequacy of the process and its representation of
+the problem.  Multiple perspectives are kept separate until synthesis so that
+consensus does not erase a decisive minority objection.  The resulting queue
+may redirect work, but advisory agreement grants neither theorem status nor
+release acceptance.
+
+The \emph{evidence-to-proof-route onramp} turns source material into a defensible proof agenda by normalizing theorem bodies, grounding claims in the target conjecture, constructing proof connections, correcting graph-hub bias, auditing regime changes, and exposing routes to counterexample pressure. A successful dossier may become a proof queue item; a route needing repair returns to conceptual exploration.
+
+\emph{Conceptual frontier deepening} is the expensive theory-first lane. It freezes target, theory, and literature context before invention, matures hypotheses independently, reflects on complete conceptual systems, and performs blind plural adjudication. Experiments may constrain a later cycle but cannot select the theory that commissioned them. Conceptual preference licenses further formalization, not theorem status.
+
+\emph{Theorem proof delivery} starts only when source, target, quantifier, and model bindings are exact. It decomposes the claim into obligations and a lemma chain, makes blocked or false steps explicit, invokes target-specific inference review where applicable, and terminates in a proof-quality disposition. This contract organizes claim-to-proof or claim-to-gap work; it is distinct from the post-commit proof-v3 runtime, which alone constructs the descendant checker-scoped capability described later. Accepted result packets may enter contribution cultivation, while failure certificates return to conceptual work.
+
+\emph{Scientific contribution cultivation} distinguishes resolving the main target from obtaining an independently valuable result. It maintains a result atlas, identifies the smallest honest claim and prior-art boundary, and asks whether a completed subgoal enables later work. A paper handoff requires mechanism evidence and explicit unresolved boundaries.
+
+\emph{Manuscript result elaboration} operates on an existing draft without reopening the discovery marathon. It converts open modules into bounded obligations, certifies theorem scope, derives finite-object or proof packets where needed, checks prior-art disqualifiers, and integrates validated results. Its optional \emph{Route-A} profile specializes the reflected Wilson-block programme. Profile authorization orders planning before specialist work, maps the generic result-candidate object into the common validation-tail input, and then rejoins the parent scope, prior-art, narrative, expansion, and readiness gates. This is control-plane composition rather than evidence that the specialist result is mathematically valid.
+
+\emph{Deep review and reorientation} evaluates the reasoning system rather than the truth of its claims. It formalizes current framework state, collects several ordered advisory perspectives, synthesizes them, and produces a governed repair queue. It may redirect target navigation or conceptual exploration, but review consensus cannot establish proof, empirical support, release acceptance, or epistemic upgrade.
+
+\subsection{Hooks, handoffs, and non-monolithic composition}
+
+Each contract declares the lifecycle
+\[
+\begin{aligned}
+\textsc{Route} &: \text{request}\rightarrow\texttt{WorkflowRecommendation},\\
+\textsc{Authorize} &: (W_i,\text{step},\text{skill},\text{context})\rightarrow\texttt{SkillAuthorization},\\
+\textsc{Receipt} &: (\text{output},\text{status},\text{evidence})\rightarrow\texttt{SkillReceipt},\\
+\textsc{ToolGate} &: (\text{tool},\text{path},\text{mutation},\text{budget})\rightarrow\texttt{ToolAuthorization},\\
+\textsc{Exit} &: (O_i,\text{open obligations})\rightarrow\texttt{WorkflowExitReceipt}.
+\end{aligned}
+\]
+Routing operates on structured trigger facts and is advisory: it recommends but does not activate a workflow or infer every trigger from free text. Pre-skill authorization checks workflow version, target, profile, step membership, prerequisites, and conditional evidence. Post-skill validation checks the nominal artifact type, presence, and epistemic status and emits a deterministic receipt. The stop hook applies the workflow-specific gate and open-obligation policy. These hooks govern admissibility and transport, not scientific merit; they cannot invent content, choose a theory, certify a theorem, reinterpret an experiment, or commit canonical state.
+
+The tool hook binds tool use to the activated workflow version, target class, and step; requires a repository-relative target path, declared mutation class, and approved structured budget; and refuses deletion through the named-workflow policy. These operational checks remain separate from scientific authority and from resource accounting by an external execution platform.
+
+A common but nonmandatory composition is
+\[
+\begin{split}
+\text{target navigation}
+&\rightarrow\{\text{source onramp},\text{ discovery marathon}\}\\
+&\rightarrow\{\text{conceptual exploration},\text{ frontier deepening}\}\\
+&\rightarrow\text{proof delivery}\rightarrow\text{contribution cultivation}\\
+&\rightarrow\{\text{manuscript elaboration},\text{ timeline paper}\}.
+\end{split}
+\]
+Deep review may intervene at a governed boundary, and release promotion is appended only when durable state must change. Failure edges are first-class: proof gaps return to conceptual work, routes may be quarantined, manuscript obligations may reopen proof delivery, and local contributions may be retained without claiming resolution of the main target. The portfolio therefore surrounds the AATS kernel with selectable declared lanes; it does not replace that kernel with a larger linear agent chain, demonstrate runtime transport merely by declaring a handoff, or transfer authority along handoff edges.
+
+\section{Semantic Feedback and Learning}
+
+An operator output is not evidence of learning merely because a file exists. For successful receipt $r$, let $\operatorname{Rows}(r)$ be the canonical semantic rows extracted from its artifact vector. The cycle requires a total map
+\[
+  \phi_r:\operatorname{Rows}(r)\rightarrow E_g
+\]
+such that every row has exactly one digest-bound consumer event. It also records a role-specific primary consumer and a separate consumption marker. The feedback edge binds request and receipt identities, all artifact descriptors, the primary consumer, every pair $(q,\phi_r(q))$, and committed generation $g+1$. Disconnected but individually valid artifacts are rejected from the transition.
+
+Negative results are first-class. Decisive contradictory evidence can refute and retire a hypothesis while preserving its genealogy and the premise that failed. A literature refresh may stale a branch without erasing the earlier state. Thus cumulative learning includes constraints on future search, not only accepted positive claims.
+
+\section{Authority Separation}
+
+We distinguish \emph{write capability}, permission to mutate canonical state, from \emph{epistemic authority}, evidence licensing a scientific status. Let $\Gamma$ contain capabilities for proposal, conceptual preference, claim provenance, checker result, empirical observation, source truth, theorem status, external validation, physics result, publication integrity, and canonical state write. For artifact $x$,
+\[
+  \operatorname{Auth}(x)\subseteq \Gamma\times\mathcal{E}_{\mathrm{auth}}
+\]
+contains only capability--evidence pairs licensed by a capability-specific validator. The coordinates are mutually incomparable: evidence for one capability creates no order-theoretic promotion into another.
+
+\begin{invariant}[Non-escalation]
+No transition may infer proof, theorem, empirical, source-truth, physics-result, or external-validation authority solely from conceptual preference, operator success, schema validity, or canonical persistence.
+\end{invariant}
+
+This is the central epistemic abstraction: different institutions answer different questions. Generators propose; adjudicators express internal conceptual preference; validators check contracts; proof systems record checker-scoped results under declared assumptions; experiment artifacts encode observations against registered premises; the reducer records authorized effects. Publication is a distinct integrity and acceptance capability and does not upgrade scientific claims.
+
+\begin{table}[ht]
+\centering\small
+\begin{tabular}{p{0.22\linewidth}p{0.25\linewidth}p{0.39\linewidth}}
+\toprule
+Institution & Permitted effect & Explicit non-authority \\
+\midrule
+Proposal operators & Produce typed candidates & Preference, proof, empirical truth, state write \\
+Conceptual panel & Return an internal plural preference & Theorem, external validation, source truth \\
+Reducer/transaction & Commit validated semantic state & Scientific truth from persistence alone \\
+Proof-v3 & Record checker-scoped outcomes & Checker soundness, physics, parent-theory selection \\
+Experiment descendant & Produce later-intake observation records & Same-generation mutation, proof, physics result \\
+Publisher & Select byte-exact accepted bundles & Novelty, efficacy, theorem or source truth \\
+\bottomrule
+\end{tabular}
+\caption{Authority is capability-specific and non-escalating.}
+\end{table}
+
+\section{Proof and Experiment as Descendant Lanes}
+
+Proof and experiment are subordinate to the theory transaction rather than coequal theory selectors.
+
+\subsection{Formal claim and proof lane}
+
+A registered producer may compile a typed formal-claim packet while assembling the theory transaction, but that packet has no proof-launch capability. Only after its request, receipt, input, registry, immutable output history, semantic consumer event, and feedback edge have been committed and reopened through one scheduled prove action may proof-v3 construct a live one-shot capability. A successful worker records a checker-scoped result under declared assumptions; checker soundness, theorem truth, physical relevance, and parent-theory selection remain null.
+
+\subsection{Delayed experimental feedback}
+
+Same-generation experiment artifacts are forbidden from mutating the theory that commissioned them. The descendant route has the chronology
+\[
+N \rightarrow N+1 \rightarrow
+\{N+2,\ldots,N+6\}\rightarrow N+7\rightarrow N+8,
+\]
+where $N$ through $N+8$ are consecutive transaction-store generations, not eight theory iterations. Generation $N+1$ commits the world-matrix anchor. Five world products may be computed concurrently, but one coordinator commits them in fixed order at $N+2$ through $N+6$; $N+7$ commits their aggregation and $N+8$ the sole immutable descendant-reflection root. The worlds include no probe, neutral or inconclusive evidence, a misleading toy positive, a registered-premise falsifier, and operational failure.
+
+\begin{invariant}[Delayed intervention]
+No descendant-lane artifact has a transition edge into $S_N$. Any later theory effect requires a distinct authority-checked consumer transition citing the $N+8$ root.
+\end{invariant}
+
+The delay is a control invariant, not evidence that eight generations is empirically optimal or that the design eliminates self-confirming bias. The $N+8$ root is only eligible input to a later theory cycle; it has no automatic theory effect.
+
+\section{Persistence and Concurrency}
+
+The logical ledger is an ordered, hash-chained event stream, while the transaction store snapshots reduced state and per-commit event suffixes. Reduction accepts only a suffix extending the exact predecessor hash and generation, applies semantic deduplication, and deterministically reconstructs the next state.
+
+The transaction store stages state and artifacts, flushes bytes, records a durability journal, atomically installs a content- and request-bound immutable commit directory, and then updates a small pointer. Within one target/run store, non-idempotent writers carrying the same expected generation cannot install distinct successors; an exact retry may return the installed commit.
+
+\begin{invariant}[Isolation]
+Workers using the parallel API receive no canonical-state capability; the merge boundary alone receives the optional CAS callback.
+\end{invariant}
+\begin{invariant}[Atomicity]
+Within one target/run transaction store, at most one non-idempotent transition from an expected generation wins compare-and-swap.
+\end{invariant}
+\begin{invariant}[Replay]
+For a fixed reducer version, exact validated predecessor, and byte-identical ordered event suffix, reduction reconstructs the same state bytes and semantic digest.
+\end{invariant}
+\begin{invariant}[Plurality]
+Adjudication may preserve several nondominated conceptual programmes and their dissent rather than collapsing them to a scalar winner.
+\end{invariant}
+
+\section{Executable Realization}
+
+The AATS core is realized through four main surfaces, with a cross-cutting named-workflow control plane:
+
+\begin{table}[h]
+\centering
+\small
+\begin{tabular}{p{0.21\linewidth}p{0.31\linewidth}p{0.38\linewidth}}
+\toprule
+Role & Repository surface & Responsibility \\
+\midrule
+State and reduction & \texttt{agentic/discovery/ledger.py} & Typed state, event algebra, negative memory, deterministic replay \\
+Cycle composition & \texttt{agentic/discovery/cycle.py} & Identity checks, semantic consumption, authority gates, single transition \\
+Operators & \texttt{agentic/registries/discovery\_operator\_registry.yaml} & Versions, schemas, consumers, validators, effects, typed-only routes \\
+Persistence & \texttt{agentic/state/discovery\_transaction.py} & Immutable commits, journals, recovery, content identity, CAS \\
+Workflow composition & Named-workflow registries, artifact envelope, hooks, and validator & Versioned activation, step membership, declared handoffs, receipts, and exit gates \\
+\bottomrule
+\end{tabular}
+\caption{Concrete realization of the authority-separated abductive transition system.}
+\end{table}
+
+The canonical cycle consumes digest-verified artifacts for one target, run, and frozen generation. Required roles include literature snapshot and production input, assimilation, high-risk portfolio, parallel portfolio, and reflective packets. Literature-conditioned invention and central conceptual v3 are typed proposal subroutes without direct preference, proof, or state-write authority. Conditional formal claims join post-commit proof-v3; descendant experiments use a separate transaction chain.
+
+\begin{table}[ht]
+\centering\small
+\begin{tabular}{p{0.27\linewidth}p{0.24\linewidth}p{0.37\linewidth}}
+\toprule
+Route & Current role & Authority boundary \\
+\midrule
+Parent theory transaction & Active reducer contract & One validated semantic CAS transition \\
+Central conceptual v3 & Active typed-only proposal route & No direct state write or merit authority \\
+Literature-conditioned invention v1 & Registered proposal route & No truth, creativity, or theory-selection authority \\
+Proof-v3 & Active post-commit descendant & Checker-scoped result; no parent mutation \\
+Experiment v3 & Active $N$--$N+8$ descendant & Later-intake root only \\
+Historical six-operator publication & Legacy evidence & Rejected by current publication/acceptance surface \\
+\bottomrule
+\end{tabular}
+\caption{Current and historical workflow surfaces must not be conflated.}
+\end{table}
+
+\section{Validation Posture}
+
+We executed a targeted conformance matrix on 5 August 2026 using the locked \texttt{uv} environment. Transaction, ledger, parallel-portfolio, and conceptual-adjudication suites completed 127 cases successfully; the canonical proof-loop suite completed six, for 133 fresh component passes. The descendant-runtime command did not produce a complete pytest summary and is therefore not counted as fresh conformance evidence. Separately, both canonical acceptance cases failed, which is reported rather than averaged into the passing component evidence.
+
+\begin{table}[ht]
+\centering\scriptsize
+\begin{tabular}{p{0.15\linewidth}p{0.23\linewidth}p{0.27\linewidth}p{0.23\linewidth}}
+\toprule
+Question & Adversarial condition & Enforced invariant & Fresh observation \\
+\midrule
+Concurrency & stale competing writer & one per-run CAS successor & component suite passed \\
+Semantic use & valid but unconsumed output & no canonical state effect & component suite passed \\
+Plural search & partial branch failure & valid siblings and dissent retained & component suite passed \\
+Replay & exact predecessor/event suffix & same state bytes and semantic digest & component suite passed \\
+Authority & preferred theory seeks proof status & no cross-capability escalation & component suite passed \\
+Experiment & same-generation mutation attempt & descendant-only later intake & contract/test-backed; fresh suite incomplete \\
+Release & checked-in current publication & v2 pointer and current topology & failed: legacy pointer \\
+Negative fixture & local-only literature case & reach intended literature gate & failed earlier: empty old chain \\
+\bottomrule
+\end{tabular}
+\caption{Conformance evidence. Passing component tests do not imply scientific efficacy or end-to-end release acceptance.}
+\end{table}
+
+They do not show that Abducer discovers better theories, solves open problems, improves human productivity, calibrates truth, or generalizes beyond the tested contracts. At the time of writing, the checked-in canonical publication uses a legacy index rejected by the current pointer loader, and the release acceptance fixture still expects an older same-generation experiment topology. Consequently, historical six-operator artifacts must not be presented as current end-to-end acceptance evidence. The current abstraction is a theory transaction followed by descendant proof and experiment support.
+
+Named-workflow control-plane evidence is separate from those core acceptance results. On 5 August 2026, 30 focused contract-registry, projection, hook, and scenario tests passed. Seven positive lifecycles cover every named workflow plus Route-A, traversing 71 activated step or specialist positions with realistic domain fixtures; negative cases cover absent activation, prohibited triggers, premature exit, cross-target receipt tampering, bypassed advisory review, premature specialist use, deletion, and unapproved budgets. Artifact receipts are bound to workflow version, target, producer, path, and content digest, while explicit adapters make non-direct handoffs inspectable. The six named contracts directly compose 75 unique skills; the wider integration report classifies 218 catalogued skills as workflow-declared only by taking the union of named workflows, legacy workflows and tasks, dispatch, operator routes, and other explicit dispositions. That report identifies eight skills as runtime-routed and executable, and none as scientifically exercised, semantically consumed, or feedback-effective. The scenario suite exercises control transport using fixture envelopes; it does not run all component skills, execute downstream handoff adapters, validate a schema specific to each payload type, or demonstrate scientific outcomes.
+
+\section{Related Work Evidence Status}
+
+No provenance-valid external literature snapshot was authorized for this repository-grounded paper. We therefore do not claim novelty or comparative advantage relative to abductive reasoning systems, LLM scientific agents, theorem-proving agents, blackboard or event-sourced architectures, workflow-provenance systems, or plural model-selection methods. A submission-oriented version requires an independently governed literature search and claim-to-source mapping across those areas.
+
+\section{Limitations}
+
+First, this is a repository-grounded systems description without an authorized external literature review; no claim of novelty relative to other agentic discovery, scientific-workflow, theorem-proving, or event-sourced systems is made. Second, internal judges are authority-distinct programs but not independent human experts. Third, contract validity and replay do not imply mathematical soundness or scientific value. Fourth, the quality of the transition depends on the semantic content supplied by generative operators, while the present evidence primarily establishes control invariants. Fifth, the legacy KB loop is only partially executable because abduction and deduction require manual prompt-driven interaction. Sixth, named-workflow artifacts retain nominal rather than payload-specific types, adapter declarations and fixture transport are not evidence of live downstream skill execution, and structured budgets are authorization records rather than measured resource enforcement. Seventh, the current canonical publication and acceptance surfaces require reconciliation before a fresh run can serve as release evidence.
+
+\section{Research Agenda}
+
+The abstraction suggests a concrete evaluation programme: compare scalar and set-valued selection; ablate negative-memory retention; test whether delayed feedback reduces self-confirming revisions; measure whether semantic-consumption edges improve audit accuracy; and conduct held-out, blinded expert evaluation of conceptual relevance and understanding change. Such studies require frozen tasks, preregistered metrics, independently governed evidence, and explicit separation between protocol conformance and scientific efficacy.
+
+\section{Conclusion}
+
+Abducer operationalizes abduction as controlled evolution of a plural epistemic state. Its essential mechanism is not a sequence of prompts, but the composition of diverse proposal, isolated maturation, recursive transformation, set-valued adjudication, semantic feedback, capability-specific authority, deterministic reduction, and atomic persistence. Around that kernel, named workflows organize source intake, conceptual deepening, proof delivery, contribution assessment, manuscript elaboration, reorientation, and target-specific work as optional, declared escalation lanes. Proof and experiment produce authority-scoped descendant records eligible for later intake without inheriting theory-selection authority, and workflow handoffs likewise transport no authority by themselves. This formulation makes the system precise enough to inspect, replay, falsify at its contract boundaries, and evaluate without confusing generated ideas, declared integration, executed transport, and established knowledge.
+
+\appendix
+\section{Repository Evidence Map}
+
+The principal local evidence for this description is:
+\begin{itemize}[leftmargin=*]
+  \item \texttt{agentic/spec/discovery\_epistemic\_state.schema.json}: state ontology and identity restrictions;
+  \item \texttt{agentic/registries/discovery\_operator\_registry.yaml}: operator, consumer, effect, and authority contracts;
+  \item \texttt{agentic/discovery/cycle.py}: canonical composition and semantic feedback;
+  \item \texttt{agentic/discovery/ledger.py}: event reduction, literature rebase, refutation, and negative memory;
+  \item \texttt{agentic/discovery/parallel.py}: isolated sibling execution and single-writer merge;
+  \item \texttt{agentic/discovery/evaluation.py}: noncompensatory conceptual gates;
+  \item \texttt{agentic/discovery/conceptual\_adjudication.py}: semantic panel and set-valued preference;
+  \item \texttt{agentic/discovery/blind\_conceptual\_judge\_v3.py}: blind aliasing and Pareto reduction;
+  \item \texttt{agentic/discovery/literature\_conditioned\_invention.py}: registered proposal-generation route;
+  \item \texttt{agentic/discovery/scheduler.py}: Pareto action scheduling and protected wildcards;
+  \item \texttt{agentic/state/discovery\_transaction.py}: immutable commits, journals, recovery, and CAS;
+  \item \texttt{agentic/discovery/proof\_v3\_facade.py}: post-commit proof execution boundary;
+  \item \texttt{agentic/experiments/world\_v3\_content\_graph\_runtime.py}: descendant experiment realization;
+  \item \texttt{agentic/registries/named\_workflow\_contracts.yaml}: versioned named-workflow and Route-A profile declarations;
+  \item \texttt{agentic/spec/named\_workflow\_artifacts.schema.json}: shared nominal artifact envelope;
+  \item \texttt{agentic/reports/skill\_integration/latest.json}: declared and runtime integration classifications;
+  \item \texttt{registry/tasks/named-skill-workflows/task\_registry.json}: generated task projection;
+  \item \texttt{hooks/scripts}: advisory routing, workflow-local skill and output checks, tool guard, and exit gate;
+  \item \texttt{skills/orchestration/reflective-conceptual-discovery/SKILL.md}: theory-first workflow contract;
+  \item \texttt{docs/research-methods/discovery-operator-routes.md}: canonical route and chronology guide.
+\end{itemize}
+
+\end{document}

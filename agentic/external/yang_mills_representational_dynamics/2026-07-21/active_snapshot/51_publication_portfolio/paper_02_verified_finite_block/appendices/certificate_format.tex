@@ -1,0 +1,26 @@
+\section{Certificate schema and trusted kernel}\label{app:certificate}
+
+The primary JSON certificate has schema
+\texttt{ym-paper02-exact-certificate-v1}.  Its theorem-critical fields are:
+\begin{itemize}
+\item the declared tree edge indices and selected retained row indices;
+\item exact cell counts and rational ranks;
+\item the claimed floor $1/25$, positivity flags, and pivot digests;
+\item exact fractions for $r,t,M_1,M_2,M_3,\kappa,\eta,$ and $\tau$;
+\item exact consequence bounds $3/80$, $1/80$, $1/16$, $1/3$, and $1/15$;
+\item an explicit list of scope exclusions and a final
+\texttt{all\_checks\_pass} flag.
+\end{itemize}
+
+The trusted computational kernel is Python's arbitrary-precision integer and
+\texttt{Fraction} arithmetic, together with the short matrix-construction,
+elimination, and factorization routines distributed in the supplement.
+\texttt{hashlib} and \texttt{json} serialize the evidence but do not decide a
+mathematical inequality.  The independent verifier replaces rational rank and
+$LDL^{\mathsf T}$ by modular elimination and integer Bareiss elimination.
+
+The heat-kernel image and normed-algebra inequalities are analytic leaves, not
+computed suprema.  The primary verifier checks their rational propagation.
+The separation is deliberate: a finite test suite is evidence that the
+implementation matches its contract, while the proofs in
+Appendix~\ref{app:heat-kernel} justify the analytic inputs.

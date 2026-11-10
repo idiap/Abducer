@@ -1,0 +1,25 @@
+// SPDX-FileCopyrightText: © 2026 Idiap Research Institute <contact@idiap.ch>
+//
+// SPDX-FileContributor: Andre Freitas <andre.freitas@idiap.ch>
+// Neuro-symbolic AI Group
+//
+// SPDX-FileContributor: Danilo Gusicuma <danilo.gusicuma@idiap.ch>
+// Neuro-symbolic AI Group
+//
+// SPDX-License-Identifier: MIT
+digraph goals {
+ graph [rankdir=TB, bgcolor="transparent", nodesep=.28, ranksep=.35, pad=.1];
+ node [shape=box, style="rounded,filled", fillcolor="#eef4f8", color="#35566b", fontname="Helvetica", fontsize=15, margin=".14,.09"];
+ edge [color="#35566b", fontname="Helvetica", fontsize=12, arrowsize=.7];
+ parent [label="Parent question and version\nTarget, commitments, acceptance"];
+ decompose [label="Choose relevant obligations or routes\nRequired together / alternatives"];
+ child [label="Child goal\nExact question and bounded attempt"];
+ deeper [label="Further subgoal\nOnly when a new dependency warrants it"];
+ decision [label="Interpret the result\nEvidence, scope, blocker, learning"];
+ exit [label="Accept, hand off, stop or suspend\nPreserve result and unresolved debt", fillcolor="#f4f4f4"];
+ parent -> decompose; decompose -> child; child -> deeper [label="recurse"]; deeper -> decision [label="return"];
+ child -> decision [label="direct result"];
+ decision -> child [style=dashed, label="adapt / backtrack / pivot"];
+ decision -> exit;
+ exit -> parent [style=dashed, label="check enablement;\nreassess or reopen"];
+}

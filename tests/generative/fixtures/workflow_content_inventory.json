@@ -1,0 +1,4646 @@
+{
+  "schema_version": 1,
+  "catalog_path": "agentic/registries/reasoning_flow_catalog.yaml",
+  "baseline": "f90f0c6f",
+  "workflow_count": 19,
+  "step_count": 273,
+  "workflows": [
+    {
+      "workflow_id": "target_navigation_loop",
+      "aliases": [
+        "target-navigation-control-plane",
+        "p-vs-np-target-navigation-run"
+      ],
+      "function": "calibrate a target and its dependency frontier, then route work or release",
+      "source_paths": [
+        "agentic/registries/workflow_contracts.yaml",
+        "registry/tasks/target-navigation/task_registry.json",
+        "registry/tasks/p-vs-np-target-navigation/task_registry.json",
+        "agentic/reasoning_flows/target_navigation_loop.prism"
+      ],
+      "steps": [
+        {
+          "step_id": "member:looper-target-goal-enricher",
+          "skill": "looper-target-goal-enricher",
+          "skill_path": "skills/control-plane/looper-target-goal-enricher/SKILL.md",
+          "mode": "composition_member",
+          "source_path": "registry/tasks/target-navigation/task_registry.json",
+          "source_pointer": "/visible_workflows/0/composed_skills/0",
+          "binding_kind": "composition_membership",
+          "order": null,
+          "source_list_index": 0,
+          "additional_source_bindings": [
+            {
+              "source_path": "registry/tasks/p-vs-np-target-navigation/task_registry.json",
+              "source_pointer": "/visible_workflows/0/composed_skills/0"
+            }
+          ]
+        },
+        {
+          "step_id": "member:looper-target-dependency-cartographer",
+          "skill": "looper-target-dependency-cartographer",
+          "skill_path": "skills/control-plane/looper-target-dependency-cartographer/SKILL.md",
+          "mode": "composition_member",
+          "source_path": "registry/tasks/target-navigation/task_registry.json",
+          "source_pointer": "/visible_workflows/0/composed_skills/1",
+          "binding_kind": "composition_membership",
+          "order": null,
+          "source_list_index": 1,
+          "additional_source_bindings": [
+            {
+              "source_path": "registry/tasks/p-vs-np-target-navigation/task_registry.json",
+              "source_pointer": "/visible_workflows/0/composed_skills/1"
+            }
+          ]
+        },
+        {
+          "step_id": "member:looper-workflow-contract-governor",
+          "skill": "looper-workflow-contract-governor",
+          "skill_path": "skills/control-plane/looper-workflow-contract-governor/SKILL.md",
+          "mode": "composition_member",
+          "source_path": "registry/tasks/target-navigation/task_registry.json",
+          "source_pointer": "/visible_workflows/0/composed_skills/2",
+          "binding_kind": "composition_membership",
+          "order": null,
+          "source_list_index": 2,
+          "additional_source_bindings": [
+            {
+              "source_path": "registry/tasks/p-vs-np-target-navigation/task_registry.json",
+              "source_pointer": "/visible_workflows/0/composed_skills/2"
+            }
+          ]
+        },
+        {
+          "step_id": "member:looper-hook-policy-maintainer",
+          "skill": "looper-hook-policy-maintainer",
+          "skill_path": "skills/control-plane/looper-hook-policy-maintainer/SKILL.md",
+          "mode": "composition_member",
+          "source_path": "registry/tasks/target-navigation/task_registry.json",
+          "source_pointer": "/visible_workflows/0/composed_skills/3",
+          "binding_kind": "composition_membership",
+          "order": null,
+          "source_list_index": 3,
+          "additional_source_bindings": [
+            {
+              "source_path": "registry/tasks/p-vs-np-target-navigation/task_registry.json",
+              "source_pointer": "/visible_workflows/0/composed_skills/3"
+            }
+          ]
+        },
+        {
+          "step_id": "member:looper-release-promoter",
+          "skill": "looper-release-promoter",
+          "skill_path": "skills/control-plane/looper-release-promoter/SKILL.md",
+          "mode": "composition_member",
+          "source_path": "registry/tasks/target-navigation/task_registry.json",
+          "source_pointer": "/visible_workflows/0/composed_skills/4",
+          "binding_kind": "composition_membership",
+          "order": null,
+          "source_list_index": 4,
+          "additional_source_bindings": [
+            {
+              "source_path": "registry/tasks/p-vs-np-target-navigation/task_registry.json",
+              "source_pointer": "/visible_workflows/0/composed_skills/4"
+            }
+          ]
+        },
+        {
+          "step_id": "member:kb-orchestrator",
+          "skill": "kb-orchestrator",
+          "skill_path": "skills/orchestration/kb-orchestrator/SKILL.md",
+          "mode": "composition_member",
+          "source_path": "registry/tasks/target-navigation/task_registry.json",
+          "source_pointer": "/visible_workflows/0/composed_skills/5",
+          "binding_kind": "composition_membership",
+          "order": null,
+          "source_list_index": 5,
+          "additional_source_bindings": [
+            {
+              "source_path": "registry/tasks/p-vs-np-target-navigation/task_registry.json",
+              "source_pointer": "/visible_workflows/0/composed_skills/5"
+            }
+          ]
+        },
+        {
+          "step_id": "member:work",
+          "skill": "work",
+          "skill_path": "skills/orchestration/work/SKILL.md",
+          "mode": "composition_member",
+          "source_path": "registry/tasks/target-navigation/task_registry.json",
+          "source_pointer": "/visible_workflows/0/composed_skills/6",
+          "binding_kind": "composition_membership",
+          "order": null,
+          "source_list_index": 6,
+          "additional_source_bindings": [
+            {
+              "source_path": "registry/tasks/p-vs-np-target-navigation/task_registry.json",
+              "source_pointer": "/visible_workflows/0/composed_skills/6"
+            }
+          ]
+        }
+      ],
+      "coverage_gaps": [
+        {
+          "kind": "membership_not_execution_order",
+          "detail": "Composed skills lists expose membership, not executable ordering, conditionality, repeats or parallelism."
+        }
+      ]
+    },
+    {
+      "workflow_id": "discovery_marathon_loop",
+      "aliases": [
+        "discovery-marathon-control-loop"
+      ],
+      "function": "generate, probe, contrast, test, and calibrate bounded discovery candidates",
+      "source_paths": [
+        "agentic/registries/workflow_contracts.yaml",
+        "registry/tasks/discovery-marathon/task_registry.json",
+        "agentic/reasoning_flows/discovery_marathon_loop.prism"
+      ],
+      "steps": [
+        {
+          "step_id": "member:looper-target-goal-enricher",
+          "skill": "looper-target-goal-enricher",
+          "skill_path": "skills/control-plane/looper-target-goal-enricher/SKILL.md",
+          "mode": "composition_member",
+          "source_path": "registry/tasks/discovery-marathon/task_registry.json",
+          "source_pointer": "/visible_workflows/0/composed_skills/0",
+          "binding_kind": "composition_membership",
+          "order": null,
+          "source_list_index": 0
+        },
+        {
+          "step_id": "member:looper-target-dependency-cartographer",
+          "skill": "looper-target-dependency-cartographer",
+          "skill_path": "skills/control-plane/looper-target-dependency-cartographer/SKILL.md",
+          "mode": "composition_member",
+          "source_path": "registry/tasks/discovery-marathon/task_registry.json",
+          "source_pointer": "/visible_workflows/0/composed_skills/1",
+          "binding_kind": "composition_membership",
+          "order": null,
+          "source_list_index": 1
+        },
+        {
+          "step_id": "member:looper-workflow-contract-governor",
+          "skill": "looper-workflow-contract-governor",
+          "skill_path": "skills/control-plane/looper-workflow-contract-governor/SKILL.md",
+          "mode": "composition_member",
+          "source_path": "registry/tasks/discovery-marathon/task_registry.json",
+          "source_pointer": "/visible_workflows/0/composed_skills/2",
+          "binding_kind": "composition_membership",
+          "order": null,
+          "source_list_index": 2
+        },
+        {
+          "step_id": "member:looper-hook-policy-maintainer",
+          "skill": "looper-hook-policy-maintainer",
+          "skill_path": "skills/control-plane/looper-hook-policy-maintainer/SKILL.md",
+          "mode": "composition_member",
+          "source_path": "registry/tasks/discovery-marathon/task_registry.json",
+          "source_pointer": "/visible_workflows/0/composed_skills/3",
+          "binding_kind": "composition_membership",
+          "order": null,
+          "source_list_index": 3
+        },
+        {
+          "step_id": "member:long-horizon-route-portfolio-manager",
+          "skill": "long-horizon-route-portfolio-manager",
+          "skill_path": "skills/orchestration/long-horizon-route-portfolio-manager/SKILL.md",
+          "mode": "composition_member",
+          "source_path": "registry/tasks/discovery-marathon/task_registry.json",
+          "source_pointer": "/visible_workflows/0/composed_skills/4",
+          "binding_kind": "composition_membership",
+          "order": null,
+          "source_list_index": 4
+        },
+        {
+          "step_id": "member:abducer-refinement-route-ranker",
+          "skill": "abducer-refinement-route-ranker",
+          "skill_path": "skills/orchestration/abducer-refinement-route-ranker/SKILL.md",
+          "mode": "composition_member",
+          "source_path": "registry/tasks/discovery-marathon/task_registry.json",
+          "source_pointer": "/visible_workflows/0/composed_skills/5",
+          "binding_kind": "composition_membership",
+          "order": null,
+          "source_list_index": 5
+        },
+        {
+          "step_id": "member:next-experiment-queue-ranker",
+          "skill": "next-experiment-queue-ranker",
+          "skill_path": "skills/orchestration/next-experiment-queue-ranker/SKILL.md",
+          "mode": "composition_member",
+          "source_path": "registry/tasks/discovery-marathon/task_registry.json",
+          "source_pointer": "/visible_workflows/0/composed_skills/6",
+          "binding_kind": "composition_membership",
+          "order": null,
+          "source_list_index": 6
+        },
+        {
+          "step_id": "member:kb-discovery-governor",
+          "skill": "kb-discovery-governor",
+          "skill_path": "skills/evaluation/kb-discovery-governor/SKILL.md",
+          "mode": "composition_member",
+          "source_path": "registry/tasks/discovery-marathon/task_registry.json",
+          "source_pointer": "/visible_workflows/0/composed_skills/7",
+          "binding_kind": "composition_membership",
+          "order": null,
+          "source_list_index": 7
+        },
+        {
+          "step_id": "member:kb-abduce",
+          "skill": "kb-abduce",
+          "skill_path": "skills/reasoning/kb-abduce/SKILL.md",
+          "mode": "composition_member",
+          "source_path": "registry/tasks/discovery-marathon/task_registry.json",
+          "source_pointer": "/visible_workflows/0/composed_skills/8",
+          "binding_kind": "composition_membership",
+          "order": null,
+          "source_list_index": 8
+        },
+        {
+          "step_id": "member:kb-deduce",
+          "skill": "kb-deduce",
+          "skill_path": "skills/reasoning/kb-deduce/SKILL.md",
+          "mode": "composition_member",
+          "source_path": "registry/tasks/discovery-marathon/task_registry.json",
+          "source_pointer": "/visible_workflows/0/composed_skills/9",
+          "binding_kind": "composition_membership",
+          "order": null,
+          "source_list_index": 9
+        },
+        {
+          "step_id": "member:kb-induce",
+          "skill": "kb-induce",
+          "skill_path": "skills/reasoning/kb-induce/SKILL.md",
+          "mode": "composition_member",
+          "source_path": "registry/tasks/discovery-marathon/task_registry.json",
+          "source_pointer": "/visible_workflows/0/composed_skills/10",
+          "binding_kind": "composition_membership",
+          "order": null,
+          "source_list_index": 10
+        },
+        {
+          "step_id": "member:mathematical-concept-gap-revisitor",
+          "skill": "mathematical-concept-gap-revisitor",
+          "skill_path": "skills/evaluation/mathematical-concept-gap-revisitor/SKILL.md",
+          "mode": "composition_member",
+          "source_path": "registry/tasks/discovery-marathon/task_registry.json",
+          "source_pointer": "/visible_workflows/0/composed_skills/11",
+          "binding_kind": "composition_membership",
+          "order": null,
+          "source_list_index": 11
+        },
+        {
+          "step_id": "member:abstraction-fit-gap-auditor",
+          "skill": "abstraction-fit-gap-auditor",
+          "skill_path": "skills/evaluation/abstraction-fit-gap-auditor/SKILL.md",
+          "mode": "composition_member",
+          "source_path": "registry/tasks/discovery-marathon/task_registry.json",
+          "source_pointer": "/visible_workflows/0/composed_skills/12",
+          "binding_kind": "composition_membership",
+          "order": null,
+          "source_list_index": 12
+        },
+        {
+          "step_id": "member:efficient-representation-requirements-elicitor",
+          "skill": "efficient-representation-requirements-elicitor",
+          "skill_path": "skills/reasoning/efficient-representation-requirements-elicitor/SKILL.md",
+          "mode": "composition_member",
+          "source_path": "registry/tasks/discovery-marathon/task_registry.json",
+          "source_pointer": "/visible_workflows/0/composed_skills/13",
+          "binding_kind": "composition_membership",
+          "order": null,
+          "source_list_index": 13
+        },
+        {
+          "step_id": "member:qualitative-variable-isolator",
+          "skill": "qualitative-variable-isolator",
+          "skill_path": "skills/reasoning/qualitative-variable-isolator/SKILL.md",
+          "mode": "composition_member",
+          "source_path": "registry/tasks/discovery-marathon/task_registry.json",
+          "source_pointer": "/visible_workflows/0/composed_skills/14",
+          "binding_kind": "composition_membership",
+          "order": null,
+          "source_list_index": 14
+        },
+        {
+          "step_id": "member:physics-regime-map-builder",
+          "skill": "physics-regime-map-builder",
+          "skill_path": "skills/reasoning/physics-regime-map-builder/SKILL.md",
+          "mode": "composition_member",
+          "source_path": "registry/tasks/discovery-marathon/task_registry.json",
+          "source_pointer": "/visible_workflows/0/composed_skills/15",
+          "binding_kind": "composition_membership",
+          "order": null,
+          "source_list_index": 15
+        },
+        {
+          "step_id": "member:monotonicity-sensitivity-prober",
+          "skill": "monotonicity-sensitivity-prober",
+          "skill_path": "skills/reasoning/monotonicity-sensitivity-prober/SKILL.md",
+          "mode": "composition_member",
+          "source_path": "registry/tasks/discovery-marathon/task_registry.json",
+          "source_pointer": "/visible_workflows/0/composed_skills/16",
+          "binding_kind": "composition_membership",
+          "order": null,
+          "source_list_index": 16
+        },
+        {
+          "step_id": "member:limit-convergence-behavior-auditor",
+          "skill": "limit-convergence-behavior-auditor",
+          "skill_path": "skills/evaluation/limit-convergence-behavior-auditor/SKILL.md",
+          "mode": "composition_member",
+          "source_path": "registry/tasks/discovery-marathon/task_registry.json",
+          "source_pointer": "/visible_workflows/0/composed_skills/17",
+          "binding_kind": "composition_membership",
+          "order": null,
+          "source_list_index": 17
+        },
+        {
+          "step_id": "member:qualitative-toy-model-builder",
+          "skill": "qualitative-toy-model-builder",
+          "skill_path": "skills/reasoning/qualitative-toy-model-builder/SKILL.md",
+          "mode": "composition_member",
+          "source_path": "registry/tasks/discovery-marathon/task_registry.json",
+          "source_pointer": "/visible_workflows/0/composed_skills/18",
+          "binding_kind": "composition_membership",
+          "order": null,
+          "source_list_index": 18
+        },
+        {
+          "step_id": "member:qualitative-physics-falsifier",
+          "skill": "qualitative-physics-falsifier",
+          "skill_path": "skills/evaluation/qualitative-physics-falsifier/SKILL.md",
+          "mode": "composition_member",
+          "source_path": "registry/tasks/discovery-marathon/task_registry.json",
+          "source_pointer": "/visible_workflows/0/composed_skills/19",
+          "binding_kind": "composition_membership",
+          "order": null,
+          "source_list_index": 19
+        },
+        {
+          "step_id": "member:dimensional-symmetry-constraint-checker",
+          "skill": "dimensional-symmetry-constraint-checker",
+          "skill_path": "skills/evaluation/dimensional-symmetry-constraint-checker/SKILL.md",
+          "mode": "composition_member",
+          "source_path": "registry/tasks/discovery-marathon/task_registry.json",
+          "source_pointer": "/visible_workflows/0/composed_skills/20",
+          "binding_kind": "composition_membership",
+          "order": null,
+          "source_list_index": 20
+        },
+        {
+          "step_id": "member:scale-asymptotic-reasoner",
+          "skill": "scale-asymptotic-reasoner",
+          "skill_path": "skills/reasoning/scale-asymptotic-reasoner/SKILL.md",
+          "mode": "composition_member",
+          "source_path": "registry/tasks/discovery-marathon/task_registry.json",
+          "source_pointer": "/visible_workflows/0/composed_skills/21",
+          "binding_kind": "composition_membership",
+          "order": null,
+          "source_list_index": 21
+        },
+        {
+          "step_id": "member:gedanken-need-assessor",
+          "skill": "gedanken-need-assessor",
+          "skill_path": "skills/evaluation/gedanken-need-assessor/SKILL.md",
+          "mode": "composition_member",
+          "source_path": "registry/tasks/discovery-marathon/task_registry.json",
+          "source_pointer": "/visible_workflows/0/composed_skills/22",
+          "binding_kind": "composition_membership",
+          "order": null,
+          "source_list_index": 22
+        },
+        {
+          "step_id": "member:gedanken-situation-designer",
+          "skill": "gedanken-situation-designer",
+          "skill_path": "skills/reasoning/gedanken-situation-designer/SKILL.md",
+          "mode": "composition_member",
+          "source_path": "registry/tasks/discovery-marathon/task_registry.json",
+          "source_pointer": "/visible_workflows/0/composed_skills/23",
+          "binding_kind": "composition_membership",
+          "order": null,
+          "source_list_index": 23
+        },
+        {
+          "step_id": "member:gedanken-counterfactual-variant-builder",
+          "skill": "gedanken-counterfactual-variant-builder",
+          "skill_path": "skills/reasoning/gedanken-counterfactual-variant-builder/SKILL.md",
+          "mode": "composition_member",
+          "source_path": "registry/tasks/discovery-marathon/task_registry.json",
+          "source_pointer": "/visible_workflows/0/composed_skills/24",
+          "binding_kind": "composition_membership",
+          "order": null,
+          "source_list_index": 24
+        },
+        {
+          "step_id": "member:gedanken-transfer-guard",
+          "skill": "gedanken-transfer-guard",
+          "skill_path": "skills/evaluation/gedanken-transfer-guard/SKILL.md",
+          "mode": "composition_member",
+          "source_path": "registry/tasks/discovery-marathon/task_registry.json",
+          "source_pointer": "/visible_workflows/0/composed_skills/25",
+          "binding_kind": "composition_membership",
+          "order": null,
+          "source_list_index": 25
+        },
+        {
+          "step_id": "member:gedanken-followup-planner",
+          "skill": "gedanken-followup-planner",
+          "skill_path": "skills/orchestration/gedanken-followup-planner/SKILL.md",
+          "mode": "composition_member",
+          "source_path": "registry/tasks/discovery-marathon/task_registry.json",
+          "source_pointer": "/visible_workflows/0/composed_skills/26",
+          "binding_kind": "composition_membership",
+          "order": null,
+          "source_list_index": 26
+        },
+        {
+          "step_id": "member:kb-contradiction-strategist",
+          "skill": "kb-contradiction-strategist",
+          "skill_path": "skills/reasoning/kb-contradiction-strategist/SKILL.md",
+          "mode": "composition_member",
+          "source_path": "registry/tasks/discovery-marathon/task_registry.json",
+          "source_pointer": "/visible_workflows/0/composed_skills/27",
+          "binding_kind": "composition_membership",
+          "order": null,
+          "source_list_index": 27
+        },
+        {
+          "step_id": "member:evidence-acquisition-planner",
+          "skill": "evidence-acquisition-planner",
+          "skill_path": "skills/ingest/evidence-acquisition-planner/SKILL.md",
+          "mode": "composition_member",
+          "source_path": "registry/tasks/discovery-marathon/task_registry.json",
+          "source_pointer": "/visible_workflows/0/composed_skills/28",
+          "binding_kind": "composition_membership",
+          "order": null,
+          "source_list_index": 28
+        },
+        {
+          "step_id": "member:prior-art-importer",
+          "skill": "prior-art-importer",
+          "skill_path": "skills/ingest/prior-art-importer/SKILL.md",
+          "mode": "composition_member",
+          "source_path": "registry/tasks/discovery-marathon/task_registry.json",
+          "source_pointer": "/visible_workflows/0/composed_skills/29",
+          "binding_kind": "composition_membership",
+          "order": null,
+          "source_list_index": 29
+        },
+        {
+          "step_id": "member:abducer-obligation-gatekeeper",
+          "skill": "abducer-obligation-gatekeeper",
+          "skill_path": "skills/evaluation/abducer-obligation-gatekeeper/SKILL.md",
+          "mode": "composition_member",
+          "source_path": "registry/tasks/discovery-marathon/task_registry.json",
+          "source_pointer": "/visible_workflows/0/composed_skills/30",
+          "binding_kind": "composition_membership",
+          "order": null,
+          "source_list_index": 30
+        },
+        {
+          "step_id": "member:entailment-gap-auditor",
+          "skill": "entailment-gap-auditor",
+          "skill_path": "skills/evaluation/entailment-gap-auditor/SKILL.md",
+          "mode": "composition_member",
+          "source_path": "registry/tasks/discovery-marathon/task_registry.json",
+          "source_pointer": "/visible_workflows/0/composed_skills/31",
+          "binding_kind": "composition_membership",
+          "order": null,
+          "source_list_index": 31
+        },
+        {
+          "step_id": "member:kb-end-to-end-proof-critic",
+          "skill": "kb-end-to-end-proof-critic",
+          "skill_path": "skills/evaluation/kb-end-to-end-proof-critic/SKILL.md",
+          "mode": "composition_member",
+          "source_path": "registry/tasks/discovery-marathon/task_registry.json",
+          "source_pointer": "/visible_workflows/0/composed_skills/32",
+          "binding_kind": "composition_membership",
+          "order": null,
+          "source_list_index": 32
+        },
+        {
+          "step_id": "member:review-reasoner",
+          "skill": "review-reasoner",
+          "skill_path": "skills/review/review-reasoner/SKILL.md",
+          "mode": "composition_member",
+          "source_path": "registry/tasks/discovery-marathon/task_registry.json",
+          "source_pointer": "/visible_workflows/0/composed_skills/33",
+          "binding_kind": "composition_membership",
+          "order": null,
+          "source_list_index": 33
+        },
+        {
+          "step_id": "member:review-reasoner-epistemologist",
+          "skill": "review-reasoner-epistemologist",
+          "skill_path": "skills/review/review-reasoner-epistemologist/SKILL.md",
+          "mode": "composition_member",
+          "source_path": "registry/tasks/discovery-marathon/task_registry.json",
+          "source_pointer": "/visible_workflows/0/composed_skills/34",
+          "binding_kind": "composition_membership",
+          "order": null,
+          "source_list_index": 34
+        },
+        {
+          "step_id": "member:review-reasoner-discovery-scientist",
+          "skill": "review-reasoner-discovery-scientist",
+          "skill_path": "skills/review/review-reasoner-discovery-scientist/SKILL.md",
+          "mode": "composition_member",
+          "source_path": "registry/tasks/discovery-marathon/task_registry.json",
+          "source_pointer": "/visible_workflows/0/composed_skills/35",
+          "binding_kind": "composition_membership",
+          "order": null,
+          "source_list_index": 35
+        },
+        {
+          "step_id": "member:kb-discovery-breakthrough-profiler",
+          "skill": "kb-discovery-breakthrough-profiler",
+          "skill_path": "skills/evaluation/kb-discovery-breakthrough-profiler/SKILL.md",
+          "mode": "composition_member",
+          "source_path": "registry/tasks/discovery-marathon/task_registry.json",
+          "source_pointer": "/visible_workflows/0/composed_skills/36",
+          "binding_kind": "composition_membership",
+          "order": null,
+          "source_list_index": 36
+        },
+        {
+          "step_id": "member:show-reasoning",
+          "skill": "show-reasoning",
+          "skill_path": "skills/orchestration/show-reasoning/SKILL.md",
+          "mode": "composition_member",
+          "source_path": "registry/tasks/discovery-marathon/task_registry.json",
+          "source_pointer": "/visible_workflows/0/composed_skills/37",
+          "binding_kind": "composition_membership",
+          "order": null,
+          "source_list_index": 37
+        },
+        {
+          "step_id": "member:kb-explain",
+          "skill": "kb-explain",
+          "skill_path": "skills/reasoning/kb-explain/SKILL.md",
+          "mode": "composition_member",
+          "source_path": "registry/tasks/discovery-marathon/task_registry.json",
+          "source_pointer": "/visible_workflows/0/composed_skills/38",
+          "binding_kind": "composition_membership",
+          "order": null,
+          "source_list_index": 38
+        },
+        {
+          "step_id": "member:looper-release-promoter",
+          "skill": "looper-release-promoter",
+          "skill_path": "skills/control-plane/looper-release-promoter/SKILL.md",
+          "mode": "composition_member",
+          "source_path": "registry/tasks/discovery-marathon/task_registry.json",
+          "source_pointer": "/visible_workflows/0/composed_skills/39",
+          "binding_kind": "composition_membership",
+          "order": null,
+          "source_list_index": 39
+        },
+        {
+          "step_id": "member:ym-freeze-clay-target",
+          "skill": "ym-freeze-clay-target",
+          "skill_path": "skills/yang_mills/ym-freeze-clay-target/SKILL.md",
+          "mode": "composition_member",
+          "source_path": "registry/tasks/discovery-marathon/task_registry.json",
+          "source_pointer": "/visible_workflows/0/composed_skills/40",
+          "binding_kind": "composition_membership",
+          "order": null,
+          "source_list_index": 40
+        },
+        {
+          "step_id": "member:ym-build-observable-core",
+          "skill": "ym-build-observable-core",
+          "skill_path": "skills/yang_mills/ym-build-observable-core/SKILL.md",
+          "mode": "composition_member",
+          "source_path": "registry/tasks/discovery-marathon/task_registry.json",
+          "source_pointer": "/visible_workflows/0/composed_skills/41",
+          "binding_kind": "composition_membership",
+          "order": null,
+          "source_list_index": 41
+        },
+        {
+          "step_id": "member:ym-build-representation-calculus",
+          "skill": "ym-build-representation-calculus",
+          "skill_path": "skills/yang_mills/ym-build-representation-calculus/SKILL.md",
+          "mode": "composition_member",
+          "source_path": "registry/tasks/discovery-marathon/task_registry.json",
+          "source_pointer": "/visible_workflows/0/composed_skills/42",
+          "binding_kind": "composition_membership",
+          "order": null,
+          "source_list_index": 42
+        },
+        {
+          "step_id": "member:ym-define-relational-rigidity",
+          "skill": "ym-define-relational-rigidity",
+          "skill_path": "skills/yang_mills/ym-define-relational-rigidity/SKILL.md",
+          "mode": "composition_member",
+          "source_path": "registry/tasks/discovery-marathon/task_registry.json",
+          "source_pointer": "/visible_workflows/0/composed_skills/43",
+          "binding_kind": "composition_membership",
+          "order": null,
+          "source_list_index": 43
+        },
+        {
+          "step_id": "member:ym-design-regulator-atlas",
+          "skill": "ym-design-regulator-atlas",
+          "skill_path": "skills/yang_mills/ym-design-regulator-atlas/SKILL.md",
+          "mode": "composition_member",
+          "source_path": "registry/tasks/discovery-marathon/task_registry.json",
+          "source_pointer": "/visible_workflows/0/composed_skills/44",
+          "binding_kind": "composition_membership",
+          "order": null,
+          "source_list_index": 44
+        },
+        {
+          "step_id": "member:ym-build-gauge-covariant-rg",
+          "skill": "ym-build-gauge-covariant-rg",
+          "skill_path": "skills/yang_mills/ym-build-gauge-covariant-rg/SKILL.md",
+          "mode": "composition_member",
+          "source_path": "registry/tasks/discovery-marathon/task_registry.json",
+          "source_pointer": "/visible_workflows/0/composed_skills/45",
+          "binding_kind": "composition_membership",
+          "order": null,
+          "source_list_index": 45
+        },
+        {
+          "step_id": "member:ym-design-infrared-basin",
+          "skill": "ym-design-infrared-basin",
+          "skill_path": "skills/yang_mills/ym-design-infrared-basin/SKILL.md",
+          "mode": "composition_member",
+          "source_path": "registry/tasks/discovery-marathon/task_registry.json",
+          "source_pointer": "/visible_workflows/0/composed_skills/46",
+          "binding_kind": "composition_membership",
+          "order": null,
+          "source_list_index": 46
+        },
+        {
+          "step_id": "member:ym-control-large-fields-and-topology",
+          "skill": "ym-control-large-fields-and-topology",
+          "skill_path": "skills/yang_mills/ym-control-large-fields-and-topology/SKILL.md",
+          "mode": "composition_member",
+          "source_path": "registry/tasks/discovery-marathon/task_registry.json",
+          "source_pointer": "/visible_workflows/0/composed_skills/47",
+          "binding_kind": "composition_membership",
+          "order": null,
+          "source_list_index": 47
+        },
+        {
+          "step_id": "member:ym-prove-basin-entry",
+          "skill": "ym-prove-basin-entry",
+          "skill_path": "skills/yang_mills/ym-prove-basin-entry/SKILL.md",
+          "mode": "composition_member",
+          "source_path": "registry/tasks/discovery-marathon/task_registry.json",
+          "source_pointer": "/visible_workflows/0/composed_skills/48",
+          "binding_kind": "composition_membership",
+          "order": null,
+          "source_list_index": 48
+        },
+        {
+          "step_id": "member:ym-prove-rg-to-rigidity",
+          "skill": "ym-prove-rg-to-rigidity",
+          "skill_path": "skills/yang_mills/ym-prove-rg-to-rigidity/SKILL.md",
+          "mode": "composition_member",
+          "source_path": "registry/tasks/discovery-marathon/task_registry.json",
+          "source_pointer": "/visible_workflows/0/composed_skills/49",
+          "binding_kind": "composition_membership",
+          "order": null,
+          "source_list_index": 49
+        },
+        {
+          "step_id": "member:ym-prove-continuum-coherence",
+          "skill": "ym-prove-continuum-coherence",
+          "skill_path": "skills/yang_mills/ym-prove-continuum-coherence/SKILL.md",
+          "mode": "composition_member",
+          "source_path": "registry/tasks/discovery-marathon/task_registry.json",
+          "source_pointer": "/visible_workflows/0/composed_skills/50",
+          "binding_kind": "composition_membership",
+          "order": null,
+          "source_list_index": 50
+        },
+        {
+          "step_id": "member:ym-prove-rigidity-transfer",
+          "skill": "ym-prove-rigidity-transfer",
+          "skill_path": "skills/yang_mills/ym-prove-rigidity-transfer/SKILL.md",
+          "mode": "composition_member",
+          "source_path": "registry/tasks/discovery-marathon/task_registry.json",
+          "source_pointer": "/visible_workflows/0/composed_skills/51",
+          "binding_kind": "composition_membership",
+          "order": null,
+          "source_list_index": 51
+        },
+        {
+          "step_id": "member:ym-reconstruct-os-gap",
+          "skill": "ym-reconstruct-os-gap",
+          "skill_path": "skills/yang_mills/ym-reconstruct-os-gap/SKILL.md",
+          "mode": "composition_member",
+          "source_path": "registry/tasks/discovery-marathon/task_registry.json",
+          "source_pointer": "/visible_workflows/0/composed_skills/52",
+          "binding_kind": "composition_membership",
+          "order": null,
+          "source_list_index": 52
+        },
+        {
+          "step_id": "member:ym-calibrate-restricted-models",
+          "skill": "ym-calibrate-restricted-models",
+          "skill_path": "skills/yang_mills/ym-calibrate-restricted-models/SKILL.md",
+          "mode": "composition_member",
+          "source_path": "registry/tasks/discovery-marathon/task_registry.json",
+          "source_pointer": "/visible_workflows/0/composed_skills/53",
+          "binding_kind": "composition_membership",
+          "order": null,
+          "source_list_index": 53
+        },
+        {
+          "step_id": "member:ym-mechanize-proof-core",
+          "skill": "ym-mechanize-proof-core",
+          "skill_path": "skills/yang_mills/ym-mechanize-proof-core/SKILL.md",
+          "mode": "composition_member",
+          "source_path": "registry/tasks/discovery-marathon/task_registry.json",
+          "source_pointer": "/visible_workflows/0/composed_skills/54",
+          "binding_kind": "composition_membership",
+          "order": null,
+          "source_list_index": 54
+        },
+        {
+          "step_id": "member:ym-audit-frontier",
+          "skill": "ym-audit-frontier",
+          "skill_path": "skills/yang_mills/ym-audit-frontier/SKILL.md",
+          "mode": "composition_member",
+          "source_path": "registry/tasks/discovery-marathon/task_registry.json",
+          "source_pointer": "/visible_workflows/0/composed_skills/55",
+          "binding_kind": "composition_membership",
+          "order": null,
+          "source_list_index": 55
+        },
+        {
+          "step_id": "member:ym-run-clay-program",
+          "skill": "ym-run-clay-program",
+          "skill_path": "skills/yang_mills/ym-run-clay-program/SKILL.md",
+          "mode": "composition_member",
+          "source_path": "registry/tasks/discovery-marathon/task_registry.json",
+          "source_pointer": "/visible_workflows/0/composed_skills/56",
+          "binding_kind": "composition_membership",
+          "order": null,
+          "source_list_index": 56
+        }
+      ],
+      "coverage_gaps": [
+        {
+          "kind": "membership_not_execution_order",
+          "detail": "Composed skills lists expose membership, not executable ordering, conditionality, repeats or parallelism."
+        }
+      ]
+    },
+    {
+      "workflow_id": "abducer_work_loop",
+      "aliases": [],
+      "function": "advance an active proof obligation from hypothesis through derivation and refutation",
+      "source_paths": [
+        "agentic/registries/workflow_contracts.yaml",
+        "agentic/reasoning_flows/abducer_work_loop.prism",
+        "skills/orchestration/work/SKILL.md"
+      ],
+      "steps": [
+        {
+          "step_id": "owner-phase:1",
+          "skill": "work",
+          "skill_path": "skills/orchestration/work/SKILL.md",
+          "mode": "procedural_phase",
+          "source_path": "skills/orchestration/work/SKILL.md",
+          "source_pointer": "line:31",
+          "binding_kind": "owner_skill_procedure",
+          "order": 1,
+          "instruction": "Load the persistent work state from `artifacts/<kb-ref>/work-state.json`."
+        },
+        {
+          "step_id": "owner-phase:2",
+          "skill": "work",
+          "skill_path": "skills/orchestration/work/SKILL.md",
+          "mode": "procedural_phase",
+          "source_path": "skills/orchestration/work/SKILL.md",
+          "source_pointer": "line:32",
+          "binding_kind": "owner_skill_procedure",
+          "order": 2,
+          "instruction": "Refresh the end-to-end plausibility report."
+        },
+        {
+          "step_id": "owner-phase:3",
+          "skill": "work",
+          "skill_path": "skills/orchestration/work/SKILL.md",
+          "mode": "procedural_phase",
+          "source_path": "skills/orchestration/work/SKILL.md",
+          "source_pointer": "line:33",
+          "binding_kind": "owner_skill_procedure",
+          "order": 3,
+          "instruction": "If the stop criteria in [references/stop-criteria.md](references/stop-criteria.md) already fire, stop."
+        },
+        {
+          "step_id": "owner-phase:4",
+          "skill": "work",
+          "skill_path": "skills/orchestration/work/SKILL.md",
+          "mode": "procedural_phase",
+          "source_path": "skills/orchestration/work/SKILL.md",
+          "source_pointer": "line:34",
+          "binding_kind": "owner_skill_procedure",
+          "order": 4,
+          "instruction": "Otherwise run exactly one phase:\n   discovery if the next phase is discovery,\n   prove if the next phase is prove."
+        },
+        {
+          "step_id": "owner-phase:5",
+          "skill": "work",
+          "skill_path": "skills/orchestration/work/SKILL.md",
+          "mode": "procedural_phase",
+          "source_path": "skills/orchestration/work/SKILL.md",
+          "source_pointer": "line:37",
+          "binding_kind": "owner_skill_procedure",
+          "order": 5,
+          "instruction": "After the phase, refresh the plausibility report again."
+        },
+        {
+          "step_id": "owner-phase:6",
+          "skill": "work",
+          "skill_path": "skills/orchestration/work/SKILL.md",
+          "mode": "procedural_phase",
+          "source_path": "skills/orchestration/work/SKILL.md",
+          "source_pointer": "line:38",
+          "binding_kind": "owner_skill_procedure",
+          "order": 6,
+          "instruction": "If the auto-meta trigger fires, generate `meta-reflection-report.*`."
+        },
+        {
+          "step_id": "owner-phase:7",
+          "skill": "work",
+          "skill_path": "skills/orchestration/work/SKILL.md",
+          "mode": "procedural_phase",
+          "source_path": "skills/orchestration/work/SKILL.md",
+          "source_pointer": "line:39",
+          "binding_kind": "owner_skill_procedure",
+          "order": 7,
+          "instruction": "Persist the updated work state and next phase."
+        }
+      ],
+      "coverage_gaps": [
+        {
+          "kind": "owner_procedure_not_nested_runtime_graph",
+          "detail": "Contract omits steps; numbered owner procedure covered, nested dispatch requires trace evidence."
+        }
+      ]
+    },
+    {
+      "workflow_id": "conceptual_hypothesis_exploration_loop",
+      "aliases": [
+        "conceptual-obstruction-refinement"
+      ],
+      "function": "replace a structural obstruction with a mediated, testable route",
+      "source_paths": [
+        "agentic/registries/workflow_contracts.yaml",
+        "registry/tasks/hegelian-abducer-integration/task_registry.json",
+        "agentic/reasoning_flows/conceptual_hypothesis_exploration_loop.prism"
+      ],
+      "steps": [
+        {
+          "step_id": "member:looper-workflow-contract-governor",
+          "skill": "looper-workflow-contract-governor",
+          "skill_path": "skills/control-plane/looper-workflow-contract-governor/SKILL.md",
+          "mode": "composition_member",
+          "source_path": "registry/tasks/hegelian-abducer-integration/task_registry.json",
+          "source_pointer": "/visible_workflows/0/composed_skills/0",
+          "binding_kind": "composition_membership",
+          "order": null,
+          "source_list_index": 0
+        },
+        {
+          "step_id": "member:looper-target-dependency-cartographer",
+          "skill": "looper-target-dependency-cartographer",
+          "skill_path": "skills/control-plane/looper-target-dependency-cartographer/SKILL.md",
+          "mode": "composition_member",
+          "source_path": "registry/tasks/hegelian-abducer-integration/task_registry.json",
+          "source_pointer": "/visible_workflows/0/composed_skills/1",
+          "binding_kind": "composition_membership",
+          "order": null,
+          "source_list_index": 1
+        },
+        {
+          "step_id": "member:abducer-conceptual-pressure-formalizer",
+          "skill": "abducer-conceptual-pressure-formalizer",
+          "skill_path": "skills/evaluation/abducer-conceptual-pressure-formalizer/SKILL.md",
+          "mode": "composition_member",
+          "source_path": "registry/tasks/hegelian-abducer-integration/task_registry.json",
+          "source_pointer": "/visible_workflows/0/composed_skills/2",
+          "binding_kind": "composition_membership",
+          "order": null,
+          "source_list_index": 2
+        },
+        {
+          "step_id": "member:abducer-failure-signal-cartographer",
+          "skill": "abducer-failure-signal-cartographer",
+          "skill_path": "skills/evaluation/abducer-failure-signal-cartographer/SKILL.md",
+          "mode": "composition_member",
+          "source_path": "registry/tasks/hegelian-abducer-integration/task_registry.json",
+          "source_pointer": "/visible_workflows/0/composed_skills/3",
+          "binding_kind": "composition_membership",
+          "order": null,
+          "source_list_index": 3
+        },
+        {
+          "step_id": "member:kb-induce",
+          "skill": "kb-induce",
+          "skill_path": "skills/reasoning/kb-induce/SKILL.md",
+          "mode": "composition_member",
+          "source_path": "registry/tasks/hegelian-abducer-integration/task_registry.json",
+          "source_pointer": "/visible_workflows/0/composed_skills/4",
+          "binding_kind": "composition_membership",
+          "order": null,
+          "source_list_index": 4
+        },
+        {
+          "step_id": "member:kb-abduce",
+          "skill": "kb-abduce",
+          "skill_path": "skills/reasoning/kb-abduce/SKILL.md",
+          "mode": "composition_member",
+          "source_path": "registry/tasks/hegelian-abducer-integration/task_registry.json",
+          "source_pointer": "/visible_workflows/0/composed_skills/5",
+          "binding_kind": "composition_membership",
+          "order": null,
+          "source_list_index": 5
+        },
+        {
+          "step_id": "member:kb-deduce",
+          "skill": "kb-deduce",
+          "skill_path": "skills/reasoning/kb-deduce/SKILL.md",
+          "mode": "composition_member",
+          "source_path": "registry/tasks/hegelian-abducer-integration/task_registry.json",
+          "source_pointer": "/visible_workflows/0/composed_skills/6",
+          "binding_kind": "composition_membership",
+          "order": null,
+          "source_list_index": 6
+        },
+        {
+          "step_id": "member:kb-contradiction-strategist",
+          "skill": "kb-contradiction-strategist",
+          "skill_path": "skills/reasoning/kb-contradiction-strategist/SKILL.md",
+          "mode": "composition_member",
+          "source_path": "registry/tasks/hegelian-abducer-integration/task_registry.json",
+          "source_pointer": "/visible_workflows/0/composed_skills/7",
+          "binding_kind": "composition_membership",
+          "order": null,
+          "source_list_index": 7
+        },
+        {
+          "step_id": "member:kb-concept-bridge-planner",
+          "skill": "kb-concept-bridge-planner",
+          "skill_path": "skills/discovery/kb-concept-bridge-planner/SKILL.md",
+          "mode": "composition_member",
+          "source_path": "registry/tasks/hegelian-abducer-integration/task_registry.json",
+          "source_pointer": "/visible_workflows/0/composed_skills/8",
+          "binding_kind": "composition_membership",
+          "order": null,
+          "source_list_index": 8
+        },
+        {
+          "step_id": "member:kb-gap-abstraction-conjecturer",
+          "skill": "kb-gap-abstraction-conjecturer",
+          "skill_path": "skills/discovery/kb-gap-abstraction-conjecturer/SKILL.md",
+          "mode": "composition_member",
+          "source_path": "registry/tasks/hegelian-abducer-integration/task_registry.json",
+          "source_pointer": "/visible_workflows/0/composed_skills/9",
+          "binding_kind": "composition_membership",
+          "order": null,
+          "source_list_index": 9
+        },
+        {
+          "step_id": "member:abducer-mediation-candidate-generator",
+          "skill": "abducer-mediation-candidate-generator",
+          "skill_path": "skills/discovery/abducer-mediation-candidate-generator/SKILL.md",
+          "mode": "composition_member",
+          "source_path": "registry/tasks/hegelian-abducer-integration/task_registry.json",
+          "source_pointer": "/visible_workflows/0/composed_skills/10",
+          "binding_kind": "composition_membership",
+          "order": null,
+          "source_list_index": 10
+        },
+        {
+          "step_id": "member:kb-promising-direction-assessor",
+          "skill": "kb-promising-direction-assessor",
+          "skill_path": "skills/discovery/kb-promising-direction-assessor/SKILL.md",
+          "mode": "composition_member",
+          "source_path": "registry/tasks/hegelian-abducer-integration/task_registry.json",
+          "source_pointer": "/visible_workflows/0/composed_skills/11",
+          "binding_kind": "composition_membership",
+          "order": null,
+          "source_list_index": 11
+        },
+        {
+          "step_id": "member:kb-discovery-cycle",
+          "skill": "kb-discovery-cycle",
+          "skill_path": "skills/discovery/kb-discovery-cycle/SKILL.md",
+          "mode": "composition_member",
+          "source_path": "registry/tasks/hegelian-abducer-integration/task_registry.json",
+          "source_pointer": "/visible_workflows/0/composed_skills/12",
+          "binding_kind": "composition_membership",
+          "order": null,
+          "source_list_index": 12
+        },
+        {
+          "step_id": "member:kb-prove-cycle",
+          "skill": "kb-prove-cycle",
+          "skill_path": "skills/discovery/kb-prove-cycle/SKILL.md",
+          "mode": "composition_member",
+          "source_path": "registry/tasks/hegelian-abducer-integration/task_registry.json",
+          "source_pointer": "/visible_workflows/0/composed_skills/13",
+          "binding_kind": "composition_membership",
+          "order": null,
+          "source_list_index": 13
+        },
+        {
+          "step_id": "member:kb-revision-loop",
+          "skill": "kb-revision-loop",
+          "skill_path": "skills/evaluation/kb-revision-loop/SKILL.md",
+          "mode": "composition_member",
+          "source_path": "registry/tasks/hegelian-abducer-integration/task_registry.json",
+          "source_pointer": "/visible_workflows/0/composed_skills/14",
+          "binding_kind": "composition_membership",
+          "order": null,
+          "source_list_index": 14
+        },
+        {
+          "step_id": "member:entailment-gap-auditor",
+          "skill": "entailment-gap-auditor",
+          "skill_path": "skills/evaluation/entailment-gap-auditor/SKILL.md",
+          "mode": "composition_member",
+          "source_path": "registry/tasks/hegelian-abducer-integration/task_registry.json",
+          "source_pointer": "/visible_workflows/0/composed_skills/15",
+          "binding_kind": "composition_membership",
+          "order": null,
+          "source_list_index": 15
+        },
+        {
+          "step_id": "member:premise-completeness-prober",
+          "skill": "premise-completeness-prober",
+          "skill_path": "skills/evaluation/premise-completeness-prober/SKILL.md",
+          "mode": "composition_member",
+          "source_path": "registry/tasks/hegelian-abducer-integration/task_registry.json",
+          "source_pointer": "/visible_workflows/0/composed_skills/16",
+          "binding_kind": "composition_membership",
+          "order": null,
+          "source_list_index": 16
+        },
+        {
+          "step_id": "member:contradiction-route-auditor",
+          "skill": "contradiction-route-auditor",
+          "skill_path": "skills/evaluation/contradiction-route-auditor/SKILL.md",
+          "mode": "composition_member",
+          "source_path": "registry/tasks/hegelian-abducer-integration/task_registry.json",
+          "source_pointer": "/visible_workflows/0/composed_skills/17",
+          "binding_kind": "composition_membership",
+          "order": null,
+          "source_list_index": 17
+        },
+        {
+          "step_id": "member:abducer-obligation-gatekeeper",
+          "skill": "abducer-obligation-gatekeeper",
+          "skill_path": "skills/evaluation/abducer-obligation-gatekeeper/SKILL.md",
+          "mode": "composition_member",
+          "source_path": "registry/tasks/hegelian-abducer-integration/task_registry.json",
+          "source_pointer": "/visible_workflows/0/composed_skills/18",
+          "binding_kind": "composition_membership",
+          "order": null,
+          "source_list_index": 18
+        },
+        {
+          "step_id": "member:counterfactual-route-prober",
+          "skill": "counterfactual-route-prober",
+          "skill_path": "skills/evaluation/counterfactual-route-prober/SKILL.md",
+          "mode": "composition_member",
+          "source_path": "registry/tasks/hegelian-abducer-integration/task_registry.json",
+          "source_pointer": "/visible_workflows/0/composed_skills/19",
+          "binding_kind": "composition_membership",
+          "order": null,
+          "source_list_index": 19
+        },
+        {
+          "step_id": "member:epistemic-status-ledger",
+          "skill": "epistemic-status-ledger",
+          "skill_path": "skills/evaluation/epistemic-status-ledger/SKILL.md",
+          "mode": "composition_member",
+          "source_path": "registry/tasks/hegelian-abducer-integration/task_registry.json",
+          "source_pointer": "/visible_workflows/0/composed_skills/20",
+          "binding_kind": "composition_membership",
+          "order": null,
+          "source_list_index": 20
+        },
+        {
+          "step_id": "member:kb-end-to-end-proof-critic",
+          "skill": "kb-end-to-end-proof-critic",
+          "skill_path": "skills/evaluation/kb-end-to-end-proof-critic/SKILL.md",
+          "mode": "composition_member",
+          "source_path": "registry/tasks/hegelian-abducer-integration/task_registry.json",
+          "source_pointer": "/visible_workflows/0/composed_skills/21",
+          "binding_kind": "composition_membership",
+          "order": null,
+          "source_list_index": 21
+        },
+        {
+          "step_id": "member:abducer-refinement-route-ranker",
+          "skill": "abducer-refinement-route-ranker",
+          "skill_path": "skills/orchestration/abducer-refinement-route-ranker/SKILL.md",
+          "mode": "composition_member",
+          "source_path": "registry/tasks/hegelian-abducer-integration/task_registry.json",
+          "source_pointer": "/visible_workflows/0/composed_skills/22",
+          "binding_kind": "composition_membership",
+          "order": null,
+          "source_list_index": 22
+        },
+        {
+          "step_id": "member:work",
+          "skill": "work",
+          "skill_path": "skills/orchestration/work/SKILL.md",
+          "mode": "composition_member",
+          "source_path": "registry/tasks/hegelian-abducer-integration/task_registry.json",
+          "source_pointer": "/visible_workflows/0/composed_skills/23",
+          "binding_kind": "composition_membership",
+          "order": null,
+          "source_list_index": 23
+        }
+      ],
+      "coverage_gaps": [
+        {
+          "kind": "membership_not_execution_order",
+          "detail": "Composed skills lists expose membership, not executable ordering, conditionality, repeats or parallelism."
+        }
+      ]
+    },
+    {
+      "workflow_id": "release_promotion_loop",
+      "aliases": [],
+      "function": "issue a claim-conserving promotion, repair, or rejection disposition",
+      "source_paths": [
+        "agentic/registries/workflow_contracts.yaml",
+        "agentic/reasoning_flows/release_promotion_loop.prism",
+        "skills/control-plane/looper-release-promoter/SKILL.md"
+      ],
+      "steps": [
+        {
+          "step_id": "owner-phase:1",
+          "skill": "looper-release-promoter",
+          "skill_path": "skills/control-plane/looper-release-promoter/SKILL.md",
+          "mode": "procedural_phase",
+          "source_path": "skills/control-plane/looper-release-promoter/SKILL.md",
+          "source_pointer": "line:33",
+          "binding_kind": "owner_skill_procedure",
+          "order": 1,
+          "instruction": "Identify the controlled iteration and target."
+        },
+        {
+          "step_id": "owner-phase:2",
+          "skill": "looper-release-promoter",
+          "skill_path": "skills/control-plane/looper-release-promoter/SKILL.md",
+          "mode": "procedural_phase",
+          "source_path": "skills/control-plane/looper-release-promoter/SKILL.md",
+          "source_pointer": "line:34",
+          "binding_kind": "owner_skill_procedure",
+          "order": 2,
+          "instruction": "Summarize what changed and which workflow executed."
+        },
+        {
+          "step_id": "owner-phase:3",
+          "skill": "looper-release-promoter",
+          "skill_path": "skills/control-plane/looper-release-promoter/SKILL.md",
+          "mode": "procedural_phase",
+          "source_path": "skills/control-plane/looper-release-promoter/SKILL.md",
+          "source_pointer": "line:35",
+          "binding_kind": "owner_skill_procedure",
+          "order": 3,
+          "instruction": "Check whether all blocking gates have evidence."
+        },
+        {
+          "step_id": "owner-phase:4",
+          "skill": "looper-release-promoter",
+          "skill_path": "skills/control-plane/looper-release-promoter/SKILL.md",
+          "mode": "procedural_phase",
+          "source_path": "skills/control-plane/looper-release-promoter/SKILL.md",
+          "source_pointer": "line:36",
+          "binding_kind": "owner_skill_procedure",
+          "order": 4,
+          "instruction": "Separate passing evidence from fragile, missing, waived, or drift-risk\n   evidence."
+        },
+        {
+          "step_id": "owner-phase:5",
+          "skill": "looper-release-promoter",
+          "skill_path": "skills/control-plane/looper-release-promoter/SKILL.md",
+          "mode": "procedural_phase",
+          "source_path": "skills/control-plane/looper-release-promoter/SKILL.md",
+          "source_pointer": "line:38",
+          "binding_kind": "owner_skill_procedure",
+          "order": 5,
+          "instruction": "Recommend promote, quarantine, rollback, or escalate."
+        },
+        {
+          "step_id": "owner-phase:6",
+          "skill": "looper-release-promoter",
+          "skill_path": "skills/control-plane/looper-release-promoter/SKILL.md",
+          "mode": "procedural_phase",
+          "source_path": "skills/control-plane/looper-release-promoter/SKILL.md",
+          "source_pointer": "line:39",
+          "binding_kind": "owner_skill_procedure",
+          "order": 6,
+          "instruction": "State rollback path and open blockers."
+        }
+      ],
+      "coverage_gaps": [
+        {
+          "kind": "owner_procedure_not_nested_runtime_graph",
+          "detail": "Contract omits steps; numbered owner procedure covered, nested dispatch requires trace evidence."
+        }
+      ]
+    },
+    {
+      "workflow_id": "evidence_to_proof_route_onramp",
+      "aliases": [
+        "evidence-to-proof-route-onramp",
+        "kb-route-onramp"
+      ],
+      "function": "turn grounded evidence into a falsification-aware route to a proof obligation",
+      "source_paths": [
+        "agentic/registries/named_workflow_contracts.yaml",
+        "agentic/reasoning_flows/evidence_to_proof_route_onramp.prism"
+      ],
+      "steps": [
+        {
+          "step_id": "ingest",
+          "skill": "latex-kb-ingest",
+          "skill_path": "skills/ingest/latex-kb-ingest/SKILL.md",
+          "mode": "required",
+          "source_path": "agentic/registries/named_workflow_contracts.yaml",
+          "source_pointer": "/workflows/0/steps/0",
+          "binding_kind": "ordered_contract_step",
+          "order": 10,
+          "when": null,
+          "consumes": [
+            "SourceBundle"
+          ],
+          "produces": [
+            "IngestedKnowledgeBase"
+          ],
+          "on_failure": "stop"
+        },
+        {
+          "step_id": "parse_pvsnp",
+          "skill": "pvsnp-kb-parser",
+          "skill_path": "skills/ingest/pvsnp-kb-parser/SKILL.md",
+          "mode": "conditional",
+          "source_path": "agentic/registries/named_workflow_contracts.yaml",
+          "source_pointer": "/workflows/0/steps/1",
+          "binding_kind": "ordered_contract_step",
+          "order": 20,
+          "when": "target == 'p-vs-np' and source_format == 'latex'",
+          "consumes": [
+            "IngestedKnowledgeBase"
+          ],
+          "produces": [
+            "ParsedKnowledgeBase"
+          ],
+          "on_failure": "quarantine"
+        },
+        {
+          "step_id": "normalize_theorems",
+          "skill": "theorem-body-normalizer",
+          "skill_path": "skills/ingest/theorem-body-normalizer/SKILL.md",
+          "mode": "required",
+          "source_path": "agentic/registries/named_workflow_contracts.yaml",
+          "source_pointer": "/workflows/0/steps/2",
+          "binding_kind": "ordered_contract_step",
+          "order": 30,
+          "when": null,
+          "consumes": [
+            "IngestedKnowledgeBase",
+            "ParsedKnowledgeBase"
+          ],
+          "produces": [
+            "NormalizedTheoremCorpus"
+          ],
+          "on_failure": "stop"
+        },
+        {
+          "step_id": "ground_conjecture",
+          "skill": "kb-main-conjecture-grounder",
+          "skill_path": "skills/discovery/kb-main-conjecture-grounder/SKILL.md",
+          "mode": "required",
+          "source_path": "agentic/registries/named_workflow_contracts.yaml",
+          "source_pointer": "/workflows/0/steps/3",
+          "binding_kind": "ordered_contract_step",
+          "order": 40,
+          "when": null,
+          "consumes": [
+            "NormalizedTheoremCorpus"
+          ],
+          "produces": [
+            "GroundedConjecture"
+          ],
+          "on_failure": "stop"
+        },
+        {
+          "step_id": "narrate_literature_evolution",
+          "skill": "target-literature-evolution-narrator",
+          "skill_path": "skills/reporting/target-literature-evolution-narrator/SKILL.md",
+          "mode": "conditional",
+          "source_path": "agentic/registries/named_workflow_contracts.yaml",
+          "source_pointer": "/workflows/0/steps/4",
+          "binding_kind": "ordered_contract_step",
+          "order": 45,
+          "when": "source_bundle_contains_literature_history",
+          "consumes": [
+            "GroundedConjecture",
+            "SourceBundle"
+          ],
+          "produces": [
+            "TargetLiteratureNarrative"
+          ],
+          "on_failure": "quarantine"
+        },
+        {
+          "step_id": "connect_proof",
+          "skill": "kb-proof-connector",
+          "skill_path": "skills/discovery/kb-proof-connector/SKILL.md",
+          "mode": "required",
+          "source_path": "agentic/registries/named_workflow_contracts.yaml",
+          "source_pointer": "/workflows/0/steps/5",
+          "binding_kind": "ordered_contract_step",
+          "order": 50,
+          "when": null,
+          "consumes": [
+            "GroundedConjecture"
+          ],
+          "produces": [
+            "ProofConnectionGraph"
+          ],
+          "on_failure": "quarantine"
+        },
+        {
+          "step_id": "evaluate_hypotheses",
+          "skill": "kb-hypothesis-evaluator",
+          "skill_path": "skills/evaluation/kb-hypothesis-evaluator/SKILL.md",
+          "mode": "conditional",
+          "source_path": "agentic/registries/named_workflow_contracts.yaml",
+          "source_pointer": "/workflows/0/steps/6",
+          "binding_kind": "ordered_contract_step",
+          "order": 60,
+          "when": "hypotheses_present",
+          "consumes": [
+            "ProofConnectionGraph"
+          ],
+          "produces": [
+            "HypothesisAssessment"
+          ],
+          "on_failure": "quarantine"
+        },
+        {
+          "step_id": "audit_hubs",
+          "skill": "hub-bias-auditor",
+          "skill_path": "skills/evaluation/hub-bias-auditor/SKILL.md",
+          "mode": "required",
+          "source_path": "agentic/registries/named_workflow_contracts.yaml",
+          "source_pointer": "/workflows/0/steps/7",
+          "binding_kind": "ordered_contract_step",
+          "order": 70,
+          "when": null,
+          "consumes": [
+            "ProofConnectionGraph"
+          ],
+          "produces": [
+            "HubBiasAudit"
+          ],
+          "on_failure": "stop"
+        },
+        {
+          "step_id": "find_entrypoint",
+          "skill": "kb-entrypoint-finder",
+          "skill_path": "skills/discovery/kb-entrypoint-finder/SKILL.md",
+          "mode": "required",
+          "source_path": "agentic/registries/named_workflow_contracts.yaml",
+          "source_pointer": "/workflows/0/steps/8",
+          "binding_kind": "ordered_contract_step",
+          "order": 80,
+          "when": null,
+          "consumes": [
+            "ProofConnectionGraph",
+            "HubBiasAudit"
+          ],
+          "produces": [
+            "EntrypointCandidates"
+          ],
+          "on_failure": "stop"
+        },
+        {
+          "step_id": "pathfind",
+          "skill": "kb-entrypoint-pathfinder",
+          "skill_path": "skills/discovery/kb-entrypoint-pathfinder/SKILL.md",
+          "mode": "required",
+          "source_path": "agentic/registries/named_workflow_contracts.yaml",
+          "source_pointer": "/workflows/0/steps/9",
+          "binding_kind": "ordered_contract_step",
+          "order": 90,
+          "when": null,
+          "consumes": [
+            "EntrypointCandidates"
+          ],
+          "produces": [
+            "ProofRouteCandidates"
+          ],
+          "on_failure": "stop"
+        },
+        {
+          "step_id": "audit_regime_shift",
+          "skill": "regime-shift-auditor",
+          "skill_path": "skills/evaluation/regime-shift-auditor/SKILL.md",
+          "mode": "conditional",
+          "source_path": "agentic/registries/named_workflow_contracts.yaml",
+          "source_pointer": "/workflows/0/steps/10",
+          "binding_kind": "ordered_contract_step",
+          "order": 100,
+          "when": "route_crosses_regime_or_model",
+          "consumes": [
+            "ProofRouteCandidates"
+          ],
+          "produces": [
+            "RegimeShiftAudit"
+          ],
+          "on_failure": "quarantine"
+        },
+        {
+          "step_id": "hunt_counterexamples",
+          "skill": "counterexample-hunter",
+          "skill_path": "skills/evaluation/counterexample-hunter/SKILL.md",
+          "mode": "required",
+          "source_path": "agentic/registries/named_workflow_contracts.yaml",
+          "source_pointer": "/workflows/0/steps/11",
+          "binding_kind": "ordered_contract_step",
+          "order": 110,
+          "when": null,
+          "consumes": [
+            "ProofRouteCandidates"
+          ],
+          "produces": [
+            "FalsificationPacket"
+          ],
+          "on_failure": "stop"
+        },
+        {
+          "step_id": "expert_handoff",
+          "skill": "expert-handoff",
+          "skill_path": "skills/reporting/expert-handoff/SKILL.md",
+          "mode": "required",
+          "source_path": "agentic/registries/named_workflow_contracts.yaml",
+          "source_pointer": "/workflows/0/steps/12",
+          "binding_kind": "ordered_contract_step",
+          "order": 120,
+          "when": null,
+          "consumes": [
+            "ProofRouteCandidates",
+            "FalsificationPacket"
+          ],
+          "produces": [
+            "ExpertRouteDossier"
+          ],
+          "on_failure": "stop"
+        }
+      ],
+      "coverage_gaps": [],
+      "profiles": []
+    },
+    {
+      "workflow_id": "conceptual_frontier_deepening",
+      "aliases": [
+        "conceptual-frontier-deepening",
+        "deep-conceptual-search"
+      ],
+      "function": "seek a discriminating conceptual bridge that is ready for formal work",
+      "source_paths": [
+        "agentic/registries/named_workflow_contracts.yaml",
+        "agentic/reasoning_flows/conceptual_frontier_deepening.prism"
+      ],
+      "steps": [
+        {
+          "step_id": "plan_deepening",
+          "skill": "conceptual-frontier-deepening",
+          "skill_path": "skills/orchestration/conceptual-frontier-deepening/SKILL.md",
+          "mode": "required",
+          "source_path": "agentic/registries/named_workflow_contracts.yaml",
+          "source_pointer": "/workflows/1/steps/0",
+          "binding_kind": "ordered_contract_step",
+          "order": 5,
+          "when": null,
+          "consumes": [
+            "FrozenDiscoveryContext"
+          ],
+          "produces": [
+            "ConceptualDeepeningPlan"
+          ],
+          "on_failure": "stop"
+        },
+        {
+          "step_id": "assimilate_literature",
+          "skill": "frontier-literature-assimilator",
+          "skill_path": "skills/reasoning/frontier-literature-assimilator/SKILL.md",
+          "mode": "required",
+          "source_path": "agentic/registries/named_workflow_contracts.yaml",
+          "source_pointer": "/workflows/1/steps/1",
+          "binding_kind": "ordered_contract_step",
+          "order": 10,
+          "when": null,
+          "consumes": [
+            "FrozenDiscoveryContext"
+          ],
+          "produces": [
+            "LiteratureFrontierMap"
+          ],
+          "on_failure": "stop"
+        },
+        {
+          "step_id": "forge_invention",
+          "skill": "literature-conditioned-invention-forger",
+          "skill_path": "skills/reasoning/literature-conditioned-invention-forger/SKILL.md",
+          "mode": "required",
+          "source_path": "agentic/registries/named_workflow_contracts.yaml",
+          "source_pointer": "/workflows/1/steps/2",
+          "binding_kind": "ordered_contract_step",
+          "order": 20,
+          "when": null,
+          "consumes": [
+            "LiteratureFrontierMap"
+          ],
+          "produces": [
+            "InventionCandidates"
+          ],
+          "on_failure": "stop"
+        },
+        {
+          "step_id": "portfolio",
+          "skill": "parallel-hypothesis-portfolio",
+          "skill_path": "skills/orchestration/parallel-hypothesis-portfolio/SKILL.md",
+          "mode": "required",
+          "source_path": "agentic/registries/named_workflow_contracts.yaml",
+          "source_pointer": "/workflows/1/steps/3",
+          "binding_kind": "ordered_contract_step",
+          "order": 30,
+          "when": null,
+          "consumes": [
+            "InventionCandidates"
+          ],
+          "produces": [
+            "HypothesisPortfolio"
+          ],
+          "on_failure": "stop"
+        },
+        {
+          "step_id": "reflect_discovery",
+          "skill": "reflective-conceptual-discovery",
+          "skill_path": "skills/orchestration/reflective-conceptual-discovery/SKILL.md",
+          "mode": "required",
+          "source_path": "agentic/registries/named_workflow_contracts.yaml",
+          "source_pointer": "/workflows/1/steps/4",
+          "binding_kind": "ordered_contract_step",
+          "order": 40,
+          "when": null,
+          "consumes": [
+            "HypothesisPortfolio"
+          ],
+          "produces": [
+            "ConceptualReflection"
+          ],
+          "on_failure": "quarantine"
+        },
+        {
+          "step_id": "synthesize",
+          "skill": "reflective-theory-synthesizer",
+          "skill_path": "skills/reasoning/reflective-theory-synthesizer/SKILL.md",
+          "mode": "required",
+          "source_path": "agentic/registries/named_workflow_contracts.yaml",
+          "source_pointer": "/workflows/1/steps/5",
+          "binding_kind": "ordered_contract_step",
+          "order": 50,
+          "when": null,
+          "consumes": [
+            "ConceptualReflection"
+          ],
+          "produces": [
+            "TheoryCandidates"
+          ],
+          "on_failure": "stop"
+        },
+        {
+          "step_id": "blind_adjudicate",
+          "skill": "blind-conceptual-preference-adjudicator",
+          "skill_path": "skills/evaluation/blind-conceptual-preference-adjudicator/SKILL.md",
+          "mode": "required",
+          "source_path": "agentic/registries/named_workflow_contracts.yaml",
+          "source_pointer": "/workflows/1/steps/6",
+          "binding_kind": "ordered_contract_step",
+          "order": 60,
+          "when": null,
+          "consumes": [
+            "TheoryCandidates"
+          ],
+          "produces": [
+            "BlindAdjudication"
+          ],
+          "on_failure": "stop"
+        },
+        {
+          "step_id": "compile_atlas_defects",
+          "skill": "theory-atlas-defect-compiler",
+          "skill_path": "skills/discovery/theory-atlas-defect-compiler/SKILL.md",
+          "mode": "conditional",
+          "source_path": "agentic/registries/named_workflow_contracts.yaml",
+          "source_pointer": "/workflows/1/steps/7",
+          "binding_kind": "ordered_contract_step",
+          "order": 70,
+          "when": "category_or_hott_pressure",
+          "consumes": [
+            "TheoryCandidates"
+          ],
+          "produces": [
+            "TheoryAtlasDefects"
+          ],
+          "on_failure": "quarantine"
+        },
+        {
+          "step_id": "derive_central_routes",
+          "skill": "central-formal-conceptual-routes",
+          "skill_path": "skills/orchestration/central-formal-conceptual-routes/SKILL.md",
+          "mode": "required",
+          "source_path": "agentic/registries/named_workflow_contracts.yaml",
+          "source_pointer": "/workflows/1/steps/8",
+          "binding_kind": "ordered_contract_step",
+          "order": 80,
+          "when": null,
+          "consumes": [
+            "BlindAdjudication"
+          ],
+          "produces": [
+            "CentralConceptualRoutes"
+          ],
+          "on_failure": "stop"
+        },
+        {
+          "step_id": "check_bridge_equivalence",
+          "skill": "bridge-object-equivalence-checker",
+          "skill_path": "skills/evaluation/bridge-object-equivalence-checker/SKILL.md",
+          "mode": "conditional",
+          "source_path": "agentic/registries/named_workflow_contracts.yaml",
+          "source_pointer": "/workflows/1/steps/9",
+          "binding_kind": "ordered_contract_step",
+          "order": 90,
+          "when": "multiple_carriers_compete",
+          "consumes": [
+            "CentralConceptualRoutes"
+          ],
+          "produces": [
+            "BridgeEquivalenceDecision"
+          ],
+          "on_failure": "quarantine"
+        },
+        {
+          "step_id": "produce_formal_claim",
+          "skill": "formal-claim-producer",
+          "skill_path": "skills/reasoning/formal-claim-producer/SKILL.md",
+          "mode": "required",
+          "source_path": "agentic/registries/named_workflow_contracts.yaml",
+          "source_pointer": "/workflows/1/steps/10",
+          "binding_kind": "ordered_contract_step",
+          "order": 100,
+          "when": null,
+          "consumes": [
+            "CentralConceptualRoutes",
+            "BlindAdjudication"
+          ],
+          "produces": [
+            "FormalClaimProducerOutputV2"
+          ],
+          "on_failure": "stop"
+        }
+      ],
+      "coverage_gaps": [],
+      "profiles": []
+    },
+    {
+      "workflow_id": "theorem_proof_delivery",
+      "aliases": [
+        "theorem-proof-delivery",
+        "proof-delivery"
+      ],
+      "function": "derive, refute, and calibrate an exact theorem under explicit premises",
+      "source_paths": [
+        "agentic/registries/named_workflow_contracts.yaml",
+        "agentic/reasoning_flows/theorem_proof_delivery.prism"
+      ],
+      "steps": [
+        {
+          "step_id": "orchestrate_delivery",
+          "skill": "proof-delivery-workflow-orchestrator",
+          "skill_path": "skills/proof_delivery/proof-delivery-workflow-orchestrator/SKILL.md",
+          "mode": "required",
+          "source_path": "agentic/registries/named_workflow_contracts.yaml",
+          "source_pointer": "/workflows/2/steps/0",
+          "binding_kind": "ordered_contract_step",
+          "order": 10,
+          "when": null,
+          "consumes": [
+            "ProofQueueItem"
+          ],
+          "produces": [
+            "ProofDeliveryPlan"
+          ],
+          "on_failure": "stop"
+        },
+        {
+          "step_id": "formalize_obligations",
+          "skill": "proof-obligation-formalizer",
+          "skill_path": "skills/proof_delivery/proof-obligation-formalizer/SKILL.md",
+          "mode": "required",
+          "source_path": "agentic/registries/named_workflow_contracts.yaml",
+          "source_pointer": "/workflows/2/steps/1",
+          "binding_kind": "ordered_contract_step",
+          "order": 20,
+          "when": null,
+          "consumes": [
+            "ProofDeliveryPlan"
+          ],
+          "produces": [
+            "FormalProofObligations"
+          ],
+          "on_failure": "stop"
+        },
+        {
+          "step_id": "build_lemma_chain",
+          "skill": "lemma-chain-proof-builder",
+          "skill_path": "skills/proof_delivery/lemma-chain-proof-builder/SKILL.md",
+          "mode": "required",
+          "source_path": "agentic/registries/named_workflow_contracts.yaml",
+          "source_pointer": "/workflows/2/steps/2",
+          "binding_kind": "ordered_contract_step",
+          "order": 30,
+          "when": null,
+          "consumes": [
+            "FormalProofObligations"
+          ],
+          "produces": [
+            "LemmaChain"
+          ],
+          "on_failure": "quarantine"
+        },
+        {
+          "step_id": "split_gap_or_countermodel",
+          "skill": "proof-gap-countermodel-splitter",
+          "skill_path": "skills/proof_delivery/proof-gap-countermodel-splitter/SKILL.md",
+          "mode": "conditional",
+          "source_path": "agentic/registries/named_workflow_contracts.yaml",
+          "source_pointer": "/workflows/2/steps/3",
+          "binding_kind": "ordered_contract_step",
+          "order": 40,
+          "when": "lemma_blocked_or_false",
+          "consumes": [
+            "LemmaChain"
+          ],
+          "produces": [
+            "ProofGapDecision"
+          ],
+          "on_failure": "stop"
+        },
+        {
+          "step_id": "control_pvsnp_inference",
+          "skill": "pvsnp-inference-quality-controller",
+          "skill_path": "skills/orchestration/pvsnp-inference-quality-controller/SKILL.md",
+          "mode": "conditional",
+          "source_path": "agentic/registries/named_workflow_contracts.yaml",
+          "source_pointer": "/workflows/2/steps/4",
+          "binding_kind": "ordered_contract_step",
+          "order": 50,
+          "when": "target == 'p-vs-np'",
+          "consumes": [
+            "LemmaChain"
+          ],
+          "produces": [
+            "InferenceQualityDecision"
+          ],
+          "on_failure": "stop"
+        },
+        {
+          "step_id": "gate_proof",
+          "skill": "proof-quality-gatekeeper",
+          "skill_path": "skills/proof_delivery/proof-quality-gatekeeper/SKILL.md",
+          "mode": "validator_only",
+          "source_path": "agentic/registries/named_workflow_contracts.yaml",
+          "source_pointer": "/workflows/2/steps/5",
+          "binding_kind": "ordered_contract_step",
+          "order": 60,
+          "when": null,
+          "consumes": [
+            "LemmaChain"
+          ],
+          "produces": [
+            "ProofGateDecision"
+          ],
+          "on_failure": "stop"
+        }
+      ],
+      "coverage_gaps": [],
+      "profiles": []
+    },
+    {
+      "workflow_id": "scientific_contribution_cultivation",
+      "aliases": [
+        "scientific-contribution-cultivation",
+        "contribution-cultivation"
+      ],
+      "function": "test what scientific contribution is actually supported by a result",
+      "source_paths": [
+        "agentic/registries/named_workflow_contracts.yaml",
+        "agentic/reasoning_flows/scientific_contribution_cultivation.prism"
+      ],
+      "steps": [
+        {
+          "step_id": "maintain_atlas",
+          "skill": "result-atlas-maintainer",
+          "skill_path": "skills/orchestration/result-atlas-maintainer/SKILL.md",
+          "mode": "required",
+          "source_path": "agentic/registries/named_workflow_contracts.yaml",
+          "source_pointer": "/workflows/3/steps/0",
+          "binding_kind": "ordered_contract_step",
+          "order": 10,
+          "when": null,
+          "consumes": [
+            "ResultAtlasSlice"
+          ],
+          "produces": [
+            "UpdatedResultAtlas"
+          ],
+          "on_failure": "stop"
+        },
+        {
+          "step_id": "manage_subgoal",
+          "skill": "contribution-oriented-subgoal-manager",
+          "skill_path": "skills/orchestration/contribution-oriented-subgoal-manager/SKILL.md",
+          "mode": "required",
+          "source_path": "agentic/registries/named_workflow_contracts.yaml",
+          "source_pointer": "/workflows/3/steps/1",
+          "binding_kind": "ordered_contract_step",
+          "order": 20,
+          "when": null,
+          "consumes": [
+            "UpdatedResultAtlas"
+          ],
+          "produces": [
+            "ContributionSubgoalPacket"
+          ],
+          "on_failure": "stop"
+        },
+        {
+          "step_id": "detect_contribution",
+          "skill": "scientific-contribution-detector",
+          "skill_path": "skills/evaluation/scientific-contribution-detector/SKILL.md",
+          "mode": "required",
+          "source_path": "agentic/registries/named_workflow_contracts.yaml",
+          "source_pointer": "/workflows/3/steps/2",
+          "binding_kind": "ordered_contract_step",
+          "order": 30,
+          "when": null,
+          "consumes": [
+            "ContributionSubgoalPacket"
+          ],
+          "produces": [
+            "ContributionCandidate"
+          ],
+          "on_failure": "stop"
+        },
+        {
+          "step_id": "assess_value",
+          "skill": "contribution-value-assessor",
+          "skill_path": "skills/evaluation/contribution-value-assessor/SKILL.md",
+          "mode": "required",
+          "source_path": "agentic/registries/named_workflow_contracts.yaml",
+          "source_pointer": "/workflows/3/steps/3",
+          "binding_kind": "ordered_contract_step",
+          "order": 40,
+          "when": null,
+          "consumes": [
+            "ContributionCandidate"
+          ],
+          "produces": [
+            "ContributionValueAssessment"
+          ],
+          "on_failure": "stop"
+        },
+        {
+          "step_id": "audit_alignment",
+          "skill": "main-problem-alignment-auditor",
+          "skill_path": "skills/evaluation/main-problem-alignment-auditor/SKILL.md",
+          "mode": "validator_only",
+          "source_path": "agentic/registries/named_workflow_contracts.yaml",
+          "source_pointer": "/workflows/3/steps/4",
+          "binding_kind": "ordered_contract_step",
+          "order": 50,
+          "when": null,
+          "consumes": [
+            "ContributionValueAssessment"
+          ],
+          "produces": [
+            "MainProblemAlignmentAudit"
+          ],
+          "on_failure": "stop"
+        },
+        {
+          "step_id": "audit_enablement",
+          "skill": "completed-subgoal-enablement-auditor",
+          "skill_path": "skills/evaluation/completed-subgoal-enablement-auditor/SKILL.md",
+          "mode": "required",
+          "source_path": "agentic/registries/named_workflow_contracts.yaml",
+          "source_pointer": "/workflows/3/steps/5",
+          "binding_kind": "ordered_contract_step",
+          "order": 60,
+          "when": null,
+          "consumes": [
+            "ContributionValueAssessment"
+          ],
+          "produces": [
+            "EnablementAudit"
+          ],
+          "on_failure": "quarantine"
+        },
+        {
+          "step_id": "package_enablement",
+          "skill": "subgoal-enablement-handoff-packager",
+          "skill_path": "skills/reporting/subgoal-enablement-handoff-packager/SKILL.md",
+          "mode": "conditional",
+          "source_path": "agentic/registries/named_workflow_contracts.yaml",
+          "source_pointer": "/workflows/3/steps/6",
+          "binding_kind": "ordered_contract_step",
+          "order": 70,
+          "when": "enablement_non_empty",
+          "consumes": [
+            "EnablementAudit"
+          ],
+          "produces": [
+            "EnablementHandoff"
+          ],
+          "on_failure": "quarantine"
+        },
+        {
+          "step_id": "paper_handoff",
+          "skill": "scientific-contribution-paper-handoff",
+          "skill_path": "skills/reporting/scientific-contribution-paper-handoff/SKILL.md",
+          "mode": "conditional",
+          "source_path": "agentic/registries/named_workflow_contracts.yaml",
+          "source_pointer": "/workflows/3/steps/7",
+          "binding_kind": "ordered_contract_step",
+          "order": 80,
+          "when": "contribution_paper_ready",
+          "consumes": [
+            "ContributionValueAssessment",
+            "MainProblemAlignmentAudit"
+          ],
+          "produces": [
+            "PaperArgumentHandoff"
+          ],
+          "on_failure": "quarantine"
+        }
+      ],
+      "coverage_gaps": [],
+      "profiles": []
+    },
+    {
+      "workflow_id": "manuscript_result_elaboration",
+      "aliases": [
+        "manuscript-result-elaboration",
+        "results-elaboration"
+      ],
+      "function": "extend a result into a scope-safe and evidence-aligned manuscript",
+      "source_paths": [
+        "agentic/registries/named_workflow_contracts.yaml",
+        "agentic/reasoning_flows/manuscript_result_elaboration.prism"
+      ],
+      "steps": [
+        {
+          "step_id": "orchestrate_elaboration",
+          "skill": "results-elaboration-workflow-orchestrator",
+          "skill_path": "skills/results_ellaboration/results-elaboration-workflow-orchestrator/SKILL.md",
+          "mode": "required",
+          "source_path": "agentic/registries/named_workflow_contracts.yaml",
+          "source_pointer": "/workflows/4/steps/0",
+          "binding_kind": "ordered_contract_step",
+          "order": 10,
+          "when": null,
+          "consumes": [
+            "PaperDraft"
+          ],
+          "produces": [
+            "ElaborationPlan"
+          ],
+          "on_failure": "stop"
+        },
+        {
+          "step_id": "interpret_context",
+          "skill": "results-context-interpreter",
+          "skill_path": "skills/results_ellaboration/results-context-interpreter/SKILL.md",
+          "mode": "required",
+          "source_path": "agentic/registries/named_workflow_contracts.yaml",
+          "source_pointer": "/workflows/4/steps/1",
+          "binding_kind": "ordered_contract_step",
+          "order": 20,
+          "when": null,
+          "consumes": [
+            "ElaborationPlan"
+          ],
+          "produces": [
+            "ResultsContext"
+          ],
+          "on_failure": "stop"
+        },
+        {
+          "step_id": "extract_extensions",
+          "skill": "results-extension-need-extractor",
+          "skill_path": "skills/results_ellaboration/results-extension-need-extractor/SKILL.md",
+          "mode": "conditional",
+          "source_path": "agentic/registries/named_workflow_contracts.yaml",
+          "source_pointer": "/workflows/4/steps/2",
+          "binding_kind": "ordered_contract_step",
+          "order": 30,
+          "when": "expansion_markers",
+          "consumes": [
+            "ResultsContext"
+          ],
+          "produces": [
+            "ExtensionNeeds"
+          ],
+          "on_failure": "quarantine"
+        },
+        {
+          "step_id": "decompose_modules",
+          "skill": "results-open-module-decomposer",
+          "skill_path": "skills/results_ellaboration/results-open-module-decomposer/SKILL.md",
+          "mode": "conditional",
+          "source_path": "agentic/registries/named_workflow_contracts.yaml",
+          "source_pointer": "/workflows/4/steps/3",
+          "binding_kind": "ordered_contract_step",
+          "order": 40,
+          "when": "open_modules",
+          "consumes": [
+            "ResultsContext"
+          ],
+          "produces": [
+            "OpenModulePlan"
+          ],
+          "on_failure": "quarantine"
+        },
+        {
+          "step_id": "plan_strategy",
+          "skill": "results-extension-strategy-planner",
+          "skill_path": "skills/results_ellaboration/results-extension-strategy-planner/SKILL.md",
+          "mode": "required",
+          "source_path": "agentic/registries/named_workflow_contracts.yaml",
+          "source_pointer": "/workflows/4/steps/4",
+          "binding_kind": "ordered_contract_step",
+          "order": 50,
+          "when": null,
+          "consumes": [
+            "ExtensionNeeds",
+            "OpenModulePlan"
+          ],
+          "produces": [
+            "ExtensionStrategy"
+          ],
+          "on_failure": "stop"
+        },
+        {
+          "step_id": "self_refine",
+          "skill": "results-critical-self-refiner",
+          "skill_path": "skills/results_ellaboration/results-critical-self-refiner/SKILL.md",
+          "mode": "required",
+          "source_path": "agentic/registries/named_workflow_contracts.yaml",
+          "source_pointer": "/workflows/4/steps/5",
+          "binding_kind": "ordered_contract_step",
+          "order": 60,
+          "when": null,
+          "consumes": [
+            "ExtensionStrategy"
+          ],
+          "produces": [
+            "RefinedResultCandidates"
+          ],
+          "on_failure": "stop"
+        },
+        {
+          "step_id": "certify_scope",
+          "skill": "results-theorem-scope-certifier",
+          "skill_path": "skills/results_ellaboration/results-theorem-scope-certifier/SKILL.md",
+          "mode": "validator_only",
+          "source_path": "agentic/registries/named_workflow_contracts.yaml",
+          "source_pointer": "/workflows/4/steps/6",
+          "binding_kind": "ordered_contract_step",
+          "order": 70,
+          "when": null,
+          "consumes": [
+            "RefinedResultCandidates"
+          ],
+          "produces": [
+            "TheoremScopeDecision"
+          ],
+          "on_failure": "stop"
+        },
+        {
+          "step_id": "formalize_finite_object",
+          "skill": "results-finite-object-formalizer",
+          "skill_path": "skills/results_ellaboration/results-finite-object-formalizer/SKILL.md",
+          "mode": "conditional",
+          "source_path": "agentic/registries/named_workflow_contracts.yaml",
+          "source_pointer": "/workflows/4/steps/7",
+          "binding_kind": "ordered_contract_step",
+          "order": 80,
+          "when": "finite_object_required",
+          "consumes": [
+            "RefinedResultCandidates"
+          ],
+          "produces": [
+            "FiniteObjectDefinition"
+          ],
+          "on_failure": "quarantine"
+        },
+        {
+          "step_id": "derive_proof_packet",
+          "skill": "results-proof-packet-deriver",
+          "skill_path": "skills/results_ellaboration/results-proof-packet-deriver/SKILL.md",
+          "mode": "conditional",
+          "source_path": "agentic/registries/named_workflow_contracts.yaml",
+          "source_pointer": "/workflows/4/steps/8",
+          "binding_kind": "ordered_contract_step",
+          "order": 90,
+          "when": "proof_class_work",
+          "consumes": [
+            "RefinedResultCandidates"
+          ],
+          "produces": [
+            "ResultsProofPacket"
+          ],
+          "on_failure": "quarantine"
+        },
+        {
+          "step_id": "audit_prior_art",
+          "skill": "results-prior-art-disqualifier-auditor",
+          "skill_path": "skills/results_ellaboration/results-prior-art-disqualifier-auditor/SKILL.md",
+          "mode": "validator_only",
+          "source_path": "agentic/registries/named_workflow_contracts.yaml",
+          "source_pointer": "/workflows/4/steps/9",
+          "binding_kind": "ordered_contract_step",
+          "order": 100,
+          "when": null,
+          "consumes": [
+            "RefinedResultCandidates"
+          ],
+          "produces": [
+            "PriorArtBoundaryAudit"
+          ],
+          "on_failure": "stop"
+        },
+        {
+          "step_id": "integrate_narrative",
+          "skill": "results-narrative-integrator",
+          "skill_path": "skills/results_ellaboration/results-narrative-integrator/SKILL.md",
+          "mode": "required",
+          "source_path": "agentic/registries/named_workflow_contracts.yaml",
+          "source_pointer": "/workflows/4/steps/10",
+          "binding_kind": "ordered_contract_step",
+          "order": 110,
+          "when": null,
+          "consumes": [
+            "RefinedResultCandidates",
+            "PriorArtBoundaryAudit"
+          ],
+          "produces": [
+            "IntegratedPaperDraft"
+          ],
+          "on_failure": "stop"
+        },
+        {
+          "step_id": "validate_expansion",
+          "skill": "results-expansion-validator",
+          "skill_path": "skills/results_ellaboration/results-expansion-validator/SKILL.md",
+          "mode": "validator_only",
+          "source_path": "agentic/registries/named_workflow_contracts.yaml",
+          "source_pointer": "/workflows/4/steps/11",
+          "binding_kind": "ordered_contract_step",
+          "order": 120,
+          "when": null,
+          "consumes": [
+            "IntegratedPaperDraft"
+          ],
+          "produces": [
+            "ExpansionValidation"
+          ],
+          "on_failure": "stop"
+        },
+        {
+          "step_id": "gate_readiness",
+          "skill": "results-paper-readiness-gatekeeper",
+          "skill_path": "skills/results_ellaboration/results-paper-readiness-gatekeeper/SKILL.md",
+          "mode": "validator_only",
+          "source_path": "agentic/registries/named_workflow_contracts.yaml",
+          "source_pointer": "/workflows/4/steps/12",
+          "binding_kind": "ordered_contract_step",
+          "order": 130,
+          "when": null,
+          "consumes": [
+            "IntegratedPaperDraft",
+            "ExpansionValidation"
+          ],
+          "produces": [
+            "PaperReadinessDecision"
+          ],
+          "on_failure": "stop"
+        },
+        {
+          "step_id": "route_a:routea_attack",
+          "skill": "routea-paper-attack-orchestrator",
+          "skill_path": "skills/results_ellaboration/routea-paper-attack-orchestrator/SKILL.md",
+          "mode": "required",
+          "source_path": "agentic/registries/named_workflow_contracts.yaml",
+          "source_pointer": "/workflows/4/profiles/0/steps/0",
+          "profile_id": "route_a",
+          "binding_kind": "ordered_profile_step",
+          "order": 10,
+          "when": null,
+          "consumes": [
+            "PaperDraft"
+          ],
+          "produces": [
+            "RouteAAttackPlan"
+          ],
+          "on_failure": "stop"
+        },
+        {
+          "step_id": "route_a:routea_open_points",
+          "skill": "routea-open-point-orchestrator",
+          "skill_path": "skills/results_ellaboration/routea-open-point-orchestrator/SKILL.md",
+          "mode": "required",
+          "source_path": "agentic/registries/named_workflow_contracts.yaml",
+          "source_pointer": "/workflows/4/profiles/0/steps/1",
+          "profile_id": "route_a",
+          "binding_kind": "ordered_profile_step",
+          "order": 20,
+          "when": null,
+          "consumes": [
+            "RouteAAttackPlan"
+          ],
+          "produces": [
+            "RouteAOpenPointPlan"
+          ],
+          "on_failure": "stop"
+        },
+        {
+          "step_id": "route_a:routea_symbolic_audit",
+          "skill": "routea-symbolic-cas-auditor",
+          "skill_path": "skills/results_ellaboration/routea-symbolic-cas-auditor/SKILL.md",
+          "mode": "conditional",
+          "source_path": "agentic/registries/named_workflow_contracts.yaml",
+          "source_pointer": "/workflows/4/profiles/0/steps/2",
+          "profile_id": "route_a",
+          "binding_kind": "ordered_profile_step",
+          "order": 30,
+          "when": "exact_algebra_required",
+          "consumes": [
+            "ResultCandidatePacket"
+          ],
+          "produces": [
+            "SymbolicCASAudit"
+          ],
+          "on_failure": "quarantine"
+        },
+        {
+          "step_id": "route_a:routea_integrate_result",
+          "skill": "routea-paper-result-integrator",
+          "skill_path": "skills/results_ellaboration/routea-paper-result-integrator/SKILL.md",
+          "mode": "required",
+          "source_path": "agentic/registries/named_workflow_contracts.yaml",
+          "source_pointer": "/workflows/4/profiles/0/steps/3",
+          "profile_id": "route_a",
+          "binding_kind": "ordered_profile_step",
+          "order": 40,
+          "when": null,
+          "consumes": [
+            "ResultCandidatePacket"
+          ],
+          "produces": [
+            "RouteAIntegratedResult"
+          ],
+          "on_failure": "stop"
+        },
+        {
+          "step_id": "route_a:routea_second_wave",
+          "skill": "routea-second-wave-manuscript-integrator",
+          "skill_path": "skills/results_ellaboration/routea-second-wave-manuscript-integrator/SKILL.md",
+          "mode": "required",
+          "source_path": "agentic/registries/named_workflow_contracts.yaml",
+          "source_pointer": "/workflows/4/profiles/0/steps/4",
+          "profile_id": "route_a",
+          "binding_kind": "ordered_profile_step",
+          "order": 50,
+          "when": null,
+          "consumes": [
+            "RouteAIntegratedResult"
+          ],
+          "produces": [
+            "IntegratedPaperDraft"
+          ],
+          "on_failure": "stop"
+        },
+        {
+          "step_id": "route_a:specialist:routea-geometric-collar-builder",
+          "skill": "routea-geometric-collar-builder",
+          "skill_path": "skills/results_ellaboration/routea-geometric-collar-builder/SKILL.md",
+          "mode": "specialist",
+          "source_path": "agentic/registries/named_workflow_contracts.yaml",
+          "source_pointer": "/workflows/4/profiles/0/specialist_skills/0",
+          "profile_id": "route_a",
+          "binding_kind": "profile_specialist",
+          "after": "routea_open_points",
+          "produces": [
+            "ResultCandidatePacket"
+          ],
+          "order": null
+        },
+        {
+          "step_id": "route_a:specialist:routea-same-theory-normalization-certifier",
+          "skill": "routea-same-theory-normalization-certifier",
+          "skill_path": "skills/results_ellaboration/routea-same-theory-normalization-certifier/SKILL.md",
+          "mode": "specialist",
+          "source_path": "agentic/registries/named_workflow_contracts.yaml",
+          "source_pointer": "/workflows/4/profiles/0/specialist_skills/1",
+          "profile_id": "route_a",
+          "binding_kind": "profile_specialist",
+          "after": "routea_open_points",
+          "produces": [
+            "ResultCandidatePacket"
+          ],
+          "order": null
+        },
+        {
+          "step_id": "route_a:specialist:routea-geometric-coefficient-extractor",
+          "skill": "routea-geometric-coefficient-extractor",
+          "skill_path": "skills/results_ellaboration/routea-geometric-coefficient-extractor/SKILL.md",
+          "mode": "specialist",
+          "source_path": "agentic/registries/named_workflow_contracts.yaml",
+          "source_pointer": "/workflows/4/profiles/0/specialist_skills/2",
+          "profile_id": "route_a",
+          "binding_kind": "profile_specialist",
+          "after": "routea_open_points",
+          "produces": [
+            "ResultCandidatePacket"
+          ],
+          "order": null
+        },
+        {
+          "step_id": "route_a:specialist:routea-finite-margin-evaluator",
+          "skill": "routea-finite-margin-evaluator",
+          "skill_path": "skills/results_ellaboration/routea-finite-margin-evaluator/SKILL.md",
+          "mode": "specialist",
+          "source_path": "agentic/registries/named_workflow_contracts.yaml",
+          "source_pointer": "/workflows/4/profiles/0/specialist_skills/3",
+          "profile_id": "route_a",
+          "binding_kind": "profile_specialist",
+          "after": "routea_open_points",
+          "produces": [
+            "ResultCandidatePacket"
+          ],
+          "order": null
+        },
+        {
+          "step_id": "route_a:specialist:routea-margin-endpoint-certifier",
+          "skill": "routea-margin-endpoint-certifier",
+          "skill_path": "skills/results_ellaboration/routea-margin-endpoint-certifier/SKILL.md",
+          "mode": "specialist",
+          "source_path": "agentic/registries/named_workflow_contracts.yaml",
+          "source_pointer": "/workflows/4/profiles/0/specialist_skills/4",
+          "profile_id": "route_a",
+          "binding_kind": "profile_specialist",
+          "after": "routea_open_points",
+          "produces": [
+            "ResultCandidatePacket"
+          ],
+          "order": null
+        },
+        {
+          "step_id": "route_a:specialist:routea-endpoint-error-budget-certifier",
+          "skill": "routea-endpoint-error-budget-certifier",
+          "skill_path": "skills/results_ellaboration/routea-endpoint-error-budget-certifier/SKILL.md",
+          "mode": "specialist",
+          "source_path": "agentic/registries/named_workflow_contracts.yaml",
+          "source_pointer": "/workflows/4/profiles/0/specialist_skills/5",
+          "profile_id": "route_a",
+          "binding_kind": "profile_specialist",
+          "after": "routea_open_points",
+          "produces": [
+            "ResultCandidatePacket"
+          ],
+          "order": null
+        },
+        {
+          "step_id": "route_a:specialist:routea-endpoint-local-integral-calculator",
+          "skill": "routea-endpoint-local-integral-calculator",
+          "skill_path": "skills/results_ellaboration/routea-endpoint-local-integral-calculator/SKILL.md",
+          "mode": "specialist",
+          "source_path": "agentic/registries/named_workflow_contracts.yaml",
+          "source_pointer": "/workflows/4/profiles/0/specialist_skills/6",
+          "profile_id": "route_a",
+          "binding_kind": "profile_specialist",
+          "after": "routea_open_points",
+          "produces": [
+            "ResultCandidatePacket"
+          ],
+          "order": null
+        },
+        {
+          "step_id": "route_a:specialist:routea-same-theory-factorization-hunter",
+          "skill": "routea-same-theory-factorization-hunter",
+          "skill_path": "skills/results_ellaboration/routea-same-theory-factorization-hunter/SKILL.md",
+          "mode": "specialist",
+          "source_path": "agentic/registries/named_workflow_contracts.yaml",
+          "source_pointer": "/workflows/4/profiles/0/specialist_skills/7",
+          "profile_id": "route_a",
+          "binding_kind": "profile_specialist",
+          "after": "routea_open_points",
+          "produces": [
+            "ResultCandidatePacket"
+          ],
+          "order": null
+        },
+        {
+          "step_id": "route_a:specialist:routea-collar-redesign-forger",
+          "skill": "routea-collar-redesign-forger",
+          "skill_path": "skills/results_ellaboration/routea-collar-redesign-forger/SKILL.md",
+          "mode": "specialist",
+          "source_path": "agentic/registries/named_workflow_contracts.yaml",
+          "source_pointer": "/workflows/4/profiles/0/specialist_skills/8",
+          "profile_id": "route_a",
+          "binding_kind": "profile_specialist",
+          "after": "routea_open_points",
+          "produces": [
+            "ResultCandidatePacket"
+          ],
+          "order": null
+        },
+        {
+          "step_id": "route_a:specialist:routea-continuum-gap-gatekeeper",
+          "skill": "routea-continuum-gap-gatekeeper",
+          "skill_path": "skills/results_ellaboration/routea-continuum-gap-gatekeeper/SKILL.md",
+          "mode": "specialist",
+          "source_path": "agentic/registries/named_workflow_contracts.yaml",
+          "source_pointer": "/workflows/4/profiles/0/specialist_skills/9",
+          "profile_id": "route_a",
+          "binding_kind": "profile_specialist",
+          "after": "routea_open_points",
+          "produces": [
+            "ResultCandidatePacket"
+          ],
+          "order": null
+        }
+      ],
+      "coverage_gaps": [],
+      "profiles": [
+        {
+          "id": "route_a",
+          "version": "1.0.0",
+          "visible_name": "Route A Manuscript Attack",
+          "aliases": [
+            "route-a",
+            "routea"
+          ],
+          "activation": "opt_in",
+          "target_scope": [
+            "manuscript:route-a"
+          ],
+          "specialist_output": "ResultCandidatePacket",
+          "specialist_after": "routea_open_points",
+          "validation_tail_start": "certify_scope",
+          "validation_tail_adapter": {
+            "from": "ResultCandidatePacket",
+            "to": "RefinedResultCandidates"
+          }
+        }
+      ]
+    },
+    {
+      "workflow_id": "deep_review_and_reorientation",
+      "aliases": [
+        "deep-review-and-reorientation",
+        "deep-review"
+      ],
+      "function": "compare defeaters and repairs to select a governed reorientation or stop",
+      "source_paths": [
+        "agentic/registries/named_workflow_contracts.yaml",
+        "agentic/reasoning_flows/deep_review_and_reorientation.prism"
+      ],
+      "steps": [
+        {
+          "step_id": "formalize_framework_state",
+          "skill": "kb-framework-state-formalizer",
+          "skill_path": "skills/discovery/kb-framework-state-formalizer/SKILL.md",
+          "mode": "required",
+          "source_path": "agentic/registries/named_workflow_contracts.yaml",
+          "source_pointer": "/workflows/5/steps/0",
+          "binding_kind": "ordered_contract_step",
+          "order": 10,
+          "when": null,
+          "consumes": [
+            "RunEvidenceBundle"
+          ],
+          "produces": [
+            "FrameworkState"
+          ],
+          "on_failure": "stop"
+        },
+        {
+          "step_id": "review_discovery_science",
+          "skill": "review-reasoner-discovery-scientist",
+          "skill_path": "skills/review/review-reasoner-discovery-scientist/SKILL.md",
+          "mode": "advisory",
+          "source_path": "agentic/registries/named_workflow_contracts.yaml",
+          "source_pointer": "/workflows/5/steps/1",
+          "binding_kind": "ordered_contract_step",
+          "order": 20,
+          "when": null,
+          "consumes": [
+            "FrameworkState"
+          ],
+          "produces": [
+            "ReviewFindingSet"
+          ],
+          "on_failure": "quarantine"
+        },
+        {
+          "step_id": "review_concept_logic",
+          "skill": "review-reasoner-concept-logician",
+          "skill_path": "skills/review/review-reasoner-concept-logician/SKILL.md",
+          "mode": "advisory",
+          "source_path": "agentic/registries/named_workflow_contracts.yaml",
+          "source_pointer": "/workflows/5/steps/2",
+          "binding_kind": "ordered_contract_step",
+          "order": 30,
+          "when": null,
+          "consumes": [
+            "FrameworkState"
+          ],
+          "produces": [
+            "ReviewFindingSet"
+          ],
+          "on_failure": "quarantine"
+        },
+        {
+          "step_id": "review_epistemology",
+          "skill": "review-reasoner-epistemologist",
+          "skill_path": "skills/review/review-reasoner-epistemologist/SKILL.md",
+          "mode": "advisory",
+          "source_path": "agentic/registries/named_workflow_contracts.yaml",
+          "source_pointer": "/workflows/5/steps/3",
+          "binding_kind": "ordered_contract_step",
+          "order": 40,
+          "when": null,
+          "consumes": [
+            "FrameworkState"
+          ],
+          "produces": [
+            "ReviewFindingSet"
+          ],
+          "on_failure": "quarantine"
+        },
+        {
+          "step_id": "review_fields",
+          "skill": "review-reasoner-fields-medalist",
+          "skill_path": "skills/review/review-reasoner-fields-medalist/SKILL.md",
+          "mode": "advisory",
+          "source_path": "agentic/registries/named_workflow_contracts.yaml",
+          "source_pointer": "/workflows/5/steps/4",
+          "binding_kind": "ordered_contract_step",
+          "order": 50,
+          "when": null,
+          "consumes": [
+            "FrameworkState"
+          ],
+          "produces": [
+            "ReviewFindingSet"
+          ],
+          "on_failure": "quarantine"
+        },
+        {
+          "step_id": "review_radical_design",
+          "skill": "review-reasoner-radical-designer",
+          "skill_path": "skills/review/review-reasoner-radical-designer/SKILL.md",
+          "mode": "advisory",
+          "source_path": "agentic/registries/named_workflow_contracts.yaml",
+          "source_pointer": "/workflows/5/steps/5",
+          "binding_kind": "ordered_contract_step",
+          "order": 60,
+          "when": null,
+          "consumes": [
+            "FrameworkState"
+          ],
+          "produces": [
+            "ReviewFindingSet"
+          ],
+          "on_failure": "quarantine"
+        },
+        {
+          "step_id": "synthesize_meta_review",
+          "skill": "meta",
+          "skill_path": "skills/control-plane/meta/SKILL.md",
+          "mode": "required",
+          "source_path": "agentic/registries/named_workflow_contracts.yaml",
+          "source_pointer": "/workflows/5/steps/6",
+          "binding_kind": "ordered_contract_step",
+          "order": 70,
+          "when": null,
+          "consumes": [
+            "ReviewFindingSet"
+          ],
+          "produces": [
+            "MetaReview"
+          ],
+          "on_failure": "stop"
+        },
+        {
+          "step_id": "govern_repairs",
+          "skill": "looper-workflow-contract-governor",
+          "skill_path": "skills/control-plane/looper-workflow-contract-governor/SKILL.md",
+          "mode": "validator_only",
+          "source_path": "agentic/registries/named_workflow_contracts.yaml",
+          "source_pointer": "/workflows/5/steps/7",
+          "binding_kind": "ordered_contract_step",
+          "order": 80,
+          "when": null,
+          "consumes": [
+            "MetaReview"
+          ],
+          "produces": [
+            "GovernedRepairQueue"
+          ],
+          "on_failure": "stop"
+        }
+      ],
+      "coverage_gaps": [],
+      "profiles": []
+    },
+    {
+      "workflow_id": "timeline-paper-independent-workflow",
+      "aliases": [],
+      "function": "produce a claim-bounded presentation of accumulated reasoning",
+      "source_paths": [
+        "registry/tasks/timeline-paper-workflow/task_registry.json",
+        "agentic/reasoning_flows/timeline-paper-independent-workflow.prism"
+      ],
+      "steps": [
+        {
+          "step_id": "member:timeline-paper-workflow-orchestrator",
+          "skill": "timeline-paper-workflow-orchestrator",
+          "skill_path": "skills/reporting/timeline-paper-workflow-orchestrator/SKILL.md",
+          "mode": "composition_member",
+          "source_path": "registry/tasks/timeline-paper-workflow/task_registry.json",
+          "source_pointer": "/visible_workflows/0/composed_skills/0",
+          "binding_kind": "composition_membership",
+          "order": null,
+          "source_list_index": 0
+        },
+        {
+          "step_id": "member:timeline-report-evidence-ingestor",
+          "skill": "timeline-report-evidence-ingestor",
+          "skill_path": "skills/reporting/timeline-report-evidence-ingestor/SKILL.md",
+          "mode": "composition_member",
+          "source_path": "registry/tasks/timeline-paper-workflow/task_registry.json",
+          "source_pointer": "/visible_workflows/0/composed_skills/1",
+          "binding_kind": "composition_membership",
+          "order": null,
+          "source_list_index": 1
+        },
+        {
+          "step_id": "member:timeline-narrative-coherence-guard",
+          "skill": "timeline-narrative-coherence-guard",
+          "skill_path": "skills/reporting/timeline-narrative-coherence-guard/SKILL.md",
+          "mode": "composition_member",
+          "source_path": "registry/tasks/timeline-paper-workflow/task_registry.json",
+          "source_pointer": "/visible_workflows/0/composed_skills/2",
+          "binding_kind": "composition_membership",
+          "order": null,
+          "source_list_index": 2
+        },
+        {
+          "step_id": "member:finite-theorem-section-packager",
+          "skill": "finite-theorem-section-packager",
+          "skill_path": "skills/reporting/finite-theorem-section-packager/SKILL.md",
+          "mode": "composition_member",
+          "source_path": "registry/tasks/timeline-paper-workflow/task_registry.json",
+          "source_pointer": "/visible_workflows/0/composed_skills/3",
+          "binding_kind": "composition_membership",
+          "order": null,
+          "source_list_index": 3
+        },
+        {
+          "step_id": "member:endpoint-worked-calculation-packager",
+          "skill": "endpoint-worked-calculation-packager",
+          "skill_path": "skills/reporting/endpoint-worked-calculation-packager/SKILL.md",
+          "mode": "composition_member",
+          "source_path": "registry/tasks/timeline-paper-workflow/task_registry.json",
+          "source_pointer": "/visible_workflows/0/composed_skills/4",
+          "binding_kind": "composition_membership",
+          "order": null,
+          "source_list_index": 4
+        },
+        {
+          "step_id": "member:prior-art-positioning-packager",
+          "skill": "prior-art-positioning-packager",
+          "skill_path": "skills/reporting/prior-art-positioning-packager/SKILL.md",
+          "mode": "composition_member",
+          "source_path": "registry/tasks/timeline-paper-workflow/task_registry.json",
+          "source_pointer": "/visible_workflows/0/composed_skills/5",
+          "binding_kind": "composition_membership",
+          "order": null,
+          "source_list_index": 5
+        },
+        {
+          "step_id": "member:timeline-report-latex-composer",
+          "skill": "timeline-report-latex-composer",
+          "skill_path": "skills/reporting/timeline-report-latex-composer/SKILL.md",
+          "mode": "composition_member",
+          "source_path": "registry/tasks/timeline-paper-workflow/task_registry.json",
+          "source_pointer": "/visible_workflows/0/composed_skills/6",
+          "binding_kind": "composition_membership",
+          "order": null,
+          "source_list_index": 6
+        },
+        {
+          "step_id": "member:timeline-summary-latex-translator",
+          "skill": "timeline-summary-latex-translator",
+          "skill_path": "skills/reporting/timeline-summary-latex-translator/SKILL.md",
+          "mode": "composition_member",
+          "source_path": "registry/tasks/timeline-paper-workflow/task_registry.json",
+          "source_pointer": "/visible_workflows/0/composed_skills/7",
+          "binding_kind": "composition_membership",
+          "order": null,
+          "source_list_index": 7
+        },
+        {
+          "step_id": "member:timeline-problem-literature-latex-translator",
+          "skill": "timeline-problem-literature-latex-translator",
+          "skill_path": "skills/reporting/timeline-problem-literature-latex-translator/SKILL.md",
+          "mode": "composition_member",
+          "source_path": "registry/tasks/timeline-paper-workflow/task_registry.json",
+          "source_pointer": "/visible_workflows/0/composed_skills/8",
+          "binding_kind": "composition_membership",
+          "order": null,
+          "source_list_index": 8
+        },
+        {
+          "step_id": "member:timeline-story-latex-translator",
+          "skill": "timeline-story-latex-translator",
+          "skill_path": "skills/reporting/timeline-story-latex-translator/SKILL.md",
+          "mode": "composition_member",
+          "source_path": "registry/tasks/timeline-paper-workflow/task_registry.json",
+          "source_pointer": "/visible_workflows/0/composed_skills/9",
+          "binding_kind": "composition_membership",
+          "order": null,
+          "source_list_index": 9
+        },
+        {
+          "step_id": "member:timeline-cycle-latex-translator",
+          "skill": "timeline-cycle-latex-translator",
+          "skill_path": "skills/reporting/timeline-cycle-latex-translator/SKILL.md",
+          "mode": "composition_member",
+          "source_path": "registry/tasks/timeline-paper-workflow/task_registry.json",
+          "source_pointer": "/visible_workflows/0/composed_skills/10",
+          "binding_kind": "composition_membership",
+          "order": null,
+          "source_list_index": 10
+        },
+        {
+          "step_id": "member:timeline-problem-space-narrator",
+          "skill": "timeline-problem-space-narrator",
+          "skill_path": "skills/reporting/timeline-problem-space-narrator/SKILL.md",
+          "mode": "composition_member",
+          "source_path": "registry/tasks/timeline-paper-workflow/task_registry.json",
+          "source_pointer": "/visible_workflows/0/composed_skills/11",
+          "binding_kind": "composition_membership",
+          "order": null,
+          "source_list_index": 11
+        },
+        {
+          "step_id": "member:timeline-contribution-stater",
+          "skill": "timeline-contribution-stater",
+          "skill_path": "skills/reporting/timeline-contribution-stater/SKILL.md",
+          "mode": "composition_member",
+          "source_path": "registry/tasks/timeline-paper-workflow/task_registry.json",
+          "source_pointer": "/visible_workflows/0/composed_skills/12",
+          "binding_kind": "composition_membership",
+          "order": null,
+          "source_list_index": 12
+        },
+        {
+          "step_id": "member:timeline-contribution-explainer",
+          "skill": "timeline-contribution-explainer",
+          "skill_path": "skills/reporting/timeline-contribution-explainer/SKILL.md",
+          "mode": "composition_member",
+          "source_path": "registry/tasks/timeline-paper-workflow/task_registry.json",
+          "source_pointer": "/visible_workflows/0/composed_skills/13",
+          "binding_kind": "composition_membership",
+          "order": null,
+          "source_list_index": 13
+        },
+        {
+          "step_id": "member:timeline-organizing-diagram-builder",
+          "skill": "timeline-organizing-diagram-builder",
+          "skill_path": "skills/reporting/timeline-organizing-diagram-builder/SKILL.md",
+          "mode": "composition_member",
+          "source_path": "registry/tasks/timeline-paper-workflow/task_registry.json",
+          "source_pointer": "/visible_workflows/0/composed_skills/14",
+          "binding_kind": "composition_membership",
+          "order": null,
+          "source_list_index": 14
+        },
+        {
+          "step_id": "member:timeline-reference-manager",
+          "skill": "timeline-reference-manager",
+          "skill_path": "skills/reporting/timeline-reference-manager/SKILL.md",
+          "mode": "composition_member",
+          "source_path": "registry/tasks/timeline-paper-workflow/task_registry.json",
+          "source_pointer": "/visible_workflows/0/composed_skills/15",
+          "binding_kind": "composition_membership",
+          "order": null,
+          "source_list_index": 15
+        },
+        {
+          "step_id": "member:timeline-formal-physics-deriver",
+          "skill": "timeline-formal-physics-deriver",
+          "skill_path": "skills/reporting/timeline-formal-physics-deriver/SKILL.md",
+          "mode": "composition_member",
+          "source_path": "registry/tasks/timeline-paper-workflow/task_registry.json",
+          "source_pointer": "/visible_workflows/0/composed_skills/16",
+          "binding_kind": "composition_membership",
+          "order": null,
+          "source_list_index": 16
+        },
+        {
+          "step_id": "member:timeline-paper-argument-architect",
+          "skill": "timeline-paper-argument-architect",
+          "skill_path": "skills/reporting/timeline-paper-argument-architect/SKILL.md",
+          "mode": "composition_member",
+          "source_path": "registry/tasks/timeline-paper-workflow/task_registry.json",
+          "source_pointer": "/visible_workflows/0/composed_skills/17",
+          "binding_kind": "composition_membership",
+          "order": null,
+          "source_list_index": 17
+        },
+        {
+          "step_id": "member:timeline-failed-route-interpreter",
+          "skill": "timeline-failed-route-interpreter",
+          "skill_path": "skills/reporting/timeline-failed-route-interpreter/SKILL.md",
+          "mode": "composition_member",
+          "source_path": "registry/tasks/timeline-paper-workflow/task_registry.json",
+          "source_pointer": "/visible_workflows/0/composed_skills/18",
+          "binding_kind": "composition_membership",
+          "order": null,
+          "source_list_index": 18
+        },
+        {
+          "step_id": "member:timeline-claim-boundary-auditor",
+          "skill": "timeline-claim-boundary-auditor",
+          "skill_path": "skills/reporting/timeline-claim-boundary-auditor/SKILL.md",
+          "mode": "composition_member",
+          "source_path": "registry/tasks/timeline-paper-workflow/task_registry.json",
+          "source_pointer": "/visible_workflows/0/composed_skills/19",
+          "binding_kind": "composition_membership",
+          "order": null,
+          "source_list_index": 19
+        },
+        {
+          "step_id": "member:timeline-paper-section-synthesizer",
+          "skill": "timeline-paper-section-synthesizer",
+          "skill_path": "skills/reporting/timeline-paper-section-synthesizer/SKILL.md",
+          "mode": "composition_member",
+          "source_path": "registry/tasks/timeline-paper-workflow/task_registry.json",
+          "source_pointer": "/visible_workflows/0/composed_skills/20",
+          "binding_kind": "composition_membership",
+          "order": null,
+          "source_list_index": 20
+        },
+        {
+          "step_id": "member:timeline-paper-cross-section-reconciler",
+          "skill": "timeline-paper-cross-section-reconciler",
+          "skill_path": "skills/reporting/timeline-paper-cross-section-reconciler/SKILL.md",
+          "mode": "composition_member",
+          "source_path": "registry/tasks/timeline-paper-workflow/task_registry.json",
+          "source_pointer": "/visible_workflows/0/composed_skills/21",
+          "binding_kind": "composition_membership",
+          "order": null,
+          "source_list_index": 21
+        }
+      ],
+      "coverage_gaps": [
+        {
+          "kind": "membership_not_execution_order",
+          "detail": "Composed skills lists expose membership, not executable ordering, conditionality, repeats or parallelism."
+        }
+      ]
+    },
+    {
+      "workflow_id": "ym-representational-dynamics-overlay",
+      "aliases": [],
+      "function": "calibrate a Yang-Mills candidate while preserving the continuum claim boundary",
+      "source_paths": [
+        "registry/tasks/discovery-marathon/task_registry.json",
+        "agentic/reasoning_flows/ym-representational-dynamics-overlay.prism"
+      ],
+      "steps": [
+        {
+          "step_id": "member:ym-freeze-clay-target",
+          "skill": "ym-freeze-clay-target",
+          "skill_path": "skills/yang_mills/ym-freeze-clay-target/SKILL.md",
+          "mode": "composition_member",
+          "source_path": "registry/tasks/discovery-marathon/task_registry.json",
+          "source_pointer": "/visible_workflows/1/composed_skills/0",
+          "binding_kind": "composition_membership",
+          "order": null,
+          "source_list_index": 0
+        },
+        {
+          "step_id": "member:ym-build-observable-core",
+          "skill": "ym-build-observable-core",
+          "skill_path": "skills/yang_mills/ym-build-observable-core/SKILL.md",
+          "mode": "composition_member",
+          "source_path": "registry/tasks/discovery-marathon/task_registry.json",
+          "source_pointer": "/visible_workflows/1/composed_skills/1",
+          "binding_kind": "composition_membership",
+          "order": null,
+          "source_list_index": 1
+        },
+        {
+          "step_id": "member:ym-build-representation-calculus",
+          "skill": "ym-build-representation-calculus",
+          "skill_path": "skills/yang_mills/ym-build-representation-calculus/SKILL.md",
+          "mode": "composition_member",
+          "source_path": "registry/tasks/discovery-marathon/task_registry.json",
+          "source_pointer": "/visible_workflows/1/composed_skills/2",
+          "binding_kind": "composition_membership",
+          "order": null,
+          "source_list_index": 2
+        },
+        {
+          "step_id": "member:ym-define-relational-rigidity",
+          "skill": "ym-define-relational-rigidity",
+          "skill_path": "skills/yang_mills/ym-define-relational-rigidity/SKILL.md",
+          "mode": "composition_member",
+          "source_path": "registry/tasks/discovery-marathon/task_registry.json",
+          "source_pointer": "/visible_workflows/1/composed_skills/3",
+          "binding_kind": "composition_membership",
+          "order": null,
+          "source_list_index": 3
+        },
+        {
+          "step_id": "member:ym-design-regulator-atlas",
+          "skill": "ym-design-regulator-atlas",
+          "skill_path": "skills/yang_mills/ym-design-regulator-atlas/SKILL.md",
+          "mode": "composition_member",
+          "source_path": "registry/tasks/discovery-marathon/task_registry.json",
+          "source_pointer": "/visible_workflows/1/composed_skills/4",
+          "binding_kind": "composition_membership",
+          "order": null,
+          "source_list_index": 4
+        },
+        {
+          "step_id": "member:ym-build-gauge-covariant-rg",
+          "skill": "ym-build-gauge-covariant-rg",
+          "skill_path": "skills/yang_mills/ym-build-gauge-covariant-rg/SKILL.md",
+          "mode": "composition_member",
+          "source_path": "registry/tasks/discovery-marathon/task_registry.json",
+          "source_pointer": "/visible_workflows/1/composed_skills/5",
+          "binding_kind": "composition_membership",
+          "order": null,
+          "source_list_index": 5
+        },
+        {
+          "step_id": "member:ym-design-infrared-basin",
+          "skill": "ym-design-infrared-basin",
+          "skill_path": "skills/yang_mills/ym-design-infrared-basin/SKILL.md",
+          "mode": "composition_member",
+          "source_path": "registry/tasks/discovery-marathon/task_registry.json",
+          "source_pointer": "/visible_workflows/1/composed_skills/6",
+          "binding_kind": "composition_membership",
+          "order": null,
+          "source_list_index": 6
+        },
+        {
+          "step_id": "member:ym-control-large-fields-and-topology",
+          "skill": "ym-control-large-fields-and-topology",
+          "skill_path": "skills/yang_mills/ym-control-large-fields-and-topology/SKILL.md",
+          "mode": "composition_member",
+          "source_path": "registry/tasks/discovery-marathon/task_registry.json",
+          "source_pointer": "/visible_workflows/1/composed_skills/7",
+          "binding_kind": "composition_membership",
+          "order": null,
+          "source_list_index": 7
+        },
+        {
+          "step_id": "member:ym-prove-basin-entry",
+          "skill": "ym-prove-basin-entry",
+          "skill_path": "skills/yang_mills/ym-prove-basin-entry/SKILL.md",
+          "mode": "composition_member",
+          "source_path": "registry/tasks/discovery-marathon/task_registry.json",
+          "source_pointer": "/visible_workflows/1/composed_skills/8",
+          "binding_kind": "composition_membership",
+          "order": null,
+          "source_list_index": 8
+        },
+        {
+          "step_id": "member:ym-prove-rg-to-rigidity",
+          "skill": "ym-prove-rg-to-rigidity",
+          "skill_path": "skills/yang_mills/ym-prove-rg-to-rigidity/SKILL.md",
+          "mode": "composition_member",
+          "source_path": "registry/tasks/discovery-marathon/task_registry.json",
+          "source_pointer": "/visible_workflows/1/composed_skills/9",
+          "binding_kind": "composition_membership",
+          "order": null,
+          "source_list_index": 9
+        },
+        {
+          "step_id": "member:ym-prove-continuum-coherence",
+          "skill": "ym-prove-continuum-coherence",
+          "skill_path": "skills/yang_mills/ym-prove-continuum-coherence/SKILL.md",
+          "mode": "composition_member",
+          "source_path": "registry/tasks/discovery-marathon/task_registry.json",
+          "source_pointer": "/visible_workflows/1/composed_skills/10",
+          "binding_kind": "composition_membership",
+          "order": null,
+          "source_list_index": 10
+        },
+        {
+          "step_id": "member:ym-prove-rigidity-transfer",
+          "skill": "ym-prove-rigidity-transfer",
+          "skill_path": "skills/yang_mills/ym-prove-rigidity-transfer/SKILL.md",
+          "mode": "composition_member",
+          "source_path": "registry/tasks/discovery-marathon/task_registry.json",
+          "source_pointer": "/visible_workflows/1/composed_skills/11",
+          "binding_kind": "composition_membership",
+          "order": null,
+          "source_list_index": 11
+        },
+        {
+          "step_id": "member:ym-reconstruct-os-gap",
+          "skill": "ym-reconstruct-os-gap",
+          "skill_path": "skills/yang_mills/ym-reconstruct-os-gap/SKILL.md",
+          "mode": "composition_member",
+          "source_path": "registry/tasks/discovery-marathon/task_registry.json",
+          "source_pointer": "/visible_workflows/1/composed_skills/12",
+          "binding_kind": "composition_membership",
+          "order": null,
+          "source_list_index": 12
+        },
+        {
+          "step_id": "member:ym-calibrate-restricted-models",
+          "skill": "ym-calibrate-restricted-models",
+          "skill_path": "skills/yang_mills/ym-calibrate-restricted-models/SKILL.md",
+          "mode": "composition_member",
+          "source_path": "registry/tasks/discovery-marathon/task_registry.json",
+          "source_pointer": "/visible_workflows/1/composed_skills/13",
+          "binding_kind": "composition_membership",
+          "order": null,
+          "source_list_index": 13
+        },
+        {
+          "step_id": "member:ym-mechanize-proof-core",
+          "skill": "ym-mechanize-proof-core",
+          "skill_path": "skills/yang_mills/ym-mechanize-proof-core/SKILL.md",
+          "mode": "composition_member",
+          "source_path": "registry/tasks/discovery-marathon/task_registry.json",
+          "source_pointer": "/visible_workflows/1/composed_skills/14",
+          "binding_kind": "composition_membership",
+          "order": null,
+          "source_list_index": 14
+        },
+        {
+          "step_id": "member:ym-audit-frontier",
+          "skill": "ym-audit-frontier",
+          "skill_path": "skills/yang_mills/ym-audit-frontier/SKILL.md",
+          "mode": "composition_member",
+          "source_path": "registry/tasks/discovery-marathon/task_registry.json",
+          "source_pointer": "/visible_workflows/1/composed_skills/15",
+          "binding_kind": "composition_membership",
+          "order": null,
+          "source_list_index": 15
+        },
+        {
+          "step_id": "member:ym-run-clay-program",
+          "skill": "ym-run-clay-program",
+          "skill_path": "skills/yang_mills/ym-run-clay-program/SKILL.md",
+          "mode": "composition_member",
+          "source_path": "registry/tasks/discovery-marathon/task_registry.json",
+          "source_pointer": "/visible_workflows/1/composed_skills/16",
+          "binding_kind": "composition_membership",
+          "order": null,
+          "source_list_index": 16
+        }
+      ],
+      "coverage_gaps": [
+        {
+          "kind": "membership_not_execution_order",
+          "detail": "Composed skills lists expose membership, not executable ordering, conditionality, repeats or parallelism."
+        }
+      ]
+    },
+    {
+      "workflow_id": "cohere_fast",
+      "aliases": [
+        "cohere-fast"
+      ],
+      "function": "coordinate an isolated domain-bound path to independent calibration",
+      "source_paths": [
+        "agentic/registries/cohere_fast_ym_workflow.yaml",
+        "registry/tasks/cohere-fast/task_registry.json",
+        "docs/workflows/cohere-fast.md",
+        "agentic/reasoning_flows/cohere_fast.prism"
+      ],
+      "steps": [
+        {
+          "step_id": "freeze_target",
+          "skill": "ym-freeze-clay-target",
+          "skill_path": "skills/domain_specific/ym/ym-freeze-clay-target/SKILL.md",
+          "mode": "domain_node",
+          "source_path": "agentic/registries/cohere_fast_ym_workflow.yaml",
+          "source_pointer": "/nodes/0",
+          "binding_kind": "domain_dag_node",
+          "depends_on": [],
+          "subworkflow": "scope_and_ground",
+          "consumes": [
+            "DomainEvidencePacket"
+          ],
+          "produces": [
+            "DomainEvidencePacket"
+          ],
+          "on_failure": "quarantine",
+          "order": null,
+          "source_disposition": "used",
+          "source_list_index": 0
+        },
+        {
+          "step_id": "ground_literature",
+          "skill": "ym-ground-paper-literature",
+          "skill_path": "skills/domain_specific/ym/ym-ground-paper-literature/SKILL.md",
+          "mode": "domain_node",
+          "source_path": "agentic/registries/cohere_fast_ym_workflow.yaml",
+          "source_pointer": "/nodes/1",
+          "binding_kind": "domain_dag_node",
+          "depends_on": [
+            "freeze_target"
+          ],
+          "subworkflow": "scope_and_ground",
+          "consumes": [
+            "DomainEvidencePacket"
+          ],
+          "produces": [
+            "DomainEvidencePacket"
+          ],
+          "on_failure": "quarantine",
+          "order": null,
+          "source_disposition": "used",
+          "source_list_index": 1
+        },
+        {
+          "step_id": "regulator_atlas",
+          "skill": "ym-design-regulator-atlas",
+          "skill_path": "skills/domain_specific/ym/ym-design-regulator-atlas/SKILL.md",
+          "mode": "domain_node",
+          "source_path": "agentic/registries/cohere_fast_ym_workflow.yaml",
+          "source_pointer": "/nodes/2",
+          "binding_kind": "domain_dag_node",
+          "depends_on": [
+            "ground_literature"
+          ],
+          "subworkflow": "adaptive_frontier",
+          "consumes": [
+            "DomainEvidencePacket"
+          ],
+          "produces": [
+            "DomainEvidencePacket"
+          ],
+          "on_failure": "quarantine",
+          "order": null,
+          "source_disposition": "used",
+          "source_list_index": 2
+        },
+        {
+          "step_id": "observable_core",
+          "skill": "ym-build-observable-core",
+          "skill_path": "skills/domain_specific/ym/ym-build-observable-core/SKILL.md",
+          "mode": "domain_node",
+          "source_path": "agentic/registries/cohere_fast_ym_workflow.yaml",
+          "source_pointer": "/nodes/3",
+          "binding_kind": "domain_dag_node",
+          "depends_on": [
+            "regulator_atlas"
+          ],
+          "subworkflow": "adaptive_frontier",
+          "consumes": [
+            "DomainEvidencePacket"
+          ],
+          "produces": [
+            "DomainEvidencePacket"
+          ],
+          "on_failure": "quarantine",
+          "order": null,
+          "source_disposition": "used",
+          "source_list_index": 3
+        },
+        {
+          "step_id": "representation_calculus",
+          "skill": "ym-build-representation-calculus",
+          "skill_path": "skills/domain_specific/ym/ym-build-representation-calculus/SKILL.md",
+          "mode": "domain_node",
+          "source_path": "agentic/registries/cohere_fast_ym_workflow.yaml",
+          "source_pointer": "/nodes/4",
+          "binding_kind": "domain_dag_node",
+          "depends_on": [
+            "observable_core"
+          ],
+          "subworkflow": "adaptive_frontier",
+          "consumes": [
+            "DomainEvidencePacket"
+          ],
+          "produces": [
+            "DomainEvidencePacket"
+          ],
+          "on_failure": "quarantine",
+          "order": null,
+          "source_disposition": "used",
+          "source_list_index": 4
+        },
+        {
+          "step_id": "restricted_models",
+          "skill": "ym-calibrate-restricted-models",
+          "skill_path": "skills/domain_specific/ym/ym-calibrate-restricted-models/SKILL.md",
+          "mode": "domain_node",
+          "source_path": "agentic/registries/cohere_fast_ym_workflow.yaml",
+          "source_pointer": "/nodes/5",
+          "binding_kind": "domain_dag_node",
+          "depends_on": [
+            "representation_calculus"
+          ],
+          "subworkflow": "adaptive_frontier",
+          "consumes": [
+            "DomainEvidencePacket"
+          ],
+          "produces": [
+            "DomainEvidencePacket"
+          ],
+          "on_failure": "quarantine",
+          "order": null,
+          "source_disposition": "used",
+          "source_list_index": 5
+        },
+        {
+          "step_id": "finite_block",
+          "skill": "ym-draft-finite-block-certificate",
+          "skill_path": "skills/domain_specific/ym/ym-draft-finite-block-certificate/SKILL.md",
+          "mode": "domain_node",
+          "source_path": "agentic/registries/cohere_fast_ym_workflow.yaml",
+          "source_pointer": "/nodes/6",
+          "binding_kind": "domain_dag_node",
+          "depends_on": [
+            "restricted_models"
+          ],
+          "subworkflow": "derivation_and_proof",
+          "consumes": [
+            "DomainEvidencePacket"
+          ],
+          "produces": [
+            "DomainEvidencePacket"
+          ],
+          "on_failure": "quarantine",
+          "order": null,
+          "source_disposition": "used",
+          "source_list_index": 6
+        },
+        {
+          "step_id": "heat_kernel",
+          "skill": "ym-draft-heat-kernel-enclosures",
+          "skill_path": "skills/domain_specific/ym/ym-draft-heat-kernel-enclosures/SKILL.md",
+          "mode": "domain_node",
+          "source_path": "agentic/registries/cohere_fast_ym_workflow.yaml",
+          "source_pointer": "/nodes/7",
+          "binding_kind": "domain_dag_node",
+          "depends_on": [
+            "finite_block"
+          ],
+          "subworkflow": "derivation_and_proof",
+          "consumes": [
+            "DomainEvidencePacket"
+          ],
+          "produces": [
+            "DomainEvidencePacket"
+          ],
+          "on_failure": "quarantine",
+          "order": null,
+          "source_disposition": "used",
+          "source_list_index": 7
+        },
+        {
+          "step_id": "frustration",
+          "skill": "ym-draft-frustration-obstruction",
+          "skill_path": "skills/domain_specific/ym/ym-draft-frustration-obstruction/SKILL.md",
+          "mode": "domain_node",
+          "source_path": "agentic/registries/cohere_fast_ym_workflow.yaml",
+          "source_pointer": "/nodes/8",
+          "binding_kind": "domain_dag_node",
+          "depends_on": [
+            "finite_block"
+          ],
+          "subworkflow": "derivation_and_proof",
+          "consumes": [
+            "DomainEvidencePacket"
+          ],
+          "produces": [
+            "DomainEvidencePacket"
+          ],
+          "on_failure": "quarantine",
+          "order": null,
+          "source_disposition": "used",
+          "source_list_index": 8
+        },
+        {
+          "step_id": "staple_dispersion",
+          "skill": "ym-draft-staple-dispersion",
+          "skill_path": "skills/domain_specific/ym/ym-draft-staple-dispersion/SKILL.md",
+          "mode": "domain_node",
+          "source_path": "agentic/registries/cohere_fast_ym_workflow.yaml",
+          "source_pointer": "/nodes/9",
+          "binding_kind": "domain_dag_node",
+          "depends_on": [
+            "finite_block"
+          ],
+          "subworkflow": "derivation_and_proof",
+          "consumes": [
+            "DomainEvidencePacket"
+          ],
+          "produces": [
+            "DomainEvidencePacket"
+          ],
+          "on_failure": "quarantine",
+          "order": null,
+          "source_disposition": "used",
+          "source_list_index": 9
+        },
+        {
+          "step_id": "representational_dynamics",
+          "skill": "ym-draft-representational-dynamics",
+          "skill_path": "skills/domain_specific/ym/ym-draft-representational-dynamics/SKILL.md",
+          "mode": "domain_node",
+          "source_path": "agentic/registries/cohere_fast_ym_workflow.yaml",
+          "source_pointer": "/nodes/10",
+          "binding_kind": "domain_dag_node",
+          "depends_on": [
+            "representation_calculus"
+          ],
+          "subworkflow": "derivation_and_proof",
+          "consumes": [
+            "DomainEvidencePacket"
+          ],
+          "produces": [
+            "DomainEvidencePacket"
+          ],
+          "on_failure": "quarantine",
+          "order": null,
+          "source_disposition": "used",
+          "source_list_index": 10
+        },
+        {
+          "step_id": "adaptive_domination",
+          "skill": "ym-prove-adaptive-block-domination",
+          "skill_path": "skills/domain_specific/ym/ym-prove-adaptive-block-domination/SKILL.md",
+          "mode": "domain_node",
+          "source_path": "agentic/registries/cohere_fast_ym_workflow.yaml",
+          "source_pointer": "/nodes/11",
+          "binding_kind": "domain_dag_node",
+          "depends_on": [
+            "heat_kernel",
+            "frustration",
+            "staple_dispersion"
+          ],
+          "subworkflow": "derivation_and_proof",
+          "consumes": [
+            "DomainEvidencePacket"
+          ],
+          "produces": [
+            "DomainEvidencePacket"
+          ],
+          "on_failure": "quarantine",
+          "order": null,
+          "source_disposition": "used",
+          "source_list_index": 11
+        },
+        {
+          "step_id": "defect_transfer",
+          "skill": "ym-prove-state-weighted-defect-transfer",
+          "skill_path": "skills/domain_specific/ym/ym-prove-state-weighted-defect-transfer/SKILL.md",
+          "mode": "domain_node",
+          "source_path": "agentic/registries/cohere_fast_ym_workflow.yaml",
+          "source_pointer": "/nodes/12",
+          "binding_kind": "domain_dag_node",
+          "depends_on": [
+            "adaptive_domination"
+          ],
+          "subworkflow": "derivation_and_proof",
+          "consumes": [
+            "DomainEvidencePacket"
+          ],
+          "produces": [
+            "DomainEvidencePacket"
+          ],
+          "on_failure": "quarantine",
+          "order": null,
+          "source_disposition": "used",
+          "source_list_index": 12
+        },
+        {
+          "step_id": "large_fields",
+          "skill": "ym-control-large-fields-and-topology",
+          "skill_path": "skills/domain_specific/ym/ym-control-large-fields-and-topology/SKILL.md",
+          "mode": "domain_node",
+          "source_path": "agentic/registries/cohere_fast_ym_workflow.yaml",
+          "source_pointer": "/nodes/13",
+          "binding_kind": "domain_dag_node",
+          "depends_on": [
+            "defect_transfer"
+          ],
+          "subworkflow": "derivation_and_proof",
+          "consumes": [
+            "DomainEvidencePacket"
+          ],
+          "produces": [
+            "DomainEvidencePacket"
+          ],
+          "on_failure": "quarantine",
+          "order": null,
+          "source_disposition": "used",
+          "source_list_index": 13
+        },
+        {
+          "step_id": "conditional_ratio",
+          "skill": "ym-prove-conditional-partition-ratio",
+          "skill_path": "skills/domain_specific/ym/ym-prove-conditional-partition-ratio/SKILL.md",
+          "mode": "domain_node",
+          "source_path": "agentic/registries/cohere_fast_ym_workflow.yaml",
+          "source_pointer": "/nodes/14",
+          "binding_kind": "domain_dag_node",
+          "depends_on": [
+            "large_fields"
+          ],
+          "subworkflow": "derivation_and_proof",
+          "consumes": [
+            "DomainEvidencePacket"
+          ],
+          "produces": [
+            "DomainEvidencePacket"
+          ],
+          "on_failure": "quarantine",
+          "order": null,
+          "source_disposition": "used",
+          "source_list_index": 14
+        },
+        {
+          "step_id": "gauge_rg",
+          "skill": "ym-build-gauge-covariant-rg",
+          "skill_path": "skills/domain_specific/ym/ym-build-gauge-covariant-rg/SKILL.md",
+          "mode": "domain_node",
+          "source_path": "agentic/registries/cohere_fast_ym_workflow.yaml",
+          "source_pointer": "/nodes/15",
+          "binding_kind": "domain_dag_node",
+          "depends_on": [
+            "conditional_ratio",
+            "representational_dynamics"
+          ],
+          "subworkflow": "derivation_and_proof",
+          "consumes": [
+            "DomainEvidencePacket"
+          ],
+          "produces": [
+            "DomainEvidencePacket"
+          ],
+          "on_failure": "quarantine",
+          "order": null,
+          "source_disposition": "used",
+          "source_list_index": 15
+        },
+        {
+          "step_id": "infrared_basin",
+          "skill": "ym-design-infrared-basin",
+          "skill_path": "skills/domain_specific/ym/ym-design-infrared-basin/SKILL.md",
+          "mode": "domain_node",
+          "source_path": "agentic/registries/cohere_fast_ym_workflow.yaml",
+          "source_pointer": "/nodes/16",
+          "binding_kind": "domain_dag_node",
+          "depends_on": [
+            "gauge_rg"
+          ],
+          "subworkflow": "derivation_and_proof",
+          "consumes": [
+            "DomainEvidencePacket"
+          ],
+          "produces": [
+            "DomainEvidencePacket"
+          ],
+          "on_failure": "quarantine",
+          "order": null,
+          "source_disposition": "used",
+          "source_list_index": 16
+        },
+        {
+          "step_id": "basin_entry",
+          "skill": "ym-prove-basin-entry",
+          "skill_path": "skills/domain_specific/ym/ym-prove-basin-entry/SKILL.md",
+          "mode": "domain_node",
+          "source_path": "agentic/registries/cohere_fast_ym_workflow.yaml",
+          "source_pointer": "/nodes/17",
+          "binding_kind": "domain_dag_node",
+          "depends_on": [
+            "infrared_basin"
+          ],
+          "subworkflow": "derivation_and_proof",
+          "consumes": [
+            "DomainEvidencePacket"
+          ],
+          "produces": [
+            "DomainEvidencePacket"
+          ],
+          "on_failure": "quarantine",
+          "order": null,
+          "source_disposition": "used",
+          "source_list_index": 17
+        },
+        {
+          "step_id": "relational_rigidity",
+          "skill": "ym-define-relational-rigidity",
+          "skill_path": "skills/domain_specific/ym/ym-define-relational-rigidity/SKILL.md",
+          "mode": "domain_node",
+          "source_path": "agentic/registries/cohere_fast_ym_workflow.yaml",
+          "source_pointer": "/nodes/18",
+          "binding_kind": "domain_dag_node",
+          "depends_on": [
+            "basin_entry"
+          ],
+          "subworkflow": "derivation_and_proof",
+          "consumes": [
+            "DomainEvidencePacket"
+          ],
+          "produces": [
+            "DomainEvidencePacket"
+          ],
+          "on_failure": "quarantine",
+          "order": null,
+          "source_disposition": "used",
+          "source_list_index": 18
+        },
+        {
+          "step_id": "rg_to_rigidity",
+          "skill": "ym-prove-rg-to-rigidity",
+          "skill_path": "skills/domain_specific/ym/ym-prove-rg-to-rigidity/SKILL.md",
+          "mode": "domain_node",
+          "source_path": "agentic/registries/cohere_fast_ym_workflow.yaml",
+          "source_pointer": "/nodes/19",
+          "binding_kind": "domain_dag_node",
+          "depends_on": [
+            "relational_rigidity"
+          ],
+          "subworkflow": "derivation_and_proof",
+          "consumes": [
+            "DomainEvidencePacket"
+          ],
+          "produces": [
+            "DomainEvidencePacket"
+          ],
+          "on_failure": "quarantine",
+          "order": null,
+          "source_disposition": "used",
+          "source_list_index": 19
+        },
+        {
+          "step_id": "rigidity_transfer",
+          "skill": "ym-prove-rigidity-transfer",
+          "skill_path": "skills/domain_specific/ym/ym-prove-rigidity-transfer/SKILL.md",
+          "mode": "domain_node",
+          "source_path": "agentic/registries/cohere_fast_ym_workflow.yaml",
+          "source_pointer": "/nodes/20",
+          "binding_kind": "domain_dag_node",
+          "depends_on": [
+            "rg_to_rigidity"
+          ],
+          "subworkflow": "derivation_and_proof",
+          "consumes": [
+            "DomainEvidencePacket"
+          ],
+          "produces": [
+            "DomainEvidencePacket"
+          ],
+          "on_failure": "quarantine",
+          "order": null,
+          "source_disposition": "used",
+          "source_list_index": 20
+        },
+        {
+          "step_id": "continuum_coherence",
+          "skill": "ym-prove-continuum-coherence",
+          "skill_path": "skills/domain_specific/ym/ym-prove-continuum-coherence/SKILL.md",
+          "mode": "domain_node",
+          "source_path": "agentic/registries/cohere_fast_ym_workflow.yaml",
+          "source_pointer": "/nodes/21",
+          "binding_kind": "domain_dag_node",
+          "depends_on": [
+            "rigidity_transfer",
+            "regulator_atlas"
+          ],
+          "subworkflow": "derivation_and_proof",
+          "consumes": [
+            "DomainEvidencePacket"
+          ],
+          "produces": [
+            "DomainEvidencePacket"
+          ],
+          "on_failure": "quarantine",
+          "order": null,
+          "source_disposition": "used",
+          "source_list_index": 21
+        },
+        {
+          "step_id": "os_gap",
+          "skill": "ym-reconstruct-os-gap",
+          "skill_path": "skills/domain_specific/ym/ym-reconstruct-os-gap/SKILL.md",
+          "mode": "domain_node",
+          "source_path": "agentic/registries/cohere_fast_ym_workflow.yaml",
+          "source_pointer": "/nodes/22",
+          "binding_kind": "domain_dag_node",
+          "depends_on": [
+            "continuum_coherence"
+          ],
+          "subworkflow": "derivation_and_proof",
+          "consumes": [
+            "DomainEvidencePacket"
+          ],
+          "produces": [
+            "DomainEvidencePacket"
+          ],
+          "on_failure": "quarantine",
+          "order": null,
+          "source_disposition": "used",
+          "source_list_index": 22
+        },
+        {
+          "step_id": "develop_proofs",
+          "skill": "ym-develop-paper-proofs",
+          "skill_path": "skills/domain_specific/ym/ym-develop-paper-proofs/SKILL.md",
+          "mode": "domain_node",
+          "source_path": "agentic/registries/cohere_fast_ym_workflow.yaml",
+          "source_pointer": "/nodes/23",
+          "binding_kind": "domain_dag_node",
+          "depends_on": [
+            "os_gap"
+          ],
+          "subworkflow": "derivation_and_proof",
+          "consumes": [
+            "DomainEvidencePacket"
+          ],
+          "produces": [
+            "DomainEvidencePacket"
+          ],
+          "on_failure": "quarantine",
+          "order": null,
+          "source_disposition": "used",
+          "source_list_index": 23
+        },
+        {
+          "step_id": "mechanize_core",
+          "skill": "ym-mechanize-proof-core",
+          "skill_path": "skills/domain_specific/ym/ym-mechanize-proof-core/SKILL.md",
+          "mode": "domain_node",
+          "source_path": "agentic/registries/cohere_fast_ym_workflow.yaml",
+          "source_pointer": "/nodes/24",
+          "binding_kind": "domain_dag_node",
+          "depends_on": [
+            "develop_proofs"
+          ],
+          "subworkflow": "derivation_and_proof",
+          "consumes": [
+            "DomainEvidencePacket"
+          ],
+          "produces": [
+            "DomainEvidencePacket"
+          ],
+          "on_failure": "quarantine",
+          "order": null,
+          "source_disposition": "used",
+          "source_list_index": 24
+        },
+        {
+          "step_id": "audit_frontier",
+          "skill": "ym-audit-frontier",
+          "skill_path": "skills/domain_specific/ym/ym-audit-frontier/SKILL.md",
+          "mode": "domain_node",
+          "source_path": "agentic/registries/cohere_fast_ym_workflow.yaml",
+          "source_pointer": "/nodes/25",
+          "binding_kind": "domain_dag_node",
+          "depends_on": [
+            "mechanize_core"
+          ],
+          "subworkflow": "independent_audit",
+          "consumes": [
+            "DomainEvidencePacket"
+          ],
+          "produces": [
+            "DomainEvidencePacket"
+          ],
+          "on_failure": "quarantine",
+          "order": null,
+          "source_disposition": "used",
+          "source_list_index": 25
+        },
+        {
+          "step_id": "frame_narrative",
+          "skill": "ym-frame-paper-narrative",
+          "skill_path": "skills/domain_specific/ym/ym-frame-paper-narrative/SKILL.md",
+          "mode": "domain_node",
+          "source_path": "agentic/registries/cohere_fast_ym_workflow.yaml",
+          "source_pointer": "/nodes/26",
+          "binding_kind": "domain_dag_node",
+          "depends_on": [
+            "audit_frontier"
+          ],
+          "subworkflow": "manuscript_release",
+          "consumes": [
+            "DomainEvidencePacket"
+          ],
+          "produces": [
+            "DomainEvidencePacket"
+          ],
+          "on_failure": "stop",
+          "order": null,
+          "source_disposition": "used",
+          "source_list_index": 26
+        },
+        {
+          "step_id": "proof_appendix",
+          "skill": "ym-build-proof-appendix",
+          "skill_path": "skills/domain_specific/ym/ym-build-proof-appendix/SKILL.md",
+          "mode": "domain_node",
+          "source_path": "agentic/registries/cohere_fast_ym_workflow.yaml",
+          "source_pointer": "/nodes/27",
+          "binding_kind": "domain_dag_node",
+          "depends_on": [
+            "audit_frontier"
+          ],
+          "subworkflow": "manuscript_release",
+          "consumes": [
+            "DomainEvidencePacket"
+          ],
+          "produces": [
+            "DomainEvidencePacket"
+          ],
+          "on_failure": "stop",
+          "order": null,
+          "source_disposition": "used",
+          "source_list_index": 27
+        },
+        {
+          "step_id": "latex_paper",
+          "skill": "ym-build-latex-paper",
+          "skill_path": "skills/domain_specific/ym/ym-build-latex-paper/SKILL.md",
+          "mode": "domain_node",
+          "source_path": "agentic/registries/cohere_fast_ym_workflow.yaml",
+          "source_pointer": "/nodes/28",
+          "binding_kind": "domain_dag_node",
+          "depends_on": [
+            "frame_narrative",
+            "proof_appendix"
+          ],
+          "subworkflow": "manuscript_release",
+          "consumes": [
+            "DomainEvidencePacket"
+          ],
+          "produces": [
+            "DomainEvidencePacket"
+          ],
+          "on_failure": "stop",
+          "order": null,
+          "source_disposition": "used",
+          "source_list_index": 28
+        },
+        {
+          "step_id": "program_coordinator",
+          "skill": "ym-run-clay-program",
+          "skill_path": "skills/domain_specific/ym/ym-run-clay-program/SKILL.md",
+          "mode": "auxiliary",
+          "source_path": "agentic/registries/cohere_fast_ym_workflow.yaml",
+          "source_pointer": "/nodes/29",
+          "binding_kind": "domain_dag_node",
+          "depends_on": [
+            "latex_paper"
+          ],
+          "subworkflow": "parent",
+          "consumes": [
+            "DomainEvidencePacket"
+          ],
+          "produces": [
+            "DomainEvidencePacket"
+          ],
+          "on_failure": "quarantine",
+          "order": null,
+          "source_disposition": "auxiliary",
+          "source_list_index": 29
+        }
+      ],
+      "coverage_gaps": [
+        {
+          "kind": "disabled_runtime",
+          "detail": "Cohere task and YM bundle disabled; isolated evaluation does not activate runtime."
+        }
+      ],
+      "activation_status": "disabled"
+    },
+    {
+      "workflow_id": "cohere_fast_scope_and_ground",
+      "aliases": [
+        "cohere_fast:scope-and-ground"
+      ],
+      "function": "bind the target, sources, domain, and claim ceiling",
+      "source_paths": [
+        "agentic/registries/cohere_fast_subworkflows.yaml",
+        "agentic/reasoning_flows/cohere_fast_scope_and_ground.prism",
+        "agentic/registries/cohere_fast_ym_workflow.yaml"
+      ],
+      "steps": [
+        {
+          "step_id": "freeze_target",
+          "skill": "ym-freeze-clay-target",
+          "skill_path": "skills/domain_specific/ym/ym-freeze-clay-target/SKILL.md",
+          "mode": "domain_node",
+          "source_path": "agentic/registries/cohere_fast_ym_workflow.yaml",
+          "source_pointer": "/nodes/0",
+          "binding_kind": "domain_dag_node",
+          "depends_on": [],
+          "subworkflow": "scope_and_ground",
+          "consumes": [
+            "DomainEvidencePacket"
+          ],
+          "produces": [
+            "DomainEvidencePacket"
+          ],
+          "on_failure": "quarantine",
+          "order": null,
+          "source_disposition": "used",
+          "source_list_index": 0
+        },
+        {
+          "step_id": "ground_literature",
+          "skill": "ym-ground-paper-literature",
+          "skill_path": "skills/domain_specific/ym/ym-ground-paper-literature/SKILL.md",
+          "mode": "domain_node",
+          "source_path": "agentic/registries/cohere_fast_ym_workflow.yaml",
+          "source_pointer": "/nodes/1",
+          "binding_kind": "domain_dag_node",
+          "depends_on": [
+            "freeze_target"
+          ],
+          "subworkflow": "scope_and_ground",
+          "consumes": [
+            "DomainEvidencePacket"
+          ],
+          "produces": [
+            "DomainEvidencePacket"
+          ],
+          "on_failure": "quarantine",
+          "order": null,
+          "source_disposition": "used",
+          "source_list_index": 1
+        }
+      ],
+      "coverage_gaps": [
+        {
+          "kind": "disabled_runtime",
+          "detail": "Cohere task and YM bundle disabled; isolated evaluation does not activate runtime."
+        }
+      ],
+      "activation_status": "disabled"
+    },
+    {
+      "workflow_id": "cohere_fast_adaptive_frontier",
+      "aliases": [
+        "cohere_fast:adaptive-frontier"
+      ],
+      "function": "form a bounded domain frontier without epistemic promotion",
+      "source_paths": [
+        "agentic/registries/cohere_fast_subworkflows.yaml",
+        "agentic/reasoning_flows/cohere_fast_adaptive_frontier.prism",
+        "agentic/registries/cohere_fast_ym_workflow.yaml"
+      ],
+      "steps": [
+        {
+          "step_id": "regulator_atlas",
+          "skill": "ym-design-regulator-atlas",
+          "skill_path": "skills/domain_specific/ym/ym-design-regulator-atlas/SKILL.md",
+          "mode": "domain_node",
+          "source_path": "agentic/registries/cohere_fast_ym_workflow.yaml",
+          "source_pointer": "/nodes/2",
+          "binding_kind": "domain_dag_node",
+          "depends_on": [
+            "ground_literature"
+          ],
+          "subworkflow": "adaptive_frontier",
+          "consumes": [
+            "DomainEvidencePacket"
+          ],
+          "produces": [
+            "DomainEvidencePacket"
+          ],
+          "on_failure": "quarantine",
+          "order": null,
+          "source_disposition": "used",
+          "source_list_index": 2
+        },
+        {
+          "step_id": "observable_core",
+          "skill": "ym-build-observable-core",
+          "skill_path": "skills/domain_specific/ym/ym-build-observable-core/SKILL.md",
+          "mode": "domain_node",
+          "source_path": "agentic/registries/cohere_fast_ym_workflow.yaml",
+          "source_pointer": "/nodes/3",
+          "binding_kind": "domain_dag_node",
+          "depends_on": [
+            "regulator_atlas"
+          ],
+          "subworkflow": "adaptive_frontier",
+          "consumes": [
+            "DomainEvidencePacket"
+          ],
+          "produces": [
+            "DomainEvidencePacket"
+          ],
+          "on_failure": "quarantine",
+          "order": null,
+          "source_disposition": "used",
+          "source_list_index": 3
+        },
+        {
+          "step_id": "representation_calculus",
+          "skill": "ym-build-representation-calculus",
+          "skill_path": "skills/domain_specific/ym/ym-build-representation-calculus/SKILL.md",
+          "mode": "domain_node",
+          "source_path": "agentic/registries/cohere_fast_ym_workflow.yaml",
+          "source_pointer": "/nodes/4",
+          "binding_kind": "domain_dag_node",
+          "depends_on": [
+            "observable_core"
+          ],
+          "subworkflow": "adaptive_frontier",
+          "consumes": [
+            "DomainEvidencePacket"
+          ],
+          "produces": [
+            "DomainEvidencePacket"
+          ],
+          "on_failure": "quarantine",
+          "order": null,
+          "source_disposition": "used",
+          "source_list_index": 4
+        },
+        {
+          "step_id": "restricted_models",
+          "skill": "ym-calibrate-restricted-models",
+          "skill_path": "skills/domain_specific/ym/ym-calibrate-restricted-models/SKILL.md",
+          "mode": "domain_node",
+          "source_path": "agentic/registries/cohere_fast_ym_workflow.yaml",
+          "source_pointer": "/nodes/5",
+          "binding_kind": "domain_dag_node",
+          "depends_on": [
+            "representation_calculus"
+          ],
+          "subworkflow": "adaptive_frontier",
+          "consumes": [
+            "DomainEvidencePacket"
+          ],
+          "produces": [
+            "DomainEvidencePacket"
+          ],
+          "on_failure": "quarantine",
+          "order": null,
+          "source_disposition": "used",
+          "source_list_index": 5
+        }
+      ],
+      "coverage_gaps": [
+        {
+          "kind": "disabled_runtime",
+          "detail": "Cohere task and YM bundle disabled; isolated evaluation does not activate runtime."
+        }
+      ],
+      "activation_status": "disabled"
+    },
+    {
+      "workflow_id": "cohere_fast_derivation_and_proof",
+      "aliases": [
+        "cohere_fast:derivation-and-proof"
+      ],
+      "function": "produce a conditional derivation packet while retaining open obligations",
+      "source_paths": [
+        "agentic/registries/cohere_fast_subworkflows.yaml",
+        "agentic/reasoning_flows/cohere_fast_derivation_and_proof.prism",
+        "agentic/registries/cohere_fast_ym_workflow.yaml"
+      ],
+      "steps": [
+        {
+          "step_id": "finite_block",
+          "skill": "ym-draft-finite-block-certificate",
+          "skill_path": "skills/domain_specific/ym/ym-draft-finite-block-certificate/SKILL.md",
+          "mode": "domain_node",
+          "source_path": "agentic/registries/cohere_fast_ym_workflow.yaml",
+          "source_pointer": "/nodes/6",
+          "binding_kind": "domain_dag_node",
+          "depends_on": [
+            "restricted_models"
+          ],
+          "subworkflow": "derivation_and_proof",
+          "consumes": [
+            "DomainEvidencePacket"
+          ],
+          "produces": [
+            "DomainEvidencePacket"
+          ],
+          "on_failure": "quarantine",
+          "order": null,
+          "source_disposition": "used",
+          "source_list_index": 6
+        },
+        {
+          "step_id": "heat_kernel",
+          "skill": "ym-draft-heat-kernel-enclosures",
+          "skill_path": "skills/domain_specific/ym/ym-draft-heat-kernel-enclosures/SKILL.md",
+          "mode": "domain_node",
+          "source_path": "agentic/registries/cohere_fast_ym_workflow.yaml",
+          "source_pointer": "/nodes/7",
+          "binding_kind": "domain_dag_node",
+          "depends_on": [
+            "finite_block"
+          ],
+          "subworkflow": "derivation_and_proof",
+          "consumes": [
+            "DomainEvidencePacket"
+          ],
+          "produces": [
+            "DomainEvidencePacket"
+          ],
+          "on_failure": "quarantine",
+          "order": null,
+          "source_disposition": "used",
+          "source_list_index": 7
+        },
+        {
+          "step_id": "frustration",
+          "skill": "ym-draft-frustration-obstruction",
+          "skill_path": "skills/domain_specific/ym/ym-draft-frustration-obstruction/SKILL.md",
+          "mode": "domain_node",
+          "source_path": "agentic/registries/cohere_fast_ym_workflow.yaml",
+          "source_pointer": "/nodes/8",
+          "binding_kind": "domain_dag_node",
+          "depends_on": [
+            "finite_block"
+          ],
+          "subworkflow": "derivation_and_proof",
+          "consumes": [
+            "DomainEvidencePacket"
+          ],
+          "produces": [
+            "DomainEvidencePacket"
+          ],
+          "on_failure": "quarantine",
+          "order": null,
+          "source_disposition": "used",
+          "source_list_index": 8
+        },
+        {
+          "step_id": "staple_dispersion",
+          "skill": "ym-draft-staple-dispersion",
+          "skill_path": "skills/domain_specific/ym/ym-draft-staple-dispersion/SKILL.md",
+          "mode": "domain_node",
+          "source_path": "agentic/registries/cohere_fast_ym_workflow.yaml",
+          "source_pointer": "/nodes/9",
+          "binding_kind": "domain_dag_node",
+          "depends_on": [
+            "finite_block"
+          ],
+          "subworkflow": "derivation_and_proof",
+          "consumes": [
+            "DomainEvidencePacket"
+          ],
+          "produces": [
+            "DomainEvidencePacket"
+          ],
+          "on_failure": "quarantine",
+          "order": null,
+          "source_disposition": "used",
+          "source_list_index": 9
+        },
+        {
+          "step_id": "representational_dynamics",
+          "skill": "ym-draft-representational-dynamics",
+          "skill_path": "skills/domain_specific/ym/ym-draft-representational-dynamics/SKILL.md",
+          "mode": "domain_node",
+          "source_path": "agentic/registries/cohere_fast_ym_workflow.yaml",
+          "source_pointer": "/nodes/10",
+          "binding_kind": "domain_dag_node",
+          "depends_on": [
+            "representation_calculus"
+          ],
+          "subworkflow": "derivation_and_proof",
+          "consumes": [
+            "DomainEvidencePacket"
+          ],
+          "produces": [
+            "DomainEvidencePacket"
+          ],
+          "on_failure": "quarantine",
+          "order": null,
+          "source_disposition": "used",
+          "source_list_index": 10
+        },
+        {
+          "step_id": "adaptive_domination",
+          "skill": "ym-prove-adaptive-block-domination",
+          "skill_path": "skills/domain_specific/ym/ym-prove-adaptive-block-domination/SKILL.md",
+          "mode": "domain_node",
+          "source_path": "agentic/registries/cohere_fast_ym_workflow.yaml",
+          "source_pointer": "/nodes/11",
+          "binding_kind": "domain_dag_node",
+          "depends_on": [
+            "heat_kernel",
+            "frustration",
+            "staple_dispersion"
+          ],
+          "subworkflow": "derivation_and_proof",
+          "consumes": [
+            "DomainEvidencePacket"
+          ],
+          "produces": [
+            "DomainEvidencePacket"
+          ],
+          "on_failure": "quarantine",
+          "order": null,
+          "source_disposition": "used",
+          "source_list_index": 11
+        },
+        {
+          "step_id": "defect_transfer",
+          "skill": "ym-prove-state-weighted-defect-transfer",
+          "skill_path": "skills/domain_specific/ym/ym-prove-state-weighted-defect-transfer/SKILL.md",
+          "mode": "domain_node",
+          "source_path": "agentic/registries/cohere_fast_ym_workflow.yaml",
+          "source_pointer": "/nodes/12",
+          "binding_kind": "domain_dag_node",
+          "depends_on": [
+            "adaptive_domination"
+          ],
+          "subworkflow": "derivation_and_proof",
+          "consumes": [
+            "DomainEvidencePacket"
+          ],
+          "produces": [
+            "DomainEvidencePacket"
+          ],
+          "on_failure": "quarantine",
+          "order": null,
+          "source_disposition": "used",
+          "source_list_index": 12
+        },
+        {
+          "step_id": "large_fields",
+          "skill": "ym-control-large-fields-and-topology",
+          "skill_path": "skills/domain_specific/ym/ym-control-large-fields-and-topology/SKILL.md",
+          "mode": "domain_node",
+          "source_path": "agentic/registries/cohere_fast_ym_workflow.yaml",
+          "source_pointer": "/nodes/13",
+          "binding_kind": "domain_dag_node",
+          "depends_on": [
+            "defect_transfer"
+          ],
+          "subworkflow": "derivation_and_proof",
+          "consumes": [
+            "DomainEvidencePacket"
+          ],
+          "produces": [
+            "DomainEvidencePacket"
+          ],
+          "on_failure": "quarantine",
+          "order": null,
+          "source_disposition": "used",
+          "source_list_index": 13
+        },
+        {
+          "step_id": "conditional_ratio",
+          "skill": "ym-prove-conditional-partition-ratio",
+          "skill_path": "skills/domain_specific/ym/ym-prove-conditional-partition-ratio/SKILL.md",
+          "mode": "domain_node",
+          "source_path": "agentic/registries/cohere_fast_ym_workflow.yaml",
+          "source_pointer": "/nodes/14",
+          "binding_kind": "domain_dag_node",
+          "depends_on": [
+            "large_fields"
+          ],
+          "subworkflow": "derivation_and_proof",
+          "consumes": [
+            "DomainEvidencePacket"
+          ],
+          "produces": [
+            "DomainEvidencePacket"
+          ],
+          "on_failure": "quarantine",
+          "order": null,
+          "source_disposition": "used",
+          "source_list_index": 14
+        },
+        {
+          "step_id": "gauge_rg",
+          "skill": "ym-build-gauge-covariant-rg",
+          "skill_path": "skills/domain_specific/ym/ym-build-gauge-covariant-rg/SKILL.md",
+          "mode": "domain_node",
+          "source_path": "agentic/registries/cohere_fast_ym_workflow.yaml",
+          "source_pointer": "/nodes/15",
+          "binding_kind": "domain_dag_node",
+          "depends_on": [
+            "conditional_ratio",
+            "representational_dynamics"
+          ],
+          "subworkflow": "derivation_and_proof",
+          "consumes": [
+            "DomainEvidencePacket"
+          ],
+          "produces": [
+            "DomainEvidencePacket"
+          ],
+          "on_failure": "quarantine",
+          "order": null,
+          "source_disposition": "used",
+          "source_list_index": 15
+        },
+        {
+          "step_id": "infrared_basin",
+          "skill": "ym-design-infrared-basin",
+          "skill_path": "skills/domain_specific/ym/ym-design-infrared-basin/SKILL.md",
+          "mode": "domain_node",
+          "source_path": "agentic/registries/cohere_fast_ym_workflow.yaml",
+          "source_pointer": "/nodes/16",
+          "binding_kind": "domain_dag_node",
+          "depends_on": [
+            "gauge_rg"
+          ],
+          "subworkflow": "derivation_and_proof",
+          "consumes": [
+            "DomainEvidencePacket"
+          ],
+          "produces": [
+            "DomainEvidencePacket"
+          ],
+          "on_failure": "quarantine",
+          "order": null,
+          "source_disposition": "used",
+          "source_list_index": 16
+        },
+        {
+          "step_id": "basin_entry",
+          "skill": "ym-prove-basin-entry",
+          "skill_path": "skills/domain_specific/ym/ym-prove-basin-entry/SKILL.md",
+          "mode": "domain_node",
+          "source_path": "agentic/registries/cohere_fast_ym_workflow.yaml",
+          "source_pointer": "/nodes/17",
+          "binding_kind": "domain_dag_node",
+          "depends_on": [
+            "infrared_basin"
+          ],
+          "subworkflow": "derivation_and_proof",
+          "consumes": [
+            "DomainEvidencePacket"
+          ],
+          "produces": [
+            "DomainEvidencePacket"
+          ],
+          "on_failure": "quarantine",
+          "order": null,
+          "source_disposition": "used",
+          "source_list_index": 17
+        },
+        {
+          "step_id": "relational_rigidity",
+          "skill": "ym-define-relational-rigidity",
+          "skill_path": "skills/domain_specific/ym/ym-define-relational-rigidity/SKILL.md",
+          "mode": "domain_node",
+          "source_path": "agentic/registries/cohere_fast_ym_workflow.yaml",
+          "source_pointer": "/nodes/18",
+          "binding_kind": "domain_dag_node",
+          "depends_on": [
+            "basin_entry"
+          ],
+          "subworkflow": "derivation_and_proof",
+          "consumes": [
+            "DomainEvidencePacket"
+          ],
+          "produces": [
+            "DomainEvidencePacket"
+          ],
+          "on_failure": "quarantine",
+          "order": null,
+          "source_disposition": "used",
+          "source_list_index": 18
+        },
+        {
+          "step_id": "rg_to_rigidity",
+          "skill": "ym-prove-rg-to-rigidity",
+          "skill_path": "skills/domain_specific/ym/ym-prove-rg-to-rigidity/SKILL.md",
+          "mode": "domain_node",
+          "source_path": "agentic/registries/cohere_fast_ym_workflow.yaml",
+          "source_pointer": "/nodes/19",
+          "binding_kind": "domain_dag_node",
+          "depends_on": [
+            "relational_rigidity"
+          ],
+          "subworkflow": "derivation_and_proof",
+          "consumes": [
+            "DomainEvidencePacket"
+          ],
+          "produces": [
+            "DomainEvidencePacket"
+          ],
+          "on_failure": "quarantine",
+          "order": null,
+          "source_disposition": "used",
+          "source_list_index": 19
+        },
+        {
+          "step_id": "rigidity_transfer",
+          "skill": "ym-prove-rigidity-transfer",
+          "skill_path": "skills/domain_specific/ym/ym-prove-rigidity-transfer/SKILL.md",
+          "mode": "domain_node",
+          "source_path": "agentic/registries/cohere_fast_ym_workflow.yaml",
+          "source_pointer": "/nodes/20",
+          "binding_kind": "domain_dag_node",
+          "depends_on": [
+            "rg_to_rigidity"
+          ],
+          "subworkflow": "derivation_and_proof",
+          "consumes": [
+            "DomainEvidencePacket"
+          ],
+          "produces": [
+            "DomainEvidencePacket"
+          ],
+          "on_failure": "quarantine",
+          "order": null,
+          "source_disposition": "used",
+          "source_list_index": 20
+        },
+        {
+          "step_id": "continuum_coherence",
+          "skill": "ym-prove-continuum-coherence",
+          "skill_path": "skills/domain_specific/ym/ym-prove-continuum-coherence/SKILL.md",
+          "mode": "domain_node",
+          "source_path": "agentic/registries/cohere_fast_ym_workflow.yaml",
+          "source_pointer": "/nodes/21",
+          "binding_kind": "domain_dag_node",
+          "depends_on": [
+            "rigidity_transfer",
+            "regulator_atlas"
+          ],
+          "subworkflow": "derivation_and_proof",
+          "consumes": [
+            "DomainEvidencePacket"
+          ],
+          "produces": [
+            "DomainEvidencePacket"
+          ],
+          "on_failure": "quarantine",
+          "order": null,
+          "source_disposition": "used",
+          "source_list_index": 21
+        },
+        {
+          "step_id": "os_gap",
+          "skill": "ym-reconstruct-os-gap",
+          "skill_path": "skills/domain_specific/ym/ym-reconstruct-os-gap/SKILL.md",
+          "mode": "domain_node",
+          "source_path": "agentic/registries/cohere_fast_ym_workflow.yaml",
+          "source_pointer": "/nodes/22",
+          "binding_kind": "domain_dag_node",
+          "depends_on": [
+            "continuum_coherence"
+          ],
+          "subworkflow": "derivation_and_proof",
+          "consumes": [
+            "DomainEvidencePacket"
+          ],
+          "produces": [
+            "DomainEvidencePacket"
+          ],
+          "on_failure": "quarantine",
+          "order": null,
+          "source_disposition": "used",
+          "source_list_index": 22
+        },
+        {
+          "step_id": "develop_proofs",
+          "skill": "ym-develop-paper-proofs",
+          "skill_path": "skills/domain_specific/ym/ym-develop-paper-proofs/SKILL.md",
+          "mode": "domain_node",
+          "source_path": "agentic/registries/cohere_fast_ym_workflow.yaml",
+          "source_pointer": "/nodes/23",
+          "binding_kind": "domain_dag_node",
+          "depends_on": [
+            "os_gap"
+          ],
+          "subworkflow": "derivation_and_proof",
+          "consumes": [
+            "DomainEvidencePacket"
+          ],
+          "produces": [
+            "DomainEvidencePacket"
+          ],
+          "on_failure": "quarantine",
+          "order": null,
+          "source_disposition": "used",
+          "source_list_index": 23
+        },
+        {
+          "step_id": "mechanize_core",
+          "skill": "ym-mechanize-proof-core",
+          "skill_path": "skills/domain_specific/ym/ym-mechanize-proof-core/SKILL.md",
+          "mode": "domain_node",
+          "source_path": "agentic/registries/cohere_fast_ym_workflow.yaml",
+          "source_pointer": "/nodes/24",
+          "binding_kind": "domain_dag_node",
+          "depends_on": [
+            "develop_proofs"
+          ],
+          "subworkflow": "derivation_and_proof",
+          "consumes": [
+            "DomainEvidencePacket"
+          ],
+          "produces": [
+            "DomainEvidencePacket"
+          ],
+          "on_failure": "quarantine",
+          "order": null,
+          "source_disposition": "used",
+          "source_list_index": 24
+        }
+      ],
+      "coverage_gaps": [
+        {
+          "kind": "disabled_runtime",
+          "detail": "Cohere task and YM bundle disabled; isolated evaluation does not activate runtime."
+        }
+      ],
+      "activation_status": "disabled"
+    },
+    {
+      "workflow_id": "cohere_fast_independent_audit",
+      "aliases": [
+        "cohere_fast:independent-audit"
+      ],
+      "function": "adversarially test and calibrate the bounded domain derivation",
+      "source_paths": [
+        "agentic/registries/cohere_fast_subworkflows.yaml",
+        "agentic/reasoning_flows/cohere_fast_independent_audit.prism",
+        "agentic/registries/cohere_fast_ym_workflow.yaml"
+      ],
+      "steps": [
+        {
+          "step_id": "audit_frontier",
+          "skill": "ym-audit-frontier",
+          "skill_path": "skills/domain_specific/ym/ym-audit-frontier/SKILL.md",
+          "mode": "domain_node",
+          "source_path": "agentic/registries/cohere_fast_ym_workflow.yaml",
+          "source_pointer": "/nodes/25",
+          "binding_kind": "domain_dag_node",
+          "depends_on": [
+            "mechanize_core"
+          ],
+          "subworkflow": "independent_audit",
+          "consumes": [
+            "DomainEvidencePacket"
+          ],
+          "produces": [
+            "DomainEvidencePacket"
+          ],
+          "on_failure": "quarantine",
+          "order": null,
+          "source_disposition": "used",
+          "source_list_index": 25
+        }
+      ],
+      "coverage_gaps": [
+        {
+          "kind": "disabled_runtime",
+          "detail": "Cohere task and YM bundle disabled; isolated evaluation does not activate runtime."
+        }
+      ],
+      "activation_status": "disabled"
+    },
+    {
+      "workflow_id": "cohere_fast_manuscript_release",
+      "aliases": [
+        "cohere_fast:manuscript-release"
+      ],
+      "function": "authorize presentation without changing the authority of its claims",
+      "source_paths": [
+        "agentic/registries/cohere_fast_subworkflows.yaml",
+        "agentic/reasoning_flows/cohere_fast_manuscript_release.prism",
+        "agentic/registries/cohere_fast_ym_workflow.yaml"
+      ],
+      "steps": [
+        {
+          "step_id": "frame_narrative",
+          "skill": "ym-frame-paper-narrative",
+          "skill_path": "skills/domain_specific/ym/ym-frame-paper-narrative/SKILL.md",
+          "mode": "domain_node",
+          "source_path": "agentic/registries/cohere_fast_ym_workflow.yaml",
+          "source_pointer": "/nodes/26",
+          "binding_kind": "domain_dag_node",
+          "depends_on": [
+            "audit_frontier"
+          ],
+          "subworkflow": "manuscript_release",
+          "consumes": [
+            "DomainEvidencePacket"
+          ],
+          "produces": [
+            "DomainEvidencePacket"
+          ],
+          "on_failure": "stop",
+          "order": null,
+          "source_disposition": "used",
+          "source_list_index": 26
+        },
+        {
+          "step_id": "proof_appendix",
+          "skill": "ym-build-proof-appendix",
+          "skill_path": "skills/domain_specific/ym/ym-build-proof-appendix/SKILL.md",
+          "mode": "domain_node",
+          "source_path": "agentic/registries/cohere_fast_ym_workflow.yaml",
+          "source_pointer": "/nodes/27",
+          "binding_kind": "domain_dag_node",
+          "depends_on": [
+            "audit_frontier"
+          ],
+          "subworkflow": "manuscript_release",
+          "consumes": [
+            "DomainEvidencePacket"
+          ],
+          "produces": [
+            "DomainEvidencePacket"
+          ],
+          "on_failure": "stop",
+          "order": null,
+          "source_disposition": "used",
+          "source_list_index": 27
+        },
+        {
+          "step_id": "latex_paper",
+          "skill": "ym-build-latex-paper",
+          "skill_path": "skills/domain_specific/ym/ym-build-latex-paper/SKILL.md",
+          "mode": "domain_node",
+          "source_path": "agentic/registries/cohere_fast_ym_workflow.yaml",
+          "source_pointer": "/nodes/28",
+          "binding_kind": "domain_dag_node",
+          "depends_on": [
+            "frame_narrative",
+            "proof_appendix"
+          ],
+          "subworkflow": "manuscript_release",
+          "consumes": [
+            "DomainEvidencePacket"
+          ],
+          "produces": [
+            "DomainEvidencePacket"
+          ],
+          "on_failure": "stop",
+          "order": null,
+          "source_disposition": "used",
+          "source_list_index": 28
+        }
+      ],
+      "coverage_gaps": [
+        {
+          "kind": "disabled_runtime",
+          "detail": "Cohere task and YM bundle disabled; isolated evaluation does not activate runtime."
+        }
+      ],
+      "activation_status": "disabled"
+    }
+  ]
+}

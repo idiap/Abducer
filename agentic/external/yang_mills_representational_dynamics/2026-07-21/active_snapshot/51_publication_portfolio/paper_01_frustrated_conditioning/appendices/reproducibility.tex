@@ -1,0 +1,52 @@
+\section{Reproducibility and claim status}
+\label{app:reproducibility}
+
+\subsection{Logical status of the artifacts}
+
+The theorem depends on the cubical incidence argument,
+Proposition~\ref{prop:conditional-law}, Varadhan's heat-kernel asymptotic, the
+compact Laplace lemma, and the metric barycenter identity.  No floating-point
+value, numerical quadrature, or sampled optimization enters a proof.
+
+\begin{center}
+\begin{tabular}{@{}p{0.24\textwidth}p{0.18\textwidth}p{0.48\textwidth}@{}}
+\toprule
+Claim & Status & Location \\
+\midrule
+Private opposite-link realization & proved &
+Lemma~\ref{lem:private-opposites} and Proposition~\ref{prop:central-surjectivity} \\
+Conditional heat-kernel density & proved & Proposition~\ref{prop:conditional-law} \\
+Metric minimizing set and rate & proved &
+Lemma~\ref{lem:metric-barycenter} and Theorem~\ref{thm:central-obstruction} \\
+Positive-measure stability & proved & Theorem~\ref{thm:open-stability} \\
+Dobrushin row-sum failure & proved & Theorem~\ref{thm:dobrushin-failure} \\
+Finite incidence ranks for $2\leq d\leq6$ & exact computation &
+\texttt{supplement/incidence\_certificate.json} \\
+Continuum Yang--Mills existence or mass gap & not claimed &
+Section~\ref{sec:scope} \\
+Viability of a weighted contour replacement & open & Section~\ref{sec:scope} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection{Independent finite check}
+
+From the manuscript root, run
+\begin{verbatim}
+python3 supplement/verify_incidence.py \
+  --output supplement/incidence_certificate.json
+python3 -m unittest -v supplement/test_verify_incidence.py
+\end{verbatim}
+The verifier uses only the Python standard library.  It reports counts,
+incident degrees, exact $\mathbb F_2$ ranks, identity-minor tests, and
+permutation checks.  The JSON file includes its schema version and the SHA-256
+hash of the verifier source.  The manuscript build and visual checks are
+described in the accompanying \texttt{README.md} and machine-readable
+\texttt{build/build\_report.json}.
+
+\subsection{Data and code statement}
+
+No external dataset was used.  The literature search ledger records queries
+and screening decisions as of 21 July 2026.  All code distributed with the
+paper is an independently reproducible finite check; it is not a substitute
+for an analytic proof.

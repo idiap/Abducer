@@ -1,0 +1,11 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema", "$id": "urn:abducer:framework-paper:bundle-manifest:1",
+  "title": "PaperBundleManifest", "type": "object", "additionalProperties": false,
+  "required": ["schema_version", "paper_slug", "run_id", "source_index_digest", "stages", "artifacts", "review_status", "promotion_status", "bundle_digest"],
+  "properties": {
+    "schema_version": {"const": "1.0.0"}, "paper_slug": {"type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"}, "run_id": {"type": "string", "minLength": 1}, "source_index_digest": {"$ref": "#/$defs/digest"},
+    "stages": {"type": "array", "items": {"type": "object", "additionalProperties": false, "required": ["stage_id", "status", "input_digests", "output_digests", "warnings"], "properties": {"stage_id": {"type": "string", "minLength": 1}, "status": {"enum": ["planned", "running", "complete", "failed", "blocked", "stale"]}, "input_digests": {"type": "array", "items": {"$ref": "#/$defs/digest"}, "uniqueItems": true}, "output_digests": {"type": "array", "items": {"$ref": "#/$defs/digest"}, "uniqueItems": true}, "warnings": {"type": "array", "items": {"type": "string"}}}}},
+    "artifacts": {"type": "array", "items": {"type": "object", "additionalProperties": false, "required": ["path", "digest", "kind"], "properties": {"path": {"type": "string", "not": {"pattern": "^(?:/|[A-Za-z]:[\\\\/])"}}, "digest": {"$ref": "#/$defs/digest"}, "kind": {"enum": ["ir", "section", "figure", "latex", "pdf", "log", "review", "receipt"]}}}},
+    "review_status": {"enum": ["not_run", "failed", "passed"]}, "promotion_status": {"enum": ["not_requested", "blocked", "eligible", "promoted"]}, "bundle_digest": {"$ref": "#/$defs/digest"}
+  }, "$defs": {"digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"}}
+}

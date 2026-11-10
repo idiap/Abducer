@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://prism.local/to-prism/contracts.schema.json",
+  "additionalProperties": false,
+  "properties": {
+    "artifact": {"const": "contracts"},
+    "contracts": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "confidence": {"enum": ["explicit", "inferred", "unknown"]},
+          "effects": {"items": {"type": "string"}, "type": "array"},
+          "errors": {"items": {"type": "object"}, "type": "array"},
+          "evidence": {"items": {"type": "object"}, "type": "array"},
+          "id": {"pattern": "^contract_[0-9a-f]{24}$", "type": "string"},
+          "input": {"type": "object"},
+          "name": {"minLength": 1, "type": "string"},
+          "output": {"type": "object"},
+          "permissions": {"items": {"type": "string"}, "type": "array"},
+          "providers": {"items": {"type": "string"}, "type": "array"},
+          "review_status": {"enum": ["extracted", "proposed", "reviewed", "approved"]},
+          "source_item_id": {"pattern": "^item_[0-9a-f]{24}$", "type": "string"}
+        },
+        "required": ["confidence", "effects", "errors", "evidence", "id", "input", "name", "output", "permissions", "providers", "review_status", "source_item_id"],
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "inventory_hash": {"pattern": "^sha256:[0-9a-f]{64}$", "type": "string"},
+    "schema_version": {"const": "1.0"},
+    "tool": {"type": "object"}
+  },
+  "required": ["artifact", "contracts", "inventory_hash", "schema_version", "tool"],
+  "type": "object"
+}

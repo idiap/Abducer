@@ -1,0 +1,189 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://abducer.local/spec/discovery_proof_receipt.schema.json",
+  "title": "Current claim-bound discovery proof receipt v2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "contract_version", "receipt_id", "content_digest", "handoff_id", "handoff_digest", "formal_claim_digest", "target_id", "run_id", "cycle_id", "branch_id", "origin_prior_state_version", "theory_generation", "concept_id", "conceptual_system_ids", "hypothesis_id", "conjecture_id", "obligation_id", "attempt_id", "attempt_number", "proof_adapter", "proof_execution_authorization", "execution_status", "proof_verdict", "substantive_cycle_consumed", "started_at", "completed_at", "workspace", "execution_authority", "process_event", "resource_receipt", "resource_receipt_digest", "result", "certificate", "artifact", "ledger_events", "reflective_assimilation", "authority_boundary"],
+  "properties": {
+    "schema_version": {"const": 2},
+    "contract_version": {"const": "discovery-proof-receipt/2.0.0"},
+    "receipt_id": {"$ref": "#/$defs/identifier"},
+    "content_digest": {"$ref": "#/$defs/digest"},
+    "handoff_id": {"$ref": "#/$defs/identifier"},
+    "handoff_digest": {"$ref": "#/$defs/digest"},
+    "formal_claim_digest": {"$ref": "#/$defs/digest"},
+    "target_id": {"$ref": "#/$defs/identifier"},
+    "run_id": {"$ref": "#/$defs/identifier"},
+    "cycle_id": {"$ref": "#/$defs/identifier"},
+    "branch_id": {"$ref": "#/$defs/identifier"},
+    "origin_prior_state_version": {"type": "integer", "minimum": 0},
+    "theory_generation": {"type": "integer", "minimum": 1},
+    "concept_id": {"$ref": "#/$defs/identifier"},
+    "conceptual_system_ids": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"$ref": "#/$defs/identifier"}},
+    "hypothesis_id": {"$ref": "#/$defs/identifier"},
+    "conjecture_id": {"$ref": "#/$defs/identifier"},
+    "obligation_id": {"$ref": "#/$defs/identifier"},
+    "attempt_id": {"$ref": "#/$defs/identifier"},
+    "attempt_number": {"type": "integer", "minimum": 1},
+    "proof_adapter": {"enum": ["exact", "finite_model", "lean", "command"]},
+    "proof_execution_authorization": {"$ref": "#/$defs/proofExecutionAuthorization"},
+    "execution_status": {"enum": ["not_started", "succeeded", "resource_limited", "failed"]},
+    "proof_verdict": {"enum": ["proof_validated", "counterexample_validated", "failed_premise_validated", "inconclusive", "not_evaluated"]},
+    "substantive_cycle_consumed": {"type": "boolean"},
+    "started_at": {"type": "string", "format": "date-time"},
+    "completed_at": {"type": "string", "format": "date-time"},
+    "workspace": {"$ref": "#/$defs/workspace"},
+    "execution_authority": {"$ref": "#/$defs/executionAuthority"},
+    "process_event": {"oneOf": [{"$ref": "#/$defs/solverProcessEvent"}, {"type": "null"}]},
+    "resource_receipt": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/resourceUsage"},
+    "resource_receipt_digest": {"$ref": "#/$defs/digest"},
+    "result": {"$ref": "#/$defs/result"},
+    "certificate": {"oneOf": [{"$ref": "#/$defs/certificate"}, {"type": "null"}]},
+    "artifact": {"oneOf": [{"$ref": "#/$defs/artifact"}, {"type": "null"}]},
+    "ledger_events": {"type": "array", "minItems": 1, "maxItems": 2, "items": {"$ref": "#/$defs/ledgerEvent"}},
+    "reflective_assimilation": {"$ref": "#/$defs/reflectiveAssimilation"},
+    "authority_boundary": {"const": "trusted_local_process_bytes_protocol_and_claim_bound_certificate_with_no_checker_soundness_theorem_truth_conceptual_merit_or_physics_authority"}
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"execution_status": {"const": "not_started"}}, "required": ["execution_status"]},
+      "then": {
+        "properties": {
+          "substantive_cycle_consumed": {"const": false},
+          "proof_verdict": {"const": "not_evaluated"},
+          "process_event": {"type": "null"},
+          "certificate": {"type": "null"},
+          "artifact": {"type": "null"},
+          "execution_authority": {"properties": {"authority_kind": {"const": "not_started"}, "logical_command": {"type": "null"}, "files": {"maxItems": 0}}},
+          "resource_receipt": {"properties": {"events": {"maxItems": 0}}}
+        }
+      },
+      "else": {
+        "properties": {
+          "substantive_cycle_consumed": {"const": true},
+          "process_event": {"$ref": "#/$defs/solverProcessEvent"},
+          "resource_receipt": {"properties": {"events": {"minItems": 1, "maxItems": 1}}}
+        }
+      }
+    },
+    {
+      "if": {"properties": {"proof_verdict": {"enum": ["proof_validated", "counterexample_validated", "failed_premise_validated"]}}, "required": ["proof_verdict"]},
+      "then": {"properties": {"execution_status": {"const": "succeeded"}, "certificate": {"$ref": "#/$defs/certificate"}}}
+    },
+    {
+      "if": {"properties": {"execution_status": {"enum": ["resource_limited", "failed"]}}, "required": ["execution_status"]},
+      "then": {"properties": {"proof_verdict": {"const": "not_evaluated"}, "certificate": {"type": "null"}}}
+    }
+  ],
+  "$defs": {
+    "digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "identifier": {"type": "string", "minLength": 1},
+    "jsonValue": {"oneOf": [{"type": "null"}, {"type": "boolean"}, {"type": "number"}, {"type": "string"}, {"type": "array", "items": {"$ref": "#/$defs/jsonValue"}}, {"type": "object", "additionalProperties": {"$ref": "#/$defs/jsonValue"}}]},
+    "proofExecutionAuthorization": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["schema_version", "authorization_kind", "authorization_id", "source_authorization_digest", "source_authorization_basis_digest", "reservation_digest", "reserved_commit_id", "reserved_manifest_digest", "reserved_state_generation", "source_commit_id", "source_manifest_digest", "source_state_generation", "reserved_action_ids", "target_id", "run_id", "cycle_id", "branch_id", "obligation_id", "handoff_id", "handoff_digest", "formal_claim_digest", "authority_boundary", "content_digest"],
+      "properties": {
+        "schema_version": {"const": 2},
+        "authorization_kind": {"const": "reserved_canonical_proof_execution"},
+        "authorization_id": {"$ref": "#/$defs/identifier"},
+        "source_authorization_digest": {"$ref": "#/$defs/digest"},
+        "source_authorization_basis_digest": {"$ref": "#/$defs/digest"},
+        "reservation_digest": {"$ref": "#/$defs/digest"},
+        "reserved_commit_id": {"$ref": "#/$defs/identifier"},
+        "reserved_manifest_digest": {"$ref": "#/$defs/digest"},
+        "reserved_state_generation": {"type": "integer", "minimum": 1},
+        "source_commit_id": {"$ref": "#/$defs/identifier"},
+        "source_manifest_digest": {"$ref": "#/$defs/digest"},
+        "source_state_generation": {"type": "integer", "minimum": 1},
+        "reserved_action_ids": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"$ref": "#/$defs/identifier"}},
+        "target_id": {"$ref": "#/$defs/identifier"},
+        "run_id": {"$ref": "#/$defs/identifier"},
+        "cycle_id": {"$ref": "#/$defs/identifier"},
+        "branch_id": {"$ref": "#/$defs/identifier"},
+        "obligation_id": {"$ref": "#/$defs/identifier"},
+        "handoff_id": {"$ref": "#/$defs/identifier"},
+        "handoff_digest": {"$ref": "#/$defs/digest"},
+        "formal_claim_digest": {"$ref": "#/$defs/digest"},
+        "authority_boundary": {"const": "live_reserved_theory_capability_and_reopened_commits_only_no_serialized_reconstruction_truth_or_physics_authority"},
+        "content_digest": {"$ref": "#/$defs/digest"}
+      }
+    },
+    "solverProcessEvent": {
+      "allOf": [
+        {"$ref": "./resource_governor_process_event_v2.schema.json#/$defs/processEventV2"},
+        {"properties": {"role": {"const": "solver"}}}
+      ]
+    },
+    "workspace": {
+      "type": "object", "additionalProperties": false,
+      "required": ["proof_root", "attempt_directory", "resolved_path", "content_digest"],
+      "properties": {"proof_root": {"type": "string", "minLength": 1}, "attempt_directory": {"type": "string", "minLength": 1}, "resolved_path": {"type": "string", "minLength": 1}, "content_digest": {"$ref": "#/$defs/digest"}}
+    },
+    "fileAuthority": {
+      "type": "object", "additionalProperties": false,
+      "required": ["path", "sha256", "byte_length", "executable"],
+      "properties": {"path": {"type": "string", "minLength": 1}, "sha256": {"$ref": "#/$defs/digest"}, "byte_length": {"type": "integer", "minimum": 1}, "executable": {"type": "boolean"}}
+    },
+    "executionAuthority": {
+      "type": "object", "additionalProperties": false,
+      "required": ["schema_version", "authority_kind", "logical_command", "files", "formal_claim_digest", "handoff_digest", "content_digest"],
+      "properties": {
+        "schema_version": {"const": 1},
+        "authority_kind": {"enum": ["builtin_worker", "lean", "external_checker", "not_started"]},
+        "logical_command": {"oneOf": [{"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}}, {"type": "null"}]},
+        "files": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/fileAuthority"}},
+        "formal_claim_digest": {"$ref": "#/$defs/digest"},
+        "handoff_digest": {"$ref": "#/$defs/digest"},
+        "content_digest": {"$ref": "#/$defs/digest"}
+      }
+    },
+    "artifact": {
+      "type": "object", "additionalProperties": false,
+      "required": ["relative_path", "sha256", "byte_length", "device", "inode", "mode", "nlink"],
+      "properties": {"relative_path": {"type": "string", "minLength": 1}, "sha256": {"$ref": "#/$defs/digest"}, "byte_length": {"type": "integer", "minimum": 0}, "device": {"type": "integer", "minimum": 0}, "inode": {"type": "integer", "minimum": 0}, "mode": {"type": "integer", "minimum": 0}, "nlink": {"const": 1}}
+    },
+    "result": {
+      "oneOf": [
+        {"type": "object", "additionalProperties": false, "required": ["kind", "reason"], "properties": {"kind": {"const": "not_started"}, "reason": {"type": "string", "minLength": 1}}},
+        {"type": "object", "additionalProperties": false, "required": ["kind", "response_digest", "worker_verdict"], "properties": {"kind": {"const": "builtin_worker_response"}, "response_digest": {"$ref": "#/$defs/digest"}, "worker_verdict": {"enum": ["claim_validated_within_declared_scope", "counterexample_validated_within_declared_scope", "inconclusive"]}}},
+        {"type": "object", "additionalProperties": false, "required": ["kind", "proposition", "source_digest"], "properties": {"kind": {"const": "lean_check"}, "proposition": {"type": "string", "minLength": 1}, "source_digest": {"$ref": "#/$defs/digest"}}},
+        {"type": "object", "additionalProperties": false, "required": ["kind", "response_digest", "checker_identity", "checker_version"], "properties": {"kind": {"const": "external_checker_response"}, "response_digest": {"$ref": "#/$defs/digest"}, "checker_identity": {"type": "string", "minLength": 1}, "checker_version": {"type": "string", "minLength": 1}}},
+        {"type": "object", "additionalProperties": false, "required": ["kind", "process_status", "reason"], "properties": {"kind": {"const": "operational_failure"}, "process_status": {"type": "string", "minLength": 1}, "reason": {"type": "string", "minLength": 1}}}
+      ]
+    },
+    "certificate": {
+      "type": "object", "additionalProperties": false,
+      "required": ["schema_version", "certificate_kind", "formal_claim_digest", "handoff_digest", "checker_kind", "scoped_certificate", "authority_boundary", "content_digest"],
+      "properties": {
+        "schema_version": {"const": 1},
+        "certificate_kind": {"enum": ["proof_validated", "counterexample_validated", "failed_premise_validated"]},
+        "formal_claim_digest": {"$ref": "#/$defs/digest"},
+        "handoff_digest": {"$ref": "#/$defs/digest"},
+        "checker_kind": {"enum": ["builtin_exact", "builtin_finite_model", "lean_kernel", "external_checker"]},
+        "scoped_certificate": {"type": "object", "additionalProperties": {"$ref": "#/$defs/jsonValue"}},
+        "authority_boundary": {"const": "certificate_valid_only_for_the_exact_formal_claim_and_declared_checker_scope"},
+        "content_digest": {"$ref": "#/$defs/digest"}
+      }
+    },
+    "ledgerEvent": {
+      "type": "object", "additionalProperties": false,
+      "required": ["target_id", "run_id", "cycle_id", "branch_id", "origin_prior_state_version", "theory_generation", "concept_id", "hypothesis_id", "conjecture_id", "obligation_id", "attempt_id", "event_type", "execution_status", "proof_verdict", "hypothesis_update", "branch_update", "operational_is_not_epistemic"],
+      "properties": {
+        "target_id": {"$ref": "#/$defs/identifier"}, "run_id": {"$ref": "#/$defs/identifier"}, "cycle_id": {"$ref": "#/$defs/identifier"}, "branch_id": {"$ref": "#/$defs/identifier"}, "origin_prior_state_version": {"type": "integer", "minimum": 0}, "theory_generation": {"type": "integer", "minimum": 1}, "concept_id": {"$ref": "#/$defs/identifier"}, "hypothesis_id": {"$ref": "#/$defs/identifier"}, "conjecture_id": {"$ref": "#/$defs/identifier"}, "obligation_id": {"$ref": "#/$defs/identifier"}, "attempt_id": {"$ref": "#/$defs/identifier"},
+        "event_type": {"enum": ["proof_attempt_terminal", "proof_certificate_validated", "verified_counterexample", "verified_failed_premise"]},
+        "execution_status": {"enum": ["not_started", "succeeded", "resource_limited", "failed"]},
+        "proof_verdict": {"enum": ["proof_validated", "counterexample_validated", "failed_premise_validated", "inconclusive", "not_evaluated"]},
+        "hypothesis_update": {"oneOf": [{"type": "string", "minLength": 1}, {"type": "null"}]},
+        "branch_update": {"oneOf": [{"type": "string", "minLength": 1}, {"type": "null"}]},
+        "operational_is_not_epistemic": {"type": "boolean"}
+      }
+    },
+    "reflectiveAssimilation": {
+      "type": "object", "additionalProperties": false,
+      "required": ["theory_programme_id", "recommendation", "authority_boundary"],
+      "properties": {"theory_programme_id": {"$ref": "#/$defs/identifier"}, "recommendation": {"type": "string", "minLength": 1}, "authority_boundary": {"const": "proof_runtime_returns_claim_bound_results_to_reflection_and_does_not_select_theory"}}
+    }
+  }
+}

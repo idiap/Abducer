@@ -1,0 +1,292 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://abducer.local/schemas/literature_source_version_graph.schema.json",
+  "title": "Literature source version and correction graph v2",
+  "description": "A closed, evidence-bound DOI-concept lineage. It routes claim audits but supplies no source-truth, peer-review, or theorem authority.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "graph_id",
+    "target_id",
+    "work_identity",
+    "concept_doi",
+    "observed_at",
+    "terminal_source_id",
+    "current_source_id",
+    "lineage_membership",
+    "versions",
+    "edges",
+    "authority_boundary",
+    "content_digest"
+  ],
+  "$defs": {
+    "id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 200,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$"
+    },
+    "digest": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
+    "doi": {"type": "string", "pattern": "^10\\.[0-9]{4,9}/\\S+$"},
+    "nonempty": {"type": "string", "minLength": 1},
+    "evidence_binding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "artifact_lane_id",
+        "artifact_content_digest",
+        "item_id",
+        "item_digest",
+        "source_id",
+        "observation_digest",
+        "evidence_id",
+        "evidence_digest",
+        "evidence_kind"
+      ],
+      "properties": {
+        "artifact_lane_id": {"$ref": "#/$defs/id"},
+        "artifact_content_digest": {"$ref": "#/$defs/digest"},
+        "item_id": {"$ref": "#/$defs/id"},
+        "item_digest": {"$ref": "#/$defs/digest"},
+        "source_id": {"$ref": "#/$defs/id"},
+        "observation_digest": {"$ref": "#/$defs/digest"},
+        "evidence_id": {"$ref": "#/$defs/id"},
+        "evidence_digest": {"$ref": "#/$defs/digest"},
+        "evidence_kind": {
+          "enum": [
+            "primary_repository_metadata",
+            "primary_repository_relation",
+            "primary_record_note",
+            "publisher_status_notice",
+            "bounded_capture_limitation"
+          ]
+        }
+      }
+    },
+    "binding_list": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {"$ref": "#/$defs/evidence_binding"}
+    },
+    "lineage_membership": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "ordered_record_dois",
+        "evidence_bindings",
+        "membership_digest"
+      ],
+      "properties": {
+        "ordered_record_dois": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/doi"}
+        },
+        "evidence_bindings": {"$ref": "#/$defs/binding_list"},
+        "membership_digest": {"$ref": "#/$defs/digest"}
+      }
+    },
+    "version": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "ordinal",
+        "source_id",
+        "record_doi",
+        "source_version",
+        "publication_date",
+        "repository_created_at",
+        "repository_updated_at",
+        "status",
+        "decision_role",
+        "present_investment_eligibility",
+        "predecessor_source_id",
+        "successor_source_id",
+        "identity_evidence_bindings",
+        "ordering_evidence_bindings",
+        "status_evidence_bindings",
+        "claim_authority"
+      ],
+      "properties": {
+        "ordinal": {"type": "integer", "minimum": 1},
+        "source_id": {"$ref": "#/$defs/id"},
+        "record_doi": {"$ref": "#/$defs/doi"},
+        "source_version": {"$ref": "#/$defs/nonempty"},
+        "publication_date": {"type": "string", "format": "date"},
+        "repository_created_at": {"type": "string", "format": "date-time"},
+        "repository_updated_at": {"type": "string", "format": "date-time"},
+        "status": {
+          "enum": ["superseded", "current", "corrected", "withdrawn", "retracted"]
+        },
+        "decision_role": {
+          "enum": [
+            "historical_correction_context_only",
+            "current_unverified_claim_audit",
+            "negative_withdrawal_evidence"
+          ]
+        },
+        "present_investment_eligibility": {
+          "enum": [
+            "blocked_positive_support",
+            "unverified_audit_only",
+            "negative_evidence_only"
+          ]
+        },
+        "predecessor_source_id": {
+          "oneOf": [{"type": "null"}, {"$ref": "#/$defs/id"}]
+        },
+        "successor_source_id": {
+          "oneOf": [{"type": "null"}, {"$ref": "#/$defs/id"}]
+        },
+        "identity_evidence_bindings": {"$ref": "#/$defs/binding_list"},
+        "ordering_evidence_bindings": {"$ref": "#/$defs/binding_list"},
+        "status_evidence_bindings": {"$ref": "#/$defs/binding_list"},
+        "claim_authority": {"const": "unverified_author_claims_only"}
+      }
+    },
+    "relation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "relation",
+        "claim_digests",
+        "evidence_bindings",
+        "relation_digest"
+      ],
+      "properties": {
+        "relation": {
+          "enum": [
+            "revision",
+            "supersedes",
+            "corrects",
+            "narrows_scope",
+            "broadens_scope",
+            "changes_scope",
+            "changes_architecture"
+          ]
+        },
+        "claim_digests": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/digest"}
+        },
+        "evidence_bindings": {"$ref": "#/$defs/binding_list"},
+        "relation_digest": {"$ref": "#/$defs/digest"}
+      }
+    },
+    "scope_delta": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "classification",
+        "claim_digests",
+        "evidence_bindings",
+        "delta_digest"
+      ],
+      "properties": {
+        "classification": {
+          "enum": ["unchanged", "narrowed", "broadened", "changed_other", "unresolved"]
+        },
+        "claim_digests": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/digest"}
+        },
+        "evidence_bindings": {"$ref": "#/$defs/binding_list"},
+        "delta_digest": {"$ref": "#/$defs/digest"}
+      }
+    },
+    "architecture_delta": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "classification",
+        "claim_digests",
+        "evidence_bindings",
+        "delta_digest"
+      ],
+      "properties": {
+        "classification": {"enum": ["unchanged", "changed", "unresolved"]},
+        "claim_digests": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/digest"}
+        },
+        "evidence_bindings": {"$ref": "#/$defs/binding_list"},
+        "delta_digest": {"$ref": "#/$defs/digest"}
+      }
+    },
+    "edge": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "edge_id",
+        "from_source_id",
+        "to_source_id",
+        "relations",
+        "scope_delta",
+        "architecture_delta",
+        "edge_digest"
+      ],
+      "properties": {
+        "edge_id": {"$ref": "#/$defs/id"},
+        "from_source_id": {"$ref": "#/$defs/id"},
+        "to_source_id": {"$ref": "#/$defs/id"},
+        "relations": {
+          "type": "array",
+          "minItems": 2,
+          "items": {"$ref": "#/$defs/relation"}
+        },
+        "scope_delta": {"$ref": "#/$defs/scope_delta"},
+        "architecture_delta": {"$ref": "#/$defs/architecture_delta"},
+        "edge_digest": {"$ref": "#/$defs/digest"}
+      }
+    }
+  },
+  "properties": {
+    "schema_version": {"const": "2.0"},
+    "graph_id": {"$ref": "#/$defs/id"},
+    "target_id": {"$ref": "#/$defs/id"},
+    "work_identity": {"$ref": "#/$defs/nonempty"},
+    "concept_doi": {"$ref": "#/$defs/doi"},
+    "observed_at": {"type": "string", "format": "date-time"},
+    "terminal_source_id": {"$ref": "#/$defs/id"},
+    "current_source_id": {
+      "oneOf": [{"type": "null"}, {"$ref": "#/$defs/id"}]
+    },
+    "lineage_membership": {"$ref": "#/$defs/lineage_membership"},
+    "versions": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/version"}
+    },
+    "edges": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/edge"}
+    },
+    "authority_boundary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "version_metadata_authority",
+        "claim_truth_authority",
+        "peer_validation_authority",
+        "allowed_use"
+      ],
+      "properties": {
+        "version_metadata_authority": {
+          "const": "primary_repository_record_plus_sealed_tool_visible_capture"
+        },
+        "claim_truth_authority": {"const": false},
+        "peer_validation_authority": {"const": false},
+        "allowed_use": {
+          "const": "supersession-aware discovery routing and claim-specific audit creation"
+        }
+      }
+    },
+    "content_digest": {"$ref": "#/$defs/digest"}
+  }
+}

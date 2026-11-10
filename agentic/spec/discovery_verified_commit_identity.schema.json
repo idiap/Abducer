@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://abducer.local/spec/discovery_verified_commit_identity.schema.json",
+  "title": "Path-free verified discovery commit identity",
+  "description": "Exact immutable commit identity used at causal boundaries. Runtime paths are deliberately excluded so the identity survives relocation.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "identity_kind",
+    "target_id",
+    "run_id",
+    "generation",
+    "prior_generation",
+    "commit_id",
+    "manifest_digest",
+    "state_file_digest",
+    "state_semantic_digest",
+    "frozen_theory_state_projection_digest",
+    "identity_digest"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "identity_kind": {"const": "verified_discovery_commit"},
+    "target_id": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/identifier"},
+    "run_id": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/identifier"},
+    "generation": {"type": "integer", "minimum": 1},
+    "prior_generation": {"type": "integer", "minimum": 0},
+    "commit_id": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/identifier"},
+    "manifest_digest": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/digest"},
+    "state_file_digest": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/digest"},
+    "state_semantic_digest": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/digest"},
+    "frozen_theory_state_projection_digest": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/digest"},
+    "identity_digest": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/digest"}
+  }
+}

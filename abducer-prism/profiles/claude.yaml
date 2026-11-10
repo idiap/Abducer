@@ -1,0 +1,78 @@
+{
+  "schema_version": 1,
+  "provider": "claude",
+  "profile_version": "2026-08-19",
+  "retrieved_at": "2026-08-19",
+  "sources": [
+    {"title": "Claude Code hooks reference", "url": "https://code.claude.com/docs/en/hooks"},
+    {"title": "Claude Code directory", "url": "https://code.claude.com/docs/en/claude-directory"},
+    {"title": "Claude Code skills", "url": "https://code.claude.com/docs/en/slash-commands"},
+    {"title": "Claude Code subagents", "url": "https://code.claude.com/docs/en/sub-agents"},
+    {"title": "Claude Code settings", "url": "https://code.claude.com/docs/en/configuration"},
+    {"title": "Claude Code MCP", "url": "https://code.claude.com/docs/en/mcp"}
+  ],
+  "project_markers": ["CLAUDE.md", "CLAUDE.local.md", ".claude/settings.json", ".claude/skills", ".claude/agents", ".mcp.json", ".claude-plugin/plugin.json"],
+  "artifact_rules": [
+    {"id": "instructions", "kind": "instructions", "globs": ["CLAUDE.md", "CLAUDE.local.md", "**/CLAUDE.md", "**/CLAUDE.local.md", ".claude/rules/*.md", ".claude/rules/**/*.md"], "priority": 80},
+    {"id": "settings", "kind": "configuration", "globs": [".claude/settings.json", ".claude/settings.local.json"], "priority": 100},
+    {"id": "skills", "kind": "skill", "globs": [".claude/skills/*/SKILL.md", ".claude/skills/**/SKILL.md"], "priority": 100},
+    {"id": "skill_resources", "kind": "skill_resource", "globs": [".claude/skills/*/assets/**", ".claude/skills/*/references/**", ".claude/skills/*/scripts/**"], "priority": 90},
+    {"id": "agents", "kind": "agent", "globs": [".claude/agents/*.md", ".claude/agents/**/*.md"], "priority": 100},
+    {"id": "legacy_commands", "kind": "command", "globs": [".claude/commands/*.md", ".claude/commands/**/*.md"], "priority": 90},
+    {"id": "mcp", "kind": "mcp_configuration", "globs": [".mcp.json"], "priority": 100},
+    {"id": "plugin_manifest", "kind": "plugin_manifest", "globs": [".claude-plugin/plugin.json"], "priority": 110},
+    {"id": "plugin_hooks", "kind": "hook_configuration", "globs": ["hooks/hooks.json"], "priority": 100}
+  ],
+  "hooks": {
+    "contract": "declarative_settings_json_or_component_frontmatter",
+    "configuration_globs": [".claude/settings.json", ".claude/settings.local.json", "hooks/hooks.json", ".claude/skills/*/SKILL.md", ".claude/agents/*.md"],
+    "events": {
+      "SessionStart": {"matcher": "source", "guard_role": "context"},
+      "Setup": {"matcher": "trigger", "guard_role": "none"},
+      "InstructionsLoaded": {"matcher": "reason", "guard_role": "none"},
+      "UserPromptSubmit": {"matcher": null, "guard_role": "none"},
+      "UserPromptExpansion": {"matcher": "command", "guard_role": "none"},
+      "MessageDisplay": {"matcher": "message_type", "guard_role": "none"},
+      "PreToolUse": {"matcher": "tool_name", "guard_role": "source_write_execution_secret"},
+      "PermissionRequest": {"matcher": "tool_name", "guard_role": "execution"},
+      "PostToolUse": {"matcher": "tool_name", "guard_role": "post_generation"},
+      "PostToolUseFailure": {"matcher": "tool_name", "guard_role": "post_generation"},
+      "PostToolBatch": {"matcher": null, "guard_role": "post_generation"},
+      "PermissionDenied": {"matcher": "tool_name", "guard_role": "none"},
+      "Notification": {"matcher": "notification_type", "guard_role": "none"},
+      "SubagentStart": {"matcher": "agent_type", "guard_role": "context"},
+      "SubagentStop": {"matcher": "agent_type", "guard_role": "checkpoint"},
+      "TaskCreated": {"matcher": null, "guard_role": "none"},
+      "TaskCompleted": {"matcher": null, "guard_role": "checkpoint"},
+      "Stop": {"matcher": null, "guard_role": "completion"},
+      "StopFailure": {"matcher": "error_type", "guard_role": "checkpoint_advisory"},
+      "TeammateIdle": {"matcher": null, "guard_role": "checkpoint"},
+      "ConfigChange": {"matcher": "source", "guard_role": "none"},
+      "CwdChanged": {"matcher": null, "guard_role": "none"},
+      "DirectoryAdded": {"matcher": "directory", "guard_role": "none"},
+      "FileChanged": {"matcher": "filename", "guard_role": "none"},
+      "WorktreeCreate": {"matcher": null, "guard_role": "source_write_execution_secret"},
+      "WorktreeRemove": {"matcher": null, "guard_role": "source_write_execution_secret"},
+      "PreCompact": {"matcher": "trigger", "guard_role": "none"},
+      "PostCompact": {"matcher": "trigger", "guard_role": "none"},
+      "SessionEnd": {"matcher": "reason", "guard_role": "checkpoint_advisory"},
+      "Elicitation": {"matcher": "mcp_server", "guard_role": "none"},
+      "ElicitationResult": {"matcher": "mcp_server", "guard_role": "none"}
+    },
+    "handler_types": {
+      "command": {"status": "executed"},
+      "http": {"status": "executed"},
+      "mcp_tool": {"status": "executed"},
+      "prompt": {"status": "executed"},
+      "agent": {"status": "experimental"}
+    },
+    "unknown_event": "unsupported"
+  },
+  "limitations": [
+    "There is no standalone .claude/hooks.json; project hooks belong under hooks in settings.json.",
+    "Plugin hooks use hooks/hooks.json and component-scoped hooks may live in skill or agent frontmatter.",
+    "Agent hook handlers are experimental in the documented snapshot.",
+    "Settings.local.json and CLAUDE.local.md are local/private scope and must not be silently treated as redistributable.",
+    "Prism can preserve typed Claude hook artifacts, but the current Prism model runner cannot establish native activation."
+  ]
+}

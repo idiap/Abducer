@@ -1,0 +1,231 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://abducer.local/schemas/source_routing_realization.schema.json",
+  "title": "Source-routing post-assimilation realization",
+  "description": "Replayable evidence that warrant validation, claim mapping, and assimilation consumed one previously sealed pre-map policy in exact order. The realization authorizes downstream causal consumption, never truth, preference, or investment.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "realization_id",
+    "target_id",
+    "run_id",
+    "state_version",
+    "completed_at",
+    "pre_map_policy",
+    "pre_map_policy_id",
+    "pre_map_policy_digest",
+    "completed_outputs",
+    "stage_receipts",
+    "post_assimilation_authorizations",
+    "downstream_consumption_contract",
+    "authority_boundary",
+    "realization_digest"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "realization_id": {"$ref": "#/$defs/identifier"},
+    "target_id": {"$ref": "#/$defs/identifier"},
+    "run_id": {"$ref": "#/$defs/identifier"},
+    "state_version": {"type": "integer", "minimum": 0},
+    "completed_at": {"type": "string", "format": "date-time"},
+    "pre_map_policy": {"$ref": "./source_routing_pre_map_policy.schema.json"},
+    "pre_map_policy_id": {"$ref": "#/$defs/identifier"},
+    "pre_map_policy_digest": {"$ref": "#/$defs/digest"},
+    "completed_outputs": {"$ref": "#/$defs/completedOutputs"},
+    "stage_receipts": {
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 3,
+      "items": {"$ref": "#/$defs/stageReceipt"}
+    },
+    "post_assimilation_authorizations": {
+      "type": "array",
+      "minItems": 4,
+      "maxItems": 4,
+      "items": {"$ref": "#/$defs/postAssimilationAuthorization"}
+    },
+    "downstream_consumption_contract": {"$ref": "#/$defs/downstreamContract"},
+    "authority_boundary": {
+      "const": "two-phase source-routing realization only; no source truth, semantic entailment, positive support, peer review, novelty, exhaustiveness, conceptual merit, creativity efficacy, physics value, experiment authority, proof authority, or investment authority"
+    },
+    "realization_digest": {"$ref": "#/$defs/digest"}
+  },
+  "$defs": {
+    "identifier": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$"
+    },
+    "digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "identity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["target_id", "run_id", "state_version"],
+      "properties": {
+        "target_id": {"$ref": "#/$defs/identifier"},
+        "run_id": {"$ref": "#/$defs/identifier"},
+        "state_version": {"type": "integer", "minimum": 0}
+      }
+    },
+    "warrantOutput": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source_ids", "warrant_ids", "warrant_count", "output_digest"],
+      "properties": {
+        "source_ids": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/identifier"}
+        },
+        "warrant_ids": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/identifier"}
+        },
+        "warrant_count": {"type": "integer", "minimum": 0},
+        "output_digest": {"$ref": "#/$defs/digest"}
+      }
+    },
+    "mappingOutput": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source_ids", "mapping_ids", "mapping_count", "output_digest"],
+      "properties": {
+        "source_ids": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/identifier"}
+        },
+        "mapping_ids": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/identifier"}
+        },
+        "mapping_count": {"type": "integer", "minimum": 1},
+        "output_digest": {"$ref": "#/$defs/digest"}
+      }
+    },
+    "assimilationOutput": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "packet_id",
+        "packet_digest",
+        "selected_snapshot_id",
+        "selected_snapshot_digest",
+        "mapping_output_digest"
+      ],
+      "properties": {
+        "packet_id": {"$ref": "#/$defs/identifier"},
+        "packet_digest": {"$ref": "#/$defs/digest"},
+        "selected_snapshot_id": {"$ref": "#/$defs/identifier"},
+        "selected_snapshot_digest": {"$ref": "#/$defs/digest"},
+        "mapping_output_digest": {"$ref": "#/$defs/digest"}
+      }
+    },
+    "completedOutputs": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["warrant_validation", "claim_mapping", "assimilation"],
+      "properties": {
+        "warrant_validation": {"$ref": "#/$defs/warrantOutput"},
+        "claim_mapping": {"$ref": "#/$defs/mappingOutput"},
+        "assimilation": {"$ref": "#/$defs/assimilationOutput"}
+      }
+    },
+    "stageReceipt": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "receipt_id",
+        "stage",
+        "status",
+        "identity",
+        "pre_map_policy_id",
+        "pre_map_policy_digest",
+        "algorithm_contract_digest",
+        "started_at",
+        "completed_at",
+        "input_digest",
+        "output_digest"
+      ],
+      "properties": {
+        "receipt_id": {"$ref": "#/$defs/identifier"},
+        "stage": {"enum": ["warrant_validation", "claim_mapping", "assimilation"]},
+        "status": {"const": "succeeded"},
+        "identity": {"$ref": "#/$defs/identity"},
+        "pre_map_policy_id": {"$ref": "#/$defs/identifier"},
+        "pre_map_policy_digest": {"$ref": "#/$defs/digest"},
+        "algorithm_contract_digest": {"$ref": "#/$defs/digest"},
+        "started_at": {"type": "string", "format": "date-time"},
+        "completed_at": {"type": "string", "format": "date-time"},
+        "input_digest": {"$ref": "#/$defs/digest"},
+        "output_digest": {"$ref": "#/$defs/digest"}
+      }
+    },
+    "postAssimilationAuthorization": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["stage", "required_consumer", "binding_digest"],
+      "properties": {
+        "stage": {
+          "enum": [
+            "high_risk_investment",
+            "parallel_scheduling",
+            "canonical_commit",
+            "theory_gate_acceptance"
+          ]
+        },
+        "required_consumer": {
+          "enum": [
+            "high-risk-hypothesis-forger",
+            "parallel-hypothesis-portfolio",
+            "canonical-discovery-cycle",
+            "canonical-theory-gate"
+          ]
+        },
+        "binding_digest": {"$ref": "#/$defs/digest"}
+      }
+    },
+    "downstreamContract": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "required_envelope_fields",
+        "required_operator_ids",
+        "required_internal_consumers",
+        "omission_policy",
+        "substitution_policy",
+        "late_realization_policy",
+        "content_digest"
+      ],
+      "properties": {
+        "required_envelope_fields": {
+          "const": ["source_routing_pre_map_policy", "source_routing_realization"]
+        },
+        "required_operator_ids": {
+          "const": [
+            "high-risk-hypothesis-forger",
+            "parallel-hypothesis-portfolio",
+            "reflective-conceptual-discovery",
+            "reflective-theory-synthesizer",
+            "blind-conceptual-preference-adjudicator",
+            "dynamic-symbolic-simulation-experimenter"
+          ]
+        },
+        "required_internal_consumers": {
+          "const": ["canonical-discovery-cycle", "canonical-theory-gate"]
+        },
+        "omission_policy": {"const": "fail_closed"},
+        "substitution_policy": {"const": "exact_policy_and_realization_objects_only"},
+        "late_realization_policy": {"const": "reject_after_first_downstream_dispatch"},
+        "content_digest": {"$ref": "#/$defs/digest"}
+      }
+    }
+  }
+}

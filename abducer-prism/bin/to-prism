@@ -1,0 +1,15 @@
+#!/bin/sh
+# SPDX-FileCopyrightText: © 2026 Idiap Research Institute <contact@idiap.ch>
+#
+# SPDX-FileContributor: Andre Freitas <andre.freitas@idiap.ch>
+# Neuro-symbolic AI Group
+#
+# SPDX-FileContributor: Danilo Gusicuma <danilo.gusicuma@idiap.ch>
+# Neuro-symbolic AI Group
+#
+# SPDX-License-Identifier: MIT
+set -eu
+TO_PRISM_ROOT=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd -P)
+export TO_PRISM_TOOLCHAIN_ROOT="$TO_PRISM_ROOT"
+PYTHONPATH="$TO_PRISM_ROOT/src${PYTHONPATH:+:$PYTHONPATH}" \
+  exec "${PYTHON:-python3}" -m to_prism "$@"

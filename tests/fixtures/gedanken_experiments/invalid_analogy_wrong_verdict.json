@@ -1,0 +1,138 @@
+{
+  "packet_id": "gedanken.fixture.invalid.analogy-verdict",
+  "target_id": "fixture-target",
+  "created_utc": "2026-07-09T00:00:00Z",
+  "source_artifacts": [
+    "tests/fixtures/gedanken_experiments/valid_packet.json"
+  ],
+  "originating_cycle_ids": [
+    "cycle-fixture"
+  ],
+  "originating_branch_ids": [
+    "branch-fixture"
+  ],
+  "need_decision": "quarantine_as_analogy",
+  "need_assessment": {
+    "decision": "quarantine_as_analogy",
+    "criteria_met": [
+      "The branch has typed variables but a hidden low-support channel could explain the observation.",
+      "A controlled contrast can separate visible-channel decay from sector-wide support."
+    ],
+    "criteria_missing": [
+      "A transfer certificate to the target observable family is still open."
+    ],
+    "rejected_alternatives": [
+      "not_needed",
+      "run_concrete_probe_first"
+    ],
+    "why_not_direct_derivation_or_probe": "A direct derivation would simply assume away the hidden channel; the imagined case identifies what the derivation must rule out."
+  },
+  "trigger_criteria": [
+    "The branch has typed variables but no discriminating situation that can expose the hidden assumption.",
+    "A follow-up cycle could derive the exact support condition."
+  ],
+  "situation": {
+    "title": "Two channels with hidden leakage",
+    "purpose": "Separate apparent decay from true absence of low-support leakage.",
+    "minimal_world": "A positive measure has one visible high-support channel and one hidden low-support channel.",
+    "mathematical_carrier": "A two-component positive measure and its Laplace transform.",
+    "controlled_contrast": "Visible channel only versus visible plus hidden channel.",
+    "why_this_situation_is_informative": "It forces the follow-up cycle to test whether the observation is sector-wide or only channel-specific.",
+    "non_claims": [
+      "This does not prove the target.",
+      "This does not replace a spectral theorem."
+    ]
+  },
+  "variables": [
+    {
+      "id": "epsilon",
+      "role": "hidden low-support mass",
+      "control_status": "varied",
+      "held_fixed_or_varied": "varied",
+      "validity_regime": "positive spectral validity regime"
+    },
+    {
+      "id": "C",
+      "role": "observed decay",
+      "control_status": "dependent",
+      "held_fixed_or_varied": "observed",
+      "validity_regime": "positive spectral validity regime"
+    }
+  ],
+  "interventions": [
+    {
+      "id": "increase-hidden-tail",
+      "operation": "Increase epsilon while holding the visible high-support channel fixed.",
+      "varied_variable": "epsilon",
+      "held_fixed": [
+        "visible channel",
+        "normalization"
+      ],
+      "predicted_direction": "late-time decay slows",
+      "decision_value": "If hidden leakage dominates, the branch needs a density or support lemma."
+    }
+  ],
+  "expected_observations": [
+    {
+      "id": "late-tail",
+      "observable": "effective decay rate",
+      "expected_pattern": "The rate bends downward at late time.",
+      "what_it_would_teach": "One observable window does not suffice for a sector-wide claim.",
+      "what_would_disconfirm_it": "A uniform support bound would disconfirm the hidden-tail scenario."
+    }
+  ],
+  "variants": [
+    {
+      "id": "remove-tail",
+      "changed_condition": "Set epsilon to zero.",
+      "predicted_change": "The late-time bend disappears.",
+      "reason_for_variant": "Isolates the hidden variable."
+    }
+  ],
+  "insight_hypotheses": [
+    "The branch needs a support or density condition before promoting decay."
+  ],
+  "transfer_scope": {
+    "transfer_verdict": "needs_certificate",
+    "transfers": "The conceptual distinction between visible-channel decay and sector-wide support.",
+    "does_not_transfer": "Any proof of the target statement.",
+    "transfer_certificate_needed": "A map from the imagined carrier to the target observable family."
+  },
+  "affected_node_ids": [
+    "var.hidden_tail",
+    "var.observed_decay"
+  ],
+  "affected_edge_ids": [
+    "rel.fixture-decay-to-support"
+  ],
+  "graph_update_action": "needs_probe",
+  "proposed_graph_updates": [
+    {
+      "edge_id": "rel.fixture-decay-to-support",
+      "action": "needs_probe",
+      "epistemic_status": "conceptual_probe",
+      "rationale": "Hidden leakage must be ruled out before decay is promoted."
+    }
+  ],
+  "followup_cycle_tasks": [
+    {
+      "action": "derive",
+      "description": "Derive the support condition needed to rule out hidden low-energy leakage.",
+      "success_criterion": "The condition names the observable family and support interval.",
+      "failure_or_demotion_criterion": "If only one observable is controlled, demote to evidence task.",
+      "required_skills": [
+        "gedanken-transfer-guard",
+        "limit-convergence-behavior-auditor"
+      ],
+      "packet_id": "gedanken.fixture.invalid.analogy-verdict",
+      "situation_title": "Two channels with hidden leakage",
+      "transfer_verdict": "needs_certificate"
+    }
+  ],
+  "failure_modes": [
+    "The situation is analogy-only.",
+    "The follow-up cycle does not name a transferable condition."
+  ],
+  "epistemic_status": "conceptual_probe",
+  "validation_handoff": "python agentic/scripts/validate_gedanken_experiment_packets.py"
+}

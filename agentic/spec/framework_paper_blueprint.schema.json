@@ -1,0 +1,10 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema", "$id": "urn:abducer:framework-paper:blueprint:1",
+  "title": "PaperBlueprint", "type": "object", "additionalProperties": false,
+  "required": ["schema_version", "blueprint_id", "input_digest", "thesis", "paper_kind", "section_order", "sections", "glossary", "notation_ids", "figure_plan", "non_claims", "citation_keys", "blueprint_digest"],
+  "properties": {
+    "schema_version": {"const": "1.0.0"}, "blueprint_id": {"type": "string", "minLength": 1}, "title": {"type": "string", "minLength": 1}, "input_digest": {"$ref": "#/$defs/digest"}, "thesis": {"type": "string", "minLength": 1}, "paper_kind": {"enum": ["descriptive_framework", "empirical_framework", "comparative_framework"]},
+    "section_order": {"$ref": "#/$defs/nonemptyStrings"}, "sections": {"type": "array", "minItems": 1, "items": {"type": "object", "additionalProperties": false, "required": ["section_id", "title", "owner", "allowed_claim_ids", "required"], "properties": {"section_id": {"type": "string", "minLength": 1}, "title": {"type": "string", "minLength": 1}, "owner": {"type": "string", "pattern": "^framework-paper-[a-z0-9-]+$"}, "allowed_claim_ids": {"type": "array", "items": {"type": "string"}, "uniqueItems": true}, "required": {"type": "boolean"}}}},
+    "glossary": {"type": "object", "additionalProperties": {"type": "string"}}, "notation_ids": {"type": "array", "items": {"type": "string"}, "uniqueItems": true}, "figure_plan": {"type": "array", "items": {"type": "string"}, "uniqueItems": true}, "non_claims": {"type": "array", "items": {"type": "string"}}, "citation_keys": {"type": "array", "items": {"type": "string"}, "uniqueItems": true}, "blueprint_digest": {"$ref": "#/$defs/digest"}
+  }, "$defs": {"digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"}, "nonemptyStrings": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}, "uniqueItems": true}}
+}

@@ -1,0 +1,553 @@
+\documentclass[11pt]{article}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage[margin=1in]{geometry}
+\usepackage{microtype}
+\usepackage{amsmath,amssymb,mathtools,amsthm}
+\usepackage{booktabs,tabularx,array}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage{hyperref}
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue!55!black,
+  citecolor=blue!55!black,
+  urlcolor=blue!55!black
+}
+
+\newtheorem{definition}{Definition}
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}{Proposition}
+\newtheorem{conjecture}{Conjectural theorem target}
+\theoremstyle{remark}
+\newtheorem{remark}{Remark}
+
+\newcommand{\Spec}{\operatorname{Spec}}
+\newcommand{\Var}{\operatorname{Var}}
+\newcommand{\Cov}{\operatorname{Cov}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\cA}{\mathcal{A}}
+\newcommand{\cF}{\mathcal{F}}
+\newcommand{\cH}{\mathcal{H}}
+
+\title{Addressing the Yang--Mills Existence and Mass-Gap Problem\\
+\large Through Relational Rigidity and Phenomenon-Preserving Representations}
+\author{}
+\date{}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+The phenomenon-preserving interpretation of physical representation suggests a
+concrete reformulation of the Yang--Mills existence and mass-gap problem.
+Rather than privileging gauge potentials, particles, or a particular regulator,
+one seeks a coherent continuum family of gauge-invariant observable relations
+and proves that local non-Abelian dynamics generates a strictly positive form
+of infrared relational rigidity.  This rigidity must be transported through
+gauge-invariant coarse-graining, the continuum and infinite-volume limits, and
+Osterwalder--Schrader reconstruction to the spectrum of the physical
+Hamiltonian.  The programme developed here isolates three theorem targets: a
+rigidity-transfer theorem, an RG-to-rigidity theorem, and a Yang--Mills
+infrared-basin-entry theorem.  The first is a conditional spectral principle;
+the second can be calibrated in restricted models; the third contains the
+genuine four-dimensional frontier.  No result in this essay constitutes a
+proof of the Clay problem; the purpose is to identify a noncircular proof
+architecture and the exact generative theorem still required.
+\end{abstract}
+
+\section{The Clay problem under the relational interpretation}
+
+The official target is to prove, for every compact simple gauge group $G$, that
+a nontrivial quantum Yang--Mills theory exists on $\R^4$ and has a physical
+Hamiltonian $H$ satisfying
+\begin{equation}
+  \Spec(H)\subseteq\{0\}\cup[\Delta,\infty),
+  \qquad \Delta>0.
+  \label{eq:clay-target}
+\end{equation}
+The construction must satisfy sufficiently strong axiomatic quantum-field
+theoretic conditions \cite{jaffe-witten}.  The difficulty includes both the
+existence of a nontrivial four-dimensional continuum theory and a gap uniform
+in the infinite-volume limit.
+
+Under the relational ontology, the problem becomes:
+\begin{quote}
+Construct a coherent continuum family of gauge-invariant observable relations,
+and prove that local non-Abelian dynamics generates a strictly positive form of
+infrared relational rigidity that survives every representation change needed
+to reconstruct the physical Hamiltonian.
+\end{quote}
+
+This divides the problem into three logically distinct obligations:
+\begin{equation}
+\boxed{
+\begin{aligned}
+\text{Generation:}\quad&
+  \text{local non-Abelian constraints generate infrared rigidity};\\
+\text{Transport:}\quad&
+  \text{the rigidity survives changes of scale and representation};\\
+\text{Realization:}\quad&
+  \text{the coherent limiting structure reconstructs a physical QFT}.
+\end{aligned}}
+\label{eq:three-obligations}
+\end{equation}
+
+\section{A gauge-invariant pre-Hamiltonian rigidity object}
+
+The mass gap is naturally stated in Hamiltonian language, but the Hamiltonian
+is available only after the continuum theory has been constructed.  A proof
+therefore needs a pre-Hamiltonian manifestation of the same physical rigidity.
+
+Let
+\begin{equation}
+  \mathfrak R_{a,L}
+  =
+  \left(
+    \cA^{\mathrm{inv}}_{a,L},
+    \omega_{a,L},
+    \Theta,
+    \tau,
+    \mathcal L
+  \right)
+  \label{eq:regulated-package}
+\end{equation}
+denote a regulated Yang--Mills representation.  Here
+\begin{itemize}[leftmargin=2em]
+  \item $\cA^{\mathrm{inv}}_{a,L}$ is a gauge-invariant observable algebra;
+  \item $\omega_{a,L}$ is the Wilson-lattice state;
+  \item $\Theta$ is Euclidean time reflection;
+  \item $\tau$ is Euclidean translation;
+  \item $\mathcal L$ records cutoff, volume, and renormalization maps.
+\end{itemize}
+
+For a centered gauge-invariant observable $A$, define the Euclidean temporal
+correlation
+\begin{equation}
+  C^A_{a,L}(t)
+  =
+  \omega_{a,L}\!\left(A^*\tau_t(A)\right),
+  \qquad
+  \omega_{a,L}(A)=0.
+  \label{eq:regulated-correlation}
+\end{equation}
+Reflection positivity gives this expression a spectral interpretation after
+Osterwalder--Schrader reconstruction.
+
+\begin{definition}[Uniform physical relational rigidity]
+A family $\{\mathfrak R_{a,L}\}$ has uniform physical relational rigidity with
+rate $m_*>0$ if, for every $m<m_*$ and every $A$ in a
+convergence-determining gauge-invariant class,
+\begin{equation}
+  \left|C^A_{a,L}(t)\right|
+  \leq K_A e^{-mt},
+  \label{eq:uniform-rigidity}
+\end{equation}
+where $t$ is measured in physical units, $K_A$ is stable under the required
+renormalization of $A$, the estimate is uniform in $L$, it persists along the
+continuum trajectory $a\to0$, and the observable class becomes cyclic or
+spectrally complete after reconstruction.
+\end{definition}
+
+This property is formulated without treating $A_\mu$, a particular gauge
+fixing, perturbative particles, or a finite-lattice Hamiltonian as fundamental.
+It records the persistence of physical distinctions in a gauge-invariant
+observable language.
+
+\section{A conditional rigidity-transfer theorem}
+
+The first exact theorem target is a transport result from regulated Euclidean
+rigidity to the continuum physical spectrum.
+
+\begin{theorem}[Relational Rigidity Transfer; conditional form]
+Suppose that:
+\begin{enumerate}[label=(\roman*),leftmargin=2.3em]
+  \item regulated gauge-invariant Schwinger functions converge to a nontrivial
+        continuum family;
+  \item the limiting family satisfies the Osterwalder--Schrader axioms;
+  \item uniform physical relational rigidity holds with rate $m_*>0$;
+  \item the observables satisfying the estimate generate a dense subspace of
+        the reconstructed physical Hilbert space orthogonal to the vacuum.
+\end{enumerate}
+Then the reconstructed Hamiltonian obeys
+\begin{equation}
+  \Spec(H)\subseteq\{0\}\cup[m_*,\infty).
+  \label{eq:transferred-gap}
+\end{equation}
+\end{theorem}
+
+\begin{proof}[Proof mechanism]
+Osterwalder--Schrader reconstruction identifies the limiting Euclidean
+correlation with
+\begin{equation}
+  C^A(t)
+  =
+  \langle\psi_A,e^{-tH}\psi_A\rangle,
+  \qquad \psi_A=A\Omega .
+  \label{eq:os-semigroup}
+\end{equation}
+The spectral theorem gives
+\begin{equation}
+  C^A(t)
+  =
+  \int_{[0,\infty)}e^{-tE}\,d\mu_A(E).
+  \label{eq:spectral-measure}
+\end{equation}
+If $\mu_A$ assigned positive weight to an interval below $m_*$, its contribution
+would decay more slowly than $e^{-mt}$ for some $m<m_*$, contradicting
+\eqref{eq:uniform-rigidity}.  Hence every centered vector generated by the
+designated observables has spectral support in $[m_*,\infty)$.  Density excludes
+an additional physical spectral subspace in $(0,m_*)$.
+\end{proof}
+
+\begin{remark}
+This theorem is conditional and belongs to the established family of
+spectral--clustering principles.  Its role here is architectural: it states
+exactly which rigidity information must be transported through the continuum
+construction.  It does not generate the required estimate.
+\end{remark}
+
+\section{The real problem: generation of the rigidity estimate}
+
+The difficult step is now isolated:
+\begin{quote}
+Derive a volume-uniform exponential-decay estimate, in physical units, from
+local Yang--Mills dynamics along the four-dimensional continuum trajectory.
+\end{quote}
+
+At fixed strong lattice coupling, cluster expansions, stochastic dynamics, and
+functional inequalities can yield infinite-volume limits and exponential decay.
+Recent Poincar\'e and log-Sobolev approaches give such results for lattice
+Yang--Mills in specified strong-coupling regimes \cite{shen-zhu-zhu,nissim}.
+These are genuine lattice correlation-decay results.  They do not reach the
+weak bare-coupling limit $\beta\to\infty$ associated with the four-dimensional
+continuum construction.
+
+The missing inference is therefore not the formal implication
+\begin{equation}
+  \text{finite lattice gap}
+  \longrightarrow
+  \text{continuum gap}.
+\end{equation}
+It is the dynamical statement
+\begin{equation}
+\boxed{
+  \text{asymptotically free ultraviolet theory}
+  \longrightarrow
+  \text{controlled entry into an infrared rigidity regime}.}
+  \label{eq:missing-inference}
+\end{equation}
+
+\section{A two-regime proof architecture}
+
+The representation ontology suggests separating ultraviolet transport from
+infrared rigidity generation.
+
+\subsection{Regime I: ultraviolet coherence transport}
+
+Beginning with a fine Wilson lattice, one seeks to
+\begin{enumerate}[leftmargin=2em]
+  \item perform gauge-covariant block transformations;
+  \item integrate out short-distance degrees of freedom;
+  \item transport a convergence-determining gauge-invariant observable algebra;
+  \item preserve reflection positivity or prove an adequate recovery theorem;
+  \item control small-field and large-field sectors separately;
+  \item retain explicit dependence on lattice spacing and running coupling.
+\end{enumerate}
+
+The intended chain is
+\begin{equation}
+  \mathfrak R_a
+  \longrightarrow
+  \mathfrak R_{ba}
+  \longrightarrow
+  \mathfrak R_{b^2a}
+  \longrightarrow\cdots\longrightarrow
+  \mathfrak R_{\ell_*}.
+  \label{eq:rg-chain}
+\end{equation}
+Balaban's four-dimensional analysis provides rigorous small-field
+renormalization-group structure, but it does not complete the continuum
+construction or establish the infrared gap \cite{balaban}.
+
+\subsection{Regime II: infrared rigidity generation}
+
+At a dynamically generated physical scale $\ell_*$, the effective
+gauge-invariant representation should enter a domain in which one can prove
+conditional mixing, a block functional inequality, transfer-operator
+contraction, effective coercivity, or another local positive inequality that
+implies exponential correlation decay.
+
+A candidate block inequality is
+\begin{equation}
+  \Var_{\mu_*}(F)
+  \leq
+  \frac{1}{\lambda_*}
+  \sum_B
+  \mathbb E_{\mu_*}
+  \left[
+    \Var\!\left(F\mid\cF_{B^c}\right)
+  \right],
+  \qquad \lambda_*>0,
+  \label{eq:block-poincare}
+\end{equation}
+together with sufficiently weak inter-block influence.  The desired consequence
+is
+\begin{equation}
+  \left|\Cov_{\mu_*}(A,B)\right|
+  \leq
+  C_{A,B}
+  e^{-c\,d(A,B)/\ell_*},
+  \label{eq:block-clustering}
+\end{equation}
+giving the physical rate
+\begin{equation}
+  m_* = \frac{c}{\ell_*}.
+  \label{eq:physical-rate}
+\end{equation}
+
+A Poincar\'e inequality for an auxiliary Langevin dynamics is not itself the
+quantum Hamiltonian mass gap.  It is an analytic engine for deriving physical
+correlation decay.  The rigidity-transfer theorem must then carry that decay to
+the OS-reconstructed Hamiltonian.
+
+\section{The central missing theorem: infrared basin entry}
+
+The interpretation identifies a sharper frontier target than the undivided
+instruction to ``prove the mass gap.''
+
+\begin{conjecture}[Yang--Mills Infrared Basin Entry]
+The gauge-covariant renormalization flow of four-dimensional pure Yang--Mills
+theory, starting on the asymptotically free continuum trajectory, reaches at a
+finite physical scale $\ell_*$ a gauge-invariant effective representation
+satisfying a verifiable local rigidity criterion:
+\begin{equation}
+  \mathfrak R_{a,g(a)}
+  \xrightarrow[\ a\to0\ ]{\text{controlled RG}}
+  \mathfrak R_{\ell_*}
+  \in
+  \mathfrak B_{\mathrm{rigid}}.
+  \label{eq:basin-entry}
+\end{equation}
+Here $\mathfrak B_{\mathrm{rigid}}$ is defined by explicit local inequalities
+and does not assume a mass gap or exponential clustering.
+\end{conjecture}
+
+A proof would have to show:
+\begin{enumerate}[leftmargin=2em]
+  \item $\ell_*$ remains finite and nonzero in physical units;
+  \item the effective representation retains the correct Yang--Mills observable
+        content;
+  \item reflection positivity or a sufficient substitute survives;
+  \item the rigidity criterion does not contain clustering among its premises;
+  \item large-field and topological sectors are controlled;
+  \item the constants are uniform in the original volume;
+  \item pulling the bound back through the RG chain does not make it vanish.
+\end{enumerate}
+
+Perturbative renormalization suggests a scale of the schematic form
+\begin{equation}
+  \ell_*
+  \sim
+  \mu^{-1}
+  \exp\!\left(\frac{1}{2b_0g^2(\mu)}\right),
+  \label{eq:transmutation-scale}
+\end{equation}
+but the running-coupling formula does not prove that the full theory enters a
+massive infrared basin at that scale.  The basin-entry theorem is where
+dimensional transmutation must become a nonperturbative mathematical statement.
+
+\section{The complete representation atlas}
+
+The proposed proof chain is
+\begin{equation}
+\begin{aligned}
+  \mathfrak R_{\mathrm{Wilson}}
+  &\xrightarrow{\text{gauge-invariant RG}}
+  \mathfrak R_{\mathrm{block}}
+  \xrightarrow{\text{basin entry}}
+  \mathfrak R_{\mathrm{rigid}}\\
+  &\xrightarrow{\text{uniform clustering}}
+  \mathfrak R_{\mathrm{Euclidean}}
+  \xrightarrow{\text{continuum coherence}}
+  \mathfrak R_{\mathrm{OS}}
+  \xrightarrow{\text{reconstruction}}
+  \mathfrak R_{\mathrm{Hamiltonian}}.
+\end{aligned}
+\label{eq:representation-atlas}
+\end{equation}
+
+Each arrow requires an independent certificate.
+
+\begin{table}[ht]
+\centering
+\small
+\renewcommand{\arraystretch}{1.2}
+\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{0.34\textwidth}X}
+\toprule
+\textbf{Representation change} & \textbf{Required certificate} \\
+\midrule
+Wilson $\to$ block variables
+  & Preservation of gauge-invariant observable content \\
+Block variables $\to$ rigid regime
+  & Noncircular local coercivity or mixing theorem \\
+Rigid regime $\to$ clustering
+  & Quantitative exponential decay in physical units \\
+Regulated theory $\to$ continuum
+  & Tightness, renormalization, nontriviality, and symmetry recovery \\
+Euclidean limit $\to$ OS theory
+  & Reflection positivity and the remaining OS axioms \\
+OS theory $\to$ Hamiltonian gap
+  & Spectral completeness and rigidity transfer \\
+\bottomrule
+\end{tabularx}
+\caption{The certificates required along the proposed proof chain.}
+\label{tab:certificates}
+\end{table}
+
+The ontology prevents a property established in one chart from being silently
+treated as though it had already survived every subsequent transformation.
+
+\section{The role of finite Wilson/OS constructions}
+
+A finite Wilson/Osterwalder--Schrader $SU(2)$ construction can serve as a
+calibrated representation package:
+\begin{equation}
+  \mathfrak R^{SU(2)}_{a,L}
+  \longrightarrow
+  \cH_{a,L}
+  \longrightarrow
+  H_{a,L}.
+  \label{eq:finite-package}
+\end{equation}
+The Clay-relevant task is to expose the complete dependence
+\begin{equation}
+  \Delta_{a,L}
+  =
+  \Delta
+  \left(
+    a,L,\beta,	ext{geometry},	ext{observable sector}
+  \right)
+  \label{eq:gap-dependence}
+\end{equation}
+and determine whether
+\begin{equation}
+  \liminf_{\substack{a\to0\\L\to\infty}}
+  \frac{\Delta^{\mathrm{lattice}}_{a,L}}{a}
+  >0.
+  \label{eq:physical-gap-limit}
+\end{equation}
+
+The finite construction becomes relevant to the continuum problem if it
+provides at least one of the following:
+\begin{itemize}[leftmargin=2em]
+  \item a physical-unit lower bound uniform in volume;
+  \item a block-local inequality stable under renormalization;
+  \item an exact comparison between transfer spectra and gauge-invariant
+        correlation decay;
+  \item a geometric coercivity estimate whose constants survive continuum
+        scaling;
+  \item control of large-field corrections to a heat-kernel or small-field
+        representation.
+\end{itemize}
+Its role is therefore not merely to display a finite eigenvalue separation, but
+to serve as a laboratory for discovering a transportable rigidity certificate.
+
+\section{What may change and what must survive}
+
+The proof may change gauge coordinates, lattice variables, gauge fixing,
+regulators, block variables, local parametrizations, particle interpretations,
+and apparent microscopic ontology.  It must preserve or recover
+\begin{itemize}[leftmargin=2em]
+  \item gauge-invariant observable content;
+  \item reflection positivity and physical positivity;
+  \item locality or causal reconstructibility;
+  \item four-dimensional continuum covariance;
+  \item asymptotic-freedom scaling;
+  \item nontriviality of the limiting theory;
+  \item completeness of the physical sectors;
+  \item a positive rigidity rate in physical units.
+\end{itemize}
+This permits a search for nonclassical variables without changing the target
+theory, provided every representational bridge is certified.
+
+\section{The irreducible core and theorem sequence}
+
+The ontology does not dissolve the Clay problem.  It exposes its irreducible
+core:
+\begin{equation}
+\boxed{
+\begin{gathered}
+\text{Prove that four-dimensional non-Abelian RG flow generates}\
+\text{a finite physical scale at which gauge-invariant relational}\
+\text{influence becomes uniformly contractive, and prove that this}\
+\text{contractivity survives continuum reconstruction.}
+\end{gathered}}
+\label{eq:irreducible-core}
+\end{equation}
+
+The research programme should pursue three theorem targets in order:
+\begin{enumerate}[leftmargin=2em]
+  \item \textbf{Rigidity Transfer Theorem:} uniform decay on a complete
+        regulated observable class implies a continuum Hamiltonian gap.
+  \item \textbf{RG-to-Rigidity Theorem:} entry into an explicitly defined
+        functional-inequality or mixing domain implies uniform physical
+        relational rigidity.
+  \item \textbf{Yang--Mills Basin Entry Theorem:} the four-dimensional pure
+        Yang--Mills RG trajectory enters that domain at a finite dynamically
+        generated scale.
+\end{enumerate}
+
+The first target is tractable as a precise transport theorem.  The second can be
+proved and stress-tested in restricted models.  The third is the genuine
+frontier theorem.  Its validity depends on formulating $\mathfrak
+B_{\mathrm{rigid}}$ through independently verifiable local inequalities rather
+than by hiding the desired mass gap in its definition.
+
+\begin{thebibliography}{99}
+
+\bibitem{jaffe-witten}
+A.~Jaffe and E.~Witten,
+\emph{Quantum Yang--Mills Theory},
+in \emph{The Millennium Prize Problems},
+Clay Mathematics Institute and American Mathematical Society, 2006.
+\url{https://www.claymath.org/wp-content/uploads/2022/06/yangmills.pdf}.
+
+\bibitem{balaban}
+T.~Ba\l aban,
+\emph{Renormalization Group Approach to Lattice Gauge Field Theories I:
+Generation of Effective Actions in a Small Field Approximation and a Coupling
+Constant Renormalization in 4D},
+Communications in Mathematical Physics \textbf{109} (1987), 249--301.
+
+\bibitem{shen-zhu-zhu}
+H.~Shen, R.~Zhu, and X.~Zhu,
+\emph{Langevin Dynamics of Lattice Yang--Mills and Applications},
+arXiv:2204.12737, 2022.
+\url{https://arxiv.org/abs/2204.12737}.
+
+\bibitem{nissim}
+R.~Nissim,
+\emph{$\mathrm{U}(N)$ Lattice Yang--Mills in the 't Hooft Regime},
+arXiv:2510.22788, 2025.
+\url{https://arxiv.org/abs/2510.22788}.
+
+\bibitem{chatterjee}
+S.~Chatterjee,
+\emph{Yang--Mills for Probabilists},
+arXiv:1803.01950, 2018.
+\url{https://arxiv.org/abs/1803.01950}.
+
+\bibitem{osterwalder-schrader}
+K.~Osterwalder and R.~Schrader,
+\emph{Axioms for Euclidean Green's Functions},
+Communications in Mathematical Physics \textbf{31} (1973), 83--112;
+\textbf{42} (1975), 281--305.
+
+\end{thebibliography}
+
+\end{document}

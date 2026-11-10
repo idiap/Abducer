@@ -1,0 +1,563 @@
+{
+  "branch_execution_records": [
+    {
+      "api_key_config": {
+        "active_provider": "azure_openai",
+        "configured_keys": [
+          "AZURE_OPENAI_API_KEY",
+          "AZURE_OPENAI_ENDPOINT",
+          "AZURE_OPENAI_MODEL",
+          "AZURE_OPENAI_REASONING_EFFORT",
+          "AZURE_OPENAI_RESPONSES_ENDPOINT",
+          "OPENAI_BASE_URL",
+          "OPENAI_MODEL",
+          "OPENAI_REASONING_EFFORT"
+        ],
+        "has_openai_api_key": true,
+        "source": "config/api_keys.json"
+      },
+      "api_timeout_seconds": 600,
+      "branch_id": "marathon.branch.2943978bc7b2",
+      "elapsed_seconds": 94.29,
+      "engine": "azure_responses_api",
+      "http_status": 200,
+      "model": "gpt-5.5",
+      "output_schema": "agentic/spec/discovery_marathon_codex_branch_output.schema.json",
+      "reasoning_effort": "high",
+      "response_id": "resp_0a89a068ff75aa3d006a4ef2e5ece081959a7d48c1a6a41a2c",
+      "status": "complete"
+    }
+  ],
+  "branch_outputs": [
+    {
+      "attempted_derivation": {
+        "blocking_gap": "The missing analytic estimate is the positivity-compatible trace/collar bound for nonlocal gauge-invariant observables and renormalized local composites as their support approaches the reflection plane. In Yang-Mills this is not a harmless density argument because reflected products can create contact terms at \\(t=0\\), perimeter/cusp divergences for Wilson loops, and renormalization mixing for local gauge-invariant composites.",
+        "derivation_id": "cycle170-derivation-collar-extension",
+        "steps": [
+          "Fix a finite family \\(F_1,\\dots,F_n\\in\\mathcal A_+\\) and coefficients \\(c\\). Choose collar approximants \\(F_i^{\\delta}=R_\\delta F_i\\in\\mathcal A_+^{\\delta}\\).",
+          "For each \\(\\delta>0\\), regulated reflection positivity gives \\(Q_{a,L}(F^{\\delta},c)\\ge0\\). Collar convergence then yields \\(Q_S(F^{\\delta},c)=\\lim_{a,L}Q_{a,L}(F^{\\delta},c)\\ge0\\). This part is formal and valid once the RG topology controls separated reflected probes.",
+          "Use the cutoff-uniform estimate \\(|Q_{a,L}(F,c)-Q_{a,L}(F^{\\delta},c)|\\le C(F,c)\\omega_F(\\delta)\\) and pass to the limit in \\((a,L)\\) on both terms. This would imply \\(|Q_S(F,c)-Q_S(F^{\\delta},c)|\\le C(F,c)\\omega_F(\\delta)\\).",
+          "Let \\(\\delta\\downarrow0\\). Since each \\(Q_S(F^{\\delta},c)\\ge0\\) and the difference tends to zero, conclude \\(Q_S(F,c)\\ge0\\). Thus the OS cone is reached for the full positive-time algebra rather than only for observables separated from the reflection plane.",
+          "The derivation also shows necessity in practice: if an RG topology fails to make the maps \\(S\\mapsto Q_S(F,c)\\) continuous or lower-semicontinuous, the closed-cone step has no valid input even though every cutoff theory is positive."
+        ],
+        "why_not_yet_a_proof": "The argument proves a conditional bridge theorem, not Yang-Mills OS positivity, until Balaban-style or lattice RG bounds are shown to dominate the reflected collar seminorms uniformly in the cutoff. The unproved part is exactly where a falsifier could live: an observable may be approximable in ordinary distribution topology but not in the OS quadratic topology."
+      },
+      "branch_id": "marathon.branch.2943978bc7b2",
+      "branch_title": "Reflection-Positivity Closed-Cone Topology",
+      "candidate_lemmas": [
+        {
+          "assumptions": [
+            "For every cutoff pair \\((a,L)\\), \\(Q_{a,L}(F,c)\\ge0\\) for all finite \\(F_i\\in\\mathcal A_+\\) after applying the fixed embedding \\(J_{a,L}\\).",
+            "For every \\(\\delta>0\\), every finite \\(F_i\\in\\mathcal A_+^{\\delta}\\), and every coefficient vector \\(c\\), the limit \\(\\lim_{a\\downarrow0,L\\uparrow\\infty}Q_{a,L}(F,c)=Q_S(F,c)\\) exists.",
+            "There are seminorms \\(\\rho_m\\) on \\(\\mathcal A_+\\) and a modulus \\(\\omega_F(\\delta)\\to0\\) such that the cutoff reflected quadratic errors between \\(F_i\\) and \\(R_\\delta F_i\\) are bounded uniformly in \\((a,L)\\) after the renormalized observables are embedded.",
+            "The convergence topology is strong enough to pass mixed reflected forms \\(S_{a,L}((\\Theta R_\\delta F_i)F_j)\\), not only unmixed Euclidean moments.",
+            "Reflection preserves the regulator and the embeddings commute with reflection on the nose or up to an error already absorbed by \\(\\omega_F(\\delta)\\)."
+          ],
+          "definitions": [
+            "source object: a net \\(S_{a,L}\\) of regulated gauge-invariant Schwinger functionals on a fixed abstract positive-time algebra \\(\\mathcal A_+\\), with embeddings \\(J_{a,L}:\\mathcal A_+\\to\\mathcal A_{a,L,+}\\), reflection \\(\\Theta\\), and finite OS quadratic forms \\(Q_{a,L}(F,c)\\).",
+            "target object: a continuum Schwinger functional \\(S\\) on the same locked gauge-invariant algebra whose reflected finite quadratic forms \\(Q_S(F,c)=\\sum_{i,j}\\overline c_i c_j S((\\Theta F_i)F_j)\\) are nonnegative, hence valid input for OS Hilbert-space reconstruction.",
+            "controlled interface: regulated reflection-positive Schwinger forms -> OS-positive continuum Schwinger functions, controlled not merely by weak distributional convergence but by convergence of the reflected quadratic probes used in OS positivity.",
+            "same-theory condition: the abstract observables \\(F\\in\\mathcal A_+\\) are identified before and after cutoff removal by product-, involution-, reflection-, and gauge-invariant embeddings \\(J_{a,L}\\); no gauge fixing, quotient replacement, or change from Wilson/composite gauge-invariant probes to a different test algebra is allowed.",
+            "\\(\\mathcal A_+^{\\delta}\\) is the collar subalgebra generated by smeared Wilson loops, smeared curvature polynomials, or other gauge-invariant probes whose supports lie in \\(t\\ge\\delta\\).",
+            "A positivity-compatible collar approximation is a family \\(R_\\delta:\\mathcal A_+\\to\\mathcal A_+^{\\delta}\\) such that \\(R_\\delta F\\to F\\) in the observable topology and the reflected quadratic error is uniformly small at the regulated and continuum levels."
+          ],
+          "equations": [
+            {
+              "label": "regulated OS form on locked algebra",
+              "latex": "Q_{a,L}(F,c)=\\sum_{i,j}\\overline{c_i}c_j\\,S_{a,L}\\big((\\Theta J_{a,L}F_i)\\,J_{a,L}F_j\\big)\\ge0",
+              "valid_when": "Valid for every finite positive-time gauge-invariant family if the regulator action and measure are reflection-positive and the embeddings do not change the observable algebra."
+            },
+            {
+              "label": "collar convergence",
+              "latex": "F_i\\in\\mathcal A_+^{\\delta}\\quad\\Longrightarrow\\quad Q_{a,L}(F,c)\\to Q_S(F,c)",
+              "valid_when": "Valid when the RG cutoff-removal topology dominates all reflected finite quadratic forms with a positive distance from the reflection plane."
+            },
+            {
+              "label": "uniform collar trace estimate",
+              "latex": "\\left|Q_{a,L}(F,c)-Q_{a,L}(R_\\delta F,c)\\right|\\le C(F,c)\\,\\omega_F(\\delta),\\qquad \\omega_F(\\delta)\\downarrow0",
+              "valid_when": "Valid only if the multiscale bounds control reflection-plane approach, including contact terms of renormalized gauge-invariant composite observables."
+            },
+            {
+              "label": "closed positivity passage",
+              "latex": "Q_S(F,c)=\\lim_{\\delta\\downarrow0}\\,\\lim_{a,L}Q_{a,L}(R_\\delta F,c)\\ge0",
+              "valid_when": "Valid after the two limits are justified by collar convergence plus the uniform trace estimate; otherwise this equation is exactly where a falsifier can enter."
+            }
+          ],
+          "failure_test": "A falsifier is any gauge-invariant observable family \\(F_i\\) with support approaching the reflection plane for which \\(Q_{a,L}(F,c)-Q_{a,L}(R_\\delta F,c)\\) has no cutoff-uniform modulus tending to zero; then positivity may hold on every collar algebra but fail to be established on the full OS test algebra.",
+          "lemma_id": "cycle170-lemma-collar-trace-os-bridge",
+          "proof_role": "This lemma isolates the remaining bridge from formal closed-cone closure to a concrete analytic domination theorem: prove positivity away from the reflection plane by convergence, then extend to observables touching the plane through a uniform trace/collar approximation.",
+          "statement": "Collar-to-trace OS positivity bridge: let \\(\\mathcal A_+\\) be the locked gauge-invariant positive-time observable algebra and let \\(\\mathcal A_+^{\\delta}\\subset \\mathcal A_+\\) denote observables whose Euclidean time support is at distance at least \\(\\delta>0\\) from the reflection plane. If regulated Schwinger forms \\(S_{a,L}\\) are reflection-positive on the corresponding regulated algebra, converge on all collar-separated reflected quadratic forms, and satisfy a uniform positivity-compatible collar approximation estimate as \\(\\delta\\downarrow0\\), then the continuum Schwinger functional \\(S\\) is OS-positive on all of \\(\\mathcal A_+\\)."
+        },
+        {
+          "assumptions": [
+            "The observable algebra and reflection map are fixed independently of the cutoff.",
+            "The cone \\(\\mathcal C_{OS}=\\{S:Q_S(F,c)\\ge0\\text{ for all finite }(F,c)\\}\\) is tested on the same finite families at cutoff and in the limit.",
+            "Convergence of \\(S_{a,L}\\) to \\(S\\) is interpreted as convergence in \\(\\tau_{RG}\\)."
+          ],
+          "definitions": [
+            "\\(\\tau_{RG}\\) is the topology delivered by multiscale compactness and renormalized Schwinger bounds.",
+            "\\(\\tau_{OS}\\) is the initial topology generated by all finite reflected quadratic maps \\(S\\mapsto Q_S(F,c)\\) on the locked algebra.",
+            "Domination \\(\\tau_{RG}\\succeq\\tau_{OS}\\) means every OS quadratic probe is continuous along RG-convergent subnets."
+          ],
+          "equations": [
+            {
+              "label": "topological domination criterion",
+              "latex": "\\tau_{RG}\\succeq\\tau_{OS}\\quad\\Longleftrightarrow\\quad S_{\\alpha}\\to S\\text{ in }\\tau_{RG}\\Rightarrow Q_{S_\\alpha}(F,c)\\to Q_S(F,c)",
+              "valid_when": "Valid for the fixed algebra when the maps \\(Q(\\cdot;F,c)\\) are among the scalar observables whose continuity defines \\(\\tau_{OS}\\)."
+            },
+            {
+              "label": "closed cone identity",
+              "latex": "\\mathcal C_{OS}=\\bigcap_{F,c}\\{S:Q_S(F,c)\\ge0\\}",
+              "valid_when": "Valid because each finite OS inequality is a closed half-line condition once the corresponding quadratic map is continuous."
+            }
+          ],
+          "failure_test": "If \\(\\tau_{RG}\\) controls only unreflected Euclidean moments or only separated non-gauge-invariant fields, then a sequence may converge in \\(\\tau_{RG}\\) while an uncontrolled OS quadratic coordinate becomes negative in the limit; that is a topological falsifier of the bridge.",
+          "lemma_id": "cycle170-lemma-rg-topology-equivalence",
+          "proof_role": "This lemma says the formal closed-cone argument is complete once the RG topology is proved to dominate \\(\\tau_{OS}\\); it prevents spending effort on a second proof of cone closure.",
+          "statement": "OS-probe domination equivalence: for a fixed same-theory gauge-invariant algebra, reflection positivity is preserved along every reflection-positive cutoff net converging to \\(S\\) if and only if every finite OS quadratic functional \\(S\\mapsto Q_S(F,c)\\) is lower-semicontinuous, equivalently continuous for scalar convergence, in the actual RG cutoff-removal topology."
+        },
+        {
+          "assumptions": [
+            "Gauge-invariant generators separate the intended continuum Yang-Mills law sufficiently for the reconstruction target.",
+            "Renormalizations of local composites are fixed by same continuum normalization conditions before positivity is tested.",
+            "No positivity proof is allowed to discard observables that are needed later for the mass-gap or Wightman reconstruction target."
+          ],
+          "definitions": [
+            "The locked algebra may be generated by traced holonomies of piecewise smooth loops and by renormalized smeared local gauge-invariant composites, completed in the chosen test topology.",
+            "Reflection compatibility means \\(J_{a,L}(\\Theta F)=\\Theta_{a,L}J_{a,L}(F)\\) for all generators, extended to the completed algebra.",
+            "Algebraic consistency means products, adjoints, Euclidean covariance on the subgroup preserving the cutoff limit, and gauge invariance survive the embeddings."
+          ],
+          "equations": [
+            {
+              "label": "reflection-compatible embedding",
+              "latex": "J_{a,L}(\\Theta F)-\\Theta_{a,L}J_{a,L}(F)\\to0\\quad\\text{in every OS-controlled seminorm}",
+              "valid_when": "Valid if reflection is exact on lattice Wilson-loop observables or if the regulator error is dominated by the same collar estimate."
+            },
+            {
+              "label": "same quadratic form across cutoff",
+              "latex": "Q_{a,L}^{\\mathrm{phys}}(F,c)=\\sum_{i,j}\\overline c_i c_j S_{a,L}((\\Theta J_{a,L}F_i)J_{a,L}F_j)",
+              "valid_when": "Valid as a test of the same theory only when \\(F_i\\) denote the same abstract physical observables for all \\((a,L)\\)."
+            }
+          ],
+          "failure_test": "A falsifier is a proof that obtains positivity only after replacing Wilson-loop/composite observables by gauge-fixed field coordinates or by an algebra that omits reflection-plane limits needed for OS reconstruction.",
+          "lemma_id": "cycle170-lemma-same-theory-lock",
+          "proof_role": "This is a guard lemma: it rules out an artificial proof where OS positivity survives because the test algebra was weakened or changed during cutoff removal.",
+          "statement": "Same-theory lock for gauge-invariant OS tests: the closed-cone positivity bridge proves positivity for Yang-Mills only if the cutoff observables, collar approximants, and continuum observables are related by a single reflection-compatible gauge-invariant algebra, not by cutoff-dependent gauge choices or by a smaller algebra selected after the limit."
+        }
+      ],
+      "control_decision": {
+        "decision": "persist_adapt",
+        "pivot_test": "Pivot if the available RG bounds cannot be upgraded from separated Euclidean correlations to reflected collar quadratic forms, or if reflection-plane contact terms require changing the observable algebra.",
+        "promotion_test": "Promote if one proves a cutoff-uniform estimate for \\(|Q_{a,L}(F,c)-Q_{a,L}(R_\\delta F,c)|\\) on a generating family of Wilson-loop and smeared local gauge-invariant observables, with \\(\u0007omega_F(\\delta)\\to0\\), while preserving the same-theory embeddings.",
+        "reason": "The branch remains productive because it has converted the preservation problem into a specific analytic estimate whose failure would be a real falsifier. Further work should not reprove closed-cone closure; it should test reflected collar domination on concrete gauge-invariant generators."
+      },
+      "dependency_updates": [
+        {
+          "dependency_id": "RG-to-OS Continuum Passage Bridge Lemma",
+          "description": "Reduced to a conditional theorem: \\(\\tau_{RG}\\succeq\\tau_{OS}\\) plus a collar-to-trace estimate implies OS positivity. The closed-cone component is valid and formal; the estimate near the reflection plane is the nonformal part.",
+          "kind": "sharpened",
+          "status": "conditional_on_reflected_probe_domination"
+        },
+        {
+          "dependency_id": "choice of gauge-invariant test algebra",
+          "description": "The algebra must be locked before cutoff removal and must include the observables later needed for reconstruction. Positivity on a smaller or changed algebra is no longer accepted as evidence for the same Yang-Mills theory.",
+          "kind": "hardened",
+          "status": "same_theory_lock_required"
+        },
+        {
+          "dependency_id": "cutoff-removal topology",
+          "description": "The topology must control finite reflected quadratic forms, first on collar-separated probes and then through a uniform trace/contact-term extension. Ordinary weak convergence of Schwinger distributions is insufficient unless it implies these seminorms.",
+          "kind": "strengthened_obligation",
+          "status": "needs_OS_seminorm_domination_proof"
+        }
+      ],
+      "falsifiers": [
+        "A concrete falsifier would be a sequence of gauge-invariant Wilson-loop observables whose loops approach or touch the reflection plane while the reflected quadratic error has a cutoff-dependent cusp or perimeter counterterm with no \\(\\delta\\to0\\) modulus.",
+        "Another falsifier is RG convergence that is valid for separated Euclidean correlations but fails for mixed reflected products \\((\\Theta F_i)F_j\\), so the topology is too weak to identify \\(Q_S(F,c)\\) as a limit of \\(Q_{a,L}(F,c)\\).",
+        "A same-theory falsifier occurs if positivity is proved only after replacing the locked gauge-invariant algebra by a gauge-fixed or quotient algebra that is not known to reconstruct the intended Yang-Mills observables.",
+        "Reflection positivity might be valid for the lattice transfer matrix but not for the renormalized continuum Schwinger functions if counterterms needed for cutoff removal are not reflection-even or do not commute with the embeddings.",
+        "A trace-extension falsifier occurs if collar positivity holds for every \\(\\delta>0\\) but the limiting quadratic form at \\(\\delta=0\\) acquires an uncontrolled negative contact term."
+      ],
+      "generated_by": "azure_responses_api",
+      "mathematical_learning": "Cycle 170 identifies the next non-tautological lemma: OS positivity should be proved first on a collar algebra away from the reflection plane and then extended by a uniform trace/collar estimate. This separates three layers: the closed cone is valid in \\(\\tau_{OS}\\), RG convergence must dominate collar-separated reflected probes, and Yang-Mills-specific analysis must control reflection-plane contact, cusp, and composite-renormalization terms. The word 'same theory' has become a mathematical condition on embeddings, not a slogan.",
+      "next_experiment": "Work out the collar estimate first for a minimal generating probe: two traced holonomies contained in positive-time slabs \\(t\\ge\\delta\\), then let one loop approach the reflection plane. Track whether lattice reflection positivity and known Wilson-loop perimeter/cusp renormalizations give a cutoff-uniform modulus or expose the first concrete obstruction."
+    }
+  ],
+  "completed_utc": "2026-07-09T01:02:59+00:00",
+  "created_utc": "2026-07-09T01:01:24+00:00",
+  "cycle_id": "cycle-0170",
+  "cycle_index": 170,
+  "cycle_learning": "This research cycle converted active route pressure into typed branch lemmas. The main mathematical change is that each branch now names a source object, target object, equation, validity condition, falsifier, and next experiment. Only research-mode cycles with elapsed-time and branch-engine evidence count as genuine long-horizon research progress.",
+  "execution_mode": "research",
+  "next_cycle_queue": [
+    "Work out the collar estimate first for a minimal generating probe: two traced holonomies contained in positive-time slabs \\(t\\ge\\delta\\), then let one loop approach the reflection plane. Track whether lattice reflection positivity and known Wilson-loop perimeter/cusp renormalizations give a cutoff-uniform modulus or expose the first concrete obstruction."
+  ],
+  "research_seconds_elapsed": 94.293,
+  "research_seconds_target": 60,
+  "run_id": "yang-mills-smoke-marathon",
+  "scheduler_decisions": [
+    {
+      "branch_id": "marathon.branch.2943978bc7b2",
+      "branch_title": "Reflection-Positivity Closed-Cone Topology",
+      "controlled_interface": "regulated reflection-positive Schwinger forms -> OS-positive continuum Schwinger functions",
+      "reason": "The branch remains target-linked and has not exhausted its certification tests.",
+      "recommended_move": "persist_adapt"
+    }
+  ],
+  "selected_branch_ids": [
+    "marathon.branch.2943978bc7b2"
+  ],
+  "skill_dispatch_trace": [
+    {
+      "cycle_id": "cycle-0170",
+      "input_artifacts": [
+        "agentic/state/current_target.json",
+        "agentic/reports/discovery_stretch/latest.json",
+        "agentic/registries/discovery_marathon_skill_dispatch.yaml"
+      ],
+      "invoked_skills": [
+        "looper-target-goal-enricher",
+        "looper-target-dependency-cartographer",
+        "looper-workflow-contract-governor",
+        "looper-hook-policy-maintainer"
+      ],
+      "missing_required_skills": [],
+      "output_artifacts": [
+        "cycle:cycle-0170",
+        "branch:marathon.branch.2943978bc7b2"
+      ],
+      "phase": "preflight_target_navigation",
+      "queued_conditional_skills": [
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "kb-orchestrator"
+        }
+      ],
+      "skipped_skills_with_reason": [],
+      "validation_handoff": "preflight_target_navigation used 4 required skills while exploring Reflection-Positivity Closed-Cone Topology."
+    },
+    {
+      "cycle_id": "cycle-0170",
+      "input_artifacts": [
+        "agentic/state/current_target.json",
+        "agentic/reports/discovery_stretch/latest.json",
+        "agentic/registries/discovery_marathon_skill_dispatch.yaml"
+      ],
+      "invoked_skills": [
+        "long-horizon-route-portfolio-manager",
+        "abducer-refinement-route-ranker",
+        "next-experiment-queue-ranker",
+        "kb-discovery-governor"
+      ],
+      "missing_required_skills": [],
+      "output_artifacts": [
+        "cycle:cycle-0170",
+        "branch:marathon.branch.2943978bc7b2"
+      ],
+      "phase": "branch_selection",
+      "queued_conditional_skills": [
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "kb-promising-direction-assessor"
+        }
+      ],
+      "skipped_skills_with_reason": [],
+      "validation_handoff": "branch_selection used 3 required skills while exploring Reflection-Positivity Closed-Cone Topology; queue ranking now orders next experiments by payoff criteria."
+    },
+    {
+      "cycle_id": "cycle-0170",
+      "input_artifacts": [
+        "agentic/state/current_target.json",
+        "agentic/reports/discovery_stretch/latest.json",
+        "agentic/registries/discovery_marathon_skill_dispatch.yaml"
+      ],
+      "invoked_skills": [
+        "kb-abduce",
+        "kb-deduce",
+        "kb-induce",
+        "kb-concept-bridge-planner",
+        "kb-gap-abstraction-conjecturer"
+      ],
+      "missing_required_skills": [],
+      "output_artifacts": [
+        "cycle:cycle-0170",
+        "branch:marathon.branch.2943978bc7b2"
+      ],
+      "phase": "branch_exploration",
+      "queued_conditional_skills": [
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "kb-proof-sketcher"
+        },
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "kb-proof-connector"
+        }
+      ],
+      "skipped_skills_with_reason": [],
+      "validation_handoff": "branch_exploration used 5 required skills while exploring Reflection-Positivity Closed-Cone Topology."
+    },
+    {
+      "cycle_id": "cycle-0170",
+      "phase": "qualitative_physics_reasoning",
+      "invoked_skills": [
+        "qualitative-variable-isolator",
+        "physics-regime-map-builder",
+        "monotonicity-sensitivity-prober",
+        "limit-convergence-behavior-auditor",
+        "qualitative-toy-model-builder",
+        "qualitative-physics-falsifier"
+      ],
+      "skipped_skills_with_reason": [],
+      "queued_conditional_skills": [
+        {
+          "skill": "dimensional-symmetry-constraint-checker",
+          "reason": "Queued when the branch exposes a dimensional, symmetry, scaling, or asymptotic consistency obligation."
+        },
+        {
+          "skill": "scale-asymptotic-reasoner",
+          "reason": "Queued when the branch exposes a dimensional, symmetry, scaling, or asymptotic consistency obligation."
+        }
+      ],
+      "missing_required_skills": [],
+      "input_artifacts": [
+        "agentic/state/current_target.json",
+        "agentic/reports/discovery_stretch/latest.json",
+        "agentic/registries/discovery_marathon_skill_dispatch.yaml",
+        "agentic/spec/qualitative_physics_relation_packet.schema.json"
+      ],
+      "output_artifacts": [
+        "cycle:cycle-0170",
+        "branch:marathon.branch.2943978bc7b2",
+        "agentic/reports/qualitative_relation_packets/latest.json",
+        "agentic/state/qualitative_mechanistic_graphs/yang-mills-existence-and-mass-gap-target.json"
+      ],
+      "validation_handoff": "qualitative_physics_reasoning isolated variables, regimes, monotonicities, limits, toy-model probes, and falsifiers while exploring Reflection-Positivity Closed-Cone Topology."
+    },
+    {
+      "cycle_id": "cycle-0170",
+      "phase": "gedanken_experiment_design",
+      "invoked_skills": [
+        "gedanken-need-assessor"
+      ],
+      "skipped_skills_with_reason": [],
+      "queued_conditional_skills": [
+        {
+          "skill": "gedanken-situation-designer",
+          "reason": "Queued when the need assessor licenses a Gedanken experiment, variant, transfer check, or follow-up planning handoff."
+        },
+        {
+          "skill": "gedanken-counterfactual-variant-builder",
+          "reason": "Queued when the need assessor licenses a Gedanken experiment, variant, transfer check, or follow-up planning handoff."
+        },
+        {
+          "skill": "gedanken-transfer-guard",
+          "reason": "Queued when the need assessor licenses a Gedanken experiment, variant, transfer check, or follow-up planning handoff."
+        },
+        {
+          "skill": "gedanken-followup-planner",
+          "reason": "Queued when the need assessor licenses a Gedanken experiment, variant, transfer check, or follow-up planning handoff."
+        },
+        {
+          "skill": "qualitative-toy-model-builder",
+          "reason": "Queued when the need assessor licenses a Gedanken experiment, variant, transfer check, or follow-up planning handoff."
+        }
+      ],
+      "missing_required_skills": [],
+      "input_artifacts": [
+        "agentic/state/current_target.json",
+        "agentic/reports/discovery_stretch/latest.json",
+        "agentic/registries/discovery_marathon_skill_dispatch.yaml",
+        "agentic/spec/gedanken_experiment_packet.schema.json",
+        "agentic/reports/qualitative_relation_packets/latest.json"
+      ],
+      "output_artifacts": [
+        "cycle:cycle-0170",
+        "branch:marathon.branch.2943978bc7b2",
+        "agentic/reports/gedanken_experiments/latest.json",
+        "agentic/reports/gedanken_experiments/latest.md"
+      ],
+      "validation_handoff": "gedanken_experiment_design assessed whether an imagined concrete situation could sharpen mechanisms, counterfactual contrasts, transfer limits, or follow-up tasks while exploring Reflection-Positivity Closed-Cone Topology."
+    },
+    {
+      "cycle_id": "cycle-0170",
+      "input_artifacts": [
+        "agentic/state/current_target.json",
+        "agentic/reports/discovery_stretch/latest.json",
+        "agentic/registries/discovery_marathon_skill_dispatch.yaml"
+      ],
+      "invoked_skills": [
+        "kb-contradiction-strategist",
+        "contradiction-route-auditor",
+        "kb-hypothesis-refutation-loop"
+      ],
+      "missing_required_skills": [],
+      "output_artifacts": [
+        "cycle:cycle-0170",
+        "branch:marathon.branch.2943978bc7b2"
+      ],
+      "phase": "contradiction_and_falsifier_generation",
+      "queued_conditional_skills": [
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "kb-novel-proof-strategist"
+        }
+      ],
+      "skipped_skills_with_reason": [],
+      "validation_handoff": "contradiction_and_falsifier_generation used 3 required skills while exploring Reflection-Positivity Closed-Cone Topology."
+    },
+    {
+      "cycle_id": "cycle-0170",
+      "input_artifacts": [
+        "agentic/state/current_target.json",
+        "agentic/reports/discovery_stretch/latest.json",
+        "agentic/registries/discovery_marathon_skill_dispatch.yaml"
+      ],
+      "invoked_skills": [
+        "evidence-acquisition-planner",
+        "prior-art-importer",
+        "kb-prior-art-pass"
+      ],
+      "missing_required_skills": [],
+      "output_artifacts": [
+        "cycle:cycle-0170",
+        "branch:marathon.branch.2943978bc7b2"
+      ],
+      "phase": "evidence_acquisition",
+      "queued_conditional_skills": [
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "kb-epistemic-hardness"
+        }
+      ],
+      "skipped_skills_with_reason": [],
+      "validation_handoff": "evidence_acquisition used 3 required skills while exploring Reflection-Positivity Closed-Cone Topology."
+    },
+    {
+      "cycle_id": "cycle-0170",
+      "input_artifacts": [
+        "agentic/state/current_target.json",
+        "agentic/reports/discovery_stretch/latest.json",
+        "agentic/registries/discovery_marathon_skill_dispatch.yaml"
+      ],
+      "invoked_skills": [
+        "abducer-obligation-gatekeeper",
+        "entailment-gap-auditor",
+        "kb-end-to-end-proof-critic"
+      ],
+      "missing_required_skills": [],
+      "output_artifacts": [
+        "cycle:cycle-0170",
+        "branch:marathon.branch.2943978bc7b2"
+      ],
+      "phase": "obligation_gating",
+      "queued_conditional_skills": [
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "kb-coherence-evaluator"
+        }
+      ],
+      "skipped_skills_with_reason": [],
+      "validation_handoff": "obligation_gating used 3 required skills while exploring Reflection-Positivity Closed-Cone Topology."
+    },
+    {
+      "cycle_id": "cycle-0170",
+      "input_artifacts": [
+        "agentic/state/current_target.json",
+        "agentic/reports/discovery_stretch/latest.json",
+        "agentic/registries/discovery_marathon_skill_dispatch.yaml"
+      ],
+      "invoked_skills": [
+        "review-reasoner",
+        "review-reasoner-epistemologist",
+        "review-reasoner-discovery-scientist",
+        "kb-discovery-breakthrough-profiler"
+      ],
+      "missing_required_skills": [],
+      "output_artifacts": [
+        "cycle:cycle-0170",
+        "branch:marathon.branch.2943978bc7b2"
+      ],
+      "phase": "review_and_synthesis",
+      "queued_conditional_skills": [
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "review-reasoner-fields-medalist"
+        },
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "review-reasoner-concept-logician"
+        }
+      ],
+      "skipped_skills_with_reason": [],
+      "validation_handoff": "review_and_synthesis used 4 required skills while exploring Reflection-Positivity Closed-Cone Topology."
+    },
+    {
+      "cycle_id": "cycle-0170",
+      "input_artifacts": [
+        "agentic/state/current_target.json",
+        "agentic/reports/discovery_stretch/latest.json",
+        "agentic/registries/discovery_marathon_skill_dispatch.yaml"
+      ],
+      "invoked_skills": [
+        "show-reasoning",
+        "kb-explain"
+      ],
+      "missing_required_skills": [],
+      "output_artifacts": [
+        "cycle:cycle-0170",
+        "branch:marathon.branch.2943978bc7b2"
+      ],
+      "phase": "report_rendering",
+      "queued_conditional_skills": [
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "kb-expert-paper-generator"
+        },
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "kb-macro-proof-paper-writer"
+        }
+      ],
+      "skipped_skills_with_reason": [],
+      "validation_handoff": "report_rendering used 2 required skills while exploring Reflection-Positivity Closed-Cone Topology."
+    },
+    {
+      "cycle_id": "cycle-0170",
+      "input_artifacts": [
+        "agentic/state/current_target.json",
+        "agentic/reports/discovery_stretch/latest.json",
+        "agentic/registries/discovery_marathon_skill_dispatch.yaml"
+      ],
+      "invoked_skills": [
+        "looper-release-promoter",
+        "looper-workflow-contract-governor"
+      ],
+      "missing_required_skills": [],
+      "output_artifacts": [
+        "cycle:cycle-0170",
+        "branch:marathon.branch.2943978bc7b2"
+      ],
+      "phase": "release_promotion",
+      "queued_conditional_skills": [
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "looper-hook-policy-maintainer"
+        }
+      ],
+      "skipped_skills_with_reason": [],
+      "validation_handoff": "release_promotion used 2 required skills while exploring Reflection-Positivity Closed-Cone Topology."
+    }
+  ],
+  "target_id": "yang-mills-existence-and-mass-gap-target",
+  "timing_validation": {
+    "reason": "Elapsed 94.293 seconds against target 60 seconds.",
+    "status": "research"
+  },
+  "valid_as_research_cycle": true,
+  "validation_handoff": [
+    "agentic/scripts/validate_discovery_marathon_cycle.py",
+    "agentic/scripts/validate_discovery_marathon_skill_dispatch.py"
+  ],
+  "version": 1
+}

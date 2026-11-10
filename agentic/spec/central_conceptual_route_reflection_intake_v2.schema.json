@@ -1,0 +1,219 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://abducer.local/schemas/central_conceptual_route_reflection_intake_v2.schema.json",
+  "title": "Receipt-derived descendant central-route reflection intake",
+  "description": "A five-route, generation-correct intake derived from exact registered producer request/input and receipt/output bytes. Before/after snapshots, typed patches, changed paths, source candidate projections, and round outcomes are computed and replayed; caller-authored changed paths have no input port. The packet remains a precommit proposal at cycle input head N until the canonical transaction commits its effect at N+1.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "artifact_kind",
+    "intake_id",
+    "target_id",
+    "run_id",
+    "central_source_commit_generation",
+    "cycle_input_head_generation",
+    "descendant_effect_commit_generation",
+    "source_request",
+    "source_request_id",
+    "source_request_digest",
+    "intake_claim",
+    "registered_producer_binding",
+    "before_snapshot",
+    "after_snapshot",
+    "selection_is_set_valued_local_input",
+    "source_selected_route_ids",
+    "route_accounts",
+    "computed_patch_set",
+    "changed_route_ids",
+    "unresolved_route_ids",
+    "negative_knowledge_route_ids",
+    "direct_authority",
+    "authority_nulls",
+    "authority_boundary",
+    "content_digest"
+  ],
+  "properties": {
+    "schema_version": {"const": "2.0.0"},
+    "artifact_kind": {"const": "central_conceptual_route_reflection_intake"},
+    "intake_id": {"$ref": "#/$defs/id"},
+    "target_id": {"$ref": "#/$defs/id"},
+    "run_id": {"$ref": "#/$defs/id"},
+    "central_source_commit_generation": {"type": "integer", "minimum": 1},
+    "cycle_input_head_generation": {"type": "integer", "minimum": 1},
+    "descendant_effect_commit_generation": {"type": "integer", "minimum": 2},
+    "source_request": {"$ref": "./central_conceptual_route_reflection_request_v2.schema.json"},
+    "source_request_id": {"$ref": "#/$defs/id"},
+    "source_request_digest": {"$ref": "#/$defs/digest"},
+    "intake_claim": {"$ref": "#/$defs/intakeClaim"},
+    "registered_producer_binding": {"$ref": "#/$defs/producerBinding"},
+    "before_snapshot": {"$ref": "#/$defs/contextSnapshot"},
+    "after_snapshot": {"$ref": "#/$defs/contextSnapshot"},
+    "selection_is_set_valued_local_input": {"const": true},
+    "source_selected_route_ids": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/route"}},
+    "route_accounts": {"type": "array", "minItems": 5, "maxItems": 5, "items": {"$ref": "#/$defs/routeAccount"}},
+    "computed_patch_set": {"$ref": "#/$defs/computedPatchSet"},
+    "changed_route_ids": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/route"}},
+    "unresolved_route_ids": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/route"}},
+    "negative_knowledge_route_ids": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/route"}},
+    "direct_authority": {"$ref": "./central_conceptual_route_reflection_intake_v1.schema.json#/$defs/directAuthority"},
+    "authority_nulls": {"$ref": "./central_conceptual_route_reflection_intake_v1.schema.json#/$defs/authorityNulls"},
+    "authority_boundary": {"type": "string", "minLength": 240},
+    "content_digest": {"$ref": "#/$defs/digest"}
+  },
+  "$defs": {
+    "id": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,199}$"},
+    "digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "route": {"enum": ["categorical", "hott", "category_then_hott", "hott_then_category", "capable_nonformal"]},
+    "intakeClaim": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "claim_id", "target_id", "run_id", "source_request_id",
+        "source_request_digest", "central_source_verified_commit",
+        "cycle_input_head_verified_commit", "central_source_commit_generation",
+        "cycle_input_head_generation", "descendant_effect_commit_generation",
+        "producer_request_id", "producer_request_digest", "producer_input_digest",
+        "claim_status", "descendant_commit_status", "canonical_consumption_status",
+        "portable_only", "claim_digest"
+      ],
+      "properties": {
+        "claim_id": {"$ref": "#/$defs/id"},
+        "target_id": {"$ref": "#/$defs/id"},
+        "run_id": {"$ref": "#/$defs/id"},
+        "source_request_id": {"$ref": "#/$defs/id"},
+        "source_request_digest": {"$ref": "#/$defs/digest"},
+        "central_source_verified_commit": {"$ref": "./central_conceptual_route_reflection_request_v1.schema.json#/$defs/verifiedCommit"},
+        "cycle_input_head_verified_commit": {"$ref": "./central_conceptual_route_reflection_request_v1.schema.json#/$defs/verifiedCommit"},
+        "central_source_commit_generation": {"type": "integer", "minimum": 1},
+        "cycle_input_head_generation": {"type": "integer", "minimum": 1},
+        "descendant_effect_commit_generation": {"type": "integer", "minimum": 2},
+        "producer_request_id": {"$ref": "#/$defs/id"},
+        "producer_request_digest": {"$ref": "#/$defs/digest"},
+        "producer_input_digest": {"$ref": "#/$defs/digest"},
+        "claim_status": {"const": "authoritatively_claimed_at_exact_active_head"},
+        "descendant_commit_status": {"const": "pending_exact_canonical_n_plus_one_commit"},
+        "canonical_consumption_status": {"const": "pending_atomic_canonical_reducer_consumption"},
+        "portable_only": {"const": true},
+        "claim_digest": {"$ref": "#/$defs/digest"}
+      }
+    },
+    "producerBinding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "operator_id", "operator_version", "registry_file_digest",
+        "producer_request", "producer_receipt", "producer_input", "producer_output",
+        "producer_input_digest", "producer_output_digest", "input_descriptor", "output_descriptor",
+        "validator_receipt_digests", "binding_digest"
+      ],
+      "properties": {
+        "operator_id": {"enum": ["reflective-conceptual-discovery", "reflective-theory-synthesizer"]},
+        "operator_version": {"$ref": "#/$defs/id"},
+        "registry_file_digest": {"$ref": "#/$defs/digest"},
+        "producer_request": {"$ref": "./discovery_operator_request.schema.json"},
+        "producer_receipt": {"$ref": "./discovery_operator_receipt.schema.json"},
+        "producer_input": {"type": "object"},
+        "producer_output": {"type": "object"},
+        "producer_input_digest": {"$ref": "#/$defs/digest"},
+        "producer_output_digest": {"$ref": "#/$defs/digest"},
+        "input_descriptor": {"$ref": "./discovery_operator_request.schema.json#/$defs/artifact"},
+        "output_descriptor": {"$ref": "./discovery_operator_receipt.schema.json#/$defs/artifact"},
+        "validator_receipt_digests": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"$ref": "#/$defs/digest"}},
+        "binding_digest": {"$ref": "#/$defs/digest"}
+      }
+    },
+    "contextSnapshot": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["conceptual_systems", "reflection_rounds", "conceptual_systems_digest", "reflection_rounds_digest", "snapshot_digest"],
+      "properties": {
+        "conceptual_systems": {"type": "array", "items": {"type": "object"}},
+        "reflection_rounds": {"type": "array", "items": {"type": "object"}},
+        "conceptual_systems_digest": {"$ref": "#/$defs/digest"},
+        "reflection_rounds_digest": {"$ref": "#/$defs/digest"},
+        "snapshot_digest": {"$ref": "#/$defs/digest"}
+      }
+    },
+    "valueSlot": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["present", "value", "value_digest"],
+      "properties": {
+        "present": {"type": "boolean"},
+        "value": {},
+        "value_digest": {"oneOf": [{"$ref": "#/$defs/digest"}, {"type": "null"}]}
+      }
+    },
+    "typedPatch": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["operation", "path", "owner_kind", "owner_id", "before", "after", "patch_digest"],
+      "properties": {
+        "operation": {"enum": ["add", "remove", "replace"]},
+        "path": {"type": "string", "pattern": "^/(conceptual_systems|reflection_rounds)/(0|[1-9][0-9]*)(/([^~/]|~[01])*)*$"},
+        "owner_kind": {"enum": ["conceptual_system", "reflection_round"]},
+        "owner_id": {"$ref": "#/$defs/id"},
+        "before": {"$ref": "#/$defs/valueSlot"},
+        "after": {"$ref": "#/$defs/valueSlot"},
+        "patch_digest": {"$ref": "#/$defs/digest"}
+      }
+    },
+    "roundOutcome": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["round_id", "result", "round_projection", "round_projection_digest"],
+      "properties": {
+        "round_id": {"$ref": "#/$defs/id"},
+        "result": {"type": "string", "minLength": 1},
+        "round_projection": {"type": "object"},
+        "round_projection_digest": {"$ref": "#/$defs/digest"}
+      }
+    },
+    "causalDirective": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["route_id", "descendant_disposition", "referenced_system_ids", "referenced_round_ids", "reflection_note"],
+      "properties": {
+        "route_id": {"$ref": "#/$defs/route"},
+        "descendant_disposition": {"enum": ["incorporated", "mutated", "synthesized", "demoted", "unresolved", "no_change", "preserved_unselected_candidate", "preserved_negative_knowledge"]},
+        "referenced_system_ids": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/id"}},
+        "referenced_round_ids": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/id"}},
+        "reflection_note": {"type": "string", "minLength": 1}
+      }
+    },
+    "routeAccount": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "route_id", "source_observation", "source_candidate_projection",
+        "source_candidate_projection_digest", "selected_candidate_binding",
+        "causal_directive", "computed_patches", "computed_changed_paths",
+        "round_outcomes"
+      ],
+      "properties": {
+        "route_id": {"$ref": "#/$defs/route"},
+        "source_observation": {"$ref": "./central_conceptual_route_reflection_request_v1.schema.json#/$defs/routeObservation"},
+        "source_candidate_projection": {"oneOf": [{"type": "object"}, {"type": "null"}]},
+        "source_candidate_projection_digest": {"oneOf": [{"$ref": "#/$defs/digest"}, {"type": "null"}]},
+        "selected_candidate_binding": {"oneOf": [{"$ref": "./central_conceptual_route_reflection_request_v1.schema.json#/$defs/selectedCandidate"}, {"type": "null"}]},
+        "causal_directive": {"$ref": "#/$defs/causalDirective"},
+        "computed_patches": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/typedPatch"}},
+        "computed_changed_paths": {"type": "array", "uniqueItems": true, "items": {"type": "string", "pattern": "^/(conceptual_systems|reflection_rounds)/(0|[1-9][0-9]*)(/([^~/]|~[01])*)*$"}},
+        "round_outcomes": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/roundOutcome"}}
+      }
+    },
+    "computedPatchSet": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["patches", "changed_paths", "patch_count", "complete_route_cover", "patch_set_digest"],
+      "properties": {
+        "patches": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/typedPatch"}},
+        "changed_paths": {"type": "array", "uniqueItems": true, "items": {"type": "string", "pattern": "^/(conceptual_systems|reflection_rounds)/(0|[1-9][0-9]*)(/([^~/]|~[01])*)*$"}},
+        "patch_count": {"type": "integer", "minimum": 0},
+        "complete_route_cover": {"const": true},
+        "patch_set_digest": {"$ref": "#/$defs/digest"}
+      }
+    }
+  }
+}

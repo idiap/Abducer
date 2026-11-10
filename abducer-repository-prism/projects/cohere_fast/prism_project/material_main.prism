@@ -1,0 +1,48 @@
+# lunar-runtime: {"declaration":"MaterializedCohereFast","entry_argument":"domain_target","execute_hook":"abducer-workflow-execute","id":"cohere_fast","input_schema":{"additionalProperties":false,"default":{"domain_id":"yang-mills","target_ref":"finite-regulator-to-continuum-mass-gap-route"},"properties":{"domain_id":{"default":"yang-mills","maxLength":16000,"minLength":1,"type":"string"},"target_ref":{"default":"finite-regulator-to-continuum-mass-gap-route","maxLength":16000,"minLength":1,"type":"string"}},"required":["domain_id","target_ref"],"type":"object"},"metadata":{"completion_contract":{"allowed_final_statuses":["passed","completed"],"forbid_blockers":true,"reasoning_complete":true,"reasoning_events_min":4,"terminal_state":"completed"},"description":"coordinate an isolated domain-bound path to independent calibration","model_required":true,"network_required":false,"provenance_contract":{"agent_invocations":[{"activated_skill_ids":["ym-run-clay-program"],"agent_name":"scope_activation_material_agent","workflow_occurrence":"scope_activation"},{"activated_skill_ids":["epistemic-status-ledger"],"agent_name":"intake_disposition_material_agent","workflow_occurrence":"intake_disposition"}],"required_source_reads":[]},"reasoning_contract":{"steps":["scope_activation","intake_disposition"],"workflow":"CohereFast"},"reasoning_required":true,"required_host_capabilities":["model","prism-engine","reasoning-events"],"scientific_truth_verified":false,"semantic_mode":"operational-model-generated","source_materialization_status":"blocked_unresolved_projection_gap","timeout_seconds":1800},"output_schema":{"additionalProperties":false,"properties":{"analysis_results":{"type":"object"},"compact_prism_input":{"type":"object"},"markdown":{"minLength":1,"type":"string"},"narrative_slots":{"type":"array"},"report_verification":{"properties":{"reasoning_complete":{"const":true},"status":{"const":"passed"}},"required":["status","reasoning_complete"],"type":"object"},"structured_value":{"properties":{"execution_provenance":{"type":"object"},"final_disposition":{"properties":{"blockers":{"maxItems":0,"type":"array"},"reasoning_complete":{"const":true},"status":{"const":"passed"}},"required":["status","reasoning_complete","blockers"],"type":"object"},"reasoning_result":{"type":"object"}},"required":["final_disposition","reasoning_result","execution_provenance"],"type":"object"}},"required":["markdown","structured_value","analysis_results","compact_prism_input","narrative_slots","report_verification"],"type":"object"},"prepare_hook":"abducer-workflow-prepare","verify_hook":"abducer-workflow-verify"}
+
+# Host-executed material graph for the complete reviewed reasoning path.
+# Generated values retain the source epistemic boundary and are not native proof or experiment receipts.
+
+from types import (
+    CohereDomainTarget,
+    CohereIntakeDisposition,
+    CohereScopeActivation,
+)
+
+from generated.intake_disposition_skill_1 import intake_disposition_skill_1
+from generated.scope_activation_skill_1 import scope_activation_skill_1
+
+# Real model capability for source occurrence scope_activation:UnresolvedCohereScopeProjection.
+agent scope_activation_material_agent(
+    task: CohereDomainTarget,
+) -> Result[Generated[CohereScopeActivation], ModelFailure]
+    ! {AI.Generate, Context.Disclose}:
+    skills: Skills[CohereDomainTarget] = [scope_activation_skill_1]
+
+# Real model capability for source occurrence intake_disposition:EvidentialCohereIntakeDispositionAssessment.
+agent intake_disposition_material_agent(
+    task: CohereScopeActivation,
+) -> Result[Generated[String], ModelFailure]
+    ! {AI.Generate, Context.Disclose}:
+    skills: Skills[CohereScopeActivation] = [intake_disposition_skill_1]
+
+workflow MaterializedCohereFast(
+    domain_target: CohereDomainTarget,
+) -> Generated[String]
+    fails ModelFailure
+    ! {AI.Generate, Context.Disclose}:
+    sequence:
+        # The projection only activates a scope; it contributes no object-level warrant.
+        [scope_activation: scope_activation_material_agent(domain_target)]
+        # Intake evaluates that activation and emits the pipeline-routing alternative.
+        [intake_disposition: intake_disposition_material_agent(scope_activation.value)]
+
+    return intake_disposition
+
+
+def main(
+    domain_target: CohereDomainTarget,
+    model_access: ModelGenerate,
+    disclosure: ContextDisclose,
+) -> Result[Generated[String], ModelFailure] ! {AI.Generate, Context.Disclose}:
+    return solve MaterializedCohereFast(domain_target)

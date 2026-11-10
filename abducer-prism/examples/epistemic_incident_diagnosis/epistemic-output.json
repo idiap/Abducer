@@ -1,0 +1,125 @@
+{
+  "incident_id": "INC-2041",
+  "normalized_claims": [
+    {
+      "claim_id": "claim-deploy-temporal",
+      "proposition": "The catalog deployment preceded the latency increase.",
+      "claimant": "on-call-operator",
+      "source_statement_id": "stmt-17",
+      "qualification": "reported_from_incident_timeline"
+    }
+  ],
+  "generated_hypotheses": {
+    "provenance": "generated",
+    "generation_policy": "cover known service, database, and network causes",
+    "candidates": [
+      {
+        "hypothesis_id": "hyp-pool",
+        "kind": "database_connection_pool_exhaustion",
+        "explains": "checkout requests wait for a database connection",
+        "predicted_observations": ["high pool utilization", "database wait latency"],
+        "falsifiers": ["normal pool utilization during affected requests"]
+      },
+      {
+        "hypothesis_id": "hyp-lock",
+        "kind": "database_lock_contention",
+        "explains": "checkout queries wait on conflicting locks",
+        "predicted_observations": ["increased lock wait time"],
+        "falsifiers": ["no lock waits during the incident window"]
+      }
+    ]
+  },
+  "critique": {
+    "target": "preliminary-incident-analysis",
+    "standards": ["evidence_relevance", "alternative_hypothesis_coverage", "calibration"],
+    "findings": [
+      {
+        "critic_kind": "assumption",
+        "finding_kind": "unsupported_causal_bridge",
+        "severity": "high",
+        "target_claim_id": "claim-deploy-temporal",
+        "grounds": ["temporal precedence alone does not establish causation"],
+        "suggested_repair": "compare latency and utilization around rollback"
+      },
+      {
+        "critic_kind": "calibration",
+        "finding_kind": "missing_reference_population",
+        "severity": "medium",
+        "target": "hypothesis confidence estimates",
+        "grounds": ["no historical outcome set is available"],
+        "suggested_repair": "report ordinal assessment, not calibrated probability"
+      }
+    ],
+    "scope": "available five-minute metrics and operator statement",
+    "disposition": "revise_before_decision"
+  },
+  "defeaters": [
+    {
+      "defeater_id": "def-temporal-causality",
+      "kind": "undercutting",
+      "target": "support from deployment timing to deployment-caused latency",
+      "grounds": ["deployment timing is reported but not independently observed here"],
+      "effect": "do not use temporal report as causal confirmation"
+    }
+  ],
+  "ranked_hypotheses": {
+    "ranking_method": {
+      "id": "weighted_criteria_v1",
+      "aggregation": "sum(weight * normalized_criterion_value)",
+      "missing_value_policy": "leave candidate unranked",
+      "tie_tolerance": 0.02
+    },
+    "evidence_snapshot": ["obs-db-p95", "obs-pool"],
+    "ordered_assessments": [
+      {
+        "rank": 1,
+        "hypothesis_id": "hyp-pool",
+        "criterion_assessments": [
+          {"criterion": "explanatory_coverage", "value": 0.8, "grounds": ["obs-db-p95", "obs-pool"], "uncertainty": "pool metric is not request-correlated"},
+          {"criterion": "contradiction_count", "value": 0, "grounds": ["no contradiction in current snapshot"], "uncertainty": "observations are limited"},
+          {"criterion": "discriminating_test_cost", "value": 3, "unit": "estimated_minutes", "grounds": ["query is non-mutating"]}
+        ],
+        "aggregate_score": 0.86,
+        "aggregate_score_scale": "weighted_criteria_v1_0_to_1",
+        "residual_anomalies": ["deployment timing remains unexplained"]
+      },
+      {
+        "rank": 2,
+        "hypothesis_id": "hyp-lock",
+        "criterion_assessments": [
+          {"criterion": "explanatory_coverage", "value": 0.4, "grounds": ["obs-db-p95"], "uncertainty": "no lock-wait observation is present"},
+          {"criterion": "contradiction_count", "value": 0, "grounds": ["no contradiction in current snapshot"], "uncertainty": "lock-specific observations are absent"},
+          {"criterion": "discriminating_test_cost", "value": 5, "unit": "estimated_minutes", "grounds": ["lock-wait query is non-mutating"]}
+        ],
+        "aggregate_score": 0.633,
+        "aggregate_score_scale": "weighted_criteria_v1_0_to_1",
+        "residual_anomalies": ["high connection-pool utilization"]
+      }
+    ],
+    "ties": [],
+    "unranked_candidates": [],
+    "epistemic_status": "provisional_ranking_not_truth_claim"
+  },
+  "recommendation": {
+    "recommendation_id": "rec-query-pool-waits",
+    "addressee": "incident-commander",
+    "proposed_action": "query request-correlated pool wait time before changing capacity",
+    "expected_outcome": "discriminate pool exhaustion from lock contention",
+    "grounds": ["hyp-pool is top-ranked", "test is low-cost and non-mutating"],
+    "risks": ["three-minute delay before mitigation"],
+    "preconditions": ["metrics query capability available"]
+  },
+  "decision": {
+    "decision_id": "decision-query-first",
+    "authority": "incident-commander",
+    "chosen_alternative": "query_request_correlated_pool_wait",
+    "alternatives_considered": ["increase_pool_capacity", "rollback_catalog_deployment"],
+    "decision_rule": "prefer reversible diagnostic action within impact budget",
+    "rationale": "ranking is provisional and query discriminates leading hypotheses",
+    "effective_at": "2026-08-19T10:07:00Z"
+  },
+  "action": {
+    "status": "not_yet_executed",
+    "reason": "the epistemic result records a decision, not fabricated effects"
+  }
+}

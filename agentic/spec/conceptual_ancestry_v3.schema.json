@@ -1,0 +1,233 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://abducer.local/schemas/conceptual_ancestry_v3.schema.json",
+  "title": "Mandatory conceptual ancestry v3 DAG",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "artifact_kind",
+    "ancestry_id",
+    "target_id",
+    "run_id",
+    "source_state_version",
+    "theory_generation",
+    "theory_state_digest",
+    "known_taxonomy_commitment_digest",
+    "ordered_stage_ids",
+    "stages",
+    "edge_set_digest",
+    "final_preference_authority",
+    "same_cycle_support_boundary",
+    "authority_nulls",
+    "authority_boundary",
+    "content_digest"
+  ],
+  "properties": {
+    "schema_version": {"const": "3.0.0"},
+    "artifact_kind": {"const": "conceptual_ancestry_v3"},
+    "ancestry_id": {"$ref": "#/$defs/identifier"},
+    "target_id": {"$ref": "#/$defs/identifier"},
+    "run_id": {"$ref": "#/$defs/identifier"},
+    "source_state_version": {"type": "integer", "minimum": 0},
+    "theory_generation": {"type": "integer", "minimum": 1},
+    "theory_state_digest": {"$ref": "#/$defs/digest"},
+    "known_taxonomy_commitment_digest": {"$ref": "#/$defs/digest"},
+    "ordered_stage_ids": {
+      "const": [
+        "current_bounded_literature",
+        "literature_only_projection",
+        "pre_taxonomy_invention_freeze",
+        "post_freeze_taxonomy_classification",
+        "isolated_parallel_maturation",
+        "hard_integrity_replay",
+        "non_saturating_plural_merit_control",
+        "six_sibling_full_core_reflections",
+        "parent_conceptual_adjudication",
+        "theory_only_synthesis",
+        "final_conceptual_adjudication"
+      ]
+    },
+    "stages": {
+      "type": "array",
+      "minItems": 11,
+      "maxItems": 11,
+      "items": {"$ref": "#/$defs/stage"}
+    },
+    "edge_set_digest": {"$ref": "#/$defs/digest"},
+    "final_preference_authority": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "evidence_id",
+        "evidence_digest",
+        "stage_id",
+        "preference_set",
+        "authority_shape",
+        "authority_boundary",
+        "authority_digest"
+      ],
+      "properties": {
+        "evidence_id": {"$ref": "#/$defs/identifier"},
+        "evidence_digest": {"$ref": "#/$defs/digest"},
+        "stage_id": {"const": "synthesis-conceptual-adjudication"},
+        "preference_set": {"type": "object"},
+        "authority_shape": {"const": "set_valued_no_singular_collapse"},
+        "authority_boundary": {"type": "string", "minLength": 160},
+        "authority_digest": {"$ref": "#/$defs/digest"}
+      }
+    },
+    "same_cycle_support_boundary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "theory_generation",
+        "earliest_proof_or_experiment_generation",
+        "same_cycle_proof_artifact_ids",
+        "same_cycle_experiment_artifact_ids",
+        "proof_may_inform_ancestry",
+        "experiment_may_inform_ancestry",
+        "boundary"
+      ],
+      "properties": {
+        "status": {"const": "theory_descendant_only"},
+        "theory_generation": {"type": "integer", "minimum": 1},
+        "earliest_proof_or_experiment_generation": {
+          "type": "integer",
+          "minimum": 2
+        },
+        "same_cycle_proof_artifact_ids": {"type": "array", "maxItems": 0},
+        "same_cycle_experiment_artifact_ids": {"type": "array", "maxItems": 0},
+        "proof_may_inform_ancestry": {"const": false},
+        "experiment_may_inform_ancestry": {"const": false},
+        "boundary": {"type": "string", "minLength": 120}
+      }
+    },
+    "authority_nulls": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_truth_authority",
+        "global_latestness_authority",
+        "literature_exhaustiveness_authority",
+        "literature_benefit_authority",
+        "taxonomy_exhaustiveness_authority",
+        "creativity_authority",
+        "external_merit_authority",
+        "evaluator_independence",
+        "lens_process_isolation",
+        "cognitive_isolation",
+        "semantic_isolation",
+        "truth_authority",
+        "philosophical_depth_authority",
+        "physics_value_authority",
+        "proof_authority",
+        "theorem_authority",
+        "experiment_authority",
+        "category_hott_advantage_authority",
+        "generalization_authority",
+        "publication_authority",
+        "world_authority"
+      ],
+      "properties": {
+        "source_truth_authority": {"type": "null"},
+        "global_latestness_authority": {"type": "null"},
+        "literature_exhaustiveness_authority": {"type": "null"},
+        "literature_benefit_authority": {"type": "null"},
+        "taxonomy_exhaustiveness_authority": {"type": "null"},
+        "creativity_authority": {"type": "null"},
+        "external_merit_authority": {"type": "null"},
+        "evaluator_independence": {"const": "unavailable"},
+        "lens_process_isolation": {
+          "const": "six_distinct_supervised_local_process_receipts_only"
+        },
+        "cognitive_isolation": {"const": "unavailable"},
+        "semantic_isolation": {"const": "unavailable"},
+        "truth_authority": {"type": "null"},
+        "philosophical_depth_authority": {"type": "null"},
+        "physics_value_authority": {"type": "null"},
+        "proof_authority": {"type": "null"},
+        "theorem_authority": {"type": "null"},
+        "experiment_authority": {"type": "null"},
+        "category_hott_advantage_authority": {"type": "null"},
+        "generalization_authority": {"type": "null"},
+        "publication_authority": {"type": "null"},
+        "world_authority": {"type": "null"}
+      }
+    },
+    "authority_boundary": {"type": "string", "minLength": 280},
+    "content_digest": {"$ref": "#/$defs/digest"}
+  },
+  "$defs": {
+    "identifier": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"
+    },
+    "digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "stage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "stage_index",
+        "stage_id",
+        "artifact_kind",
+        "artifact",
+        "artifact_digest",
+        "predecessors",
+        "stage_digest"
+      ],
+      "properties": {
+        "stage_index": {"type": "integer", "minimum": 0, "maximum": 10},
+        "stage_id": {
+          "enum": [
+            "current_bounded_literature",
+            "literature_only_projection",
+            "pre_taxonomy_invention_freeze",
+            "post_freeze_taxonomy_classification",
+            "isolated_parallel_maturation",
+            "hard_integrity_replay",
+            "non_saturating_plural_merit_control",
+            "six_sibling_full_core_reflections",
+            "parent_conceptual_adjudication",
+            "theory_only_synthesis",
+            "final_conceptual_adjudication"
+          ]
+        },
+        "artifact_kind": {
+          "enum": [
+            "bounded_current_literature_bundle_v3",
+            "literature_only_projection_v3",
+            "literature_conditioned_pre_taxonomy_invention_freeze",
+            "post_freeze_taxonomy_replay_context",
+            "open_world_maturation_portfolio",
+            "open_world_hard_integrity_receipt",
+            "non_saturating_conceptual_merit",
+            "six_sibling_full_core_reflection_bundle",
+            "full_conceptual_adjudication_replay",
+            "reflective_conceptual_discovery_packet"
+          ]
+        },
+        "artifact": {"type": "object"},
+        "artifact_digest": {"$ref": "#/$defs/digest"},
+        "predecessors": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["stage_id", "stage_digest"],
+            "properties": {
+              "stage_id": {"type": "string", "minLength": 1},
+              "stage_digest": {"$ref": "#/$defs/digest"}
+            }
+          }
+        },
+        "stage_digest": {"$ref": "#/$defs/digest"}
+      }
+    }
+  }
+}

@@ -1,0 +1,172 @@
+# SPDX-FileCopyrightText: © 2026 Idiap Research Institute <contact@idiap.ch>
+#
+# SPDX-FileContributor: Danilo Gusicuma <danilo.gusicuma@idiap.ch>
+# Neuro-symbolic AI Group
+#
+# SPDX-License-Identifier: MIT
+# REUSE-IgnoreStart
+schema_version: workflow-skill/v1
+namespace: abducer_support
+id: project_readme_workflow
+version: 1.0.0
+kind: workflow
+description: Draft interface projection of project-readme-orchestrator; native execution and authority
+  remain unchanged.
+aliases:
+- project-readme-orchestrator
+lifecycle: draft
+activation:
+  mode: explicit
+  prerequisites: []
+types:
+  NativeRequest:
+    schema:
+      type: object
+      description: Skill-defined request; consult preserved source text for inputs and conditions.
+    representation: value
+  NativeResult:
+    schema:
+      type: object
+      description: Skill-defined durable artifact bundle; no invented runtime output shape.
+    representation: value
+inputs:
+  request:
+    type: NativeRequest
+outputs:
+  result:
+    type: NativeResult
+    value:
+      ref: steps.native.outputs.result
+operations:
+  native_workflow:
+    inputs:
+      request:
+        type: NativeRequest
+    outputs:
+      result:
+        type: NativeResult
+    execution:
+      mode: specification_only
+      reason: No workflow-skill/v1 host adapter is supplied. Native skill/hook/CLI interfaces exist, but
+        payload materialization, guard evidence, execution effects and receipt translation are not qualified
+        for this format.
+flow:
+  kind: sequence
+  steps:
+  - id: native
+    kind: call
+    operation: native_workflow
+    description: Opaque native workflow boundary; internal ordering, guards and handoffs are retained
+      in abducer.native_contract.
+    arguments:
+      request:
+        ref: inputs.request
+    on_failure: blocked
+policy:
+  effects:
+    filesystem:
+      read:
+      - native_sources
+      - inputs
+      write: []
+    network: []
+    external_write: []
+  authority:
+    allowed:
+    - describe_native_interface
+    forbidden:
+    - execute_scientific_workflow
+    - approve
+    - prove
+    - publish
+    - promote
+  limits:
+    wall_time_seconds: 1800
+    max_operation_calls: 1
+  failure:
+    default: blocked
+    retry:
+      max_attempts: 1
+      retryable_codes: []
+  resume:
+    mode: none
+    require_matching_definition_and_inputs: true
+  claim_ceiling: Interface description only; no proof, scientific validity, runtime qualification, promotion
+    or approval.
+observability:
+  receipts: required
+  artifact_digests: sha256
+  provenance: required
+  events:
+  - workflow_started
+  - step_failed
+  - workflow_completed
+provenance:
+  coverage: interface_only
+  sources:
+  - path: proj_skills/project-readme-orchestrator/SKILL.md
+    digest: sha256:4d7ce19e3dc2530a26af188a4412bde1890faa2f21fccddc65f3785e77fa7552
+  - path: proj_skills/project-readme-orchestrator/references/readme-quality-contract.md
+    digest: sha256:d062a2a59bd33f0c63096b75b19ae2eb0519353656f235b1ae2c100738e8b8a0
+  - path: proj_skills/project-readme-orchestrator/scripts/validate_project_readme.py
+    digest: sha256:779a191ce0f571dcb688095ec996a67ba1a94c772f3a4e3d893300bd81b2c53b
+  - path: agentic/registries/skill_registry.yaml
+    digest: sha256:15076ed8d1bd4c10895060ab485353fe520421c44e1fc6f506508d2d566eacf0
+  - path: pyproject.toml
+    digest: sha256:69325c4805f66033ce7f7e0e68f4a0996913728c6041bb3cee656571693b2f1e
+  - path: uv.lock
+    digest: sha256:a6c77e5d86a93915eeb0f129f80bc8c45d572be387872e3ace7460a3d6ada9ae
+  - path: prism_me/shared/references/codex-control-stack.md
+    digest: sha256:4e8e7a5cdbc0572cf9b0d4ffc4a41c8f4f9c9a304fae3bcee99d8af3553be30e
+  gaps:
+  - No workflow-skill/v1 host adapter is supplied. Native skill/hook/CLI interfaces exist, but payload
+    materialization, guard evidence, execution effects and receipt translation are not qualified for this
+    format.
+  - Native control flow remains opaque; coverage is interface_only, not source-equivalence certification.
+  - One or more native payloads have no exact JSON Schema; object-only types remain explicitly underspecified.
+extensions:
+  abducer.owner:
+    path: proj_skills/project-readme-orchestrator/SKILL.md
+  abducer.native_identity:
+    id: project-readme-orchestrator
+  abducer.native_contract:
+    source_skill: proj_skills/project-readme-orchestrator/SKILL.md
+    source_text: "---\nname: project-readme-orchestrator\ndescription: Orchestrate a controlled concept-first\
+      \ repository README update. Use when creating, substantially rewriting, simplifying, or release-gating\
+      \ a project README so its promise, minimal installation path, first use, outputs, trust boundaries,\
+      \ and documentation links stay concise and synchronized with executable repository evidence.\n---\n\
+      \n# Project README Orchestrator\n\nBuild the README as the project's front door: clear enough to\
+      \ run quickly, accurate enough to trust, and shallow enough to lead readers into the documentation\
+      \ system.\n\nUse this ordered stack:\n\n1. `$project-readme-concept-builder`\n2. `$project-onboarding-path-verifier`\n\
+      \nThe orchestrator assembles the two child packets after those hooks complete; it does not invoke\
+      \ itself.\n\n## Workflow\n\n1. Inspect the request and changed repository surfaces. Determine whether\
+      \ concept, onboarding, or both require refresh.\n2. Build the concept packet with `$project-readme-concept-builder`.\n\
+      3. Build the onboarding packet with `$project-onboarding-path-verifier`.\n4. Assemble the README\
+      \ using [README quality contract](references/readme-quality-contract.md).\n5. Keep exhaustive setup,\
+      \ integration, artifact, skill, and CI detail in the documents that own it.\n6. Run the deterministic\
+      \ README gate:\n\n   ```bash\n   python proj_skills/project-readme-orchestrator/scripts/validate_project_readme.py\
+      \ --repo .\n   ```\n\n7. Run documentation, project-skill, and link tests affected by the change.\n\
+      8. Inspect the final diff for conceptual order, duplicated guidance, stale paths, and claims stronger\
+      \ than their evidence.\n\n## Output Contract\n\nLeave:\n\n- an updated [root project overview](../../README.md)\n\
+      - a verified minimal install and first-run path\n- links to canonical deeper documentation\n- an\
+      \ updated [project-skill index](../INDEX.md) when the control stack changes\n- deterministic validation\
+      \ evidence\n\n## Ownership Boundaries\n\n- Own README quality evidence and feed it into Prism verification\
+      \ and handoff gates.\n- Do not duplicate the full install guide, skill catalog, workflow contract,\
+      \ integration manuals, artifact schema, or CI matrix.\n- Do not rewrite executable workflow semantics\
+      \ to make prose true without explicit authorization.\n- Route framework-architecture changes through\
+      \ the repository's meta-framework controls.\n\n## Release Gate\n\nRecommend that Prism block handoff\
+      \ when:\n\n- the title and opening promise do not identify the project\n- the conceptual model appears\
+      \ after installation detail\n- the first local run requires undocumented credentials\n- a displayed\
+      \ command fails parser or execution verification\n- a local Markdown link is broken\n- the README\
+      \ overstates validation, fidelity, or signoff\n\nMinor wording preference is not a release blocker.\n"
+  abducer.environment:
+    python: pyproject.toml
+    lock: uv.lock
+    native_controls: .codex/config.toml
+    native_controls_optional: true
+    control_policy: prism_me/shared/references/codex-control-stack.md
+  abducer.execution_boundary:
+    status: specification_only
+    notes: Source inspection only. Effects above deny native execution until a separately reviewed adapter
+      exists.
+# REUSE-IgnoreEnd

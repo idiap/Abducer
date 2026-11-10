@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://abducer.local/spec/public_reasoning_trace.schema.json",
+  "title": "Abducer public reasoning trace",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "run_id", "workflow_id", "workflow_version", "target", "status", "events"],
+  "properties": {
+    "schema_version": {"const": "2.0.0"},
+    "run_id": {"type": "string", "minLength": 1},
+    "workflow_id": {"type": "string", "minLength": 1},
+    "workflow_version": {"type": "string", "minLength": 1},
+    "profile_id": {"type": ["string", "null"]},
+    "domain_id": {"type": ["string", "null"], "pattern": "^[a-z][a-z0-9_]*$"},
+    "subworkflow_id": {"type": ["string", "null"], "pattern": "^[a-z][a-z0-9_-]*$"},
+    "parent_run_id": {"type": ["string", "null"]},
+    "execution_kind": {"enum": ["live", "synthetic_fixture", "legacy_projection"]},
+    "target": {"type": "string", "minLength": 1},
+    "trigger_facts": {"type": "object"},
+    "approved_budget": {"type": ["object", "null"]},
+    "activation_receipt_id": {"type": ["string", "null"]},
+    "status": {"enum": ["running", "completed", "failed", "blocked", "archived"]},
+    "events": {"type": "array", "items": {"$ref": "public_reasoning_event.schema.json"}}
+  }
+}

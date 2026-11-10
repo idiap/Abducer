@@ -1,0 +1,52 @@
+# SPDX-FileCopyrightText: © 2026 Idiap Research Institute <contact@idiap.ch>
+#
+# SPDX-FileContributor: Andre Freitas <andre.freitas@idiap.ch>
+# Neuro-symbolic AI Group
+#
+# SPDX-FileContributor: Danilo Gusicuma <danilo.gusicuma@idiap.ch>
+# Neuro-symbolic AI Group
+#
+# SPDX-License-Identifier: MIT
+# Occurrence layer for discovery_marathon_loop.
+# Owns semantic join records and exact generative operation signatures.
+# Occurrence boundaries follow independently consumed epistemic commitments,
+# not the number or order of linked skills.
+
+from workflows.discovery_marathon_loop.types import (
+    HypothesisContrastAssessment,
+    DiscriminatingDiscoveryHypothesis,
+    DiscoveryDisposition,
+    BoundedDiscoveryScope,
+    ProvisionalDiscoveryPattern,
+    DiscoveryRunContext,
+    DiscoveryRoutingAssessment,
+    HypothesisRefutationAssessment,
+    HypothesisModelImplications,
+)
+
+type DiscoveryHypothesisProbeInput:
+    discovery_hypothesis: DiscriminatingDiscoveryHypothesis
+    discovery_pattern: ProvisionalDiscoveryPattern
+
+type DiscoveryRefutationInput:
+    model_implications: HypothesisModelImplications
+    contrast_assessment: HypothesisContrastAssessment
+
+type DiscoveryRoutingInput:
+    discovery_hypothesis: DiscriminatingDiscoveryHypothesis
+    discovery_pattern: ProvisionalDiscoveryPattern
+    refutation_assessment: HypothesisRefutationAssessment
+
+type EvidentialDiscoveryScopeGrounding = DiscoveryRunContext -> Generated[BoundedDiscoveryScope]
+
+type AbductiveDiscoveryHypothesisFormation = BoundedDiscoveryScope -> Generated[DiscriminatingDiscoveryHypothesis]
+
+type InductiveDiscoveryPatternFormation = BoundedDiscoveryScope -> Generated[ProvisionalDiscoveryPattern]
+
+type ModelBasedDiscoveryHypothesisProbe = DiscoveryHypothesisProbeInput -> Generated[HypothesisModelImplications]
+
+type ContrastiveDiscoveryHypothesisProbe = DiscoveryHypothesisProbeInput -> Generated[HypothesisContrastAssessment]
+
+type RefutationalDiscoveryHypothesisAssessment = DiscoveryRefutationInput -> Generated[HypothesisRefutationAssessment]
+
+type EvidentialDiscoveryRoutingAssessment = DiscoveryRoutingInput -> Generated[DiscoveryRoutingAssessment]

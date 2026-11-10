@@ -1,0 +1,466 @@
+# SPDX-FileCopyrightText: © 2026 Idiap Research Institute <contact@idiap.ch>
+#
+# SPDX-FileContributor: Andre Freitas <andre.freitas@idiap.ch>
+# Neuro-symbolic AI Group
+#
+# SPDX-FileContributor: Danilo Gusicuma <danilo.gusicuma@idiap.ch>
+# Neuro-symbolic AI Group
+#
+# SPDX-License-Identifier: MIT
+schema: abducer.ym_artifact_or_stop_anti_incrementality_todos.v1
+created_at: "2026-07-21"
+purpose: >
+  Prevent the Yang-Mills discovery marathon from drifting into incremental
+  theorem-shaped packets after a repeated blocker has already identified a
+  concrete missing artifact. Force branches to produce the artifact, produce a
+  falsifier, package a demotion, or quarantine.
+source_artifacts:
+  last_marathon_manifest: agentic/logs/discovery_marathon_jobs/ym-5h-azure-20260721a.json
+  last_marathon_log: agentic/logs/discovery_marathon_jobs/ym-5h-azure-20260721a.jsonl
+  ym_report: agentic/reports/discovery_marathon/targets/yang-mills-existence-and-mass-gap-target/latest.json
+  ym_timeline: agentic/reports/discovery_marathon/targets/yang-mills-existence-and-mass-gap-target/full_timeline.html
+  plan: docs/case-studies/yang-mills/ym-artifact-or-stop-anti-incrementality-plan.md
+implementation_status:
+  status: completed
+  completed_at: "2026-07-21"
+  summary: >
+    Implemented an executable YM artifact-or-stop gate: schemas, blocker miner,
+    endpoint source table contract, feasibility pilot, demotion packet,
+    scheduler/run preflight, future-cycle validator, report/HTML surfacing,
+    adversarial fixtures, and agentic_check integration.
+  evidence:
+    - agentic/spec/artifact_or_stop_control.schema.json
+    - agentic/spec/ym_endpoint_source_table.schema.json
+    - agentic/scripts/artifact_or_stop_control.py
+    - agentic/scripts/build_blocker_signature_report.py
+    - agentic/scripts/validate_artifact_or_stop_control.py
+    - agentic/reports/blocker_signatures/targets/yang-mills-existence-and-mass-gap-target/latest.json
+    - agentic/reports/discovery_marathon/targets/yang-mills-existence-and-mass-gap-target/proof_objects/endpoint_source_table_contract.json
+    - agentic/reports/discovery_marathon/targets/yang-mills-existence-and-mass-gap-target/proof_objects/endpoint_source_table_pilot.json
+    - agentic/reports/discovery_marathon/targets/yang-mills-existence-and-mass-gap-target/proof_objects/endpoint_route_demotion_packet.json
+    - tests/fixtures/artifact_or_stop/ym_endpoint_repeated_request_reject.json
+    - tests/generative/test_ym_artifact_or_stop_quality.md
+global_controls:
+  blocker_signature_policy: >
+    After a branch repeats the same missing artifact, estimate, table, or
+    transfer certificate three times, the next cycle may not be another broad
+    reasoning packet. It must switch to artifact_sprint, falsifier_sprint,
+    publication_demotion, or quarantine.
+  current_ym_blocker_signature: >
+    Missing positive-D endpoint source intervals and cutoff-uniform T_tail for
+    the heat-kernel SU(N) three-hairpin post-H,K endpoint gate; without these,
+    I_gate cannot be signed.
+  no_overclaim_policy: >
+    A finite local theorem, Schur complement, endpoint interval, or support
+    function may be valuable, but it is support-only until it produces a
+    physical carrier handoff and names which Clay gate remains untouched.
+  major_publication_investment_policy: >
+    Invest ordinary YM discovery cycles only in hypotheses and proof pathways
+    whose major_publication_gate is invest_high_physics_reward. If a pathway
+    cannot plausibly change physics understanding around a named physical
+    carrier and Clay-facing gate, demote, reframe, pivot, stop, quarantine, or
+    route it to a named artifact sprint rather than continuing proof search.
+  next_marathon_policy: >
+    Do not run another long YM API marathon on Route A endpoint branches until
+    the artifact-or-stop gate either emits the endpoint source table, emits a
+    falsifier, or records a quarantine/demotion packet.
+todos:
+  - id: YMAOS-001
+    type: planning_todo
+    phase: artifact-or-stop-contract
+    owner: agentic/spec
+    priority: critical
+    risk_class: repeated-blocker-incrementality
+    title: Define the artifact-or-stop control contract
+    intent: >
+      Establish a branch-control contract that distinguishes reasoning cycles
+      from artifact sprints after a repeated blocker has named a concrete
+      missing object.
+    use_skills:
+      - proof-hard-gate-selector
+      - abducer-obligation-gatekeeper
+      - proof-depth-release-gate
+      - physical-relevance-impact-auditor
+    required_artifact:
+      - agentic/spec/artifact_or_stop_control.schema.json
+      - docs/case-studies/yang-mills/ym-artifact-or-stop-anti-incrementality-plan.md
+    acceptance_criteria:
+      - The schema defines blocker_signature, repetition_count, required_artifact, allowed_next_modes, forbidden_next_modes, promotion_condition, demotion_condition, and quarantine_condition.
+      - Allowed next modes include artifact_sprint, falsifier_sprint, publication_demotion, quarantine, and conceptual_exploration_after_release.
+      - The contract states that broad_api_reasoning is forbidden after the blocker repeats at least three times without a new artifact.
+      - The contract can represent the current endpoint source table and T_tail blocker without hard-coding it as the only possible blocker.
+      - The contract preserves the distinction between local finite contribution and Clay-level progress.
+    blocked_by: []
+    evidence:
+      - agentic/reports/discovery_marathon/targets/yang-mills-existence-and-mass-gap-target/latest.json
+      - docs/case-studies/yang-mills/ym-artifact-or-stop-anti-incrementality-plan.md
+    review_date: "2026-07-21"
+    failure_modes:
+      - The contract becomes a generic quality rubric and does not force a mode switch.
+      - The contract lets another cycle say "compute X next" without producing X.
+      - The contract blocks legitimate conceptual exploration even after a branch has been released or quarantined.
+      - The contract treats support-only finite work as proof progress.
+    status: resolved
+
+  - id: YMAOS-002
+    type: workflow_todo
+    phase: blocker-signature-mining
+    owner: agentic/scripts
+    priority: critical
+    risk_class: invisible-loop-pattern
+    title: Build a blocker-signature miner for marathon cycles
+    intent: >
+      Detect repeated blockers across branch outputs so the scheduler can tell
+      when a branch has stopped learning and must switch to artifact-or-stop
+      mode.
+    use_skills:
+      - proof-inference-learning-extractor
+      - proof-learning-ledger-maintainer
+      - abducer-failure-signal-cartographer
+      - next-experiment-queue-ranker
+    required_artifact:
+      - agentic/scripts/build_blocker_signature_report.py
+      - agentic/reports/blocker_signatures/targets/yang-mills-existence-and-mass-gap-target/latest.json
+      - agentic/reports/blocker_signatures/targets/yang-mills-existence-and-mass-gap-target/latest.md
+    acceptance_criteria:
+      - The report groups cycles by normalized blocker signatures extracted from blocking_gap, next_experiment, proof_depth_control, and physical_relevance_impact.
+      - The current endpoint-source/T_tail blocker is detected as repeated in the last YM marathon.
+      - Each blocker signature records first_cycle, latest_cycle, repetition_count, branch_ids, missing_artifacts, and proposed mode switch.
+      - The report marks whether the blocker is artifact-blocked, proof-blocked, literature-blocked, physical-handoff-blocked, or conceptual-representation-blocked.
+      - The script does not print API keys or inspect config secrets.
+    blocked_by:
+      - YMAOS-001
+    evidence:
+      - agentic/logs/discovery_marathon_jobs/ym-5h-azure-20260721a.json
+      - agentic/reports/discovery_marathon/targets/yang-mills-existence-and-mass-gap-target/latest.json
+    review_date: "2026-07-21"
+    failure_modes:
+      - The miner counts superficial keyword overlap rather than the same missing artifact.
+      - The miner cannot distinguish a repeated blocker from a newly refined proof obligation.
+      - The report hides the branch ids or cycle ids needed for audit.
+      - The report recommends more broad exploration despite an artifact-blocked signature.
+    status: resolved
+
+  - id: YMAOS-003
+    type: workflow_todo
+    phase: scheduler-control
+    owner: agentic/scripts
+    priority: critical
+    risk_class: wrong-next-mode
+    title: Add artifact-or-stop branch mode selection to the marathon scheduler
+    intent: >
+      Make the next cycle mode depend on blocker evidence, so repeated compute
+      requests cannot be routed back into ordinary API branch reasoning.
+    use_skills:
+      - long-horizon-route-portfolio-manager
+      - next-experiment-queue-ranker
+      - proof-hard-gate-selector
+      - abducer-obligation-gatekeeper
+    required_artifact:
+      - agentic/scripts/discovery_marathon_scheduler.py
+      - agentic/scripts/run_discovery_marathon.py
+      - agentic/reports/blocker_signatures/targets/yang-mills-existence-and-mass-gap-target/latest.json
+    acceptance_criteria:
+      - Branch selection reads blocker signatures before selecting broad reasoning cycles.
+      - A branch with repetition_count >= 3 and a missing required_artifact is routed to artifact_sprint, falsifier_sprint, publication_demotion, or quarantine.
+      - The selected mode is written into the cycle packet and the branch local memory.
+      - A broad API marathon fails preflight if all selected YM branches are artifact-blocked and no artifact sprint executor is configured.
+      - The scheduler keeps non-blocked conceptual-exploration branches available after an artifact-blocked branch is quarantined or released.
+    blocked_by:
+      - YMAOS-001
+      - YMAOS-002
+    evidence:
+      - agentic/scripts/discovery_marathon_scheduler.py
+      - agentic/scripts/run_discovery_marathon.py
+      - agentic/runs/discovery_marathons/yang-mills-smoke-marathon/run_state.json
+    review_date: "2026-07-21"
+    failure_modes:
+      - Scheduler mode is logged but not enforced.
+      - All branches remain active even when the same artifact blocker repeats.
+      - A branch is quarantined without preserving its useful finite result or demotion packet.
+      - Scheduler forbids exploration globally instead of only blocking repeated artifact loops.
+    status: resolved
+
+  - id: YMAOS-004
+    type: workflow_todo
+    phase: endpoint-artifact-sprint
+    owner: agentic/scripts
+    priority: critical
+    risk_class: missing-decisive-artifact
+    title: Specify the endpoint source table artifact sprint
+    intent: >
+      Convert the repeated Route A endpoint request into a concrete artifact
+      contract with fields, computation plan, validation, and promotion or
+      demotion outcomes.
+    use_skills:
+      - endpoint-worked-calculation-packager
+      - routea-endpoint-local-integral-calculator
+      - routea-endpoint-error-budget-certifier
+      - routea-margin-endpoint-certifier
+      - physical-relevance-impact-auditor
+    required_artifact:
+      - agentic/spec/ym_endpoint_source_table.schema.json
+      - agentic/reports/discovery_marathon/targets/yang-mills-existence-and-mass-gap-target/proof_objects/endpoint_source_table_contract.md
+      - agentic/reports/discovery_marathon/targets/yang-mills-existence-and-mass-gap-target/proof_objects/endpoint_source_table_contract.json
+    acceptance_criteria:
+      - The artifact contract names the fixed regulated geometry, gauge group, regulator, source-equivalence classes, D_c, seven log Z samples, kappa_c intervals, M8/M_G, C_N, T_tail, and final I_gate interval.
+      - The contract states exact promote, finite-falsifier, and quarantine outcomes based on the sign or overlap of I_gate.
+      - The contract names which fields may be symbolic, interval-certified, numerically certified, or unknown.
+      - The contract states physical relevance boundaries: finite endpoint evidence does not prove continuum existence, OS/Wightman reconstruction, or the spectral gap.
+      - The contract is specific enough that an executor or human can attempt the table without reading the whole marathon timeline.
+    blocked_by:
+      - YMAOS-001
+      - YMAOS-002
+    evidence:
+      - agentic/reports/discovery_marathon/targets/yang-mills-existence-and-mass-gap-target/latest.json
+      - agentic/reports/results_ellaboration/a-finite-schur-feshbach-test-for-reflected-wilson-blocks-an-explicit-four-dimens/finite_wilson_os_routeA_SU2_attack_integrated.tex
+    review_date: "2026-07-21"
+    failure_modes:
+      - The artifact contract is another prose restatement of "compute the table".
+      - The contract omits the tail/remainder field that blocks promotion.
+      - The contract lacks a falsifier path if the interval has the wrong sign.
+      - The contract overclaims physical relevance from a fixed-regulator finite calculation.
+    status: resolved
+
+  - id: YMAOS-005
+    type: test_todo
+    phase: anti-incrementality-validation
+    owner: agentic/scripts
+    priority: critical
+    risk_class: validator-permits-loop
+    title: Add validators that reject repeated artifact-free compute requests
+    intent: >
+      Prevent a cycle from validating when it repeats an already-known missing
+      artifact without producing the artifact, a falsifier, or a quarantine
+      packet.
+    use_skills:
+      - proof-depth-release-gate
+      - abducer-obligation-gatekeeper
+      - proof-nontriviality-auditor
+      - physical-relevance-impact-auditor
+    required_artifact:
+      - agentic/scripts/validate_artifact_or_stop_control.py
+      - tests/fixtures/artifact_or_stop/ym_endpoint_repeated_request_reject.json
+      - tests/fixtures/artifact_or_stop/ym_endpoint_table_attach_accept.json
+      - tests/fixtures/artifact_or_stop/ym_endpoint_quarantine_accept.json
+    acceptance_criteria:
+      - A fixture that only repeats "compute endpoint source intervals and T_tail next" fails validation after the repetition threshold.
+      - A fixture that attaches a valid endpoint source table contract passes as artifact_sprint.
+      - A fixture that attaches a finite falsifier or quarantine packet passes with no promotion.
+      - The validator is included in the relevant marathon preflight or report validation path.
+      - The validator remains target-aware and does not accidentally block unrelated P vs NP or generic math runs.
+    blocked_by:
+      - YMAOS-002
+      - YMAOS-003
+      - YMAOS-004
+    evidence:
+      - agentic/scripts/validate_discovery_marathon_cycle.py
+      - agentic/scripts/validate_discovery_marathon_skill_dispatch.py
+      - agentic/reports/discovery_marathon/targets/yang-mills-existence-and-mass-gap-target/latest.json
+    review_date: "2026-07-21"
+    failure_modes:
+      - The validator rejects old historical cycles instead of gating future cycles.
+      - The validator can be bypassed by changing wording while preserving the same blocker.
+      - The validator demands an artifact before its contract exists.
+      - The validator promotes a support-only artifact as a physical or Clay-level result.
+    status: resolved
+
+  - id: YMAOS-006
+    type: workflow_todo
+    phase: physical-impact-promotion-gate
+    owner: agentic/scripts
+    priority: high
+    risk_class: physically-irrelevant-math-promotion
+    title: Make physical relevance packets promotion-blocking for future YM cycles
+    intent: >
+      Ensure future YM branches cannot be promoted as major subgoals unless
+      they name a physical carrier, a target gate, a field-facing impact claim,
+      and a demotion-ready physical relevance test.
+    use_skills:
+      - physical-relevance-impact-auditor
+      - main-problem-alignment-auditor
+      - paper-contribution-readiness-judge
+      - scientific-contribution-detector
+    required_artifact:
+      - agentic/scripts/physical_relevance_impact.py
+      - agentic/scripts/validate_discovery_marathon_cycle.py
+      - agentic/reports/discovery_marathon/targets/yang-mills-existence-and-mass-gap-target/latest.json
+    acceptance_criteria:
+      - Future YM cycle packets persist physical_relevance_impact rather than relying only on report-derived legacy assessment.
+      - Future YM cycle packets include major_publication_gate with an investment_decision of invest_high_physics_reward, reframe_before_investment, do_not_invest_support_only, or quarantine_low_physics_reward.
+      - Only invest_high_physics_reward branches may receive another ordinary proof-search cycle; every other decision must demote, reframe, pivot, stop, quarantine, or enter a named artifact/falsifier sprint.
+      - Major-publication potential requires a named physical carrier, named Clay-facing gate, field-facing understanding change, and falsifier-backed route decision.
+      - A branch with release_decision promote but physical decision math_support_only_pending_physical_handoff is demoted to support_only or publication_demotion.
+      - A branch cannot use Wilson/OS vocabulary alone as evidence of physical relevance.
+      - The report distinguishes persisted physical packets from legacy-derived assessments.
+      - The gate explicitly permits valuable support-only mathematics while blocking major-subgoal overclaim.
+    blocked_by:
+      - YMAOS-001
+    evidence:
+      - skills/evaluation/physical-relevance-impact-auditor/SKILL.md
+      - agentic/scripts/physical_relevance_impact.py
+      - agentic/reports/discovery_marathon/targets/yang-mills-existence-and-mass-gap-target/latest.json
+    review_date: "2026-07-21"
+    failure_modes:
+      - The physical relevance packet is visible in reports but has no effect on promotion.
+      - Legacy-derived assessments are mistaken for persisted cycle evidence.
+      - A branch is rejected merely for being finite, even though finite support-only work may be valuable.
+      - The packet becomes another generic score and does not name physical carrier or target gate.
+    status: resolved
+
+  - id: YMAOS-007
+    type: report_todo
+    phase: report-surface
+    owner: agentic/reports
+    priority: high
+    risk_class: hidden-support-only-state
+    title: Add an anti-incrementality panel to YM reports
+    intent: >
+      Make repeated blocker signatures, artifact-blocked branches, support-only
+      work, and physical-relevance status visible in the HTML/Markdown reports.
+    use_skills:
+      - show-reasoning
+      - timeline-contribution-explainer
+      - timeline-claim-boundary-auditor
+      - physical-relevance-impact-auditor
+    required_artifact:
+      - agentic/reports/discovery_marathon/targets/yang-mills-existence-and-mass-gap-target/latest.html
+      - agentic/reports/discovery_marathon/targets/yang-mills-existence-and-mass-gap-target/full_timeline.html
+      - agentic/reports/blocker_signatures/targets/yang-mills-existence-and-mass-gap-target/latest.html
+    acceptance_criteria:
+      - The report shows top blocker signatures with repetition count, branch ids, missing artifacts, and required next mode.
+      - The report labels branches as reasoning_allowed, artifact_sprint_required, falsifier_sprint_required, publication_demotion_required, or quarantined.
+      - The report shows physical relevance decisions separately from proof-depth decisions.
+      - The report states that the endpoint branch should not receive another broad API marathon until the endpoint artifact-or-stop gate is satisfied.
+      - The report exposes links to the endpoint source table contract, any produced table, and validation output.
+    blocked_by:
+      - YMAOS-002
+      - YMAOS-006
+    evidence:
+      - agentic/scripts/build_discovery_marathon_report.py
+      - agentic/scripts/generate_discovery_marathon_html.py
+      - agentic/reports/discovery_marathon/targets/yang-mills-existence-and-mass-gap-target/latest.html
+    review_date: "2026-07-21"
+    failure_modes:
+      - The report buries blocker information inside raw JSON.
+      - The report uses optimistic contribution language for support-only states.
+      - The report does not distinguish current actionable blockers from historical timeline detail.
+      - The report makes the pipeline look productive because many cycles ran, not because a gate moved.
+    status: resolved
+
+  - id: YMAOS-008
+    type: test_todo
+    phase: generative-quality-fixtures
+    owner: tests/generative
+    priority: high
+    risk_class: shallow-generative-compliance
+    title: Add adversarial generative fixtures for incrementality detection
+    intent: >
+      Stress-test whether the workflow can reject polished but incremental
+      theorem-shaped packets that merely restate the endpoint blocker.
+    use_skills:
+      - prism-generative-validation-runner
+      - proof-nontriviality-auditor
+      - contribution-value-assessor
+      - physical-relevance-impact-auditor
+    required_artifact:
+      - tests/generative/test_ym_artifact_or_stop_quality.md
+      - agentic/evals/ym_artifact_or_stop/expected_verdicts.json
+    acceptance_criteria:
+      - A fluent packet with definitions, equations, and falsifiers but no endpoint artifact is rejected after blocker repetition.
+      - A packet that adds a new wording of the same T_tail blocker is classified as incremental drift.
+      - A packet that produces a table contract but no data is routed to artifact_sprint, not promotion.
+      - A packet that produces a negative I_gate interval is accepted as a finite falsifier and overclaim-bounded.
+      - A packet that claims physical impact without carrier, same-theory transfer, or target gate is rejected.
+    blocked_by:
+      - YMAOS-005
+      - YMAOS-006
+    evidence:
+      - agentic/scripts/validate_artifact_or_stop_control.py
+      - skills/evaluation/physical-relevance-impact-auditor/SKILL.md
+      - docs/case-studies/yang-mills/ym-artifact-or-stop-anti-incrementality-plan.md
+    review_date: "2026-07-21"
+    failure_modes:
+      - Fixtures reward vocabulary rather than artifact production.
+      - Fixtures require solving the whole Clay target instead of detecting branch-level incrementality.
+      - Fixtures cannot distinguish support-only work from useless work.
+      - Fixtures leak expected answers into prompts rather than testing the workflow.
+    status: resolved
+
+  - id: YMAOS-009
+    type: workflow_todo
+    phase: publication-demotion
+    owner: skills/orchestration
+    priority: high
+    risk_class: infinite-publication-finalization
+    title: Add publication/demotion finalization after artifact-blocked lock-in
+    intent: >
+      Stop the workflow from repeatedly trying to finalize a major subgoal
+      without the artifact that would make finalization honest.
+    use_skills:
+      - proof-strategy-lockin-orchestrator
+      - timeline-narrative-coherence-guard
+      - finite-theorem-section-packager
+      - scientific-contribution-paper-handoff
+    required_artifact:
+      - agentic/reports/proof_lockin/targets/yang-mills-existence-and-mass-gap-target/latest.json
+      - agentic/reports/results_ellaboration/yang_mills_routea_endpoint_artifact_blocked_demotion.md
+      - agentic/reports/discovery_marathon/targets/yang-mills-existence-and-mass-gap-target/proof_objects/endpoint_route_demotion_packet.json
+    acceptance_criteria:
+      - If an artifact sprint cannot produce the endpoint table or T_tail within its bounded budget, the branch emits a demotion packet instead of opening a new completion loop.
+      - The demotion packet states the finite result that remains valuable and the exact artifact debt that blocks publication.
+      - The packet is suitable for a paper note or appendix only as support-only or negative route-learning, not as a major YM subgoal completion.
+      - The lock-in report records completed_cycles, blocked_named_artifact, release_to_exploration, and no nested consolidation.
+      - The next conceptual exploration branch is selected only after demotion/quarantine is recorded.
+    blocked_by:
+      - YMAOS-001
+      - YMAOS-002
+    evidence:
+      - agentic/reports/proof_lockin/targets/yang-mills-existence-and-mass-gap-target/latest.json
+      - skills/orchestration/proof-strategy-lockin-orchestrator/SKILL.md
+      - skills/reporting/timeline-narrative-coherence-guard/SKILL.md
+    review_date: "2026-07-21"
+    failure_modes:
+      - The workflow opens another lock-in loop after budget exhaustion.
+      - Demotion text is vague and does not name the missing artifact.
+      - The branch remains active with the same blocker after demotion.
+      - The paper-facing text hides that the result is support-only.
+    status: resolved
+
+  - id: YMAOS-010
+    type: target_todo
+    phase: endpoint-feasibility-pilot
+    owner: agentic/reports/discovery_marathon/targets/yang-mills-existence-and-mass-gap-target/proof_objects
+    priority: critical
+    risk_class: no-artifact-produced
+    title: Run a minimal endpoint source table feasibility pilot
+    intent: >
+      Test whether the current repository has enough definitions, scripts, and
+      mathematical specification to produce even one positive-D endpoint source
+      class row. This is the decisive practical check before another marathon.
+    use_skills:
+      - routea-endpoint-local-integral-calculator
+      - endpoint-worked-calculation-packager
+      - routea-endpoint-error-budget-certifier
+      - counterexample-hunter
+    required_artifact:
+      - agentic/reports/discovery_marathon/targets/yang-mills-existence-and-mass-gap-target/proof_objects/endpoint_source_table_pilot.json
+      - agentic/reports/discovery_marathon/targets/yang-mills-existence-and-mass-gap-target/proof_objects/endpoint_source_table_pilot.md
+    acceptance_criteria:
+      - The pilot chooses one explicit positive-D source-equivalence class or states why no class can be instantiated from current artifacts.
+      - The pilot records seven source sample slots, even if some are unknown, and marks each as computed, symbolic, externally-required, or unavailable.
+      - The pilot records what is needed to certify kappa_c and T_tail for that row.
+      - The pilot emits one of pilot_success, needs_external_math, underspecified_geometry, impossible_current_route, or quarantine_recommended.
+      - The pilot directly determines whether another API marathon is allowed on the endpoint branch.
+    blocked_by:
+      - YMAOS-004
+    evidence:
+      - agentic/reports/discovery_marathon/targets/yang-mills-existence-and-mass-gap-target/latest.json
+      - agentic/reports/results_ellaboration/a-finite-schur-feshbach-test-for-reflected-wilson-blocks-an-explicit-four-dimens/finite_wilson_os_routeA_SU2_attack_integrated.tex
+    review_date: "2026-07-21"
+    failure_modes:
+      - The pilot returns another plan instead of one attempted row.
+      - Unknowns are hidden rather than typed by required source.
+      - The pilot cannot decide whether the branch is executable or underspecified.
+      - The pilot lets the branch continue without artifact evidence.
+    status: resolved

@@ -1,0 +1,11 @@
+erfl 0.2
+reasoning manuscript_result_elaboration {
+  goal "produce a scope-safe evidence-aligned manuscript" -> calibrated_manuscript
+  steps e0:E[result->scope] -constrain> ...
+        a0:A[scope->extension] -test> ...
+        r0:R[extension->verdict] -calibrate> ...
+        e1:E[extension,verdict->paper_status]
+  on e1.proof_required => switch @theorem_proof_delivery
+  on e1.paper_ready => accept
+  on reasoning.stalled => stop
+}

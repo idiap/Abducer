@@ -1,0 +1,20 @@
+# Relation layer for deep_review_and_reorientation.
+# Owns edge/certificate contracts only; builders belong to future materialization.
+
+type ReorientationAlternativeConstraint[SourceValue, TargetValue]:
+    source: SourceValue
+    target: Generated[TargetValue]
+
+type ReorientationDecisionCalibration[SourceValue, TargetValue]:
+    source: SourceValue
+    target: Generated[TargetValue]
+
+relation GroundsReorientationAlternatives[SourceValue, TargetValue](
+    source: SourceValue,
+    target: Generated[TargetValue],
+) -> ReorientationAlternativeConstraint[SourceValue, TargetValue]
+
+relation CalibratesReorientationDecision[SourceValue, TargetValue](
+    source: SourceValue,
+    target: Generated[TargetValue],
+) -> ReorientationDecisionCalibration[SourceValue, TargetValue]

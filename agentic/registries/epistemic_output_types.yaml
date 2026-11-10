@@ -1,0 +1,213 @@
+{
+  "schema_version": "0.1",
+  "status": "initial_draft",
+  "principle": "Artifact names describe materialization; epistemic output kinds describe semantic content and authority.",
+  "common_properties": [
+    "output_id",
+    "kind",
+    "reasoning_occurrence_id",
+    "scope",
+    "provenance",
+    "taints",
+    "open_obligations",
+    "mutability",
+    "terminality",
+    "admissible_consumers"
+  ],
+  "output_kinds": [
+    {
+      "id": "KnowledgeBase",
+      "meaning": "A version-identified epistemic graph containing typed outputs and relations under explicit scope, provenance, consistency, and revision policies.",
+      "claim_effects": ["none"],
+      "native_modality_required": false,
+      "default_mutability": "immutable_versioned_successor_on_revision",
+      "composition": "By provenance-preserving member union or explicit revision; membership never promotes a member's authority.",
+      "admissible_consumers": ["D", "A", "I", "T", "C", "M", "R", "E", "control"],
+      "subtypes": ["problem_kb", "domain_kb", "working_kb", "reference_kb"]
+    },
+    {
+      "id": "Claim",
+      "meaning": "A proposition capable of being true or false.",
+      "claim_effects": ["introduce", "condition", "qualify", "revise", "supersede"],
+      "native_modality_required": true,
+      "default_mutability": "immutable_new_identity_on_revision",
+      "composition": "Only through consumers that preserve modality, scope, indispensable premises, and taints.",
+      "admissible_consumers": ["D", "A", "T", "C", "M", "R", "E", "I:scoped_case_set_only"],
+      "subtypes": ["candidate_explanation", "conditional_entailment", "provisional_generalization", "candidate_transfer", "contrast_claim", "model_finding", "revised_claim"]
+    },
+    {
+      "id": "Evidence",
+      "meaning": "An inspectable item bearing on a claim through a typed evidential relation.",
+      "claim_effects": ["none"],
+      "native_modality_required": true,
+      "default_mutability": "immutable_successor_on_correction",
+      "composition": "Affects claims only through supports, refutes, constrains, or background relations.",
+      "admissible_consumers": ["D", "A", "I", "T", "C", "M", "R", "E"],
+      "subtypes": ["observation", "source_record", "measurement", "derived_artifact", "counterexample_witness", "search_trace", "simulation_trace", "proof_checker_receipt"]
+    },
+    {
+      "id": "Decision",
+      "meaning": "An epistemic adjudication or operational disposition over existing outputs.",
+      "claim_effects": ["calibrate", "gate", "select", "demote", "none"],
+      "native_modality_required": false,
+      "default_mutability": "immutable_superseded_by_later_decision",
+      "composition": "Composable only through an explicit policy; never usable as object-level evidence.",
+      "admissible_consumers": ["control", "E", "reasoning_gate_only"],
+      "subtypes": ["epistemic_status", "bounded_nonrefutation", "refutation", "gate", "branch_selection", "workflow_disposition"]
+    },
+    {
+      "id": "Model",
+      "meaning": "An explicit representation, formal structure, or idealized system.",
+      "claim_effects": ["none"],
+      "native_modality_required": true,
+      "default_mutability": "versioned_new_identity_on_structure_or_parameter_change",
+      "composition": "Through declared interfaces, idealization maps, and preserved invariants.",
+      "admissible_consumers": ["M", "C", "R", "E", "D:model_properties_only", "T:correspondence_required", "I:case_set_required"],
+      "subtypes": ["formal_model", "symbolic_model", "numerical_model", "toy_model", "causal_model", "idealization_map"]
+    },
+    {
+      "id": "Relation",
+      "meaning": "A typed connection among output identities and the main carrier of relational warrant.",
+      "claim_effects": ["connect", "qualify", "none"],
+      "native_modality_required": true,
+      "default_mutability": "immutable_invalidated_or_superseded_explicitly",
+      "composition": "Only when endpoint kinds, identities, scopes, modalities, and side conditions unify.",
+      "admissible_consumers": ["D", "A", "I", "T", "C", "M", "R", "E", "control"],
+      "subtypes": ["depends_on", "entails_given", "explains_candidate", "generalizes_over", "transfers_via", "contrasts_with", "models", "idealizes", "supports", "refutes", "constrains", "calibrates", "revises", "supersedes"]
+    },
+    {
+      "id": "Obligation",
+      "meaning": "A typed condition that remains to be discharged before a specified promotion or use.",
+      "claim_effects": ["restrict", "none"],
+      "native_modality_required": false,
+      "default_mutability": "immutable_status_updated_by_discharge_decision",
+      "composition": "Unioned across indispensable branches; discharged only by a typed witness or decision.",
+      "admissible_consumers": ["D", "A", "I", "T", "C", "M", "R", "E", "control"],
+      "subtypes": ["premise", "proof", "boundary", "transfer", "robustness", "falsification", "provenance", "repair"]
+    },
+    {
+      "id": "Plan",
+      "meaning": "A prospective bounded sequence of reasoning or action.",
+      "claim_effects": ["none"],
+      "native_modality_required": false,
+      "default_mutability": "versioned_frozen_when_executed",
+      "composition": "Sequence, guarded choice, parallelism, and bounded iteration.",
+      "admissible_consumers": ["control", "A:revision", "E:readiness_only"],
+      "subtypes": ["proof_plan", "experiment_plan", "search_plan", "repair_plan", "workflow_plan"]
+    },
+    {
+      "id": "Presentation",
+      "meaning": "A communicative rendering of authoritative source outputs.",
+      "claim_effects": ["none"],
+      "native_modality_required": false,
+      "default_mutability": "regenerable_versioned_view",
+      "composition": "Formatting, ordering, selection, and summarization with source dereferencing.",
+      "admissible_consumers": ["human", "reporting", "reasoning:source_dereference_required"],
+      "subtypes": ["summary", "reasoning_trace", "visualization", "paper_section", "report", "rendered_document"]
+    },
+    {
+      "id": "Bundle",
+      "meaning": "An immutable product or tagged sum of typed outputs.",
+      "claim_effects": ["componentwise"],
+      "native_modality_required": false,
+      "default_mutability": "immutable_new_bundle_on_change",
+      "composition": "Product, tagged alternative, bounded collection, or provenance-preserving handoff.",
+      "admissible_consumers": ["consumer_accepting_every_required_member"],
+      "subtypes": ["product", "tagged_sum", "collection", "handoff", "context", "state_snapshot"]
+    }
+  ],
+  "semantic_port_types": [
+    {"id": "KnowledgeBase", "output_kind": "KnowledgeBase"},
+    {"id": "Observation", "output_kind": "Evidence"},
+    {"id": "Candidate", "output_kind": "Claim"},
+    {"id": "Premise", "output_kind": "Claim"},
+    {"id": "Claim", "output_kind": "Claim"},
+    {"id": "Evidence", "output_kind": "Evidence"},
+    {"id": "Witness", "output_kind": "Evidence"},
+    {"id": "Assessment", "output_kind": "Decision"},
+    {"id": "Calibrated", "output_kind": "Decision"},
+    {"id": "Obligation", "output_kind": "Obligation"},
+    {"id": "Scope", "output_kind": "Relation"},
+    {"id": "Constraint", "output_kind": "Relation"},
+    {"id": "Delta", "output_kind": "Relation"},
+    {"id": "Goal", "output_kind": "Plan"},
+    {"id": "Unavailable", "output_kind": "Decision"}
+  ],
+  "reasoning_codomains": [
+    {
+      "reasoning_type": "A",
+      "variants": [{"id": "default", "members": ["Claim:candidate_explanation", "Relation:explains_candidate", "Bundle:tagged_sum", "Obligation:falsification"]}],
+      "claim_ceiling": "candidate_explanation"
+    },
+    {
+      "reasoning_type": "D",
+      "variants": [{"id": "default", "members": ["Claim:conditional_entailment", "Relation:entails_given", "Obligation:proof"]}],
+      "claim_ceiling": "entailed_given_premises"
+    },
+    {
+      "reasoning_type": "I",
+      "variants": [{"id": "default", "members": ["Claim:provisional_generalization", "Relation:generalizes_over", "Obligation:boundary"]}],
+      "claim_ceiling": "provisional_generalization"
+    },
+    {
+      "reasoning_type": "T",
+      "variants": [{"id": "default", "members": ["Claim:candidate_transfer", "Relation:transfers_via", "Obligation:transfer"]}],
+      "claim_ceiling": "candidate_transfer"
+    },
+    {
+      "reasoning_type": "C",
+      "variants": [{"id": "default", "members": ["Claim:contrast_claim", "Evidence:derived_artifact", "Relation:contrasts_with", "Obligation:boundary"]}],
+      "claim_ceiling": "contrast_supported"
+    },
+    {
+      "reasoning_type": "M",
+      "variants": [{"id": "default", "members": ["Model:formal_model", "Claim:model_finding", "Relation:models", "Relation:idealizes", "Obligation:robustness"]}],
+      "claim_ceiling": "model_supported"
+    },
+    {
+      "reasoning_type": "R",
+      "variants": [
+        {"id": "refuted", "members": ["Evidence:counterexample_witness", "Relation:refutes", "Decision:refutation"]},
+        {"id": "not_refuted", "members": ["Evidence:search_trace", "Decision:bounded_nonrefutation", "Obligation:falsification"]},
+        {"id": "inconclusive", "members": ["Decision:bounded_nonrefutation", "Obligation:repair"]}
+      ],
+      "claim_ceiling": "not_refuted_within_scope"
+    },
+    {
+      "reasoning_type": "E",
+      "variants": [{"id": "default", "members": ["Decision:epistemic_status", "Relation:calibrates", "Bundle:state_snapshot"]}],
+      "claim_ceiling": "creates_no_substantive_claim"
+    }
+  ],
+  "artifact_examples": [
+    {"artifact_type": "GroundedConjecture", "contains": ["Claim:candidate_explanation", "Obligation:falsification"]},
+    {"artifact_type": "HypothesisPortfolio", "contains": ["Bundle:collection", "Claim:candidate_explanation", "Relation:explains_candidate"]},
+    {"artifact_type": "ProofConnectionGraph", "contains": ["Bundle:collection", "Relation:depends_on"]},
+    {"artifact_type": "FormalProofObligations", "contains": ["Bundle:collection", "Obligation:proof"]},
+    {"artifact_type": "LemmaChain", "contains": ["Claim:conditional_entailment", "Relation:entails_given", "Obligation:proof"]},
+    {"artifact_type": "FalsificationPacket", "contains": ["Evidence:search_trace", "Decision:bounded_nonrefutation", "Obligation:falsification"]},
+    {"artifact_type": "ProofGateDecision", "contains": ["Decision:gate", "Relation:calibrates"]},
+    {"artifact_type": "FiniteObjectDefinition", "contains": ["Model:formal_model", "Obligation:robustness"]},
+    {"artifact_type": "ReviewFindingSet", "contains": ["Bundle:collection", "Decision:epistemic_status", "Obligation:repair"]},
+    {"artifact_type": "ProofDeliveryPlan", "contains": ["Plan:proof_plan"]},
+    {"artifact_type": "GovernedRepairQueue", "contains": ["Plan:repair_plan", "Bundle:handoff"]},
+    {"artifact_type": "IntegratedPaperDraft", "contains": ["Presentation:rendered_document", "Bundle:handoff"]},
+    {"artifact_type": "DomainEvidencePacket", "contains": ["Bundle:context"], "mapping_status": "underspecified"},
+    {"artifact_type": "AuditPacket", "contains": ["Decision:epistemic_status", "Relation:calibrates"], "mapping_status": "schema_missing"},
+    {"artifact_type": "ReleasePacket", "contains": ["Presentation:report", "Bundle:handoff"], "mapping_status": "schema_missing"}
+  ],
+  "invariants": [
+    "Every output has exactly one primary kind.",
+    "Every substantive claim declares a native modality and claim ceiling.",
+    "Evidence has zero claim effect until connected to a claim by a typed relation.",
+    "Decisions cannot be consumed as object-level evidence.",
+    "Models, obligations, plans, and presentations cannot masquerade as claims.",
+    "Presentation has permanently zero epistemic authority.",
+    "Every claim-producing reasoning occurrence emits relations to indispensable inputs.",
+    "Every relation endpoint exists and satisfies its domain and codomain signature.",
+    "Outputs are immutable; changes use revises, supersedes, or calibrates.",
+    "Scope, provenance, taints, ceilings, and obligations propagate componentwise.",
+    "Not-refuted and unavailable never coerce to supported, validated, or entailed.",
+    "Unknown generic artifacts are non-executable until assigned typed output facets."
+  ]
+}

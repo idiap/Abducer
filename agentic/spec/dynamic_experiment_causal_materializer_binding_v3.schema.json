@@ -1,0 +1,64 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://abducer.local/spec/dynamic_experiment_causal_materializer_binding_v3.schema.json",
+  "title": "Compact causal byte-materializer binding v3",
+  "description": "Binds one staged canonical JSON input to exact request, attempt, output, history, clock, and executable-dependency evidence without embedding any artifact value or base64 copy. This is byte materialization evidence, never semantic authorship.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "contract_version", "binding_id", "binding_digest",
+    "capability_kind", "materialization_semantics", "local_protocol_valid",
+    "semantic_authorship", "authority_boundary", "evidence_authority_id",
+    "stage_id", "materializer_role", "artifact_id", "artifact_digest",
+    "identity", "invocation_id", "staged_input_ref", "request_ref",
+    "attempt_receipt_refs", "successful_attempt", "successful_receipt_ref",
+    "output_ref", "history_ref", "clock_ref", "dependency_authority", "ceilings"
+  ],
+  "properties": {
+    "schema_version": {"const": "3.0.0"},
+    "contract_version": {"const": "experiment-causal-byte-materializer-binding/3.0.0"},
+    "binding_id": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/identifier"},
+    "binding_digest": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/digest"},
+    "capability_kind": {"const": "causal_byte_materializer"},
+    "materialization_semantics": {"const": "exact_canonical_input_bytes_copied_without_interpretation"},
+    "local_protocol_valid": {"const": true},
+    "semantic_authorship": {"const": false},
+    "authority_boundary": {"const": "local_exact_byte_materialization_only_not_semantic_authorship_external_independence_theory_selection_proof_or_physics_authority"},
+    "evidence_authority_id": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/identifier"},
+    "stage_id": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/identifier"},
+    "materializer_role": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/identifier"},
+    "artifact_id": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/identifier"},
+    "artifact_digest": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/digest"},
+    "identity": {"$ref": "./dynamic_experiment_compact_evidence_ref_v3.schema.json#/properties/namespace"},
+    "invocation_id": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/identifier"},
+    "staged_input_ref": {"$ref": "./dynamic_experiment_compact_evidence_ref_v3.schema.json"},
+    "request_ref": {"$ref": "./dynamic_experiment_compact_evidence_ref_v3.schema.json"},
+    "attempt_receipt_refs": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 32,
+      "uniqueItems": true,
+      "items": {"$ref": "./dynamic_experiment_compact_evidence_ref_v3.schema.json"}
+    },
+    "successful_attempt": {"type": "integer", "minimum": 1, "maximum": 32},
+    "successful_receipt_ref": {"$ref": "./dynamic_experiment_compact_evidence_ref_v3.schema.json"},
+    "output_ref": {"$ref": "./dynamic_experiment_compact_evidence_ref_v3.schema.json"},
+    "history_ref": {"$ref": "./dynamic_experiment_compact_evidence_ref_v3.schema.json"},
+    "clock_ref": {"$ref": "./dynamic_experiment_compact_evidence_ref_v3.schema.json"},
+    "dependency_authority": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/dependencyAuthority"},
+    "ceilings": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["max_artifact_bytes", "max_request_bytes", "max_receipt_bytes", "max_binding_bytes", "max_path_bytes", "max_attempts", "subprocess_timeout_seconds"],
+      "properties": {
+        "max_artifact_bytes": {"const": 8388608},
+        "max_request_bytes": {"const": 262144},
+        "max_receipt_bytes": {"const": 1048576},
+        "max_binding_bytes": {"const": 4194304},
+        "max_path_bytes": {"const": 512},
+        "max_attempts": {"const": 32},
+        "subprocess_timeout_seconds": {"const": 30}
+      }
+    }
+  }
+}

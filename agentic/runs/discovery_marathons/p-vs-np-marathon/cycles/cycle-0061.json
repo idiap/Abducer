@@ -1,0 +1,862 @@
+{
+  "branch_execution_records": [
+    {
+      "api_attempt": "primary",
+      "api_key_config": {
+        "active_provider": "azure_openai",
+        "configured_keys": [
+          "AZURE_OPENAI_API_KEY",
+          "AZURE_OPENAI_ENDPOINT",
+          "AZURE_OPENAI_MODEL",
+          "AZURE_OPENAI_REASONING_EFFORT",
+          "AZURE_OPENAI_RESPONSES_ENDPOINT",
+          "OPENAI_BASE_URL",
+          "OPENAI_MODEL",
+          "OPENAI_REASONING_EFFORT"
+        ],
+        "has_openai_api_key": true,
+        "source": "config/api_keys.json"
+      },
+      "api_timeout_seconds": 900,
+      "branch_id": "marathon.branch.bcdeffa51f87",
+      "elapsed_seconds": 94.537,
+      "engine": "azure_responses_api",
+      "http_status": 200,
+      "max_output_tokens": 12000,
+      "model": "gpt-5.5",
+      "output_schema": "agentic/spec/discovery_marathon_codex_branch_output.schema.json",
+      "parallel_group_size": 1,
+      "parallel_max_workers": 1,
+      "parallel_worker_index": 0,
+      "prior_attempt_errors": [],
+      "reasoning_effort": "high",
+      "response_id": "resp_0c65d48302849c65006a52304e1aa48190b560130d7b11d98a",
+      "status": "complete"
+    }
+  ],
+  "branch_outputs": [
+    {
+      "attempted_derivation": {
+        "blocking_gap": "No extraction theorem converts arbitrary H_N circuits into constructively label-free codebook sketches. The trivial transcript T_N=H_N is small whenever H_N is small but is not label-free and may encode SAT-label information semantically.",
+        "derivation_id": "cycle61.D1.codebook_falsifier_and_failed_promotion",
+        "steps": [
+          "Fix the surviving escape regime L_N=(log N)^d with d>1, M_N=N^q, and max{rho,q}<1+epsilon.",
+          "Substitute a hypothetical size n^c SAT circuit into all N^q query slots; since L_N^c=N^{o(1)}, obtain C(H_N)<=N^{max{rho,q}+o(1)}.",
+          "Define LFSketch_N by an explicit codebook of U_N length-L_N formulas, a label-free transcript T_N, and a decoder producing a sparse polynomial in hardwired SAT labels of codebook entries.",
+          "Build a nonuniform circuit for H_N by computing T_N, evaluating the decoder, looking up hardwired codebook labels, evaluating at most A_N monomials, and patching E_N exceptional source inputs.",
+          "Conclude that any LFSketch_N with S_T+S_D+tildeO(U_N+A_Nr_N)+E_NN<N^{1+epsilon} is a concrete upper-bound falsifier for the desired source lower bound.",
+          "Attempt to prove the converse: small arbitrary circuits for H_N should yield small label-free sketches, making LFSketch hardness a source lower-bound certificate."
+        ],
+        "why_not_yet_a_proof": "The cycle proves a valid falsifier and preserves the target bridge, but it does not prove C(H_N)>N^{1+epsilon}. A sketch lower bound would still need a nonrelativizing, advice-accounted extraction theorem or a direct general-circuit lower bound for H_N."
+      },
+      "branch_id": "marathon.branch.bcdeffa51f87",
+      "branch_title": "Hardness-Magnification Bridge Realization",
+      "candidate_lemmas": [
+        {
+          "assumptions": [
+            "Circuit model is nonuniform fan-in-two Boolean circuits with equality patches charged O(N) gates per exceptional source input.",
+            "Generator uniformity is only size-bounded nonuniform constructibility; no hidden advice bit may encode SAT labels or H_N values.",
+            "A constructively label-free codebook B_N is an explicitly enumerable list of U_N formulas of length L_N computed without SAT-label queries.",
+            "The sparse quotient decoder, from transcript T_N(x), produces at most A_N monomials over at most r_N named codebook coordinates and never uses the SAT value of a generated formula as a control bit.",
+            "The sketch may fail on E_N source inputs; those are patched by nonuniform equality tests and therefore cost O(E_N N)."
+          ],
+          "definitions": [
+            "source object: H_N^{xor}:{0,1}^N -> {0,1} is H_N(x)=\\oplus_{j\\le M_N} SAT(\\Phi_{N,j}(x)), with M_N=N^q, query length L_N=(\\log N)^d, d>1, and a label-free generator circuit for all \\Phi_{N,j} of size N^rho.",
+            "target object: SAT on formulas of length L_N, measured by nonuniform Boolean circuits; the intended target consequence is SAT notin SIZE(n^c) for every fixed c, hence NP not subset P/poly only through this SAT complete problem.",
+            "controlled interface: substitute a size L_N^c SAT circuit into each generated query slot and combine by XOR, paying generator overhead N^rho and slot overhead N^q L_N^c polylog(N).",
+            "target-preserving condition: max{rho,q}<1+epsilon, L_N=(log N)^d is subpolynomial, the generator and transcript are independent of SAT labels, and the source lower bound holds on infinitely many valid N."
+          ],
+          "equations": [
+            {
+              "label": "xor_carrier_definition",
+              "latex": "H_N(x)=\\bigoplus_{j=1}^{N^q} SAT(\\Phi_{N,j}(x)),\\qquad |\\Phi_{N,j}(x)|=L_N=(\\log N)^d.",
+              "valid_when": "Valid when the source object is the generated XOR-SAT carrier with fixed q,d and generator outputs well-formed SAT instances for every valid N."
+            },
+            {
+              "label": "polylog_target_substitution",
+              "latex": "SAT\\in SIZE(n^c)\\ \\Longrightarrow\\ C(H_N)\\le N^\\rho+N^q L_N^c\\,polylog(N)=N^{\\max\\{\\rho,q\\}+o(1)}.",
+              "valid_when": "Applies after the controlled interface substitutes one nonuniform SAT circuit of length L_N into every generated query slot with L_N subpolynomial."
+            },
+            {
+              "label": "magnification_window",
+              "latex": "C(H_N)>N^{1+\\epsilon}\\ i.o.\\ \\wedge\\ \\max\\{\\rho,q\\}<1+\\epsilon\\ \\Longrightarrow\\ \\forall c\\ C(SAT_n)\\not\\le n^c.",
+              "valid_when": "Requires the target-preserving condition, cofinal valid source lengths, and a source lower bound exceeding the substitution upper bound for each fixed c."
+            },
+            {
+              "label": "label_free_codebook_upper_bound",
+              "latex": "C(H_N)\\le S_T+S_D+\\widetilde O(U_N+A_N r_N)+O(E_NN).",
+              "valid_when": "Valid when a constructively label-free transcript and decoder express H_N outside E_N bad inputs as a sparse polynomial in hardwired SAT labels of the enumerated codebook."
+            },
+            {
+              "label": "source_falsifier_threshold",
+              "latex": "S_T+S_D+\\widetilde O(U_N+A_Nr_N)+E_NN<N^{1+\\epsilon-o(1)}\\ \\Longrightarrow\\ C(H_N)<N^{1+\\epsilon}.",
+              "valid_when": "Valid in the nonuniform source model where codebook labels may be hardwired but the transcript construction itself contains no SAT-label advice."
+            }
+          ],
+          "failure_test": "If the transcript is allowed to depend on SAT labels, T_N=H_N becomes a one-bit sketch and the audit collapses; if U_N or E_NN is subthreshold, the source lower bound is refuted.",
+          "lemma_id": "cycle61.L1.label_free_codebook_falsifier",
+          "proof_role": "Quantitative route bridge plus concrete upper-bound falsifier for the XOR carrier; it narrows the source obligation without proving any lower bound.",
+          "statement": "For a polylog-query XOR-SAT carrier, any constructively label-free global-codebook sparse quotient sketch below N^{1+epsilon} gives an explicit nonuniform upper bound for H_N and is therefore a valid falsifier for the proposed barely-superlinear source lower bound. The target bridge remains C(H_N)>N^{1+epsilon} i.o. plus max{rho,q}<1+epsilon implies SAT notin P/poly, but sketch hardness is not itself a source lower bound."
+        },
+        {
+          "assumptions": [
+            "The extractor must be real-SAT-specific and nonrelativizing; relativizing separator or incidence arguments are insufficient.",
+            "The output transcript must be constructively label-free, not merely a restatement of the computed H_N value.",
+            "All advice introduced by extraction is charged to S_T,S_D,U_N,A_Nr_N, or E_NN."
+          ],
+          "definitions": [
+            "source object: arbitrary nonuniform circuits computing the fixed XOR-SAT carrier H_N on N-bit source inputs.",
+            "target object: the label-free codebook sketch class LFSketch(U,A,r,E,S_T,S_D) from cycle61.L1.",
+            "controlled interface: transform a small H_N circuit into a label-free transcript, decoder, codebook, and sparse polynomial representation.",
+            "target-preserving condition: extraction loss kappa satisfies kappa<epsilon-sigma when starting from C(H_N)<=N^{1+sigma}."
+          ],
+          "equations": [
+            {
+              "label": "needed_extraction_threshold",
+              "latex": "C(H_N)\\le N^{1+\\sigma}\\Rightarrow \\exists\\ LFSketch_N\\text{ of cost }\\le N^{1+\\sigma+\\kappa+o(1)}.",
+              "valid_when": "Valid only as a required bridge schema after the extraction algorithm is specified and all advice leakage is quantitatively charged."
+            },
+            {
+              "label": "sketch_to_source_transfer",
+              "latex": "LFSketchCost(H_N)>N^{1+\\epsilon-o(1)}\\ \\wedge\\ \\kappa<\\epsilon-\\sigma\\Rightarrow C(H_N)>N^{1+\\sigma}.",
+              "valid_when": "Applies only if the extraction implication is already proved for arbitrary small H_N circuits in the same nonuniform model."
+            }
+          ],
+          "failure_test": "A relativized oracle with easy H_N but no small label-free sketch, or the admissible label-dependent transcript T_N=H_N, falsifies any extraction-free promotion.",
+          "lemma_id": "cycle61.L2.extraction_gap_for_sketch_hardness",
+          "proof_role": "No-go diagnostic for promoting structured sketch lower bounds to source lower bounds.",
+          "statement": "A lower bound against label-free codebook sketches can certify C(H_N)>N^{1+epsilon} only if every small arbitrary circuit for H_N admits a nonrelativizing extraction into such a label-free sketch with subthreshold loss. Without this extraction, sketch hardness is only absence of one falsifier class."
+        }
+      ],
+      "control_decision": {
+        "decision": "continue_repaired_with_label_free_codebook_falsifier_and_extraction_gap",
+        "pivot_test": "Pivot if no candidate extraction theorem can avoid label-dependent transcripts or if every explicit generator yields subthreshold codebook entropy.",
+        "promotion_test": "Promote only if a proof shows either direct C(H_N)>N^{1+epsilon} or an advice-accounted extraction from arbitrary H_N circuits to constructively label-free codebook sketches with loss kappa<epsilon-sigma.",
+        "reason": "The branch made route-level progress by refining a concrete falsifier class and preserving the polylog-query target bridge, but it cannot promote sketch hardness to P/poly separation yet."
+      },
+      "dependency_updates": [
+        {
+          "dependency_id": "dep.cycle61.label_free_codebook_normal_form",
+          "description": "Constructively label-free global codebook sketches refine earlier sparse quotient-polynomial sketches by charging hardwired SAT labels and excluding T_N=H_N leakage.",
+          "kind": "new_falsifier_normal_form",
+          "status": "added_to_route_audit"
+        },
+        {
+          "dependency_id": "dep.cycle61.extraction_gap",
+          "description": "Need a nonrelativizing extraction from arbitrary small H_N circuits to label-free sketches before sketch lower bounds can certify source lower bounds.",
+          "kind": "blocking_dependency",
+          "status": "open"
+        },
+        {
+          "dependency_id": "dep.black_box_positive_beta_no_go",
+          "description": "The old q+beta c transfer remains the no-go certificate for any attempted polynomial-query rollback; the current XOR route stays only because L_N is polylogarithmic.",
+          "kind": "negative_tactic_validation",
+          "status": "validated_for_this_branch"
+        }
+      ],
+      "falsifiers": [
+        "label-dependent one-bit transcript falsifier: omitting label-freeness admits T_N(x)=H_N(x) and destroys the sketch audit.",
+        "small global codebook falsifier: U_N=N^{1+epsilon-omega(1)} with cheap decoder lets the circuit hardwire all relevant SAT labels.",
+        "patchable-error falsifier: E_N<N^{epsilon-o(1)} bad source inputs cost only E_NN<N^{1+epsilon-o(1)} gates.",
+        "positive-beta rollback falsifier: if L_N=N^beta with beta>0 then SAT in SIZE(n^c) gives C(H_N)<=N^{q+beta c+o(1)}, so only bounded c are excluded.",
+        "nonuniform leakage falsifier: generator or transcript advice that depends on SAT labels can compress the carrier while preserving apparent range entropy."
+      ],
+      "gedanken_experiment_design": {
+        "expected_observation": "If b+max{a,0}+error_exponent<1+epsilon, the hardwired-codebook circuit beats the claimed source lower bound; if b crosses 1+epsilon, the falsifier disappears but no lower bound follows.",
+        "held_fixed_controls": [
+          "Nonuniform Boolean circuit size model for both H_N and SAT.",
+          "Subpolynomial query length L_N=(log N)^2, so target substitution has beta=0 in exponent accounting.",
+          "No SAT-label advice in the generator, transcript, or decoder.",
+          "Exact XOR aggregation over N^q slots, with equality patching charged O(N) per bad source input.",
+          "Target bridge threshold max{rho,q}<1+epsilon held fixed."
+        ],
+        "need_decision": "design_now_as_falsifier_probe",
+        "rationale": "The branch has isolated a structured upper-bound class; varying codebook entropy gives a concrete phase boundary before attempting any abstract lower-bound claim.",
+        "situation_seed": "A high-q XOR-SAT carrier with q=1+epsilon-3eta, rho=1+epsilon-4eta, L_N=(log N)^2, and a label-free generator whose generated formulas are projected onto an explicitly enumerable quotient codebook B_N.",
+        "transfer_certificate_needed": "A formal certificate must list the codebook enumerator, transcript circuit, decoder cost, sparse support size, and error set size; only a separate nonrelativizing extraction theorem may transfer absence of such certificates into C(H_N)>N^{1+epsilon}.",
+        "varied_variable": "b=log_N U_N, the exponent of the constructively enumerable global codebook size; keep sparse decoder arity r_N=polylog(N) and monomial count A_N=N^a as secondary measured outputs."
+      },
+      "generated_by": "azure_responses_api",
+      "mathematical_learning": "Cycle 61 upgrades the XOR-carrier audit from vague label-free transcripts to a costed global-codebook normal form. The valid new contribution is an explicit upper-bound falsifier C(H_N)<=S_T+S_D+tildeO(U_N+A_Nr_N)+E_NN. This closes a leakage loophole in sparse quotient sketches, while exposing the exact remaining gap: absence of label-free sketches is not a general-circuit lower bound without a nonrelativizing extraction theorem.",
+      "negative_tactic_decision": {
+        "branch_control_decision": "persist_adapt",
+        "conflict_target": "Any claim that a positive-beta black-box carrier plus barely-superlinear H_N lower bound implies SAT notin P/poly for all polynomial exponents.",
+        "contradiction_carrier_or_no_go_family": "If beta>0, SAT in SIZE(n^c) implies C(H_N)<=N^{max{rho,q+beta c}+o(1)}, contradicting any claimed all-exponent exclusion from an N^{1+epsilon} source lower bound once c>(1+epsilon-q)/beta.",
+        "escape_conditions": [
+          "beta=0 in exponent accounting, as for L_N=(log N)^d with fixed d.",
+          "A genuinely nonblackbox use of SAT circuits not summarized by per-query substitution.",
+          "A stronger source lower bound with exponent exceeding q+beta c for each targeted c.",
+          "A direct nonuniform lower bound for H_N independent of black-box substitution."
+        ],
+        "exact_negation_or_method_class": "Black-box target-circuit substitution interfaces with source size N, M_N=N^q queries, target query length N^beta or exp((log N)^o(1)), and overhead N^rho.",
+        "next_validation_handoff": "Send cycle61.L1 and cycle61.L2 to pvsnp-symbolic-complexity-auditor for cost accounting, then to contradiction-route-auditor for the beta>0 no-go boundary and to timeline-definition-assumption-elicitor for label-free assumptions.",
+        "paper_contribution_potential": "Potential paper-level scoped theorem: a polylog-query XOR magnification bridge plus a label-free codebook-sketch falsifier and an explicit extraction-gap no-go. It is not a proof of P != NP.",
+        "proof_obligations": [
+          "Compute q,rho,beta for every proposed carrier including generator, decoding, and padding overhead.",
+          "Derive the exact upper-bound exponent max{rho,q+beta c} or max{rho,q}+o(1) in the polylog case.",
+          "Record whether the transcript, generator, and proof object are label-free, nonrelativizing, non-natural, and advice-accounted.",
+          "For the XOR route, prove or refute extraction from arbitrary H_N circuits to constructively label-free codebook sketches."
+        ],
+        "reason_for_tactic": "The decisive contradiction for polynomial-query interfaces is still the exponent cap q+beta c; the present cycle records that the XOR route escapes only by fixing beta=0 in exponent accounting via polylogarithmic queries.",
+        "route_family": "black_box_substitution_or_hardness_magnification",
+        "tactic_mode": "proof_by_contradiction"
+      },
+      "next_experiment": "Instantiate a candidate generator and compute U_N,A_N,r_N,E_N for its SAT-preserving quotient codebook; if the cost is subthreshold, quarantine that generator, otherwise formulate the exact extraction theorem it would require."
+    }
+  ],
+  "completed_utc": "2026-07-11T12:01:47+00:00",
+  "created_utc": "2026-07-11T12:00:13+00:00",
+  "cycle_id": "cycle-0061",
+  "cycle_index": 61,
+  "cycle_learning": "This research cycle converted active route pressure into typed branch lemmas. The main mathematical change is that each branch now names a source object, target object, equation, validity condition, falsifier, and next experiment. Only research-mode cycles with elapsed-time and branch-engine evidence count as genuine long-horizon research progress.",
+  "execution_mode": "research",
+  "next_cycle_queue": [
+    "Instantiate a candidate generator and compute U_N,A_N,r_N,E_N for its SAT-preserving quotient codebook; if the cost is subthreshold, quarantine that generator, otherwise formulate the exact extraction theorem it would require."
+  ],
+  "parallel_execution": {
+    "enabled": false,
+    "max_workers": 1,
+    "merge_policy": "scheduler_order_single_writer",
+    "request_spacing_seconds": 0.0,
+    "state_mutation_policy": "serialized_after_all_branch_packets_validate",
+    "worker_engine": "azure_responses_api"
+  },
+  "parallel_synthesis": {
+    "branch_record_statuses": [
+      "complete"
+    ],
+    "cited_branch_ids": [
+      "marathon.branch.bcdeffa51f87"
+    ],
+    "common_proof_obligations": [
+      "Name the exact exponent or beta-window and prove that the route keeps it target-preserving after transfer."
+    ],
+    "cross_branch_conflicts": [],
+    "enabled": false,
+    "merge_policy": "scheduler_order_single_writer",
+    "no_go_opportunities": [],
+    "pressure_families": {
+      "hardness_magnification_threshold": [
+        "marathon.branch.bcdeffa51f87"
+      ]
+    },
+    "queue_promotions": [
+      {
+        "cited_branch_ids": [
+          "marathon.branch.bcdeffa51f87"
+        ],
+        "high_reward_payoff": "Decides whether the route can reach all polynomial exponents or only a bounded window.",
+        "negative_tactic_escape_conditions": [
+          "beta=0 in exponent accounting, as for L_N=(log N)^d with fixed d.",
+          "A genuinely nonblackbox use of SAT circuits not summarized by per-query substitution.",
+          "A stronger source lower bound with exponent exceeding q+beta c for each targeted c.",
+          "A direct nonuniform lower bound for H_N independent of black-box substitution."
+        ],
+        "negative_tactic_mode": "proof_by_contradiction",
+        "negative_tactic_route_family": "black_box_substitution_or_hardness_magnification",
+        "negative_tactic_validation_handoff": "Send cycle61.L1 and cycle61.L2 to pvsnp-symbolic-complexity-auditor for cost accounting, then to contradiction-route-auditor for the beta>0 no-go boundary and to timeline-definition-assumption-elicitor for label-free assumptions.",
+        "next_analysis": "Instantiate a candidate generator and compute U_N,A_N,r_N,E_N for its SAT-preserving quotient codebook; if the cost is subthreshold, quarantine that generator, otherwise formulate the exact extraction theorem it would require.",
+        "novelty_signal": "Exact transfer parameters a,q,beta and the resulting SAT exponent window.",
+        "pressure_family": "hardness_magnification_threshold",
+        "promotion_test": "Promote only if the next packet returns a named source object, named target object, quantitative threshold, and a falsifier that would force repair or quarantine.",
+        "step_back_or_pivot_criterion": "Pivot to no-go or a new carrier if beta>0 or q consumes the source lower-bound margin."
+      }
+    ],
+    "state_mutation_policy": "branch memory, run state, reports, and queue synthesis are written only after every branch packet validates"
+  },
+  "research_seconds_elapsed": 94.538,
+  "research_seconds_target": 1,
+  "run_id": "p-vs-np-marathon",
+  "scheduler_decisions": [
+    {
+      "branch_id": "marathon.branch.bcdeffa51f87",
+      "branch_title": "Hardness-Magnification Bridge Realization",
+      "budget_posture": "prioritize_bounded_stepping_stone_certification",
+      "controlled_interface": "barely-nontrivial lower bound -> major class separation consequence",
+      "high_reward_payoff": "A single calculation can show whether the route reaches all exponents or only a bounded SAT exponent window.",
+      "negative_tactic_escape_conditions": [
+        "beta=0 or genuinely subpolynomial target-query length",
+        "a nonblackbox use of the SAT circuit not summarized by query exponent beta",
+        "a source lower bound stronger than the transferred upper-bound window"
+      ],
+      "negative_tactic_mode": "proof_by_contradiction",
+      "negative_tactic_route_family": "black_box_substitution_or_hardness_magnification",
+      "negative_tactic_validation_handoff": "Send this packet to pvsnp-symbolic-complexity-auditor for exact parameters, then to pvsnp-impossibility-theorem-forger and contradiction-route-auditor if the obstruction is theorem-shaped.",
+      "novelty_signal": "Exact beta/q/a transfer calculus replaces broad magnification optimism with a computable threshold.",
+      "pressure_family": "hardness_magnification_threshold",
+      "problem_map_next_achievement": "Compute exact beta/q/exponent transfer and determine whether all-exponent strength survives.",
+      "problem_map_node_status": "partially_achieved",
+      "reason": "The decisive issue is whether positive target-query exponent beta and overhead q cap the transfer before it reaches all SAT exponents.",
+      "recommended_move": "persist_adapt",
+      "result_atlas_open_obligations": [
+        "Analyze a Merkleized global-constraint selector for random robust low-D carriers: compute its rooted edit exponent beta, check whether beta+D crosses epsilon, and test whether its verification transcript leaks interval access or only supplies a non-natural large-jump certificate.",
+        "Audit Karchmer-Wigderson and formula-depth transfers separately: determine whether a lifted SAT communication lower bound can validly certify formula-size or depth lower bounds while still failing for unrestricted SIZE(poly).",
+        "Audit approximate-junta transfers for low-influence or depth-2 targets: compute when Friedgut's J=exp(O(I/epsilon)) is below m for SIZE(m^k) subclasses, and separate genuine AC0/DNF progress from another unrestricted SIZE collapse.",
+        "Audit branching-program length-width lower bounds for SAT using the same exponent discipline: source object L*log W or time-space simulation, target class DTIME(m^k), and padding erosion under full input length.",
+        "Audit essential-variable and junta-dimension lower-bound routes: prove the compiler bound for SIZE(m^k), compute the universal ceiling m, and test padded SAT as the falsifier before considering any P-vs-NP transfer."
+      ],
+      "result_atlas_related_result_count": 33,
+      "result_atlas_route_family": "hardness_magnification",
+      "step_back_or_pivot_criteria": "Pivot or convert to a no-go if beta>0 or q consumes the source margin for two named carriers.",
+      "why_this_budget_now": "Run the best near-stepping-stone candidate through prior-art, disqualifier, or paper-shape certification before broad exploration."
+    }
+  ],
+  "selected_branch_ids": [
+    "marathon.branch.bcdeffa51f87"
+  ],
+  "skill_dispatch_trace": [
+    {
+      "cycle_id": "cycle-0061",
+      "input_artifacts": [
+        "agentic/state/current_target.json",
+        "agentic/reports/discovery_stretch/latest.json",
+        "agentic/registries/discovery_marathon_skill_dispatch.yaml"
+      ],
+      "invoked_skills": [
+        "looper-target-goal-enricher",
+        "looper-target-dependency-cartographer",
+        "looper-workflow-contract-governor",
+        "looper-hook-policy-maintainer",
+        "pvsnp-conceptual-pressure-localizer"
+      ],
+      "missing_required_skills": [],
+      "output_artifacts": [
+        "cycle:cycle-0061",
+        "branch:marathon.branch.bcdeffa51f87"
+      ],
+      "phase": "preflight_target_navigation",
+      "queued_conditional_skills": [
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "kb-orchestrator"
+        },
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "pvsnp-conceptual-pressure-localizer"
+        }
+      ],
+      "skipped_skills_with_reason": [],
+      "validation_handoff": "preflight_target_navigation used 5 required skills while exploring Hardness-Magnification Bridge Realization."
+    },
+    {
+      "cycle_id": "cycle-0061",
+      "input_artifacts": [
+        "agentic/state/current_target.json",
+        "agentic/reports/discovery_stretch/latest.json",
+        "agentic/registries/discovery_marathon_skill_dispatch.yaml"
+      ],
+      "invoked_skills": [
+        "long-horizon-route-portfolio-manager",
+        "abducer-refinement-route-ranker",
+        "next-experiment-queue-ranker",
+        "kb-discovery-governor",
+        "pvsnp-negative-tactic-selector"
+      ],
+      "missing_required_skills": [],
+      "output_artifacts": [
+        "cycle:cycle-0061",
+        "branch:marathon.branch.bcdeffa51f87"
+      ],
+      "phase": "branch_selection",
+      "queued_conditional_skills": [
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "kb-promising-direction-assessor"
+        },
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "pvsnp-negative-tactic-selector"
+        }
+      ],
+      "skipped_skills_with_reason": [],
+      "validation_handoff": "branch_selection used 5 required skills while exploring Hardness-Magnification Bridge Realization."
+    },
+    {
+      "cycle_id": "cycle-0061",
+      "input_artifacts": [
+        "agentic/state/current_target.json",
+        "agentic/reports/discovery_stretch/latest.json",
+        "agentic/registries/discovery_marathon_skill_dispatch.yaml"
+      ],
+      "invoked_skills": [
+        "kb-abduce",
+        "kb-deduce",
+        "kb-induce",
+        "kb-concept-bridge-planner",
+        "kb-gap-abstraction-conjecturer",
+        "pvsnp-conceptual-pressure-localizer",
+        "pvsnp-pressure-bridge-forger",
+        "pvsnp-qualitative-complexity-reasoner",
+        "pvsnp-symbolic-complexity-auditor"
+      ],
+      "missing_required_skills": [],
+      "output_artifacts": [
+        "cycle:cycle-0061",
+        "branch:marathon.branch.bcdeffa51f87"
+      ],
+      "phase": "branch_exploration",
+      "queued_conditional_skills": [
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "kb-proof-sketcher"
+        },
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "kb-proof-connector"
+        },
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "pvsnp-pressure-bridge-forger"
+        },
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "pvsnp-symbolic-complexity-auditor"
+        }
+      ],
+      "skipped_skills_with_reason": [],
+      "validation_handoff": "branch_exploration used 9 required skills while exploring Hardness-Magnification Bridge Realization."
+    },
+    {
+      "cycle_id": "cycle-0061",
+      "input_artifacts": [
+        "agentic/state/current_target.json",
+        "agentic/reports/discovery_stretch/latest.json",
+        "agentic/registries/discovery_marathon_skill_dispatch.yaml"
+      ],
+      "invoked_skills": [
+        "pvsnp-inference-quality-controller",
+        "pvsnp-reduction-consistency-reviewer",
+        "pvsnp-quantifier-uniformity-reviewer",
+        "pvsnp-barrier-specificity-reviewer",
+        "pvsnp-proof-derivation-builder"
+      ],
+      "missing_required_skills": [],
+      "output_artifacts": [
+        "cycle:cycle-0061",
+        "branch:marathon.branch.bcdeffa51f87"
+      ],
+      "phase": "inference_quality_review",
+      "queued_conditional_skills": [
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "pvsnp-inference-quality-controller"
+        },
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "pvsnp-reduction-consistency-reviewer"
+        },
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "pvsnp-quantifier-uniformity-reviewer"
+        },
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "pvsnp-barrier-specificity-reviewer"
+        },
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "pvsnp-proof-derivation-builder"
+        },
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "pvsnp-proof-complexity-transfer-reviewer"
+        },
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "pvsnp-meta-complexity-carrier-reviewer"
+        },
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "pvsnp-symbolic-complexity-auditor"
+        },
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "entailment-gap-auditor"
+        }
+      ],
+      "skipped_skills_with_reason": [],
+      "validation_handoff": "inference_quality_review used 5 required skills while exploring Hardness-Magnification Bridge Realization."
+    },
+    {
+      "cycle_id": "cycle-0061",
+      "input_artifacts": [
+        "agentic/state/current_target.json",
+        "agentic/reports/discovery_stretch/latest.json",
+        "agentic/registries/discovery_marathon_skill_dispatch.yaml"
+      ],
+      "invoked_skills": [
+        "timeline-definition-assumption-elicitor",
+        "epistemic-status-ledger"
+      ],
+      "missing_required_skills": [],
+      "output_artifacts": [
+        "cycle:cycle-0061",
+        "branch:marathon.branch.bcdeffa51f87"
+      ],
+      "phase": "definition_assumption_elicitation",
+      "queued_conditional_skills": [
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "pvsnp-symbolic-complexity-auditor"
+        },
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "physics-regime-map-builder"
+        },
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "main-problem-alignment-auditor"
+        }
+      ],
+      "skipped_skills_with_reason": [],
+      "validation_handoff": "definition_assumption_elicitation used 2 required skills while exploring Hardness-Magnification Bridge Realization."
+    },
+    {
+      "cycle_id": "cycle-0061",
+      "input_artifacts": [
+        "agentic/state/current_target.json",
+        "agentic/reports/discovery_stretch/latest.json",
+        "agentic/registries/discovery_marathon_skill_dispatch.yaml"
+      ],
+      "invoked_skills": [
+        "qualitative-variable-isolator",
+        "physics-regime-map-builder",
+        "monotonicity-sensitivity-prober",
+        "limit-convergence-behavior-auditor",
+        "qualitative-toy-model-builder",
+        "qualitative-physics-falsifier",
+        "pvsnp-qualitative-complexity-reasoner",
+        "pvsnp-symbolic-complexity-auditor"
+      ],
+      "missing_required_skills": [],
+      "output_artifacts": [
+        "cycle:cycle-0061",
+        "branch:marathon.branch.bcdeffa51f87"
+      ],
+      "phase": "qualitative_physics_reasoning",
+      "queued_conditional_skills": [
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "dimensional-symmetry-constraint-checker"
+        },
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "scale-asymptotic-reasoner"
+        },
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "pvsnp-qualitative-complexity-reasoner"
+        },
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "pvsnp-symbolic-complexity-auditor"
+        }
+      ],
+      "skipped_skills_with_reason": [],
+      "validation_handoff": "qualitative complexity-theoretic reasoning used 8 required skills while exploring Hardness-Magnification Bridge Realization."
+    },
+    {
+      "cycle_id": "cycle-0061",
+      "input_artifacts": [
+        "agentic/state/current_target.json",
+        "agentic/reports/discovery_stretch/latest.json",
+        "agentic/registries/discovery_marathon_skill_dispatch.yaml"
+      ],
+      "invoked_skills": [
+        "gedanken-need-assessor",
+        "pvsnp-gedanken-complexity-lab",
+        "pvsnp-pressure-bridge-forger",
+        "pvsnp-qualitative-complexity-reasoner"
+      ],
+      "missing_required_skills": [],
+      "output_artifacts": [
+        "cycle:cycle-0061",
+        "branch:marathon.branch.bcdeffa51f87"
+      ],
+      "phase": "gedanken_experiment_design",
+      "queued_conditional_skills": [
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "gedanken-situation-designer"
+        },
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "pvsnp-gedanken-complexity-lab"
+        },
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "gedanken-counterfactual-variant-builder"
+        },
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "gedanken-transfer-guard"
+        },
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "gedanken-followup-planner"
+        },
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "qualitative-toy-model-builder"
+        }
+      ],
+      "skipped_skills_with_reason": [],
+      "validation_handoff": "gedanken_experiment_design used 4 required skills while exploring Hardness-Magnification Bridge Realization."
+    },
+    {
+      "cycle_id": "cycle-0061",
+      "input_artifacts": [
+        "agentic/state/current_target.json",
+        "agentic/reports/discovery_stretch/latest.json",
+        "agentic/registries/discovery_marathon_skill_dispatch.yaml"
+      ],
+      "invoked_skills": [
+        "kb-contradiction-strategist",
+        "contradiction-route-auditor",
+        "kb-hypothesis-refutation-loop",
+        "pvsnp-pressure-bridge-forger",
+        "pvsnp-negative-tactic-selector",
+        "pvsnp-impossibility-theorem-forger",
+        "pvsnp-symbolic-complexity-auditor"
+      ],
+      "missing_required_skills": [],
+      "output_artifacts": [
+        "cycle:cycle-0061",
+        "branch:marathon.branch.bcdeffa51f87"
+      ],
+      "phase": "contradiction_and_falsifier_generation",
+      "queued_conditional_skills": [
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "kb-novel-proof-strategist"
+        },
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "pvsnp-pressure-bridge-forger"
+        },
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "pvsnp-negative-tactic-selector"
+        },
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "pvsnp-impossibility-theorem-forger"
+        },
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "pvsnp-symbolic-complexity-auditor"
+        }
+      ],
+      "skipped_skills_with_reason": [],
+      "validation_handoff": "contradiction_and_falsifier_generation used 7 required skills while exploring Hardness-Magnification Bridge Realization."
+    },
+    {
+      "cycle_id": "cycle-0061",
+      "input_artifacts": [
+        "agentic/state/current_target.json",
+        "agentic/reports/discovery_stretch/latest.json",
+        "agentic/registries/discovery_marathon_skill_dispatch.yaml"
+      ],
+      "invoked_skills": [
+        "evidence-acquisition-planner",
+        "prior-art-importer",
+        "kb-prior-art-pass"
+      ],
+      "missing_required_skills": [],
+      "output_artifacts": [
+        "cycle:cycle-0061",
+        "branch:marathon.branch.bcdeffa51f87"
+      ],
+      "phase": "evidence_acquisition",
+      "queued_conditional_skills": [
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "kb-epistemic-hardness"
+        }
+      ],
+      "skipped_skills_with_reason": [],
+      "validation_handoff": "evidence_acquisition used 3 required skills while exploring Hardness-Magnification Bridge Realization."
+    },
+    {
+      "cycle_id": "cycle-0061",
+      "input_artifacts": [
+        "agentic/state/current_target.json",
+        "agentic/reports/discovery_stretch/latest.json",
+        "agentic/registries/discovery_marathon_skill_dispatch.yaml"
+      ],
+      "invoked_skills": [
+        "abducer-obligation-gatekeeper",
+        "entailment-gap-auditor",
+        "kb-end-to-end-proof-critic",
+        "pvsnp-conceptual-pressure-localizer",
+        "pvsnp-pressure-bridge-forger",
+        "pvsnp-negative-tactic-selector",
+        "pvsnp-impossibility-theorem-forger",
+        "pvsnp-symbolic-complexity-auditor"
+      ],
+      "missing_required_skills": [],
+      "output_artifacts": [
+        "cycle:cycle-0061",
+        "branch:marathon.branch.bcdeffa51f87"
+      ],
+      "phase": "obligation_gating",
+      "queued_conditional_skills": [
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "kb-coherence-evaluator"
+        },
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "pvsnp-pressure-bridge-forger"
+        },
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "pvsnp-negative-tactic-selector"
+        }
+      ],
+      "skipped_skills_with_reason": [],
+      "validation_handoff": "obligation_gating used 8 required skills while exploring Hardness-Magnification Bridge Realization."
+    },
+    {
+      "cycle_id": "cycle-0061",
+      "input_artifacts": [
+        "agentic/state/current_target.json",
+        "agentic/reports/discovery_stretch/latest.json",
+        "agentic/registries/discovery_marathon_skill_dispatch.yaml"
+      ],
+      "invoked_skills": [
+        "result-atlas-maintainer",
+        "scientific-contribution-detector",
+        "main-problem-alignment-auditor",
+        "paper-contribution-readiness-judge",
+        "pvsnp-negative-tactic-selector",
+        "pvsnp-pressure-bridge-forger"
+      ],
+      "missing_required_skills": [],
+      "output_artifacts": [
+        "cycle:cycle-0061",
+        "branch:marathon.branch.bcdeffa51f87"
+      ],
+      "phase": "result_atlas_maintenance",
+      "queued_conditional_skills": [
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "pvsnp-negative-tactic-selector"
+        },
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "pvsnp-pressure-bridge-forger"
+        },
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "finite-theorem-section-packager"
+        },
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "endpoint-worked-calculation-packager"
+        }
+      ],
+      "skipped_skills_with_reason": [],
+      "validation_handoff": "result_atlas_maintenance used 6 required skills while exploring Hardness-Magnification Bridge Realization."
+    },
+    {
+      "cycle_id": "cycle-0061",
+      "input_artifacts": [
+        "agentic/state/current_target.json",
+        "agentic/reports/discovery_stretch/latest.json",
+        "agentic/registries/discovery_marathon_skill_dispatch.yaml"
+      ],
+      "invoked_skills": [
+        "review-reasoner",
+        "review-reasoner-epistemologist",
+        "review-reasoner-discovery-scientist",
+        "kb-discovery-breakthrough-profiler"
+      ],
+      "missing_required_skills": [],
+      "output_artifacts": [
+        "cycle:cycle-0061",
+        "branch:marathon.branch.bcdeffa51f87"
+      ],
+      "phase": "review_and_synthesis",
+      "queued_conditional_skills": [
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "review-reasoner-fields-medalist"
+        },
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "review-reasoner-concept-logician"
+        }
+      ],
+      "skipped_skills_with_reason": [],
+      "validation_handoff": "review_and_synthesis used 4 required skills while exploring Hardness-Magnification Bridge Realization."
+    },
+    {
+      "cycle_id": "cycle-0061",
+      "input_artifacts": [
+        "agentic/state/current_target.json",
+        "agentic/reports/discovery_stretch/latest.json",
+        "agentic/registries/discovery_marathon_skill_dispatch.yaml"
+      ],
+      "invoked_skills": [
+        "show-reasoning",
+        "kb-explain"
+      ],
+      "missing_required_skills": [],
+      "output_artifacts": [
+        "cycle:cycle-0061",
+        "branch:marathon.branch.bcdeffa51f87"
+      ],
+      "phase": "report_rendering",
+      "queued_conditional_skills": [
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "kb-expert-paper-generator"
+        },
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "kb-macro-proof-paper-writer"
+        }
+      ],
+      "skipped_skills_with_reason": [],
+      "validation_handoff": "report_rendering used 2 required skills while exploring Hardness-Magnification Bridge Realization."
+    },
+    {
+      "cycle_id": "cycle-0061",
+      "input_artifacts": [
+        "agentic/state/current_target.json",
+        "agentic/reports/discovery_stretch/latest.json",
+        "agentic/registries/discovery_marathon_skill_dispatch.yaml"
+      ],
+      "invoked_skills": [
+        "looper-release-promoter",
+        "looper-workflow-contract-governor"
+      ],
+      "missing_required_skills": [],
+      "output_artifacts": [
+        "cycle:cycle-0061",
+        "branch:marathon.branch.bcdeffa51f87"
+      ],
+      "phase": "release_promotion",
+      "queued_conditional_skills": [
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "looper-hook-policy-maintainer"
+        }
+      ],
+      "skipped_skills_with_reason": [],
+      "validation_handoff": "release_promotion used 2 required skills while exploring Hardness-Magnification Bridge Realization."
+    }
+  ],
+  "target_id": "p-vs-np-target",
+  "timing_validation": {
+    "reason": "Elapsed 94.538 seconds against target 1 seconds.",
+    "status": "research"
+  },
+  "valid_as_research_cycle": true,
+  "validation_handoff": [
+    "agentic/scripts/validate_discovery_marathon_cycle.py",
+    "agentic/scripts/validate_discovery_marathon_skill_dispatch.py"
+  ],
+  "version": 1
+}

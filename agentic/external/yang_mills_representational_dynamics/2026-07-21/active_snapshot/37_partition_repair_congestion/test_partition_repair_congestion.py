@@ -1,0 +1,21 @@
+import unittest,math
+from partition_repair_congestion import *
+class Tests(unittest.TestCase):
+ def test_exact(self):self.assertTrue(repair_certificate([1],[.1],[2],[0]).congestion_bound_verified)
+ def test_ratio(self):self.assertAlmostEqual(repair_certificate([2],[.1],[1],[0]).exact_ratio_to_good,.05)
+ def test_multiplicity(self):self.assertEqual(repair_certificate([1],[.1,.2],[1,1],[0,0]).maximum_fiber_multiplicity,2)
+ def test_congestion(self):self.assertAlmostEqual(repair_certificate([1],[.1,.2],[1,1],[0,0]).exact_congestion,.3)
+ def test_energy_bound(self):self.assertAlmostEqual(multiplicity_energy_bound(2,8)["free_energy_lower"],8-math.log(2))
+ def test_subunit(self):self.assertTrue(multiplicity_energy_bound(2,8)["strictly_subunit"])
+ def test_jacobian_loss(self):self.assertGreater(multiplicity_energy_bound(2,8,1)["congestion_upper"],multiplicity_energy_bound(2,8,0)["congestion_upper"])
+ def test_entropy_counterexample(self):self.assertFalse(entropy_counterexample()["action_only_sufficient"])
+ def test_full_normalizer_flag(self):self.assertFalse(repair_certificate([1],[.1],[1],[0]).full_normalizer_used)
+ def test_physical_flag(self):self.assertFalse(repair_certificate([1],[.1],[1],[0]).physical_repair_map_verified)
+ def test_invalid_target(self):
+  with self.assertRaises(ValueError):repair_certificate([1],[.1],[1],[2])
+ def test_invalid_weight(self):
+  with self.assertRaises(ValueError):repair_certificate([0],[.1],[1],[0])
+ def test_invalid_energy(self):
+  with self.assertRaises(ValueError):multiplicity_energy_bound(0,1)
+ def test_calibration_open(self):self.assertFalse(calibration()["complete_nonlinear_repair_map_constructed"])
+if __name__=="__main__":unittest.main()

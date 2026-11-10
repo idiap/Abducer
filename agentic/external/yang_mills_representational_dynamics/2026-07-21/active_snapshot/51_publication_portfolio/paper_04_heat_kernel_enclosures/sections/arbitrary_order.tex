@@ -1,0 +1,53 @@
+\section{An arbitrary-order image hierarchy}\label{sec:arbitrary}
+
+The identity
+\begin{equation}\label{eq:sinh-integral}
+ \frac{a}{\theta}\sinh\frac{a\theta}{t}
+ =\frac{a^2}{t}\int_0^1\cosh\frac{sa\theta}{t}\,\dd s
+\end{equation}
+removes the apparent singularity in \eqref{eq:q} before differentiation.
+
+Fix $M\in\N_0$, $0<\rho<\pi$, and $t_0>0$.  For $0\le m\le M$ define
+\begin{equation}\label{eq:Qm}
+ Q_m(t_0,\rho)=2\sum_{k\ge1}
+ e^{-a_k^2/(2t_0)+a_k\rho/t_0}
+ \left(\frac{a_k}{t_0}\right)^m
+ \left(1+\frac{a_k^2}{t_0(m+1)}\right).
+\end{equation}
+The series is explicit and computable.  If it is stopped after $K$ terms,
+the omitted tail is at most the first omitted term divided by $1-r_{m,K+1}$,
+where
+\begin{equation}\label{eq:ratio}
+r_{m,N}=\left(\frac{N+1}{N}\right)^{m+2}
+\exp\left[-\frac{2\pi^2(2N+1)-2\pi\rho}{t_0}\right].
+\end{equation}
+
+\begin{theorem}[Uniform arbitrary-order image enclosure]\label{thm:image-hierarchy}
+Suppose $0<\rho<\pi$ and
+\begin{equation}\label{eq:time-condition}
+ t_0\le \frac{(2\pi)^2/2-2\pi\rho}{M+1}.
+\end{equation}
+Then, for every $0<t\le t_0$, $0\le\theta\le\rho$, and
+$0\le m\le M$,
+\begin{equation}\label{eq:qbound}
+ \abs{q_t^{(m)}(\theta)}\le Q_m(t_0,\rho).
+\end{equation}
+For each fixed $M,t_0,\rho$, the right-hand side has a rigorously bounded geometric
+tail of the form \eqref{eq:ratio}.
+\end{theorem}
+
+\begin{proof}
+Differentiate \eqref{eq:sinh-integral} under the integral.  Each hyperbolic
+derivative is bounded by $e^{a\rho/t}$, while the integral contributes
+$\int_0^1s^m\dd s=(m+1)^{-1}$.  This gives the $k$th summand in
+\eqref{eq:Qm}.  Writing its $t$-dependence as
+$e^{-A_k/t}t^{-m}(1+c_k/t)$ shows that it increases with $t$ whenever
+$t\le A_k/(m+1)$.  The smallest $A_k=a_k^2/2-a_k\rho$ occurs at $k=1$;
+\eqref{eq:time-condition} therefore makes $t=t_0$ the uniform worst case.
+Finally, the quotient of successive summands is bounded by
+\eqref{eq:ratio}; details appear in Appendix~\ref{app:image-tails}.
+\end{proof}
+
+The theorem is arbitrary-order in the standard effective sense: for every
+requested finite $M$ it gives a closed computation.  It is not a claim that a
+single fixed $t_0$ satisfies \eqref{eq:time-condition} for all $M$ at once.

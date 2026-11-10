@@ -1,0 +1,490 @@
+# SPDX-FileCopyrightText: © 2026 Idiap Research Institute <contact@idiap.ch>
+#
+# SPDX-FileContributor: Danilo Gusicuma <danilo.gusicuma@idiap.ch>
+# Neuro-symbolic AI Group
+#
+# SPDX-License-Identifier: MIT
+# REUSE-IgnoreStart
+schema_version: workflow-skill/v1
+namespace: abducer
+id: kb_orchestration_workflow
+version: 1.0.0
+kind: workflow
+description: Draft interface projection of kb-orchestrator; native execution and authority remain unchanged.
+aliases:
+- kb-orchestrator
+lifecycle: draft
+activation:
+  mode: explicit
+  prerequisites: []
+types:
+  NativeRequest:
+    schema:
+      type: object
+      description: Skill-defined request; consult preserved source text for inputs and conditions.
+    representation: value
+  NativeResult:
+    schema:
+      type: object
+      description: Skill-defined durable artifact bundle; no invented runtime output shape.
+    representation: value
+inputs:
+  request:
+    type: NativeRequest
+outputs:
+  result:
+    type: NativeResult
+    value:
+      ref: steps.native.outputs.result
+operations:
+  native_workflow:
+    inputs:
+      request:
+        type: NativeRequest
+    outputs:
+      result:
+        type: NativeResult
+    execution:
+      mode: specification_only
+      reason: No workflow-skill/v1 host adapter is supplied. Native skill/hook/CLI interfaces exist, but
+        payload materialization, guard evidence, execution effects and receipt translation are not qualified
+        for this format.
+flow:
+  kind: sequence
+  steps:
+  - id: native
+    kind: call
+    operation: native_workflow
+    description: Opaque native workflow boundary; internal ordering, guards and handoffs are retained
+      in abducer.native_contract.
+    arguments:
+      request:
+        ref: inputs.request
+    on_failure: blocked
+policy:
+  effects:
+    filesystem:
+      read:
+      - native_sources
+      - inputs
+      write: []
+    network: []
+    external_write: []
+  authority:
+    allowed:
+    - describe_native_interface
+    forbidden:
+    - execute_scientific_workflow
+    - approve
+    - prove
+    - publish
+    - promote
+  limits:
+    wall_time_seconds: 1800
+    max_operation_calls: 1
+  failure:
+    default: blocked
+    retry:
+      max_attempts: 1
+      retryable_codes: []
+  resume:
+    mode: none
+    require_matching_definition_and_inputs: true
+  claim_ceiling: Interface description only; no proof, scientific validity, runtime qualification, promotion
+    or approval.
+observability:
+  receipts: required
+  artifact_digests: sha256
+  provenance: required
+  events:
+  - workflow_started
+  - step_failed
+  - workflow_completed
+provenance:
+  coverage: interface_only
+  sources:
+  - path: skills/orchestration/kb-orchestrator/SKILL.md
+    digest: sha256:eb7aafef195c1b402005ca3f60b46ffced26d989bd122d236d3ffde7f4ac2266
+  - path: skills/orchestration/kb-orchestrator/references/abductive-loop.md
+    digest: sha256:e524b570d3047216ea87752ce8ea508f9abd2f37be4b7b08e11da7b3b5f84672
+  - path: skills/orchestration/kb-orchestrator/references/phyp-doc-export.md
+    digest: sha256:59df18ccf4b111bb8d99d944f191dae7d8315c235fdbd188c3472b64bbc779bb
+  - path: skills/orchestration/kb-orchestrator/references/prompt-template.md
+    digest: sha256:e2ae601468465948107b53455448ff179b651b79f70488fa48c5a9e2fd763fa8
+  - path: skills/orchestration/kb-orchestrator/references/routing-matrix.md
+    digest: sha256:a0d2ebf0bbe0735cb8be1d208ab4cb5a033d20f08e53f413199f89f89d8186d5
+  - path: skills/orchestration/kb-orchestrator/references/script-usage.md
+    digest: sha256:49a8553e7e8c6e2a67e11139baf20260af26c4a4e0d9e6a8db1d0d95cd26cdcf
+  - path: skills/orchestration/kb-orchestrator/scripts/execute_recommended_focus.py
+    digest: sha256:7ac774dede098e90bf454a97b6b39bf7efc07c152997ea821137984c5c745610
+  - path: skills/orchestration/kb-orchestrator/scripts/export_phyp_docs.py
+    digest: sha256:74e8756c1da5b9efa936d977a6bfd1258c680341be68436d2452545ee5185f79
+  - path: skills/orchestration/kb-orchestrator/scripts/generate_concept_evolution.py
+    digest: sha256:5a2fd0a4b71f212ff7c626756a618b6d0db63e6781dc5b06c5c88bd3a8fe444b
+  - path: skills/orchestration/kb-orchestrator/scripts/generate_conceptual_dynamics.py
+    digest: sha256:c4b82b704c0fa6101ab69e6e4e825acec363f523ad240afbe6eee87c3aa495e2
+  - path: skills/orchestration/kb-orchestrator/scripts/generate_conceptual_space_animation.py
+    digest: sha256:3f23c5613c075923ff6d60c6b177aee0fd6d6675512cc50cca35663851b65ff0
+  - path: skills/orchestration/kb-orchestrator/scripts/generate_discovery_graph_explorer.py
+    digest: sha256:8dc067180d39ec6461c511a7477a4f67cf49ce41ac768e49f504d3fd90bbbcfa
+  - path: skills/orchestration/kb-orchestrator/scripts/generate_interpretation_reports.py
+    digest: sha256:b7705e5aae66fa04b37dbb9f2e26b325da9fa5bcbad3350332c810d36cc507d7
+  - path: skills/orchestration/kb-orchestrator/scripts/generate_js_graph_visualization.py
+    digest: sha256:09618696646a2aecdc89fccfec31e70324532a1cf9b3d9342e372a7dfce9594c
+  - path: skills/orchestration/kb-orchestrator/scripts/generate_process_graph.py
+    digest: sha256:b12d7d2d51d07dfe3c0fdbc0eaec11f7aef4547cc3ee819241fac7080ecc6d78
+  - path: skills/orchestration/kb-orchestrator/scripts/generate_reasoning_dynamics.py
+    digest: sha256:3d2d7967bc9cb52426ee02d44f3dcfb1fd59fabaff6a46ae53762eb455f724db
+  - path: skills/orchestration/kb-orchestrator/scripts/generate_reasoning_log_index.py
+    digest: sha256:0153f8de3b3bb84cd613c436b163bd1fcde7ab39b55fba3113e14308189a15ea
+  - path: skills/orchestration/kb-orchestrator/scripts/generate_reasoning_surface_index.py
+    digest: sha256:39d963ea9117ac495fbeb6e9d63c75866ecbae67c1d7d9d8cfb126f228d4e2f4
+  - path: skills/orchestration/kb-orchestrator/scripts/generate_search_space_tree.py
+    digest: sha256:60c18646a487400985bc4c5f02a7978a3a02e26efd851cd97db6e124bc59bc67
+  - path: skills/orchestration/kb-orchestrator/scripts/run_orchestrator.py
+    digest: sha256:42f5c66b382d300978f630416aff799980cb5f43a35d23bdf0b66eecc23d1f85
+  - path: skills/orchestration/kb-orchestrator/scripts/simulate_theorem_discovery.py
+    digest: sha256:ab71c9649257babd0f0c36cc642b870dc0c726fac93494bdffa5ed19101dfdce
+  - path: agentic/registries/skill_registry.yaml
+    digest: sha256:15076ed8d1bd4c10895060ab485353fe520421c44e1fc6f506508d2d566eacf0
+  - path: pyproject.toml
+    digest: sha256:69325c4805f66033ce7f7e0e68f4a0996913728c6041bb3cee656571693b2f1e
+  - path: uv.lock
+    digest: sha256:a6c77e5d86a93915eeb0f129f80bc8c45d572be387872e3ace7460a3d6ada9ae
+  - path: prism_me/shared/references/codex-control-stack.md
+    digest: sha256:4e8e7a5cdbc0572cf9b0d4ffc4a41c8f4f9c9a304fae3bcee99d8af3553be30e
+  gaps:
+  - No workflow-skill/v1 host adapter is supplied. Native skill/hook/CLI interfaces exist, but payload
+    materialization, guard evidence, execution effects and receipt translation are not qualified for this
+    format.
+  - Native control flow remains opaque; coverage is interface_only, not source-equivalence certification.
+  - One or more native payloads have no exact JSON Schema; object-only types remain explicitly underspecified.
+extensions:
+  abducer.owner:
+    path: skills/orchestration/kb-orchestrator/SKILL.md
+  abducer.native_identity:
+    id: kb-orchestrator
+  abducer.native_contract:
+    source_skill: skills/orchestration/kb-orchestrator/SKILL.md
+    source_text: '---
+
+      name: kb-orchestrator
+
+      description: Orchestrate traceable mathematical knowledge-base workflows over KB/*.kb.md. Route
+      LaTeX ingestion, proof-graph coherence, entrypoint discovery, epistemic-hardness diagnostics, concept
+      bridges and revisions, conjectures, proof strategies and sketches, expert papers, hypothesis evaluation
+      and refutation, interpretation reports, and reasoning visualizations. Use when a request needs coordinated
+      KB reasoning or selection among ingestion, explanation, deduction, abduction and bounded discovery
+      loops. Induction is only a late-stage synthesis over existing bridge, strategy or proof artifacts.
+
+      ---
+
+
+      # KB Orchestrator
+
+
+
+      ## Conceptual Role
+
+
+      This skill coordinates the full KB reasoning workflow by routing intents, enforcing stage order,
+      and preserving artifact/log consistency for each KB.
+
+
+      ## Framework Contribution
+
+
+      It contributes end-to-end reproducibility and makes the multi-skill framework behave like one coherent
+      reasoning system instead of a loose collection of scripts.
+
+
+      ## How To Read Outputs
+
+
+      Read its outputs as run-level workflow summaries: they explain which inference modes were executed,
+      which artifacts were produced, and how the reasoning state evolved.
+
+
+      ## Overview
+
+
+      Route user intent to the minimum required KB skill sequence and maintain a stable KB-centric workflow.
+
+
+      Read [references/routing-matrix.md](references/routing-matrix.md) for routing rules.
+
+      Read [references/prompt-template.md](references/prompt-template.md) for orchestration prompts.
+
+      Read [references/abductive-loop.md](references/abductive-loop.md) for round-based loop policy.
+
+      Read [references/script-usage.md](references/script-usage.md) for executable deterministic orchestration.
+
+      Read [references/phyp-doc-export.md](references/phyp-doc-export.md) for Markdown->LaTeX/PDF export
+      in `phyp/`.
+
+
+      ## Orchestration Workflow
+
+
+      1. Detect primary intent.
+
+      Classify request into one of: `ingest`, `cohere`, `connect`, `coherence-eval`, `interpretation-reports`,
+      `process-graph`, `reasoning-dynamics`, `entrypoints`, `hardness`, `bridge-plan`, `conceptual-revision`,
+      `conjecture`, `strategies`, `proof-sketch`, `expert-paper`, `hypothesis-eval`, `hypothesis-loop`,
+      `revision-loop`, `explain`, `deduce`, `abduce`, `induce`, `abductive-loop`, or `pipeline`. Reserve
+      `induce` for local generalization over already-isolated bridge/strategy/proof families.
+
+
+      2. Resolve KB target.
+
+      Select or create `KB/<problem>.kb.md`. If ambiguous, infer from explicit problem title first, then
+      dominant domain terms.
+
+
+      3. Build minimal execution plan.
+
+      Use only needed skills:
+
+      - `ingest` -> `latex-kb-ingest`
+
+      - `cohere` -> `kb-proof-connector` -> `kb-coherence-evaluator`
+
+      - `connect` -> `kb-proof-connector`
+
+      - `coherence-eval` -> `kb-coherence-evaluator`
+
+      - `interpretation-reports` -> `kb-orchestrator/generate_interpretation_reports.py`
+
+      - `process-graph` -> `kb-orchestrator/generate_process_graph.py`
+
+      - `reasoning-dynamics` -> `kb-orchestrator/generate_reasoning_dynamics.py`
+
+      - `entrypoints` -> `kb-entrypoint-finder` -> `kb-entrypoint-pathfinder`
+
+      - `hardness` -> `kb-epistemic-hardness`
+
+      - `bridge-plan` -> `kb-concept-bridge-planner`
+
+      - `conceptual-revision` -> `mathematical-concept-gap-revisitor` -> `abstraction-fit-gap-auditor`
+      -> `efficient-representation-requirements-elicitor`
+
+      - `conjecture` -> `mathematical-concept-gap-revisitor` -> `kb-gap-abstraction-conjecturer` -> `abstraction-fit-gap-auditor`
+      -> `efficient-representation-requirements-elicitor`
+
+      - `strategies` -> `kb-novel-proof-strategist`
+
+      - `proof-sketch` -> `kb-proof-sketcher`
+
+      - `expert-paper` -> `kb-expert-paper-generator`
+
+      - `hypothesis-eval` -> `kb-hypothesis-evaluator`
+
+      - `hypothesis-loop` -> `kb-hypothesis-refutation-loop`
+
+      - `revision-loop` -> `kb-revision-loop`
+
+      - `explain` -> `kb-explain`
+
+      - `deduce` -> `kb-deduce`
+
+      - `abduce` -> `kb-abduce`
+
+      - `induce` -> `kb-induce` (optional; strategy/proof domain only)
+
+      - `abductive-loop` -> `kb-proof-connector` -> `kb-coherence-evaluator` -> `kb-abduce` -> `kb-deduce`
+      -> `kb-hypothesis-evaluator` -> `kb-hypothesis-refutation-loop` -> `mathematical-concept-gap-revisitor`
+      when unresolved clusters are shallow or representation-limited -> `kb-revision-loop` (iterate)
+
+      - `pipeline` -> `latex-kb-ingest` -> `kb-proof-connector` -> `kb-coherence-evaluator` -> `kb-entrypoint-finder`
+      -> `kb-entrypoint-pathfinder` -> `kb-epistemic-hardness` -> `kb-concept-bridge-planner` -> `mathematical-concept-gap-revisitor`
+      -> `kb-gap-abstraction-conjecturer` -> `abstraction-fit-gap-auditor` -> `efficient-representation-requirements-elicitor`
+      -> `kb-novel-proof-strategist` -> `kb-proof-sketcher` -> `kb-hypothesis-evaluator` -> `kb-hypothesis-refutation-loop`
+      -> `kb-revision-loop` -> `kb-orchestrator/generate_process_graph.py` -> `kb-orchestrator/generate_reasoning_dynamics.py`
+      -> `kb-expert-paper-generator`
+
+
+      `cohere` is the preferred inference-mode name when the user wants to build the relational bridge
+      web and immediately evaluate global theory fit. `connect` is retained as the connector-only legacy
+      alias.
+
+
+      4. Run gated transitions.
+
+      Do not proceed to a reasoning stage if ingest left unresolved structural errors (missing symbols,
+      broken dependencies, malformed statements).
+
+
+      5. Persist and summarize.
+
+      When KB content changes, append a one-line note to `# Change Log` and report exact files and IDs
+      touched.
+
+      For abductive-loop runs, also persist hypotheses under `phyp/<kb-slug>.proof-hypotheses.yaml`.
+
+      Always emit run-level reasoning-log index artifacts so logging coverage can be audited.
+
+
+      ## Conceptual Abstraction Revision Gate
+
+
+      Run `conceptual-revision` before another proof-search cycle when a route is
+
+      stuck in local lemmas, reports a near-definitional transfer theorem, repeats a
+
+      fragmented proof ensemble, cannot name its conceptual tension, or has no
+
+      efficient representation requirements. The gate must produce a declarative
+
+      tension, an abstraction-fit verdict, and a representation-requirements packet.
+
+      Only then send the route to proof search, abstraction forging, literature
+
+      import, or quarantine.
+
+
+      ## Abductive Loop Policy
+
+
+      For `abductive-loop` intent, run this cycle:
+
+
+      1. `kb-proof-connector`: rank intervention points and candidate links.
+
+      2. `kb-coherence-evaluator`: score explanatory power and global coherence deltas.
+
+      3. `kb-abduce`: generate minimal hypotheses for top-ranked points.
+
+      4. `kb-deduce`: test consequences and eliminate weak hypotheses.
+
+      5. `kb-hypothesis-evaluator`: classify each hypothesis as supported/refuted/inconclusive.
+
+      6. `kb-hypothesis-refutation-loop`: iterate unresolved hypotheses until convergence or round limit.
+
+      7. `kb-revision-loop`: produce concept/definition/regime repairs when unresolved clusters persist.
+
+      8. Repeat for up to 3 rounds or until no score improvement.
+
+
+      ## Guardrails
+
+
+      - Keep provenance explicit: no reasoning claim without statement IDs.
+
+      - Treat `tentative` statements as provisional evidence.
+
+      - Prefer a short, auditable route over broad multi-skill chains.
+
+      - Treat connector link proposals as hypotheses until validated by deduction.
+
+      - Stop and surface blockers instead of inventing missing source content.
+
+
+      ## Output Contract
+
+
+      For orchestrated runs, return:
+
+
+      1. `Intent Classification`
+
+      2. `Selected KB`
+
+      3. `Skill Route`
+
+      4. `Execution Summary`
+
+      5. `Updated IDs`
+
+      6. `Top Intervention Points`
+
+      7. `Conceptual Tension and Representation Requirements` when the route passed through `conceptual-revision`
+
+      8. `Open Risks`
+
+
+      Use `scripts/run_orchestrator.py` for deterministic route execution across scripted stages.
+
+
+      <!-- ABducer skill-depth contract v1 -->
+
+
+      ## Guardrails
+
+
+      - Do not let a fluent or busy workflow consume horizon budget without target relevance, evidence,
+      and validation handoff.
+
+      - Cite KB IDs, dependency node IDs, target packet IDs, artifact paths, validator output, or explicit
+      unknowns for every substantive claim.
+
+      - Keep workflow validity, artifact existence, and mathematical progress as separate statuses.
+
+
+      ## Mathematical Invariants
+
+
+      - Mathematical object: workflow route, active target ledger, skill sequence, route budget, state
+      artifact, and candidate disposition.
+
+      - Preserved invariants: target commitments, route order, budget boundaries, evidence handoffs, and
+      stop/quarantine conditions.
+
+      - Name broken invariants, edge cases, counterexample classes, or boundary regimes whenever a route
+      changes representation or scope.
+
+
+      ## Epistemic Discipline
+
+
+      - Label claims as conjectural, evidence-backed, proof-obligation, blocked, refuted, promoted, quarantined,
+      or watch/archive.
+
+      - Record uncertainty, source limits, disconfirming observations, and demotion triggers before recommending
+      continuation.
+
+      - Treat explicit unknowns as first-class outputs rather than smoothing them into prose.
+
+
+      ## Codex Exec Protocol
+
+
+      Follow `docs/reference/codex-exec-skill-protocol.md` when execution can ground the answer. Run the
+      relevant local script(s), especially `execute_recommended_focus.py, export_phyp_docs.py, generate_concept_evolution.py`;
+      inspect the produced artifacts before interpreting them. After execution, state the mathematical
+      consequence, epistemic status, unresolved obligations, and next action.
+
+
+      ## Output Contract
+
+
+      Return: selected route, target-relevance and drift-risk evidence, skill sequence, executed commands
+      if any, produced artifacts, unresolved obligations, and next action. Include executed commands and
+      produced artifacts when a deterministic run occurs; otherwise state why execution was not appropriate.
+
+
+      ## Failure/Demotion
+
+
+      Demote routes that exceed budget, omit commitment citations, skip validators, or drift into low-value
+      hypotheses.
+
+
+      ## Validation Handoff
+
+
+      End by naming the validator, artifact, TODO, proof obligation, or stop condition that should control
+      the next loop. Do not leave shallow deterministic output uninterpreted when generative mathematical
+      or epistemic interpretation is needed.
+
+      '
+  abducer.environment:
+    python: pyproject.toml
+    lock: uv.lock
+    native_controls: .codex/config.toml
+    native_controls_optional: true
+    control_policy: prism_me/shared/references/codex-control-stack.md
+  abducer.execution_boundary:
+    status: specification_only
+    notes: Source inspection only. Effects above deny native execution until a separately reviewed adapter
+      exists.
+# REUSE-IgnoreEnd

@@ -1,0 +1,196 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://abducer.local/spec/matched_discovery_study.schema.json",
+  "title": "Publication-disabled matched conceptual discovery study",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "study_id", "run_id", "run_directory", "fixture", "status", "publication_control", "parallel_execution", "families", "deterministic_projection", "authority_outcomes", "content_digest"],
+  "properties": {
+    "schema_version": {"enum": [2, 3]},
+    "study_id": {"$ref": "#/$defs/id"},
+    "run_id": {"$ref": "#/$defs/id"},
+    "run_directory": {"type": "string", "minLength": 1},
+    "fixture": {"$ref": "#/$defs/fixture"},
+    "isolation_requirement": {"$ref": "#/$defs/studyIsolationRequirement"},
+    "status": {"enum": ["protocol_complete_internal_calibration_only", "partial_failure_internal_calibration_only"]},
+    "publication_control": {"$ref": "#/$defs/publication"},
+    "parallel_execution": {"$ref": "#/$defs/parallel"},
+    "families": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/family"}},
+    "deterministic_projection": {"$ref": "#/$defs/projection"},
+    "authority_outcomes": {"$ref": "#/$defs/authority"},
+    "content_digest": {"$ref": "#/$defs/digest"}
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"schema_version": {"const": 3}}, "required": ["schema_version"]},
+      "then": {"required": ["isolation_requirement"]},
+      "else": {"not": {"required": ["isolation_requirement"]}}
+    }
+  ],
+  "$defs": {
+    "id": {"type": "string", "minLength": 1, "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$"},
+    "digest": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
+    "studyIsolationRequirement": {
+      "type": "object", "additionalProperties": false,
+      "required": ["schema_version", "kernel_isolation_required", "minimum_accepted_status", "content_digest"],
+      "properties": {
+        "schema_version": {"const": 1},
+        "kernel_isolation_required": {"type": "boolean"},
+        "minimum_accepted_status": {"enum": ["strongest_available", "kernel_policy_enforced"]},
+        "content_digest": {"$ref": "#/$defs/digest"}
+      },
+      "allOf": [
+        {
+          "if": {"properties": {"kernel_isolation_required": {"const": true}}, "required": ["kernel_isolation_required"]},
+          "then": {"properties": {"minimum_accepted_status": {"const": "kernel_policy_enforced"}}},
+          "else": {"properties": {"minimum_accepted_status": {"const": "strongest_available"}}}
+        }
+      ]
+    },
+    "fixture": {
+      "type": "object", "additionalProperties": false,
+      "required": ["fixture_id", "fixture_path", "file_sha256", "semantic_digest", "task_count", "task_cluster_count", "authorship_status", "external_human_authority_status", "calibration_mode", "descriptor_artifact_count", "production_chain_execution_status"],
+      "properties": {
+        "fixture_id": {"$ref": "#/$defs/id"}, "fixture_path": {"type": "string", "minLength": 1},
+        "file_sha256": {"$ref": "#/$defs/digest"}, "semantic_digest": {"$ref": "#/$defs/digest"},
+        "task_count": {"type": "integer", "minimum": 1}, "task_cluster_count": {"type": "integer", "minimum": 1},
+        "authorship_status": {"const": "repository_authored_independent_cluster_design"},
+        "external_human_authority_status": {"const": "unavailable"},
+        "calibration_mode": {"const": "synthetic_structural_descriptor_calibration"},
+        "descriptor_artifact_count": {"const": 1},
+        "production_chain_execution_status": {"const": "not_executed"}
+      }
+    },
+    "publication": {
+      "type": "object", "additionalProperties": false,
+      "required": ["mode", "canonical_publication_authorized", "binding_update_authorized", "reason"],
+      "properties": {"mode": {"const": "publication_disabled_study"}, "canonical_publication_authorized": {"const": false}, "binding_update_authorized": {"const": false}, "reason": {"type": "string", "minLength": 1}}
+    },
+    "parallel": {
+      "type": "object", "additionalProperties": false,
+      "required": ["cell_max_workers", "cell_parallelism", "within_cell_parallel_maturation", "shared_mutable_worker_state", "partial_failure_preserved", "high_risk_corner_catalog_digest", "high_risk_variants_per_task", "high_risk_variant_parallelism", "high_risk_variant_barrier", "high_risk_variant_shared_mutable_state"],
+      "properties": {
+        "cell_max_workers": {"type": "integer", "minimum": 1},
+        "cell_parallelism": {"const": "thread_orchestrated_isolated_subprocess_cells"},
+        "within_cell_parallel_maturation": {"const": true},
+        "shared_mutable_worker_state": {"const": false},
+        "partial_failure_preserved": {"const": true},
+        "high_risk_corner_catalog_digest": {"$ref": "#/$defs/digest"},
+        "high_risk_variants_per_task": {"const": 10},
+        "high_risk_variant_parallelism": {"const": "thread_orchestrated_inside_isolated_worker"},
+        "high_risk_variant_barrier": {"const": true},
+        "high_risk_variant_shared_mutable_state": {"const": false}
+      }
+    },
+    "condition": {
+      "type": "object", "additionalProperties": false,
+      "required": ["condition_id", "literature_world_id", "strategy_id", "arm", "frozen_ancestor_digest", "descriptor_digest"],
+      "properties": {"condition_id": {"$ref": "#/$defs/id"}, "literature_world_id": {"$ref": "#/$defs/id"}, "strategy_id": {"$ref": "#/$defs/id"}, "arm": {"enum": ["incumbent", "categorical", "hott", "combined", "no_abstraction", "decorative", "restatement"]}, "frozen_ancestor_digest": {"$ref": "#/$defs/digest"}, "descriptor_digest": {"$ref": "#/$defs/digest"}}
+    },
+    "receiptSummary": {
+      "type": "object", "additionalProperties": false,
+      "required": ["receipt_id", "receipt_ref", "receipt_digest", "receipt_file_sha256", "receipt_byte_length", "role", "operation", "invocation_id", "request_sha256", "response_sha256", "process_status", "protocol_status", "outcome_status", "isolation_status", "isolation_backend", "hidden_input_independence_authorized", "cognitive_independence_authorized", "semantic_independence_authorized"],
+      "properties": {
+        "receipt_id": {"$ref": "#/$defs/id"}, "receipt_ref": {"type": "string", "minLength": 1}, "receipt_digest": {"$ref": "#/$defs/digest"}, "receipt_file_sha256": {"$ref": "#/$defs/digest"}, "receipt_byte_length": {"type": "integer", "minimum": 1},
+        "role": {"enum": ["candidate", "high_risk", "formal_lens", "judge"]}, "operation": {"enum": ["candidate_generation", "high_risk_generation", "parallel_maturation", "formal_lens", "reflection", "blind_judgment", "convergence", "isolation_probe"]},
+        "invocation_id": {"$ref": "#/$defs/id"}, "request_sha256": {"$ref": "#/$defs/digest"}, "response_sha256": {"oneOf": [{"$ref": "#/$defs/digest"}, {"type": "null"}]},
+        "process_status": {"type": "string", "minLength": 1}, "protocol_status": {"type": "string", "minLength": 1}, "outcome_status": {"enum": ["accepted", "operational_failure", "protocol_failure"]},
+        "isolation_status": {"enum": ["kernel_policy_enforced", "process_only_strongest_available"]}, "isolation_backend": {"enum": ["macos_sandbox_exec", "linux_bubblewrap", "process_group_only"]},
+        "hidden_input_independence_authorized": {"const": false}, "cognitive_independence_authorized": {"const": false}, "semantic_independence_authorized": {"const": false}
+      }
+    },
+    "blinding": {
+      "type": "object", "additionalProperties": false,
+      "required": ["status", "condition_labels_withheld", "strategy_labels_withheld", "arm_labels_withheld", "mapping_digest", "authority_distinct_status", "cognitive_independence_authorized"],
+      "properties": {"status": {"const": "internal_process_blind_only"}, "condition_labels_withheld": {"const": true}, "strategy_labels_withheld": {"const": true}, "arm_labels_withheld": {"const": true}, "mapping_digest": {"$ref": "#/$defs/digest"}, "authority_distinct_status": {"const": "unavailable"}, "cognitive_independence_authorized": {"const": false}}
+    },
+    "semanticDiagnostics": {
+      "type": "object", "additionalProperties": false,
+      "required": ["candidate_mechanism_signature", "portfolio_signature", "portfolio_target_alignment", "structural_diversity", "risk_content_valid", "branch_independence", "formal_task_delta_present"],
+      "properties": {
+        "candidate_mechanism_signature": {"$ref": "#/$defs/digest"},
+        "portfolio_signature": {"$ref": "#/$defs/digest"},
+        "portfolio_target_alignment": {"type": "boolean"},
+        "structural_diversity": {"type": "boolean"},
+        "risk_content_valid": {"type": "boolean"},
+        "branch_independence": {"type": "boolean"},
+        "formal_task_delta_present": {"type": "boolean"}
+      }
+    },
+    "score": {
+      "type": "object", "additionalProperties": false,
+      "required": ["task_token", "relevance", "depth", "unification", "risk_reward", "burden_localization", "hard_gate", "semantic_diagnostics"],
+      "properties": {"task_token": {"$ref": "#/$defs/id"}, "relevance": {"type": "integer", "minimum": 0, "maximum": 4}, "depth": {"type": "integer", "minimum": 0, "maximum": 4}, "unification": {"type": "integer", "minimum": 0, "maximum": 4}, "risk_reward": {"type": "integer", "minimum": 0, "maximum": 4}, "burden_localization": {"type": "integer", "minimum": 0, "maximum": 4}, "hard_gate": {"enum": ["pass_internal_structure_only", "hold"]}, "semantic_diagnostics": {"$ref": "#/$defs/semanticDiagnostics"}}
+    },
+    "cell": {
+      "type": "object", "additionalProperties": false,
+      "required": ["cell_key", "family_id", "condition_id", "repetition", "task_ids", "task_cluster_ids", "frozen_ancestor_digest", "literature_descriptor_digest", "strategy_descriptor_digest", "arm", "stage_schedule_digest", "budget_profile_digest", "scheduled_stage_count", "attempted_stage_count", "completed_stage_count", "complete", "partial_failure", "failure_stages", "receipts", "parallel_maturation", "blinding", "internal_judge_scores", "scientific_projection_digest", "publication_authorized"],
+      "properties": {
+        "cell_key": {"$ref": "#/$defs/id"}, "family_id": {"$ref": "#/$defs/id"}, "condition_id": {"$ref": "#/$defs/id"}, "repetition": {"type": "integer", "minimum": 1},
+        "task_ids": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/id"}, "uniqueItems": true}, "task_cluster_ids": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/id"}, "uniqueItems": true},
+        "frozen_ancestor_digest": {"$ref": "#/$defs/digest"}, "literature_descriptor_digest": {"$ref": "#/$defs/digest"}, "strategy_descriptor_digest": {"$ref": "#/$defs/digest"}, "arm": {"enum": ["incumbent", "categorical", "hott", "combined", "no_abstraction", "decorative", "restatement"]},
+        "stage_schedule_digest": {"$ref": "#/$defs/digest"}, "budget_profile_digest": {"$ref": "#/$defs/digest"}, "scheduled_stage_count": {"const": 8}, "attempted_stage_count": {"type": "integer", "minimum": 1, "maximum": 8}, "completed_stage_count": {"type": "integer", "minimum": 0, "maximum": 8},
+        "complete": {"type": "boolean"}, "partial_failure": {"type": "boolean"}, "failure_stages": {"type": "array", "items": {"type": "string", "minLength": 1}, "uniqueItems": true},
+        "receipts": {"type": "array", "minItems": 1, "maxItems": 8, "items": {"$ref": "#/$defs/receiptSummary"}},
+        "parallel_maturation": {"type": "object", "additionalProperties": false, "required": ["scheduled_branch_count", "completed_branch_count", "barrier_status"], "properties": {"scheduled_branch_count": {"const": 2}, "completed_branch_count": {"type": "integer", "minimum": 0, "maximum": 2}, "barrier_status": {"enum": ["complete", "partial", "not_reached"]}}},
+        "blinding": {"oneOf": [{"$ref": "#/$defs/blinding"}, {"type": "null"}]}, "internal_judge_scores": {"type": "array", "items": {"$ref": "#/$defs/score"}},
+        "scientific_projection_digest": {"$ref": "#/$defs/digest"}, "publication_authorized": {"const": false}
+      }
+    },
+    "equalOpportunity": {
+      "type": "object", "additionalProperties": false,
+      "required": ["status", "scheduled_tasks_matched", "scheduled_stages_matched", "generation_opportunities_matched", "literature_slots_matched", "scheduled_resource_profile_matched", "realized_resource_equivalence_status", "frozen_ancestor_matched", "frozen_ancestor_digest", "complete_cell_count", "scheduled_cell_count", "authority_distinct_evaluation_status", "advantage_inference_authorized"],
+      "properties": {"status": {"const": "passed_schedule_level"}, "scheduled_tasks_matched": {"const": true}, "scheduled_stages_matched": {"const": true}, "generation_opportunities_matched": {"const": true}, "literature_slots_matched": {"const": true}, "scheduled_resource_profile_matched": {"const": true}, "realized_resource_equivalence_status": {"const": "unavailable_operational_telemetry_excluded"}, "frozen_ancestor_matched": {"const": true}, "frozen_ancestor_digest": {"$ref": "#/$defs/digest"}, "complete_cell_count": {"type": "integer", "minimum": 0}, "scheduled_cell_count": {"type": "integer", "minimum": 1}, "authority_distinct_evaluation_status": {"const": "unavailable"}, "advantage_inference_authorized": {"const": false}}
+    },
+    "clusterDescriptive": {
+      "type": "object", "additionalProperties": false,
+      "required": ["cluster_id", "task_count", "observation_count", "mean_scores"],
+      "properties": {"cluster_id": {"$ref": "#/$defs/id"}, "task_count": {"type": "integer", "minimum": 1}, "observation_count": {"type": "integer", "minimum": 0}, "mean_scores": {"$ref": "#/$defs/meanScores"}}
+    },
+    "meanScores": {
+      "type": "object", "additionalProperties": false,
+      "required": ["relevance", "depth", "unification", "risk_reward", "burden_localization"],
+      "properties": {"relevance": {"oneOf": [{"type": "number", "minimum": 0, "maximum": 4}, {"type": "null"}]}, "depth": {"oneOf": [{"type": "number", "minimum": 0, "maximum": 4}, {"type": "null"}]}, "unification": {"oneOf": [{"type": "number", "minimum": 0, "maximum": 4}, {"type": "null"}]}, "risk_reward": {"oneOf": [{"type": "number", "minimum": 0, "maximum": 4}, {"type": "null"}]}, "burden_localization": {"oneOf": [{"type": "number", "minimum": 0, "maximum": 4}, {"type": "null"}]}}
+    },
+    "descriptive": {
+      "type": "object", "additionalProperties": false,
+      "required": ["condition_id", "matched_repetitions", "complete_cells", "score_observations", "mean_scores", "task_cluster_results", "interpretation"],
+      "properties": {"condition_id": {"$ref": "#/$defs/id"}, "matched_repetitions": {"type": "array", "items": {"type": "integer", "minimum": 1}, "uniqueItems": true}, "complete_cells": {"type": "integer", "minimum": 0}, "score_observations": {"type": "integer", "minimum": 0}, "mean_scores": {"$ref": "#/$defs/meanScores"}, "task_cluster_results": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/clusterDescriptive"}}, "interpretation": {"const": "internal_descriptive_structure_only_no_advantage_inference"}}
+    },
+    "family": {
+      "type": "object", "additionalProperties": false,
+      "required": ["family_id", "intervention_axis", "conditions", "repetitions", "task_ids", "task_cluster_ids", "cells", "equal_opportunity_certificate", "matched_complete_repetitions", "matched_complete_cell_keys", "partial_failure", "descriptive_results", "advantage_inference_authorized", "publication_authorized"],
+      "properties": {"family_id": {"enum": ["synthetic_literature_descriptor_calibration", "synthetic_strategy_descriptor_calibration", "formal_lens_structural_calibration"]}, "intervention_axis": {"enum": ["synthetic_literature_descriptor", "synthetic_generation_strategy_descriptor", "finite_formalization_arm"]}, "conditions": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/condition"}}, "repetitions": {"type": "integer", "minimum": 1}, "task_ids": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/id"}, "uniqueItems": true}, "task_cluster_ids": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/id"}, "uniqueItems": true}, "cells": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/cell"}}, "equal_opportunity_certificate": {"$ref": "#/$defs/equalOpportunity"}, "matched_complete_repetitions": {"type": "array", "items": {"type": "integer", "minimum": 1}, "uniqueItems": true}, "matched_complete_cell_keys": {"type": "array", "items": {"$ref": "#/$defs/id"}, "uniqueItems": true}, "partial_failure": {"type": "boolean"}, "descriptive_results": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/descriptive"}}, "advantage_inference_authorized": {"const": false}, "publication_authorized": {"const": false}}
+    },
+    "projection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "cell_projection_digests", "projection_digest", "operational_metadata_excluded", "excluded_operational_fields", "projection_basis"],
+      "properties": {
+        "status": {"const": "deterministic_replayable_internal_projection"},
+        "cell_projection_digests": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["cell_key", "digest"],
+            "properties": {
+              "cell_key": {"$ref": "#/$defs/id"},
+              "digest": {"$ref": "#/$defs/digest"}
+            }
+          }
+        },
+        "projection_digest": {"$ref": "#/$defs/digest"},
+        "operational_metadata_excluded": {"const": true},
+        "excluded_operational_fields": {"const": ["command", "completed_at", "elapsed_seconds", "environment_observation", "pid", "resource_receipt", "started_at", "workspace"]},
+        "projection_basis": {"const": "worker_request_scientific_payload_output_and_typed_failure_class_only"}
+      }
+    },
+    "authority": {
+      "type": "object", "additionalProperties": false,
+      "required": ["external_human_evidence_status", "authority_distinct_evaluation_status", "external_provider_status", "strategy_execution_status", "provider_plurality_authorized", "production_chain_executed", "population_generalization_authorized", "literature_benefit_authorized", "high_risk_advantage_authorized", "abstraction_value_authorized", "creativity_authorized", "relevance_authorized", "conceptual_depth_authorized", "unification_power_authorized", "physics_value_authorized", "truth_authorized", "theorem_authorized", "continuum_authorized", "efficacy_authorized", "publication_authorized"],
+      "properties": {"external_human_evidence_status": {"const": "unavailable"}, "authority_distinct_evaluation_status": {"const": "unavailable"}, "external_provider_status": {"const": "unavailable"}, "strategy_execution_status": {"const": "synthetic_internal_descriptors_only"}, "provider_plurality_authorized": {"const": false}, "production_chain_executed": {"const": false}, "population_generalization_authorized": {"const": false}, "literature_benefit_authorized": {"const": false}, "high_risk_advantage_authorized": {"const": false}, "abstraction_value_authorized": {"const": false}, "creativity_authorized": {"const": false}, "relevance_authorized": {"const": false}, "conceptual_depth_authorized": {"const": false}, "unification_power_authorized": {"const": false}, "physics_value_authorized": {"const": false}, "truth_authorized": {"const": false}, "theorem_authorized": {"const": false}, "continuum_authorized": {"const": false}, "efficacy_authorized": {"const": false}, "publication_authorized": {"const": false}}
+    }
+  }
+}

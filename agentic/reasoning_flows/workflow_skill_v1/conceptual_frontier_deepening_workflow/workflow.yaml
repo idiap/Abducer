@@ -1,0 +1,558 @@
+# SPDX-FileCopyrightText: © 2026 Idiap Research Institute <contact@idiap.ch>
+#
+# SPDX-FileContributor: Danilo Gusicuma <danilo.gusicuma@idiap.ch>
+# Neuro-symbolic AI Group
+#
+# SPDX-License-Identifier: MIT
+# REUSE-IgnoreStart
+schema_version: workflow-skill/v1
+namespace: abducer
+id: conceptual_frontier_deepening_workflow
+version: 1.0.0
+kind: workflow
+description: Draft interface projection of conceptual_frontier_deepening; native execution and authority
+  remain unchanged.
+aliases:
+- conceptual_frontier_deepening
+- conceptual-frontier-deepening
+- deep-conceptual-search
+lifecycle: draft
+activation:
+  mode: explicit
+  prerequisites: []
+types:
+  BlindAdjudication:
+    schema: ../../../../agentic/spec/named_workflow_artifacts.schema.json
+    representation: value
+  BridgeEquivalenceDecision:
+    schema: ../../../../agentic/spec/named_workflow_artifacts.schema.json
+    representation: value
+  CentralConceptualRoutes:
+    schema: ../../../../agentic/spec/named_workflow_artifacts.schema.json
+    representation: value
+  ConceptualDeepeningPlan:
+    schema: ../../../../agentic/spec/named_workflow_artifacts.schema.json
+    representation: value
+  ConceptualReflection:
+    schema: ../../../../agentic/spec/named_workflow_artifacts.schema.json
+    representation: value
+  FormalClaimProducerOutputV2:
+    schema: ../../../../agentic/spec/named_workflow_artifacts.schema.json
+    representation: value
+  FrozenDiscoveryContext:
+    schema: ../../../../agentic/spec/named_workflow_artifacts.schema.json
+    representation: value
+  HypothesisPortfolio:
+    schema: ../../../../agentic/spec/named_workflow_artifacts.schema.json
+    representation: value
+  InventionCandidates:
+    schema: ../../../../agentic/spec/named_workflow_artifacts.schema.json
+    representation: value
+  LiteratureFrontierMap:
+    schema: ../../../../agentic/spec/named_workflow_artifacts.schema.json
+    representation: value
+  TheoryAtlasDefects:
+    schema: ../../../../agentic/spec/named_workflow_artifacts.schema.json
+    representation: value
+  TheoryCandidates:
+    schema: ../../../../agentic/spec/named_workflow_artifacts.schema.json
+    representation: value
+inputs:
+  request:
+    type: FrozenDiscoveryContext
+outputs:
+  result:
+    type: FormalClaimProducerOutputV2
+    value:
+      ref: steps.native.outputs.result
+operations:
+  native_workflow:
+    inputs:
+      request:
+        type: FrozenDiscoveryContext
+    outputs:
+      result:
+        type: FormalClaimProducerOutputV2
+    execution:
+      mode: specification_only
+      reason: No workflow-skill/v1 host adapter is supplied. Native skill/hook/CLI interfaces exist, but
+        payload materialization, guard evidence, execution effects and receipt translation are not qualified
+        for this format.
+  step_plan_deepening:
+    inputs:
+      FrozenDiscoveryContext:
+        type: FrozenDiscoveryContext
+    outputs:
+      ConceptualDeepeningPlan:
+        type: ConceptualDeepeningPlan
+    execution:
+      mode: specification_only
+      reason: Native skill exists at skills/orchestration/conceptual-frontier-deepening/SKILL.md; no typed
+        v1 adapter. Source guards, role and failure remain in native_contract.
+  step_assimilate_literature:
+    inputs:
+      FrozenDiscoveryContext:
+        type: FrozenDiscoveryContext
+    outputs:
+      LiteratureFrontierMap:
+        type: LiteratureFrontierMap
+    execution:
+      mode: specification_only
+      reason: Native skill exists at skills/reasoning/frontier-literature-assimilator/SKILL.md; no typed
+        v1 adapter. Source guards, role and failure remain in native_contract.
+  step_forge_invention:
+    inputs:
+      LiteratureFrontierMap:
+        type: LiteratureFrontierMap
+    outputs:
+      InventionCandidates:
+        type: InventionCandidates
+    execution:
+      mode: specification_only
+      reason: Native skill exists at skills/reasoning/literature-conditioned-invention-forger/SKILL.md;
+        no typed v1 adapter. Source guards, role and failure remain in native_contract.
+  step_portfolio:
+    inputs:
+      InventionCandidates:
+        type: InventionCandidates
+    outputs:
+      HypothesisPortfolio:
+        type: HypothesisPortfolio
+    execution:
+      mode: specification_only
+      reason: Native skill exists at skills/orchestration/parallel-hypothesis-portfolio/SKILL.md; no typed
+        v1 adapter. Source guards, role and failure remain in native_contract.
+  step_reflect_discovery:
+    inputs:
+      HypothesisPortfolio:
+        type: HypothesisPortfolio
+    outputs:
+      ConceptualReflection:
+        type: ConceptualReflection
+    execution:
+      mode: specification_only
+      reason: Native skill exists at skills/orchestration/reflective-conceptual-discovery/SKILL.md; no
+        typed v1 adapter. Source guards, role and failure remain in native_contract.
+  step_synthesize:
+    inputs:
+      ConceptualReflection:
+        type: ConceptualReflection
+    outputs:
+      TheoryCandidates:
+        type: TheoryCandidates
+    execution:
+      mode: specification_only
+      reason: Native skill exists at skills/reasoning/reflective-theory-synthesizer/SKILL.md; no typed
+        v1 adapter. Source guards, role and failure remain in native_contract.
+  step_blind_adjudicate:
+    inputs:
+      TheoryCandidates:
+        type: TheoryCandidates
+    outputs:
+      BlindAdjudication:
+        type: BlindAdjudication
+    execution:
+      mode: specification_only
+      reason: Native skill exists at skills/evaluation/blind-conceptual-preference-adjudicator/SKILL.md;
+        no typed v1 adapter. Source guards, role and failure remain in native_contract.
+  step_compile_atlas_defects:
+    inputs:
+      TheoryCandidates:
+        type: TheoryCandidates
+    outputs:
+      TheoryAtlasDefects:
+        type: TheoryAtlasDefects
+    execution:
+      mode: specification_only
+      reason: Native skill exists at skills/discovery/theory-atlas-defect-compiler/SKILL.md; no typed
+        v1 adapter. Source guards, role and failure remain in native_contract.
+  step_derive_central_routes:
+    inputs:
+      BlindAdjudication:
+        type: BlindAdjudication
+    outputs:
+      CentralConceptualRoutes:
+        type: CentralConceptualRoutes
+    execution:
+      mode: specification_only
+      reason: Native skill exists at skills/orchestration/central-formal-conceptual-routes/SKILL.md; no
+        typed v1 adapter. Source guards, role and failure remain in native_contract.
+  step_check_bridge_equivalence:
+    inputs:
+      CentralConceptualRoutes:
+        type: CentralConceptualRoutes
+    outputs:
+      BridgeEquivalenceDecision:
+        type: BridgeEquivalenceDecision
+    execution:
+      mode: specification_only
+      reason: Native skill exists at skills/evaluation/bridge-object-equivalence-checker/SKILL.md; no
+        typed v1 adapter. Source guards, role and failure remain in native_contract.
+  step_produce_formal_claim:
+    inputs:
+      CentralConceptualRoutes:
+        type: CentralConceptualRoutes
+      BlindAdjudication:
+        type: BlindAdjudication
+    outputs:
+      FormalClaimProducerOutputV2:
+        type: FormalClaimProducerOutputV2
+    execution:
+      mode: specification_only
+      reason: Native skill exists at skills/reasoning/formal-claim-producer/SKILL.md; no typed v1 adapter.
+        Source guards, role and failure remain in native_contract.
+flow:
+  kind: sequence
+  steps:
+  - id: native
+    kind: call
+    operation: native_workflow
+    description: Opaque native workflow boundary; internal ordering, guards and handoffs are retained
+      in abducer.native_contract.
+    arguments:
+      request:
+        ref: inputs.request
+    on_failure: blocked
+policy:
+  effects:
+    filesystem:
+      read:
+      - native_sources
+      - inputs
+      write: []
+    network: []
+    external_write: []
+  authority:
+    allowed:
+    - describe_native_interface
+    forbidden:
+    - execute_scientific_workflow
+    - approve
+    - prove
+    - publish
+    - promote
+  limits:
+    wall_time_seconds: 1800
+    max_operation_calls: 1
+  failure:
+    default: blocked
+    retry:
+      max_attempts: 1
+      retryable_codes: []
+  resume:
+    mode: none
+    require_matching_definition_and_inputs: true
+  claim_ceiling: Interface description only; no proof, scientific validity, runtime qualification, promotion
+    or approval.
+observability:
+  receipts: required
+  artifact_digests: sha256
+  provenance: required
+  events:
+  - workflow_started
+  - step_failed
+  - workflow_completed
+provenance:
+  coverage: interface_only
+  sources:
+  - path: agentic/registries/named_workflow_contracts.yaml
+    digest: sha256:a467750a969715f742cc330f21fef37f4004b76924650fd9a027c47af9447d77
+  - path: skills/orchestration/conceptual-frontier-deepening/SKILL.md
+    digest: sha256:bd58e722c911a6739c94bd60c3d60377f425fa1885ad5e004c285bdb442d178b
+  - path: hooks/workflow_local/hook_utils.py
+    digest: sha256:65cb3615d064ab6307b1117d493af57331cfd6ef0157ef7b8e733d96d748578c
+  - path: hooks/workflow_local/user_prompt_submit_intake.py
+    digest: sha256:14f6c15eac450b918ce56b290a5a30052ec4c08052b73663aeab5230338ccb11
+  - path: hooks/workflow_local/pre_skill_use_policy.py
+    digest: sha256:2140beff9c300564dedf1b0b8b00bc59cf78ef066f184bc8cbc992670ee0f489
+  - path: hooks/workflow_local/post_skill_use_review.py
+    digest: sha256:0187d1cc3e942aebf6aa4c6874cd23f5661ce6a6dd9f6de9f74703a26a83e296
+  - path: hooks/workflow_local/pre_tool_use_policy.py
+    digest: sha256:916b7acb61078b55f56b13b922ce2b9123fa06184e61fc275a8e80b3f7f30e60
+  - path: hooks/workflow_local/stop_artifact_check.py
+    digest: sha256:d9e526e86cec17c4d74a5a67a9cbeb08766aabe7f1c844ffc71cfef6384145af
+  - path: skills/reasoning/frontier-literature-assimilator/SKILL.md
+    digest: sha256:36fd10be907aabba356d94dbcbb989a9c97a63a9f0f8e7ab149eba6fc238e126
+  - path: skills/reasoning/literature-conditioned-invention-forger/SKILL.md
+    digest: sha256:f42d9602b23e4b3011b266711f5ab2042ccfe5f38d986d807e7213064f587485
+  - path: skills/orchestration/parallel-hypothesis-portfolio/SKILL.md
+    digest: sha256:55d2df3608a093fb25925a830420293d6c3903f6743e209d276023172a79e04f
+  - path: skills/orchestration/reflective-conceptual-discovery/SKILL.md
+    digest: sha256:927c4215cbb69ce0a013c6b1c7b957e4b013f1f9366dfcbe0e86b566ba69c39e
+  - path: skills/reasoning/reflective-theory-synthesizer/SKILL.md
+    digest: sha256:2012e56bc0eab4d43873d24f7e331526c5a32f031747dda86a51fc24afb15612
+  - path: skills/evaluation/blind-conceptual-preference-adjudicator/SKILL.md
+    digest: sha256:12fb8be28dcb727f86d67ec64e9f1f013d8a97b86aef63304f9e73a06a4b4de2
+  - path: skills/discovery/theory-atlas-defect-compiler/SKILL.md
+    digest: sha256:c985e4fc37e87534e3cf902c75ab11733638f61485f71b76719991938cc9feac
+  - path: skills/orchestration/central-formal-conceptual-routes/SKILL.md
+    digest: sha256:f56adb9a817d085bf351a39c1f1e0aece9dc6958ef926d75f1fb892200485280
+  - path: skills/evaluation/bridge-object-equivalence-checker/SKILL.md
+    digest: sha256:797c1f6838e6e9ad6f4953fceaeecc50eb4758ffd0cfd5728ebcfa740c043997
+  - path: skills/reasoning/formal-claim-producer/SKILL.md
+    digest: sha256:463d8315c864561748f4f19a79c5081ec3b6f795d2aba300ffc12d352afcf3be
+  - path: agentic/registries/skill_registry.yaml
+    digest: sha256:15076ed8d1bd4c10895060ab485353fe520421c44e1fc6f506508d2d566eacf0
+  - path: pyproject.toml
+    digest: sha256:69325c4805f66033ce7f7e0e68f4a0996913728c6041bb3cee656571693b2f1e
+  - path: uv.lock
+    digest: sha256:a6c77e5d86a93915eeb0f129f80bc8c45d572be387872e3ace7460a3d6ada9ae
+  - path: prism_me/shared/references/codex-control-stack.md
+    digest: sha256:4e8e7a5cdbc0572cf9b0d4ffc4a41c8f4f9c9a304fae3bcee99d8af3553be30e
+  gaps:
+  - No workflow-skill/v1 host adapter is supplied. Native skill/hook/CLI interfaces exist, but payload
+    materialization, guard evidence, execution effects and receipt translation are not qualified for this
+    format.
+  - Native control flow remains opaque; coverage is interface_only, not source-equivalence certification.
+  - Named payload schemas validate the common envelope only; nominal artifact payloads and artifact_type
+    discriminators are not refined by that schema.
+  - Conditional/advisory skips, repeated ReviewFindingSet aggregation, exit obligations and handoff adapters
+    are preserved verbatim, not executable v1 dataflow.
+extensions:
+  abducer.owner:
+    path: skills/orchestration/conceptual-frontier-deepening/SKILL.md
+  abducer.native_identity:
+    id: conceptual_frontier_deepening
+  abducer.native_contract:
+    id: conceptual_frontier_deepening
+    version: 1.0.0
+    visible_name: Conceptual Frontier Deepening
+    aliases:
+    - conceptual-frontier-deepening
+    - deep-conceptual-search
+    activation: opt_in
+    owner_skill: conceptual-frontier-deepening
+    target_scope:
+    - mathematical
+    - scientific
+    trigger:
+      all_of:
+      - frozen_target_theory_literature_context
+      - approved_budget
+      any_of:
+      - repeated_blocker
+      - representation_failure
+      - aggressive_conceptual_search_requested
+      none_of:
+      - unfrozen_context
+    input_artifact:
+      type: FrozenDiscoveryContext
+      schema: agentic/spec/named_workflow_artifacts.schema.json
+    steps:
+    - id: plan_deepening
+      order: 5
+      skill: conceptual-frontier-deepening
+      mode: required
+      when: null
+      consumes:
+      - FrozenDiscoveryContext
+      produces:
+      - ConceptualDeepeningPlan
+      on_failure: stop
+    - id: assimilate_literature
+      order: 10
+      skill: frontier-literature-assimilator
+      mode: required
+      when: null
+      consumes:
+      - FrozenDiscoveryContext
+      produces:
+      - LiteratureFrontierMap
+      on_failure: stop
+    - id: forge_invention
+      order: 20
+      skill: literature-conditioned-invention-forger
+      mode: required
+      when: null
+      consumes:
+      - LiteratureFrontierMap
+      produces:
+      - InventionCandidates
+      on_failure: stop
+    - id: portfolio
+      order: 30
+      skill: parallel-hypothesis-portfolio
+      mode: required
+      when: null
+      consumes:
+      - InventionCandidates
+      produces:
+      - HypothesisPortfolio
+      on_failure: stop
+    - id: reflect_discovery
+      order: 40
+      skill: reflective-conceptual-discovery
+      mode: required
+      when: null
+      consumes:
+      - HypothesisPortfolio
+      produces:
+      - ConceptualReflection
+      on_failure: quarantine
+    - id: synthesize
+      order: 50
+      skill: reflective-theory-synthesizer
+      mode: required
+      when: null
+      consumes:
+      - ConceptualReflection
+      produces:
+      - TheoryCandidates
+      on_failure: stop
+    - id: blind_adjudicate
+      order: 60
+      skill: blind-conceptual-preference-adjudicator
+      mode: required
+      when: null
+      consumes:
+      - TheoryCandidates
+      produces:
+      - BlindAdjudication
+      on_failure: stop
+    - id: compile_atlas_defects
+      order: 70
+      skill: theory-atlas-defect-compiler
+      mode: conditional
+      when: category_or_hott_pressure
+      consumes:
+      - TheoryCandidates
+      produces:
+      - TheoryAtlasDefects
+      on_failure: quarantine
+    - id: derive_central_routes
+      order: 80
+      skill: central-formal-conceptual-routes
+      mode: required
+      when: null
+      consumes:
+      - BlindAdjudication
+      produces:
+      - CentralConceptualRoutes
+      on_failure: stop
+    - id: check_bridge_equivalence
+      order: 90
+      skill: bridge-object-equivalence-checker
+      mode: conditional
+      when: multiple_carriers_compete
+      consumes:
+      - CentralConceptualRoutes
+      produces:
+      - BridgeEquivalenceDecision
+      on_failure: quarantine
+    - id: produce_formal_claim
+      order: 100
+      skill: formal-claim-producer
+      mode: required
+      when: null
+      consumes:
+      - CentralConceptualRoutes
+      - BlindAdjudication
+      produces:
+      - FormalClaimProducerOutputV2
+      on_failure: stop
+    hooks:
+    - hook_id: named-workflow-router
+      event: UserPromptSubmit
+      phase: activation
+      condition: trigger matches and budget approved
+      required_inputs:
+      - prompt
+      - target
+      - budget
+      decision: recommend
+      emitted_artifact: WorkflowRecommendation
+    - hook_id: workflow-membership-policy
+      event: PreSkillUse
+      phase: steps
+      condition: active workflow and step membership validate
+      required_inputs:
+      - workflow_id
+      - workflow_version
+      - target
+      - step_id
+      - skill
+      - conditional_evidence
+      decision: block
+      emitted_artifact: SkillAuthorization
+    - hook_id: typed-output-policy
+      event: PostSkillUse
+      phase: steps
+      condition: declared output and receipt validate
+      required_inputs:
+      - workflow_id
+      - step_id
+      - artifact_type
+      - epistemic_status
+      - receipt
+      decision: block
+      emitted_artifact: SkillReceipt
+    - hook_id: workflow-tool-policy
+      event: PreToolUse
+      phase: steps
+      condition: path safety mutation and budget validate
+      required_inputs:
+      - workflow_id
+      - step_id
+      - tool
+      - target_path
+      - mutation_class
+      decision: block
+      emitted_artifact: ToolAuthorization
+    - hook_id: workflow-exit-policy
+      event: Stop
+      phase: exit
+      condition: exit artifacts and obligations validate
+      required_inputs:
+      - workflow_id
+      - exit_artifacts
+      - open_obligations
+      decision: block
+      emitted_artifact: WorkflowExitReceipt
+    exit_gate:
+      validator: agentic/scripts/validate_workflow_contracts.py
+      consumes: FormalClaimProducerOutputV2
+      allowed:
+      - validated
+      - quarantined
+      - rejected
+      required_artifacts:
+      - FormalClaimProducerOutputV2
+      - BlindAdjudication
+      open_obligations_policy: allow_declared
+    handoffs:
+    - when: formal_claim_ready
+      workflow: theorem_proof_delivery
+      artifact_type: ProofQueueItem
+      adapter: formal_claim_to_proof_queue
+    - when: candidate_not_ready_or_non_dominated
+      workflow: conceptual_hypothesis_exploration_loop
+      artifact_type: ConceptualLearningDelta
+      adapter: formal_claim_disposition_to_learning_delta
+    prohibitions:
+    - No theory selection by experiment
+    - No non-blind route adjudication
+    - No execution without approved budget
+    cost_profile: expensive
+  abducer.environment:
+    python: pyproject.toml
+    lock: uv.lock
+    native_controls: .codex/config.toml
+    native_controls_optional: true
+    control_policy: prism_me/shared/references/codex-control-stack.md
+  abducer.execution_boundary:
+    status: specification_only
+    notes: Source inspection only. Effects above deny native execution until a separately reviewed adapter
+      exists.
+  abducer.step_interfaces:
+    plan_deepening: step_plan_deepening
+    assimilate_literature: step_assimilate_literature
+    forge_invention: step_forge_invention
+    portfolio: step_portfolio
+    reflect_discovery: step_reflect_discovery
+    synthesize: step_synthesize
+    blind_adjudicate: step_blind_adjudicate
+    compile_atlas_defects: step_compile_atlas_defects
+    derive_central_routes: step_derive_central_routes
+    check_bridge_equivalence: step_check_bridge_equivalence
+    produce_formal_claim: step_produce_formal_claim
+# REUSE-IgnoreEnd

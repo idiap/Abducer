@@ -1,0 +1,478 @@
+# SPDX-FileCopyrightText: Copyright © 2026 Idiap Research Institute <contact@idiap.ch>
+#
+# SPDX-FileContributor: Andre Freitas <andre.freitas@idiap.ch>
+# Neuro-symbolic AI Group
+#
+# SPDX-FileContributor: Danilo Gusicuma <danilo.gusicuma@idiap.ch>
+# Neuro-symbolic AI Group
+#
+# SPDX-License-Identifier: MIT
+tension_examples:
+  - id: tension_clinical_ai_population_vs_individual
+    field: clinical_ai
+    tension_name: Population Evidence vs Individualized Decision Support
+    scenario_summary: >
+      Oncology and chronic-disease decision support increasingly combines population-level
+      trial evidence, observational cohorts, biomarkers, and patient-specific risk models.
+      The field wants recommendations that are both evidence-based and individualized, but
+      the strongest population evidence often does not identify the treatment effect for a
+      specific patient with comorbidities, missing biomarkers, and local care constraints.
+    field_tension_elicitation_packet:
+      scope:
+        domain: medicine
+        subfield: clinical decision support
+        temporal_scope: contemporary deployment
+        material_setting: hospital oncology and chronic-care workflows
+      poles:
+        - id: population_evidence
+          label: Evidence-based standardization
+          strongest_version: Treatment recommendations should track externally validated population evidence and guideline-grade causal support.
+          formal_commitments: ["recommend only when causal support exceeds declared threshold", "preserve guideline consistency"]
+          material_commitments: ["avoid idiosyncratic local practice", "maintain auditability and malpractice defensibility"]
+          epistemic_commitments: ["randomized or high-quality causal evidence outranks uncontrolled pattern recognition"]
+          protected_successes: ["reproducibility", "standard of care", "public justification"]
+          unacceptable_losses: ["opaque individualized recommendations unsupported by evidence"]
+        - id: individual_fit
+          label: Patient-specific fit
+          strongest_version: Recommendations should account for patient heterogeneity, comorbidities, preferences, biomarkers, contraindications, and local feasibility.
+          formal_commitments: ["condition recommendation on patient state", "respect contraindication constraints"]
+          material_commitments: ["avoid average-treatment recommendations that harm atypical patients", "include patient goals and local access"]
+          epistemic_commitments: ["case-specific evidence and mechanistic plausibility can matter when trial strata are thin"]
+          protected_successes: ["personalized safety", "preference-sensitive care", "clinical judgment"]
+          unacceptable_losses: ["guideline adherence that ignores patient-specific risk"]
+      pressure_points:
+        - id: external_validity_gap
+          kind: empirical
+          description: Trial average effects may not transport to underrepresented or multimorbid patients.
+          affected_commitments: [population_evidence, individual_fit]
+          evidence_needed: ["subgroup transport evidence", "calibration by patient strata", "clinical outcome audit"]
+      candidate_crisis_hypotheses:
+        - Evidence standards certify population-level effects while deployed decisions require individual-level actionability.
+    tension_evidence_map:
+      decisive_claims:
+        - id: claim_trial_transport
+          claim: Guideline-grade evidence often estimates population effects rather than patient-specific treatment effects.
+          claim_kind: empirical
+          supports_pole: individual_fit
+          evidence_state: strong
+          source_refs: ["trial eligibility/external-validity literature", "clinical guideline methods"]
+          uncertainty: {transport_by_subgroup: variable}
+          possible_falsifiers: ["robust treatment-effect estimates for the target patient stratum"]
+        - id: claim_individual_models_risk
+          claim: Individualized models can overfit, miscalibrate, or encode site-specific practice artifacts.
+          claim_kind: empirical
+          supports_pole: population_evidence
+          evidence_state: strong
+          source_refs: ["clinical prediction model validation studies", "deployment audits"]
+          uncertainty: {site_shift: high}
+          possible_falsifiers: ["prospective multi-site calibration and outcome improvement"]
+      failed_mediations:
+        - id: subgroup_only
+          mediation: Add subgroup analysis to guidelines.
+          why_it_fails: Many clinically relevant patient states are sparse, intersecting, or absent from trials.
+          preserved: ["population evidence hierarchy"]
+          lost_or_collapsed: ["fine-grained patient fit"]
+      source_expansion: {decision: recommended, reasons: ["case-specific deployment claims need current and local evidence"]}
+    tension_formalization_packet:
+      exact_crisis_statement: >
+        Clinical decision support must produce patient-specific recommendations, but its strongest public justification
+        is population-level evidence that may not transport to the patient's concrete state without adding model
+        assumptions that weaken the original evidential guarantee.
+      crisis_types: [translation_crisis, evidence_crisis, measurement_crisis]
+      minimal_incompatible_commitments:
+        - id: c1
+          commitment: Recommendations must be justified by externally validated causal evidence.
+          pole: population_evidence
+          formalization: "Recommend(t,p) -> SupportedBy(E_population,t)"
+          material_anchor: guideline accountability and standard-of-care defense
+          evidence_state: strong
+          source_refs: ["clinical guideline methods"]
+        - id: c2
+          commitment: Recommendations must be conditioned on patient-specific state and constraints.
+          pole: individual_fit
+          formalization: "Recommend(t,p) -> Fit(t, State(p), Preferences(p), Constraints(p))"
+          material_anchor: patient safety, contraindications, access, and preference-sensitive care
+          evidence_state: strong
+          source_refs: ["clinical decision support deployment evidence"]
+        - id: c3
+          commitment: Population support does not by itself imply patient-state fit.
+          pole: shared_background
+          formalization: "SupportedBy(E_population,t) does_not_imply Fit(t, State(p)) without Transport(E_population, State(p))"
+          material_anchor: multimorbidity, underrepresentation, and site-shift cases
+          evidence_state: strong
+          source_refs: ["external validity literature"]
+      shared_assumptions_required_for_crisis: ["recommendations are action-guiding", "patient state differs materially from average trial participant"]
+      material_conditions:
+        scope: deployed clinical decision support for heterogeneous patients
+        regimes: ["thin subgroup evidence", "site shift", "preference-sensitive treatment choice"]
+        actors_or_systems: ["clinician", "patient", "clinical AI system", "hospital governance"]
+        stakes: ["patient harm", "undertreatment", "loss of auditability", "inequitable care"]
+      formal_core:
+        predicates: ["SupportedBy(e,t)", "Fit(t,p)", "Transport(e,p)", "Recommend(t,p)"]
+        constraints: ["Recommend(t,p) requires SupportedBy(e,t)", "Recommend(t,p) requires Fit(t,p)", "SupportedBy(e,t) requires Transport(e,p) to license Fit(t,p)"]
+        failed_obligations: ["source support", "patient-state adequacy", "calibration under deployment shift"]
+        incompatibility_schema: "public causal support and individual actionability diverge unless a transport relation is established"
+      preservation_requirements: ["population evidence hierarchy", "patient-specific contraindication handling", "audit trail", "uncertainty disclosure"]
+      candidate_transformation_pressures:
+        - operator_family: TransportModelEnrichment
+          target_concept_hint: evidence-backed individualized recommendation
+          what_it_must_preserve: ["guideline provenance", "patient fit", "uncertainty reporting"]
+          new_risks: ["false precision", "site-specific overfitting"]
+      epistemic_status:
+        confidence: high
+        live_uncertainties: ["target hospital population", "available biomarkers", "local calibration"]
+        possible_falsifiers: ["prospective evidence that population rule is calibrated and beneficial in target patient strata"]
+        web_expansion_needed: recommended
+
+  - id: tension_grid_decarbonization_reliability
+    field: energy_systems
+    tension_name: Renewable Decarbonization vs Grid Reliability Concepts
+    scenario_summary: >
+      Power systems are replacing dispatchable synchronous generation with inverter-based renewable resources.
+      The field needs deep decarbonization, but many reliability concepts, market products, and operating
+      procedures were built around controllable generators with inertia, fuel supply, and centralized dispatch.
+    field_tension_elicitation_packet:
+      scope:
+        domain: physical_infrastructure
+        subfield: electric grid planning and operations
+        temporal_scope: energy transition
+        material_setting: transmission-scale power systems with high renewable penetration
+      poles:
+        - id: decarbonization
+          label: Rapid low-carbon generation transition
+          strongest_version: Grid planning must reduce emissions quickly by integrating high shares of renewable and storage resources.
+          formal_commitments: ["minimize emissions subject to demand satisfaction", "increase renewable penetration"]
+          material_commitments: ["retire high-emission generation", "enable policy targets and climate commitments"]
+          epistemic_commitments: ["model system adequacy under climate constraints"]
+          protected_successes: ["emissions reduction", "fuel-cost reduction", "distributed resource growth"]
+          unacceptable_losses: ["locking in fossil infrastructure"]
+        - id: reliability
+          label: Operational reliability and stability
+          strongest_version: The grid must maintain frequency, voltage, resource adequacy, and restoration capability under disturbances.
+          formal_commitments: ["maintain stability margins", "satisfy adequacy and contingency standards"]
+          material_commitments: ["avoid blackouts", "maintain critical services", "protect equipment"]
+          epistemic_commitments: ["operational models must account for physical dynamics, not only annual energy balance"]
+          protected_successes: ["frequency control", "voltage support", "black-start capability"]
+          unacceptable_losses: ["fragile low-carbon grid with hidden reliability debt"]
+      pressure_points:
+        - id: inverter_dominance
+          kind: operational
+          description: Energy adequacy models can declare success while dynamic stability services remain underspecified.
+          affected_commitments: [decarbonization, reliability]
+          evidence_needed: ["resource adequacy studies", "dynamic stability simulations", "operating incidents"]
+      candidate_crisis_hypotheses:
+        - The concept of resource adequacy cannot remain energy-only when the resource mix changes the physical services that make delivery possible.
+    tension_evidence_map:
+      decisive_claims:
+        - id: claim_energy_not_services
+          claim: Annual or hourly energy sufficiency does not guarantee frequency response, voltage support, inertia-like behavior, or restoration capability.
+          claim_kind: formal
+          supports_pole: reliability
+          evidence_state: strong
+          source_refs: ["grid reliability standards", "power-system dynamics literature"]
+          uncertainty: {region_specific_requirements: high}
+          possible_falsifiers: ["validated grid-forming controls and market rules that provide all required services"]
+        - id: claim_decarbonization_urgency
+          claim: Delaying renewable integration to preserve legacy reliability concepts conflicts with emissions targets.
+          claim_kind: institutional
+          supports_pole: decarbonization
+          evidence_state: strong
+          source_refs: ["climate policy targets", "integrated resource plans"]
+          uncertainty: {policy_jurisdiction: variable}
+          possible_falsifiers: ["low-carbon dispatchable alternatives available at required scale and schedule"]
+      failed_mediations:
+        - id: capacity_margin_only
+          mediation: Treat capacity margin as the main reliability bridge.
+          why_it_fails: Capacity margin abstracts from dynamic services and control behavior.
+          preserved: ["planning simplicity"]
+          lost_or_collapsed: ["frequency and voltage stability requirements"]
+      source_expansion: {decision: required, reasons: ["current standards, grid incidents, and resource mix data are jurisdiction-specific"]}
+    tension_formalization_packet:
+      exact_crisis_statement: >
+        Grid planning must count low-carbon resources as adequate to meet demand, but the adequacy concept inherited
+        from synchronous systems omits dynamic services that become non-optional when those resources replace the
+        machines that formerly supplied them by default.
+      crisis_types: [regime_crisis, interface_crisis, measurement_crisis]
+      minimal_incompatible_commitments:
+        - id: c1
+          commitment: Resource plans must satisfy decarbonization constraints.
+          pole: decarbonization
+          formalization: "Plan P valid -> Emissions(P) <= Target"
+          material_anchor: policy targets and climate-risk reduction
+          evidence_state: strong
+          source_refs: ["climate policy and planning documents"]
+        - id: c2
+          commitment: Resource plans must preserve reliability services, not only energy balance.
+          pole: reliability
+          formalization: "Plan P valid -> EnergyAdequate(P) and DynamicServicesAdequate(P)"
+          material_anchor: blackout avoidance and operational security
+          evidence_state: strong
+          source_refs: ["reliability standards", "operator studies"]
+        - id: c3
+          commitment: Legacy adequacy metrics do not imply dynamic-service adequacy under inverter-dominant regimes.
+          pole: shared_background
+          formalization: "EnergyAdequate(P) does_not_imply DynamicServicesAdequate(P) when InverterShare(P) is high"
+          material_anchor: high-renewable operating regimes
+          evidence_state: strong
+          source_refs: ["power-system dynamics literature"]
+      shared_assumptions_required_for_crisis: ["renewable penetration materially changes service provision", "legacy metrics guide investment decisions"]
+      material_conditions:
+        scope: high-renewable transmission systems
+        regimes: ["high inverter-based resource share", "retirement of synchronous machines", "extreme weather stress"]
+        actors_or_systems: ["grid operator", "regulator", "generator owner", "storage provider", "customer"]
+        stakes: ["emissions", "blackout risk", "investment misallocation", "public legitimacy"]
+      formal_core:
+        predicates: ["EnergyAdequate(P)", "DynamicServicesAdequate(P)", "Emissions(P)", "InverterShare(P)", "ValidPlan(P)"]
+        constraints: ["ValidPlan(P) requires Emissions(P) <= Target", "ValidPlan(P) requires DynamicServicesAdequate(P)", "EnergyAdequate(P) is insufficient at high InverterShare(P)"]
+        failed_obligations: ["adequacy", "regime transfer", "measurement validity"]
+        incompatibility_schema: "the inherited adequacy proxy validates plans in a regime where its omitted variables become decisive"
+      preservation_requirements: ["decarbonization targets", "frequency and voltage stability", "resource adequacy", "transparent market signals"]
+      candidate_transformation_pressures:
+        - operator_family: ServiceAdequacyRefinement
+          target_concept_hint: reliability service adequacy for low-carbon grids
+          what_it_must_preserve: ["emissions constraint", "demand service", "dynamic stability"]
+          new_risks: ["overcomplicated markets", "technology lock-in"]
+      epistemic_status:
+        confidence: high
+        live_uncertainties: ["jurisdiction-specific reliability rules", "current grid-forming inverter performance", "market design updates"]
+        possible_falsifiers: ["current validated operations showing dynamic services are fully specified and procured under high inverter share"]
+        web_expansion_needed: required
+
+  - id: tension_llm_autonomy_control
+    field: ai_systems
+    tension_name: Agentic Autonomy vs Accountable Control
+    scenario_summary: >
+      Organizations want language-model agents to complete long-horizon tasks by planning, using tools,
+      writing code, querying systems, and adapting to observations. The same autonomy makes it harder to
+      define responsibility, constrain side effects, audit reasoning, and guarantee that actions remain
+      within the user's real intent and institutional policy.
+    field_tension_elicitation_packet:
+      scope:
+        domain: language_model_concept
+        subfield: tool-using agents and coding agents
+        temporal_scope: current deployment
+        material_setting: enterprise workflows with side-effecting tools
+      poles:
+        - id: autonomy
+          label: Delegated task completion
+          strongest_version: Agents need planning freedom, tool access, state, and adaptation to complete valuable tasks without constant human micromanagement.
+          formal_commitments: ["maintain state across steps", "choose actions based on observations", "recover from local failures"]
+          material_commitments: ["reduce coordination cost", "finish real workflows", "handle software and operational tasks"]
+          epistemic_commitments: ["success is measured by completed task traces, not isolated responses"]
+          protected_successes: ["long-horizon productivity", "adaptive problem solving"]
+          unacceptable_losses: ["agent reduced to a brittle command macro"]
+        - id: accountable_control
+          label: Bounded accountable control
+          strongest_version: Systems with side effects must be auditable, reversible where possible, policy-constrained, and attributable to responsible humans or institutions.
+          formal_commitments: ["actions require authorization", "tool calls satisfy policy and schema", "state is inspectable"]
+          material_commitments: ["avoid data loss, security incidents, unauthorized spending, and compliance violations"]
+          epistemic_commitments: ["observations and actions must be provenance-traceable"]
+          protected_successes: ["safety", "accountability", "governance"]
+          unacceptable_losses: ["unbounded delegation with unclear responsibility"]
+      pressure_points:
+        - id: side_effect_boundary
+          kind: governance
+          description: The actions that make agents useful are the actions that require approval, rollback, and liability assignment.
+          affected_commitments: [autonomy, accountable_control]
+          evidence_needed: ["tool-call traces", "incident classes", "approval and rollback design"]
+      candidate_crisis_hypotheses:
+        - The concept of assistant becomes unstable when output generation and authorized action are treated as the same interface.
+    tension_evidence_map:
+      decisive_claims:
+        - id: claim_tool_action_risk
+          claim: Side-effecting tools turn model output errors into operational, financial, privacy, or security incidents.
+          claim_kind: operational
+          supports_pole: accountable_control
+          evidence_state: strong
+          source_refs: ["agent incident taxonomies", "security reviews", "tool-use evaluations"]
+          uncertainty: {deployment_specificity: high}
+          possible_falsifiers: ["fully sandboxed workflow with no material side effects"]
+        - id: claim_autonomy_value
+          claim: Long-horizon workflows require state, planning, and adaptive tool use beyond single-turn assistance.
+          claim_kind: operational
+          supports_pole: autonomy
+          evidence_state: strong
+          source_refs: ["coding-agent task traces", "workflow automation evaluations"]
+          uncertainty: {task_distribution: high}
+          possible_falsifiers: ["task class can be completed by stateless deterministic automation"]
+      failed_mediations:
+        - id: human_in_loop_always
+          mediation: Require approval for every action.
+          why_it_fails: It can collapse agentic value by making the human perform the coordination burden the agent was meant to absorb.
+          preserved: ["authorization"]
+          lost_or_collapsed: ["long-horizon autonomy"]
+        - id: broad_initial_consent
+          mediation: Let the user approve a broad objective once.
+          why_it_fails: The objective rarely specifies all downstream side effects, policy constraints, and newly observed risk.
+          preserved: ["autonomy"]
+          lost_or_collapsed: ["specific accountability"]
+      source_expansion: {decision: recommended, reasons: ["current agent capabilities and incident evidence change rapidly"]}
+    tension_formalization_packet:
+      exact_crisis_statement: >
+        Agentic systems must choose and execute actions autonomously to complete delegated tasks, but the same
+        side-effecting action space requires authorization, provenance, and accountability that cannot be inferred
+        from the user's high-level goal alone.
+      crisis_types: [agency_crisis, governance_crisis, interface_crisis]
+      minimal_incompatible_commitments:
+        - id: c1
+          commitment: The system must autonomously select actions to complete long-horizon tasks.
+          pole: autonomy
+          formalization: "Complete(Task) -> exists action_sequence A chosen_by Agent"
+          material_anchor: coding, operations, and tool-mediated workflows
+          evidence_state: strong
+          source_refs: ["workflow traces", "agent benchmarks"]
+        - id: c2
+          commitment: Side-effecting actions must be authorized, accountable, and policy-compliant.
+          pole: accountable_control
+          formalization: "Execute(a) -> Authorized(a) and Accountable(a) and PolicyCompliant(a)"
+          material_anchor: enterprise security, compliance, privacy, and financial controls
+          evidence_state: strong
+          source_refs: ["security and governance requirements"]
+        - id: c3
+          commitment: A high-level task goal does not authorize every action sequence that could achieve it.
+          pole: shared_background
+          formalization: "GoalAuthorized(g) does_not_imply forall a in Plan(g): Authorized(a)"
+          material_anchor: ambiguous user intent and emergent tool observations
+          evidence_state: strong
+          source_refs: ["tool-use safety analyses"]
+      shared_assumptions_required_for_crisis: ["agent uses tools with material side effects", "authorization is action-specific or policy-specific"]
+      material_conditions:
+        scope: deployed tool-using and coding agents
+        regimes: ["side-effecting tools", "multi-step plans", "changing observations", "institutional policy constraints"]
+        actors_or_systems: ["end user", "agent", "tool provider", "organization", "affected third party"]
+        stakes: ["security", "privacy", "cost", "liability", "task completion"]
+      formal_core:
+        predicates: ["GoalAuthorized(g)", "Plan(g,A)", "Execute(a)", "Authorized(a)", "PolicyCompliant(a)", "Accountable(a)"]
+        constraints: ["Complete(g) requires action sequence A", "Execute(a) requires authorization and accountability", "goal authorization does not distribute over all plan actions"]
+        failed_obligations: ["authorization preservation", "side-effect safety", "trace provenance", "non-collapse of assistant and actor"]
+        incompatibility_schema: "the interface that licenses helpful delegation is coarser than the interface required for accountable action"
+      preservation_requirements: ["task completion", "user intent", "policy compliance", "auditability", "bounded autonomy"]
+      candidate_transformation_pressures:
+        - operator_family: GovernedAgencyInterface
+          target_concept_hint: delegated actor with typed authority and revocable tool scopes
+          what_it_must_preserve: ["adaptive planning", "authorization", "traceability", "rollback boundaries"]
+          new_risks: ["approval fatigue", "over-constrained agents", "false sense of control"]
+      epistemic_status:
+        confidence: high
+        live_uncertainties: ["current model capability", "organization-specific policy", "tool side-effect classes"]
+        possible_falsifiers: ["workflow restricted to read-only tools or fully reversible sandbox actions"]
+        web_expansion_needed: recommended
+
+  - id: tension_urban_housing_preservation_supply
+    field: urban_planning
+    tension_name: Tenant Protection vs Housing Supply
+    scenario_summary: >
+      Cities facing housing scarcity often need more homes, denser development, and faster permitting while also
+      needing to prevent displacement, preserve community networks, and protect tenants from speculative pressure.
+      The same intervention can increase aggregate supply while intensifying local displacement risk.
+    field_tension_elicitation_packet:
+      scope:
+        domain: institutional_system
+        subfield: urban housing policy
+        temporal_scope: contemporary affordability crisis
+        material_setting: high-cost metropolitan neighborhoods
+      poles:
+        - id: supply_expansion
+          label: Build more housing
+          strongest_version: Affordability requires abundant supply, zoning reform, and reduced barriers to adding homes where demand is high.
+          formal_commitments: ["increase housing units", "reduce scarcity rents", "permit density near jobs and transit"]
+          material_commitments: ["lower long-run prices", "accommodate population growth", "reduce exclusion"]
+          epistemic_commitments: ["market supply constraints materially affect price and access"]
+          protected_successes: ["regional affordability", "access to opportunity", "lower exclusionary zoning"]
+          unacceptable_losses: ["preserving scarcity through procedural veto"]
+        - id: anti_displacement
+          label: Protect residents and communities
+          strongest_version: Housing policy must prevent displacement, protect tenants, and preserve community ties, especially for vulnerable groups.
+          formal_commitments: ["minimize involuntary displacement", "protect tenant rights", "preserve access to neighborhood resources"]
+          material_commitments: ["housing stability", "community continuity", "racial and economic justice"]
+          epistemic_commitments: ["aggregate supply gains do not automatically protect current residents"]
+          protected_successes: ["tenant stability", "community self-determination", "anti-extraction safeguards"]
+          unacceptable_losses: ["using affordability to justify displacement"]
+      pressure_points:
+        - id: local_global_mismatch
+          kind: institutional
+          description: Regional supply benefits can be diffuse and delayed, while local displacement harms can be immediate and concentrated.
+          affected_commitments: [supply_expansion, anti_displacement]
+          evidence_needed: ["neighborhood price effects", "eviction and displacement data", "permitting and construction timelines"]
+      candidate_crisis_hypotheses:
+        - Housing policy lacks a mediation between regional abundance and resident-level non-displacement obligations.
+    tension_evidence_map:
+      decisive_claims:
+        - id: claim_supply_effect
+          claim: Housing scarcity and restrictive land-use rules contribute to high rents and exclusion.
+          claim_kind: empirical
+          supports_pole: supply_expansion
+          evidence_state: strong
+          source_refs: ["urban economics literature", "housing supply studies"]
+          uncertainty: {local_elasticity: variable}
+          possible_falsifiers: ["target market where supply is already elastic and not price-relevant"]
+        - id: claim_displacement_risk
+          claim: Redevelopment and neighborhood change can impose concentrated displacement risk on existing vulnerable residents.
+          claim_kind: empirical
+          supports_pole: anti_displacement
+          evidence_state: strong
+          source_refs: ["displacement studies", "tenant-rights data", "community impact reports"]
+          uncertainty: {causal_attribution_by_project: medium}
+          possible_falsifiers: ["binding protections and right-to-return guarantees eliminate displacement risk"]
+      failed_mediations:
+        - id: aggregate_affordability_only
+          mediation: Evaluate policy only by regional unit count or median rent.
+          why_it_fails: It ignores who bears transition costs, timing, and neighborhood-specific displacement.
+          preserved: ["supply expansion metric"]
+          lost_or_collapsed: ["resident-level protection"]
+        - id: preservation_only
+          mediation: Block redevelopment to preserve current residents.
+          why_it_fails: It can preserve exclusionary scarcity and prevent future residents from accessing the city.
+          preserved: ["short-term local continuity"]
+          lost_or_collapsed: ["regional access and abundance"]
+      source_expansion: {decision: required, reasons: ["real policy evaluation depends on local rent, eviction, zoning, and displacement data"]}
+    tension_formalization_packet:
+      exact_crisis_statement: >
+        Housing policy must increase regional access by expanding supply, but the transition mechanisms that add
+        supply can impose concentrated displacement burdens on current residents unless abundance is mediated by
+        enforceable resident-level protections.
+      crisis_types: [translation_crisis, governance_crisis, measurement_crisis]
+      minimal_incompatible_commitments:
+        - id: c1
+          commitment: Policy must increase housing access through supply expansion.
+          pole: supply_expansion
+          formalization: "ValidPolicy(P) -> IncreasesUnits(P) and ImprovesRegionalAccess(P)"
+          material_anchor: high rents, exclusion, and population growth
+          evidence_state: strong
+          source_refs: ["housing supply literature"]
+        - id: c2
+          commitment: Policy must not sacrifice current vulnerable residents as transition costs.
+          pole: anti_displacement
+          formalization: "ValidPolicy(P) -> ProtectsCurrentResidents(P)"
+          material_anchor: evictions, rent shocks, community disruption
+          evidence_state: strong
+          source_refs: ["displacement and tenant protection evidence"]
+        - id: c3
+          commitment: Regional access improvement does not imply resident-level protection.
+          pole: shared_background
+          formalization: "ImprovesRegionalAccess(P) does_not_imply ProtectsCurrentResidents(P)"
+          material_anchor: delayed diffuse benefits versus immediate local harms
+          evidence_state: strong
+          source_refs: ["policy evaluation literature"]
+      shared_assumptions_required_for_crisis: ["housing scarcity is real", "current residents have non-substitutable local interests", "policy transition costs matter"]
+      material_conditions:
+        scope: high-demand cities with vulnerable tenant populations
+        regimes: ["scarce housing", "redevelopment pressure", "weak tenant protections", "long construction timelines"]
+        actors_or_systems: ["tenant", "future resident", "developer", "city planner", "landlord", "community organization"]
+        stakes: ["rent burden", "displacement", "access to jobs", "segregation", "community continuity"]
+      formal_core:
+        predicates: ["IncreasesUnits(P)", "ImprovesRegionalAccess(P)", "ProtectsCurrentResidents(P)", "ValidPolicy(P)"]
+        constraints: ["ValidPolicy(P) requires supply expansion", "ValidPolicy(P) requires resident protection", "regional access does not entail resident protection"]
+        failed_obligations: ["adequacy of affordability metric", "non-displacement preservation", "transition justice"]
+        incompatibility_schema: "aggregate improvement and protected transition are distinct obligations with no automatic implication relation"
+      preservation_requirements: ["new housing capacity", "tenant stability", "anti-exclusion goals", "local accountability"]
+      candidate_transformation_pressures:
+        - operator_family: MediatedAbundancePolicy
+          target_concept_hint: supply expansion with enforceable anti-displacement obligations
+          what_it_must_preserve: ["unit growth", "resident protection", "access to opportunity"]
+          new_risks: ["administrative complexity", "capture by incumbents", "underproduction"]
+      epistemic_status:
+        confidence: medium
+        live_uncertainties: ["local displacement mechanisms", "policy enforcement quality", "market response"]
+        possible_falsifiers: ["local policy design demonstrably increases supply with no resident displacement under comparable conditions"]
+        web_expansion_needed: required

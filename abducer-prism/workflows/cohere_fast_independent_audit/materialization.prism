@@ -1,0 +1,56 @@
+# SPDX-FileCopyrightText: © 2026 Idiap Research Institute <contact@idiap.ch>
+#
+# SPDX-FileContributor: Andre Freitas <andre.freitas@idiap.ch>
+# Neuro-symbolic AI Group
+#
+# SPDX-FileContributor: Danilo Gusicuma <danilo.gusicuma@idiap.ch>
+# Neuro-symbolic AI Group
+#
+# SPDX-License-Identifier: MIT
+# Materialization layer for cohere_fast_independent_audit.
+# Compiled modules snapshot current linked skill bytes without writing source trees;
+# the manifest records paths/hashes. Fake execution proves typed integration only.
+from workflows.cohere_fast_independent_audit.types import (
+    ConditionalDerivationPacket,
+    IndependentAuditDisposition,
+    IndependentRefutationAssessment,
+)
+from workflows.cohere_fast_independent_audit.occurrences import (
+    IndependentAuditDispositionInput,
+)
+from workflows.cohere_fast_independent_audit.reasoning import CohereFastIndependentAudit
+from workflows.cohere_fast_independent_audit.relations import (
+    IndependentAuditCalibrationBasis,
+)
+from workflows.cohere_fast_independent_audit.generated.refutation_assessment_reasoning_skill_1 import counterexample_hunter_skill as refutation_assessment_reasoning_skill_1
+from workflows.cohere_fast_independent_audit.generated.audit_disposition_reasoning_skill_1 import epistemic_status_ledger_skill as audit_disposition_reasoning_skill_1
+
+def audit_disposition_reasoning_relation_builder[SourceValue, TargetValue](
+    source: SourceValue,
+    target: Generated[TargetValue],
+) -> IndependentAuditCalibrationBasis[SourceValue, TargetValue]:
+    return IndependentAuditCalibrationBasis(source = source, target = target)
+
+# RefutationalIndependentDerivationAudit performs the reviewed refute boundary.
+# Granularity: The source exposes IndependentRefutationalAudit as a separately consumed typed result in the cohere_fast_independent_audit occurrence graph.
+# Linked source skill: skills/evaluation/counterexample-hunter/SKILL.md (sha256:413eb19c3dcdc59f53bac734b6a9864e1252095063f1cbb3674dcab3445c748d).
+agent refutation_assessment_reasoning_agent(
+    task: ConditionalDerivationPacket,
+) -> Result[Generated[IndependentRefutationAssessment], ModelFailure]
+    ! {AI.Generate, Context.Disclose}:
+    skills: Skills[ConditionalDerivationPacket] = [refutation_assessment_reasoning_skill_1]
+
+# EvidentialIndependentAuditDispositionAssessment performs the reviewed calibrate boundary.
+# Granularity: The source exposes IndependentAuditCalibration as a separately consumed typed result in the cohere_fast_independent_audit occurrence graph.
+# Linked source skill: skills/evaluation/epistemic-status-ledger/SKILL.md (sha256:980ad92b1f190316a941b8124eaffc6c414680666d2960ebcc8bd21444b4d454).
+agent audit_disposition_reasoning_agent(
+    task: IndependentAuditDispositionInput,
+) -> Result[Generated[IndependentAuditDisposition], ModelFailure]
+    ! {AI.Generate, Context.Disclose}:
+    skills: Skills[IndependentAuditDispositionInput] = [audit_disposition_reasoning_skill_1]
+
+converted_reasoning = CohereFastIndependentAudit(
+    refutation_assessment = refutation_assessment_reasoning_agent,
+    audit_disposition = audit_disposition_reasoning_agent,
+    audit_disposition_by = audit_disposition_reasoning_relation_builder,
+)

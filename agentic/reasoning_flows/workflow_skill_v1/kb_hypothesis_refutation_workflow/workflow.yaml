@@ -1,0 +1,343 @@
+# SPDX-FileCopyrightText: © 2026 Idiap Research Institute <contact@idiap.ch>
+#
+# SPDX-FileContributor: Danilo Gusicuma <danilo.gusicuma@idiap.ch>
+# Neuro-symbolic AI Group
+#
+# SPDX-License-Identifier: MIT
+# REUSE-IgnoreStart
+schema_version: workflow-skill/v1
+namespace: abducer
+id: kb_hypothesis_refutation_workflow
+version: 1.0.0
+kind: workflow
+description: Draft interface projection of kb-hypothesis-refutation-loop; native execution and authority
+  remain unchanged.
+aliases:
+- kb-hypothesis-refutation-loop
+lifecycle: draft
+activation:
+  mode: explicit
+  prerequisites: []
+types:
+  NativeRequest:
+    schema:
+      type: object
+      description: Skill-defined request; consult preserved source text for inputs and conditions.
+    representation: value
+  NativeResult:
+    schema:
+      type: object
+      description: Skill-defined durable artifact bundle; no invented runtime output shape.
+    representation: value
+inputs:
+  request:
+    type: NativeRequest
+outputs:
+  result:
+    type: NativeResult
+    value:
+      ref: steps.native.outputs.result
+operations:
+  native_workflow:
+    inputs:
+      request:
+        type: NativeRequest
+    outputs:
+      result:
+        type: NativeResult
+    execution:
+      mode: specification_only
+      reason: No workflow-skill/v1 host adapter is supplied. Native skill/hook/CLI interfaces exist, but
+        payload materialization, guard evidence, execution effects and receipt translation are not qualified
+        for this format.
+flow:
+  kind: sequence
+  steps:
+  - id: native
+    kind: call
+    operation: native_workflow
+    description: Opaque native workflow boundary; internal ordering, guards and handoffs are retained
+      in abducer.native_contract.
+    arguments:
+      request:
+        ref: inputs.request
+    on_failure: blocked
+policy:
+  effects:
+    filesystem:
+      read:
+      - native_sources
+      - inputs
+      write: []
+    network: []
+    external_write: []
+  authority:
+    allowed:
+    - describe_native_interface
+    forbidden:
+    - execute_scientific_workflow
+    - approve
+    - prove
+    - publish
+    - promote
+  limits:
+    wall_time_seconds: 1800
+    max_operation_calls: 1
+  failure:
+    default: blocked
+    retry:
+      max_attempts: 1
+      retryable_codes: []
+  resume:
+    mode: none
+    require_matching_definition_and_inputs: true
+  claim_ceiling: Interface description only; no proof, scientific validity, runtime qualification, promotion
+    or approval.
+observability:
+  receipts: required
+  artifact_digests: sha256
+  provenance: required
+  events:
+  - workflow_started
+  - step_failed
+  - workflow_completed
+provenance:
+  coverage: interface_only
+  sources:
+  - path: skills/evaluation/kb-hypothesis-refutation-loop/SKILL.md
+    digest: sha256:8fe5724ced53b563a455df52896742549372a7f3c49e21adad416920126d92a4
+  - path: skills/evaluation/kb-hypothesis-refutation-loop/references/loop-policy.md
+    digest: sha256:9521bd475c23d382691ffffeac010d6ad62022547a0aac4027819fab4d7ae8bf
+  - path: skills/evaluation/kb-hypothesis-refutation-loop/references/prompt-template.md
+    digest: sha256:b80e3607070d512f7cf8550b363e7b65517535a3540d05c4fa29ab7f309bec9b
+  - path: skills/evaluation/kb-hypothesis-refutation-loop/references/script-usage.md
+    digest: sha256:0f10dba7374729caec6e60ba4a107a3a06f434a4aa32c3429e0f8e6c7697af2d
+  - path: skills/evaluation/kb-hypothesis-refutation-loop/scripts/iterate_hypotheses.py
+    digest: sha256:8db6dbd18bffe9bdf400925eb25b12a9c89925dfa66d63b3c3d81b3b72147afb
+  - path: agentic/registries/skill_registry.yaml
+    digest: sha256:15076ed8d1bd4c10895060ab485353fe520421c44e1fc6f506508d2d566eacf0
+  - path: pyproject.toml
+    digest: sha256:69325c4805f66033ce7f7e0e68f4a0996913728c6041bb3cee656571693b2f1e
+  - path: uv.lock
+    digest: sha256:a6c77e5d86a93915eeb0f129f80bc8c45d572be387872e3ace7460a3d6ada9ae
+  - path: prism_me/shared/references/codex-control-stack.md
+    digest: sha256:4e8e7a5cdbc0572cf9b0d4ffc4a41c8f4f9c9a304fae3bcee99d8af3553be30e
+  gaps:
+  - No workflow-skill/v1 host adapter is supplied. Native skill/hook/CLI interfaces exist, but payload
+    materialization, guard evidence, execution effects and receipt translation are not qualified for this
+    format.
+  - Native control flow remains opaque; coverage is interface_only, not source-equivalence certification.
+  - One or more native payloads have no exact JSON Schema; object-only types remain explicitly underspecified.
+extensions:
+  abducer.owner:
+    path: skills/evaluation/kb-hypothesis-refutation-loop/SKILL.md
+  abducer.native_identity:
+    id: kb-hypothesis-refutation-loop
+  abducer.native_contract:
+    source_skill: skills/evaluation/kb-hypothesis-refutation-loop/SKILL.md
+    source_text: '---
+
+      name: kb-hypothesis-refutation-loop
+
+      description: Run iterative hypothesis-validation rounds after `phyp` generation to drive hypotheses
+      toward supported/refuted outcomes. Use when the user asks for multi-round testing, convergence over
+      hypotheses, pruning low-yield hypotheses, or systematic refutation loops over `phyp/*.proof-hypotheses.yaml`.
+
+      ---
+
+
+
+      # KB Hypothesis Refutation Loop
+
+
+
+      ## Conceptual Role
+
+
+      This skill iterates over current proof hypotheses to support, weaken, refine, or refute them across
+      multiple rounds.
+
+
+      ## Framework Contribution
+
+
+      It contributes persistence and theory revision pressure by preventing the system from leaving generated
+      hypotheses unevaluated after a single pass.
+
+
+      ## How To Read Outputs
+
+
+      Read its outputs as the evolving status history of the current hypothesis set and as a signal of
+      where the framework is still underdetermined.
+
+
+      ## Overview
+
+
+      Run a round-based post-`phyp` loop that repeatedly evaluates unresolved hypotheses until convergence
+      or round budget exhaustion.
+
+
+      Read [references/loop-policy.md](references/loop-policy.md) for loop semantics.
+
+      Read [references/script-usage.md](references/script-usage.md) for execution.
+
+      Read [references/prompt-template.md](references/prompt-template.md) for orchestration prompts.
+
+
+      ## Workflow
+
+
+      1. Initialize loop state.
+
+      Load KB statements, hypothesis payload, and optional connector analysis scores.
+
+
+      2. Evaluate unresolved hypotheses per round.
+
+      Run support/refutation scoring only on unresolved items.
+
+
+      3. Update statuses.
+
+      Write status transitions to hypothesis records with per-round evaluation history.
+
+
+      4. Tighten or relax decision policy.
+
+      Adjust thresholds by round; optionally emit provisional final-round outcomes.
+
+      By default, rounds after the first require new evidence files.
+
+
+      5. Emit loop artifacts.
+
+      Persist JSON + Markdown round reports and reviewed hypothesis YAML.
+
+
+      ## Guardrails
+
+
+      - Keep each verdict auditable with explicit scores and reasons.
+
+      - Never drop hypotheses silently; unresolved hypotheses remain visible.
+
+      - Preserve hypothesis IDs and provenance.
+
+      - Treat supported outcomes as loop-level evidence, not formal theorem proofs.
+
+
+      ## Output Contract
+
+
+      Return:
+
+
+      1. `Round Summaries`
+
+      2. `Final Status Counts`
+
+      3. `Promotion Candidates`
+
+      4. `Refutation Candidates`
+
+      5. `Updated Hypothesis File`
+
+
+      Use `scripts/iterate_hypotheses.py` for deterministic outputs.
+
+
+      <!-- ABducer skill-depth contract v1 -->
+
+
+      ## Guardrails
+
+
+      - A score or label is never enough; evaluation must expose what would falsify, demote, or repair
+      the route.
+
+      - Cite KB IDs, dependency node IDs, target packet IDs, artifact paths, validator output, or explicit
+      unknowns for every substantive claim.
+
+      - Keep workflow validity, artifact existence, and mathematical progress as separate statuses.
+
+
+      ## Mathematical Invariants
+
+
+      - Mathematical object: definitions, bridge objects, candidate hypotheses, entailment gaps, premises,
+      regimes, counterexamples, and proof obligations.
+
+      - Preserved invariants: objects compared, assumptions used, preserved invariants, broken invariants,
+      boundary regimes, and witness evidence.
+
+      - Name broken invariants, edge cases, counterexample classes, or boundary regimes whenever a route
+      changes representation or scope.
+
+
+      ## Epistemic Discipline
+
+
+      - Label claims as conjectural, evidence-backed, proof-obligation, blocked, refuted, promoted, quarantined,
+      or watch/archive.
+
+      - Record uncertainty, source limits, disconfirming observations, and demotion triggers before recommending
+      continuation.
+
+      - Treat explicit unknowns as first-class outputs rather than smoothing them into prose.
+
+
+      ## Codex Exec Protocol
+
+
+      Follow `docs/reference/codex-exec-skill-protocol.md` when execution can ground the answer. Run the
+      relevant local script(s), especially `iterate_hypotheses.py`; inspect the produced artifacts before
+      interpreting them. After execution, state the mathematical consequence, epistemic status, unresolved
+      obligations, and next action.
+
+
+      ## Output Contract
+
+
+      Return: objects audited, assumptions, preserved invariants, broken invariants, edge case or counterexample
+      class, evidence paths, proof obligations, and disposition. Include executed commands and produced
+      artifacts when a deterministic run occurs; otherwise state why execution was not appropriate.
+
+
+      ## Failure/Demotion
+
+
+      Demote on object mismatch, hidden premise shift, broken invariant, unsupported entailment, untested
+      boundary regime, or absent witness evidence.
+
+
+      ## Validation Handoff
+
+
+      End by naming the validator, artifact, TODO, proof obligation, or stop condition that should control
+      the next loop. Do not leave shallow deterministic output uninterpreted when generative mathematical
+      or epistemic interpretation is needed.
+
+
+      ## Subgoal Control Decision
+
+
+      For each unresolved or refuted hypothesis, emit a `Subgoal Control Decision`. Use `persist_adapt`
+      when a failed check sharpens a premise, object, or bridge; `backtrack` when the hypothesis assumed
+      an unbuilt premise; `pivot` when repeated failures stop teaching the target; `quarantine` when evidence
+      or analogy is not proof-authorized; and `stop` when the hypothesis no longer has a target-object
+      link.
+
+      '
+  abducer.environment:
+    python: pyproject.toml
+    lock: uv.lock
+    native_controls: .codex/config.toml
+    native_controls_optional: true
+    control_policy: prism_me/shared/references/codex-control-stack.md
+  abducer.execution_boundary:
+    status: specification_only
+    notes: Source inspection only. Effects above deny native execution until a separately reviewed adapter
+      exists.
+# REUSE-IgnoreEnd

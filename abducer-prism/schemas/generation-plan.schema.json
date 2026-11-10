@@ -1,0 +1,260 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://prism.local/to-prism/generation-plan.schema.json",
+  "additionalProperties": false,
+  "properties": {
+    "artifact": {"const": "generation-plan"},
+    "hooks": {"items": {"type": "object"}, "type": "array"},
+    "python_adapters": {"items": {"type": "object"}, "type": "array"},
+    "schema_version": {"const": "1.0"},
+    "tool": {"type": "object"},
+    "type_definitions": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "description": {"minLength": 20, "type": "string"},
+          "fields": {
+            "items": {
+              "additionalProperties": false,
+              "properties": {
+                "description": {"minLength": 20, "type": "string"},
+                "name": {"pattern": "^[A-Za-z_][A-Za-z0-9_]*$", "type": "string"},
+                "type": {"minLength": 1, "type": "string"}
+              },
+              "required": ["description", "name", "type"],
+              "type": "object"
+            },
+            "minItems": 0,
+            "type": "array"
+          },
+          "kind": {"enum": ["record", "variant"]},
+          "name": {"pattern": "^[A-Za-z_][A-Za-z0-9_]*$", "type": "string"},
+          "variants": {
+            "items": {
+              "additionalProperties": false,
+              "properties": {
+                "description": {"minLength": 20, "type": "string"},
+                "fields": {
+                  "items": {
+                    "additionalProperties": false,
+                    "properties": {
+                      "description": {"minLength": 20, "type": "string"},
+                      "name": {"pattern": "^[A-Za-z_][A-Za-z0-9_]*$", "type": "string"},
+                      "type": {"minLength": 1, "type": "string"}
+                    },
+                    "required": ["description", "name", "type"],
+                    "type": "object"
+                  },
+                  "type": "array"
+                },
+                "name": {"pattern": "^[A-Za-z_][A-Za-z0-9_]*$", "type": "string"}
+              },
+              "required": ["description", "fields", "name"],
+              "type": "object"
+            },
+            "type": "array"
+          }
+        },
+        "oneOf": [
+          {
+            "not": {"required": ["variants"]},
+            "properties": {"kind": {"const": "record"}}
+          },
+          {
+            "properties": {"kind": {"const": "variant"}},
+            "required": ["variants"]
+          }
+        ],
+        "required": ["description", "fields", "kind", "name"],
+        "type": "object"
+      },
+      "minItems": 1,
+      "type": "array"
+    },
+    "vendored_files": {"items": {"type": "object"}, "type": "array"},
+    "workflows": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "description": {"minLength": 20, "type": "string"},
+          "epistemic_contract": {
+            "additionalProperties": false,
+            "properties": {
+              "assurance": {"const": "generated"},
+              "assurance_justification": {"minLength": 20, "type": "string"},
+              "defeater_rationale": {"minLength": 20, "type": "string"},
+              "defeaters": {"items": {"minLength": 20, "type": "string"}, "type": "array"},
+              "observations": {"items": {"minLength": 20, "type": "string"}, "minItems": 1, "type": "array"},
+              "output_meaning": {"minLength": 20, "type": "string"},
+              "question": {"minLength": 20, "type": "string"},
+              "subject": {"minLength": 20, "type": "string"},
+              "unresolved": {"items": {"minLength": 1, "type": "string"}, "type": "array"}
+            },
+            "required": ["assurance", "assurance_justification", "defeater_rationale", "defeaters", "observations", "output_meaning", "question", "subject", "unresolved"],
+            "type": "object"
+          },
+          "id": {"pattern": "^[A-Za-z_][A-Za-z0-9_-]*$", "type": "string"},
+          "input": {
+            "additionalProperties": false,
+            "properties": {
+              "fixture": {},
+              "name": {"pattern": "^[A-Za-z_][A-Za-z0-9_]*$", "type": "string"},
+              "type": {"pattern": "^[A-Za-z_][A-Za-z0-9_]*$", "type": "string"}
+            },
+            "required": ["fixture", "name", "type"],
+            "type": "object"
+          },
+          "output": {
+            "additionalProperties": false,
+            "properties": {
+              "provenance": {"enum": ["computed", "generated"]},
+              "type": {"pattern": "^[A-Za-z_][A-Za-z0-9_]*$", "type": "string"}
+            },
+            "required": ["provenance", "type"],
+            "type": "object"
+          },
+          "reasoning_projection": {
+            "additionalProperties": false,
+            "properties": {
+              "description": {"minLength": 20, "type": "string"},
+              "input_name": {"pattern": "^[A-Za-z_][A-Za-z0-9_]*$", "type": "string"},
+              "input_type": {"pattern": "^[A-Z][A-Za-z0-9_]*$", "type": "string"},
+              "name": {"pattern": "^[A-Z][A-Za-z0-9_]*$", "type": "string"},
+              "occurrences": {
+                "items": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "arguments": {
+                      "items": {
+                        "additionalProperties": false,
+                        "properties": {
+                          "field": {"pattern": "^[A-Za-z_][A-Za-z0-9_]*$", "type": "string"},
+                          "source": {"pattern": "^[A-Za-z_][A-Za-z0-9_]*$", "type": "string"}
+                        },
+                        "required": ["source"],
+                        "type": "object"
+                      },
+                      "minItems": 1,
+                      "type": "array"
+                    },
+                    "id": {"pattern": "^[a-z][a-z0-9_]*$", "type": "string"},
+                    "input_type": {"pattern": "^[A-Z][A-Za-z0-9_]*$", "type": "string"},
+                    "material_steps": {
+                      "items": {"pattern": "^[A-Za-z_][A-Za-z0-9_]*$", "type": "string"},
+                      "minItems": 1,
+                      "type": "array",
+                      "uniqueItems": true
+                    },
+                    "method": {"maxLength": 48, "pattern": "^[A-Z][A-Za-z0-9_]*$", "type": "string"},
+                    "output_type": {"pattern": "^[A-Z][A-Za-z0-9_]*$", "type": "string"},
+                    "rationale": {"minLength": 20, "type": "string"},
+                    "relation": {"maxLength": 48, "pattern": "^[A-Z][A-Za-z0-9_]*$", "type": "string"}
+                  },
+                  "required": ["arguments", "id", "input_type", "material_steps", "method", "output_type", "rationale"],
+                  "type": "object"
+                },
+                "minItems": 1,
+                "type": "array"
+              },
+              "output_occurrence": {"pattern": "^[a-z][a-z0-9_]*$", "type": "string"},
+              "output_type": {"pattern": "^[A-Z][A-Za-z0-9_]*$", "type": "string"},
+              "topology": {
+                "items": {
+                  "oneOf": [
+                    {"pattern": "^[a-z][a-z0-9_]*$", "type": "string"},
+                    {
+                      "additionalProperties": false,
+                      "properties": {
+                        "parallel": {
+                          "items": {"pattern": "^[a-z][a-z0-9_]*$", "type": "string"},
+                          "minItems": 2,
+                          "type": "array",
+                          "uniqueItems": true
+                        }
+                      },
+                      "required": ["parallel"],
+                      "type": "object"
+                    }
+                  ]
+                },
+                "minItems": 1,
+                "type": "array"
+              }
+            },
+            "required": ["description", "input_name", "input_type", "name", "occurrences", "output_occurrence", "output_type", "topology"],
+            "type": "object"
+          },
+          "review_status": {"const": "approved"},
+          "semantic_mode": {"enum": ["operational", "epistemic", "mixed"]},
+          "steps": {
+            "items": {
+              "additionalProperties": false,
+              "properties": {
+                "description": {"minLength": 20, "type": "string"},
+                "adapter_operation": {"pattern": "^[a-z][a-z0-9_.-]*$", "type": "string"},
+                "effects": {
+                  "items": {"enum": ["AI.Generate", "Context.Disclose", "Python.Call"]},
+                  "maxItems": 3,
+                  "minItems": 1,
+                  "uniqueItems": true,
+                  "type": "array"
+                },
+                "failure_type": {"enum": ["ModelFailure", "PythonError"]},
+                "granularity_rationale": {"minLength": 20, "type": "string"},
+                "id": {"pattern": "^[A-Za-z_][A-Za-z0-9_]*$", "type": "string"},
+                "input_type": {"pattern": "^[A-Za-z_][A-Za-z0-9_]*$", "type": "string"},
+                "material_kind": {"enum": ["agent", "computed"]},
+                "output_provenance": {"enum": ["computed", "generated"]},
+                "output_type": {"pattern": "^[A-Za-z_][A-Za-z0-9_]*$", "type": "string"},
+                "procedure": {"minLength": 3, "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]*$", "type": "string"},
+                "reasoning_rationale": {"minLength": 20, "type": "string"},
+                "reasoning_type": {"pattern": "^[A-Za-z_][A-Za-z0-9_]*$", "type": "string"},
+                "relation_type": {"pattern": "^[A-Za-z_][A-Za-z0-9_]*$", "type": "string"},
+                "semantic_role": {"enum": ["operational", "epistemic"]},
+                "skills": {
+                  "items": {
+                    "additionalProperties": false,
+                    "properties": {
+                      "contribution": {"minLength": 20, "type": "string"},
+                      "path": {"minLength": 1, "type": "string"},
+                      "resource_dispositions": {"type": "object"},
+                      "role": {"minLength": 20, "type": "string"}
+                    },
+                    "required": ["contribution", "path", "resource_dispositions", "role"],
+                    "type": "object"
+                  },
+                  "minItems": 1,
+                  "type": "array"
+                }
+              },
+              "required": ["description", "effects", "failure_type", "granularity_rationale", "id", "input_type", "output_provenance", "output_type", "semantic_role", "skills"],
+              "allOf": [
+                {
+                  "if": {"properties": {"material_kind": {"const": "computed"}}, "required": ["material_kind"]},
+                  "then": {
+                    "properties": {
+                      "effects": {"const": ["Python.Call"]},
+                      "failure_type": {"const": "PythonError"},
+                      "output_provenance": {"const": "computed"},
+                      "semantic_role": {"const": "operational"}
+                    },
+                    "required": ["adapter_operation", "procedure"]
+                  }
+                }
+              ],
+              "type": "object"
+            },
+            "minItems": 1,
+            "type": "array"
+          }
+        },
+        "required": ["description", "epistemic_contract", "id", "input", "output", "review_status", "semantic_mode", "steps"],
+        "type": "object"
+      },
+      "minItems": 1,
+      "type": "array"
+    }
+  },
+  "required": ["artifact", "schema_version", "type_definitions", "workflows"],
+  "type": "object"
+}

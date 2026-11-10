@@ -1,0 +1,150 @@
+# SPDX-FileCopyrightText: © 2026 Idiap Research Institute <contact@idiap.ch>
+#
+# SPDX-FileContributor: Danilo Gusicuma <danilo.gusicuma@idiap.ch>
+# Neuro-symbolic AI Group
+#
+# SPDX-License-Identifier: MIT
+# REUSE-IgnoreStart
+schema_version: workflow-skill/v1
+namespace: abducer
+id: cohere_fast_scope_and_ground_workflow
+version: 1.0.0
+kind: workflow
+description: Draft interface projection of cohere_fast/scope-and-ground; native execution and authority
+  remain unchanged.
+aliases:
+- cohere_fast/scope-and-ground
+lifecycle: draft
+activation:
+  mode: explicit
+  prerequisites: []
+types:
+  DomainRunRequest:
+    schema: ../../../../agentic/spec/cohere_fast_artifacts.schema.json#/$defs/DomainRunRequest
+    representation: value
+  ScopeGroundPacket:
+    schema:
+      type: object
+      description: Native stage type ScopeGroundPacket is declared in the registry but has no exact schema.
+    representation: value
+inputs:
+  request:
+    type: DomainRunRequest
+outputs:
+  result:
+    type: ScopeGroundPacket
+    value:
+      ref: steps.native.outputs.result
+operations:
+  native_workflow:
+    inputs:
+      request:
+        type: DomainRunRequest
+    outputs:
+      result:
+        type: ScopeGroundPacket
+    execution:
+      mode: specification_only
+      reason: No workflow-skill/v1 host adapter is supplied. Native skill/hook/CLI interfaces exist, but
+        payload materialization, guard evidence, execution effects and receipt translation are not qualified
+        for this format.
+flow:
+  kind: sequence
+  steps:
+  - id: native
+    kind: call
+    operation: native_workflow
+    description: Opaque native workflow boundary; internal ordering, guards and handoffs are retained
+      in abducer.native_contract.
+    arguments:
+      request:
+        ref: inputs.request
+    on_failure: blocked
+policy:
+  effects:
+    filesystem:
+      read:
+      - native_sources
+      - inputs
+      write: []
+    network: []
+    external_write: []
+  authority:
+    allowed:
+    - describe_native_interface
+    forbidden:
+    - execute_scientific_workflow
+    - approve
+    - prove
+    - publish
+    - promote
+  limits:
+    wall_time_seconds: 1800
+    max_operation_calls: 1
+  failure:
+    default: blocked
+    retry:
+      max_attempts: 1
+      retryable_codes: []
+  resume:
+    mode: none
+    require_matching_definition_and_inputs: true
+  claim_ceiling: Interface description only; no proof, scientific validity, runtime qualification, promotion
+    or approval.
+observability:
+  receipts: required
+  artifact_digests: sha256
+  provenance: required
+  events:
+  - workflow_started
+  - step_failed
+  - workflow_completed
+provenance:
+  coverage: interface_only
+  sources:
+  - path: agentic/registries/cohere_fast_subworkflows.yaml
+    digest: sha256:53931de5b0b89ceee22a112347d39bd453aa0fd2ba758558ffda5b55e57190e3
+  - path: skills/cohere_fast/cohere-fast-orchestrator/SKILL.md
+    digest: sha256:d238bdfea6c7e0638395f2737ce3c5950c9c305f8c4bd46145cf5c5526ebc51b
+  - path: agentic/orchestration/cohere_fast_runner.py
+    digest: sha256:1034aae90b56a538f691115099549ebcbb199df75107ddd69d694b838b08377a
+  - path: agentic/spec/cohere_fast_isolation_contract.yaml
+    digest: sha256:68314d67d4b75f82925091b16e300fd50ab621e482a5233f6767d9bc2eef21bd
+  - path: agentic/registries/skill_registry.yaml
+    digest: sha256:15076ed8d1bd4c10895060ab485353fe520421c44e1fc6f506508d2d566eacf0
+  - path: pyproject.toml
+    digest: sha256:69325c4805f66033ce7f7e0e68f4a0996913728c6041bb3cee656571693b2f1e
+  - path: uv.lock
+    digest: sha256:a6c77e5d86a93915eeb0f129f80bc8c45d572be387872e3ace7460a3d6ada9ae
+  - path: prism_me/shared/references/codex-control-stack.md
+    digest: sha256:4e8e7a5cdbc0572cf9b0d4ffc4a41c8f4f9c9a304fae3bcee99d8af3553be30e
+  gaps:
+  - No workflow-skill/v1 host adapter is supplied. Native skill/hook/CLI interfaces exist, but payload
+    materialization, guard evidence, execution effects and receipt translation are not qualified for this
+    format.
+  - Native control flow remains opaque; coverage is interface_only, not source-equivalence certification.
+  - One or more native payloads have no exact JSON Schema; object-only types remain explicitly underspecified.
+extensions:
+  abducer.owner:
+    path: skills/cohere_fast/cohere-fast-orchestrator/SKILL.md
+  abducer.native_identity:
+    id: cohere_fast/scope-and-ground
+  abducer.native_contract:
+    id: scope-and-ground
+    order: 1
+    input_type: DomainRunRequest
+    return_type: ScopeGroundPacket
+    budget:
+      max_attempts: 1
+    on_failure: stop
+  abducer.environment:
+    python: pyproject.toml
+    lock: uv.lock
+    native_controls: .codex/config.toml
+    native_controls_optional: true
+    control_policy: prism_me/shared/references/codex-control-stack.md
+  abducer.execution_boundary:
+    status: specification_only
+    notes: Source inspection only. Effects above deny native execution until a separately reviewed adapter
+      exists.
+# REUSE-IgnoreEnd

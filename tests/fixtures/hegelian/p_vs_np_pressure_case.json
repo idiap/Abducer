@@ -1,0 +1,115 @@
+{
+  "fixture_kind": "synthetic regression input; no scientific or release authority",
+  "target": {
+    "target_id": "p-vs-np-target",
+    "raw_goal": "Systematically navigate the P vs NP proof-discovery space, recursively expose dependencies for the strongest current route, and control skill application through Looper-style workflow hooks.",
+    "kb_path": "KB/p-vs-np.kb.md",
+    "main_claim_ids": [
+      "st.thm.oliveira-pich-santhanam-magnification-near-state",
+      "st.thm.oliveira-santhanam-hardness-magnification-for-na"
+    ],
+    "desired_output_type": "controlled_iteration",
+    "quality_criteria": [
+      {
+        "criterion_id": "target-specificity",
+        "question": "Does the run name concrete KB statement targets rather than a generic problem title?",
+        "measurement": "All main_claim_ids resolve in the KB.",
+        "pass_condition": "Every listed claim ID is present in the parsed KB."
+      },
+      {
+        "criterion_id": "recursive-dependency-closure",
+        "question": "Are route, proof, premise, and evidence obligations recursively surfaced?",
+        "measurement": "Dependency graph contains statement, hypothesis, route, proof-obligation, queue, and artifact-derived nodes when source artifacts exist.",
+        "pass_condition": "The dependency graph validates and has no dangling frontier node without next_action or blocker."
+      },
+      {
+        "criterion_id": "hook-controlled-skill-use",
+        "question": "Can skills be applied only through declared visible workflows and hook policies?",
+        "measurement": "Workflow registry and hook contract tests pass.",
+        "pass_condition": "The target workflow names composed skills, deterministic hooks, artifacts, and validators."
+      }
+    ],
+    "acceptance_gates": [
+      {
+        "gate_id": "target-packet-valid",
+        "kind": "schema",
+        "required_evidence": [
+          "command:python agentic/scripts/validate_target_packets.py agentic/examples/targets/p-vs-np-target.json"
+        ],
+        "blocks_release": true
+      },
+      {
+        "gate_id": "dependency-graph-valid",
+        "kind": "dependency_closure",
+        "required_evidence": [
+          "command:python agentic/scripts/validate_dependency_graph.py agentic/state/dependency_graphs/p-vs-np.json"
+        ],
+        "blocks_release": true
+      },
+      {
+        "gate_id": "workflow-registry-valid",
+        "kind": "workflow_contract",
+        "required_evidence": [
+          "command:python agentic/scripts/validate_task_skill_registry.py"
+        ],
+        "blocks_release": true
+      }
+    ],
+    "known_constraints": [
+      "Keep Abducer mathematical skills in skills/ as the domain engine.",
+      "Use Looper only as a visible control plane over target navigation, dependency closure, gates, hooks, and release evidence.",
+      "Hooks must be deterministic and transparent; they must not hide proof-search behavior."
+    ],
+    "unknowns": [
+      "Which specific bridge obligation should become the next theorem-shaped proof attempt after the first controlled slice?",
+      "Which prior-art sources are needed to discharge unresolved hardness-magnification dependencies?"
+    ],
+    "validation_targets": [
+      {
+        "target": "target packet",
+        "verification_method": "schema and KB statement resolution",
+        "evidence_artifact": "agentic/examples/targets/p-vs-np-target.json"
+      },
+      {
+        "target": "recursive dependency graph",
+        "verification_method": "graph validator plus generated closure report",
+        "evidence_artifact": "agentic/state/dependency_graphs/p-vs-np.json"
+      },
+      {
+        "target": "visible workflow registry",
+        "verification_method": "task registry validator",
+        "evidence_artifact": "registry/tasks/p-vs-np-target-navigation/task_registry.json"
+      }
+    ],
+    "evidence_paths": [
+      "KB/p-vs-np.kb.md",
+      "artifacts/p-vs-np/connection-analysis.json",
+      "artifacts/p-vs-np/entrypoint-pathways.json",
+      "artifacts/p-vs-np/proof-sketches.json",
+      "artifacts/p-vs-np/proof-queue.json",
+      "phyp/p-vs-np.proof-hypotheses.yaml"
+    ]
+  },
+  "pressures": [
+    {
+      "pressure_id": "synthetic.pvsnp.bridge",
+      "pressure_type": "discovery_signal",
+      "witness": "Synthetic regression: two routes require a typed bridge."
+    },
+    {
+      "pressure_id": "synthetic.pvsnp.blocker",
+      "pressure_type": "failure",
+      "witness": "Synthetic regression: a stronger premise lacks preservation evidence."
+    }
+  ],
+  "candidates": [
+    {
+      "candidate_id": "synthetic.pvsnp.bridge",
+      "creative_operation": "bridge_invention"
+    },
+    {
+      "candidate_id": "synthetic.pvsnp.weakening",
+      "creative_operation": "theorem_weakening"
+    }
+  ]
+}

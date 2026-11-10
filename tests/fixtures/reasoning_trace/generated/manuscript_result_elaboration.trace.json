@@ -1,0 +1,2136 @@
+{
+  "declared_route": [
+    {
+      "condition": null,
+      "consumes": [
+        "PaperDraft"
+      ],
+      "control_event_ids": [
+        "manuscript_result_elaboration.base.orchestrate_elaboration.control"
+      ],
+      "inference_event_ids": [
+        "manuscript_result_elaboration.base.orchestrate_elaboration.inference"
+      ],
+      "mode": "required",
+      "observability_gap": "",
+      "order": 10,
+      "produces": [
+        "ElaborationPlan"
+      ],
+      "semantic_complete_event_ids": [
+        "manuscript_result_elaboration.base.orchestrate_elaboration.inference"
+      ],
+      "skill": "results-elaboration-workflow-orchestrator",
+      "status": "observed",
+      "step_id": "orchestrate_elaboration",
+      "trace_requirement": {
+        "authority_boundary": "May elaborate and integrate supported manuscript claims; may not perform implicit discovery, erase disqualifiers, or promote finite evidence to continuum scope.",
+        "consumes": [
+          "PaperDraft"
+        ],
+        "disposition": "semantic_event_required",
+        "event_family": "planning",
+        "evidence_roles": [
+          "supports",
+          "constrains",
+          "refutes"
+        ],
+        "inference_operator": "artifact_grounded_transformation",
+        "mode": "required",
+        "produces": [
+          "ElaborationPlan"
+        ],
+        "required_contrast": "Show rejected revisions and unresolved markers, with finite, asymptotic, and continuum claims kept explicitly distinct.",
+        "required_fields": [
+          "public_inference.question",
+          "public_inference.premises",
+          "public_inference.warrant",
+          "public_inference.conclusion",
+          "public_inference.scope",
+          "evidence",
+          "authority"
+        ],
+        "skill": "results-elaboration-workflow-orchestrator",
+        "step_id": "orchestrate_elaboration",
+        "when": null
+      }
+    },
+    {
+      "condition": null,
+      "consumes": [
+        "ElaborationPlan"
+      ],
+      "control_event_ids": [
+        "manuscript_result_elaboration.base.interpret_context.control"
+      ],
+      "inference_event_ids": [
+        "manuscript_result_elaboration.base.interpret_context.inference"
+      ],
+      "mode": "required",
+      "observability_gap": "",
+      "order": 20,
+      "produces": [
+        "ResultsContext"
+      ],
+      "semantic_complete_event_ids": [
+        "manuscript_result_elaboration.base.interpret_context.inference"
+      ],
+      "skill": "results-context-interpreter",
+      "status": "observed",
+      "step_id": "interpret_context",
+      "trace_requirement": {
+        "authority_boundary": "May elaborate and integrate supported manuscript claims; may not perform implicit discovery, erase disqualifiers, or promote finite evidence to continuum scope.",
+        "consumes": [
+          "ElaborationPlan"
+        ],
+        "disposition": "semantic_event_required",
+        "event_family": "transformation",
+        "evidence_roles": [
+          "supports",
+          "constrains",
+          "refutes"
+        ],
+        "inference_operator": "artifact_grounded_transformation",
+        "mode": "required",
+        "produces": [
+          "ResultsContext"
+        ],
+        "required_contrast": "Show rejected revisions and unresolved markers, with finite, asymptotic, and continuum claims kept explicitly distinct.",
+        "required_fields": [
+          "public_inference.question",
+          "public_inference.premises",
+          "public_inference.warrant",
+          "public_inference.conclusion",
+          "public_inference.scope",
+          "evidence",
+          "authority"
+        ],
+        "skill": "results-context-interpreter",
+        "step_id": "interpret_context",
+        "when": null
+      }
+    },
+    {
+      "condition": "expansion_markers",
+      "consumes": [
+        "ResultsContext"
+      ],
+      "control_event_ids": [
+        "manuscript_result_elaboration.base.extract_extensions.control"
+      ],
+      "inference_event_ids": [
+        "manuscript_result_elaboration.base.extract_extensions.inference"
+      ],
+      "mode": "conditional",
+      "observability_gap": "",
+      "order": 30,
+      "produces": [
+        "ExtensionNeeds"
+      ],
+      "semantic_complete_event_ids": [
+        "manuscript_result_elaboration.base.extract_extensions.inference"
+      ],
+      "skill": "results-extension-need-extractor",
+      "status": "observed",
+      "step_id": "extract_extensions",
+      "trace_requirement": {
+        "authority_boundary": "May elaborate and integrate supported manuscript claims; may not perform implicit discovery, erase disqualifiers, or promote finite evidence to continuum scope.",
+        "consumes": [
+          "ResultsContext"
+        ],
+        "disposition": "conditional_event_or_justified_na",
+        "event_family": "transformation",
+        "evidence_roles": [
+          "supports",
+          "constrains",
+          "refutes"
+        ],
+        "inference_operator": "artifact_grounded_transformation",
+        "mode": "conditional",
+        "produces": [
+          "ExtensionNeeds"
+        ],
+        "required_contrast": "Show rejected revisions and unresolved markers, with finite, asymptotic, and continuum claims kept explicitly distinct.",
+        "required_fields": [
+          "public_inference.question",
+          "public_inference.premises",
+          "public_inference.warrant",
+          "public_inference.conclusion",
+          "public_inference.scope",
+          "evidence",
+          "authority"
+        ],
+        "skill": "results-extension-need-extractor",
+        "step_id": "extract_extensions",
+        "when": "expansion_markers"
+      }
+    },
+    {
+      "condition": "open_modules",
+      "consumes": [
+        "ResultsContext"
+      ],
+      "control_event_ids": [
+        "manuscript_result_elaboration.base.decompose_modules.control"
+      ],
+      "inference_event_ids": [
+        "manuscript_result_elaboration.base.decompose_modules.inference"
+      ],
+      "mode": "conditional",
+      "observability_gap": "",
+      "order": 40,
+      "produces": [
+        "OpenModulePlan"
+      ],
+      "semantic_complete_event_ids": [
+        "manuscript_result_elaboration.base.decompose_modules.inference"
+      ],
+      "skill": "results-open-module-decomposer",
+      "status": "observed",
+      "step_id": "decompose_modules",
+      "trace_requirement": {
+        "authority_boundary": "May elaborate and integrate supported manuscript claims; may not perform implicit discovery, erase disqualifiers, or promote finite evidence to continuum scope.",
+        "consumes": [
+          "ResultsContext"
+        ],
+        "disposition": "conditional_event_or_justified_na",
+        "event_family": "transformation",
+        "evidence_roles": [
+          "supports",
+          "constrains",
+          "refutes"
+        ],
+        "inference_operator": "artifact_grounded_transformation",
+        "mode": "conditional",
+        "produces": [
+          "OpenModulePlan"
+        ],
+        "required_contrast": "Show rejected revisions and unresolved markers, with finite, asymptotic, and continuum claims kept explicitly distinct.",
+        "required_fields": [
+          "public_inference.question",
+          "public_inference.premises",
+          "public_inference.warrant",
+          "public_inference.conclusion",
+          "public_inference.scope",
+          "evidence",
+          "authority"
+        ],
+        "skill": "results-open-module-decomposer",
+        "step_id": "decompose_modules",
+        "when": "open_modules"
+      }
+    },
+    {
+      "condition": null,
+      "consumes": [
+        "ExtensionNeeds",
+        "OpenModulePlan"
+      ],
+      "control_event_ids": [
+        "manuscript_result_elaboration.base.plan_strategy.control"
+      ],
+      "inference_event_ids": [
+        "manuscript_result_elaboration.base.plan_strategy.inference"
+      ],
+      "mode": "required",
+      "observability_gap": "",
+      "order": 50,
+      "produces": [
+        "ExtensionStrategy"
+      ],
+      "semantic_complete_event_ids": [
+        "manuscript_result_elaboration.base.plan_strategy.inference"
+      ],
+      "skill": "results-extension-strategy-planner",
+      "status": "observed",
+      "step_id": "plan_strategy",
+      "trace_requirement": {
+        "authority_boundary": "May elaborate and integrate supported manuscript claims; may not perform implicit discovery, erase disqualifiers, or promote finite evidence to continuum scope.",
+        "consumes": [
+          "ExtensionNeeds",
+          "OpenModulePlan"
+        ],
+        "disposition": "semantic_event_required",
+        "event_family": "planning",
+        "evidence_roles": [
+          "supports",
+          "constrains",
+          "refutes"
+        ],
+        "inference_operator": "artifact_grounded_transformation",
+        "mode": "required",
+        "produces": [
+          "ExtensionStrategy"
+        ],
+        "required_contrast": "Show rejected revisions and unresolved markers, with finite, asymptotic, and continuum claims kept explicitly distinct.",
+        "required_fields": [
+          "public_inference.question",
+          "public_inference.premises",
+          "public_inference.warrant",
+          "public_inference.conclusion",
+          "public_inference.scope",
+          "evidence",
+          "authority"
+        ],
+        "skill": "results-extension-strategy-planner",
+        "step_id": "plan_strategy",
+        "when": null
+      }
+    },
+    {
+      "condition": null,
+      "consumes": [
+        "ExtensionStrategy"
+      ],
+      "control_event_ids": [
+        "manuscript_result_elaboration.base.self_refine.control"
+      ],
+      "inference_event_ids": [
+        "manuscript_result_elaboration.base.self_refine.inference"
+      ],
+      "mode": "required",
+      "observability_gap": "",
+      "order": 60,
+      "produces": [
+        "RefinedResultCandidates"
+      ],
+      "semantic_complete_event_ids": [
+        "manuscript_result_elaboration.base.self_refine.inference"
+      ],
+      "skill": "results-critical-self-refiner",
+      "status": "observed",
+      "step_id": "self_refine",
+      "trace_requirement": {
+        "authority_boundary": "May elaborate and integrate supported manuscript claims; may not perform implicit discovery, erase disqualifiers, or promote finite evidence to continuum scope.",
+        "consumes": [
+          "ExtensionStrategy"
+        ],
+        "disposition": "semantic_event_required",
+        "event_family": "transformation",
+        "evidence_roles": [
+          "supports",
+          "constrains",
+          "refutes"
+        ],
+        "inference_operator": "artifact_grounded_transformation",
+        "mode": "required",
+        "produces": [
+          "RefinedResultCandidates"
+        ],
+        "required_contrast": "Show rejected revisions and unresolved markers, with finite, asymptotic, and continuum claims kept explicitly distinct.",
+        "required_fields": [
+          "public_inference.question",
+          "public_inference.premises",
+          "public_inference.warrant",
+          "public_inference.conclusion",
+          "public_inference.scope",
+          "evidence",
+          "authority"
+        ],
+        "skill": "results-critical-self-refiner",
+        "step_id": "self_refine",
+        "when": null
+      }
+    },
+    {
+      "condition": null,
+      "consumes": [
+        "RefinedResultCandidates"
+      ],
+      "control_event_ids": [
+        "manuscript_result_elaboration.base.certify_scope.control",
+        "manuscript_result_elaboration.base.certify_scope.inference"
+      ],
+      "inference_event_ids": [
+        "manuscript_result_elaboration.base.certify_scope.inference"
+      ],
+      "mode": "validator_only",
+      "observability_gap": "",
+      "order": 70,
+      "produces": [
+        "TheoremScopeDecision"
+      ],
+      "semantic_complete_event_ids": [
+        "manuscript_result_elaboration.base.certify_scope.inference"
+      ],
+      "skill": "results-theorem-scope-certifier",
+      "status": "observed",
+      "step_id": "certify_scope",
+      "trace_requirement": {
+        "authority_boundary": "May elaborate and integrate supported manuscript claims; may not perform implicit discovery, erase disqualifiers, or promote finite evidence to continuum scope.",
+        "consumes": [
+          "RefinedResultCandidates"
+        ],
+        "disposition": "validator_event_required",
+        "event_family": "validation",
+        "evidence_roles": [
+          "supports",
+          "constrains",
+          "refutes"
+        ],
+        "inference_operator": "bind_claim_scope",
+        "mode": "validator_only",
+        "produces": [
+          "TheoremScopeDecision"
+        ],
+        "required_contrast": "Show rejected revisions and unresolved markers, with finite, asymptotic, and continuum claims kept explicitly distinct.",
+        "required_fields": [
+          "public_inference.question",
+          "public_inference.premises",
+          "public_inference.warrant",
+          "public_inference.conclusion",
+          "public_inference.scope",
+          "evidence",
+          "authority"
+        ],
+        "skill": "results-theorem-scope-certifier",
+        "step_id": "certify_scope",
+        "when": null
+      }
+    },
+    {
+      "condition": "finite_object_required",
+      "consumes": [
+        "RefinedResultCandidates"
+      ],
+      "control_event_ids": [
+        "manuscript_result_elaboration.base.formalize_finite_object.control"
+      ],
+      "inference_event_ids": [
+        "manuscript_result_elaboration.base.formalize_finite_object.inference"
+      ],
+      "mode": "conditional",
+      "observability_gap": "",
+      "order": 80,
+      "produces": [
+        "FiniteObjectDefinition"
+      ],
+      "semantic_complete_event_ids": [
+        "manuscript_result_elaboration.base.formalize_finite_object.inference"
+      ],
+      "skill": "results-finite-object-formalizer",
+      "status": "observed",
+      "step_id": "formalize_finite_object",
+      "trace_requirement": {
+        "authority_boundary": "May elaborate and integrate supported manuscript claims; may not perform implicit discovery, erase disqualifiers, or promote finite evidence to continuum scope.",
+        "consumes": [
+          "RefinedResultCandidates"
+        ],
+        "disposition": "conditional_event_or_justified_na",
+        "event_family": "transformation",
+        "evidence_roles": [
+          "supports",
+          "constrains",
+          "refutes"
+        ],
+        "inference_operator": "derive_formal_obligations",
+        "mode": "conditional",
+        "produces": [
+          "FiniteObjectDefinition"
+        ],
+        "required_contrast": "Show rejected revisions and unresolved markers, with finite, asymptotic, and continuum claims kept explicitly distinct.",
+        "required_fields": [
+          "public_inference.question",
+          "public_inference.premises",
+          "public_inference.warrant",
+          "public_inference.conclusion",
+          "public_inference.scope",
+          "evidence",
+          "authority"
+        ],
+        "skill": "results-finite-object-formalizer",
+        "step_id": "formalize_finite_object",
+        "when": "finite_object_required"
+      }
+    },
+    {
+      "condition": "proof_class_work",
+      "consumes": [
+        "RefinedResultCandidates"
+      ],
+      "control_event_ids": [
+        "manuscript_result_elaboration.base.derive_proof_packet.control"
+      ],
+      "inference_event_ids": [
+        "manuscript_result_elaboration.base.derive_proof_packet.inference"
+      ],
+      "mode": "conditional",
+      "observability_gap": "",
+      "order": 90,
+      "produces": [
+        "ResultsProofPacket"
+      ],
+      "semantic_complete_event_ids": [
+        "manuscript_result_elaboration.base.derive_proof_packet.inference"
+      ],
+      "skill": "results-proof-packet-deriver",
+      "status": "observed",
+      "step_id": "derive_proof_packet",
+      "trace_requirement": {
+        "authority_boundary": "May elaborate and integrate supported manuscript claims; may not perform implicit discovery, erase disqualifiers, or promote finite evidence to continuum scope.",
+        "consumes": [
+          "RefinedResultCandidates"
+        ],
+        "disposition": "conditional_event_or_justified_na",
+        "event_family": "transformation",
+        "evidence_roles": [
+          "supports",
+          "constrains",
+          "refutes"
+        ],
+        "inference_operator": "validate_exact_claim_boundary",
+        "mode": "conditional",
+        "produces": [
+          "ResultsProofPacket"
+        ],
+        "required_contrast": "Show rejected revisions and unresolved markers, with finite, asymptotic, and continuum claims kept explicitly distinct.",
+        "required_fields": [
+          "public_inference.question",
+          "public_inference.premises",
+          "public_inference.warrant",
+          "public_inference.conclusion",
+          "public_inference.scope",
+          "evidence",
+          "authority"
+        ],
+        "skill": "results-proof-packet-deriver",
+        "step_id": "derive_proof_packet",
+        "when": "proof_class_work"
+      }
+    },
+    {
+      "condition": null,
+      "consumes": [
+        "RefinedResultCandidates"
+      ],
+      "control_event_ids": [
+        "manuscript_result_elaboration.base.audit_prior_art.control"
+      ],
+      "inference_event_ids": [
+        "manuscript_result_elaboration.base.audit_prior_art.inference"
+      ],
+      "mode": "validator_only",
+      "observability_gap": "",
+      "order": 100,
+      "produces": [
+        "PriorArtBoundaryAudit"
+      ],
+      "semantic_complete_event_ids": [
+        "manuscript_result_elaboration.base.audit_prior_art.inference"
+      ],
+      "skill": "results-prior-art-disqualifier-auditor",
+      "status": "observed",
+      "step_id": "audit_prior_art",
+      "trace_requirement": {
+        "authority_boundary": "May elaborate and integrate supported manuscript claims; may not perform implicit discovery, erase disqualifiers, or promote finite evidence to continuum scope.",
+        "consumes": [
+          "RefinedResultCandidates"
+        ],
+        "disposition": "validator_event_required",
+        "event_family": "validation",
+        "evidence_roles": [
+          "supports",
+          "constrains",
+          "refutes"
+        ],
+        "inference_operator": "test_prior_art_disqualifiers",
+        "mode": "validator_only",
+        "produces": [
+          "PriorArtBoundaryAudit"
+        ],
+        "required_contrast": "Show rejected revisions and unresolved markers, with finite, asymptotic, and continuum claims kept explicitly distinct.",
+        "required_fields": [
+          "public_inference.question",
+          "public_inference.premises",
+          "public_inference.warrant",
+          "public_inference.conclusion",
+          "public_inference.scope",
+          "evidence",
+          "authority"
+        ],
+        "skill": "results-prior-art-disqualifier-auditor",
+        "step_id": "audit_prior_art",
+        "when": null
+      }
+    },
+    {
+      "condition": null,
+      "consumes": [
+        "RefinedResultCandidates",
+        "PriorArtBoundaryAudit"
+      ],
+      "control_event_ids": [
+        "manuscript_result_elaboration.base.integrate_narrative.control"
+      ],
+      "inference_event_ids": [
+        "manuscript_result_elaboration.base.integrate_narrative.inference"
+      ],
+      "mode": "required",
+      "observability_gap": "",
+      "order": 110,
+      "produces": [
+        "IntegratedPaperDraft"
+      ],
+      "semantic_complete_event_ids": [
+        "manuscript_result_elaboration.base.integrate_narrative.inference"
+      ],
+      "skill": "results-narrative-integrator",
+      "status": "observed",
+      "step_id": "integrate_narrative",
+      "trace_requirement": {
+        "authority_boundary": "May elaborate and integrate supported manuscript claims; may not perform implicit discovery, erase disqualifiers, or promote finite evidence to continuum scope.",
+        "consumes": [
+          "RefinedResultCandidates",
+          "PriorArtBoundaryAudit"
+        ],
+        "disposition": "semantic_event_required",
+        "event_family": "handoff",
+        "evidence_roles": [
+          "supports",
+          "constrains",
+          "refutes"
+        ],
+        "inference_operator": "apply_traceable_artifact_delta",
+        "mode": "required",
+        "produces": [
+          "IntegratedPaperDraft"
+        ],
+        "required_contrast": "Show rejected revisions and unresolved markers, with finite, asymptotic, and continuum claims kept explicitly distinct.",
+        "required_fields": [
+          "public_inference.question",
+          "public_inference.premises",
+          "public_inference.warrant",
+          "public_inference.conclusion",
+          "public_inference.scope",
+          "evidence",
+          "authority"
+        ],
+        "skill": "results-narrative-integrator",
+        "step_id": "integrate_narrative",
+        "when": null
+      }
+    },
+    {
+      "condition": null,
+      "consumes": [
+        "IntegratedPaperDraft"
+      ],
+      "control_event_ids": [
+        "manuscript_result_elaboration.base.validate_expansion.control"
+      ],
+      "inference_event_ids": [
+        "manuscript_result_elaboration.base.validate_expansion.inference"
+      ],
+      "mode": "validator_only",
+      "observability_gap": "",
+      "order": 120,
+      "produces": [
+        "ExpansionValidation"
+      ],
+      "semantic_complete_event_ids": [
+        "manuscript_result_elaboration.base.validate_expansion.inference"
+      ],
+      "skill": "results-expansion-validator",
+      "status": "observed",
+      "step_id": "validate_expansion",
+      "trace_requirement": {
+        "authority_boundary": "May elaborate and integrate supported manuscript claims; may not perform implicit discovery, erase disqualifiers, or promote finite evidence to continuum scope.",
+        "consumes": [
+          "IntegratedPaperDraft"
+        ],
+        "disposition": "validator_event_required",
+        "event_family": "validation",
+        "evidence_roles": [
+          "supports",
+          "constrains",
+          "refutes"
+        ],
+        "inference_operator": "artifact_grounded_transformation",
+        "mode": "validator_only",
+        "produces": [
+          "ExpansionValidation"
+        ],
+        "required_contrast": "Show rejected revisions and unresolved markers, with finite, asymptotic, and continuum claims kept explicitly distinct.",
+        "required_fields": [
+          "public_inference.question",
+          "public_inference.premises",
+          "public_inference.warrant",
+          "public_inference.conclusion",
+          "public_inference.scope",
+          "evidence",
+          "authority"
+        ],
+        "skill": "results-expansion-validator",
+        "step_id": "validate_expansion",
+        "when": null
+      }
+    },
+    {
+      "condition": null,
+      "consumes": [
+        "IntegratedPaperDraft",
+        "ExpansionValidation"
+      ],
+      "control_event_ids": [
+        "manuscript_result_elaboration.base.gate_readiness.control"
+      ],
+      "inference_event_ids": [
+        "manuscript_result_elaboration.base.gate_readiness.inference"
+      ],
+      "mode": "validator_only",
+      "observability_gap": "",
+      "order": 130,
+      "produces": [
+        "PaperReadinessDecision"
+      ],
+      "semantic_complete_event_ids": [
+        "manuscript_result_elaboration.base.gate_readiness.inference"
+      ],
+      "skill": "results-paper-readiness-gatekeeper",
+      "status": "observed",
+      "step_id": "gate_readiness",
+      "trace_requirement": {
+        "authority_boundary": "May elaborate and integrate supported manuscript claims; may not perform implicit discovery, erase disqualifiers, or promote finite evidence to continuum scope.",
+        "consumes": [
+          "IntegratedPaperDraft",
+          "ExpansionValidation"
+        ],
+        "disposition": "validator_event_required",
+        "event_family": "validation",
+        "evidence_roles": [
+          "supports",
+          "constrains",
+          "refutes"
+        ],
+        "inference_operator": "validate_exact_claim_boundary",
+        "mode": "validator_only",
+        "produces": [
+          "PaperReadinessDecision"
+        ],
+        "required_contrast": "Show rejected revisions and unresolved markers, with finite, asymptotic, and continuum claims kept explicitly distinct.",
+        "required_fields": [
+          "public_inference.question",
+          "public_inference.premises",
+          "public_inference.warrant",
+          "public_inference.conclusion",
+          "public_inference.scope",
+          "evidence",
+          "authority"
+        ],
+        "skill": "results-paper-readiness-gatekeeper",
+        "step_id": "gate_readiness",
+        "when": null
+      }
+    }
+  ],
+  "diagnostics": [],
+  "events": [
+    {
+      "alternatives": [],
+      "artifact_validation_status": "unknown",
+      "artifacts": [],
+      "assumptions": [],
+      "attempt": 1,
+      "authority": {},
+      "claim_epistemic_status": "unknown",
+      "conclusion": "",
+      "event_family": "authorization",
+      "event_id": "manuscript_result_elaboration.base.orchestrate_elaboration.control",
+      "evidence": [],
+      "falsifiers": [],
+      "handoff": {},
+      "obligations": [],
+      "operator": "",
+      "parent_artifact_ids": [],
+      "parent_event_ids": [],
+      "phase": "",
+      "premises": [],
+      "question": "",
+      "run_id": "fixture.manuscript_result_elaboration.base",
+      "scope": {},
+      "sequence": 1,
+      "skill": "results-elaboration-workflow-orchestrator",
+      "step_id": "orchestrate_elaboration",
+      "timestamp": "",
+      "trace_incomplete": false,
+      "uncertainty": "unknown",
+      "warrant": "",
+      "workflow_disposition": "authorized"
+    },
+    {
+      "alternatives": [
+        {
+          "candidate": "Do not emit ElaborationPlan: The scope gate blocks continuum wording and the prior-art audit narrows the novelty statement.",
+          "disposition": "rejected",
+          "reason": "Show rejected revisions and unresolved markers, with finite, asymptotic, and continuum claims kept explicitly distinct. Negative evidence controls promotion."
+        }
+      ],
+      "artifact_validation_status": "integrity_valid",
+      "artifacts": [],
+      "assumptions": [],
+      "attempt": 1,
+      "authority": {
+        "absent": [
+          "unscoped-epistemic-upgrade"
+        ],
+        "exercised": [
+          "orchestrate_elaboration-assessment"
+        ],
+        "prohibitions_checked": [
+          "no hidden scope promotion"
+        ]
+      },
+      "claim_epistemic_status": "evidence_backed",
+      "conclusion": "orchestrate_elaboration produces ElaborationPlan: Integrate the finite theorem and retain the continuum marker as an open obligation.",
+      "event_family": "inference",
+      "event_id": "manuscript_result_elaboration.base.orchestrate_elaboration.inference",
+      "evidence": [
+        {
+          "artifact_type": "PaperDraft",
+          "digest": "61c8ddbab2b6d4dded3cbe6cf9348c5fd6c658796985c80675774399043f4a90",
+          "path": "tests/fixtures/reasoning_trace/evidence/workflow-evidence.json",
+          "relation": "supports"
+        }
+      ],
+      "falsifiers": [
+        "A cutoff-uniform proof packet would permit reconsidering the continuum paragraph."
+      ],
+      "handoff": {},
+      "obligations": [],
+      "operator": "artifact_grounded_transformation",
+      "parent_artifact_ids": [],
+      "parent_event_ids": [
+        "manuscript_result_elaboration.base.orchestrate_elaboration.control"
+      ],
+      "phase": "",
+      "premises": [
+        {
+          "statement": "PaperDraft: The draft marks a finite result and an unresolved continuum paragraph.",
+          "type": "artifact"
+        }
+      ],
+      "question": "At orchestrate_elaboration, how does PaperDraft bear on ElaborationPlan? Can the marked result be expanded without widening finite evidence into a continuum theorem?",
+      "run_id": "fixture.manuscript_result_elaboration.base",
+      "scope": {
+        "after": "finite theorem plus open continuum obligation",
+        "before": "expansion marker",
+        "model": "manuscript result",
+        "regime": "finite"
+      },
+      "sequence": 2,
+      "skill": "results-elaboration-workflow-orchestrator",
+      "step_id": "orchestrate_elaboration",
+      "timestamp": "",
+      "trace_incomplete": false,
+      "uncertainty": "bounded by the declared artifact and open obligations",
+      "warrant": "At orchestrate_elaboration, artifact_grounded_transformation checks PaperDraft before emitting ElaborationPlan. Authority boundary: May elaborate and integrate supported manuscript claims; may not perform implicit discovery, erase disqualifiers, or promote finite evidence to continuum scope.",
+      "workflow_disposition": "accepted"
+    },
+    {
+      "alternatives": [],
+      "artifact_validation_status": "unknown",
+      "artifacts": [],
+      "assumptions": [],
+      "attempt": 1,
+      "authority": {},
+      "claim_epistemic_status": "unknown",
+      "conclusion": "",
+      "event_family": "authorization",
+      "event_id": "manuscript_result_elaboration.base.interpret_context.control",
+      "evidence": [],
+      "falsifiers": [],
+      "handoff": {},
+      "obligations": [],
+      "operator": "",
+      "parent_artifact_ids": [],
+      "parent_event_ids": [
+        "manuscript_result_elaboration.base.orchestrate_elaboration.inference"
+      ],
+      "phase": "",
+      "premises": [],
+      "question": "",
+      "run_id": "fixture.manuscript_result_elaboration.base",
+      "scope": {},
+      "sequence": 3,
+      "skill": "results-context-interpreter",
+      "step_id": "interpret_context",
+      "timestamp": "",
+      "trace_incomplete": false,
+      "uncertainty": "unknown",
+      "warrant": "",
+      "workflow_disposition": "authorized"
+    },
+    {
+      "alternatives": [
+        {
+          "candidate": "Do not emit ResultsContext: The scope gate blocks continuum wording and the prior-art audit narrows the novelty statement.",
+          "disposition": "rejected",
+          "reason": "Show rejected revisions and unresolved markers, with finite, asymptotic, and continuum claims kept explicitly distinct. Negative evidence controls promotion."
+        }
+      ],
+      "artifact_validation_status": "integrity_valid",
+      "artifacts": [],
+      "assumptions": [],
+      "attempt": 1,
+      "authority": {
+        "absent": [
+          "unscoped-epistemic-upgrade"
+        ],
+        "exercised": [
+          "interpret_context-assessment"
+        ],
+        "prohibitions_checked": [
+          "no hidden scope promotion"
+        ]
+      },
+      "claim_epistemic_status": "evidence_backed",
+      "conclusion": "interpret_context produces ResultsContext: Integrate the finite theorem and retain the continuum marker as an open obligation.",
+      "event_family": "inference",
+      "event_id": "manuscript_result_elaboration.base.interpret_context.inference",
+      "evidence": [
+        {
+          "artifact_type": "ElaborationPlan",
+          "digest": "61c8ddbab2b6d4dded3cbe6cf9348c5fd6c658796985c80675774399043f4a90",
+          "path": "tests/fixtures/reasoning_trace/evidence/workflow-evidence.json",
+          "relation": "supports"
+        }
+      ],
+      "falsifiers": [
+        "A cutoff-uniform proof packet would permit reconsidering the continuum paragraph."
+      ],
+      "handoff": {},
+      "obligations": [],
+      "operator": "artifact_grounded_transformation",
+      "parent_artifact_ids": [],
+      "parent_event_ids": [
+        "manuscript_result_elaboration.base.interpret_context.control"
+      ],
+      "phase": "",
+      "premises": [
+        {
+          "statement": "ElaborationPlan: The draft marks a finite result and an unresolved continuum paragraph.",
+          "type": "artifact"
+        }
+      ],
+      "question": "At interpret_context, how does ElaborationPlan bear on ResultsContext? Can the marked result be expanded without widening finite evidence into a continuum theorem?",
+      "run_id": "fixture.manuscript_result_elaboration.base",
+      "scope": {
+        "after": "finite theorem plus open continuum obligation",
+        "before": "expansion marker",
+        "model": "manuscript result",
+        "regime": "finite"
+      },
+      "sequence": 4,
+      "skill": "results-context-interpreter",
+      "step_id": "interpret_context",
+      "timestamp": "",
+      "trace_incomplete": false,
+      "uncertainty": "bounded by the declared artifact and open obligations",
+      "warrant": "At interpret_context, artifact_grounded_transformation checks ElaborationPlan before emitting ResultsContext. Authority boundary: May elaborate and integrate supported manuscript claims; may not perform implicit discovery, erase disqualifiers, or promote finite evidence to continuum scope.",
+      "workflow_disposition": "accepted"
+    },
+    {
+      "alternatives": [],
+      "artifact_validation_status": "unknown",
+      "artifacts": [],
+      "assumptions": [],
+      "attempt": 1,
+      "authority": {},
+      "claim_epistemic_status": "unknown",
+      "conclusion": "",
+      "event_family": "authorization",
+      "event_id": "manuscript_result_elaboration.base.extract_extensions.control",
+      "evidence": [],
+      "falsifiers": [],
+      "handoff": {},
+      "obligations": [],
+      "operator": "",
+      "parent_artifact_ids": [],
+      "parent_event_ids": [
+        "manuscript_result_elaboration.base.interpret_context.inference"
+      ],
+      "phase": "",
+      "premises": [],
+      "question": "",
+      "run_id": "fixture.manuscript_result_elaboration.base",
+      "scope": {},
+      "sequence": 5,
+      "skill": "results-extension-need-extractor",
+      "step_id": "extract_extensions",
+      "timestamp": "",
+      "trace_incomplete": false,
+      "uncertainty": "unknown",
+      "warrant": "",
+      "workflow_disposition": "authorized"
+    },
+    {
+      "alternatives": [
+        {
+          "candidate": "Do not emit ExtensionNeeds: The scope gate blocks continuum wording and the prior-art audit narrows the novelty statement.",
+          "disposition": "rejected",
+          "reason": "Show rejected revisions and unresolved markers, with finite, asymptotic, and continuum claims kept explicitly distinct. Negative evidence controls promotion."
+        }
+      ],
+      "artifact_validation_status": "integrity_valid",
+      "artifacts": [],
+      "assumptions": [],
+      "attempt": 1,
+      "authority": {
+        "absent": [
+          "unscoped-epistemic-upgrade"
+        ],
+        "exercised": [
+          "extract_extensions-assessment"
+        ],
+        "prohibitions_checked": [
+          "no hidden scope promotion"
+        ]
+      },
+      "claim_epistemic_status": "evidence_backed",
+      "conclusion": "extract_extensions produces ExtensionNeeds: Integrate the finite theorem and retain the continuum marker as an open obligation.",
+      "event_family": "inference",
+      "event_id": "manuscript_result_elaboration.base.extract_extensions.inference",
+      "evidence": [
+        {
+          "artifact_type": "ResultsContext",
+          "digest": "61c8ddbab2b6d4dded3cbe6cf9348c5fd6c658796985c80675774399043f4a90",
+          "path": "tests/fixtures/reasoning_trace/evidence/workflow-evidence.json",
+          "relation": "supports"
+        }
+      ],
+      "falsifiers": [
+        "A cutoff-uniform proof packet would permit reconsidering the continuum paragraph."
+      ],
+      "handoff": {},
+      "obligations": [],
+      "operator": "artifact_grounded_transformation",
+      "parent_artifact_ids": [],
+      "parent_event_ids": [
+        "manuscript_result_elaboration.base.extract_extensions.control"
+      ],
+      "phase": "",
+      "premises": [
+        {
+          "statement": "ResultsContext: The draft marks a finite result and an unresolved continuum paragraph.",
+          "type": "artifact"
+        }
+      ],
+      "question": "At extract_extensions, how does ResultsContext bear on ExtensionNeeds? Can the marked result be expanded without widening finite evidence into a continuum theorem?",
+      "run_id": "fixture.manuscript_result_elaboration.base",
+      "scope": {
+        "after": "finite theorem plus open continuum obligation",
+        "before": "expansion marker",
+        "model": "manuscript result",
+        "regime": "finite"
+      },
+      "sequence": 6,
+      "skill": "results-extension-need-extractor",
+      "step_id": "extract_extensions",
+      "timestamp": "",
+      "trace_incomplete": false,
+      "uncertainty": "bounded by the declared artifact and open obligations",
+      "warrant": "At extract_extensions, artifact_grounded_transformation checks ResultsContext before emitting ExtensionNeeds. Authority boundary: May elaborate and integrate supported manuscript claims; may not perform implicit discovery, erase disqualifiers, or promote finite evidence to continuum scope.",
+      "workflow_disposition": "accepted"
+    },
+    {
+      "alternatives": [],
+      "artifact_validation_status": "unknown",
+      "artifacts": [],
+      "assumptions": [],
+      "attempt": 1,
+      "authority": {},
+      "claim_epistemic_status": "unknown",
+      "conclusion": "",
+      "event_family": "authorization",
+      "event_id": "manuscript_result_elaboration.base.decompose_modules.control",
+      "evidence": [],
+      "falsifiers": [],
+      "handoff": {},
+      "obligations": [],
+      "operator": "",
+      "parent_artifact_ids": [],
+      "parent_event_ids": [
+        "manuscript_result_elaboration.base.extract_extensions.inference"
+      ],
+      "phase": "",
+      "premises": [],
+      "question": "",
+      "run_id": "fixture.manuscript_result_elaboration.base",
+      "scope": {},
+      "sequence": 7,
+      "skill": "results-open-module-decomposer",
+      "step_id": "decompose_modules",
+      "timestamp": "",
+      "trace_incomplete": false,
+      "uncertainty": "unknown",
+      "warrant": "",
+      "workflow_disposition": "authorized"
+    },
+    {
+      "alternatives": [
+        {
+          "candidate": "Do not emit OpenModulePlan: The scope gate blocks continuum wording and the prior-art audit narrows the novelty statement.",
+          "disposition": "rejected",
+          "reason": "Show rejected revisions and unresolved markers, with finite, asymptotic, and continuum claims kept explicitly distinct. Negative evidence controls promotion."
+        }
+      ],
+      "artifact_validation_status": "integrity_valid",
+      "artifacts": [],
+      "assumptions": [],
+      "attempt": 1,
+      "authority": {
+        "absent": [
+          "unscoped-epistemic-upgrade"
+        ],
+        "exercised": [
+          "decompose_modules-assessment"
+        ],
+        "prohibitions_checked": [
+          "no hidden scope promotion"
+        ]
+      },
+      "claim_epistemic_status": "evidence_backed",
+      "conclusion": "decompose_modules produces OpenModulePlan: Integrate the finite theorem and retain the continuum marker as an open obligation.",
+      "event_family": "inference",
+      "event_id": "manuscript_result_elaboration.base.decompose_modules.inference",
+      "evidence": [
+        {
+          "artifact_type": "ResultsContext",
+          "digest": "61c8ddbab2b6d4dded3cbe6cf9348c5fd6c658796985c80675774399043f4a90",
+          "path": "tests/fixtures/reasoning_trace/evidence/workflow-evidence.json",
+          "relation": "supports"
+        }
+      ],
+      "falsifiers": [
+        "A cutoff-uniform proof packet would permit reconsidering the continuum paragraph."
+      ],
+      "handoff": {},
+      "obligations": [],
+      "operator": "artifact_grounded_transformation",
+      "parent_artifact_ids": [],
+      "parent_event_ids": [
+        "manuscript_result_elaboration.base.decompose_modules.control"
+      ],
+      "phase": "",
+      "premises": [
+        {
+          "statement": "ResultsContext: The draft marks a finite result and an unresolved continuum paragraph.",
+          "type": "artifact"
+        }
+      ],
+      "question": "At decompose_modules, how does ResultsContext bear on OpenModulePlan? Can the marked result be expanded without widening finite evidence into a continuum theorem?",
+      "run_id": "fixture.manuscript_result_elaboration.base",
+      "scope": {
+        "after": "finite theorem plus open continuum obligation",
+        "before": "expansion marker",
+        "model": "manuscript result",
+        "regime": "finite"
+      },
+      "sequence": 8,
+      "skill": "results-open-module-decomposer",
+      "step_id": "decompose_modules",
+      "timestamp": "",
+      "trace_incomplete": false,
+      "uncertainty": "bounded by the declared artifact and open obligations",
+      "warrant": "At decompose_modules, artifact_grounded_transformation checks ResultsContext before emitting OpenModulePlan. Authority boundary: May elaborate and integrate supported manuscript claims; may not perform implicit discovery, erase disqualifiers, or promote finite evidence to continuum scope.",
+      "workflow_disposition": "accepted"
+    },
+    {
+      "alternatives": [],
+      "artifact_validation_status": "unknown",
+      "artifacts": [],
+      "assumptions": [],
+      "attempt": 1,
+      "authority": {},
+      "claim_epistemic_status": "unknown",
+      "conclusion": "",
+      "event_family": "authorization",
+      "event_id": "manuscript_result_elaboration.base.plan_strategy.control",
+      "evidence": [],
+      "falsifiers": [],
+      "handoff": {},
+      "obligations": [],
+      "operator": "",
+      "parent_artifact_ids": [],
+      "parent_event_ids": [
+        "manuscript_result_elaboration.base.decompose_modules.inference"
+      ],
+      "phase": "",
+      "premises": [],
+      "question": "",
+      "run_id": "fixture.manuscript_result_elaboration.base",
+      "scope": {},
+      "sequence": 9,
+      "skill": "results-extension-strategy-planner",
+      "step_id": "plan_strategy",
+      "timestamp": "",
+      "trace_incomplete": false,
+      "uncertainty": "unknown",
+      "warrant": "",
+      "workflow_disposition": "authorized"
+    },
+    {
+      "alternatives": [
+        {
+          "candidate": "Do not emit ExtensionStrategy: The scope gate blocks continuum wording and the prior-art audit narrows the novelty statement.",
+          "disposition": "rejected",
+          "reason": "Show rejected revisions and unresolved markers, with finite, asymptotic, and continuum claims kept explicitly distinct. Negative evidence controls promotion."
+        }
+      ],
+      "artifact_validation_status": "integrity_valid",
+      "artifacts": [],
+      "assumptions": [],
+      "attempt": 1,
+      "authority": {
+        "absent": [
+          "unscoped-epistemic-upgrade"
+        ],
+        "exercised": [
+          "plan_strategy-assessment"
+        ],
+        "prohibitions_checked": [
+          "no hidden scope promotion"
+        ]
+      },
+      "claim_epistemic_status": "evidence_backed",
+      "conclusion": "plan_strategy produces ExtensionStrategy: Integrate the finite theorem and retain the continuum marker as an open obligation.",
+      "event_family": "inference",
+      "event_id": "manuscript_result_elaboration.base.plan_strategy.inference",
+      "evidence": [
+        {
+          "artifact_type": "ExtensionNeeds",
+          "digest": "61c8ddbab2b6d4dded3cbe6cf9348c5fd6c658796985c80675774399043f4a90",
+          "path": "tests/fixtures/reasoning_trace/evidence/workflow-evidence.json",
+          "relation": "supports"
+        }
+      ],
+      "falsifiers": [
+        "A cutoff-uniform proof packet would permit reconsidering the continuum paragraph."
+      ],
+      "handoff": {},
+      "obligations": [],
+      "operator": "artifact_grounded_transformation",
+      "parent_artifact_ids": [],
+      "parent_event_ids": [
+        "manuscript_result_elaboration.base.plan_strategy.control"
+      ],
+      "phase": "",
+      "premises": [
+        {
+          "statement": "ExtensionNeeds: The draft marks a finite result and an unresolved continuum paragraph.",
+          "type": "artifact"
+        }
+      ],
+      "question": "At plan_strategy, how does ExtensionNeeds bear on ExtensionStrategy? Can the marked result be expanded without widening finite evidence into a continuum theorem?",
+      "run_id": "fixture.manuscript_result_elaboration.base",
+      "scope": {
+        "after": "finite theorem plus open continuum obligation",
+        "before": "expansion marker",
+        "model": "manuscript result",
+        "regime": "finite"
+      },
+      "sequence": 10,
+      "skill": "results-extension-strategy-planner",
+      "step_id": "plan_strategy",
+      "timestamp": "",
+      "trace_incomplete": false,
+      "uncertainty": "bounded by the declared artifact and open obligations",
+      "warrant": "At plan_strategy, artifact_grounded_transformation checks ExtensionNeeds before emitting ExtensionStrategy. Authority boundary: May elaborate and integrate supported manuscript claims; may not perform implicit discovery, erase disqualifiers, or promote finite evidence to continuum scope.",
+      "workflow_disposition": "accepted"
+    },
+    {
+      "alternatives": [],
+      "artifact_validation_status": "unknown",
+      "artifacts": [],
+      "assumptions": [],
+      "attempt": 1,
+      "authority": {},
+      "claim_epistemic_status": "unknown",
+      "conclusion": "",
+      "event_family": "authorization",
+      "event_id": "manuscript_result_elaboration.base.self_refine.control",
+      "evidence": [],
+      "falsifiers": [],
+      "handoff": {},
+      "obligations": [],
+      "operator": "",
+      "parent_artifact_ids": [],
+      "parent_event_ids": [
+        "manuscript_result_elaboration.base.plan_strategy.inference"
+      ],
+      "phase": "",
+      "premises": [],
+      "question": "",
+      "run_id": "fixture.manuscript_result_elaboration.base",
+      "scope": {},
+      "sequence": 11,
+      "skill": "results-critical-self-refiner",
+      "step_id": "self_refine",
+      "timestamp": "",
+      "trace_incomplete": false,
+      "uncertainty": "unknown",
+      "warrant": "",
+      "workflow_disposition": "authorized"
+    },
+    {
+      "alternatives": [
+        {
+          "candidate": "Do not emit RefinedResultCandidates: The scope gate blocks continuum wording and the prior-art audit narrows the novelty statement.",
+          "disposition": "rejected",
+          "reason": "Show rejected revisions and unresolved markers, with finite, asymptotic, and continuum claims kept explicitly distinct. Negative evidence controls promotion."
+        }
+      ],
+      "artifact_validation_status": "integrity_valid",
+      "artifacts": [],
+      "assumptions": [],
+      "attempt": 1,
+      "authority": {
+        "absent": [
+          "unscoped-epistemic-upgrade"
+        ],
+        "exercised": [
+          "self_refine-assessment"
+        ],
+        "prohibitions_checked": [
+          "no hidden scope promotion"
+        ]
+      },
+      "claim_epistemic_status": "evidence_backed",
+      "conclusion": "self_refine produces RefinedResultCandidates: Integrate the finite theorem and retain the continuum marker as an open obligation.",
+      "event_family": "inference",
+      "event_id": "manuscript_result_elaboration.base.self_refine.inference",
+      "evidence": [
+        {
+          "artifact_type": "ExtensionStrategy",
+          "digest": "61c8ddbab2b6d4dded3cbe6cf9348c5fd6c658796985c80675774399043f4a90",
+          "path": "tests/fixtures/reasoning_trace/evidence/workflow-evidence.json",
+          "relation": "supports"
+        }
+      ],
+      "falsifiers": [
+        "A cutoff-uniform proof packet would permit reconsidering the continuum paragraph."
+      ],
+      "handoff": {},
+      "obligations": [],
+      "operator": "artifact_grounded_transformation",
+      "parent_artifact_ids": [],
+      "parent_event_ids": [
+        "manuscript_result_elaboration.base.self_refine.control"
+      ],
+      "phase": "",
+      "premises": [
+        {
+          "statement": "ExtensionStrategy: The draft marks a finite result and an unresolved continuum paragraph.",
+          "type": "artifact"
+        }
+      ],
+      "question": "At self_refine, how does ExtensionStrategy bear on RefinedResultCandidates? Can the marked result be expanded without widening finite evidence into a continuum theorem?",
+      "run_id": "fixture.manuscript_result_elaboration.base",
+      "scope": {
+        "after": "finite theorem plus open continuum obligation",
+        "before": "expansion marker",
+        "model": "manuscript result",
+        "regime": "finite"
+      },
+      "sequence": 12,
+      "skill": "results-critical-self-refiner",
+      "step_id": "self_refine",
+      "timestamp": "",
+      "trace_incomplete": false,
+      "uncertainty": "bounded by the declared artifact and open obligations",
+      "warrant": "At self_refine, artifact_grounded_transformation checks ExtensionStrategy before emitting RefinedResultCandidates. Authority boundary: May elaborate and integrate supported manuscript claims; may not perform implicit discovery, erase disqualifiers, or promote finite evidence to continuum scope.",
+      "workflow_disposition": "accepted"
+    },
+    {
+      "alternatives": [],
+      "artifact_validation_status": "unknown",
+      "artifacts": [],
+      "assumptions": [],
+      "attempt": 1,
+      "authority": {},
+      "claim_epistemic_status": "unknown",
+      "conclusion": "",
+      "event_family": "authorization",
+      "event_id": "manuscript_result_elaboration.base.certify_scope.control",
+      "evidence": [],
+      "falsifiers": [],
+      "handoff": {},
+      "obligations": [],
+      "operator": "",
+      "parent_artifact_ids": [],
+      "parent_event_ids": [
+        "manuscript_result_elaboration.base.self_refine.inference"
+      ],
+      "phase": "",
+      "premises": [],
+      "question": "",
+      "run_id": "fixture.manuscript_result_elaboration.base",
+      "scope": {},
+      "sequence": 13,
+      "skill": "results-theorem-scope-certifier",
+      "step_id": "certify_scope",
+      "timestamp": "",
+      "trace_incomplete": false,
+      "uncertainty": "unknown",
+      "warrant": "",
+      "workflow_disposition": "authorized"
+    },
+    {
+      "alternatives": [
+        {
+          "candidate": "Do not emit TheoremScopeDecision: The scope gate blocks continuum wording and the prior-art audit narrows the novelty statement.",
+          "disposition": "accepted",
+          "reason": "Show rejected revisions and unresolved markers, with finite, asymptotic, and continuum claims kept explicitly distinct. Negative evidence controls promotion."
+        }
+      ],
+      "artifact_validation_status": "integrity_valid",
+      "artifacts": [],
+      "assumptions": [],
+      "attempt": 1,
+      "authority": {
+        "absent": [
+          "unscoped-epistemic-upgrade"
+        ],
+        "exercised": [
+          "certify_scope-assessment"
+        ],
+        "prohibitions_checked": [
+          "no hidden scope promotion"
+        ]
+      },
+      "claim_epistemic_status": "quarantined",
+      "conclusion": "certify_scope rejects TheoremScopeDecision: The scope gate blocks continuum wording and the prior-art audit narrows the novelty statement.",
+      "event_family": "failure",
+      "event_id": "manuscript_result_elaboration.base.certify_scope.inference",
+      "evidence": [
+        {
+          "artifact_type": "RefinedResultCandidates",
+          "digest": "61c8ddbab2b6d4dded3cbe6cf9348c5fd6c658796985c80675774399043f4a90",
+          "path": "tests/fixtures/reasoning_trace/evidence/workflow-evidence.json",
+          "relation": "refutes"
+        }
+      ],
+      "falsifiers": [
+        "A cutoff-uniform proof packet would permit reconsidering the continuum paragraph."
+      ],
+      "handoff": {},
+      "obligations": [
+        {
+          "requirement": "A cutoff-uniform proof packet would permit reconsidering the continuum paragraph.",
+          "status": "open"
+        }
+      ],
+      "operator": "bind_claim_scope",
+      "parent_artifact_ids": [],
+      "parent_event_ids": [
+        "manuscript_result_elaboration.base.certify_scope.control"
+      ],
+      "phase": "",
+      "premises": [
+        {
+          "statement": "RefinedResultCandidates: The draft marks a finite result and an unresolved continuum paragraph.",
+          "type": "artifact"
+        }
+      ],
+      "question": "At certify_scope, how does RefinedResultCandidates bear on TheoremScopeDecision? Can the marked result be expanded without widening finite evidence into a continuum theorem?",
+      "run_id": "fixture.manuscript_result_elaboration.base",
+      "scope": {
+        "after": "finite theorem plus open continuum obligation",
+        "before": "expansion marker",
+        "model": "manuscript result",
+        "regime": "finite"
+      },
+      "sequence": 14,
+      "skill": "results-theorem-scope-certifier",
+      "step_id": "certify_scope",
+      "timestamp": "",
+      "trace_incomplete": false,
+      "uncertainty": "bounded by the declared artifact and open obligations",
+      "warrant": "At certify_scope, bind_claim_scope checks RefinedResultCandidates before emitting TheoremScopeDecision. Authority boundary: May elaborate and integrate supported manuscript claims; may not perform implicit discovery, erase disqualifiers, or promote finite evidence to continuum scope.",
+      "workflow_disposition": "failed"
+    },
+    {
+      "alternatives": [],
+      "artifact_validation_status": "unknown",
+      "artifacts": [],
+      "assumptions": [],
+      "attempt": 1,
+      "authority": {},
+      "claim_epistemic_status": "unknown",
+      "conclusion": "",
+      "event_family": "authorization",
+      "event_id": "manuscript_result_elaboration.base.formalize_finite_object.control",
+      "evidence": [],
+      "falsifiers": [],
+      "handoff": {},
+      "obligations": [],
+      "operator": "",
+      "parent_artifact_ids": [],
+      "parent_event_ids": [
+        "manuscript_result_elaboration.base.certify_scope.inference"
+      ],
+      "phase": "",
+      "premises": [],
+      "question": "",
+      "run_id": "fixture.manuscript_result_elaboration.base",
+      "scope": {},
+      "sequence": 15,
+      "skill": "results-finite-object-formalizer",
+      "step_id": "formalize_finite_object",
+      "timestamp": "",
+      "trace_incomplete": false,
+      "uncertainty": "unknown",
+      "warrant": "",
+      "workflow_disposition": "authorized"
+    },
+    {
+      "alternatives": [
+        {
+          "candidate": "Do not emit FiniteObjectDefinition: The scope gate blocks continuum wording and the prior-art audit narrows the novelty statement.",
+          "disposition": "rejected",
+          "reason": "Show rejected revisions and unresolved markers, with finite, asymptotic, and continuum claims kept explicitly distinct. Negative evidence controls promotion."
+        }
+      ],
+      "artifact_validation_status": "integrity_valid",
+      "artifacts": [],
+      "assumptions": [],
+      "attempt": 1,
+      "authority": {
+        "absent": [
+          "unscoped-epistemic-upgrade"
+        ],
+        "exercised": [
+          "formalize_finite_object-assessment"
+        ],
+        "prohibitions_checked": [
+          "no hidden scope promotion"
+        ]
+      },
+      "claim_epistemic_status": "evidence_backed",
+      "conclusion": "formalize_finite_object produces FiniteObjectDefinition: Integrate the finite theorem and retain the continuum marker as an open obligation.",
+      "event_family": "inference",
+      "event_id": "manuscript_result_elaboration.base.formalize_finite_object.inference",
+      "evidence": [
+        {
+          "artifact_type": "RefinedResultCandidates",
+          "digest": "61c8ddbab2b6d4dded3cbe6cf9348c5fd6c658796985c80675774399043f4a90",
+          "path": "tests/fixtures/reasoning_trace/evidence/workflow-evidence.json",
+          "relation": "supports"
+        }
+      ],
+      "falsifiers": [
+        "A cutoff-uniform proof packet would permit reconsidering the continuum paragraph."
+      ],
+      "handoff": {},
+      "obligations": [],
+      "operator": "derive_formal_obligations",
+      "parent_artifact_ids": [],
+      "parent_event_ids": [
+        "manuscript_result_elaboration.base.formalize_finite_object.control"
+      ],
+      "phase": "",
+      "premises": [
+        {
+          "statement": "RefinedResultCandidates: The draft marks a finite result and an unresolved continuum paragraph.",
+          "type": "artifact"
+        }
+      ],
+      "question": "At formalize_finite_object, how does RefinedResultCandidates bear on FiniteObjectDefinition? Can the marked result be expanded without widening finite evidence into a continuum theorem?",
+      "run_id": "fixture.manuscript_result_elaboration.base",
+      "scope": {
+        "after": "finite theorem plus open continuum obligation",
+        "before": "expansion marker",
+        "model": "manuscript result",
+        "regime": "finite"
+      },
+      "sequence": 16,
+      "skill": "results-finite-object-formalizer",
+      "step_id": "formalize_finite_object",
+      "timestamp": "",
+      "trace_incomplete": false,
+      "uncertainty": "bounded by the declared artifact and open obligations",
+      "warrant": "At formalize_finite_object, derive_formal_obligations checks RefinedResultCandidates before emitting FiniteObjectDefinition. Authority boundary: May elaborate and integrate supported manuscript claims; may not perform implicit discovery, erase disqualifiers, or promote finite evidence to continuum scope.",
+      "workflow_disposition": "accepted"
+    },
+    {
+      "alternatives": [],
+      "artifact_validation_status": "unknown",
+      "artifacts": [],
+      "assumptions": [],
+      "attempt": 1,
+      "authority": {},
+      "claim_epistemic_status": "unknown",
+      "conclusion": "",
+      "event_family": "authorization",
+      "event_id": "manuscript_result_elaboration.base.derive_proof_packet.control",
+      "evidence": [],
+      "falsifiers": [],
+      "handoff": {},
+      "obligations": [],
+      "operator": "",
+      "parent_artifact_ids": [],
+      "parent_event_ids": [
+        "manuscript_result_elaboration.base.formalize_finite_object.inference"
+      ],
+      "phase": "",
+      "premises": [],
+      "question": "",
+      "run_id": "fixture.manuscript_result_elaboration.base",
+      "scope": {},
+      "sequence": 17,
+      "skill": "results-proof-packet-deriver",
+      "step_id": "derive_proof_packet",
+      "timestamp": "",
+      "trace_incomplete": false,
+      "uncertainty": "unknown",
+      "warrant": "",
+      "workflow_disposition": "authorized"
+    },
+    {
+      "alternatives": [
+        {
+          "candidate": "Do not emit ResultsProofPacket: The scope gate blocks continuum wording and the prior-art audit narrows the novelty statement.",
+          "disposition": "rejected",
+          "reason": "Show rejected revisions and unresolved markers, with finite, asymptotic, and continuum claims kept explicitly distinct. Negative evidence controls promotion."
+        }
+      ],
+      "artifact_validation_status": "integrity_valid",
+      "artifacts": [],
+      "assumptions": [],
+      "attempt": 1,
+      "authority": {
+        "absent": [
+          "unscoped-epistemic-upgrade"
+        ],
+        "exercised": [
+          "derive_proof_packet-assessment"
+        ],
+        "prohibitions_checked": [
+          "no hidden scope promotion"
+        ]
+      },
+      "claim_epistemic_status": "evidence_backed",
+      "conclusion": "derive_proof_packet produces ResultsProofPacket: Integrate the finite theorem and retain the continuum marker as an open obligation.",
+      "event_family": "inference",
+      "event_id": "manuscript_result_elaboration.base.derive_proof_packet.inference",
+      "evidence": [
+        {
+          "artifact_type": "RefinedResultCandidates",
+          "digest": "61c8ddbab2b6d4dded3cbe6cf9348c5fd6c658796985c80675774399043f4a90",
+          "path": "tests/fixtures/reasoning_trace/evidence/workflow-evidence.json",
+          "relation": "supports"
+        }
+      ],
+      "falsifiers": [
+        "A cutoff-uniform proof packet would permit reconsidering the continuum paragraph."
+      ],
+      "handoff": {},
+      "obligations": [],
+      "operator": "validate_exact_claim_boundary",
+      "parent_artifact_ids": [],
+      "parent_event_ids": [
+        "manuscript_result_elaboration.base.derive_proof_packet.control"
+      ],
+      "phase": "",
+      "premises": [
+        {
+          "statement": "RefinedResultCandidates: The draft marks a finite result and an unresolved continuum paragraph.",
+          "type": "artifact"
+        }
+      ],
+      "question": "At derive_proof_packet, how does RefinedResultCandidates bear on ResultsProofPacket? Can the marked result be expanded without widening finite evidence into a continuum theorem?",
+      "run_id": "fixture.manuscript_result_elaboration.base",
+      "scope": {
+        "after": "finite theorem plus open continuum obligation",
+        "before": "expansion marker",
+        "model": "manuscript result",
+        "regime": "finite"
+      },
+      "sequence": 18,
+      "skill": "results-proof-packet-deriver",
+      "step_id": "derive_proof_packet",
+      "timestamp": "",
+      "trace_incomplete": false,
+      "uncertainty": "bounded by the declared artifact and open obligations",
+      "warrant": "At derive_proof_packet, validate_exact_claim_boundary checks RefinedResultCandidates before emitting ResultsProofPacket. Authority boundary: May elaborate and integrate supported manuscript claims; may not perform implicit discovery, erase disqualifiers, or promote finite evidence to continuum scope.",
+      "workflow_disposition": "accepted"
+    },
+    {
+      "alternatives": [],
+      "artifact_validation_status": "unknown",
+      "artifacts": [],
+      "assumptions": [],
+      "attempt": 1,
+      "authority": {},
+      "claim_epistemic_status": "unknown",
+      "conclusion": "",
+      "event_family": "authorization",
+      "event_id": "manuscript_result_elaboration.base.audit_prior_art.control",
+      "evidence": [],
+      "falsifiers": [],
+      "handoff": {},
+      "obligations": [],
+      "operator": "",
+      "parent_artifact_ids": [],
+      "parent_event_ids": [
+        "manuscript_result_elaboration.base.derive_proof_packet.inference"
+      ],
+      "phase": "",
+      "premises": [],
+      "question": "",
+      "run_id": "fixture.manuscript_result_elaboration.base",
+      "scope": {},
+      "sequence": 19,
+      "skill": "results-prior-art-disqualifier-auditor",
+      "step_id": "audit_prior_art",
+      "timestamp": "",
+      "trace_incomplete": false,
+      "uncertainty": "unknown",
+      "warrant": "",
+      "workflow_disposition": "authorized"
+    },
+    {
+      "alternatives": [
+        {
+          "candidate": "Do not emit PriorArtBoundaryAudit: The scope gate blocks continuum wording and the prior-art audit narrows the novelty statement.",
+          "disposition": "rejected",
+          "reason": "Show rejected revisions and unresolved markers, with finite, asymptotic, and continuum claims kept explicitly distinct. Negative evidence controls promotion."
+        }
+      ],
+      "artifact_validation_status": "integrity_valid",
+      "artifacts": [],
+      "assumptions": [],
+      "attempt": 1,
+      "authority": {
+        "absent": [
+          "unscoped-epistemic-upgrade"
+        ],
+        "exercised": [
+          "audit_prior_art-assessment"
+        ],
+        "prohibitions_checked": [
+          "no hidden scope promotion"
+        ]
+      },
+      "claim_epistemic_status": "evidence_backed",
+      "conclusion": "audit_prior_art produces PriorArtBoundaryAudit: Integrate the finite theorem and retain the continuum marker as an open obligation.",
+      "event_family": "inference",
+      "event_id": "manuscript_result_elaboration.base.audit_prior_art.inference",
+      "evidence": [
+        {
+          "artifact_type": "RefinedResultCandidates",
+          "digest": "61c8ddbab2b6d4dded3cbe6cf9348c5fd6c658796985c80675774399043f4a90",
+          "path": "tests/fixtures/reasoning_trace/evidence/workflow-evidence.json",
+          "relation": "supports"
+        }
+      ],
+      "falsifiers": [
+        "A cutoff-uniform proof packet would permit reconsidering the continuum paragraph."
+      ],
+      "handoff": {},
+      "obligations": [],
+      "operator": "test_prior_art_disqualifiers",
+      "parent_artifact_ids": [],
+      "parent_event_ids": [
+        "manuscript_result_elaboration.base.audit_prior_art.control"
+      ],
+      "phase": "",
+      "premises": [
+        {
+          "statement": "RefinedResultCandidates: The draft marks a finite result and an unresolved continuum paragraph.",
+          "type": "artifact"
+        }
+      ],
+      "question": "At audit_prior_art, how does RefinedResultCandidates bear on PriorArtBoundaryAudit? Can the marked result be expanded without widening finite evidence into a continuum theorem?",
+      "run_id": "fixture.manuscript_result_elaboration.base",
+      "scope": {
+        "after": "finite theorem plus open continuum obligation",
+        "before": "expansion marker",
+        "model": "manuscript result",
+        "regime": "finite"
+      },
+      "sequence": 20,
+      "skill": "results-prior-art-disqualifier-auditor",
+      "step_id": "audit_prior_art",
+      "timestamp": "",
+      "trace_incomplete": false,
+      "uncertainty": "bounded by the declared artifact and open obligations",
+      "warrant": "At audit_prior_art, test_prior_art_disqualifiers checks RefinedResultCandidates before emitting PriorArtBoundaryAudit. Authority boundary: May elaborate and integrate supported manuscript claims; may not perform implicit discovery, erase disqualifiers, or promote finite evidence to continuum scope.",
+      "workflow_disposition": "accepted"
+    },
+    {
+      "alternatives": [],
+      "artifact_validation_status": "unknown",
+      "artifacts": [],
+      "assumptions": [],
+      "attempt": 1,
+      "authority": {},
+      "claim_epistemic_status": "unknown",
+      "conclusion": "",
+      "event_family": "authorization",
+      "event_id": "manuscript_result_elaboration.base.integrate_narrative.control",
+      "evidence": [],
+      "falsifiers": [],
+      "handoff": {},
+      "obligations": [],
+      "operator": "",
+      "parent_artifact_ids": [],
+      "parent_event_ids": [
+        "manuscript_result_elaboration.base.audit_prior_art.inference"
+      ],
+      "phase": "",
+      "premises": [],
+      "question": "",
+      "run_id": "fixture.manuscript_result_elaboration.base",
+      "scope": {},
+      "sequence": 21,
+      "skill": "results-narrative-integrator",
+      "step_id": "integrate_narrative",
+      "timestamp": "",
+      "trace_incomplete": false,
+      "uncertainty": "unknown",
+      "warrant": "",
+      "workflow_disposition": "authorized"
+    },
+    {
+      "alternatives": [
+        {
+          "candidate": "Do not emit IntegratedPaperDraft: The scope gate blocks continuum wording and the prior-art audit narrows the novelty statement.",
+          "disposition": "rejected",
+          "reason": "Show rejected revisions and unresolved markers, with finite, asymptotic, and continuum claims kept explicitly distinct. Negative evidence controls promotion."
+        }
+      ],
+      "artifact_validation_status": "integrity_valid",
+      "artifacts": [],
+      "assumptions": [],
+      "attempt": 1,
+      "authority": {
+        "absent": [
+          "unscoped-epistemic-upgrade"
+        ],
+        "exercised": [
+          "integrate_narrative-assessment"
+        ],
+        "prohibitions_checked": [
+          "no hidden scope promotion"
+        ]
+      },
+      "claim_epistemic_status": "evidence_backed",
+      "conclusion": "integrate_narrative produces IntegratedPaperDraft: Integrate the finite theorem and retain the continuum marker as an open obligation.",
+      "event_family": "inference",
+      "event_id": "manuscript_result_elaboration.base.integrate_narrative.inference",
+      "evidence": [
+        {
+          "artifact_type": "RefinedResultCandidates",
+          "digest": "61c8ddbab2b6d4dded3cbe6cf9348c5fd6c658796985c80675774399043f4a90",
+          "path": "tests/fixtures/reasoning_trace/evidence/workflow-evidence.json",
+          "relation": "supports"
+        }
+      ],
+      "falsifiers": [
+        "A cutoff-uniform proof packet would permit reconsidering the continuum paragraph."
+      ],
+      "handoff": {},
+      "obligations": [],
+      "operator": "apply_traceable_artifact_delta",
+      "parent_artifact_ids": [],
+      "parent_event_ids": [
+        "manuscript_result_elaboration.base.integrate_narrative.control"
+      ],
+      "phase": "",
+      "premises": [
+        {
+          "statement": "RefinedResultCandidates: The draft marks a finite result and an unresolved continuum paragraph.",
+          "type": "artifact"
+        }
+      ],
+      "question": "At integrate_narrative, how does RefinedResultCandidates bear on IntegratedPaperDraft? Can the marked result be expanded without widening finite evidence into a continuum theorem?",
+      "run_id": "fixture.manuscript_result_elaboration.base",
+      "scope": {
+        "after": "finite theorem plus open continuum obligation",
+        "before": "expansion marker",
+        "model": "manuscript result",
+        "regime": "finite"
+      },
+      "sequence": 22,
+      "skill": "results-narrative-integrator",
+      "step_id": "integrate_narrative",
+      "timestamp": "",
+      "trace_incomplete": false,
+      "uncertainty": "bounded by the declared artifact and open obligations",
+      "warrant": "At integrate_narrative, apply_traceable_artifact_delta checks RefinedResultCandidates before emitting IntegratedPaperDraft. Authority boundary: May elaborate and integrate supported manuscript claims; may not perform implicit discovery, erase disqualifiers, or promote finite evidence to continuum scope.",
+      "workflow_disposition": "accepted"
+    },
+    {
+      "alternatives": [],
+      "artifact_validation_status": "unknown",
+      "artifacts": [],
+      "assumptions": [],
+      "attempt": 1,
+      "authority": {},
+      "claim_epistemic_status": "unknown",
+      "conclusion": "",
+      "event_family": "authorization",
+      "event_id": "manuscript_result_elaboration.base.validate_expansion.control",
+      "evidence": [],
+      "falsifiers": [],
+      "handoff": {},
+      "obligations": [],
+      "operator": "",
+      "parent_artifact_ids": [],
+      "parent_event_ids": [
+        "manuscript_result_elaboration.base.integrate_narrative.inference"
+      ],
+      "phase": "",
+      "premises": [],
+      "question": "",
+      "run_id": "fixture.manuscript_result_elaboration.base",
+      "scope": {},
+      "sequence": 23,
+      "skill": "results-expansion-validator",
+      "step_id": "validate_expansion",
+      "timestamp": "",
+      "trace_incomplete": false,
+      "uncertainty": "unknown",
+      "warrant": "",
+      "workflow_disposition": "authorized"
+    },
+    {
+      "alternatives": [
+        {
+          "candidate": "Do not emit ExpansionValidation: The scope gate blocks continuum wording and the prior-art audit narrows the novelty statement.",
+          "disposition": "rejected",
+          "reason": "Show rejected revisions and unresolved markers, with finite, asymptotic, and continuum claims kept explicitly distinct. Negative evidence controls promotion."
+        }
+      ],
+      "artifact_validation_status": "integrity_valid",
+      "artifacts": [],
+      "assumptions": [],
+      "attempt": 1,
+      "authority": {
+        "absent": [
+          "unscoped-epistemic-upgrade"
+        ],
+        "exercised": [
+          "validate_expansion-assessment"
+        ],
+        "prohibitions_checked": [
+          "no hidden scope promotion"
+        ]
+      },
+      "claim_epistemic_status": "evidence_backed",
+      "conclusion": "validate_expansion produces ExpansionValidation: Integrate the finite theorem and retain the continuum marker as an open obligation.",
+      "event_family": "inference",
+      "event_id": "manuscript_result_elaboration.base.validate_expansion.inference",
+      "evidence": [
+        {
+          "artifact_type": "IntegratedPaperDraft",
+          "digest": "61c8ddbab2b6d4dded3cbe6cf9348c5fd6c658796985c80675774399043f4a90",
+          "path": "tests/fixtures/reasoning_trace/evidence/workflow-evidence.json",
+          "relation": "supports"
+        }
+      ],
+      "falsifiers": [
+        "A cutoff-uniform proof packet would permit reconsidering the continuum paragraph."
+      ],
+      "handoff": {},
+      "obligations": [],
+      "operator": "artifact_grounded_transformation",
+      "parent_artifact_ids": [],
+      "parent_event_ids": [
+        "manuscript_result_elaboration.base.validate_expansion.control"
+      ],
+      "phase": "",
+      "premises": [
+        {
+          "statement": "IntegratedPaperDraft: The draft marks a finite result and an unresolved continuum paragraph.",
+          "type": "artifact"
+        }
+      ],
+      "question": "At validate_expansion, how does IntegratedPaperDraft bear on ExpansionValidation? Can the marked result be expanded without widening finite evidence into a continuum theorem?",
+      "run_id": "fixture.manuscript_result_elaboration.base",
+      "scope": {
+        "after": "finite theorem plus open continuum obligation",
+        "before": "expansion marker",
+        "model": "manuscript result",
+        "regime": "finite"
+      },
+      "sequence": 24,
+      "skill": "results-expansion-validator",
+      "step_id": "validate_expansion",
+      "timestamp": "",
+      "trace_incomplete": false,
+      "uncertainty": "bounded by the declared artifact and open obligations",
+      "warrant": "At validate_expansion, artifact_grounded_transformation checks IntegratedPaperDraft before emitting ExpansionValidation. Authority boundary: May elaborate and integrate supported manuscript claims; may not perform implicit discovery, erase disqualifiers, or promote finite evidence to continuum scope.",
+      "workflow_disposition": "accepted"
+    },
+    {
+      "alternatives": [],
+      "artifact_validation_status": "unknown",
+      "artifacts": [],
+      "assumptions": [],
+      "attempt": 1,
+      "authority": {},
+      "claim_epistemic_status": "unknown",
+      "conclusion": "",
+      "event_family": "authorization",
+      "event_id": "manuscript_result_elaboration.base.gate_readiness.control",
+      "evidence": [],
+      "falsifiers": [],
+      "handoff": {},
+      "obligations": [],
+      "operator": "",
+      "parent_artifact_ids": [],
+      "parent_event_ids": [
+        "manuscript_result_elaboration.base.validate_expansion.inference"
+      ],
+      "phase": "",
+      "premises": [],
+      "question": "",
+      "run_id": "fixture.manuscript_result_elaboration.base",
+      "scope": {},
+      "sequence": 25,
+      "skill": "results-paper-readiness-gatekeeper",
+      "step_id": "gate_readiness",
+      "timestamp": "",
+      "trace_incomplete": false,
+      "uncertainty": "unknown",
+      "warrant": "",
+      "workflow_disposition": "authorized"
+    },
+    {
+      "alternatives": [
+        {
+          "candidate": "Do not emit PaperReadinessDecision: The scope gate blocks continuum wording and the prior-art audit narrows the novelty statement.",
+          "disposition": "rejected",
+          "reason": "Show rejected revisions and unresolved markers, with finite, asymptotic, and continuum claims kept explicitly distinct. Negative evidence controls promotion."
+        }
+      ],
+      "artifact_validation_status": "integrity_valid",
+      "artifacts": [],
+      "assumptions": [],
+      "attempt": 1,
+      "authority": {
+        "absent": [
+          "unscoped-epistemic-upgrade"
+        ],
+        "exercised": [
+          "gate_readiness-assessment"
+        ],
+        "prohibitions_checked": [
+          "no hidden scope promotion"
+        ]
+      },
+      "claim_epistemic_status": "evidence_backed",
+      "conclusion": "gate_readiness produces PaperReadinessDecision: Integrate the finite theorem and retain the continuum marker as an open obligation.",
+      "event_family": "inference",
+      "event_id": "manuscript_result_elaboration.base.gate_readiness.inference",
+      "evidence": [
+        {
+          "artifact_type": "IntegratedPaperDraft",
+          "digest": "61c8ddbab2b6d4dded3cbe6cf9348c5fd6c658796985c80675774399043f4a90",
+          "path": "tests/fixtures/reasoning_trace/evidence/workflow-evidence.json",
+          "relation": "supports"
+        }
+      ],
+      "falsifiers": [
+        "A cutoff-uniform proof packet would permit reconsidering the continuum paragraph."
+      ],
+      "handoff": {},
+      "obligations": [],
+      "operator": "validate_exact_claim_boundary",
+      "parent_artifact_ids": [],
+      "parent_event_ids": [
+        "manuscript_result_elaboration.base.gate_readiness.control"
+      ],
+      "phase": "",
+      "premises": [
+        {
+          "statement": "IntegratedPaperDraft: The draft marks a finite result and an unresolved continuum paragraph.",
+          "type": "artifact"
+        }
+      ],
+      "question": "At gate_readiness, how does IntegratedPaperDraft bear on PaperReadinessDecision? Can the marked result be expanded without widening finite evidence into a continuum theorem?",
+      "run_id": "fixture.manuscript_result_elaboration.base",
+      "scope": {
+        "after": "finite theorem plus open continuum obligation",
+        "before": "expansion marker",
+        "model": "manuscript result",
+        "regime": "finite"
+      },
+      "sequence": 26,
+      "skill": "results-paper-readiness-gatekeeper",
+      "step_id": "gate_readiness",
+      "timestamp": "",
+      "trace_incomplete": false,
+      "uncertainty": "bounded by the declared artifact and open obligations",
+      "warrant": "At gate_readiness, validate_exact_claim_boundary checks IntegratedPaperDraft before emitting PaperReadinessDecision. Authority boundary: May elaborate and integrate supported manuscript claims; may not perform implicit discovery, erase disqualifiers, or promote finite evidence to continuum scope.",
+      "workflow_disposition": "accepted"
+    },
+    {
+      "alternatives": [],
+      "artifact_validation_status": "unknown",
+      "artifacts": [],
+      "assumptions": [],
+      "attempt": 1,
+      "authority": {},
+      "claim_epistemic_status": "unknown",
+      "conclusion": "Typed handoff to theorem_proof_delivery",
+      "event_family": "handoff",
+      "event_id": "manuscript_result_elaboration.handoff",
+      "evidence": [],
+      "falsifiers": [],
+      "handoff": {
+        "accepted": true,
+        "destination_workflow_id": "theorem_proof_delivery"
+      },
+      "obligations": [],
+      "operator": "",
+      "parent_artifact_ids": [],
+      "parent_event_ids": [
+        "manuscript_result_elaboration.base.gate_readiness.inference"
+      ],
+      "phase": "",
+      "premises": [],
+      "question": "",
+      "run_id": "fixture.manuscript_result_elaboration.base",
+      "scope": {},
+      "sequence": 27,
+      "skill": "",
+      "step_id": "",
+      "timestamp": "",
+      "trace_incomplete": false,
+      "uncertainty": "unknown",
+      "warrant": "The exit disposition and open obligations are explicit.",
+      "workflow_disposition": "handed_off"
+    }
+  ],
+  "handoff_contracts": [
+    {
+      "adapter": "paper_readiness_to_proof_queue",
+      "artifact_type": "ProofQueueItem",
+      "when": "new_theorem_requires_proof",
+      "workflow": "theorem_proof_delivery"
+    }
+  ],
+  "identity": {
+    "profile_id": "",
+    "profile_name": "",
+    "run_id": "fixture.manuscript_result_elaboration.base",
+    "target": "manuscript",
+    "trace_id": "trace.9b4a78e46487a264",
+    "workflow_id": "manuscript_result_elaboration",
+    "workflow_name": "Manuscript Result Elaboration",
+    "workflow_version": "1.0.0"
+  },
+  "observability_gaps": [],
+  "profile_topology": {},
+  "prohibitions": [
+    "No discovery marathon invocation",
+    "No conflation of finite asymptotic and continuum claims",
+    "No unresolved marker silently removed"
+  ],
+  "schema_version": "2.0",
+  "specialist_skills": [],
+  "validation_tail_start": ""
+}

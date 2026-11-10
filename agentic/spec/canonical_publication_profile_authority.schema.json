@@ -1,0 +1,215 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://abducer.local/spec/canonical_publication_profile_authority.schema.json",
+  "title": "Derived dependency authority for one canonical publication profile",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "authority_version",
+    "scope",
+    "declared_roots",
+    "entries",
+    "schema_closure",
+    "import_boundary",
+    "runtime_dependencies",
+    "authority_boundary",
+    "content_digest"
+  ],
+  "$defs": {
+    "path": {"type": "string", "minLength": 1, "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$)).+$"},
+    "role": {"type": "string", "minLength": 1},
+    "digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "callable_authority": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "role",
+        "module",
+        "qualname",
+        "code",
+        "code_digest",
+        "defaults",
+        "defaults_digest",
+        "keyword_defaults",
+        "keyword_defaults_digest",
+        "closure_cells",
+        "closure_cells_digest",
+        "identity_digest"
+      ],
+      "properties": {
+        "role": {"type": "string", "minLength": 1},
+        "module": {"type": "string"},
+        "qualname": {"type": "string", "minLength": 1},
+        "code": {"type": "object"},
+        "code_digest": {"$ref": "#/$defs/digest"},
+        "defaults": {},
+        "defaults_digest": {"$ref": "#/$defs/digest"},
+        "keyword_defaults": {},
+        "keyword_defaults_digest": {"$ref": "#/$defs/digest"},
+        "closure_cells": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["name", "value", "value_digest"],
+            "properties": {
+              "name": {"type": "string", "minLength": 1},
+              "value": {},
+              "value_digest": {"$ref": "#/$defs/digest"}
+            }
+          }
+        },
+        "closure_cells_digest": {"$ref": "#/$defs/digest"},
+        "identity_digest": {"$ref": "#/$defs/digest"}
+      }
+    }
+  },
+  "properties": {
+    "authority_version": {"const": "2.0.0"},
+    "scope": {"type": "string", "minLength": 1},
+    "declared_roots": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["kind", "path", "roles"],
+        "properties": {
+          "kind": {"enum": ["entry_python", "semantic"]},
+          "path": {"$ref": "#/$defs/path"},
+          "roles": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": {"$ref": "#/$defs/role"}
+          }
+        }
+      }
+    },
+    "entries": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["path", "roles", "byte_size", "content_digest"],
+        "properties": {
+          "path": {"$ref": "#/$defs/path"},
+          "roles": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": {"$ref": "#/$defs/role"}
+          },
+          "byte_size": {"type": "integer", "minimum": 0},
+          "content_digest": {"$ref": "#/$defs/digest"}
+        }
+      }
+    },
+    "schema_closure": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["literal_paths", "referenced_paths"],
+      "properties": {
+        "literal_paths": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/path"}
+        },
+        "referenced_paths": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/path"}
+        }
+      }
+    },
+    "import_boundary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "policy",
+        "repository_local_python_paths",
+        "stdlib_modules",
+        "third_party_modules"
+      ],
+      "properties": {
+        "policy": {"const": "conservative_repository_local_ast_import_closure_v2"},
+        "repository_local_python_paths": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/path"}
+        },
+        "stdlib_modules": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {"type": "string", "minLength": 1}
+        },
+        "third_party_modules": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["module", "distribution", "version"],
+            "properties": {
+              "module": {"type": "string", "minLength": 1},
+              "distribution": {"type": "string", "minLength": 1},
+              "version": {"type": "string", "minLength": 1}
+            }
+          }
+        }
+      }
+    },
+    "runtime_dependencies": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["name", "version"],
+        "properties": {
+          "name": {"type": "string", "minLength": 1},
+          "version": {"type": "string", "minLength": 1}
+        }
+      }
+    },
+    "dependency_authority_digest": {"$ref": "#/$defs/digest"},
+    "profile_semantics": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "profile_id",
+        "profile_version",
+        "bundle_prefix",
+        "authority_boundary",
+        "semantic_contract",
+        "semantic_contract_digest",
+        "callables",
+        "content_digest"
+      ],
+      "properties": {
+        "profile_id": {"type": "string", "minLength": 1},
+        "profile_version": {"type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"},
+        "bundle_prefix": {"type": "string", "pattern": "^[a-z][a-z0-9-]*$"},
+        "authority_boundary": {"type": "string", "minLength": 8},
+        "semantic_contract": {"type": "object"},
+        "semantic_contract_digest": {"$ref": "#/$defs/digest"},
+        "callables": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["build_authority", "validate_core", "build_evidence", "validate_evidence"],
+          "properties": {
+            "build_authority": {"$ref": "#/$defs/callable_authority"},
+            "validate_core": {"$ref": "#/$defs/callable_authority"},
+            "build_evidence": {"$ref": "#/$defs/callable_authority"},
+            "validate_evidence": {"$ref": "#/$defs/callable_authority"}
+          }
+        },
+        "content_digest": {"$ref": "#/$defs/digest"}
+      }
+    },
+    "authority_boundary": {"type": "string", "minLength": 8},
+    "content_digest": {"$ref": "#/$defs/digest"}
+  }
+}

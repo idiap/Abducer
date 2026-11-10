@@ -1,0 +1,85 @@
+{
+  "status": "implemented",
+  "verifier": "agentic/scripts/check_strict_prefix_qrep_examples.py",
+  "purpose": "finite prefix-scan evidence for the strict-prefix Qrep replay normalizer",
+  "examples": [
+    {
+      "id": "valid_two_row_strict_prefix_merge",
+      "description": "A quotient representative use is accepted because its same-theory certificate is displayed before first use.",
+      "base_support": [
+        "final_lb_line",
+        "formula_eval_parent"
+      ],
+      "dictionary_entries": [
+        {
+          "id": "qrep_A_B",
+          "row": "row_B",
+          "representative": "row_A",
+          "certificate_forest": [
+            "cert_A_equiv_B"
+          ],
+          "support": [
+            "row_A",
+            "row_B"
+          ],
+          "cert_line": 3,
+          "first_use_line": 4,
+          "rank": 1,
+          "dependencies": [],
+          "append_only": true,
+          "advice_free": true
+        }
+      ],
+      "expected_result": {
+        "accepted": true,
+        "reason": "accepted",
+        "k_qrep": [
+          "final_lb_line",
+          "formula_eval_parent",
+          "row_A",
+          "row_B"
+        ],
+        "d_q": 4
+      }
+    },
+    {
+      "id": "delayed_certificate_private_row_falsifier",
+      "description": "The same quotient use is rejected because the representative is used before the certificate is displayed.",
+      "base_support": [
+        "final_lb_line",
+        "formula_eval_parent"
+      ],
+      "dictionary_entries": [
+        {
+          "id": "qrep_A_B_late",
+          "row": "row_B",
+          "representative": "row_A",
+          "certificate_forest": [
+            "cert_A_equiv_B"
+          ],
+          "support": [
+            "row_A",
+            "row_B"
+          ],
+          "cert_line": 5,
+          "first_use_line": 4,
+          "rank": 1,
+          "dependencies": [],
+          "append_only": true,
+          "advice_free": true
+        }
+      ],
+      "expected_result": {
+        "accepted": false,
+        "reason": "certificate_not_strict_prefix",
+        "falsifier": "first_late_representative_use_private_row"
+      }
+    }
+  ],
+  "nonclaims": [
+    "not_a_P_not_NP_result",
+    "not_a_H_N_lower_bound",
+    "not_a_RealSATInfluenceRealizer_N_arb_theorem",
+    "not_an_unannotated_LRAT_DRAT_support_audit"
+  ]
+}

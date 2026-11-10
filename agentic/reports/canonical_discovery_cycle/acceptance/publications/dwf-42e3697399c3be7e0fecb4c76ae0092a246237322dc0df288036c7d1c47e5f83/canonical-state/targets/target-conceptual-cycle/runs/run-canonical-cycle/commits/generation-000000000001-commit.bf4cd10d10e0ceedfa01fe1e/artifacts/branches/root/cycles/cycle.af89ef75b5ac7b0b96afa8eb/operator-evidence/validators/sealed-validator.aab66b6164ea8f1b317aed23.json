@@ -1,0 +1,128 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://abducer.local/spec/dynamic_experiment_spec.schema.json",
+  "title": "Theory-requested dynamic experiment specification",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "experiment_id",
+    "branch_id",
+    "target_id",
+    "run_id",
+    "state_version",
+    "theory_programme_id",
+    "source_theory_programme_digest",
+    "source_reflection_packet_digest",
+    "conceptual_system_ids",
+    "theoretical_question_id",
+    "probe_role",
+    "expected_conceptual_change",
+    "triage_digest",
+    "adapter",
+    "model",
+    "preregistration",
+    "controls",
+    "seed_policy",
+    "resource_budget",
+    "transfer_boundary",
+    "code_version",
+    "environment",
+    "spec_digest"
+  ],
+  "properties": {
+    "schema_version": {"const": 1},
+    "experiment_id": {"type": "string", "minLength": 1},
+    "branch_id": {"type": "string", "minLength": 1},
+    "target_id": {"type": "string", "minLength": 1},
+    "run_id": {"type": "string", "minLength": 1},
+    "state_version": {"type": "integer", "minimum": 0},
+    "theory_programme_id": {"type": "string", "minLength": 1},
+    "source_theory_programme_digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "source_reflection_packet_digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "conceptual_system_ids": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {"type": "string", "minLength": 1}
+    },
+    "theoretical_question_id": {"type": "string", "minLength": 1},
+    "probe_role": {"enum": ["discriminator", "falsifier", "mechanism_support", "boundary_mapper", "proof_support"]},
+    "expected_conceptual_change": {"type": "string", "minLength": 1},
+    "triage_digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "adapter": {"enum": ["exact", "sympy", "finite_model", "numeric", "sweep", "lean", "hybrid"]},
+    "model": {"type": "object"},
+    "preregistration": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["hypothesis", "decision_rule", "stopping_rule", "analysis_plan", "registered_at"],
+      "properties": {
+        "hypothesis": {"type": "string", "minLength": 1},
+        "decision_rule": {"type": "object", "minProperties": 1},
+        "stopping_rule": {"type": "string", "minLength": 1},
+        "analysis_plan": {"type": "string", "minLength": 1},
+        "registered_at": {"type": "string", "format": "date-time"},
+        "estimand": {"type": "string"},
+        "sample_size": {"type": "integer", "minimum": 1},
+        "uncertainty_method": {"type": "string"}
+      }
+    },
+    "controls": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["control_id", "variable", "value", "role"],
+        "properties": {
+          "control_id": {"type": "string", "minLength": 1},
+          "variable": {"type": "string", "minLength": 1},
+          "value": {},
+          "role": {"enum": ["held_fixed", "negative", "positive", "baseline", "calibration"]}
+        }
+      }
+    },
+    "seed_policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["stochastic", "policy"],
+      "properties": {
+        "stochastic": {"type": "boolean"},
+        "policy": {"enum": ["not_applicable", "fixed_master_seed", "enumerated_seeds"]},
+        "master_seed": {"type": "integer"},
+        "seeds": {"type": "array", "items": {"type": "integer"}, "uniqueItems": true}
+      }
+    },
+    "resource_budget": {"type": "object", "minProperties": 1},
+    "transfer_boundary": {"type": "string", "minLength": 1},
+    "code_version": {"type": "string", "minLength": 1},
+    "environment": {"type": "object", "minProperties": 1},
+    "spec_digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "created_at": {"type": "string", "format": "date-time"}
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"seed_policy": {"properties": {"stochastic": {"const": true}}}}},
+      "then": {
+        "properties": {
+          "preregistration": {
+            "required": ["estimand", "sample_size", "uncertainty_method"],
+            "properties": {
+              "estimand": {"minLength": 1},
+              "uncertainty_method": {"minLength": 1}
+            }
+          },
+          "seed_policy": {
+            "properties": {"policy": {"enum": ["fixed_master_seed", "enumerated_seeds"]}}
+          }
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://abducer.local/spec/dynamic_experiment_causal_materializer_clock_v3.schema.json",
+  "title": "Governed local clock evidence for causal byte materialization v3",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "clock_kind", "clock_id", "clock_digest",
+    "clock_authority_id", "invocation_id", "request_ref", "receipt_ref",
+    "requested_at", "started_at", "completed_at", "sealed_at", "ordering_verified"
+  ],
+  "properties": {
+    "schema_version": {"const": "3.0.0"},
+    "clock_kind": {"const": "causal_byte_materializer_governed_clock"},
+    "clock_id": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/identifier"},
+    "clock_digest": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/digest"},
+    "clock_authority_id": {"const": "canonical-local-governed-utc-clock"},
+    "invocation_id": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/identifier"},
+    "request_ref": {"$ref": "./dynamic_experiment_compact_evidence_ref_v3.schema.json"},
+    "receipt_ref": {"$ref": "./dynamic_experiment_compact_evidence_ref_v3.schema.json"},
+    "requested_at": {"type": "string", "format": "date-time"},
+    "started_at": {"type": "string", "format": "date-time"},
+    "completed_at": {"type": "string", "format": "date-time"},
+    "sealed_at": {"type": "string", "format": "date-time"},
+    "ordering_verified": {"const": true}
+  }
+}

@@ -1,0 +1,45 @@
+# SPDX-FileCopyrightText: © 2026 Idiap Research Institute <contact@idiap.ch>
+#
+# SPDX-FileContributor: Andre Freitas <andre.freitas@idiap.ch>
+# Neuro-symbolic AI Group
+#
+# SPDX-FileContributor: Danilo Gusicuma <danilo.gusicuma@idiap.ch>
+# Neuro-symbolic AI Group
+#
+# SPDX-License-Identifier: MIT
+name: Discovery validation
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  discovery-validation:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          version: "0.8.3"
+          enable-cache: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install the exact locked toolchain
+        run: uv sync --frozen --all-groups
+      - name: Refuse empty or accidentally truncated test collection
+        run: |
+          uv run pytest --collect-only -q > "$RUNNER_TEMP/discovery-collection.txt"
+          uv run python -c 'import pathlib,re,sys; text=pathlib.Path(sys.argv[1]).read_text(); matches=re.findall(r"(?:collected |^)(\d+) tests?", text, re.M); count=int(matches[-1]) if matches else len([line for line in text.splitlines() if "::test" in line]); print(f"collected={count}"); raise SystemExit(0 if count >= 50 else 1)' "$RUNNER_TEMP/discovery-collection.txt"
+      - name: Validate foundational schemas
+        run: |
+          uv run python agentic/scripts/validate_discovery_operator_receipts.py
+          uv run python agentic/scripts/validate_discovery_epistemic_ledger.py
+      - name: Validate the exact checked-in canonical discovery publication
+        run: uv run python agentic/scripts/validate_canonical_discovery_publication.py
+      - name: Run the complete repository test suite
+        run: uv run pytest -q

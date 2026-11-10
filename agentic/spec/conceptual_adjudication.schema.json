@@ -1,0 +1,421 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://abducer.local/spec/conceptual_adjudication.schema.json",
+  "title": "Blind plural conceptual adjudication",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "adjudication_id",
+    "target_id",
+    "stage_id",
+    "blind_packet_digest",
+    "candidate_bindings_digest",
+    "report_ids",
+    "candidate_consensus",
+    "nondominated_candidate_aliases",
+    "qualified_candidate_aliases",
+    "preferred_candidate_aliases",
+    "preferred_system_ids",
+    "dominance_witnesses",
+    "preference_set_digest",
+    "selected_candidate_alias",
+    "selected_system_id",
+    "decision",
+    "authority",
+    "authority_boundary",
+    "adjudication_digest"
+  ],
+  "properties": {
+    "schema_version": {"const": "2.0.0"},
+    "adjudication_id": {"type": "string", "minLength": 1},
+    "target_id": {"type": "string", "minLength": 1},
+    "stage_id": {"type": "string", "minLength": 1},
+    "blind_packet_digest": {"$ref": "#/$defs/digest"},
+    "candidate_bindings_digest": {"$ref": "#/$defs/digest"},
+    "report_ids": {
+      "type": "array",
+      "minItems": 3,
+      "uniqueItems": true,
+      "items": {"type": "string", "minLength": 1}
+    },
+    "candidate_consensus": {
+      "type": "array",
+      "minItems": 2,
+      "items": {"$ref": "#/$defs/candidateConsensus"}
+    },
+    "nondominated_candidate_aliases": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {"type": "string", "minLength": 1}
+    },
+    "qualified_candidate_aliases": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {"type": "string", "minLength": 1}
+    },
+    "preferred_candidate_aliases": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {"type": "string", "minLength": 1}
+    },
+    "preferred_system_ids": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {"type": "string", "minLength": 1}
+    },
+    "dominance_witnesses": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/dominanceWitness"}
+    },
+    "preference_set_digest": {"$ref": "#/$defs/digest"},
+    "selected_candidate_alias": {"type": ["string", "null"], "minLength": 1},
+    "selected_system_id": {"type": ["string", "null"], "minLength": 1},
+    "decision": {
+      "enum": ["prefer_unique", "retain_plural_nondominated", "revise_all"]
+    },
+    "authority": {"$ref": "#/$defs/authority"},
+    "stage_comparison": {"$ref": "#/$defs/stageComparison"},
+    "authority_boundary": {"type": "string", "minLength": 1},
+    "created_at": {"type": "string", "format": "date-time"},
+    "adjudication_digest": {"$ref": "#/$defs/digest"}
+  },
+  "$defs": {
+    "digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "nullableDigest": {
+      "oneOf": [
+        {"$ref": "#/$defs/digest"},
+        {"type": "null"}
+      ]
+    },
+    "rating": {"enum": ["unknown", "weak", "adequate", "strong"]},
+    "dimensionConsensus": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "ratings",
+        "minimum_rating",
+        "unanimous_adequate_or_strong",
+        "warrant_digests"
+      ],
+      "properties": {
+        "ratings": {
+          "type": "array",
+          "minItems": 3,
+          "items": {"$ref": "#/$defs/rating"}
+        },
+        "minimum_rating": {"$ref": "#/$defs/rating"},
+        "unanimous_adequate_or_strong": {"type": "boolean"},
+        "warrant_digests": {
+          "type": "array",
+          "minItems": 3,
+          "items": {"$ref": "#/$defs/digest"}
+        }
+      }
+    },
+    "dimensionMap": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "essential_relevance",
+        "explanatory_mediation",
+        "conceptual_depth",
+        "unification_power",
+        "preserved_difference",
+        "generativity",
+        "reflective_resilience",
+        "truth_aptness"
+      ],
+      "properties": {
+        "essential_relevance": {"$ref": "#/$defs/dimensionConsensus"},
+        "explanatory_mediation": {"$ref": "#/$defs/dimensionConsensus"},
+        "conceptual_depth": {"$ref": "#/$defs/dimensionConsensus"},
+        "unification_power": {"$ref": "#/$defs/dimensionConsensus"},
+        "preserved_difference": {"$ref": "#/$defs/dimensionConsensus"},
+        "generativity": {"$ref": "#/$defs/dimensionConsensus"},
+        "reflective_resilience": {"$ref": "#/$defs/dimensionConsensus"},
+        "truth_aptness": {"$ref": "#/$defs/dimensionConsensus"}
+      }
+    },
+    "candidateConsensus": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "candidate_alias",
+        "system_id",
+        "dimensions",
+        "clears_noncompensatory_floor"
+      ],
+      "properties": {
+        "candidate_alias": {"type": "string", "minLength": 1},
+        "system_id": {"type": "string", "minLength": 1},
+        "dimensions": {"$ref": "#/$defs/dimensionMap"},
+        "clears_noncompensatory_floor": {"type": "boolean"}
+      }
+    },
+    "dominanceWitness": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "dominated_candidate_alias",
+        "dominating_candidate_aliases",
+        "strict_dimensions",
+        "witness_digest"
+      ],
+      "properties": {
+        "dominated_candidate_alias": {"type": "string", "minLength": 1},
+        "dominating_candidate_aliases": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"type": "string", "minLength": 1}
+        },
+        "strict_dimensions": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "essential_relevance",
+              "explanatory_mediation",
+              "conceptual_depth",
+              "unification_power",
+              "preserved_difference",
+              "generativity",
+              "reflective_resilience",
+              "truth_aptness"
+            ]
+          }
+        },
+        "witness_digest": {"$ref": "#/$defs/digest"}
+      }
+    },
+    "authority": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "blind_to_preferred_answer",
+        "content_warrants_verified",
+        "plural_independent_perspectives",
+        "panel_evidence_class",
+        "judge_authority_digests",
+        "correlation_group_digests",
+        "conceptual_preference_authorized",
+        "claim_scope",
+        "external_human_evidence_available",
+        "external_human_evidence_status",
+        "external_generalization_authorized"
+      ],
+      "properties": {
+        "blind_to_preferred_answer": {"const": true},
+        "content_warrants_verified": {"const": true},
+        "plural_independent_perspectives": {"type": "boolean"},
+        "panel_evidence_class": {
+          "enum": ["correlated_internal_critique", "independent_internal_judgment"]
+        },
+        "judge_authority_digests": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/digest"}
+        },
+        "correlation_group_digests": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/digest"}
+        },
+        "conceptual_preference_authorized": {"type": "boolean"},
+        "claim_scope": {"const": "internal_target_specific_conceptual_preference"},
+        "external_human_evidence_available": {"const": false},
+        "external_human_evidence_status": {"const": "unavailable"},
+        "external_generalization_authorized": {"const": false}
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {"plural_independent_perspectives": {"const": true}},
+            "required": ["plural_independent_perspectives"]
+          },
+          "then": {
+            "properties": {"panel_evidence_class": {"const": "independent_internal_judgment"}}
+          },
+          "else": {
+            "properties": {"panel_evidence_class": {"const": "correlated_internal_critique"}}
+          }
+        }
+      ]
+    },
+    "semanticChange": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "path",
+        "operation",
+        "semantic_kind",
+        "before_digest",
+        "after_digest"
+      ],
+      "properties": {
+        "path": {"type": "string", "pattern": "^/"},
+        "operation": {"enum": ["added", "removed", "modified"]},
+        "semantic_kind": {"enum": ["claim", "primitive", "relation", "dependency", "correction"]},
+        "before_digest": {"$ref": "#/$defs/nullableDigest"},
+        "after_digest": {"$ref": "#/$defs/nullableDigest"}
+      }
+    },
+    "componentDigest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["before_digest", "after_digest", "changed"],
+      "properties": {
+        "before_digest": {"$ref": "#/$defs/digest"},
+        "after_digest": {"$ref": "#/$defs/digest"},
+        "changed": {"type": "boolean"}
+      }
+    },
+    "componentDigestMap": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["claims", "primitives", "relations", "dependencies", "objections", "corrections"],
+      "properties": {
+        "claims": {"$ref": "#/$defs/componentDigest"},
+        "primitives": {"$ref": "#/$defs/componentDigest"},
+        "relations": {"$ref": "#/$defs/componentDigest"},
+        "dependencies": {"$ref": "#/$defs/componentDigest"},
+        "objections": {"$ref": "#/$defs/componentDigest"},
+        "corrections": {"$ref": "#/$defs/componentDigest"}
+      }
+    },
+    "objectionLink": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "round_alias",
+        "candidate_alias",
+        "objection_digest",
+        "correction_digest",
+        "changed_paths",
+        "link_digest"
+      ],
+      "properties": {
+        "round_alias": {"type": "string", "minLength": 1},
+        "candidate_alias": {"type": "string", "minLength": 1},
+        "objection_digest": {"$ref": "#/$defs/digest"},
+        "correction_digest": {"$ref": "#/$defs/digest"},
+        "changed_paths": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"type": "string", "pattern": "^/"}
+        },
+        "link_digest": {"$ref": "#/$defs/digest"}
+      }
+    },
+    "semanticPatch": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "system_id",
+        "parent_candidate_alias",
+        "synthesis_candidate_alias",
+        "parent_content_digest",
+        "synthesis_content_digest",
+        "content_changed",
+        "changes",
+        "component_digests",
+        "round_history_prefix_preserved",
+        "new_round_aliases",
+        "objection_links",
+        "unlinked_change_paths",
+        "all_changes_objection_linked",
+        "invalid_link_reasons",
+        "patch_digest"
+      ],
+      "properties": {
+        "schema_version": {"const": "1.0.0"},
+        "system_id": {"type": ["string", "null"], "minLength": 1},
+        "parent_candidate_alias": {"type": ["string", "null"], "minLength": 1},
+        "synthesis_candidate_alias": {"type": ["string", "null"], "minLength": 1},
+        "parent_content_digest": {"$ref": "#/$defs/digest"},
+        "synthesis_content_digest": {"$ref": "#/$defs/digest"},
+        "content_changed": {"type": "boolean"},
+        "changes": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/semanticChange"}
+        },
+        "component_digests": {"$ref": "#/$defs/componentDigestMap"},
+        "round_history_prefix_preserved": {"type": "boolean"},
+        "new_round_aliases": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {"type": "string", "minLength": 1}
+        },
+        "objection_links": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/objectionLink"}
+        },
+        "unlinked_change_paths": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {"type": "string", "pattern": "^/"}
+        },
+        "all_changes_objection_linked": {"type": "boolean"},
+        "invalid_link_reasons": {
+          "type": "array",
+          "items": {"type": "string", "minLength": 1}
+        },
+        "patch_digest": {"$ref": "#/$defs/digest"}
+      }
+    },
+    "stageComparison": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "applicability",
+        "prior_adjudication_id",
+        "prior_selected_system_id",
+        "current_selected_system_id",
+        "new_reflection_rounds",
+        "round_history_prefix_preserved",
+        "reflective_resilience_increased",
+        "nondegrading_dimension_floors",
+        "improved_dimensions",
+        "semantic_patch",
+        "material",
+        "reason"
+      ],
+      "properties": {
+        "applicability": {"const": "applicable"},
+        "prior_adjudication_id": {"type": "string", "minLength": 1},
+        "prior_selected_system_id": {"type": ["string", "null"], "minLength": 1},
+        "current_selected_system_id": {"type": ["string", "null"], "minLength": 1},
+        "new_reflection_rounds": {"type": "integer", "minimum": 0},
+        "round_history_prefix_preserved": {"type": "boolean"},
+        "reflective_resilience_increased": {"type": "boolean"},
+        "nondegrading_dimension_floors": {"type": "boolean"},
+        "improved_dimensions": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "essential_relevance",
+              "explanatory_mediation",
+              "conceptual_depth",
+              "unification_power",
+              "preserved_difference",
+              "generativity",
+              "reflective_resilience",
+              "truth_aptness"
+            ]
+          }
+        },
+        "semantic_patch": {"$ref": "#/$defs/semanticPatch"},
+        "material": {"type": "boolean"},
+        "reason": {"type": "string", "minLength": 1}
+      }
+    }
+  }
+}

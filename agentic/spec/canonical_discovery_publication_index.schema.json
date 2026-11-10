@@ -1,0 +1,160 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://abducer.local/spec/canonical_discovery_publication_index.schema.json",
+  "title": "Immutable canonical-publication index snapshot or atomic pointer",
+  "oneOf": [
+    {"$ref": "#/$defs/pointer"},
+    {"$ref": "#/$defs/snapshot"}
+  ],
+  "$defs": {
+    "digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "relative_path": {
+      "type": "string",
+      "minLength": 1,
+      "not": {"pattern": "^(?:/|[A-Za-z]:[\\\\/])"}
+    },
+    "pointer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "index_kind",
+        "snapshot_path",
+        "snapshot_sha256",
+        "snapshot_size_bytes",
+        "current_bundle_id",
+        "current_evidence_id",
+        "content_digest"
+      ],
+      "properties": {
+        "schema_version": {"const": "2.0.0"},
+        "index_kind": {"const": "canonical_discovery_publication_pointer"},
+        "snapshot_path": {"$ref": "#/$defs/relative_path"},
+        "snapshot_sha256": {"$ref": "#/$defs/digest"},
+        "snapshot_size_bytes": {"type": "integer", "minimum": 1},
+        "current_bundle_id": {"type": "string", "pattern": "^[a-z][a-z0-9-]*-[0-9a-f]{64}$"},
+        "current_evidence_id": {"type": "string", "pattern": "^evidence-[0-9a-f]{64}$"},
+        "content_digest": {"$ref": "#/$defs/digest"}
+      }
+    },
+    "snapshot": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "index_kind",
+        "current",
+        "history",
+        "legacy_publications",
+        "legacy_archives",
+        "authority_boundary"
+      ],
+      "properties": {
+        "schema_version": {"const": "2.0.0"},
+        "index_kind": {"const": "canonical_discovery_publication_snapshot"},
+        "current": {"$ref": "#/$defs/publication"},
+        "history": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/publication"}
+        },
+        "legacy_publications": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/legacy_publication"}
+        },
+        "legacy_archives": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/archive"}
+        },
+        "authority_boundary": {"type": "string", "minLength": 1}
+      }
+    },
+    "publication": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "bundle_id",
+        "bundle_path",
+        "evidence_id",
+        "evidence_path",
+        "bundle_manifest_digest",
+        "evidence_manifest_digest",
+        "target_id",
+        "run_id",
+        "cycle_id",
+        "commit_id",
+        "profile_id",
+        "profile_version",
+        "profile_authority_digest",
+        "published_utc"
+      ],
+      "properties": {
+        "bundle_id": {"type": "string", "pattern": "^[a-z][a-z0-9-]*-[0-9a-f]{64}$"},
+        "bundle_path": {"$ref": "#/$defs/relative_path"},
+        "evidence_id": {"type": "string", "pattern": "^evidence-[0-9a-f]{64}$"},
+        "evidence_path": {"$ref": "#/$defs/relative_path"},
+        "bundle_manifest_digest": {"$ref": "#/$defs/digest"},
+        "evidence_manifest_digest": {"$ref": "#/$defs/digest"},
+        "target_id": {"type": "string", "minLength": 1},
+        "run_id": {"type": "string", "minLength": 1},
+        "cycle_id": {"type": "string", "minLength": 1},
+        "commit_id": {"type": "string", "minLength": 1},
+        "profile_id": {"type": "string", "pattern": "^[a-z][a-z0-9._-]{2,80}$"},
+        "profile_version": {"type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"},
+        "profile_authority_digest": {"$ref": "#/$defs/digest"},
+        "published_utc": {"type": "string", "format": "date-time"}
+      }
+    },
+    "legacy_publication": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "bundle_id",
+        "bundle_path",
+        "evidence_path",
+        "bundle_manifest_digest",
+        "evidence_manifest_digest",
+        "target_id",
+        "run_id",
+        "cycle_id",
+        "commit_id",
+        "published_utc"
+      ],
+      "properties": {
+        "bundle_id": {"type": "string", "pattern": "^[a-z][a-z0-9-]*-[0-9a-f]{64}$"},
+        "bundle_path": {"$ref": "#/$defs/relative_path"},
+        "evidence_path": {"$ref": "#/$defs/relative_path"},
+        "bundle_manifest_digest": {"$ref": "#/$defs/digest"},
+        "evidence_manifest_digest": {"$ref": "#/$defs/digest"},
+        "target_id": {"type": "string", "minLength": 1},
+        "run_id": {"type": "string", "minLength": 1},
+        "cycle_id": {"type": "string", "minLength": 1},
+        "commit_id": {"type": "string", "minLength": 1},
+        "published_utc": {"type": "string", "format": "date-time"}
+      }
+    },
+    "archive": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "archive_id",
+        "archive_path",
+        "archive_manifest_digest",
+        "source_path",
+        "source_tree_digest",
+        "source_retained"
+      ],
+      "properties": {
+        "archive_id": {"type": "string", "minLength": 8},
+        "archive_path": {"$ref": "#/$defs/relative_path"},
+        "archive_manifest_digest": {"$ref": "#/$defs/digest"},
+        "source_path": {"type": "string", "minLength": 1},
+        "source_locator_mode": {
+          "enum": ["repository_relative", "external_absolute_origin"]
+        },
+        "source_tree_digest": {"$ref": "#/$defs/digest"},
+        "source_retained": {"const": true}
+      }
+    }
+  }
+}

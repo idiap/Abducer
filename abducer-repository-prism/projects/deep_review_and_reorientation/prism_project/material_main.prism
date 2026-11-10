@@ -1,0 +1,82 @@
+# lunar-runtime: {"declaration":"MaterializedDeepReviewAndReorientation","entry_argument":"evidence","execute_hook":"abducer-workflow-execute","id":"deep_review_and_reorientation","input_schema":{"additionalProperties":false,"default":{"review_evidence_summary":"The finite-family induction route is plausible, but preservation of the intermediate fixed-point set and the infinite-family limit remain separate."},"properties":{"review_evidence_summary":{"default":"The finite-family induction route is plausible, but preservation of the intermediate fixed-point set and the infinite-family limit remain separate.","maxLength":16000,"minLength":1,"type":"string"}},"required":["review_evidence_summary"],"type":"object"},"metadata":{"completion_contract":{"allowed_final_statuses":["passed","completed"],"forbid_blockers":true,"reasoning_complete":true,"reasoning_events_min":8,"terminal_state":"completed"},"description":"compare defeaters and repairs to select a governed reorientation or stop","model_required":true,"network_required":false,"provenance_contract":{"agent_invocations":[{"activated_skill_ids":["epistemic-status-ledger"],"agent_name":"review_state_material_agent","workflow_occurrence":"review_state"},{"activated_skill_ids":["counterexample-hunter"],"agent_name":"defeater_assessment_material_agent","workflow_occurrence":"defeater_assessment"},{"activated_skill_ids":["kb-abduce"],"agent_name":"repair_options_material_agent","workflow_occurrence":"repair_options"},{"activated_skill_ids":["epistemic-status-ledger"],"agent_name":"reorientation_decision_material_agent","workflow_occurrence":"reorientation_decision"}],"required_source_reads":[]},"reasoning_contract":{"steps":["review_state","defeater_assessment","repair_options","reorientation_decision"],"workflow":"DeepReviewAndReorientation"},"reasoning_required":true,"required_host_capabilities":["model","prism-engine","reasoning-events"],"scientific_truth_verified":false,"semantic_mode":"operational-model-generated","source_materialization_status":"linked_fake_handler_smoke","timeout_seconds":1800},"output_schema":{"additionalProperties":false,"properties":{"analysis_results":{"type":"object"},"compact_prism_input":{"type":"object"},"markdown":{"minLength":1,"type":"string"},"narrative_slots":{"type":"array"},"report_verification":{"properties":{"reasoning_complete":{"const":true},"status":{"const":"passed"}},"required":["status","reasoning_complete"],"type":"object"},"structured_value":{"properties":{"execution_provenance":{"type":"object"},"final_disposition":{"properties":{"blockers":{"maxItems":0,"type":"array"},"reasoning_complete":{"const":true},"status":{"const":"passed"}},"required":["status","reasoning_complete","blockers"],"type":"object"},"reasoning_result":{"type":"object"}},"required":["final_disposition","reasoning_result","execution_provenance"],"type":"object"}},"required":["markdown","structured_value","analysis_results","compact_prism_input","narrative_slots","report_verification"],"type":"object"},"prepare_hook":"abducer-workflow-prepare","verify_hook":"abducer-workflow-verify"}
+
+# Host-executed material graph for the complete reviewed reasoning path.
+# Generated values retain the source epistemic boundary and are not native proof or experiment receipts.
+
+from types import (
+    FormalizedReviewState,
+    ReorientationDecisionAssessment,
+    ReorientationDisposition,
+    ReorientationRepairOptions,
+    ReviewDefeaterAssessment,
+    ReviewEvidenceBundle,
+)
+from occurrences import (
+    ReorientationDecisionInput,
+)
+
+from generated.material_types import (
+    MaterialReorientationDecisionAssessment,
+)
+
+from generated.defeater_assessment_skill_1 import defeater_assessment_skill_1
+from generated.reorientation_decision_skill_1 import reorientation_decision_skill_1
+from generated.repair_options_skill_1 import repair_options_skill_1
+from generated.review_state_skill_1 import review_state_skill_1
+
+# Real model capability for source occurrence review_state:EvidentialReviewStateGrounding.
+agent review_state_material_agent(
+    task: ReviewEvidenceBundle,
+) -> Result[Generated[FormalizedReviewState], ModelFailure]
+    ! {AI.Generate, Context.Disclose}:
+    skills: Skills[ReviewEvidenceBundle] = [review_state_skill_1]
+
+# Real model capability for source occurrence defeater_assessment:RefutationalReviewDefeaterAssessment.
+agent defeater_assessment_material_agent(
+    task: FormalizedReviewState,
+) -> Result[Generated[ReviewDefeaterAssessment], ModelFailure]
+    ! {AI.Generate, Context.Disclose}:
+    skills: Skills[FormalizedReviewState] = [defeater_assessment_skill_1]
+
+# Real model capability for source occurrence repair_options:AbductiveReorientationRepairFormation.
+agent repair_options_material_agent(
+    task: FormalizedReviewState,
+) -> Result[Generated[ReorientationRepairOptions], ModelFailure]
+    ! {AI.Generate, Context.Disclose}:
+    skills: Skills[FormalizedReviewState] = [repair_options_skill_1]
+
+# Real model capability for source occurrence reorientation_decision:EvidentialReorientationDecisionAssessment.
+agent reorientation_decision_material_agent(
+    task: ReorientationDecisionInput,
+) -> Result[Generated[MaterialReorientationDecisionAssessment], ModelFailure]
+    ! {AI.Generate, Context.Disclose}:
+    skills: Skills[ReorientationDecisionInput] = [reorientation_decision_skill_1]
+
+workflow MaterializedDeepReviewAndReorientation(
+    evidence: ReviewEvidenceBundle,
+) -> Generated[MaterialReorientationDecisionAssessment]
+    fails ModelFailure
+    ! {AI.Generate, Context.Disclose}:
+    sequence:
+        # One formalized state prevents the challenge and repair branches from
+        # silently reviewing different evidence bases.
+        [review_state: review_state_material_agent(evidence)]
+        parallel:
+            # These branches are complementary: one attacks, the other repairs.
+            [defeater_assessment: defeater_assessment_material_agent(review_state.value)]
+            [repair_options: repair_options_material_agent(review_state.value)]
+        # The final calibration must consider both bounded findings and repair options.
+        [reorientation_decision: reorientation_decision_material_agent(ReorientationDecisionInput(
+            defeater_assessment = defeater_assessment.value,
+            repair_options = repair_options.value,
+        ))]
+
+    return reorientation_decision
+
+
+def main(
+    evidence: ReviewEvidenceBundle,
+    model_access: ModelGenerate,
+    disclosure: ContextDisclose,
+) -> Result[Generated[MaterialReorientationDecisionAssessment], ModelFailure] ! {AI.Generate, Context.Disclose}:
+    return solve MaterializedDeepReviewAndReorientation(evidence)

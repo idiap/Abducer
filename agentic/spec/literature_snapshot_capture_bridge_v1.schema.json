@@ -1,0 +1,473 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://abducer.local/schemas/literature_snapshot_capture_bridge_v1.schema.json",
+  "title": "Typed bridge from a retained raw literature capture to a semantic snapshot",
+  "description": "A replayable, domain-neutral lineage proof that keeps the raw byte root and semantic snapshot root cryptographically distinct while binding exact inclusion, exclusion, lane, source-identity, and locator projections.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "artifact_kind",
+    "bridge_id",
+    "target_id",
+    "run_id",
+    "state_version",
+    "raw_capture_root",
+    "semantic_snapshot_root",
+    "derivation",
+    "root_separation",
+    "authority",
+    "authority_boundary",
+    "content_digest"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "artifact_kind": {
+      "const": "literature_snapshot_capture_bridge"
+    },
+    "bridge_id": {
+      "$ref": "#/$defs/identifier"
+    },
+    "target_id": {
+      "$ref": "#/$defs/identifier"
+    },
+    "run_id": {
+      "$ref": "#/$defs/identifier"
+    },
+    "state_version": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "raw_capture_root": {
+      "$ref": "#/$defs/rawCaptureRoot"
+    },
+    "semantic_snapshot_root": {
+      "$ref": "#/$defs/semanticSnapshotRoot"
+    },
+    "derivation": {
+      "$ref": "#/$defs/derivation"
+    },
+    "root_separation": {
+      "$ref": "#/$defs/rootSeparation"
+    },
+    "authority": {
+      "$ref": "#/$defs/authority"
+    },
+    "authority_boundary": {
+      "type": "string",
+      "minLength": 240
+    },
+    "content_digest": {
+      "$ref": "#/$defs/digest"
+    }
+  },
+  "$defs": {
+    "identifier": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,199}$"
+    },
+    "digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "nonempty": {
+      "type": "string",
+      "minLength": 1
+    },
+    "identifiers": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/identifier"
+      }
+    },
+    "rawCaptureRoot": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "literature_bundle_id",
+        "literature_bundle_digest",
+        "capture_id",
+        "target_id",
+        "sha256",
+        "byte_length",
+        "capture_completed_at",
+        "coverage_cutoff",
+        "lane_count",
+        "raw_result_count"
+      ],
+      "properties": {
+        "literature_bundle_id": {
+          "$ref": "#/$defs/identifier"
+        },
+        "literature_bundle_digest": {
+          "$ref": "#/$defs/digest"
+        },
+        "capture_id": {
+          "$ref": "#/$defs/identifier"
+        },
+        "target_id": {
+          "$ref": "#/$defs/identifier"
+        },
+        "sha256": {
+          "$ref": "#/$defs/digest"
+        },
+        "byte_length": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "capture_completed_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "coverage_cutoff": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "lane_count": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "raw_result_count": {
+          "type": "integer",
+          "minimum": 1
+        }
+      }
+    },
+    "semanticSnapshotRoot": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "snapshot_id",
+        "target_id",
+        "content_digest",
+        "theory_state_digest",
+        "search_started_at",
+        "search_completed_at",
+        "coverage_cutoff",
+        "provenance_mode",
+        "validation_status",
+        "lane_count",
+        "source_count"
+      ],
+      "properties": {
+        "snapshot_id": {
+          "$ref": "#/$defs/identifier"
+        },
+        "target_id": {
+          "$ref": "#/$defs/identifier"
+        },
+        "content_digest": {
+          "$ref": "#/$defs/digest"
+        },
+        "theory_state_digest": {
+          "$ref": "#/$defs/digest"
+        },
+        "search_started_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "search_completed_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "coverage_cutoff": {
+          "$ref": "#/$defs/nonempty"
+        },
+        "provenance_mode": {
+          "enum": [
+            "live",
+            "local_only",
+            "frozen_response_replay"
+          ]
+        },
+        "validation_status": {
+          "const": "validated"
+        },
+        "lane_count": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "source_count": {
+          "type": "integer",
+          "minimum": 1
+        }
+      }
+    },
+    "laneBinding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "lane_id",
+        "lane_type",
+        "capture_lane_digest",
+        "semantic_lane_digest",
+        "queries_digest",
+        "included_source_ids",
+        "excluded_result_ids"
+      ],
+      "properties": {
+        "lane_id": {
+          "$ref": "#/$defs/identifier"
+        },
+        "lane_type": {
+          "$ref": "#/$defs/nonempty"
+        },
+        "capture_lane_digest": {
+          "$ref": "#/$defs/digest"
+        },
+        "semantic_lane_digest": {
+          "$ref": "#/$defs/digest"
+        },
+        "queries_digest": {
+          "$ref": "#/$defs/digest"
+        },
+        "included_source_ids": {
+          "$ref": "#/$defs/identifiers"
+        },
+        "excluded_result_ids": {
+          "$ref": "#/$defs/identifiers"
+        }
+      }
+    },
+    "sourceBinding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "result_id",
+        "source_id",
+        "raw_result_digest",
+        "semantic_source_digest",
+        "shared_locator_digest",
+        "raw_url",
+        "semantic_url",
+        "raw_title_digest",
+        "semantic_title_digest",
+        "title_relation",
+        "capture_lane_ids",
+        "semantic_lane_ids"
+      ],
+      "properties": {
+        "result_id": {
+          "$ref": "#/$defs/identifier"
+        },
+        "source_id": {
+          "$ref": "#/$defs/identifier"
+        },
+        "raw_result_digest": {
+          "$ref": "#/$defs/digest"
+        },
+        "semantic_source_digest": {
+          "$ref": "#/$defs/digest"
+        },
+        "shared_locator_digest": {
+          "$ref": "#/$defs/digest"
+        },
+        "raw_url": {
+          "$ref": "#/$defs/nonempty"
+        },
+        "semantic_url": {
+          "$ref": "#/$defs/nonempty"
+        },
+        "raw_title_digest": {
+          "$ref": "#/$defs/digest"
+        },
+        "semantic_title_digest": {
+          "$ref": "#/$defs/digest"
+        },
+        "title_relation": {
+          "enum": [
+            "exact",
+            "normalized_display_only"
+          ]
+        },
+        "capture_lane_ids": {
+          "$ref": "#/$defs/identifiers"
+        },
+        "semantic_lane_ids": {
+          "$ref": "#/$defs/identifiers"
+        }
+      }
+    },
+    "excludedBinding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "result_id",
+        "source_id",
+        "disposition",
+        "claim_status",
+        "raw_result_digest",
+        "capture_lane_ids",
+        "semantic_source_absent"
+      ],
+      "properties": {
+        "result_id": {
+          "$ref": "#/$defs/identifier"
+        },
+        "source_id": {
+          "$ref": "#/$defs/identifier"
+        },
+        "disposition": {
+          "$ref": "#/$defs/nonempty"
+        },
+        "claim_status": {
+          "$ref": "#/$defs/nonempty"
+        },
+        "raw_result_digest": {
+          "$ref": "#/$defs/digest"
+        },
+        "capture_lane_ids": {
+          "$ref": "#/$defs/identifiers"
+        },
+        "semantic_source_absent": {
+          "const": true
+        }
+      }
+    },
+    "derivation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "relation",
+        "selection_rule",
+        "source_identity_rule",
+        "normalization_scope",
+        "included_source_bijection",
+        "coverage_cutoff_relation",
+        "temporal_order",
+        "lane_bindings",
+        "source_bindings",
+        "excluded_bindings",
+        "projection_digest"
+      ],
+      "properties": {
+        "relation": {
+          "const": "semantic_snapshot_is_selection_identity_projection_of_retained_raw_capture"
+        },
+        "selection_rule": {
+          "const": "raw_disposition_prefix_included_v1"
+        },
+        "source_identity_rule": {
+          "const": "exact_source_id_url_and_lane_membership_v1"
+        },
+        "normalization_scope": {
+          "const": "display_and_semantic_enrichment_remain_semantic_root_only"
+        },
+        "included_source_bijection": {
+          "const": "exact"
+        },
+        "coverage_cutoff_relation": {
+          "const": "same_instant"
+        },
+        "temporal_order": {
+          "const": "semantic_snapshot_materialized_not_before_capture_completion"
+        },
+        "lane_bindings": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/laneBinding"
+          }
+        },
+        "source_bindings": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/sourceBinding"
+          }
+        },
+        "excluded_bindings": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/excludedBinding"
+          }
+        },
+        "projection_digest": {
+          "$ref": "#/$defs/digest"
+        }
+      }
+    },
+    "rootSeparation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "relation",
+        "raw_capture_sha256",
+        "semantic_snapshot_content_digest",
+        "roots_distinct",
+        "hash_equality_claim"
+      ],
+      "properties": {
+        "relation": {
+          "const": "cryptographically_distinct_roots_linked_by_replayed_derivation"
+        },
+        "raw_capture_sha256": {
+          "$ref": "#/$defs/digest"
+        },
+        "semantic_snapshot_content_digest": {
+          "$ref": "#/$defs/digest"
+        },
+        "roots_distinct": {
+          "const": true
+        },
+        "hash_equality_claim": {
+          "const": false
+        }
+      }
+    },
+    "authority": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "raw_capture_byte_identity",
+        "semantic_snapshot_validation",
+        "selection_bijection",
+        "source_locator_bijection",
+        "semantic_enrichment_from_capture_authority",
+        "source_truth_authority",
+        "global_latestness_authority",
+        "exhaustiveness_authority",
+        "proof_authority",
+        "world_authority"
+      ],
+      "properties": {
+        "raw_capture_byte_identity": {
+          "const": true
+        },
+        "semantic_snapshot_validation": {
+          "const": true
+        },
+        "selection_bijection": {
+          "const": true
+        },
+        "source_locator_bijection": {
+          "const": true
+        },
+        "semantic_enrichment_from_capture_authority": {
+          "type": "null"
+        },
+        "source_truth_authority": {
+          "type": "null"
+        },
+        "global_latestness_authority": {
+          "type": "null"
+        },
+        "exhaustiveness_authority": {
+          "type": "null"
+        },
+        "proof_authority": {
+          "type": "null"
+        },
+        "world_authority": {
+          "type": "null"
+        }
+      }
+    }
+  }
+}

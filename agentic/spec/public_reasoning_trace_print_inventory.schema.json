@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "agentic/spec/public_reasoning_trace_print_inventory.schema.json",
+  "title": "Public reasoning trace deterministic print inventory",
+  "type": "object",
+  "required": ["schema_version", "packet_digest", "identity", "lens", "sections", "semantic_ids", "field_dispositions"],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "packet_digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "identity": {"type": "object"},
+    "lens": {"type": "object", "required": ["lens_id", "visible_name", "focus_question"]},
+    "sections": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["section_id", "title", "disposition", "item_ids", "item_count", "items"],
+        "properties": {
+          "section_id": {"type": "string"},
+          "title": {"type": "string"},
+          "disposition": {"enum": ["rendered", "summarized_with_complete_appendix", "not_applicable", "omitted_with_reason"]},
+          "reason": {"type": "string"},
+          "item_ids": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+          "item_count": {"type": "integer", "minimum": 0},
+          "items": {"type": "array"}
+        },
+        "additionalProperties": false
+      }
+    },
+    "semantic_ids": {"type": "object", "additionalProperties": {"type": "array", "items": {"type": "string"}, "uniqueItems": true}},
+    "field_dispositions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["packet_field", "disposition", "destination"],
+        "properties": {
+          "packet_field": {"type": "string"},
+          "disposition": {"enum": ["rendered", "summarized_with_complete_appendix", "not_applicable", "omitted_with_reason"]},
+          "destination": {"type": "string"},
+          "reason": {"type": "string"}
+        },
+        "additionalProperties": false
+      }
+    },
+    "limits": {"type": "object"},
+    "public_rationale_boundary": {"type": "string"}
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,49 @@
+# SPDX-FileCopyrightText: Copyright © 2026 Idiap Research Institute <contact@idiap.ch>
+#
+# SPDX-FileContributor: Andre Freitas <andre.freitas@idiap.ch>
+# Neuro-symbolic AI Group
+#
+# SPDX-FileContributor: Danilo Gusicuma <danilo.gusicuma@idiap.ch>
+# Neuro-symbolic AI Group
+#
+# SPDX-License-Identifier: MIT
+name: NewtonianMechanics
+domain: physical_concept
+role: Mechanics in low-velocity inertial regimes.
+state_space: "positions and momenta over absolute time"
+observables:
+  - position
+  - velocity
+  - momentum
+dynamics:
+  equations:
+    - "F = m a"
+symmetries:
+  spacetime:
+    - Galilean
+parameters:
+  constants:
+    - mass
+measurement_model:
+  maps:
+    - "position -> ruler readings"
+    - "time -> clock readings"
+regime:
+  valid_when:
+    - "v/c << 1"
+  invalid_when:
+    - "relativistic velocities"
+limiting_cases:
+  - "successor should recover Newtonian kinetic energy as v/c -> 0"
+preservation:
+  - low_velocity_trajectory_predictions
+counterexamples:
+  - "law is not Lorentz covariant near light speed"
+anomalies:
+  - label: NonCovariance
+    description: "Newtonian velocity addition conflicts with invariant light speed"
+    witness:
+      type: thought_experiment
+      value: invariant_light_speed_pressure
+    repair_target:
+      - InvariantizeKinematics

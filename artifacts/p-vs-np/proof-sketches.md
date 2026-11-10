@@ -1,0 +1,396 @@
+# Proof Sketches
+
+## Stats
+
+- Proof sketches: 6
+- Conjectures used: 34
+- Strategies used: 6
+- Bridges used: 20
+- Hypotheses used: 44
+- Strategy families: invariant-lift-through-intermediate-object=3, surrogate-reduction-transfer=3
+
+## Strategy Families
+
+- `invariant-lift-through-intermediate-object`: Introduce a conjectured intermediate object or invariant, prove that the source regime induces it, then force the target consequence through that invariant.
+- `spectral-calculus-realization`: Use spectral theorem or functional calculus data to realize the hidden bridge object, then exponentiate or reconstruct the target dynamics from that representation.
+- `generator-recovery-from-unitary-orbits`: Recover the infinitesimal generator from strongly continuous orbit data, prove the required domain and closure properties, then identify the target operator.
+- `domain-core-self-adjointness`: Build a dense core on which the hidden operator is well-defined, prove symmetry or closure there, and upgrade the core data to self-adjointness.
+- `measure-construction-from-positive-functional`: Recover the hidden measure object from positivity on the function space, then prove that the resulting set function is regular and uniquely represents the target functional.
+- `regularity-via-compact-open-approximation`: Use compact-open approximation, Urysohn-type separation, and regularity reconstruction to turn topological control into a unique representing measure.
+- `integration-duality-decomposition`: Express the target functional through integration against a regular measure, then extend to signed or complex duality using Jordan decomposition or total variation control.
+- `affine-averaging-to-fixed-point`: Use affine orbit averages inside the compact convex set, extract a limiting witness by compactness, and prove that the limit is a fixed point for the single map.
+- `invariant-fixed-point-subset-reduction`: Construct the fixed-point subset of one map, prove it is nonempty compact convex and preserved by commuting maps, then recurse on the reduced invariant subset.
+- `finite-intersection-compactness-lift`: Show every finite commuting subfamily has a common fixed point, package these as nonempty compact sets, and use finite intersection plus compactness to obtain a point fixed by the whole family.
+- `surrogate-reduction-transfer`: Define a surrogate object or promise problem, reduce the source statement into it, and transfer the required consequence through the surrogate interface.
+- `barrier-escape-reencoding`: Re-encode the conjectured bridge concept in a representation that preserves the intended invariant while sidestepping the currently dominant barrier family.
+- `contradiction-via-collapse-or-separation`: Assume the conjectured bridge fails or the target consequence does not hold, then derive a forbidden collapse or contradiction with a known separation profile.
+- `bootstrapped-derandomization-transfer`: Use a derandomization or pseudorandomness-style object as the bridge, then bootstrap it into a lower-bound or separation consequence.
+- `case-split-regime-transfer`: Partition the argument by regime, model, or threshold case, prove each branch against the same bridge concept, and reassemble the target consequence.
+
+## Sketches
+
+| sketch_id | conjecture_id | strategy_id | family | score | target |
+|---|---|---|---|---|---|
+| psk.001 | conj.001 | strat.001 | invariant-lift-through-intermediate-object | 0.9047 | NP-not-in-P/poly |
+| psk.002 | conj.004 | strat.001 | invariant-lift-through-intermediate-object | 0.8973 | NP-not-in-P/poly |
+| psk.003 | conj.026 | strat.001 | invariant-lift-through-intermediate-object | 0.8903 | exponential-lower-bound |
+| psk.004 | conj.021 | strat.002 | surrogate-reduction-transfer | 0.8711 | MCSP-hardness-transfer |
+| psk.005 | conj.003 | strat.001 | surrogate-reduction-transfer | 0.8709 | NP-not-in-P/poly |
+| psk.006 | conj.022 | strat.002 | surrogate-reduction-transfer | 0.8637 | MCSP-hardness-transfer |
+
+### psk.001 - MCSP witness family via strat.001
+- Conjecture: conj.001
+- Strategy: strat.001 (Cross-Model Strategy around st.def.hardness-magnification-phenomenon-programme-leve)
+- Bridge: bridge.001
+- Family: invariant-lift-through-intermediate-object
+- Score: 0.9047
+- Target consequence: NP-not-in-P/poly
+- Antecedent: nonuniform-circuit-exponential-lower-bound
+- Invariant: MCSP complexity profile in nonuniform-circuits
+- Carrier kind: family of instances equipped with a monotone witness measure
+- Typing status: typed
+- Barrier scope: none
+- Family rationale: Introduce a conjectured intermediate object or invariant, prove that the source regime induces it, then force the target consequence through that invariant.
+- Bridge definition: Treat `MCSP witness family` as a `intermediate-complexity-measure` attached to the route `st.def.hardness-magnification-phenomenon-programme-leve` -> `st.thm.oliveira-pich-santhanam-magnification-near-state` and typed as a family of instances equipped with a monotone witness measure, playing the role of `An explicit family of instances equipped with a monotone witness measure that records enough of `A barely-nontrivial lower bound for an explicit problem Q in a weak model` to test whether the route can reach `NP-not-in-P/poly` while preserving `MCSP complexity profile in nonuniform-circuits`.`, carrying the source-side content `A barely-nontrivial lower bound for an explicit problem Q in a weak model` across nonuniform-circuits toward `major consequences such as NP not in P/poly` while preserving `MCSP complexity profile in nonuniform-circuits`. Minimal admissibility conditions: admits source-side witness data for `A barely-nontrivial lower bound for an explicit problem Q in a weak model`; preserves the route invariant `MCSP complexity profile in nonuniform-circuits`; forces the target-side payoff `NP-not-in-P/poly`.
+- Conditional proposition: If these assumptions hold and the route-specific lemma `Prove that a hardness-magnification witness family turns `A barely-nontrivial lower bound for an explicit problem Q in a weak model` into `major consequences such as NP not in P/poly` while preserving `MCSP complexity profile in nonuniform-circuits`.` is discharged, then `NP-not-in-P/poly` follows at `st.thm.oliveira-pich-santhanam-magnification-near-state`.
+- Route synopsis: Move from `st.def.hardness-magnification-phenomenon-programme-leve` on problem `MCSP` in model `nonuniform-circuits` using `A barely-nontrivial lower bound for an explicit problem Q in a weak model` toward `st.thm.oliveira-pich-santhanam-magnification-near-state` in model `nonuniform-circuits` to obtain `major consequences such as NP not in P/poly`.
+- Model shift: nonuniform-circuits
+- Threshold shift: major separation consequence
+- Consequence shift: upgrade `A barely-nontrivial lower bound for an explicit problem Q in a weak model` into `major consequences such as NP not in P/poly`
+- Missing route lemma: Prove that a hardness-magnification witness family turns `A barely-nontrivial lower bound for an explicit problem Q in a weak model` into `major consequences such as NP not in P/poly` while preserving `MCSP complexity profile in nonuniform-circuits`.
+- Mathematical assumptions:
+  - The source-side content `A barely-nontrivial lower bound for an explicit problem Q in a weak model` is available at `st.def.hardness-magnification-phenomenon-programme-leve`.
+  - There exists an admissible realization of `MCSP witness family` as a family of instances equipped with a monotone witness measure.
+  - The realization preserves `MCSP complexity profile in nonuniform-circuits` across nonuniform-circuits.
+- Definitional commitments: admits source-side witness data for `A barely-nontrivial lower bound for an explicit problem Q in a weak model`, forces the target-side payoff `NP-not-in-P/poly`, preserves the route invariant `MCSP complexity profile in nonuniform-circuits`, admits a concrete realization on the current source-target theorem pair
+- Counterfactual test: Allow `MCSP witness family` to ignore the source-side content `A barely-nontrivial lower bound for an explicit problem Q in a weak model` and only preserve topical overlap. => bridge-degrades-or-fails
+- Proof obligations:
+  - obl.01: Prove the source-to-object claim: the source-side content `A barely-nontrivial lower bound for an explicit problem Q in a weak model` available at `st.def.hardness-magnification-phenomenon-programme-leve` can be organized into `MCSP witness family` as a family of instances equipped with a monotone witness measure.
+  - obl.02: Prove the payoff claim: once `MCSP witness family` carries the route data from `A barely-nontrivial lower bound for an explicit problem Q in a weak model` toward `major consequences such as NP not in P/poly`, it forces `NP-not-in-P/poly` at `st.thm.oliveira-pich-santhanam-magnification-near-state`.
+  - obl.03: Prove the transport claim: every admissible realization of `MCSP witness family` preserves `MCSP complexity profile in nonuniform-circuits` while crossing the route nonuniform-circuits.
+  - obl.04: Discharge the route lemma: Prove that a hardness-magnification witness family turns `A barely-nontrivial lower bound for an explicit problem Q in a weak model` into `major consequences such as NP not in P/poly` while preserving `MCSP complexity profile in nonuniform-circuits`.
+  - obl.05: Show that every admissible realization of `MCSP witness family` preserves `MCSP complexity profile in nonuniform-circuits` across nonuniform-circuits.
+  - obl.06: Prove that any admissible realization of `MCSP witness family` forces `NP-not-in-P/poly` once the route-specific lemma `Prove that a hardness-magnification witness family turns `A barely-nontrivial lower bound for an explicit problem Q in a weak model` into `major consequences such as NP not in P/poly` while preserving `MCSP complexity profile in nonuniform-circuits`.` is discharged.
+  - obl.07: Keep the argument faithful to the `Current Bridge Agenda` regime while linking `st.def.hardness-magnification-phenomenon-programme-leve` to `st.thm.oliveira-pich-santhanam-magnification-near-state`.
+- Candidate lemmas:
+  - bridge.001.lemma.01: Source-to-object lemma: the source-side content `A barely-nontrivial lower bound for an explicit problem Q in a weak model` at `st.def.hardness-magnification-phenomenon-programme-leve` yields a realization of `MCSP witness family` as a family of instances equipped with a monotone witness measure, satisfying admits source-side witness data for `A barely-nontrivial lower bound for an explicit problem Q in a weak model`; preserves the route invariant `MCSP complexity profile in nonuniform-circuits`; forces the target-side payoff `NP-not-in-P/poly`.
+  - bridge.001.lemma.02: Transport lemma: every admissible realization of `MCSP witness family` preserves `MCSP complexity profile in nonuniform-circuits` while crossing nonuniform-circuits.
+  - bridge.001.lemma.03: Payoff lemma: if `MCSP witness family` is realized, carries `MCSP complexity profile in nonuniform-circuits`, and discharges the route-specific step from `A barely-nontrivial lower bound for an explicit problem Q in a weak model` to `major consequences such as NP not in P/poly`, then `NP-not-in-P/poly` holds at `st.thm.oliveira-pich-santhanam-magnification-near-state`.
+  - bridge.001.lemma.04: Route lemma: Prove that a hardness-magnification witness family turns `A barely-nontrivial lower bound for an explicit problem Q in a weak model` into `major consequences such as NP not in P/poly` while preserving `MCSP complexity profile in nonuniform-circuits`.
+- Lemma chain summary:
+  - Source-to-object lemma: the source-side content `A barely-nontrivial lower bound for an explicit problem Q in a weak model` at `st.def.hardness-magnification-phenomenon-programme-leve` yields a realization of `MCSP witness family` as a family of instances equipped with a monotone witness measure, satisfying admits source-side witness data for `A barely-nontrivial lower bound for an explicit problem Q in a weak model`; preserves the route invariant `MCSP complexity profile in nonuniform-circuits`; forces the target-side payoff `NP-not-in-P/poly`.
+  - Transport lemma: every admissible realization of `MCSP witness family` preserves `MCSP complexity profile in nonuniform-circuits` while crossing nonuniform-circuits.
+  - Payoff lemma: if `MCSP witness family` is realized, carries `MCSP complexity profile in nonuniform-circuits`, and discharges the route-specific step from `A barely-nontrivial lower bound for an explicit problem Q in a weak model` to `major consequences such as NP not in P/poly`, then `NP-not-in-P/poly` holds at `st.thm.oliveira-pich-santhanam-magnification-near-state`.
+  - Route lemma: Prove that a hardness-magnification witness family turns `A barely-nontrivial lower bound for an explicit problem Q in a weak model` into `major consequences such as NP not in P/poly` while preserving `MCSP complexity profile in nonuniform-circuits`.
+- Proof outline:
+  - step.01: Define `MCSP witness family` as a family of instances equipped with a monotone witness measure with the necessary attributes extracted in `conj.001`. -> A typed bridge object with explicit carrier, admissibility conditions, and theorem-family commitments.
+  - step.02: Show that the source-side content `A barely-nontrivial lower bound for an explicit problem Q in a weak model` induces `MCSP complexity profile in nonuniform-circuits` inside `MCSP witness family`. -> An invariant-preservation lemma for the conjectured object.
+  - step.03: Prove that a hardness-magnification witness family turns `A barely-nontrivial lower bound for an explicit problem Q in a weak model` into `major consequences such as NP not in P/poly` while preserving `MCSP complexity profile in nonuniform-circuits`. -> A bridge lemma linking the intermediate object to the target payoff.
+  - step.04: Use the realized bridge object to force `NP-not-in-P/poly`. -> A payoff theorem candidate or a sharply localized remaining obstruction.
+- Barrier checkpoints:
+  - barrier.01: Verify that no named barrier is already attached to the bridge commitment. / If a hidden barrier appears, reclassify the sketch family before continuing.
+- Abort conditions:
+  - Abort if the negative-route intervention does not expose the expected failure: Allow `MCSP witness family` to ignore the source-side content `A barely-nontrivial lower bound for an explicit problem Q in a weak model` and only preserve topical overlap. => bridge-degrades-or-fails.
+  - Abort if `MCSP witness family` cannot be defined as a family of instances equipped with a monotone witness measure on the current theorem pair.
+  - Abort if the route-specific lemma fails: Prove that a hardness-magnification witness family turns `A barely-nontrivial lower bound for an explicit problem Q in a weak model` into `major consequences such as NP not in P/poly` while preserving `MCSP complexity profile in nonuniform-circuits`.
+  - Abort if the payoff lemma does not improve over the existing bridge consequence or only restates known dependencies.
+- Failure mode: Allow `MCSP witness family` to ignore the source-side content `A barely-nontrivial lower bound for an explicit problem Q in a weak model` and only preserve topical overlap. bridge-degrades-or-fails The bridge object must absorb the actual source-side mathematical content rather than merely name the antecedent.
+- Success signal: A theorem-family-specific payoff lemma is isolated and survives the designated counterfactual probe.
+
+### psk.002 - MCSP witness family via strat.001
+- Conjecture: conj.004
+- Strategy: strat.001 (Cross-Model Strategy around st.def.hardness-magnification-phenomenon-programme-leve)
+- Bridge: bridge.002
+- Family: invariant-lift-through-intermediate-object
+- Score: 0.8973
+- Target consequence: NP-not-in-P/poly
+- Antecedent: nonuniform-circuit-exponential-lower-bound
+- Invariant: MCSP complexity profile in nonuniform-circuits
+- Carrier kind: family of instances equipped with a monotone witness measure
+- Typing status: typed
+- Barrier scope: none
+- Family rationale: Introduce a conjectured intermediate object or invariant, prove that the source regime induces it, then force the target consequence through that invariant.
+- Bridge definition: Treat `MCSP witness family` as a `intermediate-complexity-measure` attached to the route `st.def.hardness-magnification-phenomenon-programme-leve` -> `st.thm.oliveira-santhanam-hardness-magnification-for-na` and typed as a family of instances equipped with a monotone witness measure, playing the role of `An explicit family of instances equipped with a monotone witness measure that records enough of `A barely-nontrivial lower bound for an explicit problem Q in a weak model` to test whether the route can reach `NP-not-in-P/poly` while preserving `MCSP complexity profile in nonuniform-circuits`.`, carrying the source-side content `A barely-nontrivial lower bound for an explicit problem Q in a weak model` across nonuniform-circuits -> formula-size toward `major lower bounds for NP in much stronger models (including superpolynomial formula/circuit lower bounds, and in some parameter...` while preserving `MCSP complexity profile in nonuniform-circuits`. Minimal admissibility conditions: admits source-side witness data for `A barely-nontrivial lower bound for an explicit problem Q in a weak model`; preserves the route invariant `MCSP complexity profile in nonuniform-circuits`; forces the target-side payoff `NP-not-in-P/poly`.
+- Conditional proposition: If these assumptions hold and the route-specific lemma `Prove that a hardness-magnification witness family preserves `MCSP complexity profile in nonuniform-circuits` while transporting the route from the nonuniform-circuits regime to the formula-size regime strongly enough to derive `major lower bounds for NP in much stronger models (including superpolynomial formula/circuit lower bounds, and in some parameter...`.` is discharged, then `NP-not-in-P/poly` follows at `st.thm.oliveira-santhanam-hardness-magnification-for-na`.
+- Route synopsis: Move from `st.def.hardness-magnification-phenomenon-programme-leve` on problem `MCSP` in model `nonuniform-circuits` using `A barely-nontrivial lower bound for an explicit problem Q in a weak model` toward `st.thm.oliveira-santhanam-hardness-magnification-for-na` in model `formula-size` to obtain `major lower bounds for NP in much stronger models (including superpolynomial formula/circuit lower bounds, and in some parameter...`.
+- Model shift: nonuniform-circuits -> formula-size
+- Threshold shift: major separation consequence
+- Consequence shift: upgrade `A barely-nontrivial lower bound for an explicit problem Q in a weak model` into `major lower bounds for NP in much stronger models (including superpolynomial formula/circuit lower bounds, and in some parameter...`
+- Missing route lemma: Prove that a hardness-magnification witness family preserves `MCSP complexity profile in nonuniform-circuits` while transporting the route from the nonuniform-circuits regime to the formula-size regime strongly enough to derive `major lower bounds for NP in much stronger models (including superpolynomial formula/circuit lower bounds, and in some parameter...`.
+- Mathematical assumptions:
+  - The source-side content `A barely-nontrivial lower bound for an explicit problem Q in a weak model` is available at `st.def.hardness-magnification-phenomenon-programme-leve`.
+  - There exists an admissible realization of `MCSP witness family` as a family of instances equipped with a monotone witness measure.
+  - The realization preserves `MCSP complexity profile in nonuniform-circuits` across nonuniform-circuits -> formula-size.
+- Definitional commitments: admits source-side witness data for `A barely-nontrivial lower bound for an explicit problem Q in a weak model`, forces the target-side payoff `NP-not-in-P/poly`, preserves the route invariant `MCSP complexity profile in nonuniform-circuits`, admits a concrete realization on the current source-target theorem pair
+- Counterfactual test: Allow `MCSP witness family` to ignore the source-side content `A barely-nontrivial lower bound for an explicit problem Q in a weak model` and only preserve topical overlap. => bridge-degrades-or-fails
+- Proof obligations:
+  - obl.01: Prove the source-to-object claim: the source-side content `A barely-nontrivial lower bound for an explicit problem Q in a weak model` available at `st.def.hardness-magnification-phenomenon-programme-leve` can be organized into `MCSP witness family` as a family of instances equipped with a monotone witness measure.
+  - obl.02: Prove the payoff claim: once `MCSP witness family` carries the route data from `A barely-nontrivial lower bound for an explicit problem Q in a weak model` toward `major lower bounds for NP in much stronger models (including superpolynomial formula/circuit lower bounds, and in some parameter...`, it forces `NP-not-in-P/poly` at `st.thm.oliveira-santhanam-hardness-magnification-for-na`.
+  - obl.03: Prove the transport claim: every admissible realization of `MCSP witness family` preserves `MCSP complexity profile in nonuniform-circuits` while crossing the route nonuniform-circuits -> formula-size.
+  - obl.04: Discharge the route lemma: Prove that a hardness-magnification witness family preserves `MCSP complexity profile in nonuniform-circuits` while transporting the route from the nonuniform-circuits regime to the formula-size regime strongly enough to derive `major lower bounds for NP in much stronger models (including superpolynomial formula/circuit lower bounds, and in some parameter...`.
+  - obl.05: Show that every admissible realization of `MCSP witness family` preserves `MCSP complexity profile in nonuniform-circuits` across nonuniform-circuits -> formula-size.
+  - obl.06: Prove that any admissible realization of `MCSP witness family` forces `NP-not-in-P/poly` once the route-specific lemma `Prove that a hardness-magnification witness family preserves `MCSP complexity profile in nonuniform-circuits` while transporting the route from the nonuniform-circuits regime to the formula-size regime strongly enough to derive `major lower bounds for NP in much stronger models (including superpolynomial formula/circuit lower bounds, and in some parameter...`.` is discharged.
+  - obl.07: Keep the argument faithful to the `Current Bridge Agenda` regime while linking `st.def.hardness-magnification-phenomenon-programme-leve` to `st.thm.oliveira-santhanam-hardness-magnification-for-na`.
+- Candidate lemmas:
+  - bridge.002.lemma.01: Source-to-object lemma: the source-side content `A barely-nontrivial lower bound for an explicit problem Q in a weak model` at `st.def.hardness-magnification-phenomenon-programme-leve` yields a realization of `MCSP witness family` as a family of instances equipped with a monotone witness measure, satisfying admits source-side witness data for `A barely-nontrivial lower bound for an explicit problem Q in a weak model`; preserves the route invariant `MCSP complexity profile in nonuniform-circuits`; forces the target-side payoff `NP-not-in-P/poly`.
+  - bridge.002.lemma.02: Transport lemma: every admissible realization of `MCSP witness family` preserves `MCSP complexity profile in nonuniform-circuits` while crossing nonuniform-circuits -> formula-size.
+  - bridge.002.lemma.03: Payoff lemma: if `MCSP witness family` is realized, carries `MCSP complexity profile in nonuniform-circuits`, and discharges the route-specific step from `A barely-nontrivial lower bound for an explicit problem Q in a weak model` to `major lower bounds for NP in much stronger models (including superpolynomial formula/circuit lower bounds, and in some parameter...`, then `NP-not-in-P/poly` holds at `st.thm.oliveira-santhanam-hardness-magnification-for-na`.
+  - bridge.002.lemma.04: Route lemma: Prove that a hardness-magnification witness family preserves `MCSP complexity profile in nonuniform-circuits` while transporting the route from the nonuniform-circuits regime to the formula-size regime strongly enough to derive `major lower bounds for NP in much stronger models (including superpolynomial formula/circuit lower bounds, and in some parameter...`.
+- Lemma chain summary:
+  - Source-to-object lemma: the source-side content `A barely-nontrivial lower bound for an explicit problem Q in a weak model` at `st.def.hardness-magnification-phenomenon-programme-leve` yields a realization of `MCSP witness family` as a family of instances equipped with a monotone witness measure, satisfying admits source-side witness data for `A barely-nontrivial lower bound for an explicit problem Q in a weak model`; preserves the route invariant `MCSP complexity profile in nonuniform-circuits`; forces the target-side payoff `NP-not-in-P/poly`.
+  - Transport lemma: every admissible realization of `MCSP witness family` preserves `MCSP complexity profile in nonuniform-circuits` while crossing nonuniform-circuits -> formula-size.
+  - Payoff lemma: if `MCSP witness family` is realized, carries `MCSP complexity profile in nonuniform-circuits`, and discharges the route-specific step from `A barely-nontrivial lower bound for an explicit problem Q in a weak model` to `major lower bounds for NP in much stronger models (including superpolynomial formula/circuit lower bounds, and in some parameter...`, then `NP-not-in-P/poly` holds at `st.thm.oliveira-santhanam-hardness-magnification-for-na`.
+  - Route lemma: Prove that a hardness-magnification witness family preserves `MCSP complexity profile in nonuniform-circuits` while transporting the route from the nonuniform-circuits regime to the formula-size regime strongly enough to derive `major lower bounds for NP in much stronger models (including superpolynomial formula/circuit lower bounds, and in some parameter...`.
+- Proof outline:
+  - step.01: Define `MCSP witness family` as a family of instances equipped with a monotone witness measure with the necessary attributes extracted in `conj.004`. -> A typed bridge object with explicit carrier, admissibility conditions, and theorem-family commitments.
+  - step.02: Show that the source-side content `A barely-nontrivial lower bound for an explicit problem Q in a weak model` induces `MCSP complexity profile in nonuniform-circuits` inside `MCSP witness family`. -> An invariant-preservation lemma for the conjectured object.
+  - step.03: Prove that a hardness-magnification witness family preserves `MCSP complexity profile in nonuniform-circuits` while transporting the route from the nonuniform-circuits regime to the formula-size regime strongly enough to derive `major lower bounds for NP in much stronger models (including superpolynomial formula/circuit lower bounds, and in some parameter...`. -> A bridge lemma linking the intermediate object to the target payoff.
+  - step.04: Use the realized bridge object to force `NP-not-in-P/poly`. -> A payoff theorem candidate or a sharply localized remaining obstruction.
+- Barrier checkpoints:
+  - barrier.01: Verify that no named barrier is already attached to the bridge commitment. / If a hidden barrier appears, reclassify the sketch family before continuing.
+- Abort conditions:
+  - Abort if the negative-route intervention does not expose the expected failure: Allow `MCSP witness family` to ignore the source-side content `A barely-nontrivial lower bound for an explicit problem Q in a weak model` and only preserve topical overlap. => bridge-degrades-or-fails.
+  - Abort if `MCSP witness family` cannot be defined as a family of instances equipped with a monotone witness measure on the current theorem pair.
+  - Abort if the route-specific lemma fails: Prove that a hardness-magnification witness family preserves `MCSP complexity profile in nonuniform-circuits` while transporting the route from the nonuniform-circuits regime to the formula-size regime strongly enough to derive `major lower bounds for NP in much stronger models (including superpolynomial formula/circuit lower bounds, and in some parameter...`.
+  - Abort if the payoff lemma does not improve over the existing bridge consequence or only restates known dependencies.
+- Failure mode: Allow `MCSP witness family` to ignore the source-side content `A barely-nontrivial lower bound for an explicit problem Q in a weak model` and only preserve topical overlap. bridge-degrades-or-fails The bridge object must absorb the actual source-side mathematical content rather than merely name the antecedent.
+- Success signal: A theorem-family-specific payoff lemma is isolated and survives the designated counterfactual probe.
+
+### psk.003 - MCSP witness family via strat.001
+- Conjecture: conj.026
+- Strategy: strat.001 (Cross-Model Strategy around st.def.hardness-magnification-phenomenon-programme-leve)
+- Bridge: bridge.016
+- Family: invariant-lift-through-intermediate-object
+- Score: 0.8903
+- Target consequence: exponential-lower-bound
+- Antecedent: nonuniform-circuit-exponential-lower-bound
+- Invariant: exponential-lower-bound witness complexity
+- Carrier kind: family of instances equipped with a monotone witness measure
+- Typing status: typed
+- Barrier scope: none
+- Family rationale: Introduce a conjectured intermediate object or invariant, prove that the source regime induces it, then force the target consequence through that invariant.
+- Bridge definition: Treat `MCSP witness family` as a `intermediate-complexity-measure` attached to the route `st.def.hardness-magnification-phenomenon-programme-leve` -> `st.thm.atserias-m-uller-simple-general-magnification-fr` and typed as a family of instances equipped with a monotone witness measure, playing the role of `An explicit family of instances equipped with a monotone witness measure that records enough of `A barely-nontrivial lower bound for an explicit problem Q in a weak model` to test whether the route can reach `exponential-lower-bound` while preserving `exponential-lower-bound witness complexity`.`, carrying the source-side content `A barely-nontrivial lower bound for an explicit problem Q in a weak model` across nonuniform-circuits toward `There exist general-purpose magnification theorems (not problem-specific) showing that certain mild lower bounds for...` while preserving `exponential-lower-bound witness complexity`. Minimal admissibility conditions: admits source-side witness data for `A barely-nontrivial lower bound for an explicit problem Q in a weak model`; preserves the route invariant `exponential-lower-bound witness complexity`; aligns the model shift (nonuniform-circuits) with an explicit transport map; forces the target-side payoff `exponential-lower-bound`.
+- Conditional proposition: If these assumptions hold and the route-specific lemma `Prove that a hardness-magnification witness family upgrades the route from major separation consequence to exponential lower bound without losing `exponential-lower-bound witness complexity`.` is discharged, then `exponential-lower-bound` follows at `st.thm.atserias-m-uller-simple-general-magnification-fr`.
+- Route synopsis: Move from `st.def.hardness-magnification-phenomenon-programme-leve` on problem `MCSP` in model `nonuniform-circuits` using `A barely-nontrivial lower bound for an explicit problem Q in a weak model` toward `st.thm.atserias-m-uller-simple-general-magnification-fr` to obtain `There exist general-purpose magnification theorems (not problem-specific) showing that certain mild lower bounds for...`.
+- Model shift: nonuniform-circuits
+- Threshold shift: major separation consequence -> exponential lower bound
+- Consequence shift: upgrade `A barely-nontrivial lower bound for an explicit problem Q in a weak model` into `There exist general-purpose magnification theorems (not problem-specific) showing that certain mild lower bounds for...`
+- Missing route lemma: Prove that a hardness-magnification witness family upgrades the route from major separation consequence to exponential lower bound without losing `exponential-lower-bound witness complexity`.
+- Mathematical assumptions:
+  - The source-side content `A barely-nontrivial lower bound for an explicit problem Q in a weak model` is available at `st.def.hardness-magnification-phenomenon-programme-leve`.
+  - There exists an admissible realization of `MCSP witness family` as a family of instances equipped with a monotone witness measure.
+  - The realization preserves `exponential-lower-bound witness complexity` across nonuniform-circuits.
+- Definitional commitments: admits source-side witness data for `A barely-nontrivial lower bound for an explicit problem Q in a weak model`, forces the target-side payoff `exponential-lower-bound`, preserves the route invariant `exponential-lower-bound witness complexity`, aligns the model shift (nonuniform-circuits) with an explicit transport map
+- Counterfactual test: Allow `MCSP witness family` to ignore the source-side content `A barely-nontrivial lower bound for an explicit problem Q in a weak model` and only preserve topical overlap. => bridge-degrades-or-fails
+- Proof obligations:
+  - obl.01: Prove the source-to-object claim: the source-side content `A barely-nontrivial lower bound for an explicit problem Q in a weak model` available at `st.def.hardness-magnification-phenomenon-programme-leve` can be organized into `MCSP witness family` as a family of instances equipped with a monotone witness measure.
+  - obl.02: Prove the payoff claim: once `MCSP witness family` carries the route data from `A barely-nontrivial lower bound for an explicit problem Q in a weak model` toward `There exist general-purpose magnification theorems (not problem-specific) showing that certain mild lower bounds for...`, it forces `exponential-lower-bound` at `st.thm.atserias-m-uller-simple-general-magnification-fr`.
+  - obl.03: Prove the transport claim: every admissible realization of `MCSP witness family` preserves `exponential-lower-bound witness complexity` while crossing the route nonuniform-circuits.
+  - obl.04: Exhibit the model-alignment claim: `MCSP witness family` gives a faithful translation across nonuniform-circuits.
+  - obl.05: Show that every admissible realization of `MCSP witness family` preserves `exponential-lower-bound witness complexity` across nonuniform-circuits.
+  - obl.06: Prove that any admissible realization of `MCSP witness family` forces `exponential-lower-bound` once the route-specific lemma `Prove that a hardness-magnification witness family upgrades the route from major separation consequence to exponential lower bound without losing `exponential-lower-bound witness complexity`.` is discharged.
+  - obl.07: Keep the argument faithful to the `Current Bridge Agenda` regime while linking `st.def.hardness-magnification-phenomenon-programme-leve` to `st.thm.atserias-m-uller-simple-general-magnification-fr`.
+- Candidate lemmas:
+  - bridge.016.lemma.01: Source-to-object lemma: the source-side content `A barely-nontrivial lower bound for an explicit problem Q in a weak model` at `st.def.hardness-magnification-phenomenon-programme-leve` yields a realization of `MCSP witness family` as a family of instances equipped with a monotone witness measure, satisfying admits source-side witness data for `A barely-nontrivial lower bound for an explicit problem Q in a weak model`; preserves the route invariant `exponential-lower-bound witness complexity`; aligns the model shift (nonuniform-circuits) with an explicit transport map.
+  - bridge.016.lemma.02: Transport lemma: every admissible realization of `MCSP witness family` preserves `exponential-lower-bound witness complexity` while crossing nonuniform-circuits.
+  - bridge.016.lemma.03: Payoff lemma: if `MCSP witness family` is realized, carries `exponential-lower-bound witness complexity`, and discharges the route-specific step from `A barely-nontrivial lower bound for an explicit problem Q in a weak model` to `There exist general-purpose magnification theorems (not problem-specific) showing that certain mild lower bounds for...`, then `exponential-lower-bound` holds at `st.thm.atserias-m-uller-simple-general-magnification-fr`.
+  - bridge.016.lemma.04: Route lemma: Prove that a hardness-magnification witness family upgrades the route from major separation consequence to exponential lower bound without losing `exponential-lower-bound witness complexity`.
+- Lemma chain summary:
+  - Source-to-object lemma: the source-side content `A barely-nontrivial lower bound for an explicit problem Q in a weak model` at `st.def.hardness-magnification-phenomenon-programme-leve` yields a realization of `MCSP witness family` as a family of instances equipped with a monotone witness measure, satisfying admits source-side witness data for `A barely-nontrivial lower bound for an explicit problem Q in a weak model`; preserves the route invariant `exponential-lower-bound witness complexity`; aligns the model shift (nonuniform-circuits) with an explicit transport map.
+  - Transport lemma: every admissible realization of `MCSP witness family` preserves `exponential-lower-bound witness complexity` while crossing nonuniform-circuits.
+  - Payoff lemma: if `MCSP witness family` is realized, carries `exponential-lower-bound witness complexity`, and discharges the route-specific step from `A barely-nontrivial lower bound for an explicit problem Q in a weak model` to `There exist general-purpose magnification theorems (not problem-specific) showing that certain mild lower bounds for...`, then `exponential-lower-bound` holds at `st.thm.atserias-m-uller-simple-general-magnification-fr`.
+  - Route lemma: Prove that a hardness-magnification witness family upgrades the route from major separation consequence to exponential lower bound without losing `exponential-lower-bound witness complexity`.
+- Proof outline:
+  - step.01: Define `MCSP witness family` as a family of instances equipped with a monotone witness measure with the necessary attributes extracted in `conj.026`. -> A typed bridge object with explicit carrier, admissibility conditions, and theorem-family commitments.
+  - step.02: Show that the source-side content `A barely-nontrivial lower bound for an explicit problem Q in a weak model` induces `exponential-lower-bound witness complexity` inside `MCSP witness family`. -> An invariant-preservation lemma for the conjectured object.
+  - step.03: Prove that a hardness-magnification witness family upgrades the route from major separation consequence to exponential lower bound without losing `exponential-lower-bound witness complexity`. -> A bridge lemma linking the intermediate object to the target payoff.
+  - step.04: Use the realized bridge object to force `exponential-lower-bound`. -> A payoff theorem candidate or a sharply localized remaining obstruction.
+- Barrier checkpoints:
+  - barrier.01: Verify that no named barrier is already attached to the bridge commitment. / If a hidden barrier appears, reclassify the sketch family before continuing.
+- Abort conditions:
+  - Abort if the negative-route intervention does not expose the expected failure: Allow `MCSP witness family` to ignore the source-side content `A barely-nontrivial lower bound for an explicit problem Q in a weak model` and only preserve topical overlap. => bridge-degrades-or-fails.
+  - Abort if `MCSP witness family` cannot be defined as a family of instances equipped with a monotone witness measure on the current theorem pair.
+  - Abort if the route-specific lemma fails: Prove that a hardness-magnification witness family upgrades the route from major separation consequence to exponential lower bound without losing `exponential-lower-bound witness complexity`.
+  - Abort if the payoff lemma does not improve over the existing bridge consequence or only restates known dependencies.
+- Failure mode: Allow `MCSP witness family` to ignore the source-side content `A barely-nontrivial lower bound for an explicit problem Q in a weak model` and only preserve topical overlap. bridge-degrades-or-fails The bridge object must absorb the actual source-side mathematical content rather than merely name the antecedent.
+- Success signal: A theorem-family-specific payoff lemma is isolated and survives the designated counterfactual probe.
+
+### psk.004 - unspecified witness family via strat.002
+- Conjecture: conj.021
+- Strategy: strat.002 (Cross-Model Strategy around st.thm.karp-many-natural-problems-are-np-complete-karp1)
+- Bridge: bridge.007
+- Family: surrogate-reduction-transfer
+- Score: 0.8711
+- Target consequence: MCSP-hardness-transfer
+- Antecedent: NP-completeness
+- Invariant: consequence schema NP-complete-classification
+- Carrier kind: family of instances equipped with a monotone witness measure
+- Typing status: typed
+- Barrier scope: none
+- Family rationale: Define a surrogate object or promise problem, reduce the source statement into it, and transfer the required consequence through the surrogate interface.
+- Bridge definition: Treat `unspecified witness family` as a `intermediate-complexity-measure` attached to the route `st.thm.karp-many-natural-problems-are-np-complete-karp1` -> `st.thm.murray-williams-non-np-hardness-of-mcsp-under-lo` and typed as a family of instances equipped with a monotone witness measure, playing the role of `An explicit family of instances equipped with a monotone witness measure that records enough of `NP-complete under polynomial-time many-one reductions` to test whether the route can reach `MCSP-hardness-transfer` while preserving `consequence schema NP-complete-classification`.`, carrying the source-side content `NP-complete under polynomial-time many-one reductions` across model shift not yet typed toward `is not NP-complete. More broadly, the paper develops evidence and conditional consequences suggesting NP-hardness of MCSP under various...` while preserving `consequence schema NP-complete-classification`. Minimal admissibility conditions: admits source-side witness data for `NP-complete under polynomial-time many-one reductions`; preserves the route invariant `consequence schema NP-complete-classification`; provides an explicit transfer law or reduction mechanism on the route; forces the target-side payoff `MCSP-hardness-transfer`.
+- Conditional proposition: If these assumptions hold and the route-specific lemma `Prove that a hardness-magnification witness family turns `NP-complete under polynomial-time many-one reductions` into `is not NP-complete. More broadly, the paper develops evidence and conditional consequences suggesting NP-hardness of MCSP under various...` while preserving `consequence schema NP-complete-classification`.` is discharged, then `MCSP-hardness-transfer` follows at `st.thm.murray-williams-non-np-hardness-of-mcsp-under-lo`.
+- Route synopsis: Move from `st.thm.karp-many-natural-problems-are-np-complete-karp1` using `NP-complete under polynomial-time many-one reductions` toward `st.thm.murray-williams-non-np-hardness-of-mcsp-under-lo` on problem `MCSP` to obtain `is not NP-complete. More broadly, the paper develops evidence and conditional consequences suggesting NP-hardness of MCSP under various...`.
+- Model shift: model shift not yet typed
+- Threshold shift: threshold regime not yet typed
+- Consequence shift: upgrade `NP-complete under polynomial-time many-one reductions` into `is not NP-complete. More broadly, the paper develops evidence and conditional consequences suggesting NP-hardness of MCSP under various...`
+- Missing route lemma: Prove that a hardness-magnification witness family turns `NP-complete under polynomial-time many-one reductions` into `is not NP-complete. More broadly, the paper develops evidence and conditional consequences suggesting NP-hardness of MCSP under various...` while preserving `consequence schema NP-complete-classification`.
+- Mathematical assumptions:
+  - The source-side content `NP-complete under polynomial-time many-one reductions` is available at `st.thm.karp-many-natural-problems-are-np-complete-karp1`.
+  - There exists an admissible realization of `unspecified witness family` as a family of instances equipped with a monotone witness measure.
+  - The realization preserves `consequence schema NP-complete-classification` across model shift not yet typed.
+- Definitional commitments: admits source-side witness data for `NP-complete under polynomial-time many-one reductions`, forces the target-side payoff `MCSP-hardness-transfer`, preserves the route invariant `consequence schema NP-complete-classification`, provides an explicit transfer law or reduction mechanism on the route
+- Counterfactual test: Allow `unspecified witness family` to ignore the source-side content `NP-complete under polynomial-time many-one reductions` and only preserve topical overlap. => bridge-degrades-or-fails
+- Proof obligations:
+  - obl.01: Prove the source-to-object claim: the source-side content `NP-complete under polynomial-time many-one reductions` available at `st.thm.karp-many-natural-problems-are-np-complete-karp1` can be organized into `unspecified witness family` as a family of instances equipped with a monotone witness measure.
+  - obl.02: Prove the payoff claim: once `unspecified witness family` carries the route data from `NP-complete under polynomial-time many-one reductions` toward `is not NP-complete. More broadly, the paper develops evidence and conditional consequences suggesting NP-hardness of MCSP under various...`, it forces `MCSP-hardness-transfer` at `st.thm.murray-williams-non-np-hardness-of-mcsp-under-lo`.
+  - obl.03: Prove the transport claim: every admissible realization of `unspecified witness family` preserves `consequence schema NP-complete-classification` while crossing the route model shift not yet typed.
+  - obl.04: Construct the transfer-law claim: an explicit reduction or transport map sends `NP-complete under polynomial-time many-one reductions` into `unspecified witness family` without losing the route to `MCSP-hardness-transfer`.
+  - obl.05: Show that every admissible realization of `unspecified witness family` preserves `consequence schema NP-complete-classification` across model shift not yet typed.
+  - obl.06: Prove that any admissible realization of `unspecified witness family` forces `MCSP-hardness-transfer` once the route-specific lemma `Prove that a hardness-magnification witness family turns `NP-complete under polynomial-time many-one reductions` into `is not NP-complete. More broadly, the paper develops evidence and conditional consequences suggesting NP-hardness of MCSP under various...` while preserving `consequence schema NP-complete-classification`.` is discharged.
+  - obl.07: Keep the argument faithful to the `Additional KB-Specific Phases` regime while linking `st.thm.karp-many-natural-problems-are-np-complete-karp1` to `st.thm.murray-williams-non-np-hardness-of-mcsp-under-lo`.
+- Candidate lemmas:
+  - bridge.007.lemma.01: Source-to-object lemma: the source-side content `NP-complete under polynomial-time many-one reductions` at `st.thm.karp-many-natural-problems-are-np-complete-karp1` yields a realization of `unspecified witness family` as a family of instances equipped with a monotone witness measure, satisfying admits source-side witness data for `NP-complete under polynomial-time many-one reductions`; preserves the route invariant `consequence schema NP-complete-classification`; provides an explicit transfer law or reduction mechanism on the route.
+  - bridge.007.lemma.02: Transport lemma: every admissible realization of `unspecified witness family` preserves `consequence schema NP-complete-classification` while crossing model shift not yet typed.
+  - bridge.007.lemma.03: Payoff lemma: if `unspecified witness family` is realized, carries `consequence schema NP-complete-classification`, and discharges the route-specific step from `NP-complete under polynomial-time many-one reductions` to `is not NP-complete. More broadly, the paper develops evidence and conditional consequences suggesting NP-hardness of MCSP under various...`, then `MCSP-hardness-transfer` holds at `st.thm.murray-williams-non-np-hardness-of-mcsp-under-lo`.
+  - bridge.007.lemma.04: Reduction lemma: the source-side content `NP-complete under polynomial-time many-one reductions` reduces to the surrogate object encoded by `unspecified witness family` without weakening the path to `MCSP-hardness-transfer`.
+  - bridge.007.lemma.04: Route lemma: Prove that a hardness-magnification witness family turns `NP-complete under polynomial-time many-one reductions` into `is not NP-complete. More broadly, the paper develops evidence and conditional consequences suggesting NP-hardness of MCSP under various...` while preserving `consequence schema NP-complete-classification`.
+- Lemma chain summary:
+  - Source-to-object lemma: the source-side content `NP-complete under polynomial-time many-one reductions` at `st.thm.karp-many-natural-problems-are-np-complete-karp1` yields a realization of `unspecified witness family` as a family of instances equipped with a monotone witness measure, satisfying admits source-side witness data for `NP-complete under polynomial-time many-one reductions`; preserves the route invariant `consequence schema NP-complete-classification`; provides an explicit transfer law or reduction mechanism on the route.
+  - Transport lemma: every admissible realization of `unspecified witness family` preserves `consequence schema NP-complete-classification` while crossing model shift not yet typed.
+  - Payoff lemma: if `unspecified witness family` is realized, carries `consequence schema NP-complete-classification`, and discharges the route-specific step from `NP-complete under polynomial-time many-one reductions` to `is not NP-complete. More broadly, the paper develops evidence and conditional consequences suggesting NP-hardness of MCSP under various...`, then `MCSP-hardness-transfer` holds at `st.thm.murray-williams-non-np-hardness-of-mcsp-under-lo`.
+  - Reduction lemma: the source-side content `NP-complete under polynomial-time many-one reductions` reduces to the surrogate object encoded by `unspecified witness family` without weakening the path to `MCSP-hardness-transfer`.
+- Proof outline:
+  - step.01: Define `unspecified witness family` as a family of instances equipped with a monotone witness measure with the necessary attributes extracted in `conj.021`. -> A typed bridge object with explicit carrier, admissibility conditions, and theorem-family commitments.
+  - step.02: Show that the source-side content `NP-complete under polynomial-time many-one reductions` induces `consequence schema NP-complete-classification` inside `unspecified witness family`. -> An invariant-preservation lemma for the conjectured object.
+  - step.03: Construct the surrogate reduction into `unspecified witness family` and verify that it preserves the needed route from `NP-complete under polynomial-time many-one reductions` to `is not NP-complete. More broadly, the paper develops evidence and conditional consequences suggesting NP-hardness of MCSP under various...`. -> A reduction lemma exposing the transfer mechanism.
+  - step.04: Use the realized bridge object to force `MCSP-hardness-transfer`. -> A payoff theorem candidate or a sharply localized remaining obstruction.
+- Barrier checkpoints:
+  - barrier.01: Verify that no named barrier is already attached to the bridge commitment. / If a hidden barrier appears, reclassify the sketch family before continuing.
+- Abort conditions:
+  - Abort if the negative-route intervention does not expose the expected failure: Allow `unspecified witness family` to ignore the source-side content `NP-complete under polynomial-time many-one reductions` and only preserve topical overlap. => bridge-degrades-or-fails.
+  - Abort if `unspecified witness family` cannot be defined as a family of instances equipped with a monotone witness measure on the current theorem pair.
+  - Abort if the route-specific lemma fails: Prove that a hardness-magnification witness family turns `NP-complete under polynomial-time many-one reductions` into `is not NP-complete. More broadly, the paper develops evidence and conditional consequences suggesting NP-hardness of MCSP under various...` while preserving `consequence schema NP-complete-classification`.
+  - Abort if the payoff lemma does not improve over the existing bridge consequence or only restates known dependencies.
+- Failure mode: Allow `unspecified witness family` to ignore the source-side content `NP-complete under polynomial-time many-one reductions` and only preserve topical overlap. bridge-degrades-or-fails The bridge object must absorb the actual source-side mathematical content rather than merely name the antecedent.
+- Success signal: A theorem-family-specific payoff lemma is isolated and survives the designated counterfactual probe.
+
+### psk.005 - Gap-MCSP promise problem via strat.001
+- Conjecture: conj.003
+- Strategy: strat.001 (Cross-Model Strategy around st.def.hardness-magnification-phenomenon-programme-leve)
+- Bridge: bridge.001
+- Family: surrogate-reduction-transfer
+- Score: 0.8709
+- Target consequence: NP-not-in-P/poly
+- Antecedent: nonuniform-circuit-exponential-lower-bound
+- Invariant: MCSP complexity profile in nonuniform-circuits
+- Carrier kind: promise problem with an explicit yes/no gap and transfer reduction
+- Typing status: typed
+- Barrier scope: none
+- Family rationale: Define a surrogate object or promise problem, reduce the source statement into it, and transfer the required consequence through the surrogate interface.
+- Bridge definition: Treat `Gap-MCSP promise problem` as a `surrogate-promise-problem` attached to the route `st.def.hardness-magnification-phenomenon-programme-leve` -> `st.thm.oliveira-pich-santhanam-magnification-near-state` and typed as a promise problem with an explicit yes/no gap and transfer reduction, playing the role of `A promise problem with an explicit yes/no gap and transfer reduction whose threshold behavior makes the shift major separation consequence mathematically testable.`, carrying the source-side content `A barely-nontrivial lower bound for an explicit problem Q in a weak model` across nonuniform-circuits toward `major consequences such as NP not in P/poly` while preserving `MCSP complexity profile in nonuniform-circuits`. Minimal admissibility conditions: admits source-side witness data for `A barely-nontrivial lower bound for an explicit problem Q in a weak model`; preserves the route invariant `MCSP complexity profile in nonuniform-circuits`; forces the target-side payoff `NP-not-in-P/poly`.
+- Conditional proposition: If these assumptions hold and the route-specific lemma `Prove that a hardness-magnification witness family turns `A barely-nontrivial lower bound for an explicit problem Q in a weak model` into `major consequences such as NP not in P/poly` while preserving `MCSP complexity profile in nonuniform-circuits`.` is discharged, then `NP-not-in-P/poly` follows at `st.thm.oliveira-pich-santhanam-magnification-near-state`.
+- Route synopsis: Move from `st.def.hardness-magnification-phenomenon-programme-leve` on problem `MCSP` in model `nonuniform-circuits` using `A barely-nontrivial lower bound for an explicit problem Q in a weak model` toward `st.thm.oliveira-pich-santhanam-magnification-near-state` in model `nonuniform-circuits` to obtain `major consequences such as NP not in P/poly`.
+- Model shift: nonuniform-circuits
+- Threshold shift: major separation consequence
+- Consequence shift: upgrade `A barely-nontrivial lower bound for an explicit problem Q in a weak model` into `major consequences such as NP not in P/poly`
+- Missing route lemma: Prove that a hardness-magnification witness family turns `A barely-nontrivial lower bound for an explicit problem Q in a weak model` into `major consequences such as NP not in P/poly` while preserving `MCSP complexity profile in nonuniform-circuits`.
+- Mathematical assumptions:
+  - The source-side content `A barely-nontrivial lower bound for an explicit problem Q in a weak model` is available at `st.def.hardness-magnification-phenomenon-programme-leve`.
+  - There exists an admissible realization of `Gap-MCSP promise problem` as a promise problem with an explicit yes/no gap and transfer reduction.
+  - The realization preserves `MCSP complexity profile in nonuniform-circuits` across nonuniform-circuits.
+- Definitional commitments: admits source-side witness data for `A barely-nontrivial lower bound for an explicit problem Q in a weak model`, forces the target-side payoff `NP-not-in-P/poly`, preserves the route invariant `MCSP complexity profile in nonuniform-circuits`, admits a threshold or promise formulation with controllable hardness regime
+- Counterfactual test: Allow `Gap-MCSP promise problem` to ignore the source-side content `A barely-nontrivial lower bound for an explicit problem Q in a weak model` and only preserve topical overlap. => bridge-degrades-or-fails
+- Proof obligations:
+  - obl.01: Prove the source-to-object claim: the source-side content `A barely-nontrivial lower bound for an explicit problem Q in a weak model` available at `st.def.hardness-magnification-phenomenon-programme-leve` can be organized into `Gap-MCSP promise problem` as a promise problem with an explicit yes/no gap and transfer reduction.
+  - obl.02: Prove the payoff claim: once `Gap-MCSP promise problem` carries the route data from `A barely-nontrivial lower bound for an explicit problem Q in a weak model` toward `major consequences such as NP not in P/poly`, it forces `NP-not-in-P/poly` at `st.thm.oliveira-pich-santhanam-magnification-near-state`.
+  - obl.03: Prove the transport claim: every admissible realization of `Gap-MCSP promise problem` preserves `MCSP complexity profile in nonuniform-circuits` while crossing the route nonuniform-circuits.
+  - obl.04: Make the threshold control explicit: `Gap-MCSP promise problem` must realize the shift major separation consequence in a mathematically checkable way.
+  - obl.05: Show that every admissible realization of `Gap-MCSP promise problem` preserves `MCSP complexity profile in nonuniform-circuits` across nonuniform-circuits.
+  - obl.06: Prove that any admissible realization of `Gap-MCSP promise problem` forces `NP-not-in-P/poly` once the route-specific lemma `Prove that a hardness-magnification witness family turns `A barely-nontrivial lower bound for an explicit problem Q in a weak model` into `major consequences such as NP not in P/poly` while preserving `MCSP complexity profile in nonuniform-circuits`.` is discharged.
+  - obl.07: Keep the argument faithful to the `Current Bridge Agenda` regime while linking `st.def.hardness-magnification-phenomenon-programme-leve` to `st.thm.oliveira-pich-santhanam-magnification-near-state`.
+- Candidate lemmas:
+  - bridge.001.lemma.01: Source-to-object lemma: the source-side content `A barely-nontrivial lower bound for an explicit problem Q in a weak model` at `st.def.hardness-magnification-phenomenon-programme-leve` yields a realization of `Gap-MCSP promise problem` as a promise problem with an explicit yes/no gap and transfer reduction, satisfying admits source-side witness data for `A barely-nontrivial lower bound for an explicit problem Q in a weak model`; preserves the route invariant `MCSP complexity profile in nonuniform-circuits`; forces the target-side payoff `NP-not-in-P/poly`.
+  - bridge.001.lemma.02: Transport lemma: every admissible realization of `Gap-MCSP promise problem` preserves `MCSP complexity profile in nonuniform-circuits` while crossing nonuniform-circuits.
+  - bridge.001.lemma.03: Payoff lemma: if `Gap-MCSP promise problem` is realized, carries `MCSP complexity profile in nonuniform-circuits`, and discharges the route-specific step from `A barely-nontrivial lower bound for an explicit problem Q in a weak model` to `major consequences such as NP not in P/poly`, then `NP-not-in-P/poly` holds at `st.thm.oliveira-pich-santhanam-magnification-near-state`.
+  - bridge.001.lemma.04: Reduction lemma: the source-side content `A barely-nontrivial lower bound for an explicit problem Q in a weak model` reduces to the surrogate object encoded by `Gap-MCSP promise problem` without weakening the path to `NP-not-in-P/poly`.
+  - bridge.001.lemma.04: Route lemma: Prove that a hardness-magnification witness family turns `A barely-nontrivial lower bound for an explicit problem Q in a weak model` into `major consequences such as NP not in P/poly` while preserving `MCSP complexity profile in nonuniform-circuits`.
+- Lemma chain summary:
+  - Source-to-object lemma: the source-side content `A barely-nontrivial lower bound for an explicit problem Q in a weak model` at `st.def.hardness-magnification-phenomenon-programme-leve` yields a realization of `Gap-MCSP promise problem` as a promise problem with an explicit yes/no gap and transfer reduction, satisfying admits source-side witness data for `A barely-nontrivial lower bound for an explicit problem Q in a weak model`; preserves the route invariant `MCSP complexity profile in nonuniform-circuits`; forces the target-side payoff `NP-not-in-P/poly`.
+  - Transport lemma: every admissible realization of `Gap-MCSP promise problem` preserves `MCSP complexity profile in nonuniform-circuits` while crossing nonuniform-circuits.
+  - Payoff lemma: if `Gap-MCSP promise problem` is realized, carries `MCSP complexity profile in nonuniform-circuits`, and discharges the route-specific step from `A barely-nontrivial lower bound for an explicit problem Q in a weak model` to `major consequences such as NP not in P/poly`, then `NP-not-in-P/poly` holds at `st.thm.oliveira-pich-santhanam-magnification-near-state`.
+  - Reduction lemma: the source-side content `A barely-nontrivial lower bound for an explicit problem Q in a weak model` reduces to the surrogate object encoded by `Gap-MCSP promise problem` without weakening the path to `NP-not-in-P/poly`.
+- Proof outline:
+  - step.01: Define `Gap-MCSP promise problem` as a promise problem with an explicit yes/no gap and transfer reduction with the necessary attributes extracted in `conj.003`. -> A typed bridge object with explicit carrier, admissibility conditions, and theorem-family commitments.
+  - step.02: Show that the source-side content `A barely-nontrivial lower bound for an explicit problem Q in a weak model` induces `MCSP complexity profile in nonuniform-circuits` inside `Gap-MCSP promise problem`. -> An invariant-preservation lemma for the conjectured object.
+  - step.03: Construct the surrogate reduction into `Gap-MCSP promise problem` and verify that it preserves the needed route from `A barely-nontrivial lower bound for an explicit problem Q in a weak model` to `major consequences such as NP not in P/poly`. -> A reduction lemma exposing the transfer mechanism.
+  - step.04: Use the realized bridge object to force `NP-not-in-P/poly`. -> A payoff theorem candidate or a sharply localized remaining obstruction.
+- Barrier checkpoints:
+  - barrier.01: Verify that no named barrier is already attached to the bridge commitment. / If a hidden barrier appears, reclassify the sketch family before continuing.
+- Abort conditions:
+  - Abort if the negative-route intervention does not expose the expected failure: Allow `Gap-MCSP promise problem` to ignore the source-side content `A barely-nontrivial lower bound for an explicit problem Q in a weak model` and only preserve topical overlap. => bridge-degrades-or-fails.
+  - Abort if `Gap-MCSP promise problem` cannot be defined as a promise problem with an explicit yes/no gap and transfer reduction on the current theorem pair.
+  - Abort if the route-specific lemma fails: Prove that a hardness-magnification witness family turns `A barely-nontrivial lower bound for an explicit problem Q in a weak model` into `major consequences such as NP not in P/poly` while preserving `MCSP complexity profile in nonuniform-circuits`.
+  - Abort if the payoff lemma does not improve over the existing bridge consequence or only restates known dependencies.
+- Failure mode: Allow `Gap-MCSP promise problem` to ignore the source-side content `A barely-nontrivial lower bound for an explicit problem Q in a weak model` and only preserve topical overlap. bridge-degrades-or-fails The bridge object must absorb the actual source-side mathematical content rather than merely name the antecedent.
+- Success signal: A theorem-family-specific payoff lemma is isolated and survives the designated counterfactual probe.
+
+### psk.006 - unspecified reduction gadget family via strat.002
+- Conjecture: conj.022
+- Strategy: strat.002 (Cross-Model Strategy around st.thm.karp-many-natural-problems-are-np-complete-karp1)
+- Bridge: bridge.007
+- Family: surrogate-reduction-transfer
+- Score: 0.8637
+- Target consequence: MCSP-hardness-transfer
+- Antecedent: NP-completeness
+- Invariant: consequence schema NP-complete-classification
+- Carrier kind: family of reductions preserving the route witness structure
+- Typing status: typed
+- Barrier scope: none
+- Family rationale: Define a surrogate object or promise problem, reduce the source statement into it, and transfer the required consequence through the surrogate interface.
+- Bridge definition: Treat `unspecified reduction gadget family` as a `reduction-gadget-family` attached to the route `st.thm.karp-many-natural-problems-are-np-complete-karp1` -> `st.thm.murray-williams-non-np-hardness-of-mcsp-under-lo` and typed as a family of reductions preserving the route witness structure, playing the role of `A family of reductions preserving the route witness structure that preserves `consequence schema NP-complete-classification` while carrying the route from `NP-complete under polynomial-time many-one reductions` into `MCSP-hardness-transfer`.`, carrying the source-side content `NP-complete under polynomial-time many-one reductions` across model shift not yet typed toward `is not NP-complete. More broadly, the paper develops evidence and conditional consequences suggesting NP-hardness of MCSP under various...` while preserving `consequence schema NP-complete-classification`. Minimal admissibility conditions: admits source-side witness data for `NP-complete under polynomial-time many-one reductions`; preserves the route invariant `consequence schema NP-complete-classification`; provides an explicit transfer law or reduction mechanism on the route; forces the target-side payoff `MCSP-hardness-transfer`.
+- Conditional proposition: If these assumptions hold and the route-specific lemma `Prove that a hardness-magnification witness family turns `NP-complete under polynomial-time many-one reductions` into `is not NP-complete. More broadly, the paper develops evidence and conditional consequences suggesting NP-hardness of MCSP under various...` while preserving `consequence schema NP-complete-classification`.` is discharged, then `MCSP-hardness-transfer` follows at `st.thm.murray-williams-non-np-hardness-of-mcsp-under-lo`.
+- Route synopsis: Move from `st.thm.karp-many-natural-problems-are-np-complete-karp1` using `NP-complete under polynomial-time many-one reductions` toward `st.thm.murray-williams-non-np-hardness-of-mcsp-under-lo` on problem `MCSP` to obtain `is not NP-complete. More broadly, the paper develops evidence and conditional consequences suggesting NP-hardness of MCSP under various...`.
+- Model shift: model shift not yet typed
+- Threshold shift: threshold regime not yet typed
+- Consequence shift: upgrade `NP-complete under polynomial-time many-one reductions` into `is not NP-complete. More broadly, the paper develops evidence and conditional consequences suggesting NP-hardness of MCSP under various...`
+- Missing route lemma: Prove that a hardness-magnification witness family turns `NP-complete under polynomial-time many-one reductions` into `is not NP-complete. More broadly, the paper develops evidence and conditional consequences suggesting NP-hardness of MCSP under various...` while preserving `consequence schema NP-complete-classification`.
+- Mathematical assumptions:
+  - The source-side content `NP-complete under polynomial-time many-one reductions` is available at `st.thm.karp-many-natural-problems-are-np-complete-karp1`.
+  - There exists an admissible realization of `unspecified reduction gadget family` as a family of reductions preserving the route witness structure.
+  - The realization preserves `consequence schema NP-complete-classification` across model shift not yet typed.
+- Definitional commitments: admits source-side witness data for `NP-complete under polynomial-time many-one reductions`, forces the target-side payoff `MCSP-hardness-transfer`, preserves the route invariant `consequence schema NP-complete-classification`, provides an explicit transfer law or reduction mechanism on the route
+- Counterfactual test: Allow `unspecified reduction gadget family` to ignore the source-side content `NP-complete under polynomial-time many-one reductions` and only preserve topical overlap. => bridge-degrades-or-fails
+- Proof obligations:
+  - obl.01: Prove the source-to-object claim: the source-side content `NP-complete under polynomial-time many-one reductions` available at `st.thm.karp-many-natural-problems-are-np-complete-karp1` can be organized into `unspecified reduction gadget family` as a family of reductions preserving the route witness structure.
+  - obl.02: Prove the payoff claim: once `unspecified reduction gadget family` carries the route data from `NP-complete under polynomial-time many-one reductions` toward `is not NP-complete. More broadly, the paper develops evidence and conditional consequences suggesting NP-hardness of MCSP under various...`, it forces `MCSP-hardness-transfer` at `st.thm.murray-williams-non-np-hardness-of-mcsp-under-lo`.
+  - obl.03: Prove the transport claim: every admissible realization of `unspecified reduction gadget family` preserves `consequence schema NP-complete-classification` while crossing the route model shift not yet typed.
+  - obl.04: Construct the transfer-law claim: an explicit reduction or transport map sends `NP-complete under polynomial-time many-one reductions` into `unspecified reduction gadget family` without losing the route to `MCSP-hardness-transfer`.
+  - obl.05: Show that every admissible realization of `unspecified reduction gadget family` preserves `consequence schema NP-complete-classification` across model shift not yet typed.
+  - obl.06: Prove that any admissible realization of `unspecified reduction gadget family` forces `MCSP-hardness-transfer` once the route-specific lemma `Prove that a hardness-magnification witness family turns `NP-complete under polynomial-time many-one reductions` into `is not NP-complete. More broadly, the paper develops evidence and conditional consequences suggesting NP-hardness of MCSP under various...` while preserving `consequence schema NP-complete-classification`.` is discharged.
+  - obl.07: Keep the argument faithful to the `Additional KB-Specific Phases` regime while linking `st.thm.karp-many-natural-problems-are-np-complete-karp1` to `st.thm.murray-williams-non-np-hardness-of-mcsp-under-lo`.
+- Candidate lemmas:
+  - bridge.007.lemma.01: Source-to-object lemma: the source-side content `NP-complete under polynomial-time many-one reductions` at `st.thm.karp-many-natural-problems-are-np-complete-karp1` yields a realization of `unspecified reduction gadget family` as a family of reductions preserving the route witness structure, satisfying admits source-side witness data for `NP-complete under polynomial-time many-one reductions`; preserves the route invariant `consequence schema NP-complete-classification`; provides an explicit transfer law or reduction mechanism on the route.
+  - bridge.007.lemma.02: Transport lemma: every admissible realization of `unspecified reduction gadget family` preserves `consequence schema NP-complete-classification` while crossing model shift not yet typed.
+  - bridge.007.lemma.03: Payoff lemma: if `unspecified reduction gadget family` is realized, carries `consequence schema NP-complete-classification`, and discharges the route-specific step from `NP-complete under polynomial-time many-one reductions` to `is not NP-complete. More broadly, the paper develops evidence and conditional consequences suggesting NP-hardness of MCSP under various...`, then `MCSP-hardness-transfer` holds at `st.thm.murray-williams-non-np-hardness-of-mcsp-under-lo`.
+  - bridge.007.lemma.04: Reduction lemma: the source-side content `NP-complete under polynomial-time many-one reductions` reduces to the surrogate object encoded by `unspecified reduction gadget family` without weakening the path to `MCSP-hardness-transfer`.
+  - bridge.007.lemma.04: Route lemma: Prove that a hardness-magnification witness family turns `NP-complete under polynomial-time many-one reductions` into `is not NP-complete. More broadly, the paper develops evidence and conditional consequences suggesting NP-hardness of MCSP under various...` while preserving `consequence schema NP-complete-classification`.
+- Lemma chain summary:
+  - Source-to-object lemma: the source-side content `NP-complete under polynomial-time many-one reductions` at `st.thm.karp-many-natural-problems-are-np-complete-karp1` yields a realization of `unspecified reduction gadget family` as a family of reductions preserving the route witness structure, satisfying admits source-side witness data for `NP-complete under polynomial-time many-one reductions`; preserves the route invariant `consequence schema NP-complete-classification`; provides an explicit transfer law or reduction mechanism on the route.
+  - Transport lemma: every admissible realization of `unspecified reduction gadget family` preserves `consequence schema NP-complete-classification` while crossing model shift not yet typed.
+  - Payoff lemma: if `unspecified reduction gadget family` is realized, carries `consequence schema NP-complete-classification`, and discharges the route-specific step from `NP-complete under polynomial-time many-one reductions` to `is not NP-complete. More broadly, the paper develops evidence and conditional consequences suggesting NP-hardness of MCSP under various...`, then `MCSP-hardness-transfer` holds at `st.thm.murray-williams-non-np-hardness-of-mcsp-under-lo`.
+  - Reduction lemma: the source-side content `NP-complete under polynomial-time many-one reductions` reduces to the surrogate object encoded by `unspecified reduction gadget family` without weakening the path to `MCSP-hardness-transfer`.
+- Proof outline:
+  - step.01: Define `unspecified reduction gadget family` as a family of reductions preserving the route witness structure with the necessary attributes extracted in `conj.022`. -> A typed bridge object with explicit carrier, admissibility conditions, and theorem-family commitments.
+  - step.02: Show that the source-side content `NP-complete under polynomial-time many-one reductions` induces `consequence schema NP-complete-classification` inside `unspecified reduction gadget family`. -> An invariant-preservation lemma for the conjectured object.
+  - step.03: Construct the surrogate reduction into `unspecified reduction gadget family` and verify that it preserves the needed route from `NP-complete under polynomial-time many-one reductions` to `is not NP-complete. More broadly, the paper develops evidence and conditional consequences suggesting NP-hardness of MCSP under various...`. -> A reduction lemma exposing the transfer mechanism.
+  - step.04: Use the realized bridge object to force `MCSP-hardness-transfer`. -> A payoff theorem candidate or a sharply localized remaining obstruction.
+- Barrier checkpoints:
+  - barrier.01: Verify that no named barrier is already attached to the bridge commitment. / If a hidden barrier appears, reclassify the sketch family before continuing.
+- Abort conditions:
+  - Abort if the negative-route intervention does not expose the expected failure: Allow `unspecified reduction gadget family` to ignore the source-side content `NP-complete under polynomial-time many-one reductions` and only preserve topical overlap. => bridge-degrades-or-fails.
+  - Abort if `unspecified reduction gadget family` cannot be defined as a family of reductions preserving the route witness structure on the current theorem pair.
+  - Abort if the route-specific lemma fails: Prove that a hardness-magnification witness family turns `NP-complete under polynomial-time many-one reductions` into `is not NP-complete. More broadly, the paper develops evidence and conditional consequences suggesting NP-hardness of MCSP under various...` while preserving `consequence schema NP-complete-classification`.
+  - Abort if the payoff lemma does not improve over the existing bridge consequence or only restates known dependencies.
+- Failure mode: Allow `unspecified reduction gadget family` to ignore the source-side content `NP-complete under polynomial-time many-one reductions` and only preserve topical overlap. bridge-degrades-or-fails The bridge object must absorb the actual source-side mathematical content rather than merely name the antecedent.
+- Success signal: A theorem-family-specific payoff lemma is isolated and survives the designated counterfactual probe.

@@ -1,0 +1,1148 @@
+---
+kb_id: p-vs-np
+title: P vs NP
+domain: mathematics
+subdomain: computational-complexity
+version: 0.1.0
+status: active
+created_utc: 2026-03-11T00:00:00Z
+updated_utc: 2026-03-11T00:00:00Z
+owners:
+  - abducer
+source_policy:
+  allow_web: true
+  allow_local_docs: true
+  citation_required: true
+---
+
+<!--
+# SPDX-FileCopyrightText: © 2026 Idiap Research Institute <contact@idiap.ch>
+#
+# SPDX-FileContributor: Andre Freitas <andre.freitas@idiap.ch>
+# Neuro-symbolic AI Group
+# 
+# SPDX-License-Identifier: MIT
+-->
+
+
+# Source Index
+
+| source_id | type | citation | locator | reliability | notes |
+|---|---|---|---|---|---|
+| src.001 | file | /Users/user/Downloads/deep-research-report.md | full document | high | Parsed via pvsnp-kb-parser |
+
+# Symbol Glossary
+
+- `sym.P`: `\Pclass` complexity class.
+- `sym.NP`: `\NP` complexity class.
+- `sym.Ppoly`: `\Ppoly` nonuniform class.
+
+# Canonical Statements
+
+```yaml
+id: st.def.polynomial-time-many-one-karp-reduction
+kind: definition
+status: accepted
+latex: For languages $A,B\subseteq\bits^*$, we write $A\leq_m^p B$ iff there exists a polynomial-time computable function $f:\bits^*\to\bits^*$ such that for all $x$, $x\in A \iff f(x)\in B$.
+informal: For languages A,Bsubseteqbits^* , we write Aleq_m^p B iff there exists a polynomial-time computable function f:bits^*tobits^* such that for all x , xin A iff f(x)in B .
+source_ids:
+- src.001
+used_symbols: []
+depends_on: []
+confidence: 0.95
+proof_sketch: ''
+notes: "parsed_env: definition\nsection: Paragraph: Core reductions and complexity classes.\nsource_citation: /Users/user/Downloads/deep-research-report.md\nlabel: Polynomial-time many-one (Karp) reduction\nsource_marker: \uE200cite\uE202turn23search0\uE202turn31search0\uE201"
+```
+
+```yaml
+id: st.def.item
+kind: definition
+status: accepted
+latex: A language $L$ is in $\Pclass$ iff there exists a deterministic Turing machine $M$ and a polynomial $p$ such that for all inputs $x$, $M$ decides whether $x\in L$ in time at most $p(|x|)$.
+informal: A language L is in Pclass iff there exists a deterministic Turing machine M and a polynomial p such that for all inputs x , M decides whether xin L in time at most p(|x|) .
+source_ids:
+- src.001
+used_symbols: []
+depends_on: []
+confidence: 0.95
+proof_sketch: ''
+notes: "parsed_env: definition\nsection: Paragraph: Core reductions and complexity classes.\nsource_citation: /Users/user/Downloads/deep-research-report.md\nlabel: $\\Pclass$\nsource_marker: \uE200cite\uE202turn23search0\uE201"
+```
+
+```yaml
+id: st.def.item-2
+kind: definition
+status: accepted
+latex: 'A language $L$ is in $\NP$ iff there exist a polynomial $p$ and a polynomial-time predicate (verifier) $V(x,w)$ such that
+
+  \[
+
+  x\in L \iff \exists w\in\bits^{p(|x|)} \ \ V(x,w)=1.
+
+  \]'
+informal: A language L is in NP iff there exist a polynomial p and a polynomial-time predicate (verifier) V(x,w) such that [ xin L iff exists winbits^ p(|x|) V(x,w)=1. ]
+source_ids:
+- src.001
+used_symbols: []
+depends_on: []
+confidence: 0.95
+proof_sketch: ''
+notes: "parsed_env: definition\nsection: Paragraph: Core reductions and complexity classes.\nsource_citation: /Users/user/Downloads/deep-research-report.md\nlabel: $\\NP$\nsource_marker: \uE200cite\uE202turn23search0\uE201"
+```
+
+```yaml
+id: st.def.item-3
+kind: definition
+status: accepted
+latex: '$\coNP=\{L\subseteq\bits^* : \overline{L}\in\NP\}$, where $\overline{L}=\bits^*\setminus L$.'
+informal: 'coNP= Lsubseteqbits^* : overline L inNP , where overline L =bits^*setminus L .'
+source_ids:
+- src.001
+used_symbols: []
+depends_on: []
+confidence: 0.95
+proof_sketch: ''
+notes: "parsed_env: definition\nsection: Paragraph: Core reductions and complexity classes.\nsource_citation: /Users/user/Downloads/deep-research-report.md\nlabel: $\\coNP$\nsource_marker: \uE200cite\uE202turn23search0\uE202turn19search0\uE201"
+```
+
+```yaml
+id: st.def.np-completeness
+kind: definition
+status: accepted
+latex: A language $L$ is \emph{NP-complete} (under $\le_m^p$) iff (i) $L\in\NP$ and (ii) for every $A\in\NP$, $A\le_m^p L$.
+informal: A language L is emph NP-complete (under le_m^p ) iff (i) LinNP and (ii) for every AinNP , Ale_m^p L .
+source_ids:
+- src.001
+used_symbols: []
+depends_on: []
+confidence: 0.95
+proof_sketch: ''
+notes: "parsed_env: definition\nsection: Paragraph: Core reductions and complexity classes.\nsource_citation: /Users/user/Downloads/deep-research-report.md\nlabel: NP-completeness\nsource_marker: \uE200cite\uE202turn30search0\uE202turn31search0\uE201"
+```
+
+```yaml
+id: st.def.polynomial-hierarchy
+kind: definition
+status: accepted
+latex: Let $\Sigma_0^p=\Pi_0^p=\Pclass$ and $\Sigma_{k+1}^p=\NP^{\Sigma_k^p}$, $\Pi_{k+1}^p=\coNP^{\Sigma_k^p}$. Then $\PH=\bigcup_{k\ge 0}\Sigma_k^p$.
+informal: Let Sigma_0^p=Pi_0^p=Pclass and Sigma_ k+1 ^p=NP^ Sigma_k^p , Pi_ k+1 ^p=coNP^ Sigma_k^p . Then PH=bigcup_ kge 0 Sigma_k^p .
+source_ids:
+- src.001
+used_symbols: []
+depends_on: []
+confidence: 0.95
+proof_sketch: ''
+notes: "parsed_env: definition\nsection: Paragraph: Core reductions and complexity classes.\nsource_citation: /Users/user/Downloads/deep-research-report.md\nlabel: Polynomial hierarchy\nsource_marker: \uE200cite\uE202turn23search0\uE201"
+```
+
+```yaml
+id: st.def.exponential-time-classes
+kind: definition
+status: accepted
+latex: $\E=\DTIME(2^{O(n)})$, $\EXP=\DTIME(2^{n^{O(1)}})$, $\NEXP=\NTIME(2^{n^{O(1)}})$.
+informal: E=DTIME(2^ O(n) ) , EXP=DTIME(2^ n^ O(1) ) , NEXP=NTIME(2^ n^ O(1) ) .
+source_ids:
+- src.001
+used_symbols: []
+depends_on: []
+confidence: 0.95
+proof_sketch: ''
+notes: "parsed_env: definition\nsection: Paragraph: Core reductions and complexity classes.\nsource_citation: /Users/user/Downloads/deep-research-report.md\nlabel: Exponential time classes\nsource_marker: \uE200cite\uE202turn23search0\uE202turn22search9\uE201"
+```
+
+```yaml
+id: st.def.item-4
+kind: definition
+status: accepted
+latex: 'A language $L$ is in $\BPP$ iff there exists a probabilistic polynomial-time Turing machine $M$ such that for all $x$:
+
+  \[
+
+  x\in L \Rightarrow \Pr[M(x)\ \text{accepts}]\ge 2/3,\quad
+
+  x\notin L \Rightarrow \Pr[M(x)\ \text{accepts}]\le 1/3.
+
+  \]'
+informal: 'A language L is in BPP iff there exists a probabilistic polynomial-time Turing machine M such that for all x : [ xin L Rightarrow Pr[M(x) text accepts ]ge 2/3,quad xnotin L Rightarrow Pr[M(x) text accepts ]le 1/3. ]'
+source_ids:
+- src.001
+used_symbols: []
+depends_on: []
+confidence: 0.95
+proof_sketch: ''
+notes: "parsed_env: definition\nsection: Paragraph: Core reductions and complexity classes.\nsource_citation: /Users/user/Downloads/deep-research-report.md\nlabel: $\\BPP$\nsource_marker: \uE200cite\uE202turn23search0\uE202turn23search1\uE201"
+```
+
+```yaml
+id: st.def.boolean-circuit-and-size-depth
+kind: definition
+status: accepted
+latex: A Boolean circuit on $n$ inputs is a directed acyclic graph with $n$ input nodes labeled $x_1,\dots,x_n$, internal gates from a basis (e.g.\ $\{\wedge,\vee,\neg\}$), and one output gate. The \emph{size} is the number of gates (or wires; the convention must be fixed). The \emph{depth} is the length (number of gates) on the longest input-to-output path.
+informal: A Boolean circuit on n inputs is a directed acyclic graph with n input nodes labeled x_1,dots,x_n , internal gates from a basis (e.g. wedge,vee,neg ), and one output gate. The emph size is the number of gates (or wires; the convention must be fixed). The emph depth is the leng...
+source_ids:
+- src.001
+used_symbols: []
+depends_on: []
+confidence: 0.95
+proof_sketch: ''
+notes: "parsed_env: definition\nsection: Paragraph: Boolean circuits and nonuniform classes.\nsource_citation: /Users/user/Downloads/deep-research-report.md\nlabel: Boolean circuit and (size, depth)\nsource_marker: \uE200cite\uE202turn23search0\uE202turn23search3\uE201"
+```
+
+```yaml
+id: st.def.circuit-family-s-n
+kind: definition
+status: accepted
+latex: A circuit family $\{C_n\}_{n\ge 1}$ is a sequence where $C_n$ is a circuit on $n$ inputs. A language $L$ is in $\SIZE(s(n))$ if there exists a family $\{C_n\}$ of size $\le s(n)$ such that $C_n(x)=1 \iff x\in L$ for all $|x|=n$.
+informal: A circuit family C_n _ nge 1 is a sequence where C_n is a circuit on n inputs. A language L is in SIZE(s(n)) if there exists a family C_n of size le s(n) such that C_n(x)=1 iff xin L for all |x|=n .
+source_ids:
+- src.001
+used_symbols: []
+depends_on: []
+confidence: 0.95
+proof_sketch: ''
+notes: "parsed_env: definition\nsection: Paragraph: Boolean circuits and nonuniform classes.\nsource_citation: /Users/user/Downloads/deep-research-report.md\nlabel: Circuit family; $\\SIZE(s(n))$\nsource_marker: \uE200cite\uE202turn23search0\uE202turn22search2\uE201"
+```
+
+```yaml
+id: st.def.item-5
+kind: definition
+status: accepted
+latex: $\Ppoly$ is the class of languages $L$ decidable by polynomial-size Boolean circuit families, equivalently by polynomial-time Turing machines with polynomial-length advice strings depending only on input length.
+informal: Ppoly is the class of languages L decidable by polynomial-size Boolean circuit families, equivalently by polynomial-time Turing machines with polynomial-length advice strings depending only on input length.
+source_ids:
+- src.001
+used_symbols: []
+depends_on: []
+confidence: 0.95
+proof_sketch: ''
+notes: "parsed_env: definition\nsection: Paragraph: Boolean circuits and nonuniform classes.\nsource_citation: /Users/user/Downloads/deep-research-report.md\nlabel: $\\Ppoly$\nsource_marker: \uE200cite\uE202turn23search0\uE202turn9search16\uE202turn5search17\uE201"
+```
+
+```yaml
+id: st.def.boolean-formulas
+kind: definition
+status: accepted
+latex: A Boolean formula is a Boolean circuit whose underlying graph is a tree (fan-out $1$). The \emph{formula size} is the number of gates.
+informal: A Boolean formula is a Boolean circuit whose underlying graph is a tree (fan-out 1 ). The emph formula size is the number of gates.
+source_ids:
+- src.001
+used_symbols: []
+depends_on: []
+confidence: 0.95
+proof_sketch: ''
+notes: "parsed_env: definition\nsection: Paragraph: Boolean circuits and nonuniform classes.\nsource_citation: /Users/user/Downloads/deep-research-report.md\nlabel: Boolean formulas\nsource_marker: \uE200cite\uE202turn23search0\uE202turn16search1\uE201"
+```
+
+```yaml
+id: st.def.standard-restricted-circuit-classes
+kind: definition
+status: accepted
+latex: 'Let gates have unbounded fan-in unless stated otherwise.
+
+  \begin{enumerate}[label=(\alph*),leftmargin=2em]
+
+  \item $\NC^1$: polynomial size, logarithmic depth, bounded fan-in $\{\wedge,\vee,\neg\}$.
+
+  \item $\AC^0$: polynomial size, constant depth, unbounded fan-in $\{\wedge,\vee,\neg\}$.
+
+  \item $\AC^0[p]$: $\AC^0$ plus $\mathrm{MOD}_p$ gates (typically $p$ prime).
+
+  \item $\ACC^0$: $\AC^0$ plus $\mathrm{MOD}_m$ gates for constant $m>1$.
+
+  \item $\TC^0$: constant depth, polynomial size circuits with threshold/majority gates.
+
+  \end{enumerate}'
+informal: 'Let gates have unbounded fan-in unless stated otherwise. [label=(alph*),leftmargin=2em] item NC^1 : polynomial size, logarithmic depth, bounded fan-in wedge,vee,neg . item AC^0 : polynomial size, constant depth, unbounded fan-in wedge,vee,neg . item AC^0[p] : AC^0 plus mathrm...'
+source_ids:
+- src.001
+used_symbols: []
+depends_on: []
+confidence: 0.95
+proof_sketch: ''
+notes: "parsed_env: definition\nsection: Paragraph: Boolean circuits and nonuniform classes.\nsource_citation: /Users/user/Downloads/deep-research-report.md\nlabel: Standard restricted circuit classes\nsource_marker: \uE200cite\uE202turn23search0\uE202turn1search7\uE202turn22search9\uE201"
+```
+
+```yaml
+id: st.def.monotone-circuits
+kind: definition
+status: accepted
+latex: A monotone circuit is a circuit over $\{\wedge,\vee\}$ (no negation gates) computing a monotone Boolean function. Its complexity is measured by size/depth as usual.
+informal: A monotone circuit is a circuit over wedge,vee (no negation gates) computing a monotone Boolean function. Its complexity is measured by size/depth as usual.
+source_ids:
+- src.001
+used_symbols: []
+depends_on: []
+confidence: 0.95
+proof_sketch: ''
+notes: "parsed_env: definition\nsection: Paragraph: Boolean circuits and nonuniform classes.\nsource_citation: /Users/user/Downloads/deep-research-report.md\nlabel: Monotone circuits\nsource_marker: \uE200cite\uE202turn23search0\uE202turn19search6\uE201"
+```
+
+```yaml
+id: st.def.cook-reckhow-propositional-proof-system
+kind: definition
+status: accepted
+latex: 'A (Cook--Reckhow) propositional proof system is a polynomial-time computable surjection
+
+  \[
+
+  f:\bits^*\twoheadrightarrow \TAUT,
+
+  \]
+
+  where $\TAUT$ is the set of propositional tautologies. A string $\pi$ is an $f$-proof of formula $\varphi$ if $f(\pi)=\varphi$.'
+informal: A (Cook--Reckhow) propositional proof system is a polynomial-time computable surjection [ f:bits^*twoheadrightarrow TAUT, ] where TAUT is the set of propositional tautologies. A string pi is an f -proof of formula varphi if f(pi)=varphi .
+source_ids:
+- src.001
+used_symbols: []
+depends_on: []
+confidence: 0.95
+proof_sketch: ''
+notes: "parsed_env: definition\nsection: Paragraph: Proof complexity.\nsource_citation: /Users/user/Downloads/deep-research-report.md\nlabel: Cook--Reckhow propositional proof system\nsource_marker: \uE200cite\uE202turn19search0\uE201"
+```
+
+```yaml
+id: st.def.polynomially-bounded-proof-system
+kind: definition
+status: accepted
+latex: A proof system $f$ is \emph{polynomially bounded} if there exists a polynomial $p$ such that every $\varphi\in\TAUT$ has an $f$-proof $\pi$ with $|\pi|\le p(|\varphi|)$.
+informal: A proof system f is emph polynomially bounded if there exists a polynomial p such that every varphiinTAUT has an f -proof pi with |pi|le p(|varphi|) .
+source_ids:
+- src.001
+used_symbols: []
+depends_on: []
+confidence: 0.95
+proof_sketch: ''
+notes: "parsed_env: definition\nsection: Paragraph: Proof complexity.\nsource_citation: /Users/user/Downloads/deep-research-report.md\nlabel: Polynomially bounded proof system\nsource_marker: \uE200cite\uE202turn19search0\uE202turn19search4\uE201"
+```
+
+```yaml
+id: st.def.resolution-refutation
+kind: definition
+status: accepted
+latex: Resolution is a refutation system for CNF formulas, with inference rule $(A\vee x),(B\vee \neg x)\mapsto (A\vee B)$. A CNF is unsatisfiable iff it has a resolution refutation.
+informal: Resolution is a refutation system for CNF formulas, with inference rule (Avee x),(Bvee neg x)mapsto (Avee B) . A CNF is unsatisfiable iff it has a resolution refutation.
+source_ids:
+- src.001
+used_symbols: []
+depends_on: []
+confidence: 0.95
+proof_sketch: ''
+notes: "parsed_env: definition\nsection: Paragraph: Proof complexity.\nsource_citation: /Users/user/Downloads/deep-research-report.md\nlabel: Resolution (refutation)\nsource_marker: \uE200cite\uE202turn19search1\uE201"
+```
+
+```yaml
+id: st.def.frege-and-extended-frege-informal
+kind: definition
+status: accepted
+latex: Frege systems are propositional calculi with finitely many axiom schemes and inference rules; Extended Frege adds extension axioms allowing abbreviations. Proof size is measured by number of symbols/lines.
+informal: Frege systems are propositional calculi with finitely many axiom schemes and inference rules; Extended Frege adds extension axioms allowing abbreviations. Proof size is measured by number of symbols/lines.
+source_ids:
+- src.001
+used_symbols: []
+depends_on: []
+confidence: 0.95
+proof_sketch: ''
+notes: "parsed_env: definition\nsection: Paragraph: Proof complexity.\nsource_citation: /Users/user/Downloads/deep-research-report.md\nlabel: Frege and Extended Frege (informal)\nsource_marker: \uE200cite\uE202turn19search7\uE202turn19search3\uE201"
+```
+
+```yaml
+id: st.def.ideal-proof-system-ips-high-level
+kind: definition
+status: accepted
+latex: Given polynomials $F_1(\mathbf{x}),\dots,F_m(\mathbf{x})$ over a field with no common zero over the algebraic closure, an IPS refutation is an algebraic circuit $C(\mathbf{x},\mathbf{y})$ such that $C(\mathbf{x},\mathbf{0})\equiv 0$ and $C(\mathbf{x},F_1(\mathbf{x}),\dots,F_m(\mathbf{x}))\equiv 1$. IPS size is the circuit size of $C$.
+informal: Given polynomials F_1(mathbf x ),dots,F_m(mathbf x ) over a field with no common zero over the algebraic closure, an IPS refutation is an algebraic circuit C(mathbf x ,mathbf y ) such that C(mathbf x ,mathbf 0 )equiv 0 and C(mathbf x ,F_1(mathbf x ),dots,F_m(mathbf x ))equiv 1...
+source_ids:
+- src.001
+used_symbols: []
+depends_on: []
+confidence: 0.95
+proof_sketch: ''
+notes: "parsed_env: definition\nsection: Paragraph: Proof complexity.\nsource_citation: /Users/user/Downloads/deep-research-report.md\nlabel: Ideal Proof System (IPS) --- high-level\nsource_marker: \uE200cite\uE202turn19search6\uE201"
+```
+
+```yaml
+id: st.def.polynomial-identity-testing-pit
+kind: definition
+status: accepted
+latex: Given an arithmetic circuit $C$ over a field/ring, the PIT problem asks whether the polynomial computed by $C$ is identically zero (i.e.\ $C\equiv 0$).
+informal: Given an arithmetic circuit C over a field/ring, the PIT problem asks whether the polynomial computed by C is identically zero (i.e. Cequiv 0 ).
+source_ids:
+- src.001
+used_symbols: []
+depends_on: []
+confidence: 0.95
+proof_sketch: ''
+notes: "parsed_env: definition\nsection: Paragraph: Derandomisation, PIT, and pseudorandomness.\nsource_citation: /Users/user/Downloads/deep-research-report.md\nlabel: Polynomial Identity Testing (PIT)\nsource_marker: \uE200cite\uE202turn32search4\uE202turn19search6\uE201"
+```
+
+```yaml
+id: st.def.hitting-set-for-pit-black-box
+kind: definition
+status: accepted
+latex: A set $H\subseteq \mathbb{F}^n$ is a hitting set for a class $\mathcal{C}$ of $n$-variate circuits if for every nonzero polynomial $p$ computed by some circuit in $\mathcal{C}$, there exists $\mathbf{a}\in H$ with $p(\mathbf{a})\neq 0$.
+informal: A set Hsubseteq mathbb F ^n is a hitting set for a class mathcal C of n -variate circuits if for every nonzero polynomial p computed by some circuit in mathcal C , there exists mathbf a in H with p(mathbf a )neq 0 .
+source_ids:
+- src.001
+used_symbols: []
+depends_on: []
+confidence: 0.95
+proof_sketch: ''
+notes: "parsed_env: definition\nsection: Paragraph: Derandomisation, PIT, and pseudorandomness.\nsource_citation: /Users/user/Downloads/deep-research-report.md\nlabel: Hitting set for PIT (black-box)\nsource_marker: \uE200cite\uE202turn32search4\uE201"
+```
+
+```yaml
+id: st.def.pseudorandom-generator-prg-against-circuits
+kind: definition
+status: accepted
+latex: 'A function $G:\bits^s\to\bits^m$ is a PRG against circuit class $\mathcal{C}$ with advantage $\varepsilon$ if for all distinguishers $D\in\mathcal{C}$,
+
+  \[
+
+  \left|\Pr[D(G(U_s))=1]-\Pr[D(U_m)=1]\right|\le \varepsilon.
+
+  \]'
+informal: A function G:bits^stobits^m is a PRG against circuit class mathcal C with advantage varepsilon if for all distinguishers Dinmathcal C , [ left|Pr[D(G(U_s))=1]-Pr[D(U_m)=1]right|le varepsilon. ]
+source_ids:
+- src.001
+used_symbols: []
+depends_on: []
+confidence: 0.95
+proof_sketch: ''
+notes: "parsed_env: definition\nsection: Paragraph: Derandomisation, PIT, and pseudorandomness.\nsource_citation: /Users/user/Downloads/deep-research-report.md\nlabel: Pseudorandom generator (PRG) against circuits\nsource_marker: \uE200cite\uE202turn23search1\uE202turn4view2\uE201"
+```
+
+```yaml
+id: st.def.pseudorandom-function-prf-informal
+kind: definition
+status: accepted
+latex: A keyed family $\{f_k:\bits^n\to\bits\}$ is a PRF if no polynomial-size circuit family can distinguish oracle access to $f_k$ (for uniform random key $k$) from oracle access to a uniformly random function. Precise definitions vary by model; see standard cryptography references.
+informal: A keyed family f_k:bits^ntobits is a PRF if no polynomial-size circuit family can distinguish oracle access to f_k (for uniform random key k ) from oracle access to a uniformly random function. Precise definitions vary by model; see standard cryptography references.
+source_ids:
+- src.001
+used_symbols: []
+depends_on: []
+confidence: 0.95
+proof_sketch: ''
+notes: "parsed_env: definition\nsection: Paragraph: Derandomisation, PIT, and pseudorandomness.\nsource_citation: /Users/user/Downloads/deep-research-report.md\nlabel: Pseudorandom function (PRF) --- informal\nsource_marker: \uE200cite\uE202turn4view2\uE201"
+```
+
+```yaml
+id: st.def.minimum-circuit-size-problem-mcsp
+kind: definition
+status: accepted
+latex: 'Instance: a truth table $T\in\bits^{2^n}$ of an $n$-bit Boolean function $f$, and a size parameter $s$. Question: does $f$ have a Boolean circuit of size at most $s$? The input length is $N=2^n$, so $s$ is typically specified as a function of $n$ (or $N$).'
+informal: 'Instance: a truth table Tinbits^ 2^n of an n -bit Boolean function f , and a size parameter s . Question: does f have a Boolean circuit of size at most s ? The input length is N=2^n , so s is typically specified as a function of n (or N ).'
+source_ids:
+- src.001
+used_symbols: []
+depends_on: []
+confidence: 0.95
+proof_sketch: ''
+notes: "parsed_env: definition\nsection: Paragraph: Meta-complexity and hardness magnification.\nsource_citation: /Users/user/Downloads/deep-research-report.md\nlabel: Minimum Circuit Size Problem (MCSP)\nsource_marker: \uE200cite\uE202turn18search4\uE202turn28search5\uE201"
+```
+
+```yaml
+id: st.def.gap-mcsp
+kind: definition
+status: accepted
+latex: 'Given thresholds $s_1<s_2$, $\mathrm{GapMCSP}[s_1,s_2]$ is a promise problem: YES if $\CIRCSIZE(f)\le s_1$, NO if $\CIRCSIZE(f)\ge s_2$.'
+informal: 'Given thresholds s_1<s_2 , mathrm GapMCSP [s_1,s_2] is a promise problem: YES if CIRCSIZE(f)le s_1 , NO if CIRCSIZE(f)ge s_2 .'
+source_ids:
+- src.001
+used_symbols: []
+depends_on: []
+confidence: 0.95
+proof_sketch: ''
+notes: "parsed_env: definition\nsection: Paragraph: Meta-complexity and hardness magnification.\nsource_citation: /Users/user/Downloads/deep-research-report.md\nlabel: Gap-MCSP\nsource_marker: \uE200cite\uE202turn16search1\uE202turn16search2\uE201"
+```
+
+```yaml
+id: st.def.mktp-mktp-time-bounded-kolmogorov-meta-problem
+kind: definition
+status: accepted
+latex: Given a string $x$ and threshold $\theta$, decide whether the time-bounded Kolmogorov complexity $KT(x)\le \theta$ (Levin's $KT$ measure). Variants differ in the exact model of time-bounded description.
+informal: Given a string x and threshold theta , decide whether the time-bounded Kolmogorov complexity KT(x)le theta (Levin's KT measure). Variants differ in the exact model of time-bounded description.
+source_ids:
+- src.001
+used_symbols: []
+depends_on: []
+confidence: 0.95
+proof_sketch: ''
+notes: "parsed_env: definition\nsection: Paragraph: Meta-complexity and hardness magnification.\nsource_citation: /Users/user/Downloads/deep-research-report.md\nlabel: MKTP / MKtP (time-bounded Kolmogorov meta-problem)\nsource_marker: \uE200cite\uE202turn17search15\uE202turn18search2\uE201"
+```
+
+```yaml
+id: st.def.hardness-magnification-phenomenon-programme-leve
+kind: definition
+status: accepted
+latex: "A hardness magnification theorem has the form:\n\\[\n\\text{\u201CA barely-nontrivial lower bound for an explicit problem }Q\\text{ in a weak model } \\Rightarrow \\text{ a major lower bound/separation in a strong model.\u201D}\n\\]\nTypically, $Q$ is a meta-problem (e.g.\\ a Gap-MCSP variant) and \u201Cmajor\u201D means consequences such as $\\NP\\not\\subseteq \\Ppoly$."
+informal: "A hardness magnification theorem has the form: [ text \u201CA barely-nontrivial lower bound for an explicit problem Qtext in a weak model Rightarrow text a major lower bound/separation in a strong model.\u201D ] Typically, Q is a meta-problem (e.g. a Gap-MCSP variant) and \u201Cmajor\u201D means..."
+source_ids:
+- src.001
+used_symbols: []
+depends_on: []
+confidence: 0.95
+proof_sketch: ''
+notes: "parsed_env: definition\nsection: Paragraph: Meta-complexity and hardness magnification.\nsource_citation: /Users/user/Downloads/deep-research-report.md\nlabel: Hardness magnification (phenomenon; programme-level)\nsource_marker: \uE200cite\uE202turn16search3\uE202turn16search1\uE202turn16search2\uE201"
+```
+
+```yaml
+id: st.def.deterministic-communication-complexity
+kind: definition
+status: accepted
+latex: For a two-party Boolean function $F:\mathcal{X}\times\mathcal{Y}\to\bits$, $D^{cc}(F)$ is the minimum number of communicated bits in a deterministic protocol that computes $F$.
+informal: For a two-party Boolean function F:mathcal X timesmathcal Y tobits , D^ cc (F) is the minimum number of communicated bits in a deterministic protocol that computes F .
+source_ids:
+- src.001
+used_symbols: []
+depends_on: []
+confidence: 0.95
+proof_sketch: ''
+notes: "parsed_env: definition\nsection: Paragraph: Communication/query complexity and lifting.\nsource_citation: /Users/user/Downloads/deep-research-report.md\nlabel: Deterministic communication complexity\nsource_marker: \uE200cite\uE202turn20search4\uE202turn20search3\uE201"
+```
+
+```yaml
+id: st.def.deterministic-decision-tree-complexity
+kind: definition
+status: accepted
+latex: For $f:\bits^n\to\bits$, $D^{dt}(f)$ is the minimum number of bit-queries made by a deterministic decision tree that computes $f$ on all inputs.
+informal: For f:bits^ntobits , D^ dt (f) is the minimum number of bit-queries made by a deterministic decision tree that computes f on all inputs.
+source_ids:
+- src.001
+used_symbols: []
+depends_on: []
+confidence: 0.95
+proof_sketch: ''
+notes: "parsed_env: definition\nsection: Paragraph: Communication/query complexity and lifting.\nsource_citation: /Users/user/Downloads/deep-research-report.md\nlabel: Deterministic decision tree complexity\nsource_marker: \uE200cite\uE202turn20search4\uE202turn20search0\uE201"
+```
+
+```yaml
+id: st.def.composition-with-a-gadget-lifting-set-up
+kind: definition
+status: accepted
+latex: 'Given $f:\bits^n\to\bits$ and a \emph{gadget} $g:\mathcal{X}\times\mathcal{Y}\to\bits$, define $F=f\circ g^n$ by
+
+  \[
+
+  F((x_1,\dots,x_n),(y_1,\dots,y_n)) \;=\; f(g(x_1,y_1),\dots,g(x_n,y_n)).
+
+  \]
+
+  A lifting theorem lower-bounds $\mathrm{CC}(F)$ in terms of a query measure of $f$.'
+informal: Given f:bits^ntobits and a emph gadget g:mathcal X timesmathcal Y tobits , define F=fcirc g^n by [ F((x_1,dots,x_n),(y_1,dots,y_n)) ;=; f(g(x_1,y_1),dots,g(x_n,y_n)). ] A lifting theorem lower-bounds mathrm CC (F) in terms of a query measure of f .
+source_ids:
+- src.001
+used_symbols: []
+depends_on: []
+confidence: 0.95
+proof_sketch: ''
+notes: "parsed_env: definition\nsection: Paragraph: Communication/query complexity and lifting.\nsource_citation: /Users/user/Downloads/deep-research-report.md\nlabel: Composition with a gadget; lifting set-up\nsource_marker: \uE200cite\uE202turn20search4\uE202turn20search0\uE201"
+```
+
+```yaml
+id: st.def.relativising-proof-technique-informal
+kind: definition
+status: accepted
+latex: A proof technique is \emph{relativising} if the argument remains valid when all machines are given oracle access to an arbitrary oracle $A$ (i.e.\ it proves the relativised statement for all $A$).
+informal: A proof technique is emph relativising if the argument remains valid when all machines are given oracle access to an arbitrary oracle A (i.e. it proves the relativised statement for all A ).
+source_ids:
+- src.001
+used_symbols: []
+depends_on: []
+confidence: 0.95
+proof_sketch: ''
+notes: "parsed_env: definition\nsection: Paragraph: Barrier notions.\nsource_citation: /Users/user/Downloads/deep-research-report.md\nlabel: Relativising proof technique (informal)\nsource_marker: \uE200cite\uE202turn27search16\uE202turn23search0\uE201"
+```
+
+```yaml
+id: st.def.natural-proofs-constructive-large-useful-high-le
+kind: definition
+status: accepted
+latex: "A property $\\mathcal{P}$ of Boolean functions (truth tables) is:\n(i) \\emph{constructive} if membership in $\\mathcal{P}$ is decidable efficiently (e.g.\\ in $\\poly(2^n)$ time on truth tables); \n(ii) \\emph{large} if a non-negligible fraction of all $n$-bit functions satisfy $\\mathcal{P}$; \n(iii) \\emph{useful} against a circuit class $\\mathcal{C}$ if no function computed by small $\\mathcal{C}$-circuits satisfies $\\mathcal{P}$.\nPrecise parameterisations vary; see Razborov--Rudich."
+informal: 'A property mathcal P of Boolean functions (truth tables) is: (i) emph constructive if membership in mathcal P is decidable efficiently (e.g. in poly(2^n) time on truth tables); (ii) emph large if a non-negligible fraction of all n -bit functions satisfy mathcal P ; (iii) emph...'
+source_ids:
+- src.001
+used_symbols: []
+depends_on: []
+confidence: 0.95
+proof_sketch: ''
+notes: "parsed_env: definition\nsection: Paragraph: Barrier notions.\nsource_citation: /Users/user/Downloads/deep-research-report.md\nlabel: Natural proofs: \u201Cconstructive, large, useful\u201D (high-level)\nsource_marker: \uE200cite\uE202turn0search6\uE202turn4view2\uE201"
+```
+
+```yaml
+id: st.def.algebrising-proof-technique-informal
+kind: definition
+status: accepted
+latex: A proof technique is \emph{algebrising} if it relativises even when the oracle is augmented with low-degree extension access in the sense of Aaronson--Wigderson (extension oracles).
+informal: A proof technique is emph algebrising if it relativises even when the oracle is augmented with low-degree extension access in the sense of Aaronson--Wigderson (extension oracles).
+source_ids:
+- src.001
+used_symbols: []
+depends_on: []
+confidence: 0.95
+proof_sketch: ''
+notes: "parsed_env: definition\nsection: Paragraph: Barrier notions.\nsource_citation: /Users/user/Downloads/deep-research-report.md\nlabel: Algebrising proof technique (informal)\nsource_marker: \uE200cite\uE202turn6search2\uE202turn6search6\uE201"
+```
+
+```yaml
+id: st.thm.cook-levin-sat-is-np-complete-cook1971
+kind: theorem
+status: accepted
+latex: '$\mathrm{SAT}=\{\varphi : \varphi\ \text{is a satisfiable Boolean formula}\}$ is NP-complete.'
+informal: 'mathrm SAT = varphi : varphi text is a satisfiable Boolean formula is NP-complete.'
+source_ids:
+- src.001
+used_symbols: []
+depends_on: []
+confidence: 0.86
+proof_sketch: ''
+notes: "parsed_env: theorem\nsection: Paragraph: NP-completeness and baseline structure.\nsource_citation: /Users/user/Downloads/deep-research-report.md\nlabel: Cook--Levin: $\\mathrm{SAT}$ is NP-complete {\\cite{Cook1971}}\nsource_marker: \uE200cite\uE202turn30search0\uE202turn30search3\uE202turn23search0\uE201"
+```
+
+```yaml
+id: st.thm.karp-many-natural-problems-are-np-complete-karp1
+kind: theorem
+status: accepted
+latex: There exist many problems $L$ in combinatorial optimisation/graph theory such that $L$ is NP-complete under polynomial-time many-one reductions.
+informal: There exist many problems L in combinatorial optimisation/graph theory such that L is NP-complete under polynomial-time many-one reductions.
+source_ids:
+- src.001
+used_symbols: []
+depends_on: []
+confidence: 0.86
+proof_sketch: ''
+notes: "parsed_env: theorem\nsection: Paragraph: NP-completeness and baseline structure.\nsource_citation: /Users/user/Downloads/deep-research-report.md\nlabel: Karp: many natural problems are NP-complete {\\cite{Karp1972}}\nsource_marker: \uE200cite\uE202turn31search1\uE202turn31search6\uE202turn31search7\uE201"
+```
+
+```yaml
+id: st.thm.nonuniform-separation-target
+kind: theorem
+status: accepted
+latex: If $\NP\not\subseteq \Ppoly$, then $\Pclass\neq\NP$.
+informal: If NPnotsubseteq Ppoly , then PclassneqNP .
+source_ids:
+- src.001
+used_symbols: []
+depends_on: []
+confidence: 0.83
+proof_sketch: ''
+notes: "parsed_env: proposition\nsection: Paragraph: Circuit lower bounds as direct targets.\nsource_citation: /Users/user/Downloads/deep-research-report.md\nlabel: Nonuniform separation target\nsource_marker: \uE200cite\uE202turn23search0\uE202turn4view2\uE202turn6search2\uE201\nnormalization: proposition mapped to theorem"
+```
+
+```yaml
+id: st.thm.counting-lower-bound-almost-all-functions-are-ha
+kind: theorem
+status: accepted
+latex: For sufficiently large $n$, a uniformly random Boolean function $f:\bits^n\to\bits$ requires circuit size $\Omega(2^n/n)$ (under standard finite bases).
+informal: For sufficiently large n , a uniformly random Boolean function f:bits^ntobits requires circuit size Omega(2^n/n) (under standard finite bases).
+source_ids:
+- src.001
+used_symbols: []
+depends_on: []
+confidence: 0.86
+proof_sketch: ''
+notes: 'parsed_env: theorem
+
+  section: Paragraph: Circuit lower bounds as direct targets.
+
+  source_citation: /Users/user/Downloads/deep-research-report.md
+
+  label: Counting lower bound: almost all functions are hard (Shannon-style)'
+```
+
+```yaml
+id: st.thm.karp-lipton-np-in-collapses-karplipton1980
+kind: theorem
+status: accepted
+latex: If $\NP\subseteq \Ppoly$, then $\PH$ collapses to $\Sigma_2^p$.
+informal: If NPsubseteq Ppoly , then PH collapses to Sigma_2^p .
+source_ids:
+- src.001
+used_symbols: []
+depends_on: []
+confidence: 0.86
+proof_sketch: ''
+notes: "parsed_env: theorem\nsection: Paragraph: Nonuniformity and uniform consequences.\nsource_citation: /Users/user/Downloads/deep-research-report.md\nlabel: Karp--Lipton: NP in $\\Ppoly$ collapses $\\PH$ {\\cite{KarpLipton1980}}\nsource_marker: \uE200cite\uE202turn5search17\uE202turn9search15\uE202turn9search0\uE201"
+```
+
+```yaml
+id: st.thm.adleman-adleman1978
+kind: theorem
+status: accepted
+latex: Every $\BPP$ language has polynomial-size circuits; i.e.\ $\BPP\subseteq \Ppoly$.
+informal: Every BPP language has polynomial-size circuits; i.e. BPPsubseteq Ppoly .
+source_ids:
+- src.001
+used_symbols: []
+depends_on: []
+confidence: 0.86
+proof_sketch: ''
+notes: "parsed_env: theorem\nsection: Paragraph: Nonuniformity and uniform consequences.\nsource_citation: /Users/user/Downloads/deep-research-report.md\nlabel: Adleman: $\\BPP\\subseteq\\Ppoly$ {\\cite{Adleman1978}}\nsource_marker: \uE200cite\uE202turn29search1\uE202turn23search1\uE201"
+```
+
+```yaml
+id: st.thm.h-stad-near-optimal-0-lower-bounds-for-parity-ha
+kind: theorem
+status: accepted
+latex: For every constant depth $d\ge 2$, any depth-$d$ $\AC^0$ circuit computing $\mathrm{PARITY}_n$ has size $\exp(\Omega(n^{1/(d-1)}))$.
+informal: For every constant depth dge 2 , any depth- d AC^0 circuit computing mathrm PARITY _n has size exp(Omega(n^ 1/(d-1) )) .
+source_ids:
+- src.001
+used_symbols: []
+depends_on: []
+confidence: 0.86
+proof_sketch: ''
+notes: "parsed_env: theorem\nsection: Paragraph: Restricted circuit lower bounds (unconditional frontiers).\nsource_citation: /Users/user/Downloads/deep-research-report.md\nlabel: H{\\aa}stad: near-optimal $\\AC^0$ lower bounds for PARITY {\\cite{Hastad1986}}\nsource_marker: \uE200cite\uE202turn23search3\uE202turn1search18\uE202turn1search7\uE201"
+```
+
+```yaml
+id: st.thm.razborov-smolensky-0-p
+kind: theorem
+status: accepted
+latex: '$ lower bounds {\cite{Smolensky1987}}]
+
+  For distinct primes $p\neq q$, the function $\mathrm{MOD}_q$ does not have polynomial-size $\AC^0[p]$ circuits (and quantitative tradeoffs yield exponential size lower bounds at fixed depth).'
+informal: lower bounds cite Smolensky1987 ] For distinct primes pneq q , the function mathrm MOD _q does not have polynomial-size AC^0[p] circuits (and quantitative tradeoffs yield exponential size lower bounds at fixed depth).
+source_ids:
+- src.001
+used_symbols: []
+depends_on: []
+confidence: 0.86
+proof_sketch: ''
+notes: "parsed_env: theorem\nsection: Paragraph: Restricted circuit lower bounds (unconditional frontiers).\nsource_citation: /Users/user/Downloads/deep-research-report.md\nlabel: Razborov--Smolensky: $\\AC^0[p\nsource_marker: \uE200cite\uE202turn1search7\uE202turn1search3\uE202turn22search9\uE201"
+```
+
+```yaml
+id: st.thm.monotone-lower-bounds-for-clique-exemplar-razbor
+kind: theorem
+status: accepted
+latex: The monotone circuit complexity of $\mathrm{CLIQUE}$ is superpolynomial (indeed exponential for standard parameter regimes).
+informal: The monotone circuit complexity of mathrm CLIQUE is superpolynomial (indeed exponential for standard parameter regimes).
+source_ids:
+- src.001
+used_symbols: []
+depends_on: []
+confidence: 0.86
+proof_sketch: ''
+notes: "parsed_env: theorem\nsection: Paragraph: Restricted circuit lower bounds (unconditional frontiers).\nsource_citation: /Users/user/Downloads/deep-research-report.md\nlabel: Monotone lower bounds for CLIQUE (exemplar) {\\cite{RazborovClique}}\nsource_marker: \uE200cite\uE202turn19search6\uE201"
+```
+
+```yaml
+id: st.thm.williams-nonuniform-0-lower-bounds-for-williams2
+kind: theorem
+status: accepted
+latex: $\NEXP\not\subseteq \ACC^0$, i.e.\ there exists a language in $\NEXP$ that does not have polynomial-size nonuniform $\ACC^0$ circuits.
+informal: NEXPnotsubseteq ACC^0 , i.e. there exists a language in NEXP that does not have polynomial-size nonuniform ACC^0 circuits.
+source_ids:
+- src.001
+used_symbols: []
+depends_on: []
+confidence: 0.86
+proof_sketch: ''
+notes: "parsed_env: theorem\nsection: Paragraph: Algorithms $\\to$ lower bounds (Williams programme).\nsource_citation: /Users/user/Downloads/deep-research-report.md\nlabel: Williams: nonuniform $\\ACC^0$ lower bounds for $\\NEXP$ {\\cite{Williams2014ACC}}\nsource_marker: \uE200cite\uE202turn22search9\uE202turn5search7\uE202turn22search2\uE201"
+```
+
+```yaml
+id: st.thm.williams-improved-exhaustive-search-circuit-lowe
+kind: theorem
+status: accepted
+latex: If $\mathrm{CIRCUIT\mbox{-}SAT}$ on $n$ variables can be solved in time $2^{(1-\delta)n}\poly(m)$ for some $\delta>0$ (where $m$ is circuit size), then there exist explicit languages in relatively low exponential-time classes that require superpolynomial (indeed $2^{\varepsilon n}$) nonuniform circuit size for some $\varepsilon>0$.
+informal: If mathrm CIRCUITmbox - SAT on n variables can be solved in time 2^ (1-delta)n poly(m) for some delta>0 (where m is circuit size), then there exist explicit languages in relatively low exponential-time classes that require superpolynomial (indeed 2^ varepsilon n ) nonuniform c...
+source_ids:
+- src.001
+used_symbols: []
+depends_on: []
+confidence: 0.86
+proof_sketch: ''
+notes: "parsed_env: theorem\nsection: Paragraph: Algorithms $\\to$ lower bounds (Williams programme).\nsource_citation: /Users/user/Downloads/deep-research-report.md\nlabel: Williams: improved exhaustive search $\\Rightarrow$ circuit lower bounds {\\cite{Williams2013Exhaustive}}\nsource_marker: \uE200cite\uE202turn33search2\uE202turn33search14\uE202turn22search2\uE201"
+```
+
+```yaml
+id: st.obs.survey-perspective
+kind: observation
+status: accepted
+latex: "For an overview of the algorithms$\\leftrightarrow$circuit-complexity duality and related developments (including counting and learning connections), see Williams\u2019 invited surveys."
+informal: "For an overview of the algorithms leftrightarrow circuit-complexity duality and related developments (including counting and learning connections), see Williams\u2019 invited surveys."
+source_ids:
+- src.001
+used_symbols: []
+depends_on: []
+confidence: 0.72
+proof_sketch: ''
+notes: "parsed_env: remark\nsection: Paragraph: Algorithms $\\to$ lower bounds (Williams programme).\nsource_citation: /Users/user/Downloads/deep-research-report.md\nlabel: Survey perspective\nsource_marker: \uE200cite\uE202turn22search2\uE202turn22search6\uE201\nnormalization: remark mapped to observation"
+```
+
+```yaml
+id: st.thm.kabanets-impagliazzo-pit-derandomisation-implies
+kind: theorem
+status: accepted
+latex: 'If $\mathrm{PIT}\in \Pclass$ (or even suitable infinitely-often derandomisations in nondeterministic subexponential time, in standard variants), then at least one of the following holds:
+
+  \[
+
+  \NEXP\not\subseteq \Ppoly \quad \text{or} \quad \text{Permanent does not have polynomial-size arithmetic circuits.}
+
+  \]'
+informal: 'If mathrm PIT in Pclass (or even suitable infinitely-often derandomisations in nondeterministic subexponential time, in standard variants), then at least one of the following holds: [ NEXPnotsubseteq Ppoly quad text or quad text Permanent does not have polynomial-size arithmet...'
+source_ids:
+- src.001
+used_symbols: []
+depends_on: []
+confidence: 0.86
+proof_sketch: ''
+notes: "parsed_env: theorem\nsection: Paragraph: Derandomisation/PIT $\\leftrightarrow$ lower bounds.\nsource_citation: /Users/user/Downloads/deep-research-report.md\nlabel: Kabanets--Impagliazzo: PIT derandomisation implies major lower bounds {\\cite{KabanetsImpagliazzo2004}}\nsource_marker: \uE200cite\uE202turn32search4\uE202turn32search9\uE202turn32search3\uE201"
+```
+
+```yaml
+id: st.thm.nisan-wigderson-hardness-vs-randomness-nisanwigd
+kind: theorem
+status: accepted
+latex: Assuming sufficiently strong circuit hardness (typically worst-case-to-average-case hardness for an explicit function), one can construct pseudorandom generators fooling polynomial-size circuits, yielding derandomisations (e.g.\ conditional collapses of $\BPP$ to $\Pclass$ or subexponential simulations).
+informal: Assuming sufficiently strong circuit hardness (typically worst-case-to-average-case hardness for an explicit function), one can construct pseudorandom generators fooling polynomial-size circuits, yielding derandomisations (e.g. conditional collapses of BPP to Pclass or subexpo...
+source_ids:
+- src.001
+used_symbols: []
+depends_on: []
+confidence: 0.86
+proof_sketch: ''
+notes: "parsed_env: theorem\nsection: Paragraph: Derandomisation/PIT $\\leftrightarrow$ lower bounds.\nsource_citation: /Users/user/Downloads/deep-research-report.md\nlabel: Nisan--Wigderson: hardness vs.\\ randomness {\\cite{NisanWigderson1994}}\nsource_marker: \uE200cite\uE202turn23search1\uE202turn4view2\uE201"
+```
+
+```yaml
+id: st.thm.impagliazzo-wigderson-e-hardness-nonuniform-form
+kind: theorem
+status: accepted
+latex: If there exists a function in $\E$ with circuit complexity $2^{\Omega(n)}$ (in a standard nonuniform sense), then $\BPP=\Pclass$ (via a PRG construction building on XOR/direct-product amplification).
+informal: If there exists a function in E with circuit complexity 2^ Omega(n) (in a standard nonuniform sense), then BPP=Pclass (via a PRG construction building on XOR/direct-product amplification).
+source_ids:
+- src.001
+used_symbols: []
+depends_on: []
+confidence: 0.86
+proof_sketch: ''
+notes: "parsed_env: theorem\nsection: Paragraph: Derandomisation/PIT $\\leftrightarrow$ lower bounds.\nsource_citation: /Users/user/Downloads/deep-research-report.md\nlabel: Impagliazzo--Wigderson: $E$-hardness $\\Rightarrow \\BPP=\\Pclass$ (nonuniform form) {\\cite{ImpagliazzoWigderson1997}}\nsource_marker: \uE200cite\uE202turn26search1\uE202turn26search3\uE202turn23search1\uE201"
+```
+
+```yaml
+id: st.thm.cook-reckhow-proof-systems-and-cookreckhow1979
+kind: theorem
+status: accepted
+latex: There exists a polynomially bounded propositional proof system for $\TAUT$ if and only if $\NP=\coNP$.
+informal: There exists a polynomially bounded propositional proof system for TAUT if and only if NP=coNP .
+source_ids:
+- src.001
+used_symbols: []
+depends_on: []
+confidence: 0.86
+proof_sketch: ''
+notes: "parsed_env: theorem\nsection: Paragraph: Proof complexity connections.\nsource_citation: /Users/user/Downloads/deep-research-report.md\nlabel: Cook--Reckhow: proof systems and $\\NP=\\coNP$ {\\cite{CookReckhow1979}}\nsource_marker: \uE200cite\uE202turn19search0\uE202turn19search4\uE201"
+```
+
+```yaml
+id: st.thm.resolution-php-lower-bounds-exemplar-buss1988
+kind: theorem
+status: accepted
+latex: Pigeonhole Principle (PHP) tautologies require exponential-size resolution refutations (quantitative forms depend on the encoding and parameters).
+informal: Pigeonhole Principle (PHP) tautologies require exponential-size resolution refutations (quantitative forms depend on the encoding and parameters).
+source_ids:
+- src.001
+used_symbols: []
+depends_on: []
+confidence: 0.86
+proof_sketch: ''
+notes: "parsed_env: theorem\nsection: Paragraph: Proof complexity connections.\nsource_citation: /Users/user/Downloads/deep-research-report.md\nlabel: Resolution/PHP lower bounds (exemplar) {\\cite{Buss1988}}\nsource_marker: \uE200cite\uE202turn19search1\uE201"
+```
+
+```yaml
+id: st.thm.bounded-depth-frege-php-lower-bounds-beamepitass
+kind: theorem
+status: accepted
+latex: PHP tautologies require exponential-size bounded-depth Frege proofs (for standard formulations), implying strong lower bounds for those proof systems.
+informal: PHP tautologies require exponential-size bounded-depth Frege proofs (for standard formulations), implying strong lower bounds for those proof systems.
+source_ids:
+- src.001
+used_symbols: []
+depends_on: []
+confidence: 0.86
+proof_sketch: ''
+notes: "parsed_env: theorem\nsection: Paragraph: Proof complexity connections.\nsource_citation: /Users/user/Downloads/deep-research-report.md\nlabel: Bounded-depth Frege PHP lower bounds {\\cite{BeamePitassiImpagliazzo1993}}\nsource_marker: \uE200cite\uE202turn19search9\uE201"
+```
+
+```yaml
+id: st.thm.grochow-pitassi-ips-ties-proof-lower-bounds-to-a
+kind: theorem
+status: accepted
+latex: Any superpolynomial lower bound on IPS refutation size for \emph{any} tautology implies superpolynomial lower bounds for algebraic circuits computing the permanent (i.e.\ consequences consistent with $\mathrm{VP}\neq\mathrm{VNP}$ in standard formulations). Moreover, verification of IPS refutations relates to PIT, motivating propositional PIT axioms.
+informal: Any superpolynomial lower bound on IPS refutation size for emph any tautology implies superpolynomial lower bounds for algebraic circuits computing the permanent (i.e. consequences consistent with mathrm VP neqmathrm VNP in standard formulations). Moreover, verification of IPS...
+source_ids:
+- src.001
+used_symbols: []
+depends_on: []
+confidence: 0.86
+proof_sketch: ''
+notes: "parsed_env: theorem\nsection: Paragraph: Proof complexity connections.\nsource_citation: /Users/user/Downloads/deep-research-report.md\nlabel: Grochow--Pitassi: IPS ties proof lower bounds to algebraic circuit lower bounds {\\cite{GrochowPitassi2018}}\nsource_marker: \uE200cite\uE202turn19search6\uE202turn"
+```
+
+```yaml
+id: st.thm.oliveira-santhanam-hardness-magnification-for-na
+kind: theorem
+status: accepted
+latex: "There exist explicit \u201Cmeta\u201D problems (including MCSP variants) such that proving certain \\emph{barely-superlinear} lower bounds against restricted models (e.g.\\ formulas) would imply major lower bounds for $\\NP$ in much stronger models (including superpolynomial formula/circuit lower bounds, and in some parameter regimes consequences as strong as $\\NP\\not\\subseteq\\Ppoly$)."
+informal: "There exist explicit \u201Cmeta\u201D problems (including MCSP variants) such that proving certain emph barely-superlinear lower bounds against restricted models (e.g. formulas) would imply major lower bounds for NP in much stronger models (including superpolynomial formula/circuit lowe..."
+source_ids:
+- src.001
+used_symbols: []
+depends_on: []
+confidence: 0.86
+proof_sketch: ''
+notes: "parsed_env: theorem\nsection: Paragraph: Hardness magnification and meta-complexity.\nsource_citation: /Users/user/Downloads/deep-research-report.md\nlabel: Oliveira--Santhanam: hardness magnification for natural problems {\\cite{OliveiraSanthanam2018}}\nsource_marker: \uE200cite\uE202turn16search3\uE202turn17sea"
+```
+
+```yaml
+id: st.thm.oliveira-pich-santhanam-magnification-near-state
+kind: theorem
+status: accepted
+latex: In refined regimes, lower bounds for Gap-MCSP slightly beyond known frontiers (e.g.\ $N^{1+\varepsilon}$-type circuit lower bounds for suitable promise gaps and input length $N=2^n$) imply major consequences such as $\NP\not\subseteq \Ppoly$.
+informal: In refined regimes, lower bounds for Gap-MCSP slightly beyond known frontiers (e.g. N^ 1+varepsilon -type circuit lower bounds for suitable promise gaps and input length N=2^n ) imply major consequences such as NPnotsubseteq Ppoly .
+source_ids:
+- src.001
+used_symbols: []
+depends_on: []
+confidence: 0.86
+proof_sketch: ''
+notes: "parsed_env: theorem\nsection: Paragraph: Hardness magnification and meta-complexity.\nsource_citation: /Users/user/Downloads/deep-research-report.md\nlabel: Oliveira--Pich--Santhanam: magnification near state-of-the-art {\\cite{OliveiraPichSanthanam2021}}\nsource_marker: \uE200cite\uE202turn16search1\uE202turn16search19\uE201"
+```
+
+```yaml
+id: st.thm.atserias-m-uller-simple-general-magnification-fr
+kind: theorem
+status: accepted
+latex: There exist general-purpose magnification theorems (not problem-specific) showing that certain mild lower bounds for distinguishers/sparse-code objects can be amplified into stronger circuit/formula lower bounds, achieving magnification thresholds below previously known lower bounds in some settings.
+informal: There exist general-purpose magnification theorems (not problem-specific) showing that certain mild lower bounds for distinguishers/sparse-code objects can be amplified into stronger circuit/formula lower bounds, achieving magnification thresholds below previously known lower...
+source_ids:
+- src.001
+used_symbols: []
+depends_on: []
+confidence: 0.86
+proof_sketch: ''
+notes: "parsed_env: theorem\nsection: Paragraph: Hardness magnification and meta-complexity.\nsource_citation: /Users/user/Downloads/deep-research-report.md\nlabel: Atserias--M\\\"uller: simple general magnification framework {\\cite{AtseriasMueller2025}}\nsource_marker: \uE200cite\uE202turn16search2\uE202turn16search5\uE201"
+```
+
+```yaml
+id: st.thm.allender-das-szk-reduces-to-mcsp-bpp-reductions-
+kind: theorem
+status: accepted
+latex: Every problem in $\mathrm{SZK}$ is reducible to MCSP under efficient (randomised) reductions; in particular, Graph Isomorphism lies in $\mathrm{RP}^{\mathrm{MCSP}}$ (in standard formulations).
+informal: Every problem in mathrm SZK is reducible to MCSP under efficient (randomised) reductions; in particular, Graph Isomorphism lies in mathrm RP ^ mathrm MCSP (in standard formulations).
+source_ids:
+- src.001
+used_symbols: []
+depends_on: []
+confidence: 0.86
+proof_sketch: ''
+notes: "parsed_env: theorem\nsection: Paragraph: Hardness magnification and meta-complexity.\nsource_citation: /Users/user/Downloads/deep-research-report.md\nlabel: Allender--Das: SZK reduces to MCSP (BPP reductions) {\\cite{AllenderDas2017}}\nsource_marker: \uE200cite\uE202turn28search5\uE202turn28search0\uE202turn18search11\uE201"
+```
+
+```yaml
+id: st.thm.murray-williams-non-np-hardness-of-mcsp-under-lo
+kind: theorem
+status: accepted
+latex: "Under \u201Clocal\u201D polynomial-time reductions (where each output bit is computable with very small time), MCSP is not NP-complete. More broadly, the paper develops evidence and conditional consequences suggesting NP-hardness of MCSP under various reductions would entail unexpected class separations."
+informal: "Under \u201Clocal\u201D polynomial-time reductions (where each output bit is computable with very small time), MCSP is not NP-complete. More broadly, the paper develops evidence and conditional consequences suggesting NP-hardness of MCSP under various reductions would entail unexpected..."
+source_ids:
+- src.001
+used_symbols: []
+depends_on: []
+confidence: 0.86
+proof_sketch: ''
+notes: "parsed_env: theorem\nsection: Paragraph: Hardness magnification and meta-complexity.\nsource_citation: /Users/user/Downloads/deep-research-report.md\nlabel: Murray--Williams: (non-)NP-hardness of MCSP under local reductions {\\cite{MurrayWilliams2017}}\nsource_marker: \uE200cite\uE202turn18search4\uE202turn18search11\uE201"
+```
+
+```yaml
+id: st.thm.hirahara-ilango-np-hardness-of-mcsp-from-well-st
+kind: theorem
+status: accepted
+latex: Assuming a collection of established cryptographic and complexity-theoretic hypotheses (as specified in the paper), MCSP is NP-hard under certain reductions, yielding conditional NP-hardness results for MCSP and variants.
+informal: Assuming a collection of established cryptographic and complexity-theoretic hypotheses (as specified in the paper), MCSP is NP-hard under certain reductions, yielding conditional NP-hardness results for MCSP and variants.
+source_ids:
+- src.001
+used_symbols: []
+depends_on: []
+confidence: 0.86
+proof_sketch: ''
+notes: "parsed_env: theorem\nsection: Paragraph: Hardness magnification and meta-complexity.\nsource_citation: /Users/user/Downloads/deep-research-report.md\nlabel: Hirahara--Ilango: NP-hardness of MCSP from well-studied assumptions {\\cite{HiraharaIlango2025}}\nsource_marker: \uE200cite\uE202turn17search0\uE201"
+```
+
+```yaml
+id: st.thm.g-o-os-pitassi-watson-and-coauthors-query-to-com
+kind: theorem
+status: accepted
+latex: There exist gadgets $g$ such that for all Boolean functions $f$, the bounded-error randomised communication complexity of $F=f\circ g^n$ is (up to polylog factors) at least the bounded-error randomised query complexity of $f$ times the communication cost of $g$.
+informal: There exist gadgets g such that for all Boolean functions f , the bounded-error randomised communication complexity of F=fcirc g^n is (up to polylog factors) at least the bounded-error randomised query complexity of f times the communication cost of g .
+source_ids:
+- src.001
+used_symbols: []
+depends_on: []
+confidence: 0.86
+proof_sketch: ''
+notes: "parsed_env: theorem\nsection: Paragraph: Communication complexity and lifting.\nsource_citation: /Users/user/Downloads/deep-research-report.md\nlabel: G\\\"o\\\"os--Pitassi--Watson (and coauthors): query-to-communication lifting for $\\BPP$ {\\cite{GoosPitassiWatson2017}}\nsource_marker: \uE200cite\uE202turn20search0\uE202turn20search4\uE202turn20search17\uE201"
+```
+
+```yaml
+id: st.obs.survey-entry-point
+kind: observation
+status: accepted
+latex: "For a compact survey emphasising \u201Cproofs--circuits--communication\u201D interconnections and TFNP as a unifying language, see de Rezende et al."
+informal: "For a compact survey emphasising \u201Cproofs--circuits--communication\u201D interconnections and TFNP as a unifying language, see de Rezende et al."
+source_ids:
+- src.001
+used_symbols: []
+depends_on: []
+confidence: 0.72
+proof_sketch: ''
+notes: "parsed_env: remark\nsection: Paragraph: Communication complexity and lifting.\nsource_citation: /Users/user/Downloads/deep-research-report.md\nlabel: Survey entry point\nsource_marker: \uE200cite\uE202turn20search17\uE202turn20search1\uE201\nnormalization: remark mapped to observation"
+```
+
+```yaml
+id: st.thm.baker-gill-solovay-relativisation-barrier-bakerg
+kind: theorem
+status: accepted
+latex: There exist oracles $A,B$ such that $\Pclass^A=\NP^A$ and $\Pclass^B\neq \NP^B$.
+informal: There exist oracles A,B such that Pclass^A=NP^A and Pclass^Bneq NP^B .
+source_ids:
+- src.001
+used_symbols: []
+depends_on: []
+confidence: 0.86
+proof_sketch: ''
+notes: "parsed_env: theorem\nsection: Paragraph: Barrier theorems (what typical proof tools cannot do).\nsource_citation: /Users/user/Downloads/deep-research-report.md\nlabel: Baker--Gill--Solovay: relativisation barrier {\\cite{BakerGillSolovay1975}}\nsource_marker: \uE200cite\uE202turn27search16\uE202turn6search1\uE202turn27search3\uE201"
+```
+
+```yaml
+id: st.thm.razborov-rudich-natural-proofs-barrier-razborovr
+kind: theorem
+status: accepted
+latex: "Assuming the existence of sufficiently strong pseudorandom functions, no family of \u201Cnatural\u201D properties (constructive and large) can be useful for proving superpolynomial lower bounds against strong circuit classes such as $\\Ppoly$."
+informal: "Assuming the existence of sufficiently strong pseudorandom functions, no family of \u201Cnatural\u201D properties (constructive and large) can be useful for proving superpolynomial lower bounds against strong circuit classes such as Ppoly ."
+source_ids:
+- src.001
+used_symbols: []
+depends_on: []
+confidence: 0.86
+proof_sketch: ''
+notes: "parsed_env: theorem\nsection: Paragraph: Barrier theorems (what typical proof tools cannot do).\nsource_citation: /Users/user/Downloads/deep-research-report.md\nlabel: Razborov--Rudich: natural proofs barrier {\\cite{RazborovRudich1997}}\nsource_marker: \uE200cite\uE202turn4view2\uE202turn0search6\uE202turn23search1\uE201"
+```
+
+```yaml
+id: st.thm.aaronson-wigderson-algebrisation-barrier-aaronso
+kind: theorem
+status: accepted
+latex: Define extension oracles and algebrising proofs. Then there exist oracles (with low-degree extensions) yielding separations implying that any proof of $\Pclass\neq\NP$ must be non-algebrising. Many other major open problems (e.g.\ $\Pclass$ vs.\ $\RP$) likewise require non-algebrising techniques.
+informal: Define extension oracles and algebrising proofs. Then there exist oracles (with low-degree extensions) yielding separations implying that any proof of PclassneqNP must be non-algebrising. Many other major open problems (e.g. Pclass vs. RP ) likewise require non-algebrising tec...
+source_ids:
+- src.001
+used_symbols: []
+depends_on: []
+confidence: 0.86
+proof_sketch: ''
+notes: "parsed_env: theorem\nsection: Paragraph: Barrier theorems (what typical proof tools cannot do).\nsource_citation: /Users/user/Downloads/deep-research-report.md\nlabel: Aaronson--Wigderson: algebrisation barrier {\\cite{AaronsonWigderson2009}}\nsource_marker: \uE200cite\uE202turn6search2\uE202turn6search6\uE201"
+```
+
+```yaml
+id: st.obs.williams-constructivity-is-unavoidable-perspecti
+kind: observation
+status: accepted
+latex: Williams shows equivalences characterising $\NEXP\not\subseteq\mathcal{C}$ for many circuit classes $\mathcal{C}$ in terms of the existence of efficient distinguishers/properties, linking natural proof notions and derandomisation.
+informal: Williams shows equivalences characterising NEXPnotsubseteqmathcal C for many circuit classes mathcal C in terms of the existence of efficient distinguishers/properties, linking natural proof notions and derandomisation.
+source_ids:
+- src.001
+used_symbols: []
+depends_on: []
+confidence: 0.72
+proof_sketch: ''
+notes: "parsed_env: remark\nsection: Paragraph: Barrier theorems (what typical proof tools cannot do).\nsource_citation: /Users/user/Downloads/deep-research-report.md\nlabel: Williams: \u201Cconstructivity is unavoidable\u201D perspective\nsource_marker: \uE200cite\uE202turn22search3\uE202turn22search7\uE201\nnormalization: remark mapped to observation"
+```
+
+# Derived Statements
+
+# Open Gaps
+
+# Change Log
+
+- 2026-03-11: Parsed deep-research-report.md into PvsNP KB Added 64 canonical and 0 derived statements.
+
+## Auto-Generated Revision Patch
+
+This section was generated by `kb-revision-loop` to seed the next orchestrated cycle.
+
+### Generated Statements
+
+```yaml
+id: st.rev.split.st.thm.williams-improved-exhaustive-search-circuit-lowe
+kind: definition
+status: tentative
+depends_on:
+- st.thm.williams-improved-exhaustive-search-circuit-lowe
+used_symbols: []
+source_ids:
+- auto:rev.001
+informal: Refined sub-definition introduced to split overloaded concept around st.thm.williams-improved-exhaustive-search-circuit-lowe.
+notes: Auto-generated by rev.001 (concept-splitting).
+```
+
+```yaml
+id: st.rev.split.st.thm.kabanets-impagliazzo-pit-derandomisation-implies
+kind: definition
+status: tentative
+depends_on:
+- st.thm.kabanets-impagliazzo-pit-derandomisation-implies
+used_symbols: []
+source_ids:
+- auto:rev.001
+informal: Refined sub-definition introduced to split overloaded concept around st.thm.kabanets-impagliazzo-pit-derandomisation-implies.
+notes: Auto-generated by rev.001 (concept-splitting).
+```
+
+```yaml
+id: st.rev.split.st.thm.williams-nonuniform-0-lower-bounds-for-williams2
+kind: definition
+status: tentative
+depends_on:
+- st.thm.williams-nonuniform-0-lower-bounds-for-williams2
+used_symbols: []
+source_ids:
+- auto:rev.001
+informal: Refined sub-definition introduced to split overloaded concept around st.thm.williams-nonuniform-0-lower-bounds-for-williams2.
+notes: Auto-generated by rev.001 (concept-splitting).
+```
+
+```yaml
+id: st.rev.split.st.thm.oliveira-santhanam-hardness-magnification-for-na
+kind: definition
+status: tentative
+depends_on:
+- st.thm.oliveira-santhanam-hardness-magnification-for-na
+used_symbols: []
+source_ids:
+- auto:rev.001
+informal: Refined sub-definition introduced to split overloaded concept around st.thm.oliveira-santhanam-hardness-magnification-for-na.
+notes: Auto-generated by rev.001 (concept-splitting).
+```
+
+```yaml
+id: st.rev.split.st.thm.oliveira-pich-santhanam-magnification-near-state
+kind: definition
+status: tentative
+depends_on:
+- st.thm.oliveira-pich-santhanam-magnification-near-state
+used_symbols: []
+source_ids:
+- auto:rev.001
+informal: Refined sub-definition introduced to split overloaded concept around st.thm.oliveira-pich-santhanam-magnification-near-state.
+notes: Auto-generated by rev.001 (concept-splitting).
+```
+
+### Patched Hypothesis Summary
+
+- Touched hypotheses: 0
+- Generated hypotheses: 0

@@ -1,0 +1,93 @@
+# SPDX-FileCopyrightText: © 2026 Idiap Research Institute <contact@idiap.ch>
+#
+# SPDX-FileContributor: Andre Freitas <andre.freitas@idiap.ch>
+# Neuro-symbolic AI Group
+#
+# SPDX-FileContributor: Danilo Gusicuma <danilo.gusicuma@idiap.ch>
+# Neuro-symbolic AI Group
+#
+# SPDX-License-Identifier: MIT
+[build-system]
+requires = ["hatchling>=1.27,<2"]
+build-backend = "hatchling.build"
+
+[project]
+name = "abducer-discovery-runtime"
+version = "1.0.0"
+description = "Typed, replayable foundations for theory-driven conceptual discovery"
+requires-python = ">=3.11"
+license = "MIT"
+dependencies = [
+  "jsonschema[format]>=4.23,<5",
+  "markdown-it-py>=3.0,<5",
+  "numpy>=2.0,<3",
+  "PyYAML>=6.0.2,<7",
+  "rich>=14.0,<15",
+  "scipy>=1.14,<2",
+  "sympy>=1.14,<2",
+]
+
+[dependency-groups]
+# Hosted ChatGPT integration is opt-in; native/local research dependencies stay unchanged.
+chatgpt = [
+  "mcp>=1.26,<2",
+  "packaging>=25,<27",
+  "PyJWT[crypto]>=2.10,<3",
+  "pypdf>=6,<7",
+  "uvicorn>=0.34,<1",
+]
+dev = [
+  "black>=25,<27",
+  "pyright>=1.1,<2",
+  "pytest>=8.3,<9",
+  "pytest-timeout>=2.3,<3",
+  "reuse[charset-normalizer]>=5,<7",
+  "ruff>=0.14,<1",
+  "vulture>=2.14,<3",
+]
+
+[tool.hatch.build.targets.wheel]
+only-include = [
+  "agentic/discovery",
+  "agentic/experiments",
+  "agentic/operations",
+  "agentic/state",
+]
+sources = ["."]
+exclude = [
+  "agentic/state/**/*.json",
+]
+
+[tool.pytest.ini_options]
+minversion = "8.3"
+testpaths = ["tests"]
+pythonpath = ["."]
+addopts = "--strict-config --strict-markers"
+timeout = 120
+markers = [
+  "generative: deterministic adversarial quality cases",
+  "expensive: measured at least 30 seconds or shares a costly module fixture; includes all parameter variants (deselect with -m 'not expensive')",
+]
+
+[tool.ruff]
+target-version = "py311"
+line-length = 88
+extend-exclude = [".prism", "agentic/external", "abducer-prism/build", "tests/fixtures", "abducer-prism/tests/fixtures"]
+
+[tool.ruff.lint]
+select = ["E4", "E7", "E9", "F"]
+
+[tool.black]
+target-version = ["py311"]
+line-length = 88
+extend-exclude = '/(\.prism|agentic/external|abducer-prism/build|tests/fixtures|abducer-prism/tests/fixtures)/'
+
+[tool.pyright]
+pythonVersion = "3.11"
+venvPath = "."
+venv = ".venv"
+exclude = [".venv", ".prism", "agentic/external", "abducer-prism/build", "tests/fixtures", "abducer-prism/tests/fixtures"]
+
+[tool.vulture]
+min_confidence = 80
+exclude = ["*/.venv/*", "*/.venv-pmp/*", "*/venv/*", "*/env/*", "*/.git/*", "*/.prism/*", "*/agentic/external/*", "*/abducer-prism/build/*", "*/tests/fixtures/*"]

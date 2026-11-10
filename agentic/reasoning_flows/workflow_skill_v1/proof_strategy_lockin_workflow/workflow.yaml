@@ -1,0 +1,172 @@
+# SPDX-FileCopyrightText: © 2026 Idiap Research Institute <contact@idiap.ch>
+#
+# SPDX-FileContributor: Danilo Gusicuma <danilo.gusicuma@idiap.ch>
+# Neuro-symbolic AI Group
+#
+# SPDX-License-Identifier: MIT
+# REUSE-IgnoreStart
+schema_version: workflow-skill/v1
+namespace: abducer
+id: proof_strategy_lockin_workflow
+version: 1.0.0
+kind: workflow
+description: Draft interface projection of proof-strategy-lockin-orchestrator; native execution and authority
+  remain unchanged.
+aliases:
+- proof-strategy-lockin-orchestrator
+lifecycle: draft
+activation:
+  mode: explicit
+  prerequisites: []
+types:
+  NativeRequest:
+    schema:
+      type: object
+      description: Skill-defined request; consult preserved source text for inputs and conditions.
+    representation: value
+  NativeResult:
+    schema:
+      type: object
+      description: Skill-defined durable artifact bundle; no invented runtime output shape.
+    representation: value
+inputs:
+  request:
+    type: NativeRequest
+outputs:
+  result:
+    type: NativeResult
+    value:
+      ref: steps.native.outputs.result
+operations:
+  native_workflow:
+    inputs:
+      request:
+        type: NativeRequest
+    outputs:
+      result:
+        type: NativeResult
+    execution:
+      mode: specification_only
+      reason: No workflow-skill/v1 host adapter is supplied. Native skill/hook/CLI interfaces exist, but
+        payload materialization, guard evidence, execution effects and receipt translation are not qualified
+        for this format.
+flow:
+  kind: sequence
+  steps:
+  - id: native
+    kind: call
+    operation: native_workflow
+    description: Opaque native workflow boundary; internal ordering, guards and handoffs are retained
+      in abducer.native_contract.
+    arguments:
+      request:
+        ref: inputs.request
+    on_failure: blocked
+policy:
+  effects:
+    filesystem:
+      read:
+      - native_sources
+      - inputs
+      write: []
+    network: []
+    external_write: []
+  authority:
+    allowed:
+    - describe_native_interface
+    forbidden:
+    - execute_scientific_workflow
+    - approve
+    - prove
+    - publish
+    - promote
+  limits:
+    wall_time_seconds: 1800
+    max_operation_calls: 1
+  failure:
+    default: blocked
+    retry:
+      max_attempts: 1
+      retryable_codes: []
+  resume:
+    mode: none
+    require_matching_definition_and_inputs: true
+  claim_ceiling: Interface description only; no proof, scientific validity, runtime qualification, promotion
+    or approval.
+observability:
+  receipts: required
+  artifact_digests: sha256
+  provenance: required
+  events:
+  - workflow_started
+  - step_failed
+  - workflow_completed
+provenance:
+  coverage: interface_only
+  sources:
+  - path: skills/orchestration/proof-strategy-lockin-orchestrator/SKILL.md
+    digest: sha256:9f2540d0e09764c340c2ae41d1611861bac3d83c3957e0457df6a548caf82f48
+  - path: agentic/registries/skill_registry.yaml
+    digest: sha256:15076ed8d1bd4c10895060ab485353fe520421c44e1fc6f506508d2d566eacf0
+  - path: pyproject.toml
+    digest: sha256:69325c4805f66033ce7f7e0e68f4a0996913728c6041bb3cee656571693b2f1e
+  - path: uv.lock
+    digest: sha256:a6c77e5d86a93915eeb0f129f80bc8c45d572be387872e3ace7460a3d6ada9ae
+  - path: prism_me/shared/references/codex-control-stack.md
+    digest: sha256:4e8e7a5cdbc0572cf9b0d4ffc4a41c8f4f9c9a304fae3bcee99d8af3553be30e
+  gaps:
+  - No workflow-skill/v1 host adapter is supplied. Native skill/hook/CLI interfaces exist, but payload
+    materialization, guard evidence, execution effects and receipt translation are not qualified for this
+    format.
+  - Native control flow remains opaque; coverage is interface_only, not source-equivalence certification.
+  - One or more native payloads have no exact JSON Schema; object-only types remain explicitly underspecified.
+extensions:
+  abducer.owner:
+    path: skills/orchestration/proof-strategy-lockin-orchestrator/SKILL.md
+  abducer.native_identity:
+    id: proof-strategy-lockin-orchestrator
+  abducer.native_contract:
+    source_skill: skills/orchestration/proof-strategy-lockin-orchestrator/SKILL.md
+    source_text: "---\nname: proof-strategy-lockin-orchestrator\ndescription: Freeze and run bounded proof-strategy\
+      \ cycles for a publication-worthy subgoal, then release the workflow back to conceptual exploration.\
+      \ Use after critical mass is reached.\n---\n\n# Proof Strategy Lock-In Orchestrator\n\nConvert exploratory\
+      \ critical mass into a bounded completion cycle.\n\n## Critical Conceptual Depth\n\nLock-in is justified\
+      \ only when the subgoal carries a sharp conceptual claim:\nit proves a meaningful object exists,\
+      \ certifies transfer, explains an\nobstruction, unifies a family, or draws a boundary that changes\
+      \ the route's\nunderstanding. The orchestration should protect that core claim from\nfragmenting\
+      \ into unrelated tasks.\n\n## Value Signal\n\nState the publication value before the cycle begins\
+      \ and re-evaluate it at the\nend. The final state must say how the subgoal changes understanding,\
+      \ why it is\nnovel enough at its scope, and whether the completed result is coherent rather\nthan\
+      \ a bundle of disconnected artifacts.\n\n## Guardrails\n\n- Do not lock in without a frozen subgoal,\
+      \ non-claims, hard gates, cycle\n  budget, stop conditions, and return-to-exploration trigger.\n\
+      - Do not allow broad branch hopping while lock-in is active.\n- Do not allow nested publication-consolidation.\
+      \ The default limit is four\n  completion cycles with recursion depth one; side lemmas that do not\
+      \ fit the\n  budget become blocked handoffs or return to exploration.\n- Keep the local subgoal\
+      \ and the larger target problem visible in every\n  consolidation cycle. For Yang-Mills, distinguish\
+      \ finite Route A results from\n  the full OS/Wightman continuum construction and mass-gap obligation.\n\
+      - If the subgoal is a transfer theorem, freeze anti-definitionality tests,\n  required failure cases,\
+      \ consequence delta, and prior-art delta.\n\n## Epistemic Discipline\n\n- Cite evidence paths, learning-ledger\
+      \ events, KB ids, validators, and explicit\n  unknowns.\n- Label final state as publication_ready_subgoal,\
+      \ precise_demotion,\n  blocked_named_lemma, no_publication_result, released_to_exploration, or\n\
+      \  quarantined.\n- Preserve main-problem non-claims even when a subgoal is publication-ready.\n\n\
+      ## Codex Exec Protocol\n\nFollow `docs/reference/codex-exec-skill-protocol.md` when running validators,\
+      \ report\nbuilders, manuscript integration, or deterministic artifact checks. Inspect\nthe produced\
+      \ artifacts and include executed commands in the validation\nhandoff.\n\n## Output Contract\n\n\
+      Return:\n\n- `subgoal_statement`\n- `non_claims`\n- `locked_hard_gates`\n- `allowed_cycle_types`\n\
+      - `cycle_budget`\n- `publication_consolidation_control`\n- `main_problem_balance`\n- `recursion_guard`\n\
+      - `stop_conditions`\n- `publication_target`\n- `anti_definitionality_tests`\n- `return_to_exploration_trigger`\n\
+      - `final_state`\n- `learning_events_to_write`\n- `evidence`\n- `validation_handoff`\n\n## Failure/Demotion\n\
+      \nDemote lock-in that completes a technically correct but conceptually inert\nsubgoal, especially\
+      \ a definition-built transfer theorem. Quarantine lock-in\nplans that suppress needed conceptual\
+      \ exploration or blur the main-problem\nboundary.\n"
+  abducer.environment:
+    python: pyproject.toml
+    lock: uv.lock
+    native_controls: .codex/config.toml
+    native_controls_optional: true
+    control_policy: prism_me/shared/references/codex-control-stack.md
+  abducer.execution_boundary:
+    status: specification_only
+    notes: Source inspection only. Effects above deny native execution until a separately reviewed adapter
+      exists.
+# REUSE-IgnoreEnd

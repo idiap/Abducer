@@ -1,0 +1,174 @@
+{
+  "stream": "H4",
+  "title": "Topology as compositionally complete retained data",
+  "date": "2026-07-21",
+  "strongest_claim_level": "C2",
+  "scope": {
+    "proved_domain": "embedded additive integral-flux model on an oriented four-torus, plus generic finite positive-kernel gluing obstruction",
+    "complete_nonabelian_topology": false,
+    "normalized_yang_mills_sector_kernel": false,
+    "uniform_sector_weight_bound": false,
+    "repeated_rg": false,
+    "continuum_yang_mills": false,
+    "hamiltonian_mass_gap": false
+  },
+  "coordinate_order": ["01", "02", "03", "12", "13", "23"],
+  "pairing_matrix": [
+    [0, 0, 0, 0, 0, 1],
+    [0, 0, 0, 0, -1, 0],
+    [0, 0, 0, 1, 0, 0],
+    [0, 0, 1, 0, 0, 0],
+    [0, -1, 0, 0, 0, 0],
+    [1, 0, 0, 0, 0, 0]
+  ],
+  "pairing_certificate": {
+    "J_squared_is_identity": true,
+    "determinant": -1,
+    "signature": [3, 3],
+    "unimodular": true,
+    "six_basis_contexts_reconstruct_flux": true
+  },
+  "nodes": [
+    {
+      "id": "C2CENTER",
+      "claim": "six independent periodic mod-two center two-flux classes and 64 sectors",
+      "status": "proved_stage39",
+      "claim_level": "C2"
+    },
+    {
+      "id": "CENTER_BARRIER",
+      "claim": "minimum center representative has plaquette weight 4k in Hamming sector k",
+      "status": "proved_stage47",
+      "claim_level": "C2",
+      "depends_on": ["C2CENTER"]
+    },
+    {
+      "id": "INT_FLUX",
+      "claim": "six-component integral lift and Pfaffian charge in the embedded-abelian calibration",
+      "status": "proved_stage48",
+      "claim_level": "C2"
+    },
+    {
+      "id": "CENTER_ERASURE",
+      "claim": "fixed center label hides unbounded Pfaffian charge",
+      "status": "proved_stage48",
+      "claim_level": "C2",
+      "depends_on": ["C2CENTER", "INT_FLUX"]
+    },
+    {
+      "id": "CONTEXT_COLLISION",
+      "claim": "center plus Pfaffian charge is not sufficient under a common additive context",
+      "status": "proved_stage52",
+      "claim_level": "C2",
+      "depends_on": ["INT_FLUX"]
+    },
+    {
+      "id": "POLARIZATION",
+      "claim": "Pfaffian composition is governed by a symmetric unimodular bilinear pairing of signature (3,3)",
+      "status": "proved_stream61",
+      "claim_level": "C2",
+      "depends_on": ["INT_FLUX"]
+    },
+    {
+      "id": "CONTEXT_MINIMALITY",
+      "claim": "every deterministic statistic predicting charge after all additive contexts is injective on Z^6",
+      "status": "proved_stream61",
+      "claim_level": "C2",
+      "depends_on": ["POLARIZATION"]
+    },
+    {
+      "id": "GRADED_COMPOSITION",
+      "claim": "center, integral flux, pairing covector, and charge admit an associative redundant composition law",
+      "status": "proved_stream61",
+      "claim_level": "C2",
+      "depends_on": ["POLARIZATION"]
+    },
+    {
+      "id": "SCALAR_WEIGHT_OBSTRUCTION",
+      "claim": "scalar sector partition weights do not determine gluing across an unresolved boundary",
+      "status": "proved_stream61_finite_counterexample",
+      "claim_level": "C2",
+      "depends_on": []
+    },
+    {
+      "id": "INTEGRAL_CELL_CARRIER",
+      "claim": "relative integral cohomology, pairing, and boundary data close under the chosen finite block map",
+      "status": "open",
+      "depends_on": ["GRADED_COMPOSITION"]
+    },
+    {
+      "id": "NONABELIAN_CARRIER",
+      "claim": "complete gauge-invariant nonabelian topology carrier with controlled exceptional set",
+      "status": "open",
+      "depends_on": ["INTEGRAL_CELL_CARRIER"]
+    },
+    {
+      "id": "BOUNDARY_KERNEL",
+      "claim": "normalized positive boundary-resolved topology-sector kernel with exact two-block composition",
+      "status": "open",
+      "depends_on": ["NONABELIAN_CARRIER", "SCALAR_WEIGHT_OBSTRUCTION"]
+    },
+    {
+      "id": "UNIFORM_TOPOLOGY_BOUND",
+      "claim": "strict topology-channel Lyapunov bound uniform in volume, cutoff, scale, and retained history",
+      "status": "open",
+      "depends_on": ["BOUNDARY_KERNEL", "CENTER_BARRIER"]
+    },
+    {
+      "id": "RG_USE",
+      "claim": "topology module composes inside repeated nonperturbative Yang-Mills RG",
+      "status": "open",
+      "depends_on": ["UNIFORM_TOPOLOGY_BOUND"]
+    }
+  ],
+  "first_unproved_implication": {
+    "from": "GRADED_COMPOSITION",
+    "to": "INTEGRAL_CELL_CARRIER",
+    "reason": "the torus flux vector does not yet include relative cohomology, interface transgression, or a verified finite block chain map"
+  },
+  "next_theorem": {
+    "id": "ONE_BLOCK_NONABELIAN_TOPOLOGY_KERNEL",
+    "goal": "construct an exhaustive gauge-invariant one-block topology carrier and a normalized boundary-resolved positive sector kernel, then verify direct versus composed two-block classification",
+    "required_outputs": [
+      "frozen gauge group global form and boundary conditions",
+      "admissible nonabelian topology classifier",
+      "relative and interface composition law",
+      "quantitative exceptional-set term",
+      "positive normalized sector kernel",
+      "two-block coherence certificate",
+      "finite topology-moment enclosure"
+    ]
+  },
+  "counterexamples": {
+    "center_erasure_family": {
+      "flux": "(2k,0,0,0,0,2k)",
+      "center": "(0,0,0,0,0,0)",
+      "charge": "4k^2"
+    },
+    "center_plus_charge_context_collision": {
+      "left": [-1, -1, -1, -1, -1, -1],
+      "right": [-1, -1, -1, -1, 1, 1],
+      "common_center": [1, 1, 1, 1, 1, 1],
+      "common_charge": 1,
+      "context": [1, 0, 0, 0, 0, 0],
+      "left_composed_charge": 0,
+      "right_composed_charge": 2
+    },
+    "scalar_weight_gluing_collision": {
+      "left_a": [1, 3],
+      "left_a_prime": [2, 2],
+      "common_scalar_sum": 4,
+      "neighbor": [3, 1],
+      "glued_a": 6,
+      "glued_a_prime": 8
+    }
+  },
+  "verification": {
+    "stage39_tests_passed": 14,
+    "stage47_tests_passed": 15,
+    "stage48_tests_passed": 15,
+    "stage52_tests_passed": 12,
+    "total_inherited_tests_passed": 56,
+    "json_validated": true
+  }
+}

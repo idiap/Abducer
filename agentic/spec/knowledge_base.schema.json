@@ -1,0 +1,63 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "knowledge_base.schema.json",
+  "title": "Epistemic Knowledge Base",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "kb_id", "version_id", "scope", "world_assumption",
+    "consistency_policy", "revision_policy", "members", "provenance"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "kb_id": {"type": "string", "pattern": "^[a-z][a-z0-9_-]*$"},
+    "version_id": {"type": "string", "minLength": 1},
+    "predecessor_version_id": {"type": ["string", "null"]},
+    "scope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["description"],
+      "properties": {
+        "description": {"type": "string", "minLength": 1},
+        "domains": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+        "claim_ceiling": {"type": "string"}
+      }
+    },
+    "world_assumption": {"enum": ["open", "closed", "hybrid"]},
+    "consistency_policy": {"enum": ["classical", "paraconsistent", "unknown"]},
+    "revision_policy": {"enum": ["immutable", "versioned"]},
+    "members": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["output_id", "kind", "status"],
+        "properties": {
+          "output_id": {"type": "string", "minLength": 1},
+          "kind": {"enum": ["Claim", "Evidence", "Decision", "Model", "Relation", "Obligation", "Plan", "Presentation", "Bundle"]},
+          "status": {"enum": ["active", "contested", "superseded", "retracted"]}
+        }
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["required", "source_refs"],
+      "properties": {
+        "required": {"type": "boolean"},
+        "source_refs": {"type": "array", "items": {"type": "string"}, "uniqueItems": true}
+      }
+    },
+    "open_conflicts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["member_ids", "disposition"],
+        "properties": {
+          "member_ids": {"type": "array", "minItems": 2, "items": {"type": "string"}, "uniqueItems": true},
+          "disposition": {"enum": ["unresolved", "quarantined", "resolved"]}
+        }
+      }
+    }
+  }
+}

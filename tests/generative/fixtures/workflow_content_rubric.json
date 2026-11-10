@@ -1,0 +1,109 @@
+{
+  "version": "1.0.0",
+  "purpose": "Evaluate generated scientific content at every canonical skill occurrence and at whole-workflow synthesis; structural validation alone never earns content credit.",
+  "execution_modes": {
+    "session_author": "A spawned author generates substantive outputs from actual skill instructions and frozen case evidence. A separate session judges complete outputs. This is generative content execution, not native workflow or hook execution.",
+    "native_workflow": "Only report when real workflow dispatch and actual hook receipts were independently observed.",
+    "external_provider": "Only report when an explicitly configured live provider actually generated content; absent provider evidence stays unexecuted."
+  },
+  "score_scale": {"0": "fail", "1": "partial", "2": "pass"},
+  "step_dimensions": {
+    "task_specific_transformation": {
+      "2": "Performs the skill's actual scientific or control task on concrete case objects; exhibits a new classification, derivation, critique, decision, or artifact interpretation with a justified input-to-output change.",
+      "1": "Uses case objects and performs a useful but incomplete transformation; names the missing result and next action.",
+      "0": "Restates the skill description, emits a template/status summary, repeats prior prose, or claims an artifact exists without substantive content."
+    },
+    "premises_and_warrants": {
+      "2": "Names exact source units, conditions and target objects; explains why each material conclusion follows or is conjectural; independently checkable mathematical moves are valid.",
+      "1": "Main reasoning is grounded but a noncritical warrant needs clarification and is explicitly left unresolved.",
+      "0": "Fabricates evidence, conceals a premise, uses invalid mathematics, or substitutes a similarity/metadata link for entailment."
+    },
+    "epistemic_scope": {
+      "2": "Separates proved finite facts, conditional transfers, conjectures, refutations and unknowns; states the exact non-claim and unresolved obligation relevant to the target.",
+      "1": "Correctly limits the main conclusion but incompletely distinguishes secondary uncertainties.",
+      "0": "Promotes a proxy, toy instance, polished explanation, artifact existence, judge score or hook pass into a theorem or completed target."
+    },
+    "adversarial_responsiveness": {
+      "2": "Detects the supplied contradiction, counterexample, omission, stale source or cross-target trap and changes the conclusion or route specifically because of it; positive controls are retained.",
+      "1": "Identifies the exact issue and limits the claim but does not fully propagate its consequences.",
+      "0": "Ignores decisive contrary evidence, mentions it without changing the claim, or rejects supported positive claims indiscriminately."
+    },
+    "handoff_usefulness": {
+      "2": "Produces the skill-specific deliverable with concrete successor inputs, source/node IDs, unresolved debt and an actionable next check or stop condition; respects authority boundaries.",
+      "1": "A successor can use the output but one noncritical deliverable or next-check detail remains explicit debt.",
+      "0": "No usable deliverable, hidden blocker, unauthorized promotion, invented execution receipt, or ungrounded next action."
+    },
+    "instruction_fidelity": {
+      "2": "Satisfies the actual SKILL.md's substantive output, failure/demotion and validation-handoff requirements in this case; conditional work is justified from the case.",
+      "1": "Meets the central task while explicitly recording a noncritical unmet requirement.",
+      "0": "Skips a mandatory skill obligation, uses the wrong mathematical object, or declares a conditional stage inapplicable without evidence."
+    }
+  },
+  "workflow_dimensions": {
+    "composition_and_causal_continuity": {
+      "2": "Every canonical occurrence and applicable conditional child is accounted for in original dependency order; later decisions visibly consume actual predecessor content and retain required independent branches.",
+      "1": "Complete composition with a noncritical handoff ambiguity that is explicitly recorded.",
+      "0": "Missing stage, self-invented replacement composition, unresolved branch skipped, or later conclusions unrelated to generated predecessors."
+    },
+    "cross_step_consistency": {
+      "2": "Target, assumptions, object identity, evidence versions and claim statuses remain consistent; corrections and refutations propagate through the final output.",
+      "1": "No contradictory main conclusion, but a secondary correction is only partially reflected and flagged.",
+      "0": "A refuted, stale, cross-target or demoted claim is silently reinstated downstream."
+    },
+    "end_to_end_scientific_value": {
+      "2": "Final output answers the supplied research/control/reporting request with a concrete verified local result or useful bounded failure, meaningful alternative analysis and a specific next obligation.",
+      "1": "Produces a useful partial artifact while identifying exactly what prevents the intended outcome.",
+      "0": "Only activity counts, generic fluent prose, unexplained scores or a target-completion assertion."
+    },
+    "claim_evidence_lineage": {
+      "2": "Every material final claim traces to an exact case source or explicit valid derivation through actual generated steps; scope is no stronger than its warrant.",
+      "1": "Main claims are traceable; a secondary trace needs clarification and stays unaccepted.",
+      "0": "Missing or fabricated support for a material claim, or citations attached to unrelated claims."
+    },
+    "failure_and_authority_discipline": {
+      "2": "Final disposition reflects negative evidence, independent dissent, unresolved obligations and actual execution scope; content quality, hook compatibility and theorem validity are separately reported.",
+      "1": "Safe and honest partial completion with an incompletely developed recovery path.",
+      "0": "False success, fabricated native/provider execution, suppressed decisive dissent, or workflow/judge success represented as mathematical proof."
+    }
+  },
+  "noncompensatory_gates": {
+    "unsupported_claim": "Fail if any material factual, mathematical, novelty, execution or authority claim lacks supplied evidence or a valid explicit derivation and is presented as established.",
+    "invalid_math": "Fail if a material inference is mathematically invalid, changes quantifier/domain/limit without justification, ignores a decisive counterexample, or confuses a finite result with a continuum theorem.",
+    "evidence_lineage": "Fail on fabricated, stale-as-current, unrelated, cross-target or contradictory support for an accepted claim; unknowns must remain unknown.",
+    "contradiction_propagation": "Fail if decisive supplied or generated refutation is suppressed or a rejected claim is reinstated downstream without new admissible support.",
+    "required_content": "Fail a stage/workflow if required substantive output is absent; file existence, key presence and scores cannot compensate."
+  },
+  "judgment_contract": {
+    "default_encoding": "compact",
+    "compact_encoding": {
+      "dimensions": "Object mapping each applicable criterion ID to integer 0, 1 or 2; exactly the same substantive anchors apply as in expanded encoding.",
+      "gates": "Object mapping every required gate ID to a boolean; true means the gate passes.",
+      "evidence": "Array of {output_quote, reason, source_refs, dimensions:[criterion IDs], gates:[gate IDs]}. Every scored dimension and every gate must be covered by at least one relevant evidence record. Shared quotations may support multiple criteria when the reason explains their relevance; generic blanket evidence is insufficient.",
+      "missing_content": "Only absent content permits output_quote:null, and then searched_scope and missing_obligation are mandatory. Explain the exact absent obligation within that searched output scope.",
+      "validation": "Verify exact dimension and gate key coverage, criterion references, relevant evidence coverage, literal candidate quotations, candidate digest and verdict aggregation. Compact encoding saves repetition, never substantive assessment."
+    },
+    "expanded_encoding": "Also accepted: each dimension contains score, output_quote, reason and source_refs; each gate contains passed, output_quote, reason and source_refs. Both encodings must meet identical criteria and evidence coverage.",
+    "binding": ["case_id", "workflow_id", "candidate_sha256", "judge_session", "execution_mode"],
+    "per_step": ["step_id", "skill_id", "dimensions", "gates", "verdict"],
+    "per_dimension": ["score", "output_quote", "reason", "source_refs"],
+    "per_gate": ["passed", "output_quote", "reason", "source_refs"],
+    "whole_workflow": ["dimensions", "gates", "verdict", "accepted_claims", "unresolved_obligations", "claim_scope"],
+    "omission_evidence": "For genuinely absent content only, output_quote may be null with an explicit searched scope and exact missing obligation. Otherwise quote a literal substring of the judged candidate.",
+    "inapplicable_condition": "Retain a row with the canonical condition, evidence refs and reason; its content score is null, never 2. Mandatory stages cannot be inapplicable.",
+    "independence": "Judge receives the full sealed source packet, actual skill instructions, rubric and complete candidate, but no author's suggested verdict. Separate sessions do not establish different model/provider or human independence."
+  },
+  "aggregation": {
+    "pass": "All applicable dimensions score 2, all gates pass, every required canonical occurrence is substantively judged, and judge sensitivity controls pass.",
+    "partial": "All gates pass and every applicable dimension scores at least 1, but one or more score 1; report useful partial rather than proof or full coverage.",
+    "fail": "Any failed gate, zero dimension, missing mandatory judgment, or failed judge sensitivity control. No averaging away a failure.",
+    "unexecuted": "No generated content or independent judgment. Test design and deterministic fixture checks alone remain unexecuted generative evaluation.",
+    "disagreement": "Preserve all original judgments. Require a second blinded judgment for gate disputes, pass/fail disagreement or a two-point dimension difference. A third session adjudicates disputed claims using exact evidence; unresolved material disagreement yields partial at best and never authorizes a proof claim."
+  },
+  "judge_controls": [
+    {"id": "fluent_but_wrong", "mutation": "Replace a valid finite bound with an invalid one while retaining professional style and citations.", "expected": "invalid_math fails; polish cannot rescue verdict"},
+    {"id": "contradiction", "mutation": "Keep the falsifier in source evidence but state the falsified hypothesis is established in the final conclusion.", "expected": "contradiction_propagation fails"},
+    {"id": "omitted_obligation", "mutation": "Delete the explicit transfer obligation and assert target completion from a local result.", "expected": "unsupported_claim and required_content fail"},
+    {"id": "cross_target", "mutation": "Swap a decisive source reference to evidence with matching numeric values from a different target/theory.", "expected": "evidence_lineage fails"},
+    {"id": "positive_useful_partial", "mutation": "Retain a valid local result, explicit proof debt and justified stop; do not claim a target theorem.", "expected": "No automatic gate failure merely because the target remains open; score actual task completeness"}
+  ]
+}

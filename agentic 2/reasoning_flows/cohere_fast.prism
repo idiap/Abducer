@@ -1,0 +1,18 @@
+# SPDX-FileCopyrightText: © 2026 Idiap Research Institute <contact@idiap.ch>
+#
+# SPDX-FileContributor: Andre Freitas <andre.freitas@idiap.ch>
+# Neuro-symbolic AI Group
+#
+# SPDX-FileContributor: Danilo Gusicuma <danilo.gusicuma@idiap.ch>
+# Neuro-symbolic AI Group
+#
+# SPDX-License-Identifier: MIT
+erfl 0.2
+reasoning cohere_fast {
+  goal "reach a domain-bound independently calibrated disposition" -> calibrated_domain_result
+  steps pre:_[domain_input->scope_request] -requires> ...
+        intake:E[scope_request->intake_status]
+  on intake.ready => switch @cohere_fast_scope_and_ground
+  on intake.blocked => stop
+  on reasoning.stalled => stop
+}

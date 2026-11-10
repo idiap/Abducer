@@ -1,0 +1,55 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": ["schema_version", "generator", "scenarios"],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {"type": "string", "const": "1.0.0"},
+    "generator": {"type": "string", "const": "codex-exec"},
+    "scenarios": {
+      "type": "array", "minItems": 4, "maxItems": 8,
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["id", "title", "research_question", "evidence_scope", "initial_claim_level", "attempts", "expected"],
+        "properties": {
+          "id": {"type": "string", "pattern": "^cf-gen-[a-z0-9-]+$"},
+          "title": {"type": "string", "minLength": 12},
+          "research_question": {"type": "string", "minLength": 30},
+          "evidence_scope": {
+            "type": "object", "additionalProperties": false,
+            "required": ["regime", "model", "known_limitations"],
+            "properties": {
+              "regime": {"type": "string", "minLength": 5},
+              "model": {"type": "string", "minLength": 5},
+              "known_limitations": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 8}}
+            }
+          },
+          "initial_claim_level": {"type": "string", "enum": ["C0", "C1", "C2"]},
+          "attempts": {
+            "type": "array", "minItems": 1,
+            "items": {
+              "type": "object", "additionalProperties": false,
+              "required": ["subworkflow_id", "states", "claim_level", "finding"],
+              "properties": {
+                "subworkflow_id": {"type": "string", "enum": ["scope-and-ground", "adaptive-frontier", "derivation-and-proof", "independent-audit", "manuscript-release"]},
+                "states": {"type": "array", "minItems": 1, "maxItems": 3, "items": {"type": "string", "enum": ["accepted", "failed", "quarantined"]}},
+                "claim_level": {"type": "string", "enum": ["C0", "C1", "C2"]},
+                "finding": {"type": "string", "minLength": 20}
+              }
+            }
+          },
+          "expected": {
+            "type": "object", "additionalProperties": false,
+            "required": ["final_state", "executed_steps", "release_reached", "claim_ceiling"],
+            "properties": {
+              "final_state": {"type": "string", "enum": ["accepted", "stopped", "quarantined"]},
+              "executed_steps": {"type": "integer", "minimum": 1, "maximum": 5},
+              "release_reached": {"type": "boolean"},
+              "claim_ceiling": {"type": "string", "enum": ["C0", "C1", "C2"]}
+            }
+          }
+        }
+      }
+    }
+  }
+}

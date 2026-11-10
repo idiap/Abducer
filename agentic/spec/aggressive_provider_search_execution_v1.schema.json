@@ -1,0 +1,1275 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://abducer.local/schemas/aggressive_provider_search_execution_v1.schema.json",
+  "title": "Aggressive provider search execution",
+  "description": "Exact two-wave provider-plural conceptual search with current-literature reopening, pre-taxonomy freeze, label-blind family reconstruction, template-copy attacks, finite SAT/UNSAT coverage, protected wildcards, a capable conservative control, and explicit authority nulls.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "artifact_kind",
+    "execution_id",
+    "request",
+    "request_digest",
+    "author_requests",
+    "author_receipts",
+    "pre_taxonomy_freeze",
+    "maturation_requests",
+    "maturation_receipts",
+    "matured_outputs",
+    "family_assessment",
+    "family_private_binding",
+    "copy_control",
+    "coverage_verification",
+    "retention",
+    "process_summary",
+    "causal_order",
+    "direct_theory_preference_proof_schedule_experiment_effect",
+    "authority_nulls",
+    "authority_boundary",
+    "content_digest"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "artifact_kind": {"const": "aggressive_provider_search_execution"},
+    "execution_id": {"$ref": "#/$defs/id"},
+    "request": {"$ref": "#/$defs/request"},
+    "request_digest": {"$ref": "#/$defs/digest"},
+    "author_requests": {
+      "type": "array",
+      "minItems": 8,
+      "maxItems": 12,
+      "items": {"$ref": "#/$defs/generationRequest"}
+    },
+    "author_receipts": {
+      "type": "array",
+      "minItems": 8,
+      "maxItems": 12,
+      "items": {"$ref": "#/$defs/terminalReceipt"}
+    },
+    "pre_taxonomy_freeze": {
+      "$ref": "pre_taxonomy_invention_freeze.schema.json"
+    },
+    "maturation_requests": {
+      "type": "array",
+      "minItems": 8,
+      "maxItems": 12,
+      "items": {"$ref": "#/$defs/maturationRequest"}
+    },
+    "maturation_receipts": {
+      "type": "array",
+      "minItems": 8,
+      "maxItems": 12,
+      "items": {"$ref": "#/$defs/terminalReceipt"}
+    },
+    "matured_outputs": {
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 12,
+      "items": {"$ref": "#/$defs/maturationOutput"}
+    },
+    "family_assessment": {"$ref": "#/$defs/familyAssessment"},
+    "family_private_binding": {"$ref": "#/$defs/familyPrivateBinding"},
+    "copy_control": {"$ref": "#/$defs/copyControl"},
+    "coverage_verification": {"$ref": "#/$defs/coverageVerification"},
+    "retention": {"$ref": "#/$defs/retention"},
+    "process_summary": {"$ref": "#/$defs/processSummary"},
+    "causal_order": {
+      "const": [
+        "current_literature_transitively_reopened",
+        "author_slots_precommitted",
+        "parallel_authors_terminal",
+        "pre_taxonomy_inventions_frozen",
+        "parallel_maturation_terminal",
+        "label_blind_complete_content_families_reconstructed",
+        "template_copy_attacks_applied",
+        "finite_target_coverage_solved_and_verified",
+        "wildcards_and_capable_control_retained"
+      ]
+    },
+    "direct_theory_preference_proof_schedule_experiment_effect": {
+      "const": false
+    },
+    "authority_nulls": {"$ref": "#/$defs/authorityNulls"},
+    "authority_boundary": {"$ref": "#/$defs/text"},
+    "content_digest": {"$ref": "#/$defs/digest"}
+  },
+  "$defs": {
+    "id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"
+    },
+    "digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "text": {"type": "string", "minLength": 1},
+    "nullableText": {
+      "oneOf": [{"$ref": "#/$defs/text"}, {"type": "null"}]
+    },
+    "textList": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {"$ref": "#/$defs/text"}
+    },
+    "digestList": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {"$ref": "#/$defs/digest"}
+    },
+    "budget": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["wall_seconds"],
+      "properties": {
+        "wall_seconds": {
+          "type": "number",
+          "exclusiveMinimum": 0,
+          "maximum": 3600
+        }
+      }
+    },
+    "providerAuthority": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "authority_id",
+        "provider_id",
+        "model_id",
+        "human_operator_id",
+        "declared_channel_id"
+      ],
+      "properties": {
+        "authority_id": {"$ref": "#/$defs/id"},
+        "provider_id": {"$ref": "#/$defs/id"},
+        "model_id": {"$ref": "#/$defs/id"},
+        "human_operator_id": {
+          "oneOf": [{"$ref": "#/$defs/id"}, {"type": "null"}]
+        },
+        "declared_channel_id": {"$ref": "#/$defs/id"}
+      }
+    },
+    "slot": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "slot_id",
+        "slot_index",
+        "exploration_role",
+        "provider_authority",
+        "equal_opportunity_budget"
+      ],
+      "properties": {
+        "slot_id": {"$ref": "#/$defs/id"},
+        "slot_index": {"type": "integer", "minimum": 0, "maximum": 11},
+        "exploration_role": {
+          "enum": [
+            "aggressive_candidate",
+            "protected_wildcard",
+            "capable_conservative_control"
+          ]
+        },
+        "provider_authority": {"$ref": "#/$defs/providerAuthority"},
+        "equal_opportunity_budget": {"$ref": "#/$defs/budget"}
+      }
+    },
+    "namespace": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["target_id", "run_id", "state_version"],
+      "properties": {
+        "target_id": {"$ref": "#/$defs/id"},
+        "run_id": {"$ref": "#/$defs/id"},
+        "state_version": {"type": "integer", "minimum": 0}
+      }
+    },
+    "targetConstraints": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "target_pressure",
+        "root_contradictions",
+        "protected_successes",
+        "constraint_ids"
+      ],
+      "properties": {
+        "target_pressure": {"$ref": "#/$defs/text"},
+        "root_contradictions": {"$ref": "#/$defs/textList"},
+        "protected_successes": {"$ref": "#/$defs/textList"},
+        "constraint_ids": {
+          "type": "array",
+          "minItems": 3,
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/id"}
+        }
+      }
+    },
+    "familySignature": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "correction_kind",
+        "intervention_kind",
+        "mechanism_topology",
+        "physics_handback_status",
+        "prediction_direction",
+        "relation_polarity"
+      ],
+      "properties": {
+        "intervention_kind": {
+          "enum": [
+            "add",
+            "remove",
+            "reverse",
+            "hold_fixed",
+            "localize",
+            "quotient",
+            "couple",
+            "decouple"
+          ]
+        },
+        "prediction_direction": {
+          "enum": [
+            "increase",
+            "decrease",
+            "invariant",
+            "bifurcate",
+            "permit",
+            "obstruct"
+          ]
+        },
+        "correction_kind": {
+          "enum": [
+            "abandon",
+            "retype",
+            "change_relation",
+            "split_scope",
+            "add_mediator",
+            "retract"
+          ]
+        },
+        "mechanism_topology": {
+          "enum": ["chain", "branch", "merge", "feedback", "network"]
+        },
+        "relation_polarity": {
+          "enum": [
+            "positive",
+            "negative",
+            "constraint",
+            "dual",
+            "constitutive",
+            "emergent"
+          ]
+        },
+        "physics_handback_status": {
+          "enum": ["decision_changed", "quarantined_no_physics_delta"]
+        }
+      }
+    },
+    "coverageCell": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "cell_id",
+        "signature",
+        "covers_constraint_ids"
+      ],
+      "properties": {
+        "cell_id": {"$ref": "#/$defs/id"},
+        "signature": {"$ref": "#/$defs/familySignature"},
+        "covers_constraint_ids": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/id"}
+        }
+      }
+    },
+    "coverageProblem": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "artifact_kind",
+        "problem_id",
+        "target_id",
+        "required_constraint_ids",
+        "minimum_distinct_family_count",
+        "admissible_cells",
+        "output_independent_precommitment",
+        "caller_family_labels",
+        "content_digest"
+      ],
+      "properties": {
+        "schema_version": {"const": "1.0.0"},
+        "artifact_kind": {
+          "const": "target_predeclared_family_coverage_problem"
+        },
+        "problem_id": {"$ref": "#/$defs/id"},
+        "target_id": {"$ref": "#/$defs/id"},
+        "required_constraint_ids": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/id"}
+        },
+        "minimum_distinct_family_count": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 6
+        },
+        "admissible_cells": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 12,
+          "items": {"$ref": "#/$defs/coverageCell"}
+        },
+        "output_independent_precommitment": {"const": true},
+        "caller_family_labels": {"const": false},
+        "content_digest": {"$ref": "#/$defs/digest"}
+      }
+    },
+    "graphEdge": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source", "relation", "target"],
+      "properties": {
+        "source": {"$ref": "#/$defs/text"},
+        "relation": {"$ref": "#/$defs/text"},
+        "target": {"$ref": "#/$defs/text"}
+      }
+    },
+    "mechanismGraph": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["nodes", "edges"],
+      "properties": {
+        "nodes": {
+          "type": "array",
+          "minItems": 2,
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/text"}
+        },
+        "edges": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"$ref": "#/$defs/graphEdge"}
+        }
+      }
+    },
+    "familyEvidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "mechanism_graph",
+        "relation_polarity",
+        "intervention",
+        "prediction",
+        "correction",
+        "falsifier",
+        "physics_return"
+      ],
+      "properties": {
+        "mechanism_graph": {"$ref": "#/$defs/mechanismGraph"},
+        "relation_polarity": {
+          "enum": [
+            "positive",
+            "negative",
+            "constraint",
+            "dual",
+            "constitutive",
+            "emergent"
+          ]
+        },
+        "intervention": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "operation", "target_constraint_ids"],
+          "properties": {
+            "kind": {
+              "enum": [
+                "add",
+                "remove",
+                "reverse",
+                "hold_fixed",
+                "localize",
+                "quotient",
+                "couple",
+                "decouple"
+              ]
+            },
+            "operation": {"$ref": "#/$defs/text"},
+            "target_constraint_ids": {
+              "type": "array",
+              "minItems": 1,
+              "uniqueItems": true,
+              "items": {"$ref": "#/$defs/id"}
+            }
+          }
+        },
+        "prediction": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "observable",
+            "direction",
+            "regime",
+            "mechanism_step_index"
+          ],
+          "properties": {
+            "observable": {"$ref": "#/$defs/text"},
+            "direction": {
+              "enum": [
+                "increase",
+                "decrease",
+                "invariant",
+                "bifurcate",
+                "permit",
+                "obstruct"
+              ]
+            },
+            "regime": {"$ref": "#/$defs/text"},
+            "mechanism_step_index": {"type": "integer", "minimum": 0}
+          }
+        },
+        "correction": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "trigger", "revision"],
+          "properties": {
+            "kind": {
+              "enum": [
+                "abandon",
+                "retype",
+                "change_relation",
+                "split_scope",
+                "add_mediator",
+                "retract"
+              ]
+            },
+            "trigger": {"$ref": "#/$defs/text"},
+            "revision": {"$ref": "#/$defs/text"}
+          }
+        },
+        "falsifier": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "countermodel",
+            "implicated_mechanism_step_indices"
+          ],
+          "properties": {
+            "countermodel": {"$ref": "#/$defs/text"},
+            "implicated_mechanism_step_indices": {
+              "type": "array",
+              "minItems": 1,
+              "uniqueItems": true,
+              "items": {"type": "integer", "minimum": 0}
+            }
+          }
+        },
+        "physics_return": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "carrier",
+            "decision_delta",
+            "protected_success_constraint_ids"
+          ],
+          "properties": {
+            "carrier": {"$ref": "#/$defs/nullableText"},
+            "decision_delta": {"$ref": "#/$defs/nullableText"},
+            "protected_success_constraint_ids": {
+              "type": "array",
+              "minItems": 1,
+              "uniqueItems": true,
+              "items": {"$ref": "#/$defs/id"}
+            }
+          }
+        }
+      }
+    },
+    "knownTemplate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["template_id", "semantic_core", "typed_family_evidence"],
+      "properties": {
+        "template_id": {"$ref": "#/$defs/id"},
+        "semantic_core": {
+          "$ref": "open_world_maturation_portfolio.schema.json#/$defs/semanticCore"
+        },
+        "typed_family_evidence": {"$ref": "#/$defs/familyEvidence"}
+      }
+    },
+    "literatureAuthority": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "authority_kind",
+        "governed_present_use_at",
+        "literature_bundle",
+        "literature_bundle_digest",
+        "literature_projection",
+        "literature_projection_digest",
+        "literature_input",
+        "literature_input_digest",
+        "global_latestness_authority",
+        "source_truth_authority",
+        "literature_benefit_authority",
+        "clock_attestation_authority",
+        "content_digest"
+      ],
+      "properties": {
+        "authority_kind": {
+          "const": "transitively_reopened_bounded_literature_v1"
+        },
+        "governed_present_use_at": {"$ref": "#/$defs/text"},
+        "literature_bundle": {"type": "object"},
+        "literature_bundle_digest": {"$ref": "#/$defs/digest"},
+        "literature_projection": {"type": "object"},
+        "literature_projection_digest": {"$ref": "#/$defs/digest"},
+        "literature_input": {"type": "object"},
+        "literature_input_digest": {"$ref": "#/$defs/digest"},
+        "global_latestness_authority": {"type": "null"},
+        "source_truth_authority": {"type": "null"},
+        "literature_benefit_authority": {"type": "null"},
+        "clock_attestation_authority": {"type": "null"},
+        "content_digest": {"$ref": "#/$defs/digest"}
+      }
+    },
+    "processBudget": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "max_workers",
+        "branch_wall_seconds",
+        "phase_wall_seconds"
+      ],
+      "properties": {
+        "max_workers": {"type": "integer", "minimum": 2, "maximum": 12},
+        "branch_wall_seconds": {
+          "type": "number",
+          "exclusiveMinimum": 0,
+          "maximum": 3600
+        },
+        "phase_wall_seconds": {
+          "type": "number",
+          "exclusiveMinimum": 0,
+          "maximum": 3600
+        }
+      }
+    },
+    "request": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "artifact_kind",
+        "request_id",
+        "namespace",
+        "target_constraints",
+        "literature_authority",
+        "literature_input_digest",
+        "known_taxonomy_commitment_digest",
+        "taxonomy_visibility",
+        "coverage_problem",
+        "coverage_problem_digest",
+        "known_template_corpus",
+        "known_template_corpus_digest",
+        "requested_count",
+        "minimum_distinct_family_count",
+        "slot_schedule",
+        "process_budget",
+        "caller_supplied_inventions",
+        "caller_supplied_family_labels",
+        "fixed_programme_or_template_atlas",
+        "authority_nulls",
+        "content_digest"
+      ],
+      "properties": {
+        "schema_version": {"const": "1.0.0"},
+        "artifact_kind": {"const": "aggressive_provider_search_request"},
+        "request_id": {"$ref": "#/$defs/id"},
+        "namespace": {"$ref": "#/$defs/namespace"},
+        "target_constraints": {"$ref": "#/$defs/targetConstraints"},
+        "literature_authority": {"$ref": "#/$defs/literatureAuthority"},
+        "literature_input_digest": {"$ref": "#/$defs/digest"},
+        "known_taxonomy_commitment_digest": {"$ref": "#/$defs/digest"},
+        "taxonomy_visibility": {"const": "withheld_by_commitment_only"},
+        "coverage_problem": {"$ref": "#/$defs/coverageProblem"},
+        "coverage_problem_digest": {"$ref": "#/$defs/digest"},
+        "known_template_corpus": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"$ref": "#/$defs/knownTemplate"}
+        },
+        "known_template_corpus_digest": {"$ref": "#/$defs/digest"},
+        "requested_count": {"type": "integer", "minimum": 8, "maximum": 12},
+        "minimum_distinct_family_count": {"const": 6},
+        "slot_schedule": {
+          "type": "array",
+          "minItems": 8,
+          "maxItems": 12,
+          "items": {"$ref": "#/$defs/slot"}
+        },
+        "process_budget": {"$ref": "#/$defs/processBudget"},
+        "caller_supplied_inventions": {"const": false},
+        "caller_supplied_family_labels": {"const": false},
+        "fixed_programme_or_template_atlas": {"const": false},
+        "authority_nulls": {"$ref": "#/$defs/authorityNulls"},
+        "content_digest": {"$ref": "#/$defs/digest"}
+      }
+    },
+    "generationRequest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "phase",
+        "branch_id",
+        "parent_request_digest",
+        "slot",
+        "expected_invention_id",
+        "namespace",
+        "target_constraints",
+        "literature_input",
+        "literature_input_digest",
+        "known_taxonomy_commitment_digest",
+        "coverage_problem_digest",
+        "known_template_corpus_digest",
+        "caller_supplied_inventions",
+        "caller_supplied_family_labels",
+        "fixed_programme_or_template_atlas",
+        "output_contract",
+        "budget",
+        "request_digest"
+      ],
+      "properties": {
+        "phase": {"const": "pre_taxonomy_generation"},
+        "branch_id": {"$ref": "#/$defs/id"},
+        "parent_request_digest": {"$ref": "#/$defs/digest"},
+        "slot": {"$ref": "#/$defs/slot"},
+        "expected_invention_id": {"$ref": "#/$defs/id"},
+        "namespace": {"$ref": "#/$defs/namespace"},
+        "target_constraints": {"$ref": "#/$defs/targetConstraints"},
+        "literature_input": {"type": "object"},
+        "literature_input_digest": {"$ref": "#/$defs/digest"},
+        "known_taxonomy_commitment_digest": {"$ref": "#/$defs/digest"},
+        "coverage_problem_digest": {"$ref": "#/$defs/digest"},
+        "known_template_corpus_digest": {"$ref": "#/$defs/digest"},
+        "caller_supplied_inventions": {"const": false},
+        "caller_supplied_family_labels": {"const": false},
+        "fixed_programme_or_template_atlas": {"const": false},
+        "output_contract": {"const": "aggressive-provider-generation.v1"},
+        "budget": {"$ref": "#/$defs/budget"},
+        "request_digest": {"$ref": "#/$defs/digest"}
+      }
+    },
+    "generationOutput": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["output_kind", "request_digest", "raw_invention"],
+      "properties": {
+        "output_kind": {"const": "aggressive_provider_generation"},
+        "request_digest": {"$ref": "#/$defs/digest"},
+        "raw_invention": {
+          "$ref": "pre_taxonomy_invention_freeze.schema.json#/$defs/rawInvention"
+        }
+      }
+    },
+    "maturationRequest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "phase",
+        "branch_id",
+        "parent_request_digest",
+        "slot",
+        "author_receipt_digest",
+        "dependency_status",
+        "raw_invention",
+        "pre_taxonomy_freeze_digest",
+        "target_constraints",
+        "literature_input",
+        "literature_input_digest",
+        "known_taxonomy_commitment_digest",
+        "coverage_problem_digest",
+        "known_template_corpus_digest",
+        "sibling_invention_digests",
+        "caller_supplied_family_labels",
+        "output_contract",
+        "budget",
+        "request_digest"
+      ],
+      "properties": {
+        "phase": {"const": "post_freeze_parallel_maturation"},
+        "branch_id": {"$ref": "#/$defs/id"},
+        "parent_request_digest": {"$ref": "#/$defs/digest"},
+        "slot": {"$ref": "#/$defs/slot"},
+        "author_receipt_digest": {"$ref": "#/$defs/digest"},
+        "dependency_status": {"enum": ["ready", "author_not_accepted"]},
+        "raw_invention": {
+          "oneOf": [
+            {
+              "$ref": "pre_taxonomy_invention_freeze.schema.json#/$defs/rawInvention"
+            },
+            {"type": "null"}
+          ]
+        },
+        "pre_taxonomy_freeze_digest": {"$ref": "#/$defs/digest"},
+        "target_constraints": {"$ref": "#/$defs/targetConstraints"},
+        "literature_input": {"type": "object"},
+        "literature_input_digest": {"$ref": "#/$defs/digest"},
+        "known_taxonomy_commitment_digest": {"$ref": "#/$defs/digest"},
+        "coverage_problem_digest": {"$ref": "#/$defs/digest"},
+        "known_template_corpus_digest": {"$ref": "#/$defs/digest"},
+        "sibling_invention_digests": {"$ref": "#/$defs/digestList"},
+        "caller_supplied_family_labels": {"const": false},
+        "output_contract": {"const": "aggressive-provider-maturation.v1"},
+        "budget": {"$ref": "#/$defs/budget"},
+        "request_digest": {"$ref": "#/$defs/digest"}
+      }
+    },
+    "maturationOutput": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "output_kind",
+        "request_digest",
+        "matured_invention",
+        "typed_family_evidence"
+      ],
+      "properties": {
+        "output_kind": {"const": "aggressive_provider_maturation"},
+        "request_digest": {"$ref": "#/$defs/digest"},
+        "matured_invention": {
+          "$ref": "open_world_maturation_portfolio.schema.json#/$defs/maturedResponse"
+        },
+        "typed_family_evidence": {"$ref": "#/$defs/familyEvidence"}
+      }
+    },
+    "workerOutput": {
+      "oneOf": [
+        {"$ref": "#/$defs/generationOutput"},
+        {"$ref": "#/$defs/maturationOutput"}
+      ]
+    },
+    "terminalReceipt": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "receipt_id",
+        "phase",
+        "branch_id",
+        "slot_id",
+        "request_digest",
+        "provider_authority",
+        "started_at",
+        "completed_at",
+        "elapsed_seconds",
+        "status",
+        "output",
+        "output_digest",
+        "failure_class",
+        "failure_detail",
+        "terminal_process_group_status",
+        "isolation_scope",
+        "content_digest"
+      ],
+      "properties": {
+        "receipt_id": {"$ref": "#/$defs/id"},
+        "phase": {
+          "enum": [
+            "pre_taxonomy_generation",
+            "post_freeze_parallel_maturation"
+          ]
+        },
+        "branch_id": {"$ref": "#/$defs/id"},
+        "slot_id": {"$ref": "#/$defs/id"},
+        "request_digest": {"$ref": "#/$defs/digest"},
+        "provider_authority": {"$ref": "#/$defs/providerAuthority"},
+        "started_at": {"$ref": "#/$defs/text"},
+        "completed_at": {"$ref": "#/$defs/text"},
+        "elapsed_seconds": {"type": "number", "minimum": 0},
+        "status": {
+          "enum": [
+            "accepted",
+            "invalid",
+            "failed",
+            "timeout",
+            "dependency_blocked"
+          ]
+        },
+        "output": {
+          "anyOf": [
+            {"$ref": "#/$defs/workerOutput"},
+            {"type": "object"},
+            {"type": "null"}
+          ]
+        },
+        "output_digest": {
+          "oneOf": [{"$ref": "#/$defs/digest"}, {"type": "null"}]
+        },
+        "failure_class": {"$ref": "#/$defs/nullableText"},
+        "failure_detail": {"$ref": "#/$defs/nullableText"},
+        "terminal_process_group_status": {
+          "const": "reaped_no_background_authority"
+        },
+        "isolation_scope": {
+          "const": "deep_copy_and_killable_process_session_only"
+        },
+        "content_digest": {"$ref": "#/$defs/digest"}
+      }
+    },
+    "familyAssessmentRow": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "candidate_alias",
+        "complete_content_digest",
+        "family_signature",
+        "family_signature_digest",
+        "target_constraint_ids",
+        "predeclared_cell_id",
+        "worker_family_label_consumed",
+        "slot_or_role_metadata_consumed"
+      ],
+      "properties": {
+        "candidate_alias": {"$ref": "#/$defs/id"},
+        "complete_content_digest": {"$ref": "#/$defs/digest"},
+        "family_signature": {"$ref": "#/$defs/familySignature"},
+        "family_signature_digest": {"$ref": "#/$defs/digest"},
+        "target_constraint_ids": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/id"}
+        },
+        "predeclared_cell_id": {
+          "oneOf": [{"$ref": "#/$defs/id"}, {"type": "null"}]
+        },
+        "worker_family_label_consumed": {"const": false},
+        "slot_or_role_metadata_consumed": {"const": false}
+      }
+    },
+    "familyAssessment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "assessor_kind",
+        "coverage_problem_digest",
+        "blind_input_digest",
+        "candidate_assessments",
+        "distinct_typed_family_count",
+        "worker_family_labels_consumed",
+        "slot_role_provider_metadata_consumed",
+        "conceptual_merit_authorized",
+        "content_digest"
+      ],
+      "properties": {
+        "assessor_kind": {
+          "const": "label_blind_complete_content_family_reconstructor_v1"
+        },
+        "coverage_problem_digest": {"$ref": "#/$defs/digest"},
+        "blind_input_digest": {"$ref": "#/$defs/digest"},
+        "candidate_assessments": {
+          "type": "array",
+          "minItems": 3,
+          "maxItems": 12,
+          "items": {"$ref": "#/$defs/familyAssessmentRow"}
+        },
+        "distinct_typed_family_count": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 12
+        },
+        "worker_family_labels_consumed": {"const": false},
+        "slot_role_provider_metadata_consumed": {"const": false},
+        "conceptual_merit_authorized": {"const": false},
+        "content_digest": {"$ref": "#/$defs/digest"}
+      }
+    },
+    "familyBindingRow": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "candidate_alias",
+        "invention_id",
+        "branch_id",
+        "complete_content_digest"
+      ],
+      "properties": {
+        "candidate_alias": {"$ref": "#/$defs/id"},
+        "invention_id": {"$ref": "#/$defs/id"},
+        "branch_id": {"$ref": "#/$defs/id"},
+        "complete_content_digest": {"$ref": "#/$defs/digest"}
+      }
+    },
+    "familyPrivateBinding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["assessment_digest", "bindings", "content_digest"],
+      "properties": {
+        "assessment_digest": {"$ref": "#/$defs/digest"},
+        "bindings": {
+          "type": "array",
+          "minItems": 3,
+          "maxItems": 12,
+          "items": {"$ref": "#/$defs/familyBindingRow"}
+        },
+        "content_digest": {"$ref": "#/$defs/digest"}
+      }
+    },
+    "copyResult": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "candidate_alias",
+        "nearest_template_id",
+        "nearest_similarity",
+        "exact_identity_erased_projection_copy",
+        "copy_detected"
+      ],
+      "properties": {
+        "candidate_alias": {"$ref": "#/$defs/id"},
+        "nearest_template_id": {"$ref": "#/$defs/id"},
+        "nearest_similarity": {"type": "number", "minimum": 0, "maximum": 1},
+        "exact_identity_erased_projection_copy": {"type": "boolean"},
+        "copy_detected": {"type": "boolean"}
+      }
+    },
+    "copyControl": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "control_kind",
+        "known_template_corpus_digest",
+        "similarity_threshold",
+        "candidate_results",
+        "eligible_candidate_aliases",
+        "quarantined_copy_aliases",
+        "semantic_copy_implies_merit",
+        "content_digest"
+      ],
+      "properties": {
+        "control_kind": {
+          "const": "precommitted_known_template_copy_attack_v1"
+        },
+        "known_template_corpus_digest": {"$ref": "#/$defs/digest"},
+        "similarity_threshold": {"const": 0.95},
+        "candidate_results": {
+          "type": "array",
+          "minItems": 3,
+          "maxItems": 12,
+          "items": {"$ref": "#/$defs/copyResult"}
+        },
+        "eligible_candidate_aliases": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/id"}
+        },
+        "quarantined_copy_aliases": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/id"}
+        },
+        "semantic_copy_implies_merit": {"const": false},
+        "content_digest": {"$ref": "#/$defs/digest"}
+      }
+    },
+    "coverageAssignment": {
+      "type": "object",
+      "additionalProperties": {"$ref": "#/$defs/id"}
+    },
+    "targetSatWitness": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["selected_cell_ids", "constraint_assignment"],
+      "properties": {
+        "selected_cell_ids": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/id"}
+        },
+        "constraint_assignment": {"$ref": "#/$defs/coverageAssignment"}
+      }
+    },
+    "obligation": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["obligation_id", "kind", "value"],
+          "properties": {
+            "obligation_id": {"$ref": "#/$defs/id"},
+            "kind": {"const": "minimum_distinct_family_count"},
+            "value": {"type": "integer", "minimum": 1, "maximum": 6}
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["obligation_id", "kind", "constraint_id"],
+          "properties": {
+            "obligation_id": {"$ref": "#/$defs/id"},
+            "kind": {"const": "cover_constraint"},
+            "constraint_id": {"$ref": "#/$defs/id"}
+          }
+        }
+      ]
+    },
+    "countermodel": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "available_cell_ids",
+        "maximum_distinct_family_count",
+        "maximal_selection_cell_ids",
+        "covered_constraint_ids",
+        "uncovered_constraint_ids"
+      ],
+      "properties": {
+        "available_cell_ids": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/id"}
+        },
+        "maximum_distinct_family_count": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 12
+        },
+        "maximal_selection_cell_ids": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/id"}
+        },
+        "covered_constraint_ids": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/id"}
+        },
+        "uncovered_constraint_ids": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/id"}
+        }
+      }
+    },
+    "coverageCertificate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "solver_kind",
+        "problem_digest",
+        "status",
+        "sat_witness",
+        "minimal_unsat_core",
+        "countermodel",
+        "enumeration_bound",
+        "content_digest"
+      ],
+      "properties": {
+        "solver_kind": {"const": "finite_exhaustive_family_coverage_v1"},
+        "problem_digest": {"$ref": "#/$defs/digest"},
+        "status": {"enum": ["sat", "unsat"]},
+        "sat_witness": {
+          "oneOf": [{"$ref": "#/$defs/targetSatWitness"}, {"type": "null"}]
+        },
+        "minimal_unsat_core": {
+          "oneOf": [
+            {
+              "type": "array",
+              "minItems": 1,
+              "items": {"$ref": "#/$defs/obligation"}
+            },
+            {"type": "null"}
+          ]
+        },
+        "countermodel": {
+          "oneOf": [{"$ref": "#/$defs/countermodel"}, {"type": "null"}]
+        },
+        "enumeration_bound": {"type": "integer", "minimum": 2},
+        "content_digest": {"$ref": "#/$defs/digest"}
+      }
+    },
+    "candidateSatWitness": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "selected_candidate_aliases",
+        "selected_cell_ids",
+        "constraint_assignment"
+      ],
+      "properties": {
+        "selected_candidate_aliases": {
+          "type": "array",
+          "minItems": 6,
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/id"}
+        },
+        "selected_cell_ids": {
+          "type": "array",
+          "minItems": 6,
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/id"}
+        },
+        "constraint_assignment": {"$ref": "#/$defs/coverageAssignment"}
+      }
+    },
+    "coverageVerification": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "target_problem_certificate",
+        "candidate_sat_witness",
+        "under_six_route_authorized"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "candidate_sat_witness_verified",
+            "target_predeclared_unsat_countermodel_verified"
+          ]
+        },
+        "target_problem_certificate": {
+          "$ref": "#/$defs/coverageCertificate"
+        },
+        "candidate_sat_witness": {
+          "oneOf": [
+            {"$ref": "#/$defs/candidateSatWitness"},
+            {"type": "null"}
+          ]
+        },
+        "under_six_route_authorized": {"type": "boolean"}
+      }
+    },
+    "retention": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "policy",
+        "eligible_candidate_aliases",
+        "protected_wildcard_aliases",
+        "capable_conservative_control_alias",
+        "retained_candidate_aliases",
+        "merit_or_truth_selection_authorized",
+        "content_digest"
+      ],
+      "properties": {
+        "policy": {"const": "conflict_preserving_no_merit_pruning_v1"},
+        "eligible_candidate_aliases": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/id"}
+        },
+        "protected_wildcard_aliases": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 2,
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/id"}
+        },
+        "capable_conservative_control_alias": {"$ref": "#/$defs/id"},
+        "retained_candidate_aliases": {
+          "type": "array",
+          "minItems": 3,
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/id"}
+        },
+        "merit_or_truth_selection_authorized": {"const": false},
+        "content_digest": {"$ref": "#/$defs/digest"}
+      }
+    },
+    "processSummary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "actual_killable_process_waves",
+        "scheduled_author_slots",
+        "accepted_author_slots",
+        "accepted_maturation_slots",
+        "terminal_receipt_count",
+        "partial_failure",
+        "max_workers",
+        "overlap_measurement_authority"
+      ],
+      "properties": {
+        "actual_killable_process_waves": {"const": 2},
+        "scheduled_author_slots": {
+          "type": "integer",
+          "minimum": 8,
+          "maximum": 12
+        },
+        "accepted_author_slots": {
+          "type": "integer",
+          "minimum": 3,
+          "maximum": 12
+        },
+        "accepted_maturation_slots": {
+          "type": "integer",
+          "minimum": 3,
+          "maximum": 12
+        },
+        "terminal_receipt_count": {
+          "type": "integer",
+          "minimum": 16,
+          "maximum": 24
+        },
+        "partial_failure": {"type": "boolean"},
+        "max_workers": {"type": "integer", "minimum": 2, "maximum": 12},
+        "overlap_measurement_authority": {"type": "null"}
+      }
+    },
+    "authorityNulls": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_truth_authority",
+        "global_latestness_authority",
+        "semantic_entailment_authority",
+        "novelty_authority",
+        "creativity_authority",
+        "conceptual_merit_authority",
+        "relevance_authority",
+        "conceptual_depth_authority",
+        "philosophical_understanding_authority",
+        "unification_power_authority",
+        "literature_benefit_authority",
+        "physics_value_authority",
+        "truth_authority",
+        "proof_or_theorem_authority",
+        "provider_independence_authority",
+        "model_independence_authority",
+        "human_independence_authority",
+        "cognitive_independence_authority",
+        "semantic_independence_authority",
+        "evaluator_independence_authority"
+      ],
+      "properties": {
+        "source_truth_authority": {"type": "null"},
+        "global_latestness_authority": {"type": "null"},
+        "semantic_entailment_authority": {"type": "null"},
+        "novelty_authority": {"type": "null"},
+        "creativity_authority": {"type": "null"},
+        "conceptual_merit_authority": {"type": "null"},
+        "relevance_authority": {"type": "null"},
+        "conceptual_depth_authority": {"type": "null"},
+        "philosophical_understanding_authority": {"type": "null"},
+        "unification_power_authority": {"type": "null"},
+        "literature_benefit_authority": {"type": "null"},
+        "physics_value_authority": {"type": "null"},
+        "truth_authority": {"type": "null"},
+        "proof_or_theorem_authority": {"type": "null"},
+        "provider_independence_authority": {"type": "null"},
+        "model_independence_authority": {"type": "null"},
+        "human_independence_authority": {"type": "null"},
+        "cognitive_independence_authority": {"type": "null"},
+        "semantic_independence_authority": {"type": "null"},
+        "evaluator_independence_authority": {"type": "null"}
+      }
+    }
+  }
+}

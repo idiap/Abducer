@@ -1,0 +1,31 @@
+# SPDX-FileCopyrightText: © 2026 Idiap Research Institute <contact@idiap.ch>
+#
+# SPDX-FileContributor: Danilo Gusicuma <danilo.gusicuma@idiap.ch>
+# Neuro-symbolic AI Group
+#
+# SPDX-License-Identifier: MIT
+name: Agent plugins
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  agent-plugins:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: uv sync --frozen --all-groups
+      - run: uv run python agentic/scripts/normalize_workflow_skills.py --check
+      - run: uv run python -m unittest discover -s integrations/workflow_contracts/tests -v
+      - run: uv run python integrations/agent_plugins/generate.py --check
+      - run: uv run reuse lint
+      - run: uv run reuse --root plugins/abducer lint
+      - run: uv run pytest -q tests/integrations/test_agent_plugins.py tests/integrations/test_workflow_mcp.py tests/orchestration/test_workflow_skill_v1_projection.py tests/infrastructure/test_reuse_skill_attribution.py

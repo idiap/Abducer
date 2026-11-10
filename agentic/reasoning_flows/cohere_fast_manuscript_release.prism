@@ -1,0 +1,8 @@
+erfl 0.2
+reasoning cohere_fast_manuscript_release {
+  goal "authorize a presentation without changing claim authority" -> release_status
+  steps pre:_[audit_status->presentation_candidate] -requires> ...
+        e0:E[presentation_candidate->release_status]
+  on e0.accepted => accept
+  on e0.stopped => stop
+}

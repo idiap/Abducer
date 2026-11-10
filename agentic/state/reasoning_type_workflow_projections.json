@@ -1,0 +1,2806 @@
+{
+  "executable": false,
+  "ontology": {
+    "digest": "sha256:cc2d6576946ed866cc66b0ae8fe5d30513a2a223984def1f8a4d7cc3d073b534",
+    "path": "agentic/registries/essential_reasoning_types.yaml"
+  },
+  "projection_rules": {
+    "joins": "preserve_or_mark_unspecified",
+    "multi_type": "single_coinstantiated_occurrence_without_invented_order",
+    "operational": "epsilon_only_when_explicitly_declared",
+    "relational_coherence": "unknown_until_claim_identity_state_ports_and_join_semantics_are_bound",
+    "unmapped": "retain_as_opaque_gap",
+    "workflow_switches": "preserve_guard_and_target"
+  },
+  "relation_ontology": {
+    "digest": "sha256:4d765f40c08cbb062dd67a187e411644c387fa27b10da9ad702afd0cda21d543",
+    "path": "agentic/registries/epistemic_relations.yaml"
+  },
+  "schema_version": "1.0.0",
+  "sources": [
+    {
+      "digest": "sha256:a467750a969715f742cc330f21fef37f4004b76924650fd9a027c47af9447d77",
+      "path": "agentic/registries/named_workflow_contracts.yaml"
+    },
+    {
+      "digest": "sha256:b6e96e458aa1dd23730c345ea91523a47527fa16ee8e10382bf845a6f60e5b64",
+      "path": "agentic/registries/cohere_fast_ym_workflow.yaml"
+    }
+  ],
+  "view": "reasoning_type_occurrence_graph",
+  "workflows": [
+    {
+      "controls": {
+        "iterations": [],
+        "switches": [
+          {
+            "artifact_type": "ProofQueueItem",
+            "to": "theorem_proof_delivery",
+            "when": "output_is_theorem_shaped"
+          },
+          {
+            "artifact_type": "ExpertRouteDossier",
+            "to": "conceptual_hypothesis_exploration_loop",
+            "when": "output_requires_conceptual_refinement"
+          }
+        ]
+      },
+      "coverage": {
+        "mapped": 2,
+        "mapped_fraction": 0.1538,
+        "operational": 0,
+        "total": 13,
+        "unmapped": 11
+      },
+      "gaps": {
+        "ambiguous_joins": [
+          {
+            "reason": "conditional producers feed a multi-input step without all/any/fallback semantics",
+            "sources": [
+              "ingest",
+              "parse_pvsnp"
+            ],
+            "target": "normalize_theorems"
+          }
+        ],
+        "unmapped_occurrences": [
+          "ingest",
+          "parse_pvsnp",
+          "normalize_theorems",
+          "ground_conjecture",
+          "narrate_literature_evolution",
+          "connect_proof",
+          "audit_hubs",
+          "find_entrypoint",
+          "pathfind",
+          "audit_regime_shift",
+          "expert_handoff"
+        ]
+      },
+      "occurrences": [
+        {
+          "classification": "gap",
+          "id": "ingest",
+          "provenance": {
+            "guard": null,
+            "mode": "required",
+            "profile": null,
+            "skill": "latex-kb-ingest",
+            "workflow_step": "ingest"
+          },
+          "type_expression": {
+            "kind": "opaque_unmapped"
+          }
+        },
+        {
+          "classification": "gap",
+          "id": "parse_pvsnp",
+          "provenance": {
+            "guard": "target == 'p-vs-np' and source_format == 'latex'",
+            "mode": "conditional",
+            "profile": null,
+            "skill": "pvsnp-kb-parser",
+            "workflow_step": "parse_pvsnp"
+          },
+          "type_expression": {
+            "kind": "opaque_unmapped"
+          }
+        },
+        {
+          "classification": "gap",
+          "id": "normalize_theorems",
+          "provenance": {
+            "guard": null,
+            "mode": "required",
+            "profile": null,
+            "skill": "theorem-body-normalizer",
+            "workflow_step": "normalize_theorems"
+          },
+          "type_expression": {
+            "kind": "opaque_unmapped"
+          }
+        },
+        {
+          "classification": "gap",
+          "id": "ground_conjecture",
+          "provenance": {
+            "guard": null,
+            "mode": "required",
+            "profile": null,
+            "skill": "kb-main-conjecture-grounder",
+            "workflow_step": "ground_conjecture"
+          },
+          "type_expression": {
+            "kind": "opaque_unmapped"
+          }
+        },
+        {
+          "classification": "gap",
+          "id": "narrate_literature_evolution",
+          "provenance": {
+            "guard": "source_bundle_contains_literature_history",
+            "mode": "conditional",
+            "profile": null,
+            "skill": "target-literature-evolution-narrator",
+            "workflow_step": "narrate_literature_evolution"
+          },
+          "type_expression": {
+            "kind": "opaque_unmapped"
+          }
+        },
+        {
+          "classification": "gap",
+          "id": "connect_proof",
+          "provenance": {
+            "guard": null,
+            "mode": "required",
+            "profile": null,
+            "skill": "kb-proof-connector",
+            "workflow_step": "connect_proof"
+          },
+          "type_expression": {
+            "kind": "opaque_unmapped"
+          }
+        },
+        {
+          "classification": "epistemic",
+          "id": "evaluate_hypotheses",
+          "provenance": {
+            "guard": "hypotheses_present",
+            "mode": "conditional",
+            "profile": null,
+            "skill": "kb-hypothesis-evaluator",
+            "workflow_step": "evaluate_hypotheses"
+          },
+          "type_expression": {
+            "claim_ceiling": "creates_no_substantive_claim",
+            "input_state": "claims_provenance_tests_and_open_obligations",
+            "kind": "coinstantiated_unordered",
+            "output_state": "calibrated_epistemic_status",
+            "primary": "evidential_status_calibration",
+            "secondary": [
+              "critical_refutational_testing"
+            ]
+          }
+        },
+        {
+          "classification": "gap",
+          "id": "audit_hubs",
+          "provenance": {
+            "guard": null,
+            "mode": "required",
+            "profile": null,
+            "skill": "hub-bias-auditor",
+            "workflow_step": "audit_hubs"
+          },
+          "type_expression": {
+            "kind": "opaque_unmapped"
+          }
+        },
+        {
+          "classification": "gap",
+          "id": "find_entrypoint",
+          "provenance": {
+            "guard": null,
+            "mode": "required",
+            "profile": null,
+            "skill": "kb-entrypoint-finder",
+            "workflow_step": "find_entrypoint"
+          },
+          "type_expression": {
+            "kind": "opaque_unmapped"
+          }
+        },
+        {
+          "classification": "gap",
+          "id": "pathfind",
+          "provenance": {
+            "guard": null,
+            "mode": "required",
+            "profile": null,
+            "skill": "kb-entrypoint-pathfinder",
+            "workflow_step": "pathfind"
+          },
+          "type_expression": {
+            "kind": "opaque_unmapped"
+          }
+        },
+        {
+          "classification": "gap",
+          "id": "audit_regime_shift",
+          "provenance": {
+            "guard": "route_crosses_regime_or_model",
+            "mode": "conditional",
+            "profile": null,
+            "skill": "regime-shift-auditor",
+            "workflow_step": "audit_regime_shift"
+          },
+          "type_expression": {
+            "kind": "opaque_unmapped"
+          }
+        },
+        {
+          "classification": "epistemic",
+          "id": "hunt_counterexamples",
+          "provenance": {
+            "guard": null,
+            "mode": "required",
+            "profile": null,
+            "skill": "counterexample-hunter",
+            "workflow_step": "hunt_counterexamples"
+          },
+          "type_expression": {
+            "claim_ceiling": "not_refuted_within_scope",
+            "input_state": "claim_assumptions_and_search_scope",
+            "kind": "atomic",
+            "output_state": "refuted_or_not_refuted_within_scope",
+            "primary": "critical_refutational_testing",
+            "secondary": []
+          }
+        },
+        {
+          "classification": "gap",
+          "id": "expert_handoff",
+          "provenance": {
+            "guard": null,
+            "mode": "required",
+            "profile": null,
+            "skill": "expert-handoff",
+            "workflow_step": "expert_handoff"
+          },
+          "type_expression": {
+            "kind": "opaque_unmapped"
+          }
+        }
+      ],
+      "projection_status": "degraded",
+      "relational_coherence": {
+        "reason": "Source artifacts do not yet bind claim identity, epistemic ports, or join modality.",
+        "resolved_edges": 0,
+        "status": "unknown",
+        "unknown_edges": 12
+      },
+      "relations": [
+        {
+          "epistemic_relation": "requires",
+          "guard": "target == 'p-vs-np' and source_format == 'latex'",
+          "join": "single",
+          "relation": "artifact_dependency",
+          "relational_coherence": "unknown_without_state_binding",
+          "sources": [
+            "ingest"
+          ],
+          "target": "parse_pvsnp"
+        },
+        {
+          "epistemic_relation": "requires",
+          "guard": null,
+          "join": "unspecified",
+          "relation": "artifact_dependency",
+          "relational_coherence": "unknown_without_state_binding",
+          "sources": [
+            "ingest",
+            "parse_pvsnp"
+          ],
+          "target": "normalize_theorems"
+        },
+        {
+          "epistemic_relation": "requires",
+          "guard": null,
+          "join": "single",
+          "relation": "artifact_dependency",
+          "relational_coherence": "unknown_without_state_binding",
+          "sources": [
+            "normalize_theorems"
+          ],
+          "target": "ground_conjecture"
+        },
+        {
+          "epistemic_relation": "requires",
+          "guard": "source_bundle_contains_literature_history",
+          "join": "single",
+          "relation": "artifact_dependency",
+          "relational_coherence": "unknown_without_state_binding",
+          "sources": [
+            "ground_conjecture"
+          ],
+          "target": "narrate_literature_evolution"
+        },
+        {
+          "epistemic_relation": "requires",
+          "guard": null,
+          "join": "single",
+          "relation": "artifact_dependency",
+          "relational_coherence": "unknown_without_state_binding",
+          "sources": [
+            "ground_conjecture"
+          ],
+          "target": "connect_proof"
+        },
+        {
+          "epistemic_relation": "requires",
+          "guard": "hypotheses_present",
+          "join": "single",
+          "relation": "artifact_dependency",
+          "relational_coherence": "unknown_without_state_binding",
+          "sources": [
+            "connect_proof"
+          ],
+          "target": "evaluate_hypotheses"
+        },
+        {
+          "epistemic_relation": "requires",
+          "guard": null,
+          "join": "single",
+          "relation": "artifact_dependency",
+          "relational_coherence": "unknown_without_state_binding",
+          "sources": [
+            "connect_proof"
+          ],
+          "target": "audit_hubs"
+        },
+        {
+          "epistemic_relation": "requires",
+          "guard": null,
+          "join": "unspecified",
+          "relation": "artifact_dependency",
+          "relational_coherence": "unknown_without_state_binding",
+          "sources": [
+            "audit_hubs",
+            "connect_proof"
+          ],
+          "target": "find_entrypoint"
+        },
+        {
+          "epistemic_relation": "requires",
+          "guard": null,
+          "join": "single",
+          "relation": "artifact_dependency",
+          "relational_coherence": "unknown_without_state_binding",
+          "sources": [
+            "find_entrypoint"
+          ],
+          "target": "pathfind"
+        },
+        {
+          "epistemic_relation": "requires",
+          "guard": "route_crosses_regime_or_model",
+          "join": "single",
+          "relation": "artifact_dependency",
+          "relational_coherence": "unknown_without_state_binding",
+          "sources": [
+            "pathfind"
+          ],
+          "target": "audit_regime_shift"
+        },
+        {
+          "epistemic_relation": "requires",
+          "guard": null,
+          "join": "single",
+          "relation": "artifact_dependency",
+          "relational_coherence": "unknown_without_state_binding",
+          "sources": [
+            "pathfind"
+          ],
+          "target": "hunt_counterexamples"
+        },
+        {
+          "epistemic_relation": "requires",
+          "guard": null,
+          "join": "unspecified",
+          "relation": "artifact_dependency",
+          "relational_coherence": "unknown_without_state_binding",
+          "sources": [
+            "hunt_counterexamples",
+            "pathfind"
+          ],
+          "target": "expert_handoff"
+        }
+      ],
+      "workflow_id": "evidence_to_proof_route_onramp"
+    },
+    {
+      "controls": {
+        "iterations": [],
+        "switches": [
+          {
+            "artifact_type": "ProofQueueItem",
+            "to": "theorem_proof_delivery",
+            "when": "formal_claim_ready"
+          },
+          {
+            "artifact_type": "ConceptualLearningDelta",
+            "to": "conceptual_hypothesis_exploration_loop",
+            "when": "candidate_not_ready_or_non_dominated"
+          }
+        ]
+      },
+      "coverage": {
+        "mapped": 3,
+        "mapped_fraction": 0.2727,
+        "operational": 0,
+        "total": 11,
+        "unmapped": 8
+      },
+      "gaps": {
+        "ambiguous_joins": [],
+        "unmapped_occurrences": [
+          "plan_deepening",
+          "assimilate_literature",
+          "forge_invention",
+          "portfolio",
+          "reflect_discovery",
+          "blind_adjudicate",
+          "compile_atlas_defects",
+          "derive_central_routes"
+        ]
+      },
+      "occurrences": [
+        {
+          "classification": "gap",
+          "id": "plan_deepening",
+          "provenance": {
+            "guard": null,
+            "mode": "required",
+            "profile": null,
+            "skill": "conceptual-frontier-deepening",
+            "workflow_step": "plan_deepening"
+          },
+          "type_expression": {
+            "kind": "opaque_unmapped"
+          }
+        },
+        {
+          "classification": "gap",
+          "id": "assimilate_literature",
+          "provenance": {
+            "guard": null,
+            "mode": "required",
+            "profile": null,
+            "skill": "frontier-literature-assimilator",
+            "workflow_step": "assimilate_literature"
+          },
+          "type_expression": {
+            "kind": "opaque_unmapped"
+          }
+        },
+        {
+          "classification": "gap",
+          "id": "forge_invention",
+          "provenance": {
+            "guard": null,
+            "mode": "required",
+            "profile": null,
+            "skill": "literature-conditioned-invention-forger",
+            "workflow_step": "forge_invention"
+          },
+          "type_expression": {
+            "kind": "opaque_unmapped"
+          }
+        },
+        {
+          "classification": "gap",
+          "id": "portfolio",
+          "provenance": {
+            "guard": null,
+            "mode": "required",
+            "profile": null,
+            "skill": "parallel-hypothesis-portfolio",
+            "workflow_step": "portfolio"
+          },
+          "type_expression": {
+            "kind": "opaque_unmapped"
+          }
+        },
+        {
+          "classification": "gap",
+          "id": "reflect_discovery",
+          "provenance": {
+            "guard": null,
+            "mode": "required",
+            "profile": null,
+            "skill": "reflective-conceptual-discovery",
+            "workflow_step": "reflect_discovery"
+          },
+          "type_expression": {
+            "kind": "opaque_unmapped"
+          }
+        },
+        {
+          "classification": "epistemic",
+          "id": "synthesize",
+          "provenance": {
+            "guard": null,
+            "mode": "required",
+            "profile": null,
+            "skill": "reflective-theory-synthesizer",
+            "workflow_step": "synthesize"
+          },
+          "type_expression": {
+            "claim_ceiling": "provisional_generalization",
+            "input_state": "case_set_with_sampling_scope",
+            "kind": "coinstantiated_unordered",
+            "output_state": "provisional_generalization",
+            "primary": "inductive_generalization",
+            "secondary": [
+              "abductive_hypothesis_formation"
+            ]
+          }
+        },
+        {
+          "classification": "gap",
+          "id": "blind_adjudicate",
+          "provenance": {
+            "guard": null,
+            "mode": "required",
+            "profile": null,
+            "skill": "blind-conceptual-preference-adjudicator",
+            "workflow_step": "blind_adjudicate"
+          },
+          "type_expression": {
+            "kind": "opaque_unmapped"
+          }
+        },
+        {
+          "classification": "gap",
+          "id": "compile_atlas_defects",
+          "provenance": {
+            "guard": "category_or_hott_pressure",
+            "mode": "conditional",
+            "profile": null,
+            "skill": "theory-atlas-defect-compiler",
+            "workflow_step": "compile_atlas_defects"
+          },
+          "type_expression": {
+            "kind": "opaque_unmapped"
+          }
+        },
+        {
+          "classification": "gap",
+          "id": "derive_central_routes",
+          "provenance": {
+            "guard": null,
+            "mode": "required",
+            "profile": null,
+            "skill": "central-formal-conceptual-routes",
+            "workflow_step": "derive_central_routes"
+          },
+          "type_expression": {
+            "kind": "opaque_unmapped"
+          }
+        },
+        {
+          "classification": "epistemic",
+          "id": "check_bridge_equivalence",
+          "provenance": {
+            "guard": "multiple_carriers_compete",
+            "mode": "conditional",
+            "profile": null,
+            "skill": "bridge-object-equivalence-checker",
+            "workflow_step": "check_bridge_equivalence"
+          },
+          "type_expression": {
+            "claim_ceiling": "candidate_transfer",
+            "input_state": "source_target_and_correspondence",
+            "kind": "coinstantiated_unordered",
+            "output_state": "candidate_transfer",
+            "primary": "structural_analogy_transfer",
+            "secondary": [
+              "deductive_entailment"
+            ]
+          }
+        },
+        {
+          "classification": "epistemic",
+          "id": "produce_formal_claim",
+          "provenance": {
+            "guard": null,
+            "mode": "required",
+            "profile": null,
+            "skill": "formal-claim-producer",
+            "workflow_step": "produce_formal_claim"
+          },
+          "type_expression": {
+            "claim_ceiling": "entailed_given_premises",
+            "input_state": "premises_with_scope_and_provenance",
+            "kind": "coinstantiated_unordered",
+            "output_state": "entailed_given_premises",
+            "primary": "deductive_entailment",
+            "secondary": [
+              "evidential_status_calibration"
+            ]
+          }
+        }
+      ],
+      "projection_status": "degraded",
+      "relational_coherence": {
+        "reason": "Source artifacts do not yet bind claim identity, epistemic ports, or join modality.",
+        "resolved_edges": 0,
+        "status": "unknown",
+        "unknown_edges": 9
+      },
+      "relations": [
+        {
+          "epistemic_relation": "requires",
+          "guard": null,
+          "join": "single",
+          "relation": "artifact_dependency",
+          "relational_coherence": "unknown_without_state_binding",
+          "sources": [
+            "assimilate_literature"
+          ],
+          "target": "forge_invention"
+        },
+        {
+          "epistemic_relation": "requires",
+          "guard": null,
+          "join": "single",
+          "relation": "artifact_dependency",
+          "relational_coherence": "unknown_without_state_binding",
+          "sources": [
+            "forge_invention"
+          ],
+          "target": "portfolio"
+        },
+        {
+          "epistemic_relation": "requires",
+          "guard": null,
+          "join": "single",
+          "relation": "artifact_dependency",
+          "relational_coherence": "unknown_without_state_binding",
+          "sources": [
+            "portfolio"
+          ],
+          "target": "reflect_discovery"
+        },
+        {
+          "epistemic_relation": "requires",
+          "guard": null,
+          "join": "single",
+          "relation": "artifact_dependency",
+          "relational_coherence": "unknown_without_state_binding",
+          "sources": [
+            "reflect_discovery"
+          ],
+          "target": "synthesize"
+        },
+        {
+          "epistemic_relation": "requires",
+          "guard": null,
+          "join": "single",
+          "relation": "artifact_dependency",
+          "relational_coherence": "unknown_without_state_binding",
+          "sources": [
+            "synthesize"
+          ],
+          "target": "blind_adjudicate"
+        },
+        {
+          "epistemic_relation": "requires",
+          "guard": "category_or_hott_pressure",
+          "join": "single",
+          "relation": "artifact_dependency",
+          "relational_coherence": "unknown_without_state_binding",
+          "sources": [
+            "synthesize"
+          ],
+          "target": "compile_atlas_defects"
+        },
+        {
+          "epistemic_relation": "requires",
+          "guard": null,
+          "join": "single",
+          "relation": "artifact_dependency",
+          "relational_coherence": "unknown_without_state_binding",
+          "sources": [
+            "blind_adjudicate"
+          ],
+          "target": "derive_central_routes"
+        },
+        {
+          "epistemic_relation": "requires",
+          "guard": "multiple_carriers_compete",
+          "join": "single",
+          "relation": "artifact_dependency",
+          "relational_coherence": "unknown_without_state_binding",
+          "sources": [
+            "derive_central_routes"
+          ],
+          "target": "check_bridge_equivalence"
+        },
+        {
+          "epistemic_relation": "requires",
+          "guard": null,
+          "join": "unspecified",
+          "relation": "artifact_dependency",
+          "relational_coherence": "unknown_without_state_binding",
+          "sources": [
+            "blind_adjudicate",
+            "derive_central_routes"
+          ],
+          "target": "produce_formal_claim"
+        }
+      ],
+      "workflow_id": "conceptual_frontier_deepening"
+    },
+    {
+      "controls": {
+        "iterations": [],
+        "switches": [
+          {
+            "artifact_type": "ResultAtlasSlice",
+            "to": "scientific_contribution_cultivation",
+            "when": "proof_accepted"
+          },
+          {
+            "artifact_type": "ProofFailureCertificate",
+            "to": "conceptual_hypothesis_exploration_loop",
+            "when": "failure_certificate_issued"
+          }
+        ]
+      },
+      "coverage": {
+        "mapped": 2,
+        "mapped_fraction": 0.3333,
+        "operational": 0,
+        "total": 6,
+        "unmapped": 4
+      },
+      "gaps": {
+        "ambiguous_joins": [],
+        "unmapped_occurrences": [
+          "orchestrate_delivery",
+          "formalize_obligations",
+          "split_gap_or_countermodel",
+          "control_pvsnp_inference"
+        ]
+      },
+      "occurrences": [
+        {
+          "classification": "gap",
+          "id": "orchestrate_delivery",
+          "provenance": {
+            "guard": null,
+            "mode": "required",
+            "profile": null,
+            "skill": "proof-delivery-workflow-orchestrator",
+            "workflow_step": "orchestrate_delivery"
+          },
+          "type_expression": {
+            "kind": "opaque_unmapped"
+          }
+        },
+        {
+          "classification": "gap",
+          "id": "formalize_obligations",
+          "provenance": {
+            "guard": null,
+            "mode": "required",
+            "profile": null,
+            "skill": "proof-obligation-formalizer",
+            "workflow_step": "formalize_obligations"
+          },
+          "type_expression": {
+            "kind": "opaque_unmapped"
+          }
+        },
+        {
+          "classification": "epistemic",
+          "id": "build_lemma_chain",
+          "provenance": {
+            "guard": null,
+            "mode": "required",
+            "profile": null,
+            "skill": "lemma-chain-proof-builder",
+            "workflow_step": "build_lemma_chain"
+          },
+          "type_expression": {
+            "claim_ceiling": "entailed_given_premises",
+            "input_state": "premises_with_scope_and_provenance",
+            "kind": "atomic",
+            "output_state": "entailed_given_premises",
+            "primary": "deductive_entailment",
+            "secondary": []
+          }
+        },
+        {
+          "classification": "gap",
+          "id": "split_gap_or_countermodel",
+          "provenance": {
+            "guard": "lemma_blocked_or_false",
+            "mode": "conditional",
+            "profile": null,
+            "skill": "proof-gap-countermodel-splitter",
+            "workflow_step": "split_gap_or_countermodel"
+          },
+          "type_expression": {
+            "kind": "opaque_unmapped"
+          }
+        },
+        {
+          "classification": "gap",
+          "id": "control_pvsnp_inference",
+          "provenance": {
+            "guard": "target == 'p-vs-np'",
+            "mode": "conditional",
+            "profile": null,
+            "skill": "pvsnp-inference-quality-controller",
+            "workflow_step": "control_pvsnp_inference"
+          },
+          "type_expression": {
+            "kind": "opaque_unmapped"
+          }
+        },
+        {
+          "classification": "epistemic",
+          "id": "gate_proof",
+          "provenance": {
+            "guard": null,
+            "mode": "validator_only",
+            "profile": null,
+            "skill": "proof-quality-gatekeeper",
+            "workflow_step": "gate_proof"
+          },
+          "type_expression": {
+            "claim_ceiling": "creates_no_substantive_claim",
+            "input_state": "claims_provenance_tests_and_open_obligations",
+            "kind": "coinstantiated_unordered",
+            "output_state": "calibrated_epistemic_status",
+            "primary": "evidential_status_calibration",
+            "secondary": [
+              "deductive_entailment",
+              "critical_refutational_testing"
+            ]
+          }
+        }
+      ],
+      "projection_status": "degraded",
+      "relational_coherence": {
+        "reason": "Source artifacts do not yet bind claim identity, epistemic ports, or join modality.",
+        "resolved_edges": 0,
+        "status": "unknown",
+        "unknown_edges": 5
+      },
+      "relations": [
+        {
+          "epistemic_relation": "requires",
+          "guard": null,
+          "join": "single",
+          "relation": "artifact_dependency",
+          "relational_coherence": "unknown_without_state_binding",
+          "sources": [
+            "orchestrate_delivery"
+          ],
+          "target": "formalize_obligations"
+        },
+        {
+          "epistemic_relation": "requires",
+          "guard": null,
+          "join": "single",
+          "relation": "artifact_dependency",
+          "relational_coherence": "unknown_without_state_binding",
+          "sources": [
+            "formalize_obligations"
+          ],
+          "target": "build_lemma_chain"
+        },
+        {
+          "epistemic_relation": "requires",
+          "guard": "lemma_blocked_or_false",
+          "join": "single",
+          "relation": "artifact_dependency",
+          "relational_coherence": "unknown_without_state_binding",
+          "sources": [
+            "build_lemma_chain"
+          ],
+          "target": "split_gap_or_countermodel"
+        },
+        {
+          "epistemic_relation": "requires",
+          "guard": "target == 'p-vs-np'",
+          "join": "single",
+          "relation": "artifact_dependency",
+          "relational_coherence": "unknown_without_state_binding",
+          "sources": [
+            "build_lemma_chain"
+          ],
+          "target": "control_pvsnp_inference"
+        },
+        {
+          "epistemic_relation": "requires",
+          "guard": null,
+          "join": "single",
+          "relation": "artifact_dependency",
+          "relational_coherence": "unknown_without_state_binding",
+          "sources": [
+            "build_lemma_chain"
+          ],
+          "target": "gate_proof"
+        }
+      ],
+      "workflow_id": "theorem_proof_delivery"
+    },
+    {
+      "controls": {
+        "iterations": [],
+        "switches": [
+          {
+            "artifact_type": "PaperArgumentHandoff",
+            "to": "manuscript_result_elaboration",
+            "when": "paper_ready"
+          }
+        ]
+      },
+      "coverage": {
+        "mapped": 0,
+        "mapped_fraction": 0.0,
+        "operational": 0,
+        "total": 8,
+        "unmapped": 8
+      },
+      "gaps": {
+        "ambiguous_joins": [],
+        "unmapped_occurrences": [
+          "maintain_atlas",
+          "manage_subgoal",
+          "detect_contribution",
+          "assess_value",
+          "audit_alignment",
+          "audit_enablement",
+          "package_enablement",
+          "paper_handoff"
+        ]
+      },
+      "occurrences": [
+        {
+          "classification": "gap",
+          "id": "maintain_atlas",
+          "provenance": {
+            "guard": null,
+            "mode": "required",
+            "profile": null,
+            "skill": "result-atlas-maintainer",
+            "workflow_step": "maintain_atlas"
+          },
+          "type_expression": {
+            "kind": "opaque_unmapped"
+          }
+        },
+        {
+          "classification": "gap",
+          "id": "manage_subgoal",
+          "provenance": {
+            "guard": null,
+            "mode": "required",
+            "profile": null,
+            "skill": "contribution-oriented-subgoal-manager",
+            "workflow_step": "manage_subgoal"
+          },
+          "type_expression": {
+            "kind": "opaque_unmapped"
+          }
+        },
+        {
+          "classification": "gap",
+          "id": "detect_contribution",
+          "provenance": {
+            "guard": null,
+            "mode": "required",
+            "profile": null,
+            "skill": "scientific-contribution-detector",
+            "workflow_step": "detect_contribution"
+          },
+          "type_expression": {
+            "kind": "opaque_unmapped"
+          }
+        },
+        {
+          "classification": "gap",
+          "id": "assess_value",
+          "provenance": {
+            "guard": null,
+            "mode": "required",
+            "profile": null,
+            "skill": "contribution-value-assessor",
+            "workflow_step": "assess_value"
+          },
+          "type_expression": {
+            "kind": "opaque_unmapped"
+          }
+        },
+        {
+          "classification": "gap",
+          "id": "audit_alignment",
+          "provenance": {
+            "guard": null,
+            "mode": "validator_only",
+            "profile": null,
+            "skill": "main-problem-alignment-auditor",
+            "workflow_step": "audit_alignment"
+          },
+          "type_expression": {
+            "kind": "opaque_unmapped"
+          }
+        },
+        {
+          "classification": "gap",
+          "id": "audit_enablement",
+          "provenance": {
+            "guard": null,
+            "mode": "required",
+            "profile": null,
+            "skill": "completed-subgoal-enablement-auditor",
+            "workflow_step": "audit_enablement"
+          },
+          "type_expression": {
+            "kind": "opaque_unmapped"
+          }
+        },
+        {
+          "classification": "gap",
+          "id": "package_enablement",
+          "provenance": {
+            "guard": "enablement_non_empty",
+            "mode": "conditional",
+            "profile": null,
+            "skill": "subgoal-enablement-handoff-packager",
+            "workflow_step": "package_enablement"
+          },
+          "type_expression": {
+            "kind": "opaque_unmapped"
+          }
+        },
+        {
+          "classification": "gap",
+          "id": "paper_handoff",
+          "provenance": {
+            "guard": "contribution_paper_ready",
+            "mode": "conditional",
+            "profile": null,
+            "skill": "scientific-contribution-paper-handoff",
+            "workflow_step": "paper_handoff"
+          },
+          "type_expression": {
+            "kind": "opaque_unmapped"
+          }
+        }
+      ],
+      "projection_status": "degraded",
+      "relational_coherence": {
+        "reason": "Source artifacts do not yet bind claim identity, epistemic ports, or join modality.",
+        "resolved_edges": 0,
+        "status": "unknown",
+        "unknown_edges": 7
+      },
+      "relations": [
+        {
+          "epistemic_relation": "requires",
+          "guard": null,
+          "join": "single",
+          "relation": "artifact_dependency",
+          "relational_coherence": "unknown_without_state_binding",
+          "sources": [
+            "maintain_atlas"
+          ],
+          "target": "manage_subgoal"
+        },
+        {
+          "epistemic_relation": "requires",
+          "guard": null,
+          "join": "single",
+          "relation": "artifact_dependency",
+          "relational_coherence": "unknown_without_state_binding",
+          "sources": [
+            "manage_subgoal"
+          ],
+          "target": "detect_contribution"
+        },
+        {
+          "epistemic_relation": "requires",
+          "guard": null,
+          "join": "single",
+          "relation": "artifact_dependency",
+          "relational_coherence": "unknown_without_state_binding",
+          "sources": [
+            "detect_contribution"
+          ],
+          "target": "assess_value"
+        },
+        {
+          "epistemic_relation": "requires",
+          "guard": null,
+          "join": "single",
+          "relation": "artifact_dependency",
+          "relational_coherence": "unknown_without_state_binding",
+          "sources": [
+            "assess_value"
+          ],
+          "target": "audit_alignment"
+        },
+        {
+          "epistemic_relation": "requires",
+          "guard": null,
+          "join": "single",
+          "relation": "artifact_dependency",
+          "relational_coherence": "unknown_without_state_binding",
+          "sources": [
+            "assess_value"
+          ],
+          "target": "audit_enablement"
+        },
+        {
+          "epistemic_relation": "requires",
+          "guard": "enablement_non_empty",
+          "join": "single",
+          "relation": "artifact_dependency",
+          "relational_coherence": "unknown_without_state_binding",
+          "sources": [
+            "audit_enablement"
+          ],
+          "target": "package_enablement"
+        },
+        {
+          "epistemic_relation": "requires",
+          "guard": "contribution_paper_ready",
+          "join": "unspecified",
+          "relation": "artifact_dependency",
+          "relational_coherence": "unknown_without_state_binding",
+          "sources": [
+            "assess_value",
+            "audit_alignment"
+          ],
+          "target": "paper_handoff"
+        }
+      ],
+      "workflow_id": "scientific_contribution_cultivation"
+    },
+    {
+      "controls": {
+        "iterations": [],
+        "switches": [
+          {
+            "artifact_type": "ProofQueueItem",
+            "to": "theorem_proof_delivery",
+            "when": "new_theorem_requires_proof"
+          }
+        ]
+      },
+      "coverage": {
+        "mapped": 0,
+        "mapped_fraction": 0.0,
+        "operational": 0,
+        "total": 28,
+        "unmapped": 28
+      },
+      "gaps": {
+        "ambiguous_joins": [
+          {
+            "reason": "conditional producers feed a multi-input step without all/any/fallback semantics",
+            "sources": [
+              "decompose_modules",
+              "extract_extensions"
+            ],
+            "target": "plan_strategy"
+          }
+        ],
+        "unmapped_occurrences": [
+          "orchestrate_elaboration",
+          "interpret_context",
+          "extract_extensions",
+          "decompose_modules",
+          "plan_strategy",
+          "self_refine",
+          "certify_scope",
+          "formalize_finite_object",
+          "derive_proof_packet",
+          "audit_prior_art",
+          "integrate_narrative",
+          "validate_expansion",
+          "gate_readiness",
+          "route_a:routea_attack",
+          "route_a:routea_open_points",
+          "route_a:routea_symbolic_audit",
+          "route_a:routea_integrate_result",
+          "route_a:routea_second_wave",
+          "route_a:specialist:1",
+          "route_a:specialist:2",
+          "route_a:specialist:3",
+          "route_a:specialist:4",
+          "route_a:specialist:5",
+          "route_a:specialist:6",
+          "route_a:specialist:7",
+          "route_a:specialist:8",
+          "route_a:specialist:9",
+          "route_a:specialist:10"
+        ]
+      },
+      "occurrences": [
+        {
+          "classification": "gap",
+          "id": "orchestrate_elaboration",
+          "provenance": {
+            "guard": null,
+            "mode": "required",
+            "profile": null,
+            "skill": "results-elaboration-workflow-orchestrator",
+            "workflow_step": "orchestrate_elaboration"
+          },
+          "type_expression": {
+            "kind": "opaque_unmapped"
+          }
+        },
+        {
+          "classification": "gap",
+          "id": "interpret_context",
+          "provenance": {
+            "guard": null,
+            "mode": "required",
+            "profile": null,
+            "skill": "results-context-interpreter",
+            "workflow_step": "interpret_context"
+          },
+          "type_expression": {
+            "kind": "opaque_unmapped"
+          }
+        },
+        {
+          "classification": "gap",
+          "id": "extract_extensions",
+          "provenance": {
+            "guard": "expansion_markers",
+            "mode": "conditional",
+            "profile": null,
+            "skill": "results-extension-need-extractor",
+            "workflow_step": "extract_extensions"
+          },
+          "type_expression": {
+            "kind": "opaque_unmapped"
+          }
+        },
+        {
+          "classification": "gap",
+          "id": "decompose_modules",
+          "provenance": {
+            "guard": "open_modules",
+            "mode": "conditional",
+            "profile": null,
+            "skill": "results-open-module-decomposer",
+            "workflow_step": "decompose_modules"
+          },
+          "type_expression": {
+            "kind": "opaque_unmapped"
+          }
+        },
+        {
+          "classification": "gap",
+          "id": "plan_strategy",
+          "provenance": {
+            "guard": null,
+            "mode": "required",
+            "profile": null,
+            "skill": "results-extension-strategy-planner",
+            "workflow_step": "plan_strategy"
+          },
+          "type_expression": {
+            "kind": "opaque_unmapped"
+          }
+        },
+        {
+          "classification": "gap",
+          "id": "self_refine",
+          "provenance": {
+            "guard": null,
+            "mode": "required",
+            "profile": null,
+            "skill": "results-critical-self-refiner",
+            "workflow_step": "self_refine"
+          },
+          "type_expression": {
+            "kind": "opaque_unmapped"
+          }
+        },
+        {
+          "classification": "gap",
+          "id": "certify_scope",
+          "provenance": {
+            "guard": null,
+            "mode": "validator_only",
+            "profile": null,
+            "skill": "results-theorem-scope-certifier",
+            "workflow_step": "certify_scope"
+          },
+          "type_expression": {
+            "kind": "opaque_unmapped"
+          }
+        },
+        {
+          "classification": "gap",
+          "id": "formalize_finite_object",
+          "provenance": {
+            "guard": "finite_object_required",
+            "mode": "conditional",
+            "profile": null,
+            "skill": "results-finite-object-formalizer",
+            "workflow_step": "formalize_finite_object"
+          },
+          "type_expression": {
+            "kind": "opaque_unmapped"
+          }
+        },
+        {
+          "classification": "gap",
+          "id": "derive_proof_packet",
+          "provenance": {
+            "guard": "proof_class_work",
+            "mode": "conditional",
+            "profile": null,
+            "skill": "results-proof-packet-deriver",
+            "workflow_step": "derive_proof_packet"
+          },
+          "type_expression": {
+            "kind": "opaque_unmapped"
+          }
+        },
+        {
+          "classification": "gap",
+          "id": "audit_prior_art",
+          "provenance": {
+            "guard": null,
+            "mode": "validator_only",
+            "profile": null,
+            "skill": "results-prior-art-disqualifier-auditor",
+            "workflow_step": "audit_prior_art"
+          },
+          "type_expression": {
+            "kind": "opaque_unmapped"
+          }
+        },
+        {
+          "classification": "gap",
+          "id": "integrate_narrative",
+          "provenance": {
+            "guard": null,
+            "mode": "required",
+            "profile": null,
+            "skill": "results-narrative-integrator",
+            "workflow_step": "integrate_narrative"
+          },
+          "type_expression": {
+            "kind": "opaque_unmapped"
+          }
+        },
+        {
+          "classification": "gap",
+          "id": "validate_expansion",
+          "provenance": {
+            "guard": null,
+            "mode": "validator_only",
+            "profile": null,
+            "skill": "results-expansion-validator",
+            "workflow_step": "validate_expansion"
+          },
+          "type_expression": {
+            "kind": "opaque_unmapped"
+          }
+        },
+        {
+          "classification": "gap",
+          "id": "gate_readiness",
+          "provenance": {
+            "guard": null,
+            "mode": "validator_only",
+            "profile": null,
+            "skill": "results-paper-readiness-gatekeeper",
+            "workflow_step": "gate_readiness"
+          },
+          "type_expression": {
+            "kind": "opaque_unmapped"
+          }
+        },
+        {
+          "classification": "gap",
+          "id": "route_a:routea_attack",
+          "provenance": {
+            "guard": null,
+            "mode": "required",
+            "profile": "route_a",
+            "skill": "routea-paper-attack-orchestrator",
+            "workflow_step": "route_a:routea_attack"
+          },
+          "type_expression": {
+            "kind": "opaque_unmapped"
+          }
+        },
+        {
+          "classification": "gap",
+          "id": "route_a:routea_open_points",
+          "provenance": {
+            "guard": null,
+            "mode": "required",
+            "profile": "route_a",
+            "skill": "routea-open-point-orchestrator",
+            "workflow_step": "route_a:routea_open_points"
+          },
+          "type_expression": {
+            "kind": "opaque_unmapped"
+          }
+        },
+        {
+          "classification": "gap",
+          "id": "route_a:routea_symbolic_audit",
+          "provenance": {
+            "guard": "exact_algebra_required",
+            "mode": "conditional",
+            "profile": "route_a",
+            "skill": "routea-symbolic-cas-auditor",
+            "workflow_step": "route_a:routea_symbolic_audit"
+          },
+          "type_expression": {
+            "kind": "opaque_unmapped"
+          }
+        },
+        {
+          "classification": "gap",
+          "id": "route_a:routea_integrate_result",
+          "provenance": {
+            "guard": null,
+            "mode": "required",
+            "profile": "route_a",
+            "skill": "routea-paper-result-integrator",
+            "workflow_step": "route_a:routea_integrate_result"
+          },
+          "type_expression": {
+            "kind": "opaque_unmapped"
+          }
+        },
+        {
+          "classification": "gap",
+          "id": "route_a:routea_second_wave",
+          "provenance": {
+            "guard": null,
+            "mode": "required",
+            "profile": "route_a",
+            "skill": "routea-second-wave-manuscript-integrator",
+            "workflow_step": "route_a:routea_second_wave"
+          },
+          "type_expression": {
+            "kind": "opaque_unmapped"
+          }
+        },
+        {
+          "classification": "gap",
+          "id": "route_a:specialist:1",
+          "provenance": {
+            "guard": "profile specialist ordering and join are unspecified",
+            "mode": "profile_specialist",
+            "profile": "route_a",
+            "skill": "routea-geometric-collar-builder",
+            "workflow_step": "route_a:specialist:1"
+          },
+          "type_expression": {
+            "kind": "opaque_unmapped"
+          }
+        },
+        {
+          "classification": "gap",
+          "id": "route_a:specialist:2",
+          "provenance": {
+            "guard": "profile specialist ordering and join are unspecified",
+            "mode": "profile_specialist",
+            "profile": "route_a",
+            "skill": "routea-same-theory-normalization-certifier",
+            "workflow_step": "route_a:specialist:2"
+          },
+          "type_expression": {
+            "kind": "opaque_unmapped"
+          }
+        },
+        {
+          "classification": "gap",
+          "id": "route_a:specialist:3",
+          "provenance": {
+            "guard": "profile specialist ordering and join are unspecified",
+            "mode": "profile_specialist",
+            "profile": "route_a",
+            "skill": "routea-geometric-coefficient-extractor",
+            "workflow_step": "route_a:specialist:3"
+          },
+          "type_expression": {
+            "kind": "opaque_unmapped"
+          }
+        },
+        {
+          "classification": "gap",
+          "id": "route_a:specialist:4",
+          "provenance": {
+            "guard": "profile specialist ordering and join are unspecified",
+            "mode": "profile_specialist",
+            "profile": "route_a",
+            "skill": "routea-finite-margin-evaluator",
+            "workflow_step": "route_a:specialist:4"
+          },
+          "type_expression": {
+            "kind": "opaque_unmapped"
+          }
+        },
+        {
+          "classification": "gap",
+          "id": "route_a:specialist:5",
+          "provenance": {
+            "guard": "profile specialist ordering and join are unspecified",
+            "mode": "profile_specialist",
+            "profile": "route_a",
+            "skill": "routea-margin-endpoint-certifier",
+            "workflow_step": "route_a:specialist:5"
+          },
+          "type_expression": {
+            "kind": "opaque_unmapped"
+          }
+        },
+        {
+          "classification": "gap",
+          "id": "route_a:specialist:6",
+          "provenance": {
+            "guard": "profile specialist ordering and join are unspecified",
+            "mode": "profile_specialist",
+            "profile": "route_a",
+            "skill": "routea-endpoint-error-budget-certifier",
+            "workflow_step": "route_a:specialist:6"
+          },
+          "type_expression": {
+            "kind": "opaque_unmapped"
+          }
+        },
+        {
+          "classification": "gap",
+          "id": "route_a:specialist:7",
+          "provenance": {
+            "guard": "profile specialist ordering and join are unspecified",
+            "mode": "profile_specialist",
+            "profile": "route_a",
+            "skill": "routea-endpoint-local-integral-calculator",
+            "workflow_step": "route_a:specialist:7"
+          },
+          "type_expression": {
+            "kind": "opaque_unmapped"
+          }
+        },
+        {
+          "classification": "gap",
+          "id": "route_a:specialist:8",
+          "provenance": {
+            "guard": "profile specialist ordering and join are unspecified",
+            "mode": "profile_specialist",
+            "profile": "route_a",
+            "skill": "routea-same-theory-factorization-hunter",
+            "workflow_step": "route_a:specialist:8"
+          },
+          "type_expression": {
+            "kind": "opaque_unmapped"
+          }
+        },
+        {
+          "classification": "gap",
+          "id": "route_a:specialist:9",
+          "provenance": {
+            "guard": "profile specialist ordering and join are unspecified",
+            "mode": "profile_specialist",
+            "profile": "route_a",
+            "skill": "routea-collar-redesign-forger",
+            "workflow_step": "route_a:specialist:9"
+          },
+          "type_expression": {
+            "kind": "opaque_unmapped"
+          }
+        },
+        {
+          "classification": "gap",
+          "id": "route_a:specialist:10",
+          "provenance": {
+            "guard": "profile specialist ordering and join are unspecified",
+            "mode": "profile_specialist",
+            "profile": "route_a",
+            "skill": "routea-continuum-gap-gatekeeper",
+            "workflow_step": "route_a:specialist:10"
+          },
+          "type_expression": {
+            "kind": "opaque_unmapped"
+          }
+        }
+      ],
+      "projection_status": "degraded",
+      "relational_coherence": {
+        "reason": "Source artifacts do not yet bind claim identity, epistemic ports, or join modality.",
+        "resolved_edges": 0,
+        "status": "unknown",
+        "unknown_edges": 16
+      },
+      "relations": [
+        {
+          "epistemic_relation": "requires",
+          "guard": null,
+          "join": "single",
+          "relation": "artifact_dependency",
+          "relational_coherence": "unknown_without_state_binding",
+          "sources": [
+            "orchestrate_elaboration"
+          ],
+          "target": "interpret_context"
+        },
+        {
+          "epistemic_relation": "requires",
+          "guard": "expansion_markers",
+          "join": "single",
+          "relation": "artifact_dependency",
+          "relational_coherence": "unknown_without_state_binding",
+          "sources": [
+            "interpret_context"
+          ],
+          "target": "extract_extensions"
+        },
+        {
+          "epistemic_relation": "requires",
+          "guard": "open_modules",
+          "join": "single",
+          "relation": "artifact_dependency",
+          "relational_coherence": "unknown_without_state_binding",
+          "sources": [
+            "interpret_context"
+          ],
+          "target": "decompose_modules"
+        },
+        {
+          "epistemic_relation": "requires",
+          "guard": null,
+          "join": "unspecified",
+          "relation": "artifact_dependency",
+          "relational_coherence": "unknown_without_state_binding",
+          "sources": [
+            "decompose_modules",
+            "extract_extensions"
+          ],
+          "target": "plan_strategy"
+        },
+        {
+          "epistemic_relation": "requires",
+          "guard": null,
+          "join": "single",
+          "relation": "artifact_dependency",
+          "relational_coherence": "unknown_without_state_binding",
+          "sources": [
+            "plan_strategy"
+          ],
+          "target": "self_refine"
+        },
+        {
+          "epistemic_relation": "requires",
+          "guard": null,
+          "join": "single",
+          "relation": "artifact_dependency",
+          "relational_coherence": "unknown_without_state_binding",
+          "sources": [
+            "self_refine"
+          ],
+          "target": "certify_scope"
+        },
+        {
+          "epistemic_relation": "requires",
+          "guard": "finite_object_required",
+          "join": "single",
+          "relation": "artifact_dependency",
+          "relational_coherence": "unknown_without_state_binding",
+          "sources": [
+            "self_refine"
+          ],
+          "target": "formalize_finite_object"
+        },
+        {
+          "epistemic_relation": "requires",
+          "guard": "proof_class_work",
+          "join": "single",
+          "relation": "artifact_dependency",
+          "relational_coherence": "unknown_without_state_binding",
+          "sources": [
+            "self_refine"
+          ],
+          "target": "derive_proof_packet"
+        },
+        {
+          "epistemic_relation": "requires",
+          "guard": null,
+          "join": "single",
+          "relation": "artifact_dependency",
+          "relational_coherence": "unknown_without_state_binding",
+          "sources": [
+            "self_refine"
+          ],
+          "target": "audit_prior_art"
+        },
+        {
+          "epistemic_relation": "requires",
+          "guard": null,
+          "join": "unspecified",
+          "relation": "artifact_dependency",
+          "relational_coherence": "unknown_without_state_binding",
+          "sources": [
+            "audit_prior_art",
+            "self_refine"
+          ],
+          "target": "integrate_narrative"
+        },
+        {
+          "epistemic_relation": "requires",
+          "guard": null,
+          "join": "unspecified",
+          "relation": "artifact_dependency",
+          "relational_coherence": "unknown_without_state_binding",
+          "sources": [
+            "integrate_narrative",
+            "route_a:routea_second_wave"
+          ],
+          "target": "validate_expansion"
+        },
+        {
+          "epistemic_relation": "requires",
+          "guard": null,
+          "join": "unspecified",
+          "relation": "artifact_dependency",
+          "relational_coherence": "unknown_without_state_binding",
+          "sources": [
+            "integrate_narrative",
+            "route_a:routea_second_wave",
+            "validate_expansion"
+          ],
+          "target": "gate_readiness"
+        },
+        {
+          "epistemic_relation": "requires",
+          "guard": null,
+          "join": "single",
+          "relation": "artifact_dependency",
+          "relational_coherence": "unknown_without_state_binding",
+          "sources": [
+            "route_a:routea_attack"
+          ],
+          "target": "route_a:routea_open_points"
+        },
+        {
+          "epistemic_relation": "requires",
+          "guard": "exact_algebra_required",
+          "join": "unspecified",
+          "relation": "artifact_dependency",
+          "relational_coherence": "unknown_without_state_binding",
+          "sources": [
+            "route_a:specialist:1",
+            "route_a:specialist:10",
+            "route_a:specialist:2",
+            "route_a:specialist:3",
+            "route_a:specialist:4",
+            "route_a:specialist:5",
+            "route_a:specialist:6",
+            "route_a:specialist:7",
+            "route_a:specialist:8",
+            "route_a:specialist:9"
+          ],
+          "target": "route_a:routea_symbolic_audit"
+        },
+        {
+          "epistemic_relation": "requires",
+          "guard": null,
+          "join": "unspecified",
+          "relation": "artifact_dependency",
+          "relational_coherence": "unknown_without_state_binding",
+          "sources": [
+            "route_a:specialist:1",
+            "route_a:specialist:10",
+            "route_a:specialist:2",
+            "route_a:specialist:3",
+            "route_a:specialist:4",
+            "route_a:specialist:5",
+            "route_a:specialist:6",
+            "route_a:specialist:7",
+            "route_a:specialist:8",
+            "route_a:specialist:9"
+          ],
+          "target": "route_a:routea_integrate_result"
+        },
+        {
+          "epistemic_relation": "requires",
+          "guard": null,
+          "join": "single",
+          "relation": "artifact_dependency",
+          "relational_coherence": "unknown_without_state_binding",
+          "sources": [
+            "route_a:routea_integrate_result"
+          ],
+          "target": "route_a:routea_second_wave"
+        }
+      ],
+      "workflow_id": "manuscript_result_elaboration"
+    },
+    {
+      "controls": {
+        "iterations": [],
+        "switches": [
+          {
+            "artifact_type": "GovernedRepairQueue",
+            "to": "target_navigation_loop",
+            "when": "repair_workflow_assigned"
+          },
+          {
+            "artifact_type": "GovernedRepairQueue",
+            "to": "conceptual_hypothesis_exploration_loop",
+            "when": "conceptual_reorientation_required"
+          }
+        ]
+      },
+      "coverage": {
+        "mapped": 0,
+        "mapped_fraction": 0.0,
+        "operational": 0,
+        "total": 8,
+        "unmapped": 8
+      },
+      "gaps": {
+        "ambiguous_joins": [],
+        "unmapped_occurrences": [
+          "formalize_framework_state",
+          "review_discovery_science",
+          "review_concept_logic",
+          "review_epistemology",
+          "review_fields",
+          "review_radical_design",
+          "synthesize_meta_review",
+          "govern_repairs"
+        ]
+      },
+      "occurrences": [
+        {
+          "classification": "gap",
+          "id": "formalize_framework_state",
+          "provenance": {
+            "guard": null,
+            "mode": "required",
+            "profile": null,
+            "skill": "kb-framework-state-formalizer",
+            "workflow_step": "formalize_framework_state"
+          },
+          "type_expression": {
+            "kind": "opaque_unmapped"
+          }
+        },
+        {
+          "classification": "gap",
+          "id": "review_discovery_science",
+          "provenance": {
+            "guard": null,
+            "mode": "advisory",
+            "profile": null,
+            "skill": "review-reasoner-discovery-scientist",
+            "workflow_step": "review_discovery_science"
+          },
+          "type_expression": {
+            "kind": "opaque_unmapped"
+          }
+        },
+        {
+          "classification": "gap",
+          "id": "review_concept_logic",
+          "provenance": {
+            "guard": null,
+            "mode": "advisory",
+            "profile": null,
+            "skill": "review-reasoner-concept-logician",
+            "workflow_step": "review_concept_logic"
+          },
+          "type_expression": {
+            "kind": "opaque_unmapped"
+          }
+        },
+        {
+          "classification": "gap",
+          "id": "review_epistemology",
+          "provenance": {
+            "guard": null,
+            "mode": "advisory",
+            "profile": null,
+            "skill": "review-reasoner-epistemologist",
+            "workflow_step": "review_epistemology"
+          },
+          "type_expression": {
+            "kind": "opaque_unmapped"
+          }
+        },
+        {
+          "classification": "gap",
+          "id": "review_fields",
+          "provenance": {
+            "guard": null,
+            "mode": "advisory",
+            "profile": null,
+            "skill": "review-reasoner-fields-medalist",
+            "workflow_step": "review_fields"
+          },
+          "type_expression": {
+            "kind": "opaque_unmapped"
+          }
+        },
+        {
+          "classification": "gap",
+          "id": "review_radical_design",
+          "provenance": {
+            "guard": null,
+            "mode": "advisory",
+            "profile": null,
+            "skill": "review-reasoner-radical-designer",
+            "workflow_step": "review_radical_design"
+          },
+          "type_expression": {
+            "kind": "opaque_unmapped"
+          }
+        },
+        {
+          "classification": "gap",
+          "id": "synthesize_meta_review",
+          "provenance": {
+            "guard": null,
+            "mode": "required",
+            "profile": null,
+            "skill": "meta",
+            "workflow_step": "synthesize_meta_review"
+          },
+          "type_expression": {
+            "kind": "opaque_unmapped"
+          }
+        },
+        {
+          "classification": "gap",
+          "id": "govern_repairs",
+          "provenance": {
+            "guard": null,
+            "mode": "validator_only",
+            "profile": null,
+            "skill": "looper-workflow-contract-governor",
+            "workflow_step": "govern_repairs"
+          },
+          "type_expression": {
+            "kind": "opaque_unmapped"
+          }
+        }
+      ],
+      "projection_status": "degraded",
+      "relational_coherence": {
+        "reason": "Source artifacts do not yet bind claim identity, epistemic ports, or join modality.",
+        "resolved_edges": 0,
+        "status": "unknown",
+        "unknown_edges": 7
+      },
+      "relations": [
+        {
+          "epistemic_relation": "requires",
+          "guard": null,
+          "join": "single",
+          "relation": "artifact_dependency",
+          "relational_coherence": "unknown_without_state_binding",
+          "sources": [
+            "formalize_framework_state"
+          ],
+          "target": "review_discovery_science"
+        },
+        {
+          "epistemic_relation": "requires",
+          "guard": null,
+          "join": "single",
+          "relation": "artifact_dependency",
+          "relational_coherence": "unknown_without_state_binding",
+          "sources": [
+            "formalize_framework_state"
+          ],
+          "target": "review_concept_logic"
+        },
+        {
+          "epistemic_relation": "requires",
+          "guard": null,
+          "join": "single",
+          "relation": "artifact_dependency",
+          "relational_coherence": "unknown_without_state_binding",
+          "sources": [
+            "formalize_framework_state"
+          ],
+          "target": "review_epistemology"
+        },
+        {
+          "epistemic_relation": "requires",
+          "guard": null,
+          "join": "single",
+          "relation": "artifact_dependency",
+          "relational_coherence": "unknown_without_state_binding",
+          "sources": [
+            "formalize_framework_state"
+          ],
+          "target": "review_fields"
+        },
+        {
+          "epistemic_relation": "requires",
+          "guard": null,
+          "join": "single",
+          "relation": "artifact_dependency",
+          "relational_coherence": "unknown_without_state_binding",
+          "sources": [
+            "formalize_framework_state"
+          ],
+          "target": "review_radical_design"
+        },
+        {
+          "epistemic_relation": "requires",
+          "guard": null,
+          "join": "unspecified",
+          "relation": "artifact_dependency",
+          "relational_coherence": "unknown_without_state_binding",
+          "sources": [
+            "review_concept_logic",
+            "review_discovery_science",
+            "review_epistemology",
+            "review_fields",
+            "review_radical_design"
+          ],
+          "target": "synthesize_meta_review"
+        },
+        {
+          "epistemic_relation": "requires",
+          "guard": null,
+          "join": "single",
+          "relation": "artifact_dependency",
+          "relational_coherence": "unknown_without_state_binding",
+          "sources": [
+            "synthesize_meta_review"
+          ],
+          "target": "govern_repairs"
+        }
+      ],
+      "workflow_id": "deep_review_and_reorientation"
+    },
+    {
+      "controls": {
+        "iterations": [],
+        "switches": []
+      },
+      "coverage": {
+        "mapped": 1,
+        "mapped_fraction": 0.0333,
+        "operational": 0,
+        "total": 30,
+        "unmapped": 29
+      },
+      "gaps": {
+        "ambiguous_joins": [],
+        "identifier_alias_required": "subworkflow underscores in domain DAG versus hyphens in parent contract",
+        "unmapped_occurrences": [
+          "freeze_target",
+          "ground_literature",
+          "regulator_atlas",
+          "observable_core",
+          "representation_calculus",
+          "restricted_models",
+          "finite_block",
+          "heat_kernel",
+          "frustration",
+          "staple_dispersion",
+          "representational_dynamics",
+          "adaptive_domination",
+          "defect_transfer",
+          "large_fields",
+          "conditional_ratio",
+          "gauge_rg",
+          "infrared_basin",
+          "basin_entry",
+          "relational_rigidity",
+          "rg_to_rigidity",
+          "rigidity_transfer",
+          "continuum_coherence",
+          "os_gap",
+          "develop_proofs",
+          "mechanize_core",
+          "frame_narrative",
+          "proof_appendix",
+          "latex_paper",
+          "program_coordinator"
+        ]
+      },
+      "occurrences": [
+        {
+          "classification": "gap",
+          "id": "freeze_target",
+          "provenance": {
+            "disposition": "used",
+            "skill": "ym-freeze-clay-target",
+            "subworkflow": "scope_and_ground"
+          },
+          "type_expression": {
+            "kind": "opaque_unmapped"
+          }
+        },
+        {
+          "classification": "gap",
+          "id": "ground_literature",
+          "provenance": {
+            "disposition": "used",
+            "skill": "ym-ground-paper-literature",
+            "subworkflow": "scope_and_ground"
+          },
+          "type_expression": {
+            "kind": "opaque_unmapped"
+          }
+        },
+        {
+          "classification": "gap",
+          "id": "regulator_atlas",
+          "provenance": {
+            "disposition": "used",
+            "skill": "ym-design-regulator-atlas",
+            "subworkflow": "adaptive_frontier"
+          },
+          "type_expression": {
+            "kind": "opaque_unmapped"
+          }
+        },
+        {
+          "classification": "gap",
+          "id": "observable_core",
+          "provenance": {
+            "disposition": "used",
+            "skill": "ym-build-observable-core",
+            "subworkflow": "adaptive_frontier"
+          },
+          "type_expression": {
+            "kind": "opaque_unmapped"
+          }
+        },
+        {
+          "classification": "gap",
+          "id": "representation_calculus",
+          "provenance": {
+            "disposition": "used",
+            "skill": "ym-build-representation-calculus",
+            "subworkflow": "adaptive_frontier"
+          },
+          "type_expression": {
+            "kind": "opaque_unmapped"
+          }
+        },
+        {
+          "classification": "gap",
+          "id": "restricted_models",
+          "provenance": {
+            "disposition": "used",
+            "skill": "ym-calibrate-restricted-models",
+            "subworkflow": "adaptive_frontier"
+          },
+          "type_expression": {
+            "kind": "opaque_unmapped"
+          }
+        },
+        {
+          "classification": "gap",
+          "id": "finite_block",
+          "provenance": {
+            "disposition": "used",
+            "skill": "ym-draft-finite-block-certificate",
+            "subworkflow": "derivation_and_proof"
+          },
+          "type_expression": {
+            "kind": "opaque_unmapped"
+          }
+        },
+        {
+          "classification": "gap",
+          "id": "heat_kernel",
+          "provenance": {
+            "disposition": "used",
+            "skill": "ym-draft-heat-kernel-enclosures",
+            "subworkflow": "derivation_and_proof"
+          },
+          "type_expression": {
+            "kind": "opaque_unmapped"
+          }
+        },
+        {
+          "classification": "gap",
+          "id": "frustration",
+          "provenance": {
+            "disposition": "used",
+            "skill": "ym-draft-frustration-obstruction",
+            "subworkflow": "derivation_and_proof"
+          },
+          "type_expression": {
+            "kind": "opaque_unmapped"
+          }
+        },
+        {
+          "classification": "gap",
+          "id": "staple_dispersion",
+          "provenance": {
+            "disposition": "used",
+            "skill": "ym-draft-staple-dispersion",
+            "subworkflow": "derivation_and_proof"
+          },
+          "type_expression": {
+            "kind": "opaque_unmapped"
+          }
+        },
+        {
+          "classification": "gap",
+          "id": "representational_dynamics",
+          "provenance": {
+            "disposition": "used",
+            "skill": "ym-draft-representational-dynamics",
+            "subworkflow": "derivation_and_proof"
+          },
+          "type_expression": {
+            "kind": "opaque_unmapped"
+          }
+        },
+        {
+          "classification": "gap",
+          "id": "adaptive_domination",
+          "provenance": {
+            "disposition": "used",
+            "skill": "ym-prove-adaptive-block-domination",
+            "subworkflow": "derivation_and_proof"
+          },
+          "type_expression": {
+            "kind": "opaque_unmapped"
+          }
+        },
+        {
+          "classification": "gap",
+          "id": "defect_transfer",
+          "provenance": {
+            "disposition": "used",
+            "skill": "ym-prove-state-weighted-defect-transfer",
+            "subworkflow": "derivation_and_proof"
+          },
+          "type_expression": {
+            "kind": "opaque_unmapped"
+          }
+        },
+        {
+          "classification": "gap",
+          "id": "large_fields",
+          "provenance": {
+            "disposition": "used",
+            "skill": "ym-control-large-fields-and-topology",
+            "subworkflow": "derivation_and_proof"
+          },
+          "type_expression": {
+            "kind": "opaque_unmapped"
+          }
+        },
+        {
+          "classification": "gap",
+          "id": "conditional_ratio",
+          "provenance": {
+            "disposition": "used",
+            "skill": "ym-prove-conditional-partition-ratio",
+            "subworkflow": "derivation_and_proof"
+          },
+          "type_expression": {
+            "kind": "opaque_unmapped"
+          }
+        },
+        {
+          "classification": "gap",
+          "id": "gauge_rg",
+          "provenance": {
+            "disposition": "used",
+            "skill": "ym-build-gauge-covariant-rg",
+            "subworkflow": "derivation_and_proof"
+          },
+          "type_expression": {
+            "kind": "opaque_unmapped"
+          }
+        },
+        {
+          "classification": "gap",
+          "id": "infrared_basin",
+          "provenance": {
+            "disposition": "used",
+            "skill": "ym-design-infrared-basin",
+            "subworkflow": "derivation_and_proof"
+          },
+          "type_expression": {
+            "kind": "opaque_unmapped"
+          }
+        },
+        {
+          "classification": "gap",
+          "id": "basin_entry",
+          "provenance": {
+            "disposition": "used",
+            "skill": "ym-prove-basin-entry",
+            "subworkflow": "derivation_and_proof"
+          },
+          "type_expression": {
+            "kind": "opaque_unmapped"
+          }
+        },
+        {
+          "classification": "gap",
+          "id": "relational_rigidity",
+          "provenance": {
+            "disposition": "used",
+            "skill": "ym-define-relational-rigidity",
+            "subworkflow": "derivation_and_proof"
+          },
+          "type_expression": {
+            "kind": "opaque_unmapped"
+          }
+        },
+        {
+          "classification": "gap",
+          "id": "rg_to_rigidity",
+          "provenance": {
+            "disposition": "used",
+            "skill": "ym-prove-rg-to-rigidity",
+            "subworkflow": "derivation_and_proof"
+          },
+          "type_expression": {
+            "kind": "opaque_unmapped"
+          }
+        },
+        {
+          "classification": "gap",
+          "id": "rigidity_transfer",
+          "provenance": {
+            "disposition": "used",
+            "skill": "ym-prove-rigidity-transfer",
+            "subworkflow": "derivation_and_proof"
+          },
+          "type_expression": {
+            "kind": "opaque_unmapped"
+          }
+        },
+        {
+          "classification": "gap",
+          "id": "continuum_coherence",
+          "provenance": {
+            "disposition": "used",
+            "skill": "ym-prove-continuum-coherence",
+            "subworkflow": "derivation_and_proof"
+          },
+          "type_expression": {
+            "kind": "opaque_unmapped"
+          }
+        },
+        {
+          "classification": "gap",
+          "id": "os_gap",
+          "provenance": {
+            "disposition": "used",
+            "skill": "ym-reconstruct-os-gap",
+            "subworkflow": "derivation_and_proof"
+          },
+          "type_expression": {
+            "kind": "opaque_unmapped"
+          }
+        },
+        {
+          "classification": "gap",
+          "id": "develop_proofs",
+          "provenance": {
+            "disposition": "used",
+            "skill": "ym-develop-paper-proofs",
+            "subworkflow": "derivation_and_proof"
+          },
+          "type_expression": {
+            "kind": "opaque_unmapped"
+          }
+        },
+        {
+          "classification": "gap",
+          "id": "mechanize_core",
+          "provenance": {
+            "disposition": "used",
+            "skill": "ym-mechanize-proof-core",
+            "subworkflow": "derivation_and_proof"
+          },
+          "type_expression": {
+            "kind": "opaque_unmapped"
+          }
+        },
+        {
+          "classification": "epistemic",
+          "id": "audit_frontier",
+          "provenance": {
+            "disposition": "used",
+            "skill": "ym-audit-frontier",
+            "subworkflow": "independent_audit"
+          },
+          "type_expression": {
+            "claim_ceiling": "creates_no_substantive_claim",
+            "input_state": "claims_provenance_tests_and_open_obligations",
+            "kind": "coinstantiated_unordered",
+            "output_state": "calibrated_epistemic_status",
+            "primary": "evidential_status_calibration",
+            "secondary": [
+              "critical_refutational_testing"
+            ]
+          }
+        },
+        {
+          "classification": "gap",
+          "id": "frame_narrative",
+          "provenance": {
+            "disposition": "used",
+            "skill": "ym-frame-paper-narrative",
+            "subworkflow": "manuscript_release"
+          },
+          "type_expression": {
+            "kind": "opaque_unmapped"
+          }
+        },
+        {
+          "classification": "gap",
+          "id": "proof_appendix",
+          "provenance": {
+            "disposition": "used",
+            "skill": "ym-build-proof-appendix",
+            "subworkflow": "manuscript_release"
+          },
+          "type_expression": {
+            "kind": "opaque_unmapped"
+          }
+        },
+        {
+          "classification": "gap",
+          "id": "latex_paper",
+          "provenance": {
+            "disposition": "used",
+            "skill": "ym-build-latex-paper",
+            "subworkflow": "manuscript_release"
+          },
+          "type_expression": {
+            "kind": "opaque_unmapped"
+          }
+        },
+        {
+          "classification": "gap",
+          "id": "program_coordinator",
+          "provenance": {
+            "disposition": "auxiliary",
+            "skill": "ym-run-clay-program",
+            "subworkflow": "parent"
+          },
+          "type_expression": {
+            "kind": "opaque_unmapped"
+          }
+        }
+      ],
+      "projection_status": "degraded",
+      "relational_coherence": {
+        "reason": "Only one domain occurrence is curated and dependency edges carry no claim-state bindings.",
+        "resolved_edges": 0,
+        "status": "unknown",
+        "unknown_edges": 29
+      },
+      "relations": [
+        {
+          "epistemic_relation": "requires",
+          "join": "single",
+          "relation": "declared_dependency",
+          "relational_coherence": "unknown_without_state_binding",
+          "sources": [
+            "freeze_target"
+          ],
+          "target": "ground_literature"
+        },
+        {
+          "epistemic_relation": "requires",
+          "join": "single",
+          "relation": "declared_dependency",
+          "relational_coherence": "unknown_without_state_binding",
+          "sources": [
+            "ground_literature"
+          ],
+          "target": "regulator_atlas"
+        },
+        {
+          "epistemic_relation": "requires",
+          "join": "single",
+          "relation": "declared_dependency",
+          "relational_coherence": "unknown_without_state_binding",
+          "sources": [
+            "regulator_atlas"
+          ],
+          "target": "observable_core"
+        },
+        {
+          "epistemic_relation": "requires",
+          "join": "single",
+          "relation": "declared_dependency",
+          "relational_coherence": "unknown_without_state_binding",
+          "sources": [
+            "observable_core"
+          ],
+          "target": "representation_calculus"
+        },
+        {
+          "epistemic_relation": "requires",
+          "join": "single",
+          "relation": "declared_dependency",
+          "relational_coherence": "unknown_without_state_binding",
+          "sources": [
+            "representation_calculus"
+          ],
+          "target": "restricted_models"
+        },
+        {
+          "epistemic_relation": "requires",
+          "join": "single",
+          "relation": "declared_dependency",
+          "relational_coherence": "unknown_without_state_binding",
+          "sources": [
+            "restricted_models"
+          ],
+          "target": "finite_block"
+        },
+        {
+          "epistemic_relation": "requires",
+          "join": "single",
+          "relation": "declared_dependency",
+          "relational_coherence": "unknown_without_state_binding",
+          "sources": [
+            "finite_block"
+          ],
+          "target": "heat_kernel"
+        },
+        {
+          "epistemic_relation": "requires",
+          "join": "single",
+          "relation": "declared_dependency",
+          "relational_coherence": "unknown_without_state_binding",
+          "sources": [
+            "finite_block"
+          ],
+          "target": "frustration"
+        },
+        {
+          "epistemic_relation": "requires",
+          "join": "single",
+          "relation": "declared_dependency",
+          "relational_coherence": "unknown_without_state_binding",
+          "sources": [
+            "finite_block"
+          ],
+          "target": "staple_dispersion"
+        },
+        {
+          "epistemic_relation": "requires",
+          "join": "single",
+          "relation": "declared_dependency",
+          "relational_coherence": "unknown_without_state_binding",
+          "sources": [
+            "representation_calculus"
+          ],
+          "target": "representational_dynamics"
+        },
+        {
+          "epistemic_relation": "requires",
+          "join": "all",
+          "relation": "declared_dependency",
+          "relational_coherence": "unknown_without_state_binding",
+          "sources": [
+            "heat_kernel",
+            "frustration",
+            "staple_dispersion"
+          ],
+          "target": "adaptive_domination"
+        },
+        {
+          "epistemic_relation": "requires",
+          "join": "single",
+          "relation": "declared_dependency",
+          "relational_coherence": "unknown_without_state_binding",
+          "sources": [
+            "adaptive_domination"
+          ],
+          "target": "defect_transfer"
+        },
+        {
+          "epistemic_relation": "requires",
+          "join": "single",
+          "relation": "declared_dependency",
+          "relational_coherence": "unknown_without_state_binding",
+          "sources": [
+            "defect_transfer"
+          ],
+          "target": "large_fields"
+        },
+        {
+          "epistemic_relation": "requires",
+          "join": "single",
+          "relation": "declared_dependency",
+          "relational_coherence": "unknown_without_state_binding",
+          "sources": [
+            "large_fields"
+          ],
+          "target": "conditional_ratio"
+        },
+        {
+          "epistemic_relation": "requires",
+          "join": "all",
+          "relation": "declared_dependency",
+          "relational_coherence": "unknown_without_state_binding",
+          "sources": [
+            "conditional_ratio",
+            "representational_dynamics"
+          ],
+          "target": "gauge_rg"
+        },
+        {
+          "epistemic_relation": "requires",
+          "join": "single",
+          "relation": "declared_dependency",
+          "relational_coherence": "unknown_without_state_binding",
+          "sources": [
+            "gauge_rg"
+          ],
+          "target": "infrared_basin"
+        },
+        {
+          "epistemic_relation": "requires",
+          "join": "single",
+          "relation": "declared_dependency",
+          "relational_coherence": "unknown_without_state_binding",
+          "sources": [
+            "infrared_basin"
+          ],
+          "target": "basin_entry"
+        },
+        {
+          "epistemic_relation": "requires",
+          "join": "single",
+          "relation": "declared_dependency",
+          "relational_coherence": "unknown_without_state_binding",
+          "sources": [
+            "basin_entry"
+          ],
+          "target": "relational_rigidity"
+        },
+        {
+          "epistemic_relation": "requires",
+          "join": "single",
+          "relation": "declared_dependency",
+          "relational_coherence": "unknown_without_state_binding",
+          "sources": [
+            "relational_rigidity"
+          ],
+          "target": "rg_to_rigidity"
+        },
+        {
+          "epistemic_relation": "requires",
+          "join": "single",
+          "relation": "declared_dependency",
+          "relational_coherence": "unknown_without_state_binding",
+          "sources": [
+            "rg_to_rigidity"
+          ],
+          "target": "rigidity_transfer"
+        },
+        {
+          "epistemic_relation": "requires",
+          "join": "all",
+          "relation": "declared_dependency",
+          "relational_coherence": "unknown_without_state_binding",
+          "sources": [
+            "rigidity_transfer",
+            "regulator_atlas"
+          ],
+          "target": "continuum_coherence"
+        },
+        {
+          "epistemic_relation": "requires",
+          "join": "single",
+          "relation": "declared_dependency",
+          "relational_coherence": "unknown_without_state_binding",
+          "sources": [
+            "continuum_coherence"
+          ],
+          "target": "os_gap"
+        },
+        {
+          "epistemic_relation": "requires",
+          "join": "single",
+          "relation": "declared_dependency",
+          "relational_coherence": "unknown_without_state_binding",
+          "sources": [
+            "os_gap"
+          ],
+          "target": "develop_proofs"
+        },
+        {
+          "epistemic_relation": "requires",
+          "join": "single",
+          "relation": "declared_dependency",
+          "relational_coherence": "unknown_without_state_binding",
+          "sources": [
+            "develop_proofs"
+          ],
+          "target": "mechanize_core"
+        },
+        {
+          "epistemic_relation": "requires",
+          "join": "single",
+          "relation": "declared_dependency",
+          "relational_coherence": "unknown_without_state_binding",
+          "sources": [
+            "mechanize_core"
+          ],
+          "target": "audit_frontier"
+        },
+        {
+          "epistemic_relation": "requires",
+          "join": "single",
+          "relation": "declared_dependency",
+          "relational_coherence": "unknown_without_state_binding",
+          "sources": [
+            "audit_frontier"
+          ],
+          "target": "frame_narrative"
+        },
+        {
+          "epistemic_relation": "requires",
+          "join": "single",
+          "relation": "declared_dependency",
+          "relational_coherence": "unknown_without_state_binding",
+          "sources": [
+            "audit_frontier"
+          ],
+          "target": "proof_appendix"
+        },
+        {
+          "epistemic_relation": "requires",
+          "join": "all",
+          "relation": "declared_dependency",
+          "relational_coherence": "unknown_without_state_binding",
+          "sources": [
+            "frame_narrative",
+            "proof_appendix"
+          ],
+          "target": "latex_paper"
+        },
+        {
+          "epistemic_relation": "requires",
+          "join": "single",
+          "relation": "declared_dependency",
+          "relational_coherence": "unknown_without_state_binding",
+          "sources": [
+            "latex_paper"
+          ],
+          "target": "program_coordinator"
+        }
+      ],
+      "workflow_id": "cohere_fast"
+    }
+  ]
+}

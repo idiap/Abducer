@@ -1,0 +1,93 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://abducer.local/spec/dynamic_experiment_receipt.schema.json",
+  "title": "Dynamic experiment execution receipt",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "receipt_id",
+    "experiment_id",
+    "branch_id",
+    "target_id",
+    "run_id",
+    "state_version",
+    "theory_programme_id",
+    "source_theory_programme_digest",
+    "source_reflection_packet_digest",
+    "conceptual_system_ids",
+    "theoretical_question_id",
+    "adapter",
+    "status",
+    "epistemic_outcome",
+    "spec_digest",
+    "code_digest",
+    "environment_digest",
+    "started_at",
+    "completed_at",
+    "resource_usage",
+    "result",
+    "certificate",
+    "uncertainty_analysis",
+    "completeness",
+    "validator",
+    "output_digest",
+    "transfer_boundary",
+    "reflective_assimilation"
+  ],
+  "properties": {
+    "schema_version": {"const": 1},
+    "receipt_id": {"type": "string", "minLength": 1},
+    "experiment_id": {"type": "string", "minLength": 1},
+    "branch_id": {"type": "string", "minLength": 1},
+    "target_id": {"type": "string", "minLength": 1},
+    "run_id": {"type": "string", "minLength": 1},
+    "state_version": {"type": "integer", "minimum": 0},
+    "theory_programme_id": {"type": "string", "minLength": 1},
+    "source_theory_programme_digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "source_reflection_packet_digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "conceptual_system_ids": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+    "theoretical_question_id": {"type": "string", "minLength": 1},
+    "adapter": {"enum": ["exact", "sympy", "finite_model", "numeric", "sweep", "lean", "hybrid"]},
+    "status": {"enum": ["succeeded", "counterexample", "capability_unavailable", "deadline_exhausted", "resource_exhausted", "solver_failure", "invalid_spec", "operational_failure"]},
+    "epistemic_outcome": {"enum": ["supports_within_scope", "falsifies_claim", "maps_boundary", "inconclusive", "not_evaluated"]},
+    "spec_digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "code_digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "environment_digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "started_at": {"type": "string", "format": "date-time"},
+    "completed_at": {"type": "string", "format": "date-time"},
+    "resource_usage": {"type": "object"},
+    "result": {"type": "object"},
+    "certificate": {"type": ["object", "null"]},
+    "uncertainty_analysis": {"type": ["object", "null"]},
+    "completeness": {"type": ["object", "null"]},
+    "validator": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["validator_id", "version", "status", "checked_digest"],
+      "properties": {
+        "validator_id": {"type": "string", "minLength": 1},
+        "version": {"type": "string", "minLength": 1},
+        "status": {"enum": ["valid", "invalid", "not_run"]},
+        "checked_digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"}
+      }
+    },
+    "output_digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "transfer_boundary": {"type": "string", "minLength": 1},
+    "reflective_assimilation": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["conceptual_system_id", "recommendation", "authority_boundary"],
+        "properties": {
+          "conceptual_system_id": {"type": "string", "minLength": 1},
+          "recommendation": {"type": "string", "minLength": 1},
+          "authority_boundary": {"const": "reflective_assimilation_required_runtime_does_not_select_theory_or_prove_theorem"}
+        }
+      }
+    },
+    "failure": {"type": ["object", "null"]}
+  }
+}

@@ -1,0 +1,80 @@
+\section{Exact topology, coercivity, and Gaussian separation}\label{sec:linear}
+
+Let $D$ be the $216\times136$ integer matrix obtained by restricting $d_1$ to
+the cotree links, and set
+\begin{equation}\label{eq:H-def}
+ H=D^{\mathsf T}D.
+\end{equation}
+
+\begin{proposition}[Exact dimensions]\label{prop:dimensions}
+The cellular ranks and retained rank are
+\[
+ \rank d_0=80,\qquad \rank d_1=136,\qquad \rank R=17.
+\]
+Consequently
+\[
+ \dim\mathcal Y_0=17,\quad \dim F_0=119,
+ \qquad \dim\cY=51,\quad \dim\cF=357.
+\]
+\end{proposition}
+
+\begin{proof}
+The one-skeleton is connected, so $\rank d_0=81-1=80$.  Contractibility of
+$I_2^4$ gives $\ker d_1=\operatorname{im}d_0$, hence $\rank d_1=216-80=136$.
+The face-sum map factors through the curvature map of one coarse four-cube,
+whose rank is $32-(16-1)=17$.  Exact rational elimination on the displayed
+rows in \eqref{eq:selected-rows} gives the matching lower bound after tree
+gauge.  Rank--nullity and tensoring by $\R^3$ finish the proof.  The explicit
+integer matrices appear in Appendix~\ref{app:linear-algebra}.
+\end{proof}
+
+\begin{theorem}[Certified cotree coercivity]\label{thm:cotree-coercivity}
+For every $a\in\R^{136}$,
+\begin{equation}\label{eq:cotree-floor}
+ a^{\mathsf T}Ha=\norm{Da}^2\ge\frac1{25}\norm a^2.
+\end{equation}
+The same bound holds on $F_0$ and after tensoring with $\R^3$.
+\end{theorem}
+
+\begin{proof}
+The supplement constructs $H$ from the declared cubical orientation and proves
+that $H-\frac1{25}\Id$ admits an exact rational $LDL^{\mathsf T}$
+factorization with $136$ positive pivots.  This is Sylvester positivity and
+implies \eqref{eq:cotree-floor}.  A second implementation proves positivity of
+$25H-\Id$ by fraction-free Bareiss leading-principal-minor elimination.  No
+floating eigenvalue is used.  See Appendix~\ref{app:linear-algebra}.
+\end{proof}
+
+We now choose coordinates adapted to conditioning.  Put
+\[
+ G=RH^{-1}R^{\mathsf T},\qquad
+ \mathsf B=G^{-1/2}R,\qquad M=H^{-1}\mathsf B^{\mathsf T}.
+\]
+Choose an Euclidean isometry $N:\R^{119}\to\ker R$.  Then
+\begin{equation}\label{eq:horizontal-identities}
+ \mathsf BM=\Id_{17},\quad M^{\mathsf T}HM=\Id_{17},\quad
+ M^{\mathsf T}HN=0,\quad N^{\mathsf T}N=\Id_{119},
+ \quad \norm M\le5.
+\end{equation}
+The last inequality follows from Theorem~\ref{thm:cotree-coercivity}.  We use
+the same letters for the color-tensored maps.  Every reduced logarithmic field
+has the unique form
+\begin{equation}\label{eq:decomposition}
+ A=My+Nz,\qquad y\in\R^{51},\quad z\in\R^{357}.
+\end{equation}
+
+\begin{proposition}[Exact centered Gaussian cancellation]\label{prop:gaussian}
+For the tangent density proportional to
+$\exp[-A^{\mathsf T}(H\otimes\Id_3)A/(2t)]$, conditioning on $\mathsf BA=y$ gives
+\[
+ A=My+NZ,\qquad
+ Z\sim\mathcal N\!\left(0,t(N^{\mathsf T}HN)^{-1}\right).
+\]
+In particular, the centered fiber law is exactly independent of $y$.
+\end{proposition}
+
+\begin{proof}
+Insert \eqref{eq:decomposition} into the quadratic form and use
+\eqref{eq:horizontal-identities}.  The cross term vanishes and the retained
+quadratic form is $\norm y^2$.  Normalization produces the stated Gaussian.
+\end{proof}

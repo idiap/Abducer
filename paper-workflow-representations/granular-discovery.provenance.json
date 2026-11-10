@@ -1,0 +1,999 @@
+{
+  "artifact": "paper-workflow-representations/granular-discovery.tex",
+  "artifact_sha256": "1553bfeb957c8a70ec5507a0f2a8efcc62fb92c000fb32e7aade7bfa3b16bbe4",
+  "source_snapshot": ".prism/paper-granular-prism-workflows/source-snapshot.json",
+  "review_basis": "Manually authored descriptive appendix integration under user authorization; not a validated pipeline packet. Exact occurrence signatures and relation use coverage checked against source; integration review remains parent responsibility.",
+  "notation": {
+    "Gen[T]": "Generated[T]",
+    "z.value": "explicit native projection; no claim of a dependent proof",
+    "type_scope": "All aliases are local to a workflow module; identical names across modules are not equated."
+  },
+  "workflows": [
+    {
+      "workflow_id": "abducer_work_loop",
+      "section_label": "app:granular-abducer-work-loop",
+      "sources": [
+        {
+          "path": "abducer-prism/workflows/abducer_work_loop/types.prism",
+          "sha256": "0846dc791ffb536781190502e8d784b153dd94e12cd294ed48370462f068f5bf"
+        },
+        {
+          "path": "abducer-prism/workflows/abducer_work_loop/occurrences.prism",
+          "sha256": "da68e03db7ee379ce139c1fc72a3f384575fa0192549e6391ea460d4e7e5fe07"
+        },
+        {
+          "path": "abducer-prism/workflows/abducer_work_loop/relations.prism",
+          "sha256": "5049be5222c316113a50bfb63f3960b3c888143801d81ed181008f284549ad11"
+        },
+        {
+          "path": "abducer-prism/workflows/abducer_work_loop/reasoning.prism",
+          "sha256": "fb0961afb73f2c176d4c12a67f6a707f7b5eb7146cac47d4221467822b111af3"
+        },
+        {
+          "path": "agentic/reasoning_flows/abducer_work_loop.prism",
+          "sha256": "3a363bcd9613b8b0a65b0f1d2f5ad79f6b8e3c35ab47d04857ccfb05edc4a7fc"
+        }
+      ],
+      "occurrences": [
+        {
+          "alias": "a",
+          "local_binding": "route_hypothesis",
+          "operation": "AbductiveProofRouteHypothesisFormation",
+          "signature": "ActiveProofGap -> Generated[ProofRouteHypothesis]",
+          "native_input_expression": "proof_gap",
+          "relation": null,
+          "reasoning_line": 36,
+          "coverage": "explained in prose and typed display"
+        },
+        {
+          "alias": "d",
+          "local_binding": "derived_claim",
+          "operation": "DeductiveProofRouteClaimDerivation",
+          "signature": "ProofRouteHypothesis -> Generated[ProofRouteDerivedClaim]",
+          "native_input_expression": "route_hypothesis.value",
+          "relation": "TreatsProofRouteAsClaimPremise",
+          "reasoning_line": 37,
+          "coverage": "explained in prose and typed display"
+        },
+        {
+          "alias": "r",
+          "local_binding": "refutation_assessment",
+          "operation": "RefutationalProofRouteClaimAssessment",
+          "signature": "ProofRouteDerivedClaim -> Generated[ProofRouteRefutationAssessment]",
+          "native_input_expression": "derived_claim.value",
+          "relation": "TestsProofRouteDerivedClaim",
+          "reasoning_line": 39,
+          "coverage": "explained in prose and typed display"
+        },
+        {
+          "alias": "e",
+          "local_binding": "work_routing",
+          "operation": "EvidentialProofWorkRoutingAssessment",
+          "signature": "ProofWorkRoutingInput -> Generated[ProofWorkRoutingAssessment]",
+          "native_input_expression": "ProofWorkRoutingInput(\n            derived_claim = derived_claim.value,\n            refutation_assessment = refutation_assessment.value,\n        )",
+          "relation": "CalibratesProofWorkRouting",
+          "reasoning_line": 40,
+          "coverage": "explained in prose and typed display"
+        }
+      ],
+      "relations": [
+        {
+          "name": "TreatsProofRouteAsClaimPremise",
+          "uses": [
+            "derived_claim"
+          ],
+          "coverage": "conceptual role explained; source-target contract does not establish semantic proof"
+        },
+        {
+          "name": "TestsProofRouteDerivedClaim",
+          "uses": [
+            "refutation_assessment"
+          ],
+          "coverage": "conceptual role explained; source-target contract does not establish semantic proof"
+        },
+        {
+          "name": "CalibratesProofWorkRouting",
+          "uses": [
+            "work_routing"
+          ],
+          "coverage": "conceptual role explained; source-target contract does not establish semantic proof"
+        }
+      ],
+      "type_aliases": {
+        "G": "ActiveProofGap",
+        "H": "ProofRouteHypothesis",
+        "C": "ProofRouteDerivedClaim",
+        "R": "ProofRouteRefutationAssessment",
+        "S": "ProofWorkRoutingAssessment"
+      },
+      "join_aliases": {
+        "J": "ProofWorkRoutingInput"
+      },
+      "coverage": {
+        "declared_occurrences": 4,
+        "described_occurrences": 4,
+        "declared_relations": 3,
+        "described_relations": 3
+      },
+      "example_status": "constructed, not observed execution",
+      "routing_posture": "Original ERFL switches/stop guards distinguished from native sequence; native handoff comments where present are non-executable.",
+      "internal_mechanism_sources": [
+        {
+          "path": "skills/reasoning/kb-abduce/SKILL.md",
+          "sha256": "3c0985794a9e14c75a8edc7a3ecccfa4ef28a51cd1b096985359d6cdab534a03",
+          "source_span": "Workflow 1–5; Guardrails",
+          "supports": "Deduction failure boundary, small competing premise sets, criteria, falsifiers"
+        },
+        {
+          "path": "skills/orchestration/work/SKILL.md",
+          "sha256": "89fd51dfb27aa494554668aeefa17f40e72dc1e7a6a5f52e456fb8ac3cc09983",
+          "source_span": "Conceptual Role; Workflow; Subgoal Control Decision; Best Machinery Assessment",
+          "supports": "Persistent discovery/prove alternation, informative failure, bottleneck-specific method choice"
+        },
+        {
+          "path": "agentic/registries/workflow_contracts.yaml",
+          "sha256": "87fa0266c714219668ece825d40a3686d3f02d68fd5bea08c9e60013d86873c7",
+          "source_span": "workflows[id=abducer_work_loop]",
+          "supports": "Work state, proof queue and dependency frontier contract"
+        }
+      ],
+      "internal_mechanism_claim": {
+        "paragraph_heading": "How the search is constrained.",
+        "status": "prescribed skill/contract procedure; not claimed as native implementation or observed execution",
+        "example": "constructed scientific illustration, no observed run or novel theorem claim"
+      }
+    },
+    {
+      "workflow_id": "discovery_marathon_loop",
+      "section_label": "app:granular-discovery-marathon-loop",
+      "sources": [
+        {
+          "path": "abducer-prism/workflows/discovery_marathon_loop/types.prism",
+          "sha256": "5c45469d1639c0533600215420eba323e1639d0112d2bc23f5ae30338d90ef89"
+        },
+        {
+          "path": "abducer-prism/workflows/discovery_marathon_loop/occurrences.prism",
+          "sha256": "aa89d3029679befb8579530e839e83958e185f88958bee04e17a270bc18ca868"
+        },
+        {
+          "path": "abducer-prism/workflows/discovery_marathon_loop/relations.prism",
+          "sha256": "e485e7165447641eb1c0730872ccb536d4f67970f6354f6994344845a06cfc03"
+        },
+        {
+          "path": "abducer-prism/workflows/discovery_marathon_loop/reasoning.prism",
+          "sha256": "ca594b5e88f7fefd599a4929bbe15e1f0bbb86fd6dad99b64e081d517f6829e3"
+        },
+        {
+          "path": "agentic/reasoning_flows/discovery_marathon_loop.prism",
+          "sha256": "3bbc603907983212e978eff2da4be08a9936874b0e7b0525398a14c3649be6f6"
+        }
+      ],
+      "occurrences": [
+        {
+          "alias": "e_0",
+          "local_binding": "search_scope",
+          "operation": "EvidentialDiscoveryScopeGrounding",
+          "signature": "DiscoveryRunContext -> Generated[BoundedDiscoveryScope]",
+          "native_input_expression": "run_context",
+          "relation": null,
+          "reasoning_line": 46,
+          "coverage": "explained in prose and typed display"
+        },
+        {
+          "alias": "a",
+          "local_binding": "discovery_hypothesis",
+          "operation": "AbductiveDiscoveryHypothesisFormation",
+          "signature": "BoundedDiscoveryScope -> Generated[DiscriminatingDiscoveryHypothesis]",
+          "native_input_expression": "search_scope.value",
+          "relation": "ScopesDiscoveryFormation",
+          "reasoning_line": 50,
+          "coverage": "explained in prose and typed display"
+        },
+        {
+          "alias": "i",
+          "local_binding": "discovery_pattern",
+          "operation": "InductiveDiscoveryPatternFormation",
+          "signature": "BoundedDiscoveryScope -> Generated[ProvisionalDiscoveryPattern]",
+          "native_input_expression": "search_scope.value",
+          "relation": "ScopesDiscoveryFormation",
+          "reasoning_line": 51,
+          "coverage": "explained in prose and typed display"
+        },
+        {
+          "alias": "m",
+          "local_binding": "model_implications",
+          "operation": "ModelBasedDiscoveryHypothesisProbe",
+          "signature": "DiscoveryHypothesisProbeInput -> Generated[HypothesisModelImplications]",
+          "native_input_expression": "DiscoveryHypothesisProbeInput(\n                discovery_hypothesis = discovery_hypothesis.value,\n                discovery_pattern = discovery_pattern.value,\n            )",
+          "relation": "GroundsDiscoveryProbe",
+          "reasoning_line": 55,
+          "coverage": "explained in prose and typed display"
+        },
+        {
+          "alias": "c",
+          "local_binding": "contrast_assessment",
+          "operation": "ContrastiveDiscoveryHypothesisProbe",
+          "signature": "DiscoveryHypothesisProbeInput -> Generated[HypothesisContrastAssessment]",
+          "native_input_expression": "DiscoveryHypothesisProbeInput(\n                discovery_hypothesis = discovery_hypothesis.value,\n                discovery_pattern = discovery_pattern.value,\n            )",
+          "relation": "GroundsDiscoveryProbe",
+          "reasoning_line": 59,
+          "coverage": "explained in prose and typed display"
+        },
+        {
+          "alias": "r",
+          "local_binding": "refutation_assessment",
+          "operation": "RefutationalDiscoveryHypothesisAssessment",
+          "signature": "DiscoveryRefutationInput -> Generated[HypothesisRefutationAssessment]",
+          "native_input_expression": "DiscoveryRefutationInput(\n            model_implications = model_implications.value,\n            contrast_assessment = contrast_assessment.value,\n        )",
+          "relation": "GroundsDiscoveryRefutation",
+          "reasoning_line": 64,
+          "coverage": "explained in prose and typed display"
+        },
+        {
+          "alias": "e_1",
+          "local_binding": "routing_assessment",
+          "operation": "EvidentialDiscoveryRoutingAssessment",
+          "signature": "DiscoveryRoutingInput -> Generated[DiscoveryRoutingAssessment]",
+          "native_input_expression": "DiscoveryRoutingInput(\n            discovery_hypothesis = discovery_hypothesis.value,\n            discovery_pattern = discovery_pattern.value,\n            refutation_assessment = refutation_assessment.value,\n        )",
+          "relation": "CalibratesDiscoveryRouting",
+          "reasoning_line": 69,
+          "coverage": "explained in prose and typed display"
+        }
+      ],
+      "relations": [
+        {
+          "name": "ScopesDiscoveryFormation",
+          "uses": [
+            "discovery_hypothesis",
+            "discovery_pattern"
+          ],
+          "coverage": "conceptual role explained; source-target contract does not establish semantic proof"
+        },
+        {
+          "name": "GroundsDiscoveryProbe",
+          "uses": [
+            "model_implications",
+            "contrast_assessment"
+          ],
+          "coverage": "conceptual role explained; source-target contract does not establish semantic proof"
+        },
+        {
+          "name": "GroundsDiscoveryRefutation",
+          "uses": [
+            "refutation_assessment"
+          ],
+          "coverage": "conceptual role explained; source-target contract does not establish semantic proof"
+        },
+        {
+          "name": "CalibratesDiscoveryRouting",
+          "uses": [
+            "routing_assessment"
+          ],
+          "coverage": "conceptual role explained; source-target contract does not establish semantic proof"
+        }
+      ],
+      "type_aliases": {
+        "X": "DiscoveryRunContext",
+        "B": "BoundedDiscoveryScope",
+        "H": "DiscriminatingDiscoveryHypothesis",
+        "P": "ProvisionalDiscoveryPattern",
+        "M": "HypothesisModelImplications",
+        "C": "HypothesisContrastAssessment",
+        "R": "HypothesisRefutationAssessment",
+        "S": "DiscoveryRoutingAssessment"
+      },
+      "join_aliases": {
+        "J_HP": "DiscoveryHypothesisProbeInput",
+        "J_MC": "DiscoveryRefutationInput",
+        "J_HPR": "DiscoveryRoutingInput"
+      },
+      "coverage": {
+        "declared_occurrences": 7,
+        "described_occurrences": 7,
+        "declared_relations": 4,
+        "described_relations": 4
+      },
+      "example_status": "constructed, not observed execution",
+      "routing_posture": "Original ERFL switches/stop guards distinguished from native sequence; native handoff comments where present are non-executable.",
+      "internal_mechanism_sources": [
+        {
+          "path": "skills/orchestration/long-horizon-route-portfolio-manager/SKILL.md",
+          "sha256": "45fe8f30fc85546193cff070f93c801b223132425fed0c2c7c927cc5610b6cfc",
+          "source_span": "Procedure; Subgoal Control Decision",
+          "supports": "Commitment-specific branch value, drift control, informative persistence"
+        },
+        {
+          "path": "skills/reasoning/dynamic-symbolic-simulation-experimenter/SKILL.md",
+          "sha256": "5961d2cc5dcbd36be9ed32181e92f42234021cf8a2484fc341b32a87fe8b0f6a",
+          "source_span": "Entry Gate; Workflow 1, 5, 6",
+          "supports": "Preregistered rival predictions, same observable/controls, non-identifiability, bounded interpretation"
+        },
+        {
+          "path": "skills/evaluation/counterfactual-route-prober/SKILL.md",
+          "sha256": "417c863db8e5fe85987f55a5837f41eeee4caf7bc082737b3de181db5375bb77",
+          "source_span": "Role; When To Use",
+          "supports": "Minimal assumption/carrier perturbation tests dependence"
+        },
+        {
+          "path": "agentic/registries/workflow_contracts.yaml",
+          "sha256": "87fa0266c714219668ece825d40a3686d3f02d68fd5bea08c9e60013d86873c7",
+          "source_span": "workflows[id=discovery_marathon_loop]",
+          "supports": "Bounded branch/cycle contract and declared handoffs"
+        }
+      ],
+      "internal_mechanism_claim": {
+        "paragraph_heading": "What makes a discovery cycle informative.",
+        "status": "prescribed skill/contract procedure; not claimed as native implementation or observed execution",
+        "example": "constructed scientific illustration, no observed run or novel theorem claim"
+      }
+    },
+    {
+      "workflow_id": "conceptual_hypothesis_exploration_loop",
+      "section_label": "app:granular-conceptual-hypothesis-exploration-loop",
+      "sources": [
+        {
+          "path": "abducer-prism/workflows/conceptual_hypothesis_exploration_loop/types.prism",
+          "sha256": "c2fb69c8db7ff2ebca444bdc5e82d9f7f1d41af094305f421c5525c4fed3a9ba"
+        },
+        {
+          "path": "abducer-prism/workflows/conceptual_hypothesis_exploration_loop/occurrences.prism",
+          "sha256": "51cac77a25a279153e2442c1ec7f54fc2277cfa92895d315733d40b4ed8dad13"
+        },
+        {
+          "path": "abducer-prism/workflows/conceptual_hypothesis_exploration_loop/relations.prism",
+          "sha256": "c19350546e6981322b883423d083cafa4b5013e57e8f1604529dda1668e7c3e3"
+        },
+        {
+          "path": "abducer-prism/workflows/conceptual_hypothesis_exploration_loop/reasoning.prism",
+          "sha256": "b5bf899397ed054d835c43fd16917c5279c1ad6a1a282e3592b64059ac63c4fc"
+        },
+        {
+          "path": "agentic/reasoning_flows/conceptual_hypothesis_exploration_loop.prism",
+          "sha256": "3bce8bc51e3232f76b16b4510354a7764ef70ccce98152333dfeb4fe86049e0e"
+        }
+      ],
+      "occurrences": [
+        {
+          "alias": "e_0",
+          "local_binding": "obstruction_pressure",
+          "operation": "EvidentialConceptualObstructionAssessment",
+          "signature": "ConceptualFailureState -> Generated[ConceptualObstructionPressure]",
+          "native_input_expression": "failure_state",
+          "relation": null,
+          "reasoning_line": 42,
+          "coverage": "explained in prose and typed display"
+        },
+        {
+          "alias": "a",
+          "local_binding": "mediation_hypothesis",
+          "operation": "AbductiveMediationHypothesisFormation",
+          "signature": "ConceptualObstructionPressure -> Generated[ConceptualMediationHypothesis]",
+          "native_input_expression": "obstruction_pressure.value",
+          "relation": "BoundsConceptualObstructionPressure",
+          "reasoning_line": 43,
+          "coverage": "explained in prose and typed display"
+        },
+        {
+          "alias": "t",
+          "local_binding": "conceptual_bridge",
+          "operation": "AnalogicalConceptualBridgeTransfer",
+          "signature": "ConceptualMediationHypothesis -> Generated[MediatingConceptualBridge]",
+          "native_input_expression": "mediation_hypothesis.value",
+          "relation": "TransfersMediationIntoBridge",
+          "reasoning_line": 45,
+          "coverage": "explained in prose and typed display"
+        },
+        {
+          "alias": "d",
+          "local_binding": "bridge_consequence",
+          "operation": "DeductiveConceptualBridgeConsequenceDerivation",
+          "signature": "MediatingConceptualBridge -> Generated[BridgeDerivedConsequence]",
+          "native_input_expression": "conceptual_bridge.value",
+          "relation": "TreatsBridgeAsConsequencePremise",
+          "reasoning_line": 46,
+          "coverage": "explained in prose and typed display"
+        },
+        {
+          "alias": "r",
+          "local_binding": "refutation_assessment",
+          "operation": "RefutationalBridgeConsequenceAssessment",
+          "signature": "BridgeDerivedConsequence -> Generated[BridgeConsequenceRefutationAssessment]",
+          "native_input_expression": "bridge_consequence.value",
+          "relation": "TestsBridgeConsequence",
+          "reasoning_line": 48,
+          "coverage": "explained in prose and typed display"
+        },
+        {
+          "alias": "e_1",
+          "local_binding": "refinement_routing",
+          "operation": "EvidentialConceptualRefinementRoutingAssessment",
+          "signature": "ConceptualRefinementRoutingInput -> Generated[ConceptualRefinementRoutingAssessment]",
+          "native_input_expression": "ConceptualRefinementRoutingInput(\n            conceptual_bridge = conceptual_bridge.value,\n            refutation_assessment = refutation_assessment.value,\n        )",
+          "relation": "CalibratesConceptualRefinementRouting",
+          "reasoning_line": 49,
+          "coverage": "explained in prose and typed display"
+        }
+      ],
+      "relations": [
+        {
+          "name": "BoundsConceptualObstructionPressure",
+          "uses": [
+            "mediation_hypothesis"
+          ],
+          "coverage": "conceptual role explained; source-target contract does not establish semantic proof"
+        },
+        {
+          "name": "TransfersMediationIntoBridge",
+          "uses": [
+            "conceptual_bridge"
+          ],
+          "coverage": "conceptual role explained; source-target contract does not establish semantic proof"
+        },
+        {
+          "name": "TreatsBridgeAsConsequencePremise",
+          "uses": [
+            "bridge_consequence"
+          ],
+          "coverage": "conceptual role explained; source-target contract does not establish semantic proof"
+        },
+        {
+          "name": "TestsBridgeConsequence",
+          "uses": [
+            "refutation_assessment"
+          ],
+          "coverage": "conceptual role explained; source-target contract does not establish semantic proof"
+        },
+        {
+          "name": "CalibratesConceptualRefinementRouting",
+          "uses": [
+            "refinement_routing"
+          ],
+          "coverage": "conceptual role explained; source-target contract does not establish semantic proof"
+        }
+      ],
+      "type_aliases": {
+        "F": "ConceptualFailureState",
+        "P": "ConceptualObstructionPressure",
+        "H": "ConceptualMediationHypothesis",
+        "B": "MediatingConceptualBridge",
+        "C": "BridgeDerivedConsequence",
+        "R": "BridgeConsequenceRefutationAssessment",
+        "S": "ConceptualRefinementRoutingAssessment"
+      },
+      "join_aliases": {
+        "J_BR": "ConceptualRefinementRoutingInput"
+      },
+      "coverage": {
+        "declared_occurrences": 6,
+        "described_occurrences": 6,
+        "declared_relations": 5,
+        "described_relations": 5
+      },
+      "example_status": "constructed, not observed execution",
+      "routing_posture": "Original ERFL switches/stop guards distinguished from native sequence; native handoff comments where present are non-executable.",
+      "internal_mechanism_sources": [
+        {
+          "path": "skills/reasoning/proof-bridge-object-forger/SKILL.md",
+          "sha256": "c519405dbb1a32163bd0840a493fc176a40965e56cfc98c45755bea20fe77f26",
+          "source_span": "Critical Conceptual Depth; Mathematical Invariants; Output Contract",
+          "supports": "Carrier/interface construction, invariant map, no conclusion built into definition"
+        },
+        {
+          "path": "skills/orchestration/abducer-refinement-route-ranker/SKILL.md",
+          "sha256": "9db7d8a7906b389cded2d753e11fd4200b3069ed3acd3f6ccd6282bd890ccab1",
+          "source_span": "Workflow; Guardrails; Subgoal Control Decision; Best Machinery Assessment",
+          "supports": "Contribution/validation/risk/tractability ranking; proof-form requirements and feedback"
+        },
+        {
+          "path": "agentic/registries/workflow_contracts.yaml",
+          "sha256": "87fa0266c714219668ece825d40a3686d3f02d68fd5bea08c9e60013d86873c7",
+          "source_span": "workflows[id=conceptual_hypothesis_exploration_loop]",
+          "supports": "Failure cartography, mediation candidates, validation and machinery packets"
+        }
+      ],
+      "internal_mechanism_claim": {
+        "paragraph_heading": "What is revised, and why.",
+        "status": "prescribed skill/contract procedure; not claimed as native implementation or observed execution",
+        "example": "constructed scientific illustration, no observed run or novel theorem claim"
+      }
+    },
+    {
+      "workflow_id": "conceptual_frontier_deepening",
+      "section_label": "app:granular-conceptual-frontier-deepening",
+      "sources": [
+        {
+          "path": "abducer-prism/workflows/conceptual_frontier_deepening/types.prism",
+          "sha256": "766f290daf861b602edd19b9ecf954237cdb88b2af703d7995709dd170d631b2"
+        },
+        {
+          "path": "abducer-prism/workflows/conceptual_frontier_deepening/occurrences.prism",
+          "sha256": "86cd17d33275e99beddadd7e3b12512ce6508f4f16f2b391f1c26bcd5f57896c"
+        },
+        {
+          "path": "abducer-prism/workflows/conceptual_frontier_deepening/relations.prism",
+          "sha256": "930764f596b2f68f3126c973790399de0f0e8c19e6b620f4f45eb44a3cdaf67d"
+        },
+        {
+          "path": "abducer-prism/workflows/conceptual_frontier_deepening/reasoning.prism",
+          "sha256": "90ea2a02cddf329306237122306d7ade7203eea0408c7a8c7d8a2320694947e0"
+        },
+        {
+          "path": "agentic/reasoning_flows/conceptual_frontier_deepening.prism",
+          "sha256": "feee627f06b018d1bd3311111ff67f0e2b3fa3f906e7e4364654f4ce22f08f7a"
+        }
+      ],
+      "occurrences": [
+        {
+          "alias": "e_0",
+          "local_binding": "conceptual_frontier",
+          "operation": "EvidentialConceptualFrontierGrounding",
+          "signature": "FrozenConceptualContext -> Generated[BoundedConceptualFrontier]",
+          "native_input_expression": "context",
+          "relation": null,
+          "reasoning_line": 45,
+          "coverage": "explained in prose and typed display"
+        },
+        {
+          "alias": "a",
+          "local_binding": "conceptual_hypothesis",
+          "operation": "AbductiveConceptualHypothesisFormation",
+          "signature": "BoundedConceptualFrontier -> Generated[DiscriminatingConceptualHypothesis]",
+          "native_input_expression": "conceptual_frontier.value",
+          "relation": "BoundsConceptualFrontierSearch",
+          "reasoning_line": 46,
+          "coverage": "explained in prose and typed display"
+        },
+        {
+          "alias": "r",
+          "local_binding": "refutation_assessment",
+          "operation": "RefutationalConceptualHypothesisAssessment",
+          "signature": "DiscriminatingConceptualHypothesis -> Generated[ConceptualHypothesisRefutationAssessment]",
+          "native_input_expression": "conceptual_hypothesis.value",
+          "relation": "TestsConceptualHypothesis",
+          "reasoning_line": 48,
+          "coverage": "explained in prose and typed display"
+        },
+        {
+          "alias": "e_1",
+          "local_binding": "hypothesis_selection",
+          "operation": "EvidentialConceptualHypothesisSelection",
+          "signature": "ConceptualHypothesisSelectionInput -> Generated[ConceptualHypothesisSelection]",
+          "native_input_expression": "ConceptualHypothesisSelectionInput(\n            conceptual_hypothesis = conceptual_hypothesis.value,\n            refutation_assessment = refutation_assessment.value,\n        )",
+          "relation": "CalibratesConceptualFrontierProgress",
+          "reasoning_line": 49,
+          "coverage": "explained in prose and typed display"
+        },
+        {
+          "alias": "t",
+          "local_binding": "conceptual_bridge",
+          "operation": "AnalogicalConceptualBridgeRevision",
+          "signature": "ConceptualHypothesisSelection -> Generated[RevisedConceptualBridge]",
+          "native_input_expression": "hypothesis_selection.value",
+          "relation": "RevisesConceptualBridge",
+          "reasoning_line": 54,
+          "coverage": "explained in prose and typed display"
+        },
+        {
+          "alias": "d",
+          "local_binding": "formal_claim",
+          "operation": "DeductiveFormalClaimDerivation",
+          "signature": "RevisedConceptualBridge -> Generated[BridgeDerivedFormalClaim]",
+          "native_input_expression": "conceptual_bridge.value",
+          "relation": "TreatsBridgeAsFormalClaimPremise",
+          "reasoning_line": 55,
+          "coverage": "explained in prose and typed display"
+        },
+        {
+          "alias": "e_2",
+          "local_binding": "calibrated_candidate",
+          "operation": "EvidentialFormalizationReadinessAssessment",
+          "signature": "BridgeDerivedFormalClaim -> Generated[FormalizationReadinessAssessment]",
+          "native_input_expression": "formal_claim.value",
+          "relation": "CalibratesConceptualFrontierProgress",
+          "reasoning_line": 57,
+          "coverage": "explained in prose and typed display"
+        }
+      ],
+      "relations": [
+        {
+          "name": "BoundsConceptualFrontierSearch",
+          "uses": [
+            "conceptual_hypothesis"
+          ],
+          "coverage": "conceptual role explained; source-target contract does not establish semantic proof"
+        },
+        {
+          "name": "TestsConceptualHypothesis",
+          "uses": [
+            "refutation_assessment"
+          ],
+          "coverage": "conceptual role explained; source-target contract does not establish semantic proof"
+        },
+        {
+          "name": "CalibratesConceptualFrontierProgress",
+          "uses": [
+            "hypothesis_selection",
+            "calibrated_candidate"
+          ],
+          "coverage": "conceptual role explained; source-target contract does not establish semantic proof"
+        },
+        {
+          "name": "RevisesConceptualBridge",
+          "uses": [
+            "conceptual_bridge"
+          ],
+          "coverage": "conceptual role explained; source-target contract does not establish semantic proof"
+        },
+        {
+          "name": "TreatsBridgeAsFormalClaimPremise",
+          "uses": [
+            "formal_claim"
+          ],
+          "coverage": "conceptual role explained; source-target contract does not establish semantic proof"
+        }
+      ],
+      "type_aliases": {
+        "X": "FrozenConceptualContext",
+        "F": "BoundedConceptualFrontier",
+        "H": "DiscriminatingConceptualHypothesis",
+        "R": "ConceptualHypothesisRefutationAssessment",
+        "S": "ConceptualHypothesisSelection",
+        "B": "RevisedConceptualBridge",
+        "C": "BridgeDerivedFormalClaim",
+        "Q": "FormalizationReadinessAssessment"
+      },
+      "join_aliases": {
+        "J_HR": "ConceptualHypothesisSelectionInput"
+      },
+      "coverage": {
+        "declared_occurrences": 7,
+        "described_occurrences": 7,
+        "declared_relations": 5,
+        "described_relations": 5
+      },
+      "example_status": "constructed, not observed execution",
+      "routing_posture": "Original ERFL switches/stop guards distinguished from native sequence; native handoff comments where present are non-executable.",
+      "internal_mechanism_sources": [
+        {
+          "path": "skills/orchestration/conceptual-frontier-deepening/SKILL.md",
+          "sha256": "bd58e722c911a6739c94bd60c3d60377f425fa1885ad5e004c285bdb442d178b",
+          "source_span": "Phases 1–5; Mathematical invariants",
+          "supports": "Pre-taxonomy invention, blind semantic family reconstruction, reflective transformations, non-compensatory plural evaluation, conditional formal routes"
+        },
+        {
+          "path": "agentic/registries/named_workflow_contracts.yaml",
+          "sha256": "a467750a969715f742cc330f21fef37f4004b76924650fd9a027c47af9447d77",
+          "source_span": "workflows[id=conceptual_frontier_deepening].steps",
+          "supports": "Required central-route derivation/formal-claim production differs from conditional formal-route skill posture"
+        }
+      ],
+      "internal_mechanism_claim": {
+        "paragraph_heading": "The conceptual work hidden by a single hypothesis port.",
+        "status": "prescribed skill/contract procedure; not claimed as native implementation or observed execution",
+        "example": "constructed scientific illustration, no observed run or novel theorem claim"
+      }
+    },
+    {
+      "workflow_id": "evidence_to_proof_route_onramp",
+      "section_label": "app:granular-evidence-to-proof-route-onramp",
+      "sources": [
+        {
+          "path": "abducer-prism/workflows/evidence_to_proof_route_onramp/types.prism",
+          "sha256": "d6d31a856ce7749ffa4f246cc2a8c241a11272d0e861e785a9b49e4598616d12"
+        },
+        {
+          "path": "abducer-prism/workflows/evidence_to_proof_route_onramp/occurrences.prism",
+          "sha256": "780c5f85ae82df496b19c86ab62f436bf60800c48033deef06efc07633526270"
+        },
+        {
+          "path": "abducer-prism/workflows/evidence_to_proof_route_onramp/relations.prism",
+          "sha256": "55d20c0c054b8a392630e663cd331bafe0b8aeec02fba1be561c21531abb47e2"
+        },
+        {
+          "path": "abducer-prism/workflows/evidence_to_proof_route_onramp/reasoning.prism",
+          "sha256": "d9bfc2e0fe8095019e9113679dad7f4976db8f7b8f707b2491cfba0bbfd63348"
+        },
+        {
+          "path": "agentic/reasoning_flows/evidence_to_proof_route_onramp.prism",
+          "sha256": "0455bc4d33f51839b8281f8da35c22938e3b94f542fadfd1b52f47291a1a0480"
+        }
+      ],
+      "occurrences": [
+        {
+          "alias": "e_0",
+          "local_binding": "e0",
+          "operation": "EvidentialProofRouteGrounding",
+          "signature": "ProofRouteSourceBundle -> Generated[ProofRouteEvidenceGround]",
+          "native_input_expression": "source",
+          "relation": null,
+          "reasoning_line": 48,
+          "coverage": "explained in prose and typed display"
+        },
+        {
+          "alias": "a_0",
+          "local_binding": "a0",
+          "operation": "AbductiveProofRouteHypothesisFormation",
+          "signature": "ProofRouteEvidenceGround -> Generated[ProofRouteHypothesis]",
+          "native_input_expression": "e0.value",
+          "relation": "GroundsProofRouteSearch",
+          "reasoning_line": 49,
+          "coverage": "explained in prose and typed display"
+        },
+        {
+          "alias": "d_0",
+          "local_binding": "d0",
+          "operation": "DeductiveProofRouteConsequenceDerivation",
+          "signature": "ProofRouteHypothesis -> Generated[ProofRouteDerivedConsequence]",
+          "native_input_expression": "a0.value",
+          "relation": "TreatsRouteAsConsequencePremise",
+          "reasoning_line": 51,
+          "coverage": "explained in prose and typed display"
+        },
+        {
+          "alias": "e_1",
+          "local_binding": "e1",
+          "operation": "EvidentialProofRouteConsequenceAssessment",
+          "signature": "ProofRouteDerivedConsequence -> Generated[ProofRouteConsequenceAssessment]",
+          "native_input_expression": "d0.value",
+          "relation": "CalibratesProofRouteAssessment",
+          "reasoning_line": 52,
+          "coverage": "explained in prose and typed display"
+        },
+        {
+          "alias": "a_1",
+          "local_binding": "a1",
+          "operation": "AbductiveProofObligationEntrypointRevision",
+          "signature": "ProofRouteConsequenceAssessment -> Generated[ProofObligationEntrypointHypothesis]",
+          "native_input_expression": "e1.value",
+          "relation": "RevisesProofObligationEntrypoint",
+          "reasoning_line": 54,
+          "coverage": "explained in prose and typed display"
+        },
+        {
+          "alias": "r_0",
+          "local_binding": "r0",
+          "operation": "RefutationalProofEntrypointAssessment",
+          "signature": "ProofObligationEntrypointHypothesis -> Generated[EntrypointFalsificationAssessment]",
+          "native_input_expression": "a1.value",
+          "relation": "TestsProofEntrypoint",
+          "reasoning_line": 55,
+          "coverage": "explained in prose and typed display"
+        },
+        {
+          "alias": "e_2",
+          "local_binding": "e2",
+          "operation": "EvidentialProofRouteReadinessAssessment",
+          "signature": "ProofRouteReadinessInput -> Generated[ProofRouteReadinessAssessment]",
+          "native_input_expression": "ProofRouteReadinessInput(\n            proof_entrypoint = a1.value,\n            falsification_assessment = r0.value,\n        )",
+          "relation": "CalibratesProofRouteAssessment",
+          "reasoning_line": 57,
+          "coverage": "explained in prose and typed display"
+        }
+      ],
+      "relations": [
+        {
+          "name": "GroundsProofRouteSearch",
+          "uses": [
+            "a0"
+          ],
+          "coverage": "conceptual role explained; source-target contract does not establish semantic proof"
+        },
+        {
+          "name": "TreatsRouteAsConsequencePremise",
+          "uses": [
+            "d0"
+          ],
+          "coverage": "conceptual role explained; source-target contract does not establish semantic proof"
+        },
+        {
+          "name": "CalibratesProofRouteAssessment",
+          "uses": [
+            "e1",
+            "e2"
+          ],
+          "coverage": "conceptual role explained; source-target contract does not establish semantic proof"
+        },
+        {
+          "name": "RevisesProofObligationEntrypoint",
+          "uses": [
+            "a1"
+          ],
+          "coverage": "conceptual role explained; source-target contract does not establish semantic proof"
+        },
+        {
+          "name": "TestsProofEntrypoint",
+          "uses": [
+            "r0"
+          ],
+          "coverage": "conceptual role explained; source-target contract does not establish semantic proof"
+        }
+      ],
+      "type_aliases": {
+        "X": "ProofRouteSourceBundle",
+        "G": "ProofRouteEvidenceGround",
+        "H": "ProofRouteHypothesis",
+        "C": "ProofRouteDerivedConsequence",
+        "A": "ProofRouteConsequenceAssessment",
+        "P": "ProofObligationEntrypointHypothesis",
+        "R": "EntrypointFalsificationAssessment",
+        "S": "ProofRouteReadinessAssessment"
+      },
+      "join_aliases": {
+        "J_PR": "ProofRouteReadinessInput"
+      },
+      "coverage": {
+        "declared_occurrences": 7,
+        "described_occurrences": 7,
+        "declared_relations": 5,
+        "described_relations": 5
+      },
+      "example_status": "constructed, not observed execution",
+      "routing_posture": "Original ERFL switches/stop guards distinguished from native sequence; native handoff comments where present are non-executable.",
+      "internal_mechanism_sources": [
+        {
+          "path": "skills/discovery/kb-proof-connector/SKILL.md",
+          "sha256": "c101e174ffa2d9cf6e463fff24c1257667b3cf76dcbf0dd6b0dc2935afd46886",
+          "source_span": "Workflow; Guardrails",
+          "supports": "Graph dependencies versus speculative links, symbol roles, bridge intervention candidates"
+        },
+        {
+          "path": "skills/discovery/kb-entrypoint-pathfinder/SKILL.md",
+          "sha256": "774e45bae5575dbcc53d9541de3df93186399f69d450c61c7939e64c6d4c7215",
+          "source_span": "Workflow; Guardrails",
+          "supports": "One-statement anchored pathway with support and prune conditions"
+        },
+        {
+          "path": "skills/evaluation/hub-bias-auditor/SKILL.md",
+          "sha256": "01103d7dad929b747ba09973b15d9b3b57c740eff63f8be54fe17b3dca26cad0",
+          "source_span": "Role; When To Use",
+          "supports": "Graph centrality versus theorem relevance"
+        },
+        {
+          "path": "agentic/registries/named_workflow_contracts.yaml",
+          "sha256": "a467750a969715f742cc330f21fef37f4004b76924650fd9a027c47af9447d77",
+          "source_span": "workflows[id=evidence_to_proof_route_onramp].steps and exit_gate",
+          "supports": "Explicit order, conditional regime audit, falsification and dossier handoff"
+        }
+      ],
+      "internal_mechanism_claim": {
+        "paragraph_heading": "How an entrypoint is found.",
+        "status": "prescribed skill/contract procedure; not claimed as native implementation or observed execution",
+        "example": "constructed scientific illustration, no observed run or novel theorem claim"
+      }
+    },
+    {
+      "workflow_id": "theorem_proof_delivery",
+      "section_label": "app:granular-theorem-proof-delivery",
+      "sources": [
+        {
+          "path": "abducer-prism/workflows/theorem_proof_delivery/types.prism",
+          "sha256": "9fc8748f9069f84b5ef2216a542a27a3adeb9a8bed4d0a56f8342133d6969a14"
+        },
+        {
+          "path": "abducer-prism/workflows/theorem_proof_delivery/occurrences.prism",
+          "sha256": "7902d8e6c6509c6eb15a407fceb390a83697b00d5b17626435e79274c4165966"
+        },
+        {
+          "path": "abducer-prism/workflows/theorem_proof_delivery/relations.prism",
+          "sha256": "78e639f014b38ca3a7fd69b20d5569093c73e22dc786735a939ec9b781f4e7a9"
+        },
+        {
+          "path": "abducer-prism/workflows/theorem_proof_delivery/reasoning.prism",
+          "sha256": "d83772ab214d22de73eb88409f669ddbcf8b5a0fbb3db9a8d4269a8138e35c6b"
+        },
+        {
+          "path": "agentic/reasoning_flows/theorem_proof_delivery.prism",
+          "sha256": "165c85913d3de0a63bbbcbddc8a0284e4433524d25488b65356db0d217f044e5"
+        }
+      ],
+      "occurrences": [
+        {
+          "alias": "d_0",
+          "local_binding": "d0",
+          "operation": "DeductiveExactTheoremClaimDerivation",
+          "signature": "ExplicitPremises -> Generated[ExactTheoremClaim]",
+          "native_input_expression": "item.premises",
+          "relation": null,
+          "reasoning_line": 39,
+          "coverage": "explained in prose and typed display"
+        },
+        {
+          "alias": "r_0",
+          "local_binding": "r0",
+          "operation": "RefutationalExactTheoremClaimAssessment",
+          "signature": "ExactTheoremClaim -> Generated[ExactClaimRefutationAssessment]",
+          "native_input_expression": "d0.value",
+          "relation": "TestsExactTheoremClaim",
+          "reasoning_line": 41,
+          "coverage": "explained in prose and typed display"
+        },
+        {
+          "alias": "e_0",
+          "local_binding": "e0",
+          "operation": "EvidentialTheoremProofDispositionAssessment",
+          "signature": "TheoremProofDispositionInput -> Generated[TheoremProofDispositionAssessment]",
+          "native_input_expression": "TheoremProofDispositionInput(\n            theorem_claim = d0.value,\n            refutation_assessment = r0.value,\n        )",
+          "relation": "CalibratesTheoremProofDisposition",
+          "reasoning_line": 43,
+          "coverage": "explained in prose and typed display"
+        }
+      ],
+      "relations": [
+        {
+          "name": "TestsExactTheoremClaim",
+          "uses": [
+            "r0"
+          ],
+          "coverage": "conceptual role explained; source-target contract does not establish semantic proof"
+        },
+        {
+          "name": "CalibratesTheoremProofDisposition",
+          "uses": [
+            "e0"
+          ],
+          "coverage": "conceptual role explained; source-target contract does not establish semantic proof"
+        }
+      ],
+      "type_aliases": {
+        "P": "ExplicitPremises",
+        "C": "ExactTheoremClaim",
+        "R": "ExactClaimRefutationAssessment",
+        "S": "TheoremProofDispositionAssessment"
+      },
+      "join_aliases": {
+        "J_CR": "TheoremProofDispositionInput"
+      },
+      "coverage": {
+        "declared_occurrences": 3,
+        "described_occurrences": 3,
+        "declared_relations": 2,
+        "described_relations": 2
+      },
+      "example_status": "constructed, not observed execution",
+      "routing_posture": "Original ERFL switches/stop guards distinguished from native sequence; native handoff comments where present are non-executable.",
+      "internal_mechanism_sources": [
+        {
+          "path": "skills/proof_delivery/lemma-chain-proof-builder/SKILL.md",
+          "sha256": "7748bf28122214d526a86add93cd144eb78d7353393b338cfb748e18d1fc4535",
+          "source_span": "Mathematical Invariants; Workflow",
+          "supports": "Noncircular lemma dependencies, parameter propagation, status and blocked obligations"
+        },
+        {
+          "path": "skills/proof_delivery/proof-gap-countermodel-splitter/SKILL.md",
+          "sha256": "75f8a9d66c0e291969f86ef78648ba6a9943f3097870e11012d418868856cfc8",
+          "source_span": "Mathematical Invariants; Workflow",
+          "supports": "Gap classification, mandatory adversarial search, one repair and next disposition"
+        },
+        {
+          "path": "skills/proof_delivery/proof-quality-gatekeeper/SKILL.md",
+          "sha256": "a61be07678e0017bf551b9016482443632bc0eaa39af1dd4416b3dd403bbe67e",
+          "source_span": "Gate Criteria; Decisions",
+          "supports": "Conditional versus unconditional theorem, exact statement, no silent closure"
+        },
+        {
+          "path": "agentic/registries/named_workflow_contracts.yaml",
+          "sha256": "a467750a969715f742cc330f21fef37f4004b76924650fd9a027c47af9447d77",
+          "source_span": "workflows[id=theorem_proof_delivery].steps and exit_gate",
+          "supports": "Conditional gap split, required obligations, exit allows declared open obligations"
+        }
+      ],
+      "internal_mechanism_claim": {
+        "paragraph_heading": "What happens inside a proof attempt.",
+        "status": "prescribed skill/contract procedure; not claimed as native implementation or observed execution",
+        "example": "constructed scientific illustration, no observed run or novel theorem claim"
+      }
+    }
+  ],
+  "verification": {
+    "coverage": "34/34 occurrences; 24/24 declared relation names, including repeated uses",
+    "local_build": "PASS: pdflatex article 11pt, 6.5-inch width, seven pages; repeat build no overfull/underfull/warnings.",
+    "review_refinement": "Replaced generic onramp outcome with explicit degree-two cycle refutation; kept early-stop/native-sequence distinction. Cross-review: corrected operation/result distinction at onramp join; specified diffusion evolution and Euclidean norm; clarified cycle refutes uniform strengthening; wrapped conceptual repair join and long relation names for 11pt manuscript. Expanded six substantive internal-mechanism paragraphs and diversified four constructed examples; exact source hashes and claim mappings recorded."
+  },
+  "internal_mechanism_review_limits": "Read bounded manifest-linked SKILL procedures and applicable workflow/named contracts. Materialization skill associations are exemplars only; binding-list order not treated as execution order. Explicit ordered contract steps distinguished from native topology. No procedure execution or semantic equivalence validation performed.",
+  "step_explanations": {
+    "packet": "paper-workflow-representations/step-explanations.json",
+    "sha256": "4fa537886151bdc5685ef18b6960d406af994323c89b51d900be16d9a812d65c",
+    "review": ".prism/paper-step-explanations/semantic-review.md",
+    "posture": "Manually reviewed per-occurrence explanations and continuous constructed cases; not runtime evidence."
+  }
+}

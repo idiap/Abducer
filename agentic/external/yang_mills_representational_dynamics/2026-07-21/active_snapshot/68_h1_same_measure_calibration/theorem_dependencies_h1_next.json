@@ -1,0 +1,103 @@
+{
+  "artifact": "H1 same-measure calibration",
+  "claim_level": "C2 finite algebraic theorem with floating-point certificate and finite-family countermodel",
+  "nodes": [
+    {
+      "id": "H1-SM-01",
+      "claim": "One strictly positive symmetric positive-definite two-state matrix is both the Gibbs edge weight and temporal transfer kernel.",
+      "depends_on": [],
+      "status": "proved_finite",
+      "evidence": "validate_transfer; same_measure_certificate"
+    },
+    {
+      "id": "H1-SM-02",
+      "claim": "The finite edge kernel has a positive Gram factorization and is bond-reflection positive in this calibration.",
+      "depends_on": [
+        "H1-SM-01"
+      ],
+      "status": "proved_finite",
+      "evidence": "strict positivity of both transfer eigenvalues"
+    },
+    {
+      "id": "H1-SM-03",
+      "claim": "The Perron vacuum defines a stochastic reversible Doob kernel with stationary state proportional to psi squared.",
+      "depends_on": [
+        "H1-SM-01"
+      ],
+      "status": "proved_finite",
+      "evidence": "spectral_data; same_measure_certificate; hostile tests"
+    },
+    {
+      "id": "H1-SM-04",
+      "claim": "The bad subkernel Q is M times P and therefore comes from a declared event in the same finite measure.",
+      "depends_on": [
+        "H1-SM-03"
+      ],
+      "status": "proved_finite",
+      "evidence": "bad_subkernel and entrywise Q<=P tests"
+    },
+    {
+      "id": "H1-SM-05",
+      "claim": "For V=max(psi)/psi, (QV)_i/V_i equals the masked transfer row divided by lambda0.",
+      "depends_on": [
+        "H1-SM-03",
+        "H1-SM-04"
+      ],
+      "status": "proved_algebraically_and_tolerance_checked",
+      "evidence": "inverse_vacuum_identity_error below floating-point tolerance"
+    },
+    {
+      "id": "H1-SM-06",
+      "claim": "The stationary root moment sum pi_i V_i is finite and numerically evaluated from the algebraic formula.",
+      "depends_on": [
+        "H1-SM-03",
+        "H1-SM-05"
+      ],
+      "status": "proved_finite",
+      "evidence": "stationary_root_moment in h1_same_measure_results.json"
+    },
+    {
+      "id": "H1-SM-07",
+      "claim": "The finite discrete temporal transfer has gap -log(lambda1/lambda0)>0.",
+      "depends_on": [
+        "H1-SM-01",
+        "H1-SM-02"
+      ],
+      "status": "proved_finite",
+      "evidence": "spectral_data"
+    },
+    {
+      "id": "H1-SM-08",
+      "claim": "A small same-measure inverse-vacuum weighted bad ceiling forces a cutoff-uniform positive temporal gap.",
+      "depends_on": [
+        "H1-SM-04",
+        "H1-SM-05",
+        "H1-SM-07"
+      ],
+      "status": "refuted_without_additional_hypothesis",
+      "evidence": "T_delta family: q=delta/(1+delta) and m=-log((1-delta)/(1+delta)) both tend to zero"
+    },
+    {
+      "id": "H1-SM-09",
+      "claim": "The same construction yields the physical nonlinear SU(2) retained-state kernel uniformly in boundary, volume, and cutoff.",
+      "depends_on": [
+        "H1-SM-01",
+        "H1-SM-04",
+        "H1-SM-06"
+      ],
+      "status": "open",
+      "evidence": "not represented by the two-state calibration"
+    },
+    {
+      "id": "H1-SM-10",
+      "claim": "OS reconstruction and a positive continuum Yang--Mills mass gap follow.",
+      "depends_on": [
+        "H1-SM-07",
+        "H1-SM-09"
+      ],
+      "status": "open",
+      "evidence": "continuum construction, OS axioms, observable-core density, and uniform temporal estimate absent"
+    }
+  ],
+  "first_open_implication": "Identify a physically meaningful bad observable whose same-measure weighted ceiling controls the entire orthogonal temporal transfer spectrum, or prove an additional observability/coercivity inequality that supplies this missing implication."
+}

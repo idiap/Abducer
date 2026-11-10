@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://abducer.local/spec/benchmark_external_process_summary.schema.json",
+  "title": "Exact projection of one governed benchmark process receipt",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "receipt_id", "receipt_ref", "receipt_digest", "receipt_file_sha256", "receipt_byte_length", "index_ref", "run_directory", "benchmark_id", "benchmark_run_id", "role", "invocation_id", "request_digest", "command_authority_digest", "command_authority_status", "command_authority_observation_digest", "isolation_assurance_digest", "isolation_status", "external_efficacy_eligible", "workspace_ref", "workspace_digest", "budget_digest", "resource_receipt_digest", "response_digest", "process_status", "protocol_status", "outcome_status", "epistemic_effect"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "receipt_id": {"type": "string", "pattern": "^benchmark-process-receipt\\.[a-f0-9]{24}$"},
+    "receipt_ref": {"type": "string", "pattern": "^receipts/(benchmark_runner|human_evidence_verifier)/benchmark-process-receipt\\.[a-f0-9]{24}\\.json$"},
+    "receipt_digest": {"$ref": "#/$defs/digest"},
+    "receipt_file_sha256": {"$ref": "#/$defs/digest"},
+    "receipt_byte_length": {"type": "integer", "minimum": 1},
+    "index_ref": {"type": "string", "pattern": "^indices/(benchmark_runner|human_evidence_verifier)\\.json$"},
+    "run_directory": {"type": "string", "minLength": 1},
+    "benchmark_id": {"type": "string", "minLength": 1},
+    "benchmark_run_id": {"type": "string", "minLength": 1},
+    "role": {"enum": ["benchmark_runner", "human_evidence_verifier"]},
+    "invocation_id": {"type": "string", "pattern": "^benchmark-invocation\\.[a-f0-9]{24}$"},
+    "request_digest": {"$ref": "#/$defs/digest"},
+    "command_authority_digest": {"$ref": "#/$defs/digest"},
+    "command_authority_status": {"enum": ["exact_match", "mismatch"]},
+    "command_authority_observation_digest": {"$ref": "#/$defs/digest"},
+    "isolation_assurance_digest": {"$ref": "#/$defs/digest"},
+    "isolation_status": {"const": "unisolated_protocol_only"},
+    "external_efficacy_eligible": {"const": false},
+    "workspace_ref": {"type": "string", "pattern": "^workspaces/(benchmark_runner|human_evidence_verifier)/benchmark-invocation\\.[a-f0-9]{24}$"},
+    "workspace_digest": {"$ref": "#/$defs/digest"},
+    "budget_digest": {"$ref": "#/$defs/digest"},
+    "resource_receipt_digest": {"$ref": "#/$defs/digest"},
+    "response_digest": {"oneOf": [{"$ref": "#/$defs/digest"}, {"type": "null"}]},
+    "process_status": {"$ref": "#/$defs/processStatus"},
+    "protocol_status": {"$ref": "#/$defs/protocolStatus"},
+    "outcome_status": {"enum": ["accepted", "operational_failure", "protocol_failure"]},
+    "epistemic_effect": {"const": "none_process_execution_has_no_epistemic_authority"}
+  },
+  "$defs": {
+    "digest": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
+    "processStatus": {"enum": ["succeeded", "deadline_exhausted", "cpu_exhausted", "out_of_memory", "disk_exhausted", "network_exhausted", "token_exhausted", "request_exhausted", "spend_exhausted", "input_exhausted", "output_exhausted", "worker_failed", "report_failed", "cancelled"]},
+    "protocolStatus": {"enum": ["accepted", "process_failed", "input_exhausted", "output_exhausted", "invalid_utf8", "invalid_json", "non_object", "reserved_field_spoofed", "reported_usage_exhausted", "authority_mismatch", "authority_or_launch_failed", "request_encoding_failed"]}
+  }
+}

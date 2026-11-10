@@ -1,0 +1,38 @@
+% SPDX-FileCopyrightText: © 2026 Idiap Research Institute <contact@idiap.ch>
+%
+% SPDX-FileContributor: Andre Freitas <andre.freitas@idiap.ch>
+% Neuro-symbolic AI Group
+%
+% SPDX-FileContributor: Danilo Gusicuma <danilo.gusicuma@idiap.ch>
+% Neuro-symbolic AI Group
+%
+% SPDX-License-Identifier: MIT
+\subsection{Sharpness status and model separations}
+\label{subsec:sharpness-status}
+
+The lower bounds above should be read as necessary conditions until matching
+families are supplied.  Two elementary examples clarify the model boundaries.
+
+First, formula labels and occurrence labels can differ by a factor \(M_n\).
+Let \(M_n\) be odd and let every row contain \(M_n\) copies of a single generated
+key \(u_x\), with \(x\mapsto u_x\) injective.  In the formula-label model the
+row output under parity is the shared value \(\lambda(u_x)\), so one generated
+formula controls the row.  In the occurrence-label model the \(M_n\) positions
+are private, and forcing a parity row requires all \(M_n\) occurrences.  Thus
+the occurrence model has the full aggregator-forcing cost that the formula
+model can avoid through equality of generated strings.
+
+Second, equality quotienting can collapse private occurrence hardness.  If each
+row contains two equal occurrences and parity is the aggregator, then quotienting
+the two positions identifies their labels and the row contribution is
+\(\lambda(u)+\lambda(u)=0\).  The quotient carrier is constant, although the
+private occurrence model before quotienting could realize arbitrary row
+parities.  This is why the quotient theorem is a distinct equality-aware
+completion statement rather than a cosmetic rewriting of the occurrence model.
+
+These examples do not provide a matching upper-bound theory for explicit hard
+SAT-labeled carriers.  In the absence of such a theory, the row-forcing and
+quotient-distance results are supporting structural lemmas.  The formula
+footprint theorem remains the main technical candidate because the batched
+static dictionary improves the naive \(M K\ell\) exception-lookup cost to a
+near-linear batch-plus-dictionary cost.

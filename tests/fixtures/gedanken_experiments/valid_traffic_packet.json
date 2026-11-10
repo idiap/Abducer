@@ -1,0 +1,139 @@
+{
+  "packet_id": "gedanken.fixture.valid.traffic",
+  "target_id": "traffic-flow-target",
+  "created_utc": "2026-07-09T00:00:00Z",
+  "source_artifacts": [
+    "tests/fixtures/gedanken_experiments/valid_traffic_packet.json"
+  ],
+  "originating_cycle_ids": [
+    "cycle-fixture"
+  ],
+  "originating_branch_ids": [
+    "branch-fixture"
+  ],
+  "need_decision": "design_now",
+  "need_assessment": {
+    "decision": "design_now",
+    "criteria_met": [
+      "The branch has typed variables but a hidden low-support channel could explain the observation.",
+      "A controlled contrast can separate visible-channel decay from sector-wide support."
+    ],
+    "criteria_missing": [
+      "A transfer certificate to the target observable family is still open."
+    ],
+    "rejected_alternatives": [
+      "not_needed",
+      "run_concrete_probe_first"
+    ],
+    "why_not_direct_derivation_or_probe": "A direct derivation would simply assume away the hidden channel; the imagined case identifies what the derivation must rule out."
+  },
+  "trigger_criteria": [
+    "The branch has typed variables but no discriminating situation that can expose the hidden assumption.",
+    "A follow-up cycle could derive the exact support condition."
+  ],
+  "situation": {
+    "title": "Two merge lanes with hidden bottleneck capacity",
+    "purpose": "Separate apparent linear throughput from saturation under hidden bottleneck capacity.",
+    "minimal_world": "Two traffic streams merge into one lane with a hidden maximum capacity.",
+    "mathematical_carrier": "A piecewise flow function q=min(q1+q2, C) with a hidden capacity C.",
+    "controlled_contrast": "Increase input flow before and after the bottleneck capacity is reached.",
+    "why_this_situation_is_informative": "It distinguishes local linear response from global saturation when a hidden constraint becomes active.",
+    "non_claims": [
+      "This does not prove the target.",
+      "This does not replace a spectral theorem."
+    ]
+  },
+  "variables": [
+    {
+      "id": "q1",
+      "role": "incoming flow from lane one",
+      "control_status": "varied",
+      "held_fixed_or_varied": "varied",
+      "validity_regime": "positive spectral validity regime"
+    },
+    {
+      "id": "qout",
+      "role": "outgoing merged flow",
+      "control_status": "dependent",
+      "held_fixed_or_varied": "observed",
+      "validity_regime": "positive spectral validity regime"
+    }
+  ],
+  "interventions": [
+    {
+      "id": "increase-lane-one-flow",
+      "operation": "Increase q1 while holding q2 and capacity C fixed.",
+      "varied_variable": "q1",
+      "held_fixed": [
+        "q2",
+        "capacity C"
+      ],
+      "predicted_direction": "qout first increases linearly and then saturates.",
+      "decision_value": "If hidden leakage dominates, the branch needs a density or support lemma."
+    }
+  ],
+  "expected_observations": [
+    {
+      "id": "late-tail",
+      "observable": "slope of qout as q1 increases",
+      "expected_pattern": "Slope transitions from one to zero at the bottleneck.",
+      "what_it_would_teach": "A hidden capacity constraint can reverse a naive monotonic extrapolation.",
+      "what_would_disconfirm_it": "A uniform support bound would disconfirm the hidden-tail scenario."
+    }
+  ],
+  "variants": [
+    {
+      "id": "raise-capacity",
+      "changed_condition": "Raise capacity C while holding incoming flows fixed.",
+      "predicted_change": "The saturation point moves to a larger q1.",
+      "reason_for_variant": "Tests whether the hidden capacity is the active mechanism."
+    }
+  ],
+  "insight_hypotheses": [
+    "The branch needs a support or density condition before promoting decay."
+  ],
+  "transfer_scope": {
+    "transfer_verdict": "needs_certificate",
+    "transfers": "The generic mechanism that hidden constraints can turn local linearity into saturation.",
+    "does_not_transfer": "Any specific claim about traffic policy or physics targets.",
+    "transfer_certificate_needed": "A target-specific map from hidden capacity to the relevant constraint."
+  },
+  "affected_node_ids": [
+    "var.input_flow",
+    "var.output_flow",
+    "constraint.capacity"
+  ],
+  "affected_edge_ids": [
+    "rel.input-to-output-saturates"
+  ],
+  "graph_update_action": "needs_probe",
+  "proposed_graph_updates": [
+    {
+      "edge_id": "rel.input-to-output-saturates",
+      "action": "needs_probe",
+      "epistemic_status": "conceptual_probe",
+      "rationale": "Hidden leakage must be ruled out before decay is promoted."
+    }
+  ],
+  "followup_cycle_tasks": [
+    {
+      "action": "derive",
+      "description": "Derive the support condition needed to rule out hidden low-energy leakage.",
+      "success_criterion": "The condition names the observable family and support interval.",
+      "failure_or_demotion_criterion": "If only one observable is controlled, demote to evidence task.",
+      "required_skills": [
+        "gedanken-transfer-guard",
+        "limit-convergence-behavior-auditor"
+      ],
+      "packet_id": "gedanken.fixture.valid.traffic",
+      "situation_title": "Two merge lanes with hidden bottleneck capacity",
+      "transfer_verdict": "needs_certificate"
+    }
+  ],
+  "failure_modes": [
+    "The situation is analogy-only.",
+    "The follow-up cycle does not name a transferable condition."
+  ],
+  "epistemic_status": "conceptual_probe",
+  "validation_handoff": "python agentic/scripts/validate_gedanken_experiment_packets.py"
+}

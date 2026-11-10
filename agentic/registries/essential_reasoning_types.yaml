@@ -1,0 +1,199 @@
+{
+  "schema_version": "1.0.0",
+  "status": "initial_draft",
+  "scope": {
+    "mapping_kind": "curated_exemplars",
+    "complete_skill_coverage": false,
+    "canonical_mapping_direction": "skill_mappings",
+    "multi_type_realization_default": "opaque_unordered",
+    "principle": "Reasoning types describe epistemic warrants; skills are concrete materializations and may instantiate more than one type.",
+    "excluded_as_essential_types": [
+      "generative_reasoning",
+      "workflow_composition",
+      "dependency_closure",
+      "deterministic_validation",
+      "reporting",
+      "ingestion"
+    ]
+  },
+  "reasoning_types": [
+    {
+      "id": "deductive_entailment",
+      "family": "core_inference",
+      "definition": "Derive a conclusion or obligation licensed by typed premises, definitions, and valid rules.",
+      "input_state": "premises_with_scope_and_provenance",
+      "output_state": "entailed_given_premises",
+      "warrant": "Valid inference rules plus conserved premise scope and provenance.",
+      "claim_ceiling": "entailed_given_premises",
+      "failure_modes": ["hidden premise", "invalid inference", "quantifier drift", "regime drift"],
+      "exemplar_skills": ["kb-deduce", "lemma-chain-proof-builder", "pvsnp-proof-derivation-builder", "formal-claim-producer", "entailment-gap-auditor"]
+    },
+    {
+      "id": "abductive_hypothesis_formation",
+      "family": "core_inference",
+      "definition": "Generate and rank conjectural explanations, missing premises, or bridge objects for an observation or gap.",
+      "input_state": "observations_gaps_and_constraints",
+      "output_state": "candidate_explanation",
+      "warrant": "Coverage, coherence, parsimony, discriminability, and explicit alternatives.",
+      "claim_ceiling": "candidate_explanation",
+      "failure_modes": ["affirming the consequent", "hypothesis monoculture", "coherence promoted as truth"],
+      "exemplar_skills": ["kb-abduce", "kb-gap-abstraction-conjecturer", "abducer-mediation-candidate-generator", "proof-bridge-object-forger", "kb-hypothesis-evaluator"]
+    },
+    {
+      "id": "inductive_generalization",
+      "family": "core_inference",
+      "definition": "Infer a scoped regularity or schema from multiple cases, routes, or experimental outcomes.",
+      "input_state": "case_set_with_sampling_scope",
+      "output_state": "provisional_generalization",
+      "warrant": "Recurrence, representativeness, stability under variation, and stated boundary conditions.",
+      "claim_ceiling": "provisional_generalization",
+      "failure_modes": ["hasty generalization", "selection bias", "unstated exceptions", "finite-to-asymptotic promotion"],
+      "exemplar_skills": ["kb-induce", "proof-inference-learning-extractor", "reflective-theory-synthesizer", "scale-asymptotic-reasoner"]
+    },
+    {
+      "id": "structural_analogy_transfer",
+      "family": "core_inference",
+      "definition": "Transport a candidate property, method, or conjecture through an explicit source-target correspondence.",
+      "input_state": "source_target_and_correspondence",
+      "output_state": "candidate_transfer",
+      "warrant": "Preservation of relevant relations, invariants, side conditions, and domain identity.",
+      "claim_ceiling": "candidate_transfer",
+      "failure_modes": ["surface analogy", "category mismatch", "regime mismatch", "lost side condition"],
+      "exemplar_skills": ["proof-bridge-object-forger", "proof-same-domain-transfer-certifier", "bridge-object-equivalence-checker", "visual-analogy-preservation-auditor", "gedanken-transfer-guard"]
+    },
+    {
+      "id": "contrastive_counterfactual_reasoning",
+      "family": "core_inference",
+      "definition": "Compare a baseline with a controlled alternative to identify dependence, sensitivity, or discriminating consequences.",
+      "input_state": "baseline_intervention_and_fixed_invariants",
+      "output_state": "contrast_supported",
+      "warrant": "A well-defined contrast with controlled changes and explicit invariants.",
+      "claim_ceiling": "contrast_supported",
+      "failure_modes": ["impossible antecedent", "uncontrolled simultaneous changes", "causal overclaim"],
+      "exemplar_skills": ["counterfactual-route-prober", "gedanken-counterfactual-variant-builder", "monotonicity-sensitivity-prober", "qualitative-variable-isolator"]
+    },
+    {
+      "id": "model_based_reasoning",
+      "family": "core_inference",
+      "definition": "Use an explicit idealized, finite, symbolic, numerical, or toy model to probe behavior or mechanism.",
+      "input_state": "theory_model_and_idealization_map",
+      "output_state": "model_supported",
+      "warrant": "Reproducibility, robustness, error control, and an explicit idealization-to-target map.",
+      "claim_ceiling": "model_supported",
+      "failure_modes": ["model-target conflation", "numerical artifact", "unlicensed extrapolation"],
+      "exemplar_skills": ["qualitative-toy-model-builder", "dynamic-symbolic-simulation-experimenter", "pvsnp-gedanken-complexity-lab", "physics-regime-map-builder"]
+    },
+    {
+      "id": "critical_refutational_testing",
+      "family": "epistemic_control",
+      "definition": "Search for counterexamples, contradictions, missing premises, or other defeaters of a candidate claim.",
+      "input_state": "claim_assumptions_and_search_scope",
+      "output_state": "refuted_or_not_refuted_within_scope",
+      "warrant": "A valid defeating witness, or a bounded and fully reported search scope.",
+      "claim_ceiling": "not_refuted_within_scope",
+      "failure_modes": ["absence of counterexample treated as proof", "weak adversary", "suppressed failed search"],
+      "exemplar_skills": ["counterexample-hunter", "kb-hypothesis-refutation-loop", "qualitative-physics-falsifier", "contradiction-route-auditor", "premise-completeness-prober", "entailment-gap-auditor"]
+    },
+    {
+      "id": "evidential_status_calibration",
+      "family": "epistemic_control",
+      "definition": "Assign, conserve, demote, or promote epistemic status using declared evidence and promotion rules.",
+      "input_state": "claims_provenance_tests_and_open_obligations",
+      "output_state": "calibrated_epistemic_status",
+      "warrant": "Traceable evidence, explicit criteria, claim ceilings, and unresolved-obligation accounting.",
+      "claim_ceiling": "creates_no_substantive_claim",
+      "failure_modes": ["plausibility treated as validation", "coherence treated as entailment", "workflow success treated as truth"],
+      "exemplar_skills": ["epistemic-status-ledger", "kb-coherence-evaluator", "kb-hypothesis-evaluator", "proof-quality-gatekeeper", "paper-contribution-readiness-judge", "ym-audit-frontier"]
+    }
+  ],
+  "skill_mappings": [
+    {"skill": "kb-deduce", "primary_type": "deductive_entailment", "secondary_types": [], "epistemic_role": "transformer", "confidence": "high"},
+    {"skill": "lemma-chain-proof-builder", "primary_type": "deductive_entailment", "secondary_types": [], "epistemic_role": "generator", "confidence": "high"},
+    {"skill": "pvsnp-proof-derivation-builder", "primary_type": "deductive_entailment", "secondary_types": [], "epistemic_role": "generator", "confidence": "high"},
+    {"skill": "formal-claim-producer", "primary_type": "deductive_entailment", "secondary_types": ["evidential_status_calibration"], "epistemic_role": "transformer", "confidence": "medium"},
+    {"skill": "entailment-gap-auditor", "primary_type": "critical_refutational_testing", "secondary_types": ["deductive_entailment"], "epistemic_role": "validator", "confidence": "high"},
+    {"skill": "kb-abduce", "primary_type": "abductive_hypothesis_formation", "secondary_types": [], "epistemic_role": "generator", "confidence": "high"},
+    {"skill": "kb-gap-abstraction-conjecturer", "primary_type": "abductive_hypothesis_formation", "secondary_types": ["inductive_generalization"], "epistemic_role": "generator", "confidence": "medium"},
+    {"skill": "abducer-mediation-candidate-generator", "primary_type": "abductive_hypothesis_formation", "secondary_types": ["structural_analogy_transfer"], "epistemic_role": "generator", "confidence": "high"},
+    {"skill": "proof-bridge-object-forger", "primary_type": "abductive_hypothesis_formation", "secondary_types": ["structural_analogy_transfer"], "epistemic_role": "generator", "confidence": "high"},
+    {"skill": "kb-induce", "primary_type": "inductive_generalization", "secondary_types": [], "epistemic_role": "generator", "confidence": "high"},
+    {"skill": "proof-inference-learning-extractor", "primary_type": "inductive_generalization", "secondary_types": ["evidential_status_calibration"], "epistemic_role": "transformer", "confidence": "high"},
+    {"skill": "reflective-theory-synthesizer", "primary_type": "inductive_generalization", "secondary_types": ["abductive_hypothesis_formation"], "epistemic_role": "generator", "confidence": "medium"},
+    {"skill": "scale-asymptotic-reasoner", "primary_type": "inductive_generalization", "secondary_types": ["model_based_reasoning"], "epistemic_role": "transformer", "confidence": "medium"},
+    {"skill": "proof-same-domain-transfer-certifier", "primary_type": "structural_analogy_transfer", "secondary_types": ["evidential_status_calibration"], "epistemic_role": "validator", "confidence": "high"},
+    {"skill": "bridge-object-equivalence-checker", "primary_type": "structural_analogy_transfer", "secondary_types": ["deductive_entailment"], "epistemic_role": "validator", "confidence": "high"},
+    {"skill": "visual-analogy-preservation-auditor", "primary_type": "structural_analogy_transfer", "secondary_types": ["critical_refutational_testing"], "epistemic_role": "validator", "confidence": "high"},
+    {"skill": "gedanken-transfer-guard", "primary_type": "structural_analogy_transfer", "secondary_types": ["critical_refutational_testing"], "epistemic_role": "validator", "confidence": "high"},
+    {"skill": "counterfactual-route-prober", "primary_type": "contrastive_counterfactual_reasoning", "secondary_types": ["critical_refutational_testing"], "epistemic_role": "generator", "confidence": "high"},
+    {"skill": "gedanken-counterfactual-variant-builder", "primary_type": "contrastive_counterfactual_reasoning", "secondary_types": [], "epistemic_role": "generator", "confidence": "high"},
+    {"skill": "monotonicity-sensitivity-prober", "primary_type": "contrastive_counterfactual_reasoning", "secondary_types": ["model_based_reasoning"], "epistemic_role": "validator", "confidence": "high"},
+    {"skill": "qualitative-variable-isolator", "primary_type": "contrastive_counterfactual_reasoning", "secondary_types": ["model_based_reasoning"], "epistemic_role": "transformer", "confidence": "high"},
+    {"skill": "qualitative-toy-model-builder", "primary_type": "model_based_reasoning", "secondary_types": ["abductive_hypothesis_formation"], "epistemic_role": "generator", "confidence": "high"},
+    {"skill": "dynamic-symbolic-simulation-experimenter", "primary_type": "model_based_reasoning", "secondary_types": ["contrastive_counterfactual_reasoning"], "epistemic_role": "generator", "confidence": "high"},
+    {"skill": "pvsnp-gedanken-complexity-lab", "primary_type": "model_based_reasoning", "secondary_types": ["contrastive_counterfactual_reasoning"], "epistemic_role": "generator", "confidence": "high"},
+    {"skill": "physics-regime-map-builder", "primary_type": "model_based_reasoning", "secondary_types": ["evidential_status_calibration"], "epistemic_role": "transformer", "confidence": "medium"},
+    {"skill": "counterexample-hunter", "primary_type": "critical_refutational_testing", "secondary_types": [], "epistemic_role": "validator", "confidence": "high"},
+    {"skill": "kb-hypothesis-refutation-loop", "primary_type": "critical_refutational_testing", "secondary_types": ["deductive_entailment"], "epistemic_role": "validator", "confidence": "high"},
+    {"skill": "qualitative-physics-falsifier", "primary_type": "critical_refutational_testing", "secondary_types": ["model_based_reasoning"], "epistemic_role": "validator", "confidence": "high"},
+    {"skill": "contradiction-route-auditor", "primary_type": "critical_refutational_testing", "secondary_types": ["deductive_entailment"], "epistemic_role": "validator", "confidence": "high"},
+    {"skill": "premise-completeness-prober", "primary_type": "critical_refutational_testing", "secondary_types": ["deductive_entailment"], "epistemic_role": "validator", "confidence": "high"},
+    {"skill": "epistemic-status-ledger", "primary_type": "evidential_status_calibration", "secondary_types": [], "epistemic_role": "adjudicator", "confidence": "high"},
+    {"skill": "kb-coherence-evaluator", "primary_type": "evidential_status_calibration", "secondary_types": ["abductive_hypothesis_formation"], "epistemic_role": "validator", "confidence": "medium"},
+    {"skill": "kb-hypothesis-evaluator", "primary_type": "evidential_status_calibration", "secondary_types": ["critical_refutational_testing"], "epistemic_role": "adjudicator", "confidence": "high"},
+    {"skill": "proof-quality-gatekeeper", "primary_type": "evidential_status_calibration", "secondary_types": ["deductive_entailment", "critical_refutational_testing"], "epistemic_role": "adjudicator", "confidence": "high"},
+    {"skill": "paper-contribution-readiness-judge", "primary_type": "evidential_status_calibration", "secondary_types": [], "epistemic_role": "adjudicator", "confidence": "high"},
+    {"skill": "ym-audit-frontier", "primary_type": "evidential_status_calibration", "secondary_types": ["critical_refutational_testing"], "epistemic_role": "validator", "confidence": "medium"}
+  ],
+  "non_epistemic_materializers": [
+    {
+      "skill": "route",
+      "operational_role": "rigid_router",
+      "reasoning_relation": "binds_but_does_not_itself_instantiate",
+      "rationale": "A valid capability binding establishes executable coverage, not an epistemic warrant or scientific result."
+    },
+    {
+      "skill": "orch",
+      "operational_role": "dynamic_orchestrator",
+      "reasoning_relation": "selects_and_composes_but_does_not_itself_instantiate",
+      "rationale": "Choosing and sequencing reasoning capabilities is a control decision whose authority remains below the child inferences."
+    },
+    {
+      "skill": "cohere-fast-orchestrator",
+      "operational_role": "orchestrator",
+      "reasoning_relation": "composes_but_does_not_itself_instantiate",
+      "rationale": "Successful control flow is not a scientific inference and inherits no child claim authority."
+    },
+    {
+      "skill": "kb-explain",
+      "operational_role": "synthesizer_presenter",
+      "reasoning_relation": "communicates_composite_reasoning",
+      "rationale": "Explanation may combine deduction and abduction, but presentation alone creates no new warrant."
+    }
+  ],
+  "reasoning_styles": [
+    {
+      "id": "abductive_discovery",
+      "definition": "Form candidate explanations and expose them to consequence tracing and defeaters.",
+      "composition": ["abductive_hypothesis_formation", "deductive_entailment", "contrastive_counterfactual_reasoning", "critical_refutational_testing", "evidential_status_calibration"],
+      "required_guards": ["alternatives remain visible", "no candidate is promoted directly to established"]
+    },
+    {
+      "id": "proof_search",
+      "definition": "Propose a proof route, derive its consequences, and audit premises and transfer steps.",
+      "composition": ["abductive_hypothesis_formation", "structural_analogy_transfer", "deductive_entailment", "critical_refutational_testing", "evidential_status_calibration"],
+      "required_guards": ["premise provenance conserved", "transfer side conditions explicit"]
+    },
+    {
+      "id": "theory_abstraction",
+      "definition": "Generalize across cases and structures, synthesize a candidate account, and derive discriminating predictions.",
+      "composition": ["inductive_generalization", "structural_analogy_transfer", "abductive_hypothesis_formation", "deductive_entailment", "critical_refutational_testing"],
+      "required_guards": ["generalization base reported", "exceptions and boundary conditions retained"]
+    },
+    {
+      "id": "model_mediated_inquiry",
+      "definition": "Use bounded models and controlled contrasts to probe mechanisms without promoting model evidence beyond scope.",
+      "composition": ["model_based_reasoning", "contrastive_counterfactual_reasoning", "inductive_generalization", "evidential_status_calibration"],
+      "required_guards": ["idealization map explicit", "model-supported does not imply theorem or target fact"]
+    }
+  ]
+}

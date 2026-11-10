@@ -1,0 +1,104 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://abducer.local/spec/dynamic_experiment_causal_materializer_receipt_v3.schema.json",
+  "title": "Compact causal byte-materializer attempt receipt v3",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "receipt_kind", "receipt_id", "receipt_digest",
+    "request_id", "request_digest", "invocation_id", "attempt", "operator",
+    "semantic_authorship", "authority_boundary", "started_at", "completed_at",
+    "duration_seconds", "status", "exit_code", "stdout_digest", "stderr_digest",
+    "input_ref", "output_ref", "history_ref", "validator", "error"
+  ],
+  "properties": {
+    "schema_version": {"const": "3.0.0"},
+    "receipt_kind": {"const": "causal_byte_materializer_attempt"},
+    "receipt_id": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/identifier"},
+    "receipt_digest": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/digest"},
+    "request_id": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/identifier"},
+    "request_digest": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/digest"},
+    "invocation_id": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/identifier"},
+    "attempt": {"type": "integer", "minimum": 1, "maximum": 32},
+    "operator": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["operator_id", "version", "kind"],
+      "properties": {
+        "operator_id": {"const": "canonical-causal-byte-materializer-v3"},
+        "version": {"const": "3.0.0"},
+        "kind": {"const": "support_probe"}
+      }
+    },
+    "semantic_authorship": {"const": false},
+    "authority_boundary": {"const": "local_exact_byte_materialization_only_not_semantic_authorship_external_independence_theory_selection_proof_or_physics_authority"},
+    "started_at": {"type": "string", "format": "date-time"},
+    "completed_at": {"type": "string", "format": "date-time"},
+    "duration_seconds": {"type": "number", "minimum": 0, "maximum": 60},
+    "status": {"enum": ["succeeded", "failed", "timed_out"]},
+    "exit_code": {"type": ["integer", "null"]},
+    "stdout_digest": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/digest"},
+    "stderr_digest": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/digest"},
+    "input_ref": {"$ref": "./dynamic_experiment_compact_evidence_ref_v3.schema.json"},
+    "output_ref": {
+      "oneOf": [
+        {"$ref": "./dynamic_experiment_compact_evidence_ref_v3.schema.json"},
+        {"type": "null"}
+      ]
+    },
+    "history_ref": {
+      "oneOf": [
+        {"$ref": "./dynamic_experiment_compact_evidence_ref_v3.schema.json"},
+        {"type": "null"}
+      ]
+    },
+    "validator": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["validator_id", "version", "status", "dependency_authority_digest", "stdout_digest", "stderr_digest", "exit_code"],
+      "properties": {
+        "validator_id": {"const": "canonical-causal-byte-materializer-validator-v3"},
+        "version": {"const": "3.0.0"},
+        "status": {"enum": ["passed", "failed", "not_run"]},
+        "dependency_authority_digest": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/digest"},
+        "stdout_digest": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/digest"},
+        "stderr_digest": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/digest"},
+        "exit_code": {"type": ["integer", "null"]}
+      }
+    },
+    "error": {
+      "oneOf": [
+        {"type": "null"},
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["error_type", "message_digest"],
+          "properties": {
+            "error_type": {"type": "string", "minLength": 1, "maxLength": 128},
+            "message_digest": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/digest"}
+          }
+        }
+      ]
+    }
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"status": {"const": "succeeded"}}, "required": ["status"]},
+      "then": {
+        "properties": {
+          "output_ref": {"$ref": "./dynamic_experiment_compact_evidence_ref_v3.schema.json"},
+          "history_ref": {"$ref": "./dynamic_experiment_compact_evidence_ref_v3.schema.json"},
+          "error": {"type": "null"},
+          "validator": {"properties": {"status": {"const": "passed"}}}
+        }
+      },
+      "else": {
+        "properties": {
+          "output_ref": {"type": "null"},
+          "history_ref": {"type": "null"},
+          "error": {"type": "object"}
+        }
+      }
+    }
+  ]
+}

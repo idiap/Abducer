@@ -1,0 +1,92 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://abducer.local/spec/dynamic_experiment_causal_producer_binding_v2.schema.json",
+  "title": "Exact producer request, receipt, immutable bytes, role, and governed time binding v2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "contract_version", "binding_id", "local_protocol_valid", "evidence_authority_id", "stage_id", "producer_role", "target_id", "run_id", "state_version", "producer_request", "producer_receipt", "artifact_evidence", "governed_timestamps", "binding_digest"],
+  "properties": {
+    "schema_version": {"const": "2.0.0"},
+    "contract_version": {"const": "experiment-causal-producer-binding/2.0.0"},
+    "binding_id": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/identifier"},
+    "local_protocol_valid": {"const": true},
+    "evidence_authority_id": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/identifier"},
+    "stage_id": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/identifier"},
+    "producer_role": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/identifier"},
+    "target_id": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/identifier"},
+    "run_id": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/identifier"},
+    "state_version": {"type": "integer", "minimum": 0},
+    "producer_request": {"$ref": "#/$defs/requestEvidence"},
+    "producer_receipt": {"$ref": "#/$defs/receiptEvidence"},
+    "artifact_evidence": {"$ref": "#/$defs/artifactEvidence"},
+    "governed_timestamps": {"$ref": "#/$defs/governedTimestamps"},
+    "binding_digest": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/digest"}
+  },
+  "$defs": {
+    "encodedEvidenceCore": {
+      "type": "object",
+      "required": ["value", "value_digest", "bytes_base64", "file_sha256", "byte_length"],
+      "properties": {
+        "value": {"type": "object"},
+        "value_digest": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/digest"},
+        "bytes_base64": {"type": "string", "minLength": 4, "contentEncoding": "base64"},
+        "file_sha256": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/digest"},
+        "byte_length": {"type": "integer", "minimum": 1}
+      }
+    },
+    "requestEvidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["value", "value_digest", "bytes_base64", "file_sha256", "byte_length"],
+      "properties": {
+        "value": {"$ref": "./discovery_operator_request.schema.json"},
+        "value_digest": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/digest"},
+        "bytes_base64": {"type": "string", "minLength": 4, "contentEncoding": "base64"},
+        "file_sha256": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/digest"},
+        "byte_length": {"type": "integer", "minimum": 1}
+      }
+    },
+    "receiptEvidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["value", "value_digest", "bytes_base64", "file_sha256", "byte_length"],
+      "properties": {
+        "value": {"$ref": "./discovery_operator_receipt.schema.json"},
+        "value_digest": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/digest"},
+        "bytes_base64": {"type": "string", "minLength": 4, "contentEncoding": "base64"},
+        "file_sha256": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/digest"},
+        "byte_length": {"type": "integer", "minimum": 1}
+      }
+    },
+    "artifactEvidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["value", "value_digest", "bytes_base64", "file_sha256", "byte_length", "artifact_id", "declared_output_path", "immutable_history_path", "output_descriptor", "history_descriptor"],
+      "properties": {
+        "value": {"type": "object"},
+        "value_digest": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/digest"},
+        "bytes_base64": {"type": "string", "minLength": 4, "contentEncoding": "base64"},
+        "file_sha256": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/digest"},
+        "byte_length": {"type": "integer", "minimum": 1},
+        "artifact_id": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/identifier"},
+        "declared_output_path": {"type": "string", "minLength": 1},
+        "immutable_history_path": {"type": "string", "minLength": 1},
+        "output_descriptor": {"$ref": "./discovery_operator_request.schema.json#/$defs/artifact"},
+        "history_descriptor": {"$ref": "./discovery_operator_request.schema.json#/$defs/artifact"}
+      }
+    },
+    "governedTimestamps": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["clock_authority_id", "requested_at", "started_at", "completed_at", "sealed_at", "clock_authority_digest"],
+      "properties": {
+        "clock_authority_id": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/identifier"},
+        "requested_at": {"type": "string", "format": "date-time"},
+        "started_at": {"type": "string", "format": "date-time"},
+        "completed_at": {"type": "string", "format": "date-time"},
+        "sealed_at": {"type": "string", "format": "date-time"},
+        "clock_authority_digest": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/digest"}
+      }
+    }
+  }
+}

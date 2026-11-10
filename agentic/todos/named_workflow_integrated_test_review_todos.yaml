@@ -1,0 +1,189 @@
+[
+  {
+    "id": "NWIT-001", "type": "workflow_todo", "phase": "runtime-substrate", "owner": "agentic/orchestration", "priority": "critical", "risk_class": "fixture-runtime-gap",
+    "title": "Execute named workflow contracts through a real lifecycle runner",
+    "intent": "Replace projection-only confidence with an executable runner that evaluates triggers, dispatches steps, validates typed inputs and outputs, and records durable receipts.",
+    "use_skills": ["looper-workflow-contract-governor", "skill-orphan-integration-orchestrator"],
+    "implementation_steps": ["Define the run state machine and typed artifact store.", "Dispatch every eligible step through its declared skill execution mode.", "Persist run, step, artifact, authorization, and disposition receipts.", "Exercise one bounded real scenario for each named workflow and Route-A."],
+    "required_artifact": ["agentic/orchestration/named_workflow_runner.py", "agentic/spec/named_workflow_run_receipt.schema.json", "tests/integration/test_named_workflow_runtime.py"],
+    "acceptance_criteria": ["Each of the six named workflows and Route-A completes a non-fixture bounded run.", "Receipts prove which implementation ran and bind consumed and produced artifact digests.", "The skill-integration report records exercised skills from runtime receipts rather than registry declarations."],
+    "blocked_by": [], "evidence": ["file:agentic/reports/skill_integration/latest.json", "cmd:.venv/bin/python -m pytest -q tests/integration/test_named_workflow_runtime.py"], "review_date": "2026-08-12",
+    "failure_modes": ["A test constructs events without executing skills.", "A prompt or catalog mention is counted as execution.", "Outputs are accepted without schema or digest validation."], "status": "open"
+  },
+  {
+    "id": "NWIT-002", "type": "test_todo", "phase": "lifecycle-semantics", "owner": "tests/orchestration", "priority": "critical", "risk_class": "invalid-continuation",
+    "title": "Enforce stop, quarantine, rejection, and terminal handoff semantics",
+    "intent": "Prevent failed steps from being followed by unauthorized execution or an accepted handoff.",
+    "use_skills": ["looper-workflow-contract-governor"],
+    "implementation_steps": ["Build a transition table for every on_failure and exit-gate disposition.", "Generate tests at first, middle, and final steps.", "Assert that stop is terminal, quarantine changes the permitted route, and rejected runs cannot hand off as accepted.", "Correct the realistic trace generator so its injected negative case obeys the declared policy."],
+    "required_artifact": ["agentic/spec/named_workflow_lifecycle.schema.json", "tests/orchestration/test_named_workflow_failure_transitions.py", "tests/orchestration/test_named_workflow_realistic_trace_scenarios.py"],
+    "acceptance_criteria": ["No semantic step executes after a terminal stop.", "Every quarantine has an explicit recovery, review, or terminal route.", "Handoff acceptance is impossible after an incompatible failure disposition."],
+    "blocked_by": ["NWIT-001"], "evidence": ["file:agentic/registries/named_workflow_contracts.yaml", "file:tests/orchestration/test_named_workflow_realistic_trace_scenarios.py"], "review_date": "2026-08-12",
+    "failure_modes": ["The test injects a failure and still executes the remaining happy path.", "Quarantine is treated as cosmetic metadata.", "The report shows a successful handoff for a failed run."], "status": "open"
+  },
+  {
+    "id": "NWIT-003", "type": "test_todo", "phase": "branch-coverage", "owner": "tests/integration", "priority": "high", "risk_class": "conditional-blind-spot",
+    "title": "Cover both outcomes of every conditional and profile branch",
+    "intent": "Demonstrate realistic eligibility, justified non-applicability, and failure behavior instead of executing every declared step unconditionally.",
+    "use_skills": ["looper-workflow-contract-governor"],
+    "implementation_steps": ["Inventory all when expressions and profile-specific roles.", "Create the smallest scenario set that makes each conditional true and false.", "Require evidence for conditional execution and justified N/A.", "Include Route-A symbolic-audit and specialist/tail branches."],
+    "required_artifact": ["agentic/reports/named_workflow_branch_coverage/latest.json", "tests/integration/test_named_workflow_branch_matrix.py"],
+    "acceptance_criteria": ["Every conditional has observed true and false outcomes.", "A false condition produces justified N/A, not a trace gap.", "Branch coverage is computed from run receipts."],
+    "blocked_by": ["NWIT-001"], "evidence": ["file:agentic/registries/named_workflow_contracts.yaml"], "review_date": "2026-08-12",
+    "failure_modes": ["All declared steps execute in every scenario.", "A skipped step lacks condition evidence.", "Profile-only roles disappear from coverage."], "status": "open"
+  },
+  {
+    "id": "NWIT-004", "type": "workflow_todo", "phase": "handoff-runtime", "owner": "agentic/orchestration", "priority": "critical", "risk_class": "declarative-adapter",
+    "title": "Implement and execute typed cross-workflow handoff adapters",
+    "intent": "Turn adapter names in the registry into validated transformations accepted by the destination workflow.",
+    "use_skills": ["looper-workflow-contract-governor", "workflow-hook-engineer"],
+    "implementation_steps": ["Create an adapter registry keyed by source, destination, artifact type, and version.", "Validate source digest, transformed artifact, obligations, scope, and destination trigger.", "Run proof, contribution, manuscript, conceptual-return, and governed-repair chains.", "Record destination acceptance or rejection receipts."],
+    "required_artifact": ["agentic/orchestration/handoff_adapters.py", "agentic/spec/workflow_handoff_receipt.schema.json", "tests/integration/test_named_workflow_handoffs.py"],
+    "acceptance_criteria": ["Every declared adapter resolves to executable code.", "The destination validates and consumes the transformed artifact.", "Open obligations and epistemic scope survive the boundary."],
+    "blocked_by": ["NWIT-001"], "evidence": ["file:agentic/registries/named_workflow_contracts.yaml"], "review_date": "2026-08-12",
+    "failure_modes": ["The test asserts only the adapter string.", "A handoff is accepted without destination execution.", "Transformation loses provenance or obligations."], "status": "open"
+  },
+  {
+    "id": "NWIT-005", "type": "workflow_todo", "phase": "route-a-runtime", "owner": "agentic/orchestration", "priority": "critical", "risk_class": "fork-join-integrity",
+    "title": "Exercise Route-A specialist fork, join, adapter, and validation tail",
+    "intent": "Validate Route-A as concurrent workflow behavior rather than a flattened projected step list.",
+    "use_skills": ["routea-paper-attack-orchestrator", "routea-open-point-orchestrator", "looper-workflow-contract-governor"],
+    "implementation_steps": ["Execute specialist roles with separate branch identities and receipts.", "Test partial failure, timeout, incompatible scope, and same-theory mismatch.", "Join only admissible ResultCandidatePackets.", "Apply and validate the ResultCandidatePacket to RefinedResultCandidates tail adapter."],
+    "required_artifact": ["agentic/orchestration/route_a_runner.py", "tests/integration/test_route_a_fork_join.py"],
+    "acceptance_criteria": ["Fan-out and join topology is observable in receipts.", "A failed or incompatible specialist cannot silently enter the join.", "The common validation tail consumes the adapted joined artifact."],
+    "blocked_by": ["NWIT-001"], "evidence": ["file:agentic/registries/named_workflow_contracts.yaml", "file:agentic/registries/named_workflow_trace_contracts.yaml"], "review_date": "2026-08-12",
+    "failure_modes": ["Route-A is tested as one sequential list.", "The join ignores missing branches.", "The tail adapter exists only as YAML."], "status": "open"
+  },
+  {
+    "id": "NWIT-006", "type": "hook_todo", "phase": "hook-integration", "owner": "agentic/hooks", "priority": "high", "risk_class": "authorization-coverage",
+    "title": "Build a per-workflow hook decision and tamper matrix",
+    "intent": "Verify activation, pre-skill, pre-tool, post-skill, and stop hooks on real runs for allowed and denied cases.",
+    "use_skills": ["workflow-hook-engineer", "looper-workflow-contract-governor"],
+    "implementation_steps": ["Cross workflows and profiles with every hook phase.", "Test valid, missing, forged, stale, out-of-membership, and digest-mismatched inputs.", "Correlate decisions with run and step receipts.", "Assert denied actions leave no semantic output."],
+    "required_artifact": ["agentic/reports/named_workflow_hook_coverage/latest.json", "tests/integration/test_named_workflow_hook_matrix.py"],
+    "acceptance_criteria": ["Every workflow/profile and hook phase has allow and deny evidence.", "Forged or stale authorization is rejected.", "Denied execution cannot emit an accepted artifact or inference."],
+    "blocked_by": ["NWIT-001"], "evidence": ["cmd:python agentic/scripts/run_hook_contract_tests.py"], "review_date": "2026-08-12",
+    "failure_modes": ["Five generic fixtures stand in for workflow-specific coverage.", "Hook decisions cannot be correlated to the run.", "A denied skill still produces output."], "status": "open"
+  },
+  {
+    "id": "NWIT-007", "type": "workflow_todo", "phase": "skill-integration-ladder", "owner": "agentic/registries", "priority": "critical", "risk_class": "declared-not-integrated",
+    "title": "Move skills from declaration to routed, executable, exercised, consumed, and feedback-effective evidence",
+    "intent": "Use the integration ladder as an outcome measure and close the current 218-declared versus 8-routed and 0-exercised gap.",
+    "use_skills": ["skill-orphan-integration-orchestrator", "looper-workflow-contract-governor"],
+    "implementation_steps": ["Assign an execution mode and callable owner to every workflow step.", "Prioritize at least one complete vertical slice per workflow.", "Count only signed runtime receipts at exercised and higher levels.", "Record downstream consumption and a tested feedback effect."],
+    "required_artifact": ["agentic/reports/skill_integration/latest.json", "agentic/reports/skill_integration/latest.md"],
+    "acceptance_criteria": ["No required workflow step lacks a runtime route or explicit blocked disposition.", "Each workflow has exercised and consumed evidence.", "Feedback-effective status names the downstream decision changed by the feedback."],
+    "blocked_by": ["NWIT-001"], "evidence": ["cmd:python agentic/scripts/validate_skill_integration.py", "file:agentic/reports/skill_integration/latest.json"], "review_date": "2026-08-12",
+    "failure_modes": ["Catalog membership is counted as integration.", "Synthetic trace events are counted as execution.", "Feedback is logged but has no tested effect."], "status": "open"
+  },
+  {
+    "id": "NWIT-008", "type": "report_todo", "phase": "live-trace", "owner": "agentic/scripts", "priority": "critical", "risk_class": "fixture-observability-gap",
+    "title": "Generate HTML and PDF traces from the same real workflow receipts",
+    "intent": "Prove that expert-facing reports describe executed inference and control behavior, not only semantically rich fixtures.",
+    "use_skills": ["workflow-reasoning-visualizer", "workflow-reasoning-pdf-visualizer"],
+    "implementation_steps": ["Assemble a public trace from runtime receipts with curated warrants rather than hidden reasoning.", "Render HTML and PDF from one validated packet.", "Bind packet, source receipts, artifacts, HTML, TeX, and PDF digests in the manifest.", "Retain fixture tests as renderer unit tests only."],
+    "required_artifact": ["agentic/reports/named_workflow_trace/live/latest.json", "agentic/reports/named_workflow_trace/live/latest.html", "agentic/reports/named_workflow_trace/live/latest.pdf"],
+    "acceptance_criteria": ["At least one live report exists for every workflow and Route-A.", "HTML and PDF semantic IDs match the same validated packet.", "Every substantive inference links to runtime and artifact receipts."],
+    "blocked_by": ["NWIT-001", "NWIT-004", "NWIT-005"], "evidence": ["cmd:.venv/bin/python -m pytest -q tests/reporting"], "review_date": "2026-08-12",
+    "failure_modes": ["A fixture run ID is presented as live evidence.", "HTML and PDF render different packets.", "A report claim lacks a source receipt."], "status": "open"
+  },
+  {
+    "id": "NWIT-009", "type": "report_todo", "phase": "expert-readability", "owner": "agentic/reports", "priority": "high", "risk_class": "report-density",
+    "title": "Set expert readability, density, and compilation-warning budgets",
+    "intent": "Preserve complete inference visibility while making long workflow reports navigable and reviewable.",
+    "use_skills": ["workflow-reasoning-pdf-visualizer", "review-reasoner-radical-designer"],
+    "implementation_steps": ["Measure page count, inference density, repeated boilerplate, navigation cost, and material TeX warnings.", "Define executive, main-body, and appendix content budgets.", "Provide topology and obligation indexes with stable links.", "Treat formal PDF/UA conformance as a separate explicit gate."],
+    "required_artifact": ["agentic/reports/reasoning_trace_readability/latest.json", "agentic/reports/reasoning_trace_readability/latest.md"],
+    "acceptance_criteria": ["Each report meets documented density and warning budgets or records a waiver.", "Route-A remains complete without forcing all detail into the main narrative.", "Accessibility status is stated without equating selectable text with PDF/UA conformance."],
+    "blocked_by": ["NWIT-008"], "evidence": ["file:agentic/reports/reasoning_trace_pdf_coverage/latest.md"], "review_date": "2026-08-12",
+    "failure_modes": ["Completeness produces an unreadable monolith.", "Material warnings are hidden in compiler logs.", "Selectable text is misreported as accessibility conformance."], "status": "open"
+  },
+  {
+    "id": "NWIT-010", "type": "test_todo", "phase": "expert-validation", "owner": "tests/generative", "priority": "high", "risk_class": "unsigned-review",
+    "title": "Replace the empty expert-review checklist with review receipts",
+    "intent": "Obtain auditable expert judgments for workflow-specific inference legibility and correctness.",
+    "use_skills": ["review-reasoner-epistemologist", "review-reasoner-fields-medalist"],
+    "implementation_steps": ["Version a review-receipt schema with reviewer role, artifact digest, findings, severity, and disposition.", "Review all six workflows and Route-A against shared and workflow-specific questions.", "Route findings into TODOs and require closure or waiver.", "Re-review after material renderer or trace-contract changes."],
+    "required_artifact": ["agentic/spec/reasoning_trace_expert_review.schema.json", "agentic/reports/reasoning_trace_expert_review/latest.json"],
+    "acceptance_criteria": ["Every generated report has a signed or attributed review receipt.", "Every checklist item has evidence and a disposition.", "Critical findings block release."],
+    "blocked_by": ["NWIT-008", "NWIT-009"], "evidence": ["file:tests/generative/named_workflow_trace_expert_review.md"], "review_date": "2026-08-12",
+    "failure_modes": ["Unchecked boxes are treated as approval.", "Review is not bound to an artifact digest.", "Findings do not affect release."], "status": "open"
+  },
+  {
+    "id": "NWIT-011", "type": "release_todo", "phase": "global-gate", "owner": "agentic/scripts", "priority": "critical", "risk_class": "non-hermetic-validation",
+    "title": "Make the repository integration gate hermetic and truly read-only",
+    "intent": "Ensure the full validation command reaches named-workflow gates without stale evidence or filesystem mutation.",
+    "use_skills": ["looper-workflow-contract-governor"],
+    "implementation_steps": ["Correct the stale reasoning-monitor evidence path.", "Separate generators from validators or run generators in an isolated temporary workspace.", "Pin the project interpreter and dependencies.", "Fail with a concise mutation manifest and preserve the worktree."],
+    "required_artifact": ["agentic/scripts/agentic_check.py", "tests/integration/test_agentic_check_read_only.py"],
+    "acceptance_criteria": ["The full check exits zero from a clean verified fixture state.", "The command creates, deletes, or modifies no repository file.", "Named-workflow and trace gates are reached and reported."],
+    "blocked_by": [], "evidence": ["cmd:.venv/bin/python agentic/scripts/agentic_check.py"], "review_date": "2026-08-12",
+    "failure_modes": ["Validation creates timestamped reasoning logs.", "A moved test path blocks the entire gate.", "The gate passes only under an undeclared interpreter."], "status": "open"
+  },
+  {
+    "id": "NWIT-012", "type": "release_todo", "phase": "outcome-gate", "owner": "agentic/reports", "priority": "high", "risk_class": "green-without-outcomes",
+    "title": "Publish an outcome-oriented workflow integration scorecard",
+    "intent": "Make release confidence depend on executed behavior, artifact continuity, negative paths, and expert validation rather than test totals alone.",
+    "use_skills": ["looper-workflow-contract-governor", "review-reasoner-epistemologist"],
+    "implementation_steps": ["Report per workflow: real runs, branch outcomes, hook decisions, handoffs, skill ladder, trace formats, expert findings, and open failures.", "Separate projection, fixture, runtime, and production evidence.", "Define release thresholds and waiver ownership.", "Integrate the scorecard into the workflow hub and CI summary."],
+    "required_artifact": ["agentic/reports/named_workflow_integration/latest.json", "agentic/reports/named_workflow_integration/latest.md"],
+    "acceptance_criteria": ["A green unit suite cannot mask zero exercised or consumed skills.", "Every workflow has independently visible outcome evidence.", "Threshold failures create or reference actionable TODOs."],
+    "blocked_by": ["NWIT-002", "NWIT-003", "NWIT-004", "NWIT-005", "NWIT-006", "NWIT-007", "NWIT-008", "NWIT-010", "NWIT-011"], "evidence": ["file:agentic/reports/skill_integration/latest.json", "file:agentic/reports/reasoning_trace_pdf_coverage/latest.json"], "review_date": "2026-08-12",
+    "failure_modes": ["The scorecard reports only pass counts.", "Fixture evidence is labeled as runtime evidence.", "A release waiver has no owner or expiry."], "status": "open"
+  },
+  {
+    "id": "NWIT-013", "type": "report_todo", "phase": "epistemic-labeling", "owner": "agentic/scripts", "priority": "critical", "risk_class": "synthetic-evidence-promotion",
+    "title": "Distinguish synthetic fixture integrity from scientific evidence",
+    "intent": "Prevent a valid fixture digest from being displayed as evidence-backed scientific support.",
+    "use_skills": ["review-reasoner-epistemologist", "workflow-reasoning-visualizer"],
+    "implementation_steps": ["Add execution_kind to trace packets and manifests.", "Watermark synthetic reports in HTML and PDF.", "Separate artifact-integrity evidence from scientific supporting, constraining, and refuting evidence.", "Replace the universal evidence anchor with typed per-workflow evidence portfolios."],
+    "required_artifact": ["agentic/spec/public_reasoning_trace.schema.json", "tests/reporting/test_reasoning_trace_execution_kind.py"],
+    "acceptance_criteria": ["Synthetic-only evidence cannot yield evidence_backed scientific status.", "Every fixture report is visibly labeled synthetic.", "Evidence type and relation are validated per inference."],
+    "blocked_by": [], "evidence": ["file:tests/fixtures/reasoning_trace/evidence/workflow-evidence.json"], "review_date": "2026-08-12",
+    "failure_modes": ["One provenance digest supports every scientific conclusion.", "Readers cannot distinguish fixture and live reports.", "Integrity-valid is rendered as scientifically validated."], "status": "open"
+  },
+  {
+    "id": "NWIT-014", "type": "workflow_todo", "phase": "route-topology", "owner": "agentic/registries", "priority": "critical", "risk_class": "masked-topology-drift",
+    "title": "Canonicalize Route-A identities, inputs, and event ordering",
+    "intent": "Make declared Route-A topology, executed events, and rendered reports describe the same fork/join route.",
+    "use_skills": ["routea-paper-attack-orchestrator", "looper-workflow-contract-governor"],
+    "implementation_steps": ["Choose one canonical specialist step-ID form.", "Declare RouteAOpenPointPlan consumption for every specialist.", "Place specialist events after routea_open_points and before integration/join.", "Remove skill-name fallback from exact topology validation."],
+    "required_artifact": ["agentic/registries/named_workflow_contracts.yaml", "agentic/registries/named_workflow_trace_contracts.yaml", "tests/orchestration/test_route_a_trace_topology.py"],
+    "acceptance_criteria": ["Every event maps to exactly one declared step.", "No required specialist has empty consumes.", "Event order matches fan-out, join, integration, and common-tail order."],
+    "blocked_by": [], "evidence": ["file:agentic/registries/named_workflow_contracts.yaml", "file:agentic/registries/named_workflow_trace_contracts.yaml"], "review_date": "2026-08-12",
+    "failure_modes": ["Coverage passes via skill fallback despite step-ID mismatch.", "PDF prints Consumes=None for a specialist with an input premise.", "Profile steps run before the declared specialist fan-out."], "status": "open"
+  },
+  {
+    "id": "NWIT-015", "type": "test_todo", "phase": "fixture-coherence", "owner": "tests/orchestration", "priority": "critical", "risk_class": "split-source-drift",
+    "title": "Derive control outcomes and trace reports from one scenario source",
+    "intent": "Eliminate contradictory workflow dispositions, skipped steps, specialist counts, and destinations across integration tests and reports.",
+    "use_skills": ["looper-workflow-contract-governor"],
+    "implementation_steps": ["Define one typed scenario schema.", "Generate control expectations and trace events from the same execution receipt.", "Compare final disposition, executed/skipped steps, specialist set, and handoff destination across artifacts.", "Add mutation tests that prove drift is rejected."],
+    "required_artifact": ["tests/fixtures/named_workflows/scenario.schema.json", "tests/integration/test_named_workflow_scenario_coherence.py"],
+    "acceptance_criteria": ["The theorem scenario cannot be both proof-accepted and quarantined.", "Route-A specialist cardinality agrees across control, trace, HTML, and PDF.", "Executed and skipped steps reconcile exactly."],
+    "blocked_by": ["NWIT-001"], "evidence": ["file:tests/orchestration/test_named_workflow_realistic_scenarios.py", "file:tests/orchestration/test_named_workflow_realistic_trace_scenarios.py"], "review_date": "2026-08-12",
+    "failure_modes": ["Control and trace fixtures encode different stories.", "A skipped control step appears as a failed inference.", "One selected specialist becomes ten in the report."], "status": "open"
+  },
+  {
+    "id": "NWIT-016", "type": "test_todo", "phase": "html-browser-acceptance", "owner": "tests/reporting", "priority": "high", "risk_class": "static-html-only",
+    "title": "Test expert HTML behavior in a real browser DOM",
+    "intent": "Verify that all workflow reports remain operable, accessible, responsive, and complete after rendering.",
+    "use_skills": ["workflow-reasoning-visualizer", "review-reasoner-radical-designer"],
+    "implementation_steps": ["Run headless browser tests for all seven reports.", "Exercise tabs, filters, keyboard focus, ARIA behavior, mobile layout, and untrusted text.", "Test large-trace truncation indicators and full-packet retention.", "Reconcile visible DOM semantic IDs with packet inventory."],
+    "required_artifact": ["tests/browser/test_named_workflow_trace_html.py", "agentic/reports/reasoning_trace_browser_coverage/latest.json"],
+    "acceptance_criteria": ["Interactive controls work by mouse and keyboard.", "Responsive views preserve expert-critical fields.", "Any visual truncation is explicit and does not truncate the underlying packet."],
+    "blocked_by": ["NWIT-008"], "evidence": ["file:tests/reporting/test_named_workflow_trace_html.py"], "review_date": "2026-08-12",
+    "failure_modes": ["Static string assertions pass while controls are unusable.", "Cards disappear silently above a size limit.", "Mobile layout hides obligations or failures."], "status": "open"
+  },
+  {
+    "id": "NWIT-017", "type": "release_todo", "phase": "pdf-diagnostics", "owner": "agentic/scripts", "priority": "high", "risk_class": "warning-reconciliation",
+    "title": "Reconcile PDF compile logs, manifests, and warning budgets",
+    "intent": "Classify visible layout and compiler diagnostics so manifests do not report an empty warning set when logs contain repeated warnings.",
+    "use_skills": ["workflow-reasoning-pdf-visualizer"],
+    "implementation_steps": ["Parse final-pass underfull and latexmk diagnostics into stable codes.", "Separate advisory layout warnings from release blockers.", "Set per-report repetition budgets and bind the external log digest.", "Normalize raw JSON structures and identifier line breaking in print output."],
+    "required_artifact": ["agentic/scripts/reasoning_trace_pdf_compiler.py", "tests/reporting/test_reasoning_trace_pdf_diagnostics.py"],
+    "acceptance_criteria": ["Manifest warnings reconcile with classified compile-log diagnostics.", "Repeated underfull warnings are counted and budgeted.", "No raw JSON object is used where a semantic list or table is intended."],
+    "blocked_by": [], "evidence": ["file:agentic/reports/reasoning_trace_pdf_coverage/latest.md"], "review_date": "2026-08-12",
+    "failure_modes": ["Manifest says warnings=[] while logs contain material diagnostics.", "Latexmk runtime warnings are silently discarded.", "Identifiers break into misleading tokens."], "status": "open"
+  }
+]

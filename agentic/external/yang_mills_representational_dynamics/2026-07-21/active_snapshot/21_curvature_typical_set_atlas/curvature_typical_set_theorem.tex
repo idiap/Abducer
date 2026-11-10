@@ -1,0 +1,78 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,booktabs}
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}{Proposition}
+\title{Dependency-Aware Local Typical Sets and a Two-Center $SU(2)$ Atlas}
+\author{}
+\date{}
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We replace a global high-dimensional Gaussian ball by local link, plaquette
+input, and curvature constraints.  The resulting coverage estimate requires
+no independence.  For the finite $2^4$ Coulomb Gaussian, the required
+four-link radius is approximately $0.00602316$, reducing the apparent chart
+gap by a factor of four.  We also record an exact two-center atlas for all of
+$SU(2)$.
+\end{abstract}
+
+\section{Local Gaussian coverage}
+Let $A_j$ be jointly Gaussian blocks in $\mathbb R^r$ and suppose their
+marginal covariance operators satisfy $\operatorname{Cov}(A_j)\preceq
+\lambda I$.  No assumption is made on correlations between different blocks.
+
+\begin{theorem}[Local union bound]
+For $N$ blocks and $0<\delta<1$,
+\[
+ \mathbb P\left\{\max_{1\le j\le N}\|A_j\|>
+ \sqrt\lambda\left(\sqrt r+\sqrt{2\log(N/\delta)}\right)\right\}
+ \le\delta.
+\]
+\end{theorem}
+\begin{proof}
+Write each marginal as $\Sigma_j^{1/2}Z$ with $Z$ standard Gaussian.  Since
+$\|\Sigma_j^{1/2}\|\le\sqrt\lambda$, Gaussian norm concentration gives
+$\mathbb P(\|A_j\|>\sqrt\lambda(\sqrt r+\sqrt{2x}))\le e^{-x}$.
+Take $x=\log(N/\delta)$ and apply the union bound.  Dependence never enters.
+\end{proof}
+
+On the scalar Coulomb space $\ker d_0^T$ of the $2^4$ block, the Hessian
+$d_1^Td_1$ has physical dimension $136$ and spectrum in $[2,12]$.  Direct
+finite spectral calculation gives the leverage coefficients shown below.
+
+\begin{center}
+\begin{tabular}{lrr}
+\toprule
+Local object & covariance coefficient & radius at $t=3\cdot10^{-6}$\\
+\midrule
+one link ($r=3$) & $0.128788574$ & $0.004025831$\\
+four-link plaquette input ($r=12$) & $0.179460637$ & $0.006023158$\\
+linear curvature ($r=3$) & $0.685582011$ & $0.009288521$\\
+\bottomrule
+\end{tabular}
+\end{center}
+Here $N=216$ and $\delta=0.00279270808$.  By comparison, the global
+$408$-dimensional ball of radius $0.003$ had log mass $-803.25266$; it was a
+valid but structurally mismatched certificate.
+
+\section{Two-center group atlas}
+Identify $SU(2)$ with unit quaternions.  Choose the nearer center $z\in\{1,-1\}$
+according to the sign of the scalar quaternion component and write
+$zU=\exp X$.  Then $\|X\|\le\pi/2$.  Thus the two center charts cover $SU(2)$
+with multiplicity at most two.  In exponential coordinates the normalized
+Haar density is
+\[
+ J(r)=\frac{1}{2\pi^2}\left(\frac{\sin r}{r}\right)^2,
+\]
+so its ratio on either radius-$\pi/2$ chart is at most $(\pi/2)^2$.
+Relative tree gauge has constant gauge-volume Jacobian.
+
+\section{Scope}
+The local-union theorem and group atlas do not yet compare normalized
+nonlinear and Gaussian conditional measures.  A charged estimate for the
+nonprincipal center and orbit channels is also absent.  The next question is
+whether nonlinear quotient convexity reaches the radius $0.006023158$.
+\end{document}
+

@@ -1,0 +1,11 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema", "$id": "urn:abducer:framework-paper:execution-evidence-model:1",
+  "title": "ExecutionEvidenceModel", "type": "object", "additionalProperties": false,
+  "required": ["schema_version", "model_id", "input_digest", "assessments", "missing_evidence", "contested_evidence", "model_digest"],
+  "properties": {
+    "schema_version": {"const": "1.0.0"}, "model_id": {"type": "string", "minLength": 1}, "input_digest": {"$ref": "#/$defs/digest"},
+    "assessments": {"type": "array", "items": {"type": "object", "additionalProperties": false, "required": ["assessment_id", "subject_id", "status", "receipt_evidence_ids", "limitations"], "properties": {"assessment_id": {"type": "string", "minLength": 1}, "subject_id": {"type": "string", "minLength": 1}, "status": {"enum": ["observed", "replayed", "verified", "missing", "contested"]}, "receipt_evidence_ids": {"type": "array", "items": {"type": "string"}, "uniqueItems": true}, "limitations": {"type": "array", "items": {"type": "string"}}}}},
+    "missing_evidence": {"type": "array", "items": {"type": "string"}}, "contested_evidence": {"type": "array", "items": {"type": "string"}}, "model_digest": {"$ref": "#/$defs/digest"}
+  },
+  "$defs": {"digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"}}
+}

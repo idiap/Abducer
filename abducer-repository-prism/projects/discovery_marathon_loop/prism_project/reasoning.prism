@@ -1,0 +1,162 @@
+# Function: run one bounded discovery cycle and choose the next route.
+# Input: DiscoveryRunContext is grounded into a BoundedDiscoveryScope.
+# Types: hypothesis and pattern form independently; model, contrast, and refutation types test the candidate.
+# Output: DiscoveryRoutingAssessment selects promotion, reorientation, target reset, or stall with a basis.
+# Flow: scope -> parallel formation -> parallel probes -> refutation -> routing.
+# Layer: high-level epistemic topology only.
+# Metadata: workflows/manifest.json (`discovery_marathon_loop`).
+
+import prism.reporting.report as r
+
+from types import (
+    HypothesisContrastAssessment,
+    DiscriminatingDiscoveryHypothesis,
+    DiscoveryDisposition,
+    BoundedDiscoveryScope,
+    ProvisionalDiscoveryPattern,
+    DiscoveryRunContext,
+    DiscoveryRoutingAssessment,
+    HypothesisRefutationAssessment,
+    HypothesisModelImplications,
+)
+
+from occurrences import (
+    AbductiveDiscoveryHypothesisFormation,
+    ContrastiveDiscoveryHypothesisProbe,
+    DiscoveryRoutingInput,
+    DiscoveryHypothesisProbeInput,
+    DiscoveryRefutationInput,
+    EvidentialDiscoveryRoutingAssessment,
+    EvidentialDiscoveryScopeGrounding,
+    InductiveDiscoveryPatternFormation,
+    ModelBasedDiscoveryHypothesisProbe,
+    RefutationalDiscoveryHypothesisAssessment,
+)
+
+from relations import (
+    CalibratesDiscoveryRouting,
+    ScopesDiscoveryFormation,
+    GroundsDiscoveryProbe,
+    GroundsDiscoveryRefutation,
+)
+
+def assemble_discovery_report_view(
+    context: DiscoveryRunContext,
+    scope: BoundedDiscoveryScope,
+    hypothesis: DiscriminatingDiscoveryHypothesis,
+    pattern: ProvisionalDiscoveryPattern,
+    implications: HypothesisModelImplications,
+    contrast: HypothesisContrastAssessment,
+    refutation: HypothesisRefutationAssessment,
+    routing: DiscoveryRoutingAssessment,
+) -> r.Report:
+    overview_text: String = "# Discovery Marathon Report\n\n## Final disposition\n\nDiscovery disposition: **" + routing.disposition + "**\n\n" + routing.routing_basis + "\n\n## Completed reasoning steps\n\n- search_scope\n- discovery_hypothesis\n- discovery_pattern\n- model_implications\n- contrast_assessment\n- refutation_assessment\n- routing_assessment\n\n## Typed reasoning result\n\n" + routing.routing_basis + "\n\n## Execution provenance\n\nThe report is the terminal typed value of the executed PRISM graph. Lunar retains the native trace and section ancestry.\n\n## Interpretation and limits\n\nRuntime completion does not prove a theorem or validate a scientific claim."
+    physics_math_strategy_text: String = "### Bounded scope\n\n" + scope.bounded_scope + "\n\n### Candidate hypothesis\n\n" + hypothesis.hypothesis + "\n\n### Provisional pattern\n\n" + pattern.provisional_pattern + "\n\n### Bounded model implications\n\n" + implications.bounded_model_implications
+    timeline_text: String = "The seven declared reasoning occurrences completed before this typed report was assembled.\n\n| # | Reasoning stage | Status |\n| ---: | --- | --- |\n| 1 | search_scope | completed |\n| 2 | discovery_hypothesis | completed |\n| 3 | discovery_pattern | completed |\n| 4 | model_implications | completed |\n| 5 | contrast_assessment | completed |\n| 6 | refutation_assessment | completed |\n| 7 | routing_assessment | completed |"
+    ranked_queue_text: String = "1. **Validate sources and exact theorem hypotheses.** " + routing.routing_basis + "\n2. **Discharge the strongest refutation pressure.** " + refutation.scoped_refutation + "\n3. **Test the controlled contrast.** " + contrast.controlled_contrast + "\n4. **Check bounded implications.** " + implications.bounded_model_implications
+    skills_text: String = "Seven packaged skills were bound to the seven executed occurrences. Skill use supports generation and critique; it is not independent scientific verification.\n\n| Stage | Packaged skill |\n| --- | --- |\n| search_scope | epistemic-status-ledger |\n| discovery_hypothesis | kb-abduce |\n| discovery_pattern | kb-induce |\n| model_implications | dynamic-symbolic-simulation-experimenter |\n| contrast_assessment | counterfactual-route-prober |\n| refutation_assessment | counterexample-hunter |\n| routing_assessment | epistemic-status-ledger |"
+    contributions_text: String = "- Preserved the user-supplied problem boundary through all seven typed stages.\n- Produced separate abductive and inductive formation records.\n- Produced separate model-based and contrastive probes before refutation.\n- Retained a closed routing disposition with explicit limitations.\n- Scientific novelty remains **not claimed**; all substantive content is model-generated."
+    result_atlas_text: String = "### Search scope\n\n" + scope.bounded_scope + "\n\n### Discovery hypothesis\n\n" + hypothesis.hypothesis + "\n\n### Discovery pattern\n\n" + pattern.provisional_pattern + "\n\n### Model implications\n\n" + implications.bounded_model_implications + "\n\n### Controlled contrast\n\n" + contrast.controlled_contrast + "\n\n### Refutation assessment\n\n" + refutation.scoped_refutation + "\n\n### Routing assessment\n\n" + routing.routing_basis
+    literature_text: String = "### Problem statement\n\n" + context.context_summary + "\n\n### Literature status\n\nThis workflow requested no public-network authority and performed no live literature acquisition. References mentioned by generated outputs remain leads requiring source retrieval and validation."
+    macro_strategy_text: String = "### Formation route\n\n" + hypothesis.hypothesis + "\n\n### Pattern route\n\n" + pattern.provisional_pattern + "\n\n### Model-pressure route\n\n" + implications.bounded_model_implications
+    strategy_judge_text: String = "### Controlled contrast\n\n" + contrast.controlled_contrast + "\n\n### Refutation assessment\n\n" + refutation.scoped_refutation + "\n\n### Routing judgment\n\n**" + routing.disposition + "**\n\n" + routing.routing_basis
+    artifact_or_stop_text: String = "**Decision:** " + routing.disposition + "\n\n" + routing.routing_basis + "\n\nRepository-compatible artifacts are released only after Lunar verifies reasoning completion and report integrity. A passed runtime is not a proof certificate."
+    story_text: String = "The run began by bounding the search:\n\n" + scope.bounded_scope + "\n\nIt formed an abductive hypothesis and an inductive pattern:\n\n" + hypothesis.hypothesis + "\n\n" + pattern.provisional_pattern + "\n\nThe probe lanes were merged by refutation before routing:\n\n" + routing.routing_basis
+    branches_text: String = "### Formation branch · abductive\n\n" + hypothesis.hypothesis + "\n\n### Formation branch · inductive\n\n" + pattern.provisional_pattern + "\n\n### Probe branch · model implications\n\n" + implications.bounded_model_implications + "\n\n### Probe branch · controlled contrast\n\n" + contrast.controlled_contrast + "\n\n### Merge · refutation\n\n" + refutation.scoped_refutation
+    reviews_text: String = "### Epistemology\n\nGenerated hypotheses, probes, refutation, and routing remain distinct evidence classes.\n\n### Mathematics\n\nThe content remains conditional until hypotheses, proof steps, counterexamples, and sources are checked.\n\n### AI research\n\nOne schema-valid run does not measure calibration or cross-model agreement.\n\n### Software engineering\n\nThe typed PRISM Report, native trace, section ancestry, source hashes, and artifacts are retained for replay."
+    overview_section: r.Section = r.Markdown(id="overview-content", text=overview_text)
+    physics_math_strategy_section: r.Section = r.Markdown(id="physics_math_strategy-content", text=physics_math_strategy_text)
+    timeline_section: r.Section = r.Markdown(id="timeline-content", text=timeline_text)
+    ranked_queue_section: r.Section = r.Markdown(id="ranked_queue-content", text=ranked_queue_text)
+    skills_section: r.Section = r.Markdown(id="skills-content", text=skills_text)
+    contributions_section: r.Section = r.Markdown(id="contributions-content", text=contributions_text)
+    result_atlas_section: r.Section = r.Markdown(id="result_atlas-content", text=result_atlas_text)
+    literature_section: r.Section = r.Markdown(id="literature-content", text=literature_text)
+    macro_strategy_section: r.Section = r.Markdown(id="macro_strategy-content", text=macro_strategy_text)
+    strategy_judge_section: r.Section = r.Markdown(id="strategy_judge-content", text=strategy_judge_text)
+    artifact_or_stop_section: r.Section = r.Markdown(id="artifact_or_stop-content", text=artifact_or_stop_text)
+    story_section: r.Section = r.Markdown(id="story-content", text=story_text)
+    branches_section: r.Section = r.Markdown(id="branches-content", text=branches_text)
+    reviews_section: r.Section = r.Markdown(id="reviews-content", text=reviews_text)
+    tabs: List[r.Tab] = [
+        r.Tab(id="overview", label="Summary", sections=[overview_section]),
+        r.Tab(id="physics_math_strategy", label="Mathematical Strategy", sections=[physics_math_strategy_section]),
+        r.Tab(id="timeline", label="Timeline", sections=[timeline_section]),
+        r.Tab(id="ranked_queue", label="Ranked Analyses", sections=[ranked_queue_section]),
+        r.Tab(id="skills", label="Skill Use", sections=[skills_section]),
+        r.Tab(id="contributions", label="Contributions", sections=[contributions_section]),
+        r.Tab(id="result_atlas", label="Result Atlas", sections=[result_atlas_section]),
+        r.Tab(id="literature", label="Problem & Literature", sections=[literature_section]),
+        r.Tab(id="macro_strategy", label="Macro Strategies", sections=[macro_strategy_section]),
+        r.Tab(id="strategy_judge", label="Strategy Judge", sections=[strategy_judge_section]),
+        r.Tab(id="artifact_or_stop", label="Artifact-Or-Stop", sections=[artifact_or_stop_section]),
+        r.Tab(id="story", label="Story", sections=[story_section]),
+        r.Tab(id="branches", label="Branches", sections=[branches_section]),
+        r.Tab(id="reviews", label="Deep Reviews", sections=[reviews_section]),
+    ]
+    report_sections: List[r.Section] = [r.Tabs(id="discovery-sections", tabs=tabs)]
+    template_tabs: List[r.TemplateTab] = [
+        r.TemplateTab(id="overview", sections=[r.MarkdownSlot(id="overview-content")]),
+        r.TemplateTab(id="physics_math_strategy", sections=[r.MarkdownSlot(id="physics_math_strategy-content")]),
+        r.TemplateTab(id="timeline", sections=[r.MarkdownSlot(id="timeline-content")]),
+        r.TemplateTab(id="ranked_queue", sections=[r.MarkdownSlot(id="ranked_queue-content")]),
+        r.TemplateTab(id="skills", sections=[r.MarkdownSlot(id="skills-content")]),
+        r.TemplateTab(id="contributions", sections=[r.MarkdownSlot(id="contributions-content")]),
+        r.TemplateTab(id="result_atlas", sections=[r.MarkdownSlot(id="result_atlas-content")]),
+        r.TemplateTab(id="literature", sections=[r.MarkdownSlot(id="literature-content")]),
+        r.TemplateTab(id="macro_strategy", sections=[r.MarkdownSlot(id="macro_strategy-content")]),
+        r.TemplateTab(id="strategy_judge", sections=[r.MarkdownSlot(id="strategy_judge-content")]),
+        r.TemplateTab(id="artifact_or_stop", sections=[r.MarkdownSlot(id="artifact_or_stop-content")]),
+        r.TemplateTab(id="story", sections=[r.MarkdownSlot(id="story-content")]),
+        r.TemplateTab(id="branches", sections=[r.MarkdownSlot(id="branches-content")]),
+        r.TemplateTab(id="reviews", sections=[r.MarkdownSlot(id="reviews-content")]),
+    ]
+    template_sections: List[r.TemplateSection] = [r.TabsSlot(id="discovery-sections", tabs=template_tabs)]
+    template: r.TemplateChoice = r.WithTemplate(snapshot=r.Template(id="abducer-discovery-marathon-v1", title="Discovery Marathon", sections=template_sections))
+    return r.Report(id="discovery-marathon-report", title="Discovery Marathon Report", sections=report_sections, template=template)
+
+reasoning DiscoveryMarathonLoop(
+    run_context: DiscoveryRunContext,
+) -> r.Report:
+    sequence:
+        # Scope grounding prevents later formation from silently widening the run.
+        [search_scope: EvidentialDiscoveryScopeGrounding(run_context)]
+        parallel:
+            # Abduction proposes an explanation while induction extracts a pattern;
+            # neither is treated as confirmation of the other.
+            [discovery_hypothesis: AbductiveDiscoveryHypothesisFormation(search_scope.value)] by ScopesDiscoveryFormation
+            [discovery_pattern: InductiveDiscoveryPatternFormation(search_scope.value)] by ScopesDiscoveryFormation
+        parallel:
+            # Both probes consume the same typed hypothesis-pattern join but ask
+            # different questions: implications under a model versus a contrast case.
+            [model_implications: ModelBasedDiscoveryHypothesisProbe(DiscoveryHypothesisProbeInput(
+                discovery_hypothesis = discovery_hypothesis.value,
+                discovery_pattern = discovery_pattern.value,
+            ))] by GroundsDiscoveryProbe
+            [contrast_assessment: ContrastiveDiscoveryHypothesisProbe(DiscoveryHypothesisProbeInput(
+                discovery_hypothesis = discovery_hypothesis.value,
+                discovery_pattern = discovery_pattern.value,
+            ))] by GroundsDiscoveryProbe
+        # Refutation combines the two probes before routing sees the candidate.
+        [refutation_assessment: RefutationalDiscoveryHypothesisAssessment(DiscoveryRefutationInput(
+            model_implications = model_implications.value,
+            contrast_assessment = contrast_assessment.value,
+        ))] by GroundsDiscoveryRefutation
+        # Routing joins formation and refutation evidence into the next-cycle decision.
+        [routing_assessment: EvidentialDiscoveryRoutingAssessment(DiscoveryRoutingInput(
+            discovery_hypothesis = discovery_hypothesis.value,
+            discovery_pattern = discovery_pattern.value,
+            refutation_assessment = refutation_assessment.value,
+        ))] by CalibratesDiscoveryRouting
+        [typed_report: assemble_discovery_report_view(
+            run_context,
+            search_scope.value,
+            discovery_hypothesis.value,
+            discovery_pattern.value,
+            model_implications.value,
+            contrast_assessment.value,
+            refutation_assessment.value,
+            routing_assessment.value,
+        )]
+
+    return typed_report

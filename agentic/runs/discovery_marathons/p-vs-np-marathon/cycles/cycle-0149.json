@@ -1,0 +1,1061 @@
+{
+  "branch_execution_records": [
+    {
+      "api_attempt": "primary",
+      "api_key_config": {
+        "active_provider": "azure_openai",
+        "configured_keys": [
+          "AZURE_OPENAI_API_KEY",
+          "AZURE_OPENAI_ENDPOINT",
+          "AZURE_OPENAI_MODEL",
+          "AZURE_OPENAI_REASONING_EFFORT",
+          "AZURE_OPENAI_RESPONSES_ENDPOINT",
+          "OPENAI_BASE_URL",
+          "OPENAI_MODEL",
+          "OPENAI_REASONING_EFFORT"
+        ],
+        "has_openai_api_key": true,
+        "source": "config/api_keys.json"
+      },
+      "api_timeout_seconds": 900,
+      "branch_id": "marathon.branch.bcdeffa51f87",
+      "elapsed_seconds": 100.412,
+      "engine": "azure_responses_api",
+      "http_status": 200,
+      "max_output_tokens": 12000,
+      "model": "gpt-5.5",
+      "output_schema": "agentic/spec/discovery_marathon_codex_branch_output.schema.json",
+      "parallel_group_size": 1,
+      "parallel_max_workers": 1,
+      "parallel_worker_index": 0,
+      "prior_attempt_errors": [],
+      "reasoning_effort": "high",
+      "response_id": "resp_08115e0e27282c1c006a556dafbcb48197936f22128c97f5cf",
+      "status": "complete"
+    }
+  ],
+  "branch_outputs": [
+    {
+      "attempted_derivation": {
+        "blocking_gap": "The derivation does not cover arbitrary real-SAT semantic pruning or FormulaEval comprehension unless RealSATInfluenceRealizer_N^arb uniformly lists the influencing rows and charges them before use.",
+        "derivation_id": "cycle149.QrepTransparentSupport.line_induction",
+        "steps": [
+          "Encode each QCTSR proof line with fields (rule tag, parents, row id, child restriction, representative id, quotient-certificate id, rank, dependency list). These fields are verifier-visible and do not query SAT truth advice.",
+          "Define F_Qrep on sets of support objects: add bEF dependencies, FormulaEval support rows, every counterfactual TSR child row, all nodes of each same-theory quotient certificate forest, and the canonical representative chosen by the charged certificate. Iterate from the final LB_N line to obtain K_Qrep(pi).",
+          "Monotonicity and finiteness give a least fixed point. Rank decrease in quotient certificates gives acyclicity, so the same K_Qrep(pi) is reached independently of line order or certificate-processing order.",
+          "Prove representative stability by induction on rank: if row a is replaced by representative b, then all lower-rank certificate dependencies proving EqSAT(a,b) are already in K_Qrep(pi), so the parser may identify a and b without reading an uncharged label.",
+          "Extend the existing Gamma_bEF line induction. bEF lines use Gamma_bEF; transparent FormulaEval uses U_N+X_N; complete counterfactual TSR child expansion contributes C_CTSR=N^{1+kappa+theta+o(1)} in the bounded schema; ranked quotient compression contributes C_Qcert+C_rep and may only reduce row multiplicity after the certificate is charged.",
+          "Build the source circuit for H_N from the generator circuit, the parsed transcript evaluator, parity aggregation over charged representatives, and equality patches for E_pi residual rows. This yields C_SIZE(H_N)<=N^{rho+o(1)}+Gamma_Qrep(pi)+O(E_pi N).",
+          "Contrapose: if LB_N(1+epsilon) is asserted in the same SIZE model, then any valid Psys_sym^QCTSR certificate must have Gamma_Qrep(pi)+O(E_pi N)>=N^{1+epsilon-o(1)}.",
+          "For necessity, take the first quotient merge or pruning child not accepted by the ranked closure verifier. Toggle a private row label r* outside K_Qrep(pi), keep the visible transcript fixed, and force the affected line or carrier parity to differ. Thus hidden quotienting is a falsifier for transparent parsing."
+        ],
+        "why_not_yet_a_proof": "This is a restricted parser/falsifier theorem for Psys_sym^QCTSR. It proves no lower bound for H_N, gives no P != NP result, and leaves the full semantic proof-system extraction problem quarantined at a named nonrelativizing realizer lemma."
+      },
+      "branch_id": "marathon.branch.bcdeffa51f87",
+      "branch_title": "Hardness-Magnification Bridge Realization",
+      "candidate_lemmas": [
+        {
+          "assumptions": [
+            "Length regime: N tends to infinity; M_N=N^{q+o(1)}; L_N=(log N)^d with fixed d>1; q,rho,epsilon are fixed constants with q,rho<1+epsilon.",
+            "Circuit model: all upper bounds and lower-bound assertions are in the same nonuniform SIZE model over the N-bit source input x; proof syntax may be nonuniform but the row parser and closure verifier are advice-free given pi and N.",
+            "QCTSR syntax exposes bit fields (line id, rule tag, parent ids, row id, child restriction, representative id, quotient certificate id, rank, and dependency pointers).",
+            "Ranked quotient certificates are acyclic, dependency-closed, same-theory EqSAT derivations; every dependency used to delete or merge a row appears in K_Qrep(pi) at strictly lower rank.",
+            "Sparse residual patching is charged as O(E_pi N), where E_pi is the number of source rows not handled by the parsed transcript."
+          ],
+          "definitions": [
+            "source object: H_N^SAT(x)=xor_{j<M_N} SAT(G_N(x,j)), where M_N=N^{q+o(1)}, each query has length L_N=(log N)^d, d>1, and G_N has SIZE N^{rho+o(1)}.",
+            "target object: a same-model nonuniform SIZE upper-bound falsifier for the source assertion LB_N(1+epsilon): C_SIZE(H_N^SAT)>N^{1+epsilon-o(1)}, not a P vs NP separation.",
+            "controlled interface: Psys_sym^QCTSR consists of bit-explicit bEF lines, transparent FormulaEval lines, complete counterfactual TSR child declarations, and ranked EqSAT same-theory quotient certificates.",
+            "target-preserving condition: every row influence is uniformly surfaced and charged before use, every quotient representative is certified inside the same theory by decreasing rank, beta=0 is preserved, and no hidden advice selects rows or representatives.",
+            "K_Qrep(pi) is the least fixed point generated from the final LB_N line by parent pointers, visible FormulaEval support, counterfactual TSR child lists, and quotient-certificate dependency forests.",
+            "Gamma_Qrep(pi)=Gamma_bEF(pi)+U_N(pi)+X_N(pi)+C_CTSR(pi)+C_Qcert(pi)+C_rep(pi) is the source SIZE ledger charged by the parser."
+          ],
+          "equations": [
+            {
+              "label": "carrier",
+              "latex": "H_N^SAT(x)=xor_{j<M_N} SAT(G_N(x,j)),  M_N=N^{q+o(1)},  L_N=(log N)^d",
+              "valid_when": "Valid when the carrier is the beta-zero parity construction with polylogarithmic SAT queries and a uniform generator."
+            },
+            {
+              "label": "least_closure",
+              "latex": "K_Qrep(pi)=lfp(F_parent union F_FE union F_CTSR union F_Qcert union F_rep)",
+              "valid_when": "Valid when QCTSR syntax exposes all parent pointers, child rows, quotient certificates, and FormulaEval influences."
+            },
+            {
+              "label": "ledger",
+              "latex": "Gamma_Qrep(pi)=Gamma_bEF(pi)+U_N+X_N+C_CTSR+C_Qcert+C_rep",
+              "valid_when": "Valid when each support row expansion costs Theta(N) in the same nonuniform SIZE model and all certificate bits are charged."
+            },
+            {
+              "label": "parser_upper_bound",
+              "latex": "C_SIZE(H_N^SAT) <= N^{rho+o(1)} + Gamma_Qrep(pi) + O(E_pi N)",
+              "valid_when": "Valid when the parser line induction has no hidden semantic use and patchable row errors are explicitly bounded."
+            },
+            {
+              "label": "contrapositive_window",
+              "latex": "LB_N(1+epsilon) implies Gamma_Qrep(pi)+O(E_pi N) >= N^{1+epsilon-o(1)}",
+              "valid_when": "Valid when LB_N means a same-model lower-bound assertion for H_N rather than any NP lower bound."
+            },
+            {
+              "label": "support_density_corollary",
+              "latex": "|K_idx(pi)|/M_N >= N^{epsilon-q-o(1)}",
+              "valid_when": "Valid when row expansion dominates the ledger and each visible source row contributes Theta(N) charged gates."
+            }
+          ],
+          "failure_test": "Reject the lemma if a quotient representative can be chosen by advice, if a same-theory certificate is cyclic or nondecreasing in rank, or if a semantic pruning step influences the proof before its row is listed in K_Qrep(pi).",
+          "lemma_id": "L149.1.QCTSR_as_TransparentRowSupport_instance",
+          "proof_role": "Positive restricted theorem for the TransparentRowSupport_N packet: it absorbs representative-stable ranked QCTSR as one rule case and derives the same-model falsifier inequality.",
+          "statement": "For beta-zero parity carriers, a Psys_sym^QCTSR proof whose FormulaEval, counterfactual TSR, and EqSAT quotient-compression steps expose a ranked proof-carrying support closure has a valid parser-to-circuit falsifier with ledger Gamma_Qrep. Quotient compression is allowed only through lower-rank same-theory certificates already in the least representative-stable closure K_Qrep(pi)."
+        },
+        {
+          "assumptions": [
+            "The rejected merge is not forced by any surfaced same-theory certificate already charged at lower rank.",
+            "The proof line is evaluated extensionally over row labels for the purpose of the parser theorem; real SAT semantics may escape only by providing a charged RealSATInfluenceRealizer_N certificate.",
+            "The hidden row r* can be toggled while preserving all labels and certificates visible to K_Qrep(pi).",
+            "The final carrier or the certified lower-bound line depends on the parity or evaluation bit that r* controls."
+          ],
+          "definitions": [
+            "source object: the same H_N^SAT parity carrier, viewed as a Boolean functional of the SAT-label vector on generated rows.",
+            "target object: invalidation of the claimed Gamma_Qrep parser certificate for LB_N(1+epsilon), not invalidation of real SAT reasoning itself.",
+            "controlled interface: the parser sees only K_Qrep(pi), certificate bits, declared child rows, and visible FormulaEval influences.",
+            "observable: the first rejected merge row r* whose label affects the proof line but is absent from the charged support closure."
+          ],
+          "equations": [
+            {
+              "label": "two_world_agreement",
+              "latex": "Transcript_pi(Y0|K_Qrep)=Transcript_pi(Y1|K_Qrep) and Y0(r*) != Y1(r*)",
+              "valid_when": "Valid when r* is the first influence not contained in the charged representative-stable support closure."
+            },
+            {
+              "label": "semantic_disagreement",
+              "latex": "H_N^{Y0}(x*) != H_N^{Y1}(x*) or Line_pi^{Y0} != Line_pi^{Y1}",
+              "valid_when": "Valid when the hidden row is actually used by the rejected quotient merge or pruning decision."
+            },
+            {
+              "label": "patch_threshold",
+              "latex": "C_SIZE(H_N) <= N^{rho+o(1)}+Gamma_visible(pi)+O(E_pi N)",
+              "valid_when": "Valid when the parser ignores r* and all remaining residual row errors are equality-patchable."
+            }
+          ],
+          "failure_test": "The countermodel fails only if the proof syntax supplies a nonrelativizing RealSATInfluenceRealizer_N that uniformly lists r* or proves a same-theory dependency for it before the merge.",
+          "lemma_id": "L149.2.first_rejected_QCTSR_merge_countermodel",
+          "proof_role": "Necessity and minimality side of the theorem pair: it explains exactly why proof-carrying ranked support is needed.",
+          "statement": "If a QCTSR proof uses the first unranked, cyclic, advice-chosen, non-same-theory, or hidden semantic quotient merge, then extensional surface parsing is unsound: two row-label structures agree on every charged transcript bit but differ on the hidden row needed by the merge. This is a private-row falsifier for treating the step as transparent support."
+        },
+        {
+          "assumptions": [
+            "Reviewer handoff requires reduction-consistency check of beta=0, quantifier-uniformity check of K_Qrep computation, barrier-specificity check of private-row worlds, and proof-derivation check of the line induction.",
+            "The theorem is paper-promotable only as a scoped FormulaEval/CTSR/QCTSR parser boundary."
+          ],
+          "definitions": [
+            "model context: source carrier is beta-zero generated parity SAT; proof model is Psys_sym^QCTSR; circuit model is nonuniform SIZE; simulation type is parser-to-circuit plus equality patching.",
+            "quantifier context: fixed q,rho,epsilon,d with q,rho<1+epsilon and d>1; N ranges over valid carrier lengths; no hidden advice may select support rows.",
+            "barrier context: the theorem is nonrelativizing only through charged same-theory certificates; the private-row falsifier is an oracle-style no-go for uncharged semantic support.",
+            "nonclaim boundary: no lower bound for H_N, no NP not subset P/poly consequence, no full EF+SAT semantic extraction theorem."
+          ],
+          "equations": [
+            {
+              "label": "beta_zero_transfer",
+              "latex": "SAT in SIZE(L^c) gives substitution overhead N^{q+o(1)}, not N^{q+beta c}",
+              "valid_when": "Valid when all generated SAT queries have polylogarithmic length and the consumer is nonblackbox compact."
+            }
+          ],
+          "failure_test": "Demote if any reviewer finds beta>0, semantic row advice, uncharged quotient dependencies, or a missing same-model simulation step.",
+          "lemma_id": "L149.3.live_inference_quality_packet_Qrep",
+          "proof_role": "Live pvsnp_inference_quality source-target-model-quantifier packet for the cycle-149 theorem-shaped result.",
+          "statement": "The promoted claim is a restricted parser/countermodel theorem: source statement LB_N(1+epsilon) for H_N^SAT is contradicted by a subthreshold Qrep transcript; target statement is a same-model SIZE upper bound for H_N^SAT; derivation is complete for Psys_sym^QCTSR and blocked for arbitrary semantic FormulaEval at RealSATInfluenceRealizer_N^arb."
+        }
+      ],
+      "control_decision": {
+        "decision": "continue_promoted_with_Qrep_QCTSR_rule_case_and_quarantine_full_semantics",
+        "pivot_test": "Pivot only if the finite verifier cannot decide same-theory rank dependencies or if canonical representatives require hidden advice.",
+        "promotion_test": "Promote to paper module after reviewer checks confirm beta=0, same-model SIZE simulation, no semantic row advice, and a complete Gamma_Qrep line induction.",
+        "reason": "A proof-delivery subgoal was advanced: the QCTSR quotient-compression loophole is closed inside the restricted transparent-support theorem pair, and its necessity countermodel is explicit."
+      },
+      "dependency_updates": [
+        {
+          "dependency_id": "dep.L149.TransparentRowSupport_QCTSR",
+          "description": "Representative-stable ranked QCTSR is now a TransparentRowSupport_N rule case: complete counterfactual children plus proof-carrying quotient certificates give Gamma_Qrep line induction and the same-model LB_N falsifier window.",
+          "kind": "restricted_theorem_promoted",
+          "status": "promote_as_scoped_parser_countermodel_result"
+        },
+        {
+          "dependency_id": "dep.L149.RealSATInfluenceRealizer_N_arb",
+          "description": "Full semantic FormulaEval and adaptive SAT pruning are not claimed. They require a nonrelativizing realizer that uniformly lists influence rows, same-theory expansions, and charged overhead before semantic use.",
+          "kind": "blocked_named_lemma",
+          "status": "quarantined_open_problem"
+        },
+        {
+          "dependency_id": "dep.L149.inference_quality",
+          "description": "source_statement=LB_N(1+epsilon) for H_N^SAT; target_statement=same-model SIZE upper bound from subthreshold Gamma_Qrep; model_context=nonuniform SIZE plus Psys_sym^QCTSR parser; quantifier_context=fixed q,rho<1+epsilon, beta=0, advice-free support closure; derivation_status=proved for restricted QCTSR, blocked at RealSATInfluenceRealizer_N^arb; reviewers=reduction, quantifier, barrier, derivation.",
+          "kind": "pvsnp_live_packet_ready",
+          "status": "ready_for_runner_synthesis"
+        },
+        {
+          "dependency_id": "dep.L149.formula_footprints_result_card",
+          "description": "external_anchor=proof-carrying quotient compression resembles certified equality reasoning, not a new proof-system lower bound; nonvacuity_witness=ranked same-theory certificate forests with complete CTSR child lists; sharpness_status=first rejected merge countermodel shows necessity of ranking and charging; demotion_boundary=row-forcing and quotient-distance remain supporting lemmas; paper_claim_status=scoped parser/falsifier theorem only; closed_objection_ids=pvsnp-ff-referee-003,pvsnp-ff-referee-006,pvsnp-ff-referee-009 for this rule case.",
+          "kind": "referee_closure_card",
+          "status": "supports_main_candidate_after_reframe"
+        }
+      ],
+      "falsifiers": [
+        "first unranked quotient merge falsifier: a row is deleted without a charged same-theory certificate",
+        "cyclic or nondecreasing-rank certificate falsifier: the representative map is not well-founded",
+        "advice-chosen representative falsifier: nonuniform leakage selects a merge invisible to K_Qrep(pi)",
+        "hidden semantic pruning falsifier: an unlisted counterfactual child changes the proof while the transcript stays fixed",
+        "positive beta falsifier for broader magnification claims: SAT in SIZE(n^c) transfers only to N^{q+beta c+o(1)} source size",
+        "q<epsilon enumeration falsifier: too little absolute support density makes LB_N(1+epsilon) incompatible with the parser upper bound"
+      ],
+      "gedanken_experiment_design": {
+        "expected_observation": "At zeta=0, K_Qrep is order-independent and the Gamma_Qrep line induction is valid. At the first zeta>0 merge, two label worlds agree on the charged transcript but differ on the hidden row, yielding the private-row falsifier.",
+        "held_fixed_controls": [
+          "M_N=N^{q+o(1)}, L_N=(log N)^d with d>1, and generator SIZE N^{rho+o(1)} are fixed.",
+          "The source and target circuit model remains the same nonuniform SIZE model.",
+          "All FormulaEval support and complete counterfactual TSR child declarations are kept visible and charged.",
+          "No SAT truth table advice or row-selection advice is allowed."
+        ],
+        "need_decision": "Use now as a falsifier probe for QCTSR representative stability.",
+        "rationale": "The abstract closure theorem is already promoted; the remaining risk is a concrete hidden quotient merge that appears harmless but changes a parity row without being charged.",
+        "situation_seed": "A beta-zero parity carrier with M_N=N^q generated polylog SAT rows and a Psys_sym^QCTSR proof that merges two counterfactual TSR children through an EqSAT quotient representative before the final LB_N line.",
+        "transfer_certificate_needed": "A finite verifier that checks rank decrease, dependency closure, same-theory EqSAT derivations, canonical representative choice, and inclusion of every influencing row before quotient compression can affect the parser proof queue.",
+        "varied_variable": "zeta, the fraction of quotient merges lacking a lower-rank surfaced same-theory certificate; zeta=0 is fully ranked QCTSR, zeta>0 introduces the first hidden merge."
+      },
+      "generated_by": "azure_responses_api",
+      "mathematical_learning": "Cycle 149 folds representative-stable ranked QCTSR into TransparentRowSupport_N as a valid rule case. The new contribution is not another magnification slogan: quotient compression is proof-carrying, rank-stratified, dependency-closed, and charged, while the first rejected merge gives a concrete private-row falsifier. Full semantic SAT pruning remains exactly at RealSATInfluenceRealizer_N^arb.",
+      "negative_tactic_decision": {
+        "branch_control_decision": "persist_with_falsifier_test",
+        "conflict_target": "claimed all-exponent exclusion for NP not subset P/poly or claimed transparent support after hidden quotient/pruning despite uncharged influence rows",
+        "contradiction_carrier_or_no_go_family": "For positive beta the no-go carrier is SAT in SIZE(n^c) => source in SIZE(N^{q+beta c+o(1)}); for QCTSR hidden support the carrier is two label worlds agreeing on K_Qrep but disagreeing on the private row.",
+        "escape_conditions": [
+          "beta=0 or genuinely subpolynomial target-query length is preserved throughout the carrier.",
+          "The SAT circuit is used nonblackbox through a charged, advice-free, row-complete parser rather than a positive-beta black-box substitution.",
+          "A source lower bound stronger than the transferred upper-bound window is proved directly in the same SIZE model.",
+          "A nonrelativizing RealSATInfluenceRealizer_N^arb uniformly lists and charges every semantic influence row before use.",
+          "Every quotient merge has a ranked acyclic same-theory certificate with dependencies already in K_Qrep."
+        ],
+        "exact_negation_or_method_class": "Negate claims that uncharged semantic quotienting or positive-beta black-box substitution preserves the barely-nontrivial source threshold; the method class is source-size N, overhead N^q, target query length n^beta, plus proof-mediated row support.",
+        "next_validation_handoff": "Send L149.1-L149.3 to pvsnp-symbolic-complexity-auditor for exponents, pvsnp-quantifier-uniformity-reviewer for K_Qrep computability, pvsnp-barrier-specificity-reviewer for private-row scope, and pvsnp-proof-derivation-builder for line induction.",
+        "paper_contribution_potential": "Paper-level scoped theorem/countermodel: proof-carrying QCTSR quotient compression is a valid transparent-support rule case, and unranked semantic compression is a finite falsifier boundary.",
+        "proof_obligations": [
+          "Compute q,beta,rho,kappa,theta and all ledger exponents for the named carrier and proof rule.",
+          "Derive the exact exponent window q+beta*c+o(1) for any black-box target-circuit substitution variant.",
+          "Verify that QCTSR closure is advice-free, representative-stable, acyclic, and dependency-closed.",
+          "Record relativization status: private-row countermodel applies to uncharged extensional parsing, while same-theory certificates are the explicit nonrelativizing component.",
+          "Record naturalness and advice status: no large truth-table property is claimed, and hidden support advice is a disqualifier."
+        ],
+        "reason_for_tactic": "The branch must prevent a restricted parser theorem from being misread as all-exponent NP not subset P/poly; any positive-beta or hidden-semantic variant is checked by an explicit transfer or private-row falsifier.",
+        "route_family": "black_box_substitution_or_hardness_magnification with proof-mediated beta-zero parser audit",
+        "tactic_mode": "falsifier_search"
+      },
+      "next_experiment": "Write the standalone paper theorem for TransparentRowSupport_N^{Qrep}: include the K_Qrep fixed-point verifier pseudocode, the Gamma_Qrep ledger proof, the first-rejected-merge countermodel, and a one-page nonclaim box separating this parser boundary from H_N lower bounds and P != NP.",
+      "pvsnp_inference_quality": {
+        "barrier_status": {
+          "barrier_families": [
+            "proof_complexity",
+            "black_box",
+            "relativization"
+          ],
+          "escape_conditions": [
+            "advice-free parser or residual decoder is proved for the named proof-system fragment",
+            "unwitnessed semantic SAT/extensionality use is isolated as a model change rather than promoted",
+            "all transfer exponents and row-support charges remain below the claimed source threshold"
+          ],
+          "trigger": "route-specific proof/certificate extraction can overclaim if semantic SAT rules, advice, or transfer exponents are not charged"
+        },
+        "branch_id": "marathon.branch.bcdeffa51f87",
+        "correctness_criteria": [
+          "reduction direction and transfer inequality are stated before claiming target progress",
+          "length, exponent, uniformity, advice, and proof-system regimes match between source and target",
+          "barrier status is attached to the exact proof/certificate mechanism, not used as a slogan",
+          "semantic SAT rules are either witnessed and charged or quarantined as model changes"
+        ],
+        "decision": "needs_repair",
+        "derivation_status": {
+          "blocked_obligation": "The derivation does not cover arbitrary real-SAT semantic pruning or FormulaEval comprehension unless RealSATInfluenceRealizer_N^arb uniformly lists the influencing rows and charges them before use.",
+          "status": "blocked_at_named_lemma",
+          "theorem_shape": true
+        },
+        "failure_modes": [
+          "occurrence-label reasoning is silently upgraded to full SAT semantics",
+          "hidden advice or nonuniform row selection enters the parser or residual decoder",
+          "the branch repeats the semantic fork without proving extraction, countermodel, or named escape",
+          "the result is described as P vs NP progress rather than a scoped route-control theorem"
+        ],
+        "inference_id": "L149.1.QCTSR_as_TransparentRowSupport_instance",
+        "inference_rule": "proof_complexity_transfer",
+        "live_packet": true,
+        "model_context": {
+          "circuit_model": "nonuniform Boolean circuits with explicitly stated proof-system or certificate model",
+          "oracle_status": "oracle-free unless an unwitnessed SAT-semantic/extensionality rule is explicitly quarantined as semantic-oracle escape",
+          "reduction_type": "proof_system_simulation",
+          "source_carrier": "source object: H_N^SAT(x)=xor_{j<M_N} SAT(G_N(x,j)), where M_N=N^{q+o(1)}, each query has length L_N=(log N)^d, d>1, and G_N has SIZE N^{rho+o(1)}.",
+          "target_class": "route-specific P vs NP consequence; no claim of P != NP or SAT notin P/poly without all-exponent transfer"
+        },
+        "packet_id": "pvsnp-iq-live.152a438b41bc",
+        "parameter_map": {
+          "input_length_map": "source length N with polylog SAT-query length L_N and branch-declared row/support exponents",
+          "tracked_parameters": [
+            "N",
+            "M_N",
+            "q",
+            "rho",
+            "epsilon",
+            "alpha_ext",
+            "K_pi",
+            "Delta_SR_h"
+          ],
+          "transfer_formula": "if the named proof/certificate parser has subthreshold residual or cover cost, then patching gives a small circuit for H_N^SAT; otherwise the branch must pay the declared row/support threshold"
+        },
+        "quantifier_context": {
+          "advice_status": "hidden_advice_risk",
+          "exponent_regime": "all_constants",
+          "length_regime": "all_sufficiently_large_lengths",
+          "uniformity": "nonuniform_circuit_family"
+        },
+        "reviewer_findings": [
+          {
+            "finding": "The derivation does not cover arbitrary real-SAT semantic pruning or FormulaEval comprehension unless RealSATInfluenceRealizer_N^arb uniformly lists the influencing rows and charges them before use.",
+            "reviewer": "pvsnp-inference-quality-controller",
+            "severity": "blocking"
+          },
+          {
+            "finding": "Check whether the named proof-system fragment really yields the declared parser, quotient, support, or residual object.",
+            "reviewer": "pvsnp-proof-complexity-transfer-reviewer",
+            "severity": "warning"
+          },
+          {
+            "finding": "Audit all lengths, exponent window, uniformity, and advice status before paper handoff.",
+            "reviewer": "pvsnp-quantifier-uniformity-reviewer",
+            "severity": "warning"
+          }
+        ],
+        "side_conditions": [
+          "source object and target object are the ones stated in the candidate lemma definitions",
+          "the parser, residual decoder, row-support set, and proof-system rules must be advice-free or explicitly quarantined",
+          "the result remains a scoped route audit and does not claim P != NP",
+          "Length regime: N tends to infinity; M_N=N^{q+o(1)}; L_N=(log N)^d with fixed d>1; q,rho,epsilon are fixed constants with q,rho<1+epsilon.",
+          "Circuit model: all upper bounds and lower-bound assertions are in the same nonuniform SIZE model over the N-bit source input x; proof syntax may be nonuniform but the row parser and closure verifier are advice-free given pi and N."
+        ],
+        "source_statement": "source object: H_N^SAT(x)=xor_{j<M_N} SAT(G_N(x,j)), where M_N=N^{q+o(1)}, each query has length L_N=(log N)^d, d>1, and G_N has SIZE N^{rho+o(1)}.",
+        "target_id": "p-vs-np-target",
+        "target_statement": "target object: a same-model nonuniform SIZE upper-bound falsifier for the source assertion LB_N(1+epsilon): C_SIZE(H_N^SAT)>N^{1+epsilon-o(1)}, not a P vs NP separation.",
+        "validation_handoff": {
+          "next_skill": "pvsnp-proof-derivation-builder",
+          "report": "agentic/reports/pvsnp_inference_quality/latest.json",
+          "validator": "agentic/scripts/validate_pvsnp_inference_quality.py"
+        }
+      }
+    }
+  ],
+  "completed_utc": "2026-07-13T23:00:35+00:00",
+  "created_utc": "2026-07-13T22:58:54+00:00",
+  "cycle_id": "cycle-0149",
+  "cycle_index": 149,
+  "cycle_learning": "This research cycle converted active route pressure into typed branch lemmas. The main mathematical change is that each branch now names a source object, target object, equation, validity condition, falsifier, and next experiment. Only research-mode cycles with elapsed-time and branch-engine evidence count as genuine long-horizon research progress.",
+  "execution_mode": "research",
+  "next_cycle_queue": [
+    "Write the standalone paper theorem for TransparentRowSupport_N^{Qrep}: include the K_Qrep fixed-point verifier pseudocode, the Gamma_Qrep ledger proof, the first-rejected-merge countermodel, and a one-page nonclaim box separating this parser boundary from H_N lower bounds and P != NP."
+  ],
+  "parallel_execution": {
+    "enabled": false,
+    "max_workers": 1,
+    "merge_policy": "scheduler_order_single_writer",
+    "request_spacing_seconds": 0.0,
+    "state_mutation_policy": "serialized_after_all_branch_packets_validate",
+    "worker_engine": "azure_responses_api"
+  },
+  "parallel_synthesis": {
+    "branch_record_statuses": [
+      "complete"
+    ],
+    "cited_branch_ids": [
+      "marathon.branch.bcdeffa51f87"
+    ],
+    "common_proof_obligations": [
+      "State the source lower-bound model, target class consequence, and exact quantitative threshold that survives the magnification transfer."
+    ],
+    "cross_branch_conflicts": [],
+    "enabled": false,
+    "merge_policy": "scheduler_order_single_writer",
+    "no_go_opportunities": [],
+    "pressure_families": {
+      "hardness_magnification_threshold": [
+        "marathon.branch.bcdeffa51f87"
+      ]
+    },
+    "queue_promotions": [
+      {
+        "cited_branch_ids": [
+          "marathon.branch.bcdeffa51f87"
+        ],
+        "high_reward_payoff": "Decides whether the route can reach all polynomial exponents or only a bounded window.",
+        "negative_tactic_escape_conditions": [
+          "beta=0 or genuinely subpolynomial target-query length is preserved throughout the carrier.",
+          "The SAT circuit is used nonblackbox through a charged, advice-free, row-complete parser rather than a positive-beta black-box substitution.",
+          "A source lower bound stronger than the transferred upper-bound window is proved directly in the same SIZE model.",
+          "A nonrelativizing RealSATInfluenceRealizer_N^arb uniformly lists and charges every semantic influence row before use.",
+          "Every quotient merge has a ranked acyclic same-theory certificate with dependencies already in K_Qrep."
+        ],
+        "negative_tactic_mode": "falsifier_search",
+        "negative_tactic_route_family": "black_box_substitution_or_hardness_magnification with proof-mediated beta-zero parser audit",
+        "negative_tactic_validation_handoff": "Send L149.1-L149.3 to pvsnp-symbolic-complexity-auditor for exponents, pvsnp-quantifier-uniformity-reviewer for K_Qrep computability, pvsnp-barrier-specificity-reviewer for private-row scope, and pvsnp-proof-derivation-builder for line induction.",
+        "next_analysis": "Write the standalone paper theorem for TransparentRowSupport_N^{Qrep}: include the K_Qrep fixed-point verifier pseudocode, the Gamma_Qrep ledger proof, the first-rejected-merge countermodel, and a one-page nonclaim box separating this parser boundary from H_N lower bounds and P != NP.",
+        "novelty_signal": "Exact transfer parameters a,q,beta and the resulting SAT exponent window.",
+        "pressure_family": "hardness_magnification_threshold",
+        "promotion_test": "Promote only if the next packet returns a named source object, named target object, quantitative threshold, and a falsifier that would force repair or quarantine.",
+        "step_back_or_pivot_criterion": "Pivot to no-go or a new carrier if beta>0 or q consumes the source lower-bound margin."
+      }
+    ],
+    "state_mutation_policy": "branch memory, run state, reports, and queue synthesis are written only after every branch packet validates"
+  },
+  "research_seconds_elapsed": 100.413,
+  "research_seconds_target": 60,
+  "run_id": "p-vs-np-marathon",
+  "scheduler_decisions": [
+    {
+      "branch_id": "marathon.branch.bcdeffa51f87",
+      "branch_title": "Hardness-Magnification Bridge Realization",
+      "budget_posture": "prioritize_bounded_stepping_stone_certification",
+      "controlled_interface": "barely-nontrivial lower bound -> major class separation consequence",
+      "high_reward_payoff": "A single calculation can show whether the route reaches all exponents or only a bounded SAT exponent window.",
+      "negative_tactic_escape_conditions": [
+        "beta=0 or genuinely subpolynomial target-query length",
+        "a nonblackbox use of the SAT circuit not summarized by query exponent beta",
+        "a source lower bound stronger than the transferred upper-bound window"
+      ],
+      "negative_tactic_mode": "falsifier_search",
+      "negative_tactic_route_family": "black_box_substitution_or_hardness_magnification",
+      "negative_tactic_validation_handoff": "Send this packet to pvsnp-symbolic-complexity-auditor for exact parameters, then to pvsnp-impossibility-theorem-forger and contradiction-route-auditor if the obstruction is theorem-shaped.",
+      "novelty_signal": "Exact beta/q/a transfer calculus replaces broad magnification optimism with a computable threshold.",
+      "pressure_family": "hardness_magnification_threshold",
+      "problem_map_next_achievement": "Compute exact beta/q/exponent transfer and determine whether all-exponent strength survives.",
+      "problem_map_node_status": "partially_achieved",
+      "reason": "The decisive issue is whether positive target-query exponent beta and overhead q cap the transfer before it reaches all SAT exponents.",
+      "recommended_move": "persist_with_falsifier_test",
+      "result_atlas_open_obligations": [
+        "Compute beta and q for the named carrier, including all padding and decoding overhead.",
+        "Derive the exact exponent window q+beta*c+o(1) and identify which SAT exponents survive.",
+        "For a named Psys beyond the DirectClusterSound-style toy carrier, we still need a formal theorem that accepted certificates either yield functional label openings/residuals or avoid every such adaptive cover. Without that dichotomy the no-go is scoped to low-cover carriers.",
+        "For a named proof system Psys, formulate LB(u,2^{epsilon m}); prove that short Psys proofs imply searchable hardness witnesses, or prove that any such bridge would yield a route-specific no-go.",
+        "For every fixed c, construct a source instance with margin a_c and overhead q_c,beta_c satisfying a_c>q_c+beta_c c while preserving valid lengths and model identity."
+      ],
+      "result_atlas_related_result_count": 31,
+      "result_atlas_route_family": "hardness_magnification",
+      "step_back_or_pivot_criteria": "Pivot or convert to a no-go if beta>0 or q consumes the source margin for two named carriers.",
+      "why_this_budget_now": "Run the best near-stepping-stone candidate through prior-art, disqualifier, or paper-shape certification before broad exploration."
+    }
+  ],
+  "selected_branch_ids": [
+    "marathon.branch.bcdeffa51f87"
+  ],
+  "skill_dispatch_trace": [
+    {
+      "cycle_id": "cycle-0149",
+      "input_artifacts": [
+        "agentic/state/current_target.json",
+        "agentic/reports/discovery_stretch/latest.json",
+        "agentic/registries/discovery_marathon_skill_dispatch.yaml"
+      ],
+      "invoked_skills": [
+        "looper-target-goal-enricher",
+        "looper-target-dependency-cartographer",
+        "looper-workflow-contract-governor",
+        "looper-hook-policy-maintainer",
+        "pvsnp-conceptual-pressure-localizer"
+      ],
+      "missing_required_skills": [],
+      "output_artifacts": [
+        "cycle:cycle-0149",
+        "branch:marathon.branch.bcdeffa51f87"
+      ],
+      "phase": "preflight_target_navigation",
+      "queued_conditional_skills": [
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "kb-orchestrator"
+        },
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "pvsnp-conceptual-pressure-localizer"
+        }
+      ],
+      "skipped_skills_with_reason": [],
+      "validation_handoff": "preflight_target_navigation used 5 required skills while exploring Hardness-Magnification Bridge Realization."
+    },
+    {
+      "cycle_id": "cycle-0149",
+      "input_artifacts": [
+        "agentic/state/current_target.json",
+        "agentic/reports/discovery_stretch/latest.json",
+        "agentic/registries/discovery_marathon_skill_dispatch.yaml"
+      ],
+      "invoked_skills": [
+        "long-horizon-route-portfolio-manager",
+        "abducer-refinement-route-ranker",
+        "next-experiment-queue-ranker",
+        "kb-discovery-governor",
+        "pvsnp-negative-tactic-selector"
+      ],
+      "missing_required_skills": [],
+      "output_artifacts": [
+        "cycle:cycle-0149",
+        "branch:marathon.branch.bcdeffa51f87"
+      ],
+      "phase": "branch_selection",
+      "queued_conditional_skills": [
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "kb-promising-direction-assessor"
+        },
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "pvsnp-negative-tactic-selector"
+        }
+      ],
+      "skipped_skills_with_reason": [],
+      "validation_handoff": "branch_selection used 5 required skills while exploring Hardness-Magnification Bridge Realization."
+    },
+    {
+      "cycle_id": "cycle-0149",
+      "input_artifacts": [
+        "agentic/state/current_target.json",
+        "agentic/reports/discovery_stretch/latest.json",
+        "agentic/registries/discovery_marathon_skill_dispatch.yaml"
+      ],
+      "invoked_skills": [
+        "kb-abduce",
+        "kb-deduce",
+        "kb-induce",
+        "kb-concept-bridge-planner",
+        "kb-gap-abstraction-conjecturer",
+        "pvsnp-conceptual-pressure-localizer",
+        "pvsnp-pressure-bridge-forger",
+        "pvsnp-qualitative-complexity-reasoner",
+        "pvsnp-symbolic-complexity-auditor"
+      ],
+      "missing_required_skills": [],
+      "output_artifacts": [
+        "cycle:cycle-0149",
+        "branch:marathon.branch.bcdeffa51f87"
+      ],
+      "phase": "branch_exploration",
+      "queued_conditional_skills": [
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "kb-proof-sketcher"
+        },
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "kb-proof-connector"
+        },
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "pvsnp-pressure-bridge-forger"
+        },
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "pvsnp-symbolic-complexity-auditor"
+        }
+      ],
+      "skipped_skills_with_reason": [],
+      "validation_handoff": "branch_exploration used 9 required skills while exploring Hardness-Magnification Bridge Realization."
+    },
+    {
+      "cycle_id": "cycle-0149",
+      "input_artifacts": [
+        "agentic/state/current_target.json",
+        "agentic/reports/discovery_stretch/latest.json",
+        "agentic/registries/discovery_marathon_skill_dispatch.yaml"
+      ],
+      "invoked_skills": [
+        "pvsnp-inference-quality-controller",
+        "pvsnp-reduction-consistency-reviewer",
+        "pvsnp-quantifier-uniformity-reviewer",
+        "pvsnp-barrier-specificity-reviewer",
+        "pvsnp-proof-derivation-builder"
+      ],
+      "missing_required_skills": [],
+      "output_artifacts": [
+        "cycle:cycle-0149",
+        "branch:marathon.branch.bcdeffa51f87"
+      ],
+      "phase": "inference_quality_review",
+      "queued_conditional_skills": [
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "pvsnp-inference-quality-controller"
+        },
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "pvsnp-reduction-consistency-reviewer"
+        },
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "pvsnp-quantifier-uniformity-reviewer"
+        },
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "pvsnp-barrier-specificity-reviewer"
+        },
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "pvsnp-proof-derivation-builder"
+        },
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "pvsnp-proof-complexity-transfer-reviewer"
+        },
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "pvsnp-meta-complexity-carrier-reviewer"
+        },
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "pvsnp-symbolic-complexity-auditor"
+        },
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "entailment-gap-auditor"
+        }
+      ],
+      "skipped_skills_with_reason": [],
+      "validation_handoff": "inference_quality_review used 5 required skills while exploring Hardness-Magnification Bridge Realization."
+    },
+    {
+      "cycle_id": "cycle-0149",
+      "input_artifacts": [
+        "agentic/state/current_target.json",
+        "agentic/reports/discovery_stretch/latest.json",
+        "agentic/registries/discovery_marathon_skill_dispatch.yaml"
+      ],
+      "invoked_skills": [
+        "proof-delivery-workflow-orchestrator",
+        "proof-obligation-formalizer",
+        "lemma-chain-proof-builder",
+        "proof-gap-countermodel-splitter",
+        "proof-quality-gatekeeper",
+        "pvsnp-forcedrows-proof-workflow",
+        "pvsnp-inference-quality-controller",
+        "pvsnp-reduction-consistency-reviewer",
+        "pvsnp-quantifier-uniformity-reviewer",
+        "pvsnp-barrier-specificity-reviewer",
+        "pvsnp-proof-complexity-transfer-reviewer"
+      ],
+      "missing_required_skills": [],
+      "output_artifacts": [
+        "cycle:cycle-0149",
+        "branch:marathon.branch.bcdeffa51f87"
+      ],
+      "phase": "proof_delivery",
+      "queued_conditional_skills": [
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "pvsnp-forcedrows-proof-workflow"
+        },
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "pvsnp-inference-quality-controller"
+        },
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "pvsnp-reduction-consistency-reviewer"
+        },
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "pvsnp-quantifier-uniformity-reviewer"
+        },
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "pvsnp-barrier-specificity-reviewer"
+        },
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "pvsnp-proof-complexity-transfer-reviewer"
+        }
+      ],
+      "skipped_skills_with_reason": [],
+      "validation_handoff": "proof_delivery used 11 required skills while exploring Hardness-Magnification Bridge Realization."
+    },
+    {
+      "cycle_id": "cycle-0149",
+      "input_artifacts": [
+        "agentic/state/current_target.json",
+        "agentic/reports/discovery_stretch/latest.json",
+        "agentic/registries/discovery_marathon_skill_dispatch.yaml"
+      ],
+      "invoked_skills": [
+        "timeline-definition-assumption-elicitor",
+        "epistemic-status-ledger"
+      ],
+      "missing_required_skills": [],
+      "output_artifacts": [
+        "cycle:cycle-0149",
+        "branch:marathon.branch.bcdeffa51f87"
+      ],
+      "phase": "definition_assumption_elicitation",
+      "queued_conditional_skills": [
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "pvsnp-symbolic-complexity-auditor"
+        },
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "physics-regime-map-builder"
+        },
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "main-problem-alignment-auditor"
+        }
+      ],
+      "skipped_skills_with_reason": [],
+      "validation_handoff": "definition_assumption_elicitation used 2 required skills while exploring Hardness-Magnification Bridge Realization."
+    },
+    {
+      "cycle_id": "cycle-0149",
+      "input_artifacts": [
+        "agentic/state/current_target.json",
+        "agentic/reports/discovery_stretch/latest.json",
+        "agentic/registries/discovery_marathon_skill_dispatch.yaml"
+      ],
+      "invoked_skills": [
+        "qualitative-variable-isolator",
+        "physics-regime-map-builder",
+        "monotonicity-sensitivity-prober",
+        "limit-convergence-behavior-auditor",
+        "qualitative-toy-model-builder",
+        "qualitative-physics-falsifier",
+        "pvsnp-qualitative-complexity-reasoner",
+        "pvsnp-symbolic-complexity-auditor"
+      ],
+      "missing_required_skills": [],
+      "output_artifacts": [
+        "cycle:cycle-0149",
+        "branch:marathon.branch.bcdeffa51f87"
+      ],
+      "phase": "qualitative_physics_reasoning",
+      "queued_conditional_skills": [
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "dimensional-symmetry-constraint-checker"
+        },
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "scale-asymptotic-reasoner"
+        },
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "pvsnp-qualitative-complexity-reasoner"
+        },
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "pvsnp-symbolic-complexity-auditor"
+        }
+      ],
+      "skipped_skills_with_reason": [],
+      "validation_handoff": "qualitative complexity-theoretic reasoning used 8 required skills while exploring Hardness-Magnification Bridge Realization."
+    },
+    {
+      "cycle_id": "cycle-0149",
+      "input_artifacts": [
+        "agentic/state/current_target.json",
+        "agentic/reports/discovery_stretch/latest.json",
+        "agentic/registries/discovery_marathon_skill_dispatch.yaml"
+      ],
+      "invoked_skills": [
+        "gedanken-need-assessor",
+        "pvsnp-gedanken-complexity-lab",
+        "pvsnp-pressure-bridge-forger",
+        "pvsnp-qualitative-complexity-reasoner"
+      ],
+      "missing_required_skills": [],
+      "output_artifacts": [
+        "cycle:cycle-0149",
+        "branch:marathon.branch.bcdeffa51f87"
+      ],
+      "phase": "gedanken_experiment_design",
+      "queued_conditional_skills": [
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "gedanken-situation-designer"
+        },
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "pvsnp-gedanken-complexity-lab"
+        },
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "gedanken-counterfactual-variant-builder"
+        },
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "gedanken-transfer-guard"
+        },
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "gedanken-followup-planner"
+        },
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "qualitative-toy-model-builder"
+        }
+      ],
+      "skipped_skills_with_reason": [],
+      "validation_handoff": "gedanken_experiment_design used 4 required skills while exploring Hardness-Magnification Bridge Realization."
+    },
+    {
+      "cycle_id": "cycle-0149",
+      "input_artifacts": [
+        "agentic/state/current_target.json",
+        "agentic/reports/discovery_stretch/latest.json",
+        "agentic/registries/discovery_marathon_skill_dispatch.yaml"
+      ],
+      "invoked_skills": [
+        "kb-contradiction-strategist",
+        "contradiction-route-auditor",
+        "kb-hypothesis-refutation-loop",
+        "pvsnp-pressure-bridge-forger",
+        "pvsnp-negative-tactic-selector",
+        "pvsnp-impossibility-theorem-forger",
+        "pvsnp-symbolic-complexity-auditor"
+      ],
+      "missing_required_skills": [],
+      "output_artifacts": [
+        "cycle:cycle-0149",
+        "branch:marathon.branch.bcdeffa51f87"
+      ],
+      "phase": "contradiction_and_falsifier_generation",
+      "queued_conditional_skills": [
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "kb-novel-proof-strategist"
+        },
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "pvsnp-pressure-bridge-forger"
+        },
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "pvsnp-negative-tactic-selector"
+        },
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "pvsnp-impossibility-theorem-forger"
+        },
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "pvsnp-symbolic-complexity-auditor"
+        }
+      ],
+      "skipped_skills_with_reason": [],
+      "validation_handoff": "contradiction_and_falsifier_generation used 7 required skills while exploring Hardness-Magnification Bridge Realization."
+    },
+    {
+      "cycle_id": "cycle-0149",
+      "input_artifacts": [
+        "agentic/state/current_target.json",
+        "agentic/reports/discovery_stretch/latest.json",
+        "agentic/registries/discovery_marathon_skill_dispatch.yaml"
+      ],
+      "invoked_skills": [
+        "evidence-acquisition-planner",
+        "prior-art-importer",
+        "kb-prior-art-pass"
+      ],
+      "missing_required_skills": [],
+      "output_artifacts": [
+        "cycle:cycle-0149",
+        "branch:marathon.branch.bcdeffa51f87"
+      ],
+      "phase": "evidence_acquisition",
+      "queued_conditional_skills": [
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "kb-epistemic-hardness"
+        }
+      ],
+      "skipped_skills_with_reason": [],
+      "validation_handoff": "evidence_acquisition used 3 required skills while exploring Hardness-Magnification Bridge Realization."
+    },
+    {
+      "cycle_id": "cycle-0149",
+      "input_artifacts": [
+        "agentic/state/current_target.json",
+        "agentic/reports/discovery_stretch/latest.json",
+        "agentic/registries/discovery_marathon_skill_dispatch.yaml"
+      ],
+      "invoked_skills": [
+        "abducer-obligation-gatekeeper",
+        "entailment-gap-auditor",
+        "kb-end-to-end-proof-critic",
+        "pvsnp-conceptual-pressure-localizer",
+        "pvsnp-pressure-bridge-forger",
+        "pvsnp-negative-tactic-selector",
+        "pvsnp-impossibility-theorem-forger",
+        "pvsnp-symbolic-complexity-auditor"
+      ],
+      "missing_required_skills": [],
+      "output_artifacts": [
+        "cycle:cycle-0149",
+        "branch:marathon.branch.bcdeffa51f87"
+      ],
+      "phase": "obligation_gating",
+      "queued_conditional_skills": [
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "kb-coherence-evaluator"
+        },
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "pvsnp-pressure-bridge-forger"
+        },
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "pvsnp-negative-tactic-selector"
+        }
+      ],
+      "skipped_skills_with_reason": [],
+      "validation_handoff": "obligation_gating used 8 required skills while exploring Hardness-Magnification Bridge Realization."
+    },
+    {
+      "cycle_id": "cycle-0149",
+      "input_artifacts": [
+        "agentic/state/current_target.json",
+        "agentic/reports/discovery_stretch/latest.json",
+        "agentic/registries/discovery_marathon_skill_dispatch.yaml"
+      ],
+      "invoked_skills": [
+        "result-atlas-maintainer",
+        "scientific-contribution-detector",
+        "main-problem-alignment-auditor",
+        "paper-contribution-readiness-judge",
+        "pvsnp-negative-tactic-selector",
+        "pvsnp-pressure-bridge-forger"
+      ],
+      "missing_required_skills": [],
+      "output_artifacts": [
+        "cycle:cycle-0149",
+        "branch:marathon.branch.bcdeffa51f87"
+      ],
+      "phase": "result_atlas_maintenance",
+      "queued_conditional_skills": [
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "pvsnp-negative-tactic-selector"
+        },
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "pvsnp-pressure-bridge-forger"
+        },
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "finite-theorem-section-packager"
+        },
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "endpoint-worked-calculation-packager"
+        }
+      ],
+      "skipped_skills_with_reason": [],
+      "validation_handoff": "result_atlas_maintenance used 6 required skills while exploring Hardness-Magnification Bridge Realization."
+    },
+    {
+      "cycle_id": "cycle-0149",
+      "input_artifacts": [
+        "agentic/state/current_target.json",
+        "agentic/reports/discovery_stretch/latest.json",
+        "agentic/registries/discovery_marathon_skill_dispatch.yaml"
+      ],
+      "invoked_skills": [
+        "review-reasoner",
+        "review-reasoner-epistemologist",
+        "review-reasoner-discovery-scientist",
+        "kb-discovery-breakthrough-profiler"
+      ],
+      "missing_required_skills": [],
+      "output_artifacts": [
+        "cycle:cycle-0149",
+        "branch:marathon.branch.bcdeffa51f87"
+      ],
+      "phase": "review_and_synthesis",
+      "queued_conditional_skills": [
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "review-reasoner-fields-medalist"
+        },
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "review-reasoner-concept-logician"
+        }
+      ],
+      "skipped_skills_with_reason": [],
+      "validation_handoff": "review_and_synthesis used 4 required skills while exploring Hardness-Magnification Bridge Realization."
+    },
+    {
+      "cycle_id": "cycle-0149",
+      "input_artifacts": [
+        "agentic/state/current_target.json",
+        "agentic/reports/discovery_stretch/latest.json",
+        "agentic/registries/discovery_marathon_skill_dispatch.yaml"
+      ],
+      "invoked_skills": [
+        "show-reasoning",
+        "kb-explain"
+      ],
+      "missing_required_skills": [],
+      "output_artifacts": [
+        "cycle:cycle-0149",
+        "branch:marathon.branch.bcdeffa51f87"
+      ],
+      "phase": "report_rendering",
+      "queued_conditional_skills": [
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "kb-expert-paper-generator"
+        },
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "kb-macro-proof-paper-writer"
+        }
+      ],
+      "skipped_skills_with_reason": [],
+      "validation_handoff": "report_rendering used 2 required skills while exploring Hardness-Magnification Bridge Realization."
+    },
+    {
+      "cycle_id": "cycle-0149",
+      "input_artifacts": [
+        "agentic/state/current_target.json",
+        "agentic/reports/discovery_stretch/latest.json",
+        "agentic/registries/discovery_marathon_skill_dispatch.yaml"
+      ],
+      "invoked_skills": [
+        "looper-release-promoter",
+        "looper-workflow-contract-governor"
+      ],
+      "missing_required_skills": [],
+      "output_artifacts": [
+        "cycle:cycle-0149",
+        "branch:marathon.branch.bcdeffa51f87"
+      ],
+      "phase": "release_promotion",
+      "queued_conditional_skills": [
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "looper-hook-policy-maintainer"
+        }
+      ],
+      "skipped_skills_with_reason": [],
+      "validation_handoff": "release_promotion used 2 required skills while exploring Hardness-Magnification Bridge Realization."
+    }
+  ],
+  "target_id": "p-vs-np-target",
+  "timing_validation": {
+    "reason": "Elapsed 100.413 seconds against target 60 seconds.",
+    "status": "research"
+  },
+  "valid_as_research_cycle": true,
+  "validation_handoff": [
+    "agentic/scripts/validate_discovery_marathon_cycle.py",
+    "agentic/scripts/validate_discovery_marathon_skill_dispatch.py"
+  ],
+  "version": 1
+}

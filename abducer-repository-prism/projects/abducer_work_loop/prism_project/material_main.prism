@@ -1,0 +1,79 @@
+# lunar-runtime: {"declaration":"MaterializedAbducerWorkLoop","entry_argument":"proof_gap","execute_hook":"abducer-workflow-execute","id":"abducer_work_loop","input_schema":{"additionalProperties":false,"default":{"obligation":"Identify a testable induction route for extending a common fixed point from n commuting affine maps to n+1 maps."},"properties":{"obligation":{"default":"Identify a testable induction route for extending a common fixed point from n commuting affine maps to n+1 maps.","maxLength":16000,"minLength":1,"type":"string"}},"required":["obligation"],"type":"object"},"metadata":{"completion_contract":{"allowed_final_statuses":["passed","completed"],"forbid_blockers":true,"reasoning_complete":true,"reasoning_events_min":8,"terminal_state":"completed"},"description":"advance an active proof obligation from hypothesis through derivation and refutation","model_required":true,"network_required":false,"provenance_contract":{"agent_invocations":[{"activated_skill_ids":["kb-abduce"],"agent_name":"route_hypothesis_material_agent","workflow_occurrence":"route_hypothesis"},{"activated_skill_ids":["kb-deduce"],"agent_name":"derived_claim_material_agent","workflow_occurrence":"derived_claim"},{"activated_skill_ids":["counterexample-hunter"],"agent_name":"refutation_assessment_material_agent","workflow_occurrence":"refutation_assessment"},{"activated_skill_ids":["epistemic-status-ledger"],"agent_name":"work_routing_material_agent","workflow_occurrence":"work_routing"}],"required_source_reads":[]},"reasoning_contract":{"steps":["route_hypothesis","derived_claim","refutation_assessment","work_routing"],"workflow":"AbducerWorkLoop"},"reasoning_required":true,"required_host_capabilities":["model","prism-engine","reasoning-events"],"scientific_truth_verified":false,"semantic_mode":"operational-model-generated","source_materialization_status":"linked_fake_handler_smoke","timeout_seconds":1800},"output_schema":{"additionalProperties":false,"properties":{"analysis_results":{"type":"object"},"compact_prism_input":{"type":"object"},"markdown":{"minLength":1,"type":"string"},"narrative_slots":{"type":"array"},"report_verification":{"properties":{"reasoning_complete":{"const":true},"status":{"const":"passed"}},"required":["status","reasoning_complete"],"type":"object"},"structured_value":{"properties":{"execution_provenance":{"type":"object"},"final_disposition":{"properties":{"blockers":{"maxItems":0,"type":"array"},"reasoning_complete":{"const":true},"status":{"const":"passed"}},"required":["status","reasoning_complete","blockers"],"type":"object"},"reasoning_result":{"type":"object"}},"required":["final_disposition","reasoning_result","execution_provenance"],"type":"object"}},"required":["markdown","structured_value","analysis_results","compact_prism_input","narrative_slots","report_verification"],"type":"object"},"prepare_hook":"abducer-workflow-prepare","verify_hook":"abducer-workflow-verify"}
+
+# Host-executed material graph for the complete reviewed reasoning path.
+# Generated values retain the source epistemic boundary and are not native proof or experiment receipts.
+
+from types import (
+    ActiveProofGap,
+    ProofRouteDerivedClaim,
+    ProofRouteHypothesis,
+    ProofRouteRefutationAssessment,
+    ProofWorkDisposition,
+    ProofWorkRoutingAssessment,
+)
+from occurrences import (
+    ProofWorkRoutingInput,
+)
+
+from generated.material_types import (
+    MaterialProofWorkRoutingAssessment,
+)
+
+from generated.derived_claim_skill_1 import derived_claim_skill_1
+from generated.refutation_assessment_skill_1 import refutation_assessment_skill_1
+from generated.route_hypothesis_skill_1 import route_hypothesis_skill_1
+from generated.work_routing_skill_1 import work_routing_skill_1
+
+# Real model capability for source occurrence route_hypothesis:AbductiveProofRouteHypothesisFormation.
+agent route_hypothesis_material_agent(
+    task: ActiveProofGap,
+) -> Result[Generated[ProofRouteHypothesis], ModelFailure]
+    ! {AI.Generate, Context.Disclose}:
+    skills: Skills[ActiveProofGap] = [route_hypothesis_skill_1]
+
+# Real model capability for source occurrence derived_claim:DeductiveProofRouteClaimDerivation.
+agent derived_claim_material_agent(
+    task: ProofRouteHypothesis,
+) -> Result[Generated[ProofRouteDerivedClaim], ModelFailure]
+    ! {AI.Generate, Context.Disclose}:
+    skills: Skills[ProofRouteHypothesis] = [derived_claim_skill_1]
+
+# Real model capability for source occurrence refutation_assessment:RefutationalProofRouteClaimAssessment.
+agent refutation_assessment_material_agent(
+    task: ProofRouteDerivedClaim,
+) -> Result[Generated[ProofRouteRefutationAssessment], ModelFailure]
+    ! {AI.Generate, Context.Disclose}:
+    skills: Skills[ProofRouteDerivedClaim] = [refutation_assessment_skill_1]
+
+# Real model capability for source occurrence work_routing:EvidentialProofWorkRoutingAssessment.
+agent work_routing_material_agent(
+    task: ProofWorkRoutingInput,
+) -> Result[Generated[MaterialProofWorkRoutingAssessment], ModelFailure]
+    ! {AI.Generate, Context.Disclose}:
+    skills: Skills[ProofWorkRoutingInput] = [work_routing_skill_1]
+
+workflow MaterializedAbducerWorkLoop(
+    proof_gap: ActiveProofGap,
+) -> Generated[MaterialProofWorkRoutingAssessment]
+    fails ModelFailure
+    ! {AI.Generate, Context.Disclose}:
+    sequence:
+        # Formation and deduction turn the gap into a concrete claim that can fail.
+        [route_hypothesis: route_hypothesis_material_agent(proof_gap)]
+        [derived_claim: derived_claim_material_agent(route_hypothesis.value)]
+        # Refutation tests the claim; calibration uses claim and test, not either alone.
+        [refutation_assessment: refutation_assessment_material_agent(derived_claim.value)]
+        [work_routing: work_routing_material_agent(ProofWorkRoutingInput(
+            derived_claim = derived_claim.value,
+            refutation_assessment = refutation_assessment.value,
+        ))]
+
+    return work_routing
+
+
+def main(
+    proof_gap: ActiveProofGap,
+    model_access: ModelGenerate,
+    disclosure: ContextDisclose,
+) -> Result[Generated[MaterialProofWorkRoutingAssessment], ModelFailure] ! {AI.Generate, Context.Disclose}:
+    return solve MaterializedAbducerWorkLoop(proof_gap)

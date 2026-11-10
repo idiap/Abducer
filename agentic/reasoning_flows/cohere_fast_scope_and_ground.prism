@@ -1,0 +1,8 @@
+erfl 0.2
+reasoning cohere_fast_scope_and_ground {
+  goal "bind target, sources, domain, and claim ceiling" -> scope_status
+  steps pre:_[domain_request->scope_candidate] -requires> ...
+        e0:E[scope_candidate->scope_status]
+  on e0.accepted => switch @cohere_fast_adaptive_frontier
+  on e0.blocked => stop
+}

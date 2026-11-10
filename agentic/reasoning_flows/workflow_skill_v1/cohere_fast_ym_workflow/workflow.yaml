@@ -1,0 +1,480 @@
+# SPDX-FileCopyrightText: © 2026 Idiap Research Institute <contact@idiap.ch>
+#
+# SPDX-FileContributor: Danilo Gusicuma <danilo.gusicuma@idiap.ch>
+# Neuro-symbolic AI Group
+#
+# SPDX-License-Identifier: MIT
+# REUSE-IgnoreStart
+schema_version: workflow-skill/v1
+namespace: abducer
+id: cohere_fast_ym_workflow
+version: 1.0.0
+kind: workflow
+description: Draft interface projection of cohere_fast:ym; native execution and authority remain unchanged.
+aliases:
+- cohere_fast:ym
+lifecycle: draft
+activation:
+  mode: explicit
+  prerequisites: []
+types:
+  DomainEvidencePacket:
+    schema: ../../../../agentic/spec/cohere_fast_artifacts.schema.json#/$defs/DomainEvidencePacket
+    representation: value
+inputs:
+  request:
+    type: DomainEvidencePacket
+outputs:
+  result:
+    type: DomainEvidencePacket
+    value:
+      ref: steps.native.outputs.result
+operations:
+  native_workflow:
+    inputs:
+      request:
+        type: DomainEvidencePacket
+    outputs:
+      result:
+        type: DomainEvidencePacket
+    execution:
+      mode: specification_only
+      reason: No workflow-skill/v1 host adapter is supplied. Native skill/hook/CLI interfaces exist, but
+        payload materialization, guard evidence, execution effects and receipt translation are not qualified
+        for this format.
+flow:
+  kind: sequence
+  steps:
+  - id: native
+    kind: call
+    operation: native_workflow
+    description: Opaque native workflow boundary; internal ordering, guards and handoffs are retained
+      in abducer.native_contract.
+    arguments:
+      request:
+        ref: inputs.request
+    on_failure: blocked
+policy:
+  effects:
+    filesystem:
+      read:
+      - native_sources
+      - inputs
+      write: []
+    network: []
+    external_write: []
+  authority:
+    allowed:
+    - describe_native_interface
+    forbidden:
+    - execute_scientific_workflow
+    - approve
+    - prove
+    - publish
+    - promote
+  limits:
+    wall_time_seconds: 1800
+    max_operation_calls: 1
+  failure:
+    default: blocked
+    retry:
+      max_attempts: 1
+      retryable_codes: []
+  resume:
+    mode: none
+    require_matching_definition_and_inputs: true
+  claim_ceiling: Interface description only; no proof, scientific validity, runtime qualification, promotion
+    or approval.
+observability:
+  receipts: required
+  artifact_digests: sha256
+  provenance: required
+  events:
+  - workflow_started
+  - step_failed
+  - workflow_completed
+provenance:
+  coverage: interface_only
+  sources:
+  - path: agentic/registries/cohere_fast_ym_workflow.yaml
+    digest: sha256:b6e96e458aa1dd23730c345ea91523a47527fa16ee8e10382bf845a6f60e5b64
+  - path: skills/cohere_fast/cohere-fast-orchestrator/SKILL.md
+    digest: sha256:d238bdfea6c7e0638395f2737ce3c5950c9c305f8c4bd46145cf5c5526ebc51b
+  - path: agentic/registries/cohere_fast_subworkflows.yaml
+    digest: sha256:53931de5b0b89ceee22a112347d39bd453aa0fd2ba758558ffda5b55e57190e3
+  - path: agentic/orchestration/cohere_fast_runner.py
+    digest: sha256:1034aae90b56a538f691115099549ebcbb199df75107ddd69d694b838b08377a
+  - path: agentic/spec/cohere_fast_isolation_contract.yaml
+    digest: sha256:68314d67d4b75f82925091b16e300fd50ab621e482a5233f6767d9bc2eef21bd
+  - path: skills/domain_specific/ym/ym-freeze-clay-target/SKILL.md
+    digest: sha256:cae55eff954cb8b5f52a5adc564a01bbd48f571161d1aec785bfeeae68d655f3
+  - path: skills/domain_specific/ym/ym-ground-paper-literature/SKILL.md
+    digest: sha256:070c2669c0414ed4ad3076ee4d35db2cf94b3229611570a524d97d3b956d766a
+  - path: skills/domain_specific/ym/ym-design-regulator-atlas/SKILL.md
+    digest: sha256:967a7695f90b1a7de27060389091d8605b2745867fa30881793ad075da4b6496
+  - path: skills/domain_specific/ym/ym-build-observable-core/SKILL.md
+    digest: sha256:4ba44f77e884c900e3e841209038d71e88eb0be5e49b91ed3f8b5166bd4ec8af
+  - path: skills/domain_specific/ym/ym-build-representation-calculus/SKILL.md
+    digest: sha256:df9fc99d2472c017dd6c6149b5d7109e21752b1264bf921528719c444b859445
+  - path: skills/domain_specific/ym/ym-calibrate-restricted-models/SKILL.md
+    digest: sha256:b5ad9e0bb7f2bd1bcf6e76c64536ae63565ba0963eb2c7a95b3c13cca9268fd9
+  - path: skills/domain_specific/ym/ym-draft-finite-block-certificate/SKILL.md
+    digest: sha256:00e323e3ae5225222308a196710cf019903997b809715a13e9318c14bb318f6a
+  - path: skills/domain_specific/ym/ym-draft-heat-kernel-enclosures/SKILL.md
+    digest: sha256:6365c709e7dac6cec919e30411ff1528f0818eef1f6d6395fb0da2fb3fd59150
+  - path: skills/domain_specific/ym/ym-draft-frustration-obstruction/SKILL.md
+    digest: sha256:bd04bbd4070c4c0215f24035b4ab9f0aa716bcb29d67856ece8aca056a7f91a7
+  - path: skills/domain_specific/ym/ym-draft-staple-dispersion/SKILL.md
+    digest: sha256:b95c5167ac1c25b48d95c0be42d35a0c05b40fbff875e7aa5ab2c575e90464cd
+  - path: skills/domain_specific/ym/ym-draft-representational-dynamics/SKILL.md
+    digest: sha256:e71d82653834126d1d46ff2b39860c4662c48ba5c380443d26c2d6fb7a75bee3
+  - path: skills/domain_specific/ym/ym-prove-adaptive-block-domination/SKILL.md
+    digest: sha256:de5488d8e0a901c27d49f1b40c1a29ed5293e951841ede9a76a23ad1fab2997c
+  - path: skills/domain_specific/ym/ym-prove-state-weighted-defect-transfer/SKILL.md
+    digest: sha256:8e082f06cdd1d34fbf331bf14dd919800cc600613bb50c5d26c17212f4259968
+  - path: skills/domain_specific/ym/ym-control-large-fields-and-topology/SKILL.md
+    digest: sha256:22bacba90707d36aab383250597367ec7d91004365aef3345cd7f488e4800af4
+  - path: skills/domain_specific/ym/ym-prove-conditional-partition-ratio/SKILL.md
+    digest: sha256:024ecac1c09af44f6c4882600f50f589a853afa1833a46a84c9cf3bc41050130
+  - path: skills/domain_specific/ym/ym-build-gauge-covariant-rg/SKILL.md
+    digest: sha256:b1e24a9d8a2caccc7f76d1b4693d9543091fec728ab1c0a53df8d51211ce3fb2
+  - path: skills/domain_specific/ym/ym-design-infrared-basin/SKILL.md
+    digest: sha256:019eec6256ec9e2c03263db910a3468d92942c4c5dc4cc5a1da276aa69c63226
+  - path: skills/domain_specific/ym/ym-prove-basin-entry/SKILL.md
+    digest: sha256:7e6f465b3cbed6bf23752dfefa79f38af3e243fcfd7693f633677490687cb079
+  - path: skills/domain_specific/ym/ym-define-relational-rigidity/SKILL.md
+    digest: sha256:18b1b88d86e0d85c33efa5646bc7a1a170e1da6a07316b48711a735c12a6b3a4
+  - path: skills/domain_specific/ym/ym-prove-rg-to-rigidity/SKILL.md
+    digest: sha256:73a7e477c9785bf3bd72844dde4e765ffb99f7c2773c722850592f34fc1fe556
+  - path: skills/domain_specific/ym/ym-prove-rigidity-transfer/SKILL.md
+    digest: sha256:cee0df062124631e86b0ca582653db3044eed8ed1fbd53286a493ed3807a5196
+  - path: skills/domain_specific/ym/ym-prove-continuum-coherence/SKILL.md
+    digest: sha256:c0f5ef4e10ad82e369ef6e70ed937bf3b5856ec6f0264acfc47999cc03de1641
+  - path: skills/domain_specific/ym/ym-reconstruct-os-gap/SKILL.md
+    digest: sha256:92e1b47718b124f351df07ffb31c6e4196de525e75b484ca88a574429fe0ffaf
+  - path: skills/domain_specific/ym/ym-develop-paper-proofs/SKILL.md
+    digest: sha256:3db0ebca7d429db413b5ed6226784be4a83b795d166aa778d67c12fb7b377242
+  - path: skills/domain_specific/ym/ym-mechanize-proof-core/SKILL.md
+    digest: sha256:30ec3ddd1fb9404cd77ea0297633e2762db3544c15f2f12dae3f49155fe8e5be
+  - path: skills/domain_specific/ym/ym-audit-frontier/SKILL.md
+    digest: sha256:525bb65be91dceb72b8ca0844cb803507e6b08a28d3101d3e4fe7673d6b4a8aa
+  - path: skills/domain_specific/ym/ym-frame-paper-narrative/SKILL.md
+    digest: sha256:6f11dd7dbf22656a57629924ee38f026882f1f60b188124c972969549398027b
+  - path: skills/domain_specific/ym/ym-build-proof-appendix/SKILL.md
+    digest: sha256:5c2d6156ce4c589546426df578740c052dcc1f2cb50faa2441174dc4b09b7089
+  - path: skills/domain_specific/ym/ym-build-latex-paper/SKILL.md
+    digest: sha256:89ce2b95e614d2107606a49b9fb1762593bb50261992c002d27252b6fb6258f3
+  - path: skills/domain_specific/ym/ym-run-clay-program/SKILL.md
+    digest: sha256:aefda5b2590c7c11c41a5d951067e902c2f3699c655a2a150f6efa5ee00f4202
+  - path: agentic/registries/skill_registry.yaml
+    digest: sha256:15076ed8d1bd4c10895060ab485353fe520421c44e1fc6f506508d2d566eacf0
+  - path: pyproject.toml
+    digest: sha256:69325c4805f66033ce7f7e0e68f4a0996913728c6041bb3cee656571693b2f1e
+  - path: uv.lock
+    digest: sha256:a6c77e5d86a93915eeb0f129f80bc8c45d572be387872e3ace7460a3d6ada9ae
+  - path: prism_me/shared/references/codex-control-stack.md
+    digest: sha256:4e8e7a5cdbc0572cf9b0d4ffc4a41c8f4f9c9a304fae3bcee99d8af3553be30e
+  gaps:
+  - No workflow-skill/v1 host adapter is supplied. Native skill/hook/CLI interfaces exist, but payload
+    materialization, guard evidence, execution effects and receipt translation are not qualified for this
+    format.
+  - Native control flow remains opaque; coverage is interface_only, not source-equivalence certification.
+extensions:
+  abducer.owner:
+    path: skills/cohere_fast/cohere-fast-orchestrator/SKILL.md
+  abducer.native_identity:
+    id: cohere_fast:ym
+  abducer.native_contract:
+    schema_version: '1.0'
+    workflow_id: cohere_fast
+    domain_id: ym
+    activation: explicit-only
+    claim_ceiling: candidate
+    closure_gate: audit_frontier
+    manuscript_gate: independently-audited-inputs-only
+    nodes:
+    - id: freeze_target
+      skill: ym-freeze-clay-target
+      subworkflow: scope_and_ground
+      disposition: used
+      input_type: DomainEvidencePacket
+      output_type: DomainEvidencePacket
+      depends_on: []
+      on_failure: quarantine
+    - id: ground_literature
+      skill: ym-ground-paper-literature
+      subworkflow: scope_and_ground
+      disposition: used
+      input_type: DomainEvidencePacket
+      output_type: DomainEvidencePacket
+      depends_on:
+      - freeze_target
+      on_failure: quarantine
+    - id: regulator_atlas
+      skill: ym-design-regulator-atlas
+      subworkflow: adaptive_frontier
+      disposition: used
+      input_type: DomainEvidencePacket
+      output_type: DomainEvidencePacket
+      depends_on:
+      - ground_literature
+      on_failure: quarantine
+    - id: observable_core
+      skill: ym-build-observable-core
+      subworkflow: adaptive_frontier
+      disposition: used
+      input_type: DomainEvidencePacket
+      output_type: DomainEvidencePacket
+      depends_on:
+      - regulator_atlas
+      on_failure: quarantine
+    - id: representation_calculus
+      skill: ym-build-representation-calculus
+      subworkflow: adaptive_frontier
+      disposition: used
+      input_type: DomainEvidencePacket
+      output_type: DomainEvidencePacket
+      depends_on:
+      - observable_core
+      on_failure: quarantine
+    - id: restricted_models
+      skill: ym-calibrate-restricted-models
+      subworkflow: adaptive_frontier
+      disposition: used
+      input_type: DomainEvidencePacket
+      output_type: DomainEvidencePacket
+      depends_on:
+      - representation_calculus
+      on_failure: quarantine
+    - id: finite_block
+      skill: ym-draft-finite-block-certificate
+      subworkflow: derivation_and_proof
+      disposition: used
+      input_type: DomainEvidencePacket
+      output_type: DomainEvidencePacket
+      depends_on:
+      - restricted_models
+      on_failure: quarantine
+    - id: heat_kernel
+      skill: ym-draft-heat-kernel-enclosures
+      subworkflow: derivation_and_proof
+      disposition: used
+      input_type: DomainEvidencePacket
+      output_type: DomainEvidencePacket
+      depends_on:
+      - finite_block
+      on_failure: quarantine
+    - id: frustration
+      skill: ym-draft-frustration-obstruction
+      subworkflow: derivation_and_proof
+      disposition: used
+      input_type: DomainEvidencePacket
+      output_type: DomainEvidencePacket
+      depends_on:
+      - finite_block
+      on_failure: quarantine
+    - id: staple_dispersion
+      skill: ym-draft-staple-dispersion
+      subworkflow: derivation_and_proof
+      disposition: used
+      input_type: DomainEvidencePacket
+      output_type: DomainEvidencePacket
+      depends_on:
+      - finite_block
+      on_failure: quarantine
+    - id: representational_dynamics
+      skill: ym-draft-representational-dynamics
+      subworkflow: derivation_and_proof
+      disposition: used
+      input_type: DomainEvidencePacket
+      output_type: DomainEvidencePacket
+      depends_on:
+      - representation_calculus
+      on_failure: quarantine
+    - id: adaptive_domination
+      skill: ym-prove-adaptive-block-domination
+      subworkflow: derivation_and_proof
+      disposition: used
+      input_type: DomainEvidencePacket
+      output_type: DomainEvidencePacket
+      depends_on:
+      - heat_kernel
+      - frustration
+      - staple_dispersion
+      on_failure: quarantine
+    - id: defect_transfer
+      skill: ym-prove-state-weighted-defect-transfer
+      subworkflow: derivation_and_proof
+      disposition: used
+      input_type: DomainEvidencePacket
+      output_type: DomainEvidencePacket
+      depends_on:
+      - adaptive_domination
+      on_failure: quarantine
+    - id: large_fields
+      skill: ym-control-large-fields-and-topology
+      subworkflow: derivation_and_proof
+      disposition: used
+      input_type: DomainEvidencePacket
+      output_type: DomainEvidencePacket
+      depends_on:
+      - defect_transfer
+      on_failure: quarantine
+    - id: conditional_ratio
+      skill: ym-prove-conditional-partition-ratio
+      subworkflow: derivation_and_proof
+      disposition: used
+      input_type: DomainEvidencePacket
+      output_type: DomainEvidencePacket
+      depends_on:
+      - large_fields
+      on_failure: quarantine
+    - id: gauge_rg
+      skill: ym-build-gauge-covariant-rg
+      subworkflow: derivation_and_proof
+      disposition: used
+      input_type: DomainEvidencePacket
+      output_type: DomainEvidencePacket
+      depends_on:
+      - conditional_ratio
+      - representational_dynamics
+      on_failure: quarantine
+    - id: infrared_basin
+      skill: ym-design-infrared-basin
+      subworkflow: derivation_and_proof
+      disposition: used
+      input_type: DomainEvidencePacket
+      output_type: DomainEvidencePacket
+      depends_on:
+      - gauge_rg
+      on_failure: quarantine
+    - id: basin_entry
+      skill: ym-prove-basin-entry
+      subworkflow: derivation_and_proof
+      disposition: used
+      input_type: DomainEvidencePacket
+      output_type: DomainEvidencePacket
+      depends_on:
+      - infrared_basin
+      on_failure: quarantine
+    - id: relational_rigidity
+      skill: ym-define-relational-rigidity
+      subworkflow: derivation_and_proof
+      disposition: used
+      input_type: DomainEvidencePacket
+      output_type: DomainEvidencePacket
+      depends_on:
+      - basin_entry
+      on_failure: quarantine
+    - id: rg_to_rigidity
+      skill: ym-prove-rg-to-rigidity
+      subworkflow: derivation_and_proof
+      disposition: used
+      input_type: DomainEvidencePacket
+      output_type: DomainEvidencePacket
+      depends_on:
+      - relational_rigidity
+      on_failure: quarantine
+    - id: rigidity_transfer
+      skill: ym-prove-rigidity-transfer
+      subworkflow: derivation_and_proof
+      disposition: used
+      input_type: DomainEvidencePacket
+      output_type: DomainEvidencePacket
+      depends_on:
+      - rg_to_rigidity
+      on_failure: quarantine
+    - id: continuum_coherence
+      skill: ym-prove-continuum-coherence
+      subworkflow: derivation_and_proof
+      disposition: used
+      input_type: DomainEvidencePacket
+      output_type: DomainEvidencePacket
+      depends_on:
+      - rigidity_transfer
+      - regulator_atlas
+      on_failure: quarantine
+    - id: os_gap
+      skill: ym-reconstruct-os-gap
+      subworkflow: derivation_and_proof
+      disposition: used
+      input_type: DomainEvidencePacket
+      output_type: DomainEvidencePacket
+      depends_on:
+      - continuum_coherence
+      on_failure: quarantine
+    - id: develop_proofs
+      skill: ym-develop-paper-proofs
+      subworkflow: derivation_and_proof
+      disposition: used
+      input_type: DomainEvidencePacket
+      output_type: DomainEvidencePacket
+      depends_on:
+      - os_gap
+      on_failure: quarantine
+    - id: mechanize_core
+      skill: ym-mechanize-proof-core
+      subworkflow: derivation_and_proof
+      disposition: used
+      input_type: DomainEvidencePacket
+      output_type: DomainEvidencePacket
+      depends_on:
+      - develop_proofs
+      on_failure: quarantine
+    - id: audit_frontier
+      skill: ym-audit-frontier
+      subworkflow: independent_audit
+      disposition: used
+      input_type: DomainEvidencePacket
+      output_type: DomainEvidencePacket
+      depends_on:
+      - mechanize_core
+      on_failure: quarantine
+    - id: frame_narrative
+      skill: ym-frame-paper-narrative
+      subworkflow: manuscript_release
+      disposition: used
+      input_type: DomainEvidencePacket
+      output_type: DomainEvidencePacket
+      depends_on:
+      - audit_frontier
+      on_failure: stop
+    - id: proof_appendix
+      skill: ym-build-proof-appendix
+      subworkflow: manuscript_release
+      disposition: used
+      input_type: DomainEvidencePacket
+      output_type: DomainEvidencePacket
+      depends_on:
+      - audit_frontier
+      on_failure: stop
+    - id: latex_paper
+      skill: ym-build-latex-paper
+      subworkflow: manuscript_release
+      disposition: used
+      input_type: DomainEvidencePacket
+      output_type: DomainEvidencePacket
+      depends_on:
+      - frame_narrative
+      - proof_appendix
+      on_failure: stop
+    - id: program_coordinator
+      skill: ym-run-clay-program
+      subworkflow: parent
+      disposition: auxiliary
+      input_type: DomainEvidencePacket
+      output_type: DomainEvidencePacket
+      depends_on:
+      - latex_paper
+      on_failure: quarantine
+  abducer.environment:
+    python: pyproject.toml
+    lock: uv.lock
+    native_controls: .codex/config.toml
+    native_controls_optional: true
+    control_policy: prism_me/shared/references/codex-control-stack.md
+  abducer.execution_boundary:
+    status: specification_only
+    notes: Source inspection only. Effects above deny native execution until a separately reviewed adapter
+      exists.
+# REUSE-IgnoreEnd

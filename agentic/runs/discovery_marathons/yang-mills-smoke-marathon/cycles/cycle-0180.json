@@ -1,0 +1,571 @@
+{
+  "branch_execution_records": [
+    {
+      "api_attempt": "primary",
+      "api_key_config": {
+        "active_provider": "azure_openai",
+        "configured_keys": [
+          "AZURE_OPENAI_API_KEY",
+          "AZURE_OPENAI_ENDPOINT",
+          "AZURE_OPENAI_MODEL",
+          "AZURE_OPENAI_REASONING_EFFORT",
+          "AZURE_OPENAI_RESPONSES_ENDPOINT",
+          "OPENAI_BASE_URL",
+          "OPENAI_MODEL",
+          "OPENAI_REASONING_EFFORT"
+        ],
+        "has_openai_api_key": true,
+        "source": "config/api_keys.json"
+      },
+      "api_timeout_seconds": 900,
+      "branch_id": "marathon.branch.2943978bc7b2",
+      "elapsed_seconds": 161.104,
+      "engine": "azure_responses_api",
+      "http_status": 200,
+      "max_output_tokens": 8000,
+      "model": "gpt-5.5",
+      "output_schema": "agentic/spec/discovery_marathon_codex_branch_output.schema.json",
+      "reasoning_effort": "high",
+      "response_id": "resp_0f9e9829665552dc006a4efb4273a88196896a9a639ff9d693",
+      "status": "complete"
+    }
+  ],
+  "branch_outputs": [
+    {
+      "attempted_derivation": {
+        "blocking_gap": "There is no proved Yang-Mills trace theorem for mixed reflected Wilson products as the reflected and unreflected networks collide at t=0. In particular, we lack a uniform no-new-boundary-renormalization/factorization estimate excluding cusp, hairpin, and curvature-contact defects in every finite OS matrix entry.",
+        "derivation_id": "cycle-0180-derivation-mixed-matrix-trace",
+        "steps": [
+          "Start with regulated reflection positivity: for cutoff Schwinger forms S_{a,L} and any positive-time gauge-invariant collar observables T_delta F_i, Q_{a,L}(T_delta F,c)=sum_{i,j} overline{c_i} c_j S_{a,L}(Theta T_delta F_i,T_delta F_j)>=0.",
+          "Use the RG-to-OS fixed-collar convergence topology: for fixed delta>0, every reflected product Theta T_delta F_i · T_delta F_j is separated from the reflection plane, so S_{a,L} -> S gives M^delta_{ij}=S(Theta T_delta F_i T_delta F_j) and M^delta is positive semidefinite.",
+          "For uncollared F_i, write M^0_{ij}=S(Theta F_i F_j). If the finite-matrix trace modulus omega_F(delta)=||M^delta-M^0||_op tends to zero, then for every c, c^*M^0 c >= c^*M^delta c - ||c||^2 omega_F(delta) >= -||c||^2 omega_F(delta), hence c^*M^0 c>=0 after delta downarrow 0.",
+          "For mirror-flat local composites, T_delta f -> f in the test-function topology and the Schwinger distributions are continuous, so the trace modulus follows unless there is an unrenormalized boundary contact term.",
+          "For Wilson loops, try to express the collar limit as M^delta_{ij}->overline{lambda_i}lambda_j M^0_{ij}+E_{ij}. The diagonal congruence part is positivity-safe if lambda_i is locked in the observable definition. The remaining mixed term E_{ij}, or a nonfactorizing Schur factor R_{ij}, is the obstruction.",
+          "The algebraic two-by-two model shows why this distinction matters: a mixed damping factor can make R circ M^0 positive even when M^0 is not positive, so closed-cone positivity of the collar limit cannot be quoted as OS positivity of the intended Schwinger functions."
+        ],
+        "why_not_yet_a_proof": "The fixed-collar closed-cone passage is valid, and the local mirror-flat sector has a plausible distributional proof. But full OS positivity for the intended Yang-Mills algebra still requires the finite-matrix Wilson trace modulus or an allowed locked congruence theorem. Without that, a boundary-renormalized positive theory could be constructed while failing to prove positivity for the target Schwinger functions."
+      },
+      "branch_id": "marathon.branch.2943978bc7b2",
+      "branch_title": "Reflection-Positivity Closed-Cone Topology: mixed Wilson boundary-defect criterion",
+      "candidate_lemmas": [
+        {
+          "assumptions": [
+            "For every fixed delta>0 and every finite family F_i in A_+, RG convergence is strong enough for the reflected collar probes Theta T_delta F_i · T_delta F_j, so the closed-cone argument gives M^delta >= 0.",
+            "The collar maps T_delta preserve the locked algebraic identification: T_delta(Theta F)=Theta T_delta(F) after reflection and T_delta(FG) approximates the same product observable, not a changed boundary theory.",
+            "For each finite family F, omega_F(delta)=||M^delta-M^0||_op tends to 0 as delta downarrow 0.",
+            "The Schwinger functional is already defined on the uncollared observables F_i, so M^0 is not being defined by the positive collar limit itself."
+          ],
+          "definitions": [
+            "source object: regulated reflection-positive Schwinger forms S_{a,L} on a fixed gauge-invariant positive-time test algebra, together with their continuum limit S and collar approximants T_delta F inherited from the same cutoff observables.",
+            "target object: OS-positive continuum Schwinger functions on the locked Yang-Mills gauge-invariant algebra A_+, inducing the sesquilinear form <F,G>_OS=S(Theta F G), the OS quotient Hilbert space, vacuum vector, and positive time-translation semigroup.",
+            "controlled interface: finite reflected quadratic forms Q_S(F,c)=sum_{i,j} overline{c_i} c_j S(Theta F_i F_j) and their collar matrices M^delta, controlled in the finite OS matrix/operator-norm topology.",
+            "same-theory condition: the observable embedding, product, reflection, and renormalization conventions are fixed before cutoff removal and before delta downarrow 0; no extra reflection-plane observable, boundary counterterm, or post hoc Wilson-loop normalization may be introduced to make the limiting positivity statement valid."
+          ],
+          "equations": [
+            {
+              "label": "finite OS matrix trace modulus",
+              "latex": "M^\\delta_{ij}=S(\\Theta T_\\delta F_i\\,T_\\delta F_j),\\qquad M^0_{ij}=S(\\Theta F_i\\,F_j),\\qquad \\omega_F(\\delta)=\\|M^\\delta-M^0\\|_{op}\\to 0",
+              "valid_when": "The cutoff-removal topology controls every reflected collar probe and the delta downarrow 0 trace limit is taken inside the same locked gauge-invariant algebra."
+            },
+            {
+              "label": "positivity transfer by matrix norm",
+              "latex": "\\sum_{i,j}\\overline c_i c_j M^0_{ij}=\\sum_{i,j}\\overline c_i c_j M^\\delta_{ij}+\\sum_{i,j}\\overline c_i c_j(M^0_{ij}-M^\\delta_{ij})\\ge -\\|c\\|^2\\omega_F(\\delta)\\xrightarrow{\\delta\\downarrow0}0",
+              "valid_when": "M^delta is positive semidefinite for each fixed collar delta and omega_F(delta) tends to zero."
+            },
+            {
+              "label": "boundary defect obstruction",
+              "latex": "M^\\delta\\longrightarrow M^0+B_F,\\qquad B_F\\ne 0\\quad\\Longrightarrow\\quad M^0+B_F\\ge0\\ \\text{does not imply}\\ M^0\\ge0",
+              "valid_when": "The defect matrix B_F is a mixed reflection-plane contribution not already encoded by the source and target observable normalization."
+            }
+          ],
+          "failure_test": "Find F_1,F_2 in the locked Wilson-loop sector such that M^delta converges to M^0+B with B_{12} nonzero while B_{11}=B_{22}=0, or more generally such that the defect cannot be absorbed by a pre-declared diagonal congruence. Then fixed-collar positivity is valid but it is positivity for the wrong matrix.",
+          "lemma_id": "cycle-0180-lemma-1",
+          "proof_role": "This is the sharpened bridge lemma: it reduces the continuum OS positivity problem to fixed-collar closed-cone preservation plus a finite-matrix boundary trace estimate. It also identifies exactly what a Wilson-loop boundary anomaly must avoid.",
+          "statement": "Finite OS Matrix Trace-Modulus Bridge. Let S be a continuum Schwinger functional obtained as a cutoff limit of reflection-positive regulated gauge-invariant Schwinger forms. For a locked positive-time gauge-invariant algebra A_+ and collar maps T_delta moving observables into t >= delta, assume fixed-collar OS positivity and finite OS matrix trace continuity: for every finite family F_1,...,F_n in A_+, the matrices M^delta_{ij}=S(Theta T_delta F_i T_delta F_j) converge in operator norm to M^0_{ij}=S(Theta F_i F_j). Then S is OS-positive on A_+. A nonzero mixed boundary defect not removable by a pre-locked diagonal congruence is a falsifier of this bridge, because fixed-collar positivity then proves positivity of a boundary-renormalized matrix rather than of the target OS matrix."
+        },
+        {
+          "assumptions": [
+            "The fixed-collar Wilson OS matrices are positive semidefinite by regulated reflection positivity and closed-cone transfer.",
+            "The individual Wilson observables have already been renormalized in the bulk theory; the test asks only whether an additional reflection-plane renormalization appears in mixed OS products.",
+            "All lambda_i used in a congruence must be nonzero and chosen before forming the OS matrix; otherwise the same-theory condition is not satisfied."
+          ],
+          "definitions": [
+            "Wilson collar family: W(C_delta) denotes the locked renormalized Wilson observable whose loop or network C_delta lies in t>=delta and tends geometrically to C touching or approaching the reflection plane.",
+            "Mixed OS Wilson matrix: M^delta_{ij}=S(Theta W(C_i^delta) W(D_j^delta)), where the reflected and unreflected loops may collide at t=0 in the product observable.",
+            "Locked congruence anomaly: a limit M^delta_{ij}->overline{lambda_i} lambda_j M^0_{ij} with lambda_i attached to the individual observable F_i and already included in the source-target identification.",
+            "Genuinely mixed anomaly: a factor or additive term depending on the pair (Theta C_i,D_j), such as a cusp angle, hairpin contact, or boundary local counterterm, not decomposable into individual observable normalizations."
+          ],
+          "equations": [
+            {
+              "label": "congruence-safe anomaly",
+              "latex": "M^\\delta_{ij}\\to \\overline{\\lambda_i}\\lambda_j M^0_{ij},\\qquad c^*(\\Lambda^*M^0\\Lambda)c=(\\Lambda c)^*M^0(\\Lambda c)",
+              "valid_when": "The boundary factor is an individual observable normalization already present in the locked algebra; then positivity of the congruent matrix is equivalent to positivity of M^0."
+            },
+            {
+              "label": "nonfactorizing Schur anomaly",
+              "latex": "M^\\delta_{ij}\\to R_{ij}M^0_{ij},\\qquad R_{ij}\\ne\\overline{\\lambda_i}\\lambda_j",
+              "valid_when": "The collar limit produces pair-dependent Wilson cusp, hairpin, or contact factors; positivity of R\\circ M^0 is not a valid proof of positivity of M^0."
+            },
+            {
+              "label": "two-by-two falsifier pattern",
+              "latex": "M^0=\\begin{pmatrix}1&2\\\\2&1\\end{pmatrix}\\not\\ge0,\\qquad R\\circ M^0=\\begin{pmatrix}1&\\rho\\,2\\\\\\overline\\rho\\,2&1\\end{pmatrix}\\ge0\\ \\text{if } |\\rho|\\le \\tfrac12",
+              "valid_when": "This algebraic model shows why a damped mixed boundary factor can hide failure of the target OS matrix; it is not a claim that this numerical matrix is realized by Yang-Mills."
+            }
+          ],
+          "failure_test": "Compute or bound a reflected Wilson-pair collar limit and show an angle-dependent or contact-dependent factor R_{ij} that cannot be written as overline{lambda_i}lambda_j on a finite family. That is a concrete falsifier of the same-theory OS passage.",
+          "lemma_id": "cycle-0180-lemma-2",
+          "proof_role": "This lemma refines the previous no-boundary-renormalization requirement: the bridge can tolerate only zero defects or pre-locked diagonal congruences, while pair-dependent mixed Wilson defects invalidate the inference to the intended OS form.",
+          "statement": "Mixed Wilson Boundary-Factorization Test. In the Wilson-loop/nonlocal sector, a collar-collapse anomaly is harmless for OS positivity only if, on every finite OS matrix, it is either zero or a locked congruence factor M^delta -> Lambda^* M^0 Lambda with Lambda diagonal and nonzero, corresponding to individual observable renormalizations fixed in the same theory. A genuinely mixed factor R_{ij} depending on the pair Theta C_i with D_j rather than on the individual observables is a same-theory falsifier."
+        },
+        {
+          "assumptions": [
+            "Continuum local composite Schwinger functions are tempered or live in a specified distribution space continuous on the chosen test-function topology.",
+            "T_delta f -> f in that topology after reflection and product formation.",
+            "The mirror-flat core is OS-dense in the intended local subalgebra, or at least dense enough to reduce the remaining obstruction to Wilson/nonlocal observables."
+          ],
+          "definitions": [
+            "Mirror-flat local core: finite products of gauge-invariant local composites, such as smeared curvature polynomials, whose positive-time smearing functions extend smoothly across t=0 after reflection and have prescribed vanishing normal jets at t=0.",
+            "Collar operator on local tests: T_delta acts by translating or smoothing the support into t>=delta while converging to the original test in the Schwartz/test-function topology adapted to the composite distribution.",
+            "Local OS matrix entry: M^delta_{ij}=S_n(Theta T_delta f_i, T_delta f_j) for the relevant n-point composite Schwinger distribution.",
+            "Contact-safe condition: possible contact terms supported at coincident points on the reflection plane vanish against the chosen flat jets or are already part of the locked bulk composite renormalization."
+          ],
+          "equations": [
+            {
+              "label": "distributional local trace",
+              "latex": "S_n(\\Theta T_\\delta f_i, T_\\delta f_j)\\to S_n(\\Theta f_i,f_j)",
+              "valid_when": "The reflected test tensors converge in the distribution test topology and no unaccounted boundary contact term survives the flat-jet pairing."
+            },
+            {
+              "label": "local quadratic transfer",
+              "latex": "Q_S(T_\\delta F,c)\\ge0,\\qquad Q_S(T_\\delta F,c)\\to Q_S(F,c)\\quad\\Longrightarrow\\quad Q_S(F,c)\\ge0",
+              "valid_when": "The finite family F belongs to the mirror-flat local core and fixed-collar positivity has already been obtained."
+            }
+          ],
+          "failure_test": "A local curvature-composite contact term supported on t=0 that does not vanish against mirror-flat approximants would refute the claimed local trace continuity and become a local-sector falsifier.",
+          "lemma_id": "cycle-0180-lemma-3",
+          "proof_role": "This lemma isolates a plausibly solved subcase, preventing the branch from treating all reflection-plane trace issues as equally hard. The nonlocal Wilson sector remains the decisive gap.",
+          "statement": "Mirror-Flat Local Core Trace Lemma. For local gauge-invariant composite fields smeared by test functions supported in t>=0 and flat to sufficiently high order at the reflection plane, collar trace continuity of OS matrix entries follows from ordinary distributional continuity of the continuum Schwinger distributions, so this sector should not be the main obstruction."
+        }
+      ],
+      "control_decision": {
+        "decision": "persist_adapt",
+        "pivot_test": "Pivot away from this branch if an unavoidable pair-dependent Wilson boundary defect is derived or if the RG topology cannot be strengthened to finite OS matrix trace convergence without changing the observable algebra.",
+        "promotion_test": "Promote if a theorem is proved that every reflected Wilson collar product has zero or locked-congruence boundary defect and the mirror-flat/Wilson core is OS-dense in the target gauge-invariant algebra.",
+        "reason": "The branch produced a sharper bridge lemma and a concrete falsifier criterion: test finite mixed Wilson OS matrices for nonfactorizing boundary defects. This is new mathematical information beyond the previous zero-defect slogan."
+      },
+      "dependency_updates": [
+        {
+          "dependency_id": "RG-to-OS Continuum Passage Bridge Lemma",
+          "description": "The bridge is now split into a formal valid part, fixed-collar closed-cone transfer, and a nonformal finite-matrix trace-modulus part. The latter must include mixed Wilson OS entries, not just single-observable limits.",
+          "kind": "sharpened",
+          "status": "formal part stable; trace-modulus obligation open"
+        },
+        {
+          "dependency_id": "choice of gauge-invariant test algebra",
+          "description": "The algebra must lock Wilson-loop normalization and reflection-plane behavior before taking limits. Congruence renormalizations are allowed only if predeclared as individual observable normalizations; pair-dependent boundary factors violate same-theory identification.",
+          "kind": "tightened",
+          "status": "requires explicit locked Wilson-network core"
+        },
+        {
+          "dependency_id": "cutoff-removal topology",
+          "description": "The needed topology is not merely pointwise Schwinger convergence or separated-probe convergence. It must dominate finite OS matrices M^delta uniformly enough to prove omega_F(delta)->0 after continuum cutoff removal.",
+          "kind": "refined",
+          "status": "open analytic estimate"
+        },
+        {
+          "dependency_id": "mixed Wilson boundary-defect theorem",
+          "description": "Prove that reflected Wilson collar products have zero defect, or only locked diagonal congruence defects, in every finite OS matrix. This is the decisive nonlocal-sector bridge.",
+          "kind": "new_dependency",
+          "status": "new open dependency"
+        }
+      ],
+      "falsifiers": [
+        "Wilson-pair falsifier: find loops C_i,D_j whose collar product Theta C_i^delta with D_j^delta develops a cusp/hairpin at t=0 with a finite nonfactorizing mixed factor R_{ij}, so M^delta -> R circ M^0 rather than M^0.",
+        "Boundary-counterterm falsifier: the collar limit of reflected Wilson products requires adding a plane-supported term such as an effective integral over t=0 of a gauge-invariant curvature density; then the positive form belongs to an enlarged boundary theory, not the same theory.",
+        "Renormalization-ratio falsifier: the limit of Z_a(Theta C_delta · D_delta)/(Z_a(C_delta)Z_a(D_delta)) is nontrivial and pair-dependent as a->0 and delta->0, showing that individual Wilson renormalizations do not control mixed OS entries.",
+        "Topology falsifier: Balaban-style or multiscale compactness controls separated probes for every fixed delta but gives no estimate uniform enough to pass delta downarrow 0 in finite OS matrices.",
+        "Density falsifier: the mirror-flat local core plus admissible Wilson collars is not OS-dense in the locked positive-time algebra, so positivity on the controlled core does not extend to the desired target object."
+      ],
+      "generated_by": "azure_responses_api",
+      "mathematical_learning": "Cycle 180 refines the obstruction: not every Wilson boundary anomaly is equally fatal. A purely individual, pre-locked diagonal congruence preserves OS positivity, but a pair-dependent mixed defect can make the collar-limit matrix positive while the intended target matrix is indefinite. Thus the real same-theory condition is a finite-matrix factorization/no-defect theorem for reflected Wilson products at t=0. The local mirror-flat sector remains plausibly valid by distributional continuity; the decisive falsifier is now a nonfactorizing mixed Wilson cusp, hairpin, or boundary-contact term.",
+      "next_experiment": "Analyze a two-by-two family of reflected rectangular or hairpin Wilson loops whose collars approach t=0. Track whether the known/expected cusp or perimeter renormalization of Theta C_delta · D_delta factorizes into individual loop normalizations or leaves a pair-dependent mixed factor; this gives the quickest concrete falsifier or proof target for the finite OS matrix trace modulus."
+    }
+  ],
+  "completed_utc": "2026-07-09T01:39:46+00:00",
+  "created_utc": "2026-07-09T01:37:05+00:00",
+  "cycle_id": "cycle-0180",
+  "cycle_index": 180,
+  "cycle_learning": "This research cycle converted active route pressure into typed branch lemmas. The main mathematical change is that each branch now names a source object, target object, equation, validity condition, falsifier, and next experiment. Only research-mode cycles with elapsed-time and branch-engine evidence count as genuine long-horizon research progress.",
+  "execution_mode": "research",
+  "next_cycle_queue": [
+    "Analyze a two-by-two family of reflected rectangular or hairpin Wilson loops whose collars approach t=0. Track whether the known/expected cusp or perimeter renormalization of Theta C_delta · D_delta factorizes into individual loop normalizations or leaves a pair-dependent mixed factor; this gives the quickest concrete falsifier or proof target for the finite OS matrix trace modulus."
+  ],
+  "research_seconds_elapsed": 161.107,
+  "research_seconds_target": 60,
+  "run_id": "yang-mills-smoke-marathon",
+  "scheduler_decisions": [
+    {
+      "branch_id": "marathon.branch.2943978bc7b2",
+      "branch_title": "Reflection-Positivity Closed-Cone Topology",
+      "controlled_interface": "regulated reflection-positive Schwinger forms -> OS-positive continuum Schwinger functions",
+      "reason": "The branch remains target-linked and has not exhausted its certification tests.",
+      "recommended_move": "persist_adapt"
+    }
+  ],
+  "selected_branch_ids": [
+    "marathon.branch.2943978bc7b2"
+  ],
+  "skill_dispatch_trace": [
+    {
+      "cycle_id": "cycle-0180",
+      "input_artifacts": [
+        "agentic/state/current_target.json",
+        "agentic/reports/discovery_stretch/latest.json",
+        "agentic/registries/discovery_marathon_skill_dispatch.yaml"
+      ],
+      "invoked_skills": [
+        "looper-target-goal-enricher",
+        "looper-target-dependency-cartographer",
+        "looper-workflow-contract-governor",
+        "looper-hook-policy-maintainer"
+      ],
+      "missing_required_skills": [],
+      "output_artifacts": [
+        "cycle:cycle-0180",
+        "branch:marathon.branch.2943978bc7b2"
+      ],
+      "phase": "preflight_target_navigation",
+      "queued_conditional_skills": [
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "kb-orchestrator"
+        }
+      ],
+      "skipped_skills_with_reason": [],
+      "validation_handoff": "preflight_target_navigation used 4 required skills while exploring Reflection-Positivity Closed-Cone Topology."
+    },
+    {
+      "cycle_id": "cycle-0180",
+      "input_artifacts": [
+        "agentic/state/current_target.json",
+        "agentic/reports/discovery_stretch/latest.json",
+        "agentic/registries/discovery_marathon_skill_dispatch.yaml"
+      ],
+      "invoked_skills": [
+        "long-horizon-route-portfolio-manager",
+        "abducer-refinement-route-ranker",
+        "next-experiment-queue-ranker",
+        "kb-discovery-governor"
+      ],
+      "missing_required_skills": [],
+      "output_artifacts": [
+        "cycle:cycle-0180",
+        "branch:marathon.branch.2943978bc7b2"
+      ],
+      "phase": "branch_selection",
+      "queued_conditional_skills": [
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "kb-promising-direction-assessor"
+        }
+      ],
+      "skipped_skills_with_reason": [],
+      "validation_handoff": "branch_selection used 3 required skills while exploring Reflection-Positivity Closed-Cone Topology; queue ranking now orders next experiments by payoff criteria."
+    },
+    {
+      "cycle_id": "cycle-0180",
+      "input_artifacts": [
+        "agentic/state/current_target.json",
+        "agentic/reports/discovery_stretch/latest.json",
+        "agentic/registries/discovery_marathon_skill_dispatch.yaml"
+      ],
+      "invoked_skills": [
+        "kb-abduce",
+        "kb-deduce",
+        "kb-induce",
+        "kb-concept-bridge-planner",
+        "kb-gap-abstraction-conjecturer"
+      ],
+      "missing_required_skills": [],
+      "output_artifacts": [
+        "cycle:cycle-0180",
+        "branch:marathon.branch.2943978bc7b2"
+      ],
+      "phase": "branch_exploration",
+      "queued_conditional_skills": [
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "kb-proof-sketcher"
+        },
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "kb-proof-connector"
+        }
+      ],
+      "skipped_skills_with_reason": [],
+      "validation_handoff": "branch_exploration used 5 required skills while exploring Reflection-Positivity Closed-Cone Topology."
+    },
+    {
+      "cycle_id": "cycle-0180",
+      "phase": "qualitative_physics_reasoning",
+      "invoked_skills": [
+        "qualitative-variable-isolator",
+        "physics-regime-map-builder",
+        "monotonicity-sensitivity-prober",
+        "limit-convergence-behavior-auditor",
+        "qualitative-toy-model-builder",
+        "qualitative-physics-falsifier"
+      ],
+      "skipped_skills_with_reason": [],
+      "queued_conditional_skills": [
+        {
+          "skill": "dimensional-symmetry-constraint-checker",
+          "reason": "Queued when the branch exposes a dimensional, symmetry, scaling, or asymptotic consistency obligation."
+        },
+        {
+          "skill": "scale-asymptotic-reasoner",
+          "reason": "Queued when the branch exposes a dimensional, symmetry, scaling, or asymptotic consistency obligation."
+        }
+      ],
+      "missing_required_skills": [],
+      "input_artifacts": [
+        "agentic/state/current_target.json",
+        "agentic/reports/discovery_stretch/latest.json",
+        "agentic/registries/discovery_marathon_skill_dispatch.yaml",
+        "agentic/spec/qualitative_physics_relation_packet.schema.json"
+      ],
+      "output_artifacts": [
+        "cycle:cycle-0180",
+        "branch:marathon.branch.2943978bc7b2",
+        "agentic/reports/qualitative_relation_packets/latest.json",
+        "agentic/state/qualitative_mechanistic_graphs/yang-mills-existence-and-mass-gap-target.json"
+      ],
+      "validation_handoff": "qualitative_physics_reasoning isolated variables, regimes, monotonicities, limits, toy-model probes, and falsifiers while exploring Reflection-Positivity Closed-Cone Topology: mixed Wilson boundary-defect criterion."
+    },
+    {
+      "cycle_id": "cycle-0180",
+      "phase": "gedanken_experiment_design",
+      "invoked_skills": [
+        "gedanken-need-assessor"
+      ],
+      "skipped_skills_with_reason": [],
+      "queued_conditional_skills": [
+        {
+          "skill": "gedanken-situation-designer",
+          "reason": "Queued when the need assessor licenses a Gedanken experiment, variant, transfer check, or follow-up planning handoff."
+        },
+        {
+          "skill": "gedanken-counterfactual-variant-builder",
+          "reason": "Queued when the need assessor licenses a Gedanken experiment, variant, transfer check, or follow-up planning handoff."
+        },
+        {
+          "skill": "gedanken-transfer-guard",
+          "reason": "Queued when the need assessor licenses a Gedanken experiment, variant, transfer check, or follow-up planning handoff."
+        },
+        {
+          "skill": "gedanken-followup-planner",
+          "reason": "Queued when the need assessor licenses a Gedanken experiment, variant, transfer check, or follow-up planning handoff."
+        },
+        {
+          "skill": "qualitative-toy-model-builder",
+          "reason": "Queued when the need assessor licenses a Gedanken experiment, variant, transfer check, or follow-up planning handoff."
+        }
+      ],
+      "missing_required_skills": [],
+      "input_artifacts": [
+        "agentic/state/current_target.json",
+        "agentic/reports/discovery_stretch/latest.json",
+        "agentic/registries/discovery_marathon_skill_dispatch.yaml",
+        "agentic/spec/gedanken_experiment_packet.schema.json",
+        "agentic/reports/qualitative_relation_packets/latest.json"
+      ],
+      "output_artifacts": [
+        "cycle:cycle-0180",
+        "branch:marathon.branch.2943978bc7b2",
+        "agentic/reports/gedanken_experiments/latest.json",
+        "agentic/reports/gedanken_experiments/latest.md"
+      ],
+      "validation_handoff": "gedanken_experiment_design assessed whether an imagined concrete situation could sharpen mechanisms, counterfactual contrasts, transfer limits, or follow-up tasks while exploring Reflection-Positivity Closed-Cone Topology: mixed Wilson boundary-defect criterion."
+    },
+    {
+      "cycle_id": "cycle-0180",
+      "input_artifacts": [
+        "agentic/state/current_target.json",
+        "agentic/reports/discovery_stretch/latest.json",
+        "agentic/registries/discovery_marathon_skill_dispatch.yaml"
+      ],
+      "invoked_skills": [
+        "kb-contradiction-strategist",
+        "contradiction-route-auditor",
+        "kb-hypothesis-refutation-loop"
+      ],
+      "missing_required_skills": [],
+      "output_artifacts": [
+        "cycle:cycle-0180",
+        "branch:marathon.branch.2943978bc7b2"
+      ],
+      "phase": "contradiction_and_falsifier_generation",
+      "queued_conditional_skills": [
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "kb-novel-proof-strategist"
+        }
+      ],
+      "skipped_skills_with_reason": [],
+      "validation_handoff": "contradiction_and_falsifier_generation used 3 required skills while exploring Reflection-Positivity Closed-Cone Topology."
+    },
+    {
+      "cycle_id": "cycle-0180",
+      "input_artifacts": [
+        "agentic/state/current_target.json",
+        "agentic/reports/discovery_stretch/latest.json",
+        "agentic/registries/discovery_marathon_skill_dispatch.yaml"
+      ],
+      "invoked_skills": [
+        "evidence-acquisition-planner",
+        "prior-art-importer",
+        "kb-prior-art-pass"
+      ],
+      "missing_required_skills": [],
+      "output_artifacts": [
+        "cycle:cycle-0180",
+        "branch:marathon.branch.2943978bc7b2"
+      ],
+      "phase": "evidence_acquisition",
+      "queued_conditional_skills": [
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "kb-epistemic-hardness"
+        }
+      ],
+      "skipped_skills_with_reason": [],
+      "validation_handoff": "evidence_acquisition used 3 required skills while exploring Reflection-Positivity Closed-Cone Topology."
+    },
+    {
+      "cycle_id": "cycle-0180",
+      "input_artifacts": [
+        "agentic/state/current_target.json",
+        "agentic/reports/discovery_stretch/latest.json",
+        "agentic/registries/discovery_marathon_skill_dispatch.yaml"
+      ],
+      "invoked_skills": [
+        "abducer-obligation-gatekeeper",
+        "entailment-gap-auditor",
+        "kb-end-to-end-proof-critic"
+      ],
+      "missing_required_skills": [],
+      "output_artifacts": [
+        "cycle:cycle-0180",
+        "branch:marathon.branch.2943978bc7b2"
+      ],
+      "phase": "obligation_gating",
+      "queued_conditional_skills": [
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "kb-coherence-evaluator"
+        }
+      ],
+      "skipped_skills_with_reason": [],
+      "validation_handoff": "obligation_gating used 3 required skills while exploring Reflection-Positivity Closed-Cone Topology."
+    },
+    {
+      "cycle_id": "cycle-0180",
+      "input_artifacts": [
+        "agentic/state/current_target.json",
+        "agentic/reports/discovery_stretch/latest.json",
+        "agentic/registries/discovery_marathon_skill_dispatch.yaml"
+      ],
+      "invoked_skills": [
+        "review-reasoner",
+        "review-reasoner-epistemologist",
+        "review-reasoner-discovery-scientist",
+        "kb-discovery-breakthrough-profiler"
+      ],
+      "missing_required_skills": [],
+      "output_artifacts": [
+        "cycle:cycle-0180",
+        "branch:marathon.branch.2943978bc7b2"
+      ],
+      "phase": "review_and_synthesis",
+      "queued_conditional_skills": [
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "review-reasoner-fields-medalist"
+        },
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "review-reasoner-concept-logician"
+        }
+      ],
+      "skipped_skills_with_reason": [],
+      "validation_handoff": "review_and_synthesis used 4 required skills while exploring Reflection-Positivity Closed-Cone Topology."
+    },
+    {
+      "cycle_id": "cycle-0180",
+      "input_artifacts": [
+        "agentic/state/current_target.json",
+        "agentic/reports/discovery_stretch/latest.json",
+        "agentic/registries/discovery_marathon_skill_dispatch.yaml"
+      ],
+      "invoked_skills": [
+        "show-reasoning",
+        "kb-explain"
+      ],
+      "missing_required_skills": [],
+      "output_artifacts": [
+        "cycle:cycle-0180",
+        "branch:marathon.branch.2943978bc7b2"
+      ],
+      "phase": "report_rendering",
+      "queued_conditional_skills": [
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "kb-expert-paper-generator"
+        },
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "kb-macro-proof-paper-writer"
+        }
+      ],
+      "skipped_skills_with_reason": [],
+      "validation_handoff": "report_rendering used 2 required skills while exploring Reflection-Positivity Closed-Cone Topology."
+    },
+    {
+      "cycle_id": "cycle-0180",
+      "input_artifacts": [
+        "agentic/state/current_target.json",
+        "agentic/reports/discovery_stretch/latest.json",
+        "agentic/registries/discovery_marathon_skill_dispatch.yaml"
+      ],
+      "invoked_skills": [
+        "looper-release-promoter",
+        "looper-workflow-contract-governor"
+      ],
+      "missing_required_skills": [],
+      "output_artifacts": [
+        "cycle:cycle-0180",
+        "branch:marathon.branch.2943978bc7b2"
+      ],
+      "phase": "release_promotion",
+      "queued_conditional_skills": [
+        {
+          "reason": "Queued only if the branch output exposes the corresponding proof, evidence, or writing obligation.",
+          "skill": "looper-hook-policy-maintainer"
+        }
+      ],
+      "skipped_skills_with_reason": [],
+      "validation_handoff": "release_promotion used 2 required skills while exploring Reflection-Positivity Closed-Cone Topology."
+    }
+  ],
+  "target_id": "yang-mills-existence-and-mass-gap-target",
+  "timing_validation": {
+    "reason": "Elapsed 161.107 seconds against target 60 seconds.",
+    "status": "research"
+  },
+  "valid_as_research_cycle": true,
+  "validation_handoff": [
+    "agentic/scripts/validate_discovery_marathon_cycle.py",
+    "agentic/scripts/validate_discovery_marathon_skill_dispatch.py"
+  ],
+  "version": 1
+}

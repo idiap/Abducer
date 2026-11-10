@@ -1,0 +1,412 @@
+{
+  "archive_file_count": 364,
+  "archive_sha256": "71aaf2b973feb423adab8336a5d7f533d7980961863df6cfb76368d3faeb846e",
+  "catalog_sha256": "9a89533f290cf5ee8deb330ac779a8021912b58f36b0a891753a77ad3081632e",
+  "evidence_level": "reviewed-structural-trace",
+  "manifest_sha256": "8568e6e2ffb1e0c831ba558fa46f2b0c7937e0ac1bdc0e74f9e3400746a747c4",
+  "prism_executable_sha256": "8b4e59b838ecc46409754fe243b8ed32e2c4ac5209f68e87f85e51320dc14c72",
+  "sample_outputs_bundle_sha256": "2f8f8561bd5b89d726a0c96ef1317a1fee44656d00dae5ace186059676f3795d",
+  "schema_version": "1.0.0",
+  "source_bundle_sha256": "75857ab50dfeb0fb8dd0d03be9777b24ab202615bf9f9ee9437f607ab39d8d25",
+  "source_revision": "f90f0c6fe08f0a14884d8a2bdda611a81ccf72bf",
+  "workflow_count": 19,
+  "workflows": [
+    {
+      "compiled_composition_sha256": "bc078de8eb0868fbb2aa4a5641f8bc4607a0a4163454eef4ad0ef082fcd87c72",
+      "former_route": "pre:_[raw_target->dependency_state] -requires> e0:E[dependency_state->target_status]",
+      "former_sha256": "8d8ea66dca22c06f3e637aeb14fd475e956c292ef0da0d449881fb10e3798545",
+      "former_source": "agentic/reasoning_flows/target_navigation_loop.rflow",
+      "id": "target_navigation_loop",
+      "policy_clauses": [
+        "e0.work_ready => switch @abducer_work_loop",
+        "e0.release_candidate => switch @release_promotion_loop",
+        "flow.stalled => stop"
+      ],
+      "prism_sha256": "c5d34f50cdcf55824e3bd59f166a813273d485b28726d799c73ba3bad141c723",
+      "prism_source": "target_navigation_loop/reasoning.prism",
+      "projection_status": "gap_bearing_curated_abstraction",
+      "sample_outputs": {
+        "alignment_sha256": "38e3ad002d1faaaaca92737e406adb2c02c1a0af695101d4bc3fde94772cee49",
+        "path": "target_navigation_loop/sample_outputs.prism",
+        "sha256": "8d43bb033f4adfceab82ef116adfad15797c3811394dc485c22cda347c7b4d2a",
+        "step_count": 2
+      }
+    },
+    {
+      "compiled_composition_sha256": "741cb54aaab97dc04a60f81e3c7ce4c0ea684e8870ddbc6bf6ba015885a24d07",
+      "former_route": "e0:E[run_context->scope] -constrain> (a0:A[scope->candidate] & i0:I[scope->pattern]) -probe> (m0:M[candidate,pattern->model_result] & c0:C[candidate,pattern->contrast_result]) -test> r0:R[model_result,contrast_result->verdict] -calibrate> e1:E[candidate,pattern,verdict->discovery_status]",
+      "former_sha256": "e0a08246e9388dcfb07ec84b4d982793867067c2f80cb785ce878ce132baee97",
+      "former_source": "agentic/reasoning_flows/discovery_marathon_loop.rflow",
+      "id": "discovery_marathon_loop",
+      "policy_clauses": [
+        "e1.promotable => switch @release_promotion_loop",
+        "e1.reorient => switch @conceptual_hypothesis_exploration_loop",
+        "e1.target_reset => switch @target_navigation_loop",
+        "flow.stalled => stop"
+      ],
+      "prism_sha256": "ca594b5e88f7fefd599a4929bbe15e1f0bbb86fd6dad99b64e081d517f6829e3",
+      "prism_source": "discovery_marathon_loop/reasoning.prism",
+      "projection_status": "curated_abstraction",
+      "sample_outputs": {
+        "alignment_sha256": "25d71a52a14dfdf18ccc357fa57feca8ea57bf450bf5f93cd64c963a939c084c",
+        "path": "discovery_marathon_loop/sample_outputs.prism",
+        "sha256": "2a0b18015eb416f32a3617962e533fe4c16f7ca9355750362ae854c8ca68dddc",
+        "step_count": 7
+      }
+    },
+    {
+      "compiled_composition_sha256": "0bc9dcbf148352344a3fc682e07517a8ef177e5125dcfa6ac9e8b08e916a99a6",
+      "former_route": "a0:A[proof_gap->route] -assume> d0:D[route->claim] -test> r0:R[claim->verdict] -calibrate> e0:E[claim,verdict->work_status]",
+      "former_sha256": "2e145e98dae1fa7b5d056b3783527f7b545d21c8ddf07d3abe8e60817ecf0bc6",
+      "former_source": "agentic/reasoning_flows/abducer_work_loop.rflow",
+      "id": "abducer_work_loop",
+      "policy_clauses": [
+        "e0.release_candidate => switch @release_promotion_loop",
+        "e0.reframe => switch @conceptual_hypothesis_exploration_loop",
+        "e0.retarget => switch @target_navigation_loop",
+        "r0.refuted => stop"
+      ],
+      "prism_sha256": "fb0961afb73f2c176d4c12a67f6a707f7b5eb7146cac47d4221467822b111af3",
+      "prism_source": "abducer_work_loop/reasoning.prism",
+      "projection_status": "curated_abstraction",
+      "sample_outputs": {
+        "alignment_sha256": "a1a9197ba09f101e5318fbbe0d4998da2e9a44223792796527a0baa9ac98cd79",
+        "path": "abducer_work_loop/sample_outputs.prism",
+        "sha256": "69041570e4cc0352480669fcbcfe4f8f3c6212602498aaaf971fa4f579ed4a63",
+        "step_count": 4
+      }
+    },
+    {
+      "compiled_composition_sha256": "c243b8ba67bcb82b27f427d38ab7b0613d22fd80644b3f6b589b0fdcaa51346d",
+      "former_route": "e0:E[failure_state->pressure] -constrain> a0:A[pressure->candidate] -transfer> t0:T[candidate->bridge] -assume> d0:D[bridge->consequence] -test> r0:R[consequence->verdict] -calibrate> e1:E[bridge,verdict->refinement_status]",
+      "former_sha256": "0eef92a3b6819aa4b595ef126c9b4ed8f87122163a73d62f306aece45fbabcb0",
+      "former_source": "agentic/reasoning_flows/conceptual_hypothesis_exploration_loop.rflow",
+      "id": "conceptual_hypothesis_exploration_loop",
+      "policy_clauses": [
+        "e1.work_ready => switch @abducer_work_loop",
+        "e1.release_candidate => switch @release_promotion_loop",
+        "r0.refuted => stop"
+      ],
+      "prism_sha256": "b5bf899397ed054d835c43fd16917c5279c1ad6a1a282e3592b64059ac63c4fc",
+      "prism_source": "conceptual_hypothesis_exploration_loop/reasoning.prism",
+      "projection_status": "curated_abstraction",
+      "sample_outputs": {
+        "alignment_sha256": "321b75bd205a8de23cad81840e2d8ea5bfdfdf7858481afd5074eed95c9ec9bb",
+        "path": "conceptual_hypothesis_exploration_loop/sample_outputs.prism",
+        "sha256": "ea2541a8da8c5a771d7414974fc21af7b9295c6b254293a58035d80cffa27fe2",
+        "step_count": 6
+      }
+    },
+    {
+      "compiled_composition_sha256": "3f8ec55bee9787a120820d6f20fa3632e3b91ea6af25e0bafe9b05f92087c227",
+      "former_route": "pre:_[run_evidence->release_candidate] -requires> e0:E[release_candidate->release_status]",
+      "former_sha256": "6683b98f7aafce6dba901efb06367c1ccf0eff504ff747d0384485b3d7a26297",
+      "former_source": "agentic/reasoning_flows/release_promotion_loop.rflow",
+      "id": "release_promotion_loop",
+      "policy_clauses": [
+        "e0.promoted => accept",
+        "e0.repair_target => switch @target_navigation_loop",
+        "e0.repair_concept => switch @conceptual_hypothesis_exploration_loop",
+        "e0.rejected => stop"
+      ],
+      "prism_sha256": "fc2a6c255d3544e12a8f0fd3be7c95afec7950a7e034a858ec563996bb73088e",
+      "prism_source": "release_promotion_loop/reasoning.prism",
+      "projection_status": "gap_bearing_curated_abstraction",
+      "sample_outputs": {
+        "alignment_sha256": "a75fc8d30995cb0250e4afcebfd52f9fe96a41e9a79ca8aae5ab7d6fd3e33af8",
+        "path": "release_promotion_loop/sample_outputs.prism",
+        "sha256": "65a77561d995ae8666119d5381cf960fd1317ff4bfb647ccb84e2debb3ef71ed",
+        "step_count": 2
+      }
+    },
+    {
+      "compiled_composition_sha256": "79a5bb6e8b4b808f4e103cee1a9ca2dfb9348989a7953e89b098e8337702c08a",
+      "former_route": "e0:E[source->ground] -constrain> a0:A[ground->route] -assume> d0:D[route->consequence] -calibrate> e1:E[consequence->assessment] -revise> a1:A[assessment->entrypoint] -test> r0:R[entrypoint->verdict] -calibrate> e2:E[entrypoint,verdict->status]",
+      "former_sha256": "96efaf31914183d1083d3873e35d0db05f1b4008918d9bb6385d0899495f84c9",
+      "former_source": "agentic/reasoning_flows/evidence_to_proof_route_onramp.rflow",
+      "id": "evidence_to_proof_route_onramp",
+      "policy_clauses": [
+        "e2.route_ready => switch @theorem_proof_delivery",
+        "r0.refuted => stop",
+        "e2.requires_conceptual_refinement => switch @conceptual_hypothesis_exploration_loop"
+      ],
+      "prism_sha256": "d9bfc2e0fe8095019e9113679dad7f4976db8f7b8f707b2491cfba0bbfd63348",
+      "prism_source": "evidence_to_proof_route_onramp/reasoning.prism",
+      "projection_status": "hypothesized_degraded_summary",
+      "sample_outputs": {
+        "alignment_sha256": "f18c236a1a4873e0097425cc2ebb17e61b5e536846a4a0562b78cfe776478e9e",
+        "path": "evidence_to_proof_route_onramp/sample_outputs.prism",
+        "sha256": "db652fffaa1b98948475afed3ce7e213b2dbcedd92054aceb8b0a2ff3580e45e",
+        "step_count": 7
+      }
+    },
+    {
+      "compiled_composition_sha256": "d1a009c5977aa9519c212ebb4f51a6185490bb0aac3e08b34da693a52e19321e",
+      "former_route": "e0:E[context->ground] -constrain> a0:A[ground->hypothesis] -test> r0:R[hypothesis->verdict] -calibrate> e1:E[hypothesis,verdict->selection] -revise> t0:T[selection->bridge] -assume> d0:D[bridge->claim] -calibrate> e2:E[claim->status]",
+      "former_sha256": "f1617d53aee3064ade2e218591ae3d8e151487b145d15bd9728602aa0b6ca225",
+      "former_source": "agentic/reasoning_flows/conceptual_frontier_deepening.rflow",
+      "id": "conceptual_frontier_deepening",
+      "policy_clauses": [
+        "e2.formal_ready => switch @theorem_proof_delivery",
+        "r0.refuted => stop",
+        "e2.candidate_not_ready_or_non_dominated => switch @conceptual_hypothesis_exploration_loop"
+      ],
+      "prism_sha256": "90ea2a02cddf329306237122306d7ade7203eea0408c7a8c7d8a2320694947e0",
+      "prism_source": "conceptual_frontier_deepening/reasoning.prism",
+      "projection_status": "hypothesized_degraded_summary",
+      "sample_outputs": {
+        "alignment_sha256": "f5a152dfbf21f3825f4b06da8dacd4f95f1b89c138e4775533b1d01864483c5b",
+        "path": "conceptual_frontier_deepening/sample_outputs.prism",
+        "sha256": "d1f1bf5e754a59d6e2d71a13b405ed223c0c47a77c9389389a89dde88ced7709",
+        "step_count": 7
+      }
+    },
+    {
+      "compiled_composition_sha256": "c483d9be9d21d12651199abfab47ebbf6ecb5ef52ecc0d9a838db97e16202a11",
+      "former_route": "d0:D[premises->claim] -test> r0:R[claim->verdict] -calibrate> e0:E[claim,verdict->status]",
+      "former_sha256": "5e7328e2ab4c23759f0fa1a81724b1b9dd2a840b576ab6c6c0ebe0f3118f32a2",
+      "former_source": "agentic/reasoning_flows/theorem_proof_delivery.rflow",
+      "id": "theorem_proof_delivery",
+      "policy_clauses": [
+        "e0.proof_accepted => switch @scientific_contribution_cultivation",
+        "e0.failure_certificate_issued => switch @conceptual_hypothesis_exploration_loop",
+        "e0.quarantined => stop"
+      ],
+      "prism_sha256": "d83772ab214d22de73eb88409f669ddbcf8b5a0fbb3db9a8d4269a8138e35c6b",
+      "prism_source": "theorem_proof_delivery/reasoning.prism",
+      "projection_status": "hypothesized_degraded_summary",
+      "sample_outputs": {
+        "alignment_sha256": "e5f2c0e16054515ff2260980b739432bcbb4658f8060d49bc6a2bf463e4c03dc",
+        "path": "theorem_proof_delivery/sample_outputs.prism",
+        "sha256": "9f984d404ef9459093014f76800f17c082cb39b5b44b76546086f4000544d142",
+        "step_count": 3
+      }
+    },
+    {
+      "compiled_composition_sha256": "12da0b40785bf7ed9351be145685b142a0c6f5fad9462ec87492ab2824a85cea",
+      "former_route": "a0:A[result->candidate] -test> r0:R[candidate->verdict] -calibrate> e0:E[candidate,verdict->status]",
+      "former_sha256": "1d13ecb809cb5fd8a5e8b3f4a67f68abff32f210fbf804ce9362a22f9700dee0",
+      "former_source": "agentic/reasoning_flows/scientific_contribution_cultivation.rflow",
+      "id": "scientific_contribution_cultivation",
+      "policy_clauses": [
+        "e0.paper_ready => switch @manuscript_result_elaboration",
+        "r0.refuted => stop",
+        "flow.stalled => stop"
+      ],
+      "prism_sha256": "11f20bd9dbe82a943fb38d310326520b71bf08d6c181953897d5cb9bd8cccb3e",
+      "prism_source": "scientific_contribution_cultivation/reasoning.prism",
+      "projection_status": "hypothesized_degraded_summary",
+      "sample_outputs": {
+        "alignment_sha256": "3450d86177c421b09bf0fd3ea88cb423ea35bc883fc04095e4d506d6bcc292e8",
+        "path": "scientific_contribution_cultivation/sample_outputs.prism",
+        "sha256": "2e45c35373522675270059d23379a79239bfd49cd1e07b4d18a74cec59bdcdc9",
+        "step_count": 3
+      }
+    },
+    {
+      "compiled_composition_sha256": "b4f686ebba1f44e3e7a8814717b8c92f11ea8333b533425decbd46759208f17d",
+      "former_route": "e0:E[result->scope] -constrain> a0:A[scope->extension] -test> r0:R[extension->verdict] -calibrate> e1:E[extension,verdict->paper_status]",
+      "former_sha256": "4ef7181480c4b1410e75bbb0319574c095fe90d83e896908d27b075d97b54d5c",
+      "former_source": "agentic/reasoning_flows/manuscript_result_elaboration.rflow",
+      "id": "manuscript_result_elaboration",
+      "policy_clauses": [
+        "e1.proof_required => switch @theorem_proof_delivery",
+        "e1.paper_ready => accept",
+        "flow.stalled => stop"
+      ],
+      "prism_sha256": "ec932f6dbc592bce7ed21989fe546622ec1cac12d5b8cafe025bcbe4fcaf8f00",
+      "prism_source": "manuscript_result_elaboration/reasoning.prism",
+      "projection_status": "hypothesized_degraded_summary",
+      "sample_outputs": {
+        "alignment_sha256": "97a5c04c7a98d3344f3762f5c1f72333d57313c49bcc4d31832a3e82dc6d2a18",
+        "path": "manuscript_result_elaboration/sample_outputs.prism",
+        "sha256": "4d65755ebda5957a45751ebb5cddc5b0057700e4f498273c249f8218a596ae49",
+        "step_count": 4
+      }
+    },
+    {
+      "compiled_composition_sha256": "6ceb25530d87a4652c73532b29fa67a45abc7c0351509a1a0ca0c4f141779172",
+      "former_route": "e0:E[evidence->state] -constrain> (r0:R[state->defeaters] & a0:A[state->repairs]) -calibrate> e1:E[defeaters,repairs->decision]",
+      "former_sha256": "5fc525481ccd84310651acf0a86bc86a28386b5b699c6246b51f0b4480d73df2",
+      "former_source": "agentic/reasoning_flows/deep_review_and_reorientation.rflow",
+      "id": "deep_review_and_reorientation",
+      "policy_clauses": [
+        "e1.repair_workflow_assigned => switch @target_navigation_loop",
+        "e1.conceptual_reorientation_required => switch @conceptual_hypothesis_exploration_loop",
+        "flow.stalled => stop"
+      ],
+      "prism_sha256": "875c50634512e0149b6f25db22a46a2bee0787592253efb1ba16a5ce3d004c1e",
+      "prism_source": "deep_review_and_reorientation/reasoning.prism",
+      "projection_status": "hypothesized_degraded_summary",
+      "sample_outputs": {
+        "alignment_sha256": "9f31d04c45e1d10600389e051f00510f68b33cb86ab70b86ce24c576f2d7d3ef",
+        "path": "deep_review_and_reorientation/sample_outputs.prism",
+        "sha256": "f9b1c8f14984cf9cf404beffac9616c19fe5c4aacc57d9d3959ce8f808c15abd",
+        "step_count": 4
+      }
+    },
+    {
+      "compiled_composition_sha256": "52033fb241aca9e648d8b55b656a62bdfa15c4e38ade66e5cbda06d487a90dec",
+      "former_route": "pre:_[source_outputs->claim_set] -requires> e0:E[claim_set->paper_status]",
+      "former_sha256": "d7536960d6ea0fc81d98a2f48d2203c0fbdabdab3f1e18d3fb1d1444c282d6a4",
+      "former_source": "agentic/reasoning_flows/timeline-paper-independent-workflow.rflow",
+      "id": "timeline-paper-independent-workflow",
+      "policy_clauses": [
+        "e0.paper_ready => accept",
+        "e0.claim_boundary_failure => stop",
+        "flow.stalled => stop"
+      ],
+      "prism_sha256": "664f1c084fa590423d1068576a0ce96ab2053228ee613f08edd787f71a02453b",
+      "prism_source": "timeline_paper_independent_workflow/reasoning.prism",
+      "projection_status": "gap_bearing_curated_abstraction",
+      "sample_outputs": {
+        "alignment_sha256": "fc67bd38df5ffb2fd244999ef27f72e104afcf7b5b7e1e2db9cdca3fa5ef55f9",
+        "path": "timeline_paper_independent_workflow/sample_outputs.prism",
+        "sha256": "e6172320c6ab69c79318d3f6fca84d8a8ca5606460af2626bb57309a81291405",
+        "step_count": 2
+      }
+    },
+    {
+      "compiled_composition_sha256": "cdb81e986a4a47d08f9464e581d9c4ef38b157e51a74320c0d22c8df4949cedd",
+      "former_route": "pre:_[target_context->audit_input] -requires> audit:E[audit_input->overlay_status]",
+      "former_sha256": "e96cb564b7ba305919981ad5b187fd3c4827645f2908d227652d33e80267e399",
+      "former_source": "agentic/reasoning_flows/ym-representational-dynamics-overlay.rflow",
+      "id": "ym-representational-dynamics-overlay",
+      "policy_clauses": [
+        "audit.accepted => accept",
+        "audit.quarantined => stop",
+        "flow.stalled => stop"
+      ],
+      "prism_sha256": "a8a8d776566069de7ee07254d36198dc6afa95bd64d1c523e9bff05d5a52fd43",
+      "prism_source": "ym_representational_dynamics_overlay/reasoning.prism",
+      "projection_status": "gap_bearing_curated_abstraction",
+      "sample_outputs": {
+        "alignment_sha256": "9c1b4ad912e0a8d0fa5abbcb3b8a57e57d27700065bd3d8902827539db8021f1",
+        "path": "ym_representational_dynamics_overlay/sample_outputs.prism",
+        "sha256": "e84cd44b613ac8cfec995b6e3d99ef5c54773f7f95936479579be5b37ba864a9",
+        "step_count": 2
+      }
+    },
+    {
+      "compiled_composition_sha256": "8f79afba3c4ca50d17521f97bd70713dd0591bcaa9ca2d1dadcf3453fc75f08d",
+      "former_route": "pre:_[domain_input->scope_request] -requires> intake:E[scope_request->intake_status]",
+      "former_sha256": "30f23263da96dd977ad965c7a29ae57e303d5523773e0d4ebc1ad4b7281c6082",
+      "former_source": "agentic/reasoning_flows/cohere_fast.rflow",
+      "id": "cohere_fast",
+      "policy_clauses": [
+        "intake.ready => switch @cohere_fast_scope_and_ground",
+        "intake.blocked => stop",
+        "flow.stalled => stop"
+      ],
+      "prism_sha256": "9ae3ed3fde692aa4e324cebf6e9787dfb455979e0547159d685d475ee630a256",
+      "prism_source": "cohere_fast/reasoning.prism",
+      "projection_status": "gap_bearing_degraded_summary",
+      "sample_outputs": {
+        "alignment_sha256": "ad4620568123345cbabe92c77c2f233810da9c04baa07fbc18015c437b551337",
+        "path": "cohere_fast/sample_outputs.prism",
+        "sha256": "98734f1e2b34e2c30fe54f3c26cf12161b7aa2001a3220a9f4449c6fd4cbfcc1",
+        "step_count": 2
+      }
+    },
+    {
+      "compiled_composition_sha256": "bb53e91bd644855dc64f61c54369b2056c249b3568b0083643f040bc4d3fae62",
+      "former_route": "pre:_[domain_request->scope_candidate] -requires> e0:E[scope_candidate->scope_status]",
+      "former_sha256": "0a84a87dfbe0517f5cc6d05cb66552d98bf1ffe85db7397aaadaf50a3c6e8378",
+      "former_source": "agentic/reasoning_flows/cohere_fast_scope_and_ground.rflow",
+      "id": "cohere_fast_scope_and_ground",
+      "policy_clauses": [
+        "e0.accepted => switch @cohere_fast_adaptive_frontier",
+        "e0.blocked => stop"
+      ],
+      "prism_sha256": "b264d9375cc8e8e2761b91dfa28ef5f467418681fd3b2115270d4d284cb40115",
+      "prism_source": "cohere_fast_scope_and_ground/reasoning.prism",
+      "projection_status": "gap_bearing_degraded_summary",
+      "sample_outputs": {
+        "alignment_sha256": "6171554e144a81933de36471f54c4021cb37c41505eabac6ba852462d89bf0d2",
+        "path": "cohere_fast_scope_and_ground/sample_outputs.prism",
+        "sha256": "4b1246ba10193b04e4b242a43345830279d459f7ab17b0fb29a933d7cc16b101",
+        "step_count": 2
+      }
+    },
+    {
+      "compiled_composition_sha256": "3501e9b79a15e93e9c4957b50db96a19f134ec7fdd82bb7d441bc620b6ffef8e",
+      "former_route": "pre:_[scope_state->frontier_candidate] -requires> e0:E[frontier_candidate->frontier_status]",
+      "former_sha256": "9023fcc72bcaa196fdf65419282d763175eb61f7010c4c630e2e6c79b681d890",
+      "former_source": "agentic/reasoning_flows/cohere_fast_adaptive_frontier.rflow",
+      "id": "cohere_fast_adaptive_frontier",
+      "policy_clauses": [
+        "e0.accepted => switch @cohere_fast_derivation_and_proof",
+        "e0.quarantined => stop"
+      ],
+      "prism_sha256": "0397addff5674000e70dfd7cca9cb6a89eb86d7571c6ca3cf7d59b0ff8e2ece7",
+      "prism_source": "cohere_fast_adaptive_frontier/reasoning.prism",
+      "projection_status": "gap_bearing_degraded_summary",
+      "sample_outputs": {
+        "alignment_sha256": "2c3616643d03ff45168da4d0816e3a4a52224952775a4777d24142dfaa50631c",
+        "path": "cohere_fast_adaptive_frontier/sample_outputs.prism",
+        "sha256": "a0ed23cc6f1e07a7ec1cfd4078768bf7c1fe19ec3da39ac56626e4171b213183",
+        "step_count": 2
+      }
+    },
+    {
+      "compiled_composition_sha256": "f916b6b54126bb13973a88c93e0d741a83724a5a6e412bf68741ac9d3c2eabbe",
+      "former_route": "pre:_[frontier_state->derivation_candidate] -requires> e0:E[derivation_candidate->derivation_status]",
+      "former_sha256": "b95dc5e7506dabb3b16b78e427bd7d7b368bcdb5edb367b9f70fa8b8cc1e1042",
+      "former_source": "agentic/reasoning_flows/cohere_fast_derivation_and_proof.rflow",
+      "id": "cohere_fast_derivation_and_proof",
+      "policy_clauses": [
+        "e0.accepted => switch @cohere_fast_independent_audit",
+        "e0.quarantined => stop"
+      ],
+      "prism_sha256": "06fd9ec495581a70e4cd02930f6e4b1d39f5315baf99217ccec78e4fad25f899",
+      "prism_source": "cohere_fast_derivation_and_proof/reasoning.prism",
+      "projection_status": "gap_bearing_degraded_summary",
+      "sample_outputs": {
+        "alignment_sha256": "bdcda201d74fff4360973f016a180895c16485ec68d1f286980e47cf8b797476",
+        "path": "cohere_fast_derivation_and_proof/sample_outputs.prism",
+        "sha256": "e7223494c8116ca56406be2a450ab746d2fd568841c95e4257b2059a172a3f8b",
+        "step_count": 2
+      }
+    },
+    {
+      "compiled_composition_sha256": "5bd232e9f3c457e1e6c7449b7044a6fe116e7c0bc348d965103bcf95eb3cb1f6",
+      "former_route": "r0:R[derivation_candidate->verdict] -calibrate> e0:E[derivation_candidate,verdict->audit_status]",
+      "former_sha256": "fb57bed59831e773cfdd465d9a543fcb5e1ebb2b37d19e4646e94e7ed22b678d",
+      "former_source": "agentic/reasoning_flows/cohere_fast_independent_audit.rflow",
+      "id": "cohere_fast_independent_audit",
+      "policy_clauses": [
+        "e0.accepted => switch @cohere_fast_manuscript_release",
+        "e0.quarantined => stop"
+      ],
+      "prism_sha256": "f0306096d2eca900da4f26bf5f147853b115498d1441227c45c15e749587aaf8",
+      "prism_source": "cohere_fast_independent_audit/reasoning.prism",
+      "projection_status": "degraded_summary",
+      "sample_outputs": {
+        "alignment_sha256": "ca92da97f240768953cf37bc967e627639700f58213c4f2f56f5008d7e306101",
+        "path": "cohere_fast_independent_audit/sample_outputs.prism",
+        "sha256": "d4659ec0b1f99f7bf837757e4168ad9f58121c1212286f03ef28572d5ba7fb78",
+        "step_count": 2
+      }
+    },
+    {
+      "compiled_composition_sha256": "72cfce91154a9a13a2421c3c35b6baa8bb6fbf2738e824a71f5ae1828a9f9b90",
+      "former_route": "pre:_[audit_status->presentation_candidate] -requires> e0:E[presentation_candidate->release_status]",
+      "former_sha256": "a5be33fb4907159ea53dc8dbb73d9c0b7d2208029d56be2e0172cf97ec4b60ad",
+      "former_source": "agentic/reasoning_flows/cohere_fast_manuscript_release.rflow",
+      "id": "cohere_fast_manuscript_release",
+      "policy_clauses": [
+        "e0.accepted => accept",
+        "e0.stopped => stop"
+      ],
+      "prism_sha256": "a4c75058f08cb51f0e0eb267adf91f1f730dae2ce993ca36c7d8b34bab0cc012",
+      "prism_source": "cohere_fast_manuscript_release/reasoning.prism",
+      "projection_status": "gap_bearing_degraded_summary",
+      "sample_outputs": {
+        "alignment_sha256": "0432c529c6ca1b8553f12721b9efed1f9bcc3cd4411a194309b9405df7831001",
+        "path": "cohere_fast_manuscript_release/sample_outputs.prism",
+        "sha256": "75f293a47a5fe14b56b2e1e198ac7869e96238078eede241766f264c15596091",
+        "step_count": 2
+      }
+    }
+  ]
+}

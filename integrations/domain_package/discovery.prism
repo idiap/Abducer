@@ -1,0 +1,61 @@
+# SPDX-FileCopyrightText: © 2026 Idiap Research Institute <contact@idiap.ch>
+#
+# SPDX-FileContributor: Danilo Gusicuma <danilo.gusicuma@idiap.ch>
+# Neuro-symbolic AI Group
+#
+# SPDX-License-Identifier: MIT
+# Lunar entrypoint: user context enters the original Discovery Marathon topology.
+# Reuse six source agents and every relation builder. The routing agent retains
+# its source skill and adds the explicit closed-choice contract omitted by the
+# provider's string-only schema for the source DiscoveryDisposition type.
+from workflows.discovery_marathon_loop.materialization import (
+    search_scope_reasoning_agent,
+    discovery_hypothesis_reasoning_agent, discovery_hypothesis_reasoning_relation_builder,
+    discovery_pattern_reasoning_agent, discovery_pattern_reasoning_relation_builder,
+    model_implications_reasoning_agent, model_implications_reasoning_relation_builder,
+    contrast_assessment_reasoning_agent, contrast_assessment_reasoning_relation_builder,
+    refutation_assessment_reasoning_agent, refutation_assessment_reasoning_relation_builder,
+    routing_assessment_reasoning_relation_builder,
+)
+from workflows.discovery_marathon_loop.generated.routing_assessment_reasoning_skill_1 import epistemic_status_ledger_skill
+from workflows.discovery_marathon_loop.reasoning import DiscoveryMarathonLoop
+from workflows.discovery_marathon_loop.occurrences import DiscoveryRoutingInput
+from workflows.discovery_marathon_loop.types import DiscoveryRoutingAssessment, DiscoveryRunContext
+
+routing_contract: Skill[DiscoveryRoutingInput] = skill_artifact[DiscoveryRoutingInput](
+    "lunar-discovery-routing-contract",
+    "1.0.0",
+    "Lunar discovery routing contract",
+    "Choose an exact DiscoveryDisposition and explain the next research action.",
+    "Return disposition as exactly one of: Promotable, Reorient, TargetReset, Stalled. Promotable means a bounded candidate ready for further review, never proof or release authority. Reorient means change the approach or run a discriminating test; TargetReset means revise the research target; Stalled means no justified next step with the supplied evidence. Give the supporting reason and a concrete next action in routing_basis. Treat model hypotheses and proposed experiments as unverified; do not claim any experiment, tool, or proof verification was executed. Retain uncertainty and open defeaters.",
+    "{}",
+)
+
+agent live_routing_agent(
+    task: DiscoveryRoutingInput,
+) -> Result[Generated[DiscoveryRoutingAssessment], ModelFailure] ! {AI.Generate, Context.Disclose}:
+    skills: Skills[DiscoveryRoutingInput] = [epistemic_status_ledger_skill, routing_contract]
+
+converted_reasoning = DiscoveryMarathonLoop(
+    search_scope = search_scope_reasoning_agent,
+    discovery_hypothesis = discovery_hypothesis_reasoning_agent,
+    discovery_hypothesis_by = discovery_hypothesis_reasoning_relation_builder,
+    discovery_pattern = discovery_pattern_reasoning_agent,
+    discovery_pattern_by = discovery_pattern_reasoning_relation_builder,
+    model_implications = model_implications_reasoning_agent,
+    model_implications_by = model_implications_reasoning_relation_builder,
+    contrast_assessment = contrast_assessment_reasoning_agent,
+    contrast_assessment_by = contrast_assessment_reasoning_relation_builder,
+    refutation_assessment = refutation_assessment_reasoning_agent,
+    refutation_assessment_by = refutation_assessment_reasoning_relation_builder,
+    routing_assessment = live_routing_agent,
+    routing_assessment_by = routing_assessment_reasoning_relation_builder,
+)
+
+def main(
+    context: DiscoveryRunContext,
+    model_access: ModelGenerate,
+    disclosure: ContextDisclose,
+) -> Result[Generated[DiscoveryRoutingAssessment], ModelFailure] ! {AI.Generate, Context.Disclose}:
+    flow = converted_reasoning(context)
+    return solve DiscoveryMarathonLoop(context) using flow

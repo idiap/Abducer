@@ -1,0 +1,20 @@
+\section{Reproducibility}
+\label{app:repro}
+
+From the manuscript directory, run
+\begin{verbatim}
+python3 supplement/exact_linear_algebra.py --verify
+python3 -m unittest supplement.test_exact_linear_algebra -v
+latexmk -pdf -interaction=nonstopmode -halt-on-error \
+  -outdir=build main.tex
+\end{verbatim}
+The first command reconstructs both theorem-critical spectra for all eight
+interior links and compares the result with the stored JSON certificate.  The
+second checks block counts, orientation-sensitive spectra, the exact
+polynomial backend, KKT identities, and the stored certificate.  Python,
+NumPy, and SciPy are used; the proof arithmetic itself uses Python integers
+and \texttt{fractions.Fraction}.
+
+The source archive contains the manuscript, certificate, verifier, tests,
+proof-audit artifacts, and build report.  Generated PDF auxiliary files are
+not mathematical inputs.

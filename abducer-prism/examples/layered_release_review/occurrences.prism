@@ -1,0 +1,31 @@
+# SPDX-FileCopyrightText: © 2026 Idiap Research Institute <contact@idiap.ch>
+#
+# SPDX-FileContributor: Andre Freitas <andre.freitas@idiap.ch>
+# Neuro-symbolic AI Group
+#
+# SPDX-FileContributor: Danilo Gusicuma <danilo.gusicuma@idiap.ch>
+# Neuro-symbolic AI Group
+#
+# SPDX-License-Identifier: MIT
+from examples.layered_release_review.types import (
+    DefeaterReview,
+    ReadyToDeploy,
+    ReleaseCandidate,
+    ReleaseChecks,
+)
+
+type CaptureEvidence = ReleaseCandidate -> Evidence[ReleaseCandidate]
+type DeriveChecks = Evidence[ReleaseCandidate] -> ReleaseChecks
+
+type DefeaterInput:
+    checks: ReleaseChecks
+    change: ReleaseCandidate
+
+type ReadinessInput:
+    evidence: Evidence[ReleaseCandidate]
+    checks: ReleaseChecks
+    defeaters: DefeaterReview
+    change: ReleaseCandidate
+
+type FindDefeaters = DefeaterInput -> DefeaterReview
+type SupportReadiness = ReadinessInput -> Supported[ReadyToDeploy()]

@@ -1,0 +1,488 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://abducer.local/schemas/theory_atlas_defect_packet.schema.json",
+  "title": "Theory-atlas categorical defect compiler packet",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "packet_id", "target_id", "source_archive",
+    "evidence_registry", "theory_fragments", "relations", "diagrams",
+    "repair_ladder", "reflection_sweep", "redescription_operator_sweep",
+    "registered_defect_taxonomy", "defects", "completion_candidates",
+    "structured_failures", "representation_mutation", "return_squares",
+    "authority_boundaries", "content_digest"
+  ],
+  "$defs": {
+    "id": {"type": "string", "minLength": 1, "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"},
+    "digest": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
+    "text": {"type": "string", "minLength": 1},
+    "textArray": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"$ref": "#/$defs/text"}},
+    "idArray": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"$ref": "#/$defs/id"}},
+    "evidence": {
+      "type": "object", "additionalProperties": false,
+      "required": ["evidence_id", "source_path", "exact_claim", "content_digest"],
+      "properties": {
+        "evidence_id": {"$ref": "#/$defs/id"},
+        "source_path": {"$ref": "#/$defs/text"},
+        "exact_claim": {"$ref": "#/$defs/text"},
+        "content_digest": {"$ref": "#/$defs/digest"}
+      }
+    },
+    "morphism": {
+      "type": "object", "additionalProperties": false,
+      "required": ["symbol", "source_object", "target_object"],
+      "properties": {
+        "symbol": {"$ref": "#/$defs/id"},
+        "source_object": {"$ref": "#/$defs/id"},
+        "target_object": {"$ref": "#/$defs/id"}
+      }
+    },
+    "signature": {
+      "type": "object", "additionalProperties": false,
+      "required": ["objects", "morphisms", "predicates"],
+      "properties": {
+        "objects": {"$ref": "#/$defs/idArray"},
+        "morphisms": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/morphism"}},
+        "predicates": {"$ref": "#/$defs/idArray"}
+      }
+    },
+    "scope": {
+      "type": "object", "additionalProperties": false,
+      "required": ["domain", "regime", "quantifiers", "exclusions"],
+      "properties": {
+        "domain": {"$ref": "#/$defs/text"},
+        "regime": {"$ref": "#/$defs/text"},
+        "quantifiers": {"$ref": "#/$defs/textArray"},
+        "exclusions": {"$ref": "#/$defs/textArray"}
+      }
+    },
+    "meaningDimension": {
+      "type": "object", "additionalProperties": false,
+      "required": ["statement", "evidence_refs"],
+      "properties": {
+        "statement": {"$ref": "#/$defs/text"},
+        "evidence_refs": {"$ref": "#/$defs/idArray"}
+      }
+    },
+    "meaningProfile": {
+      "type": "object", "additionalProperties": false,
+      "required": [
+        "referential_role", "inferential_commitments", "identity_criteria",
+        "modal_commitments", "operational_anchors", "scale_and_scope",
+        "explanatory_role", "pragmatic_uses", "protected_distinctions"
+      ],
+      "properties": {
+        "referential_role": {"$ref": "#/$defs/meaningDimension"},
+        "inferential_commitments": {"$ref": "#/$defs/meaningDimension"},
+        "identity_criteria": {"$ref": "#/$defs/meaningDimension"},
+        "modal_commitments": {"$ref": "#/$defs/meaningDimension"},
+        "operational_anchors": {"$ref": "#/$defs/meaningDimension"},
+        "scale_and_scope": {"$ref": "#/$defs/meaningDimension"},
+        "explanatory_role": {"$ref": "#/$defs/meaningDimension"},
+        "pragmatic_uses": {"$ref": "#/$defs/meaningDimension"},
+        "protected_distinctions": {"$ref": "#/$defs/meaningDimension"}
+      }
+    },
+    "fragment": {
+      "type": "object", "additionalProperties": false,
+      "required": ["fragment_id", "signature", "axioms", "models", "observables", "scope", "evidence_refs", "meaning_profile"],
+      "properties": {
+        "fragment_id": {"$ref": "#/$defs/id"},
+        "signature": {"$ref": "#/$defs/signature"},
+        "axioms": {"$ref": "#/$defs/textArray"},
+        "models": {"$ref": "#/$defs/textArray"},
+        "observables": {"$ref": "#/$defs/textArray"},
+        "scope": {"$ref": "#/$defs/scope"},
+        "evidence_refs": {"$ref": "#/$defs/idArray"},
+        "meaning_profile": {"$ref": "#/$defs/meaningProfile"}
+      }
+    },
+    "symbolMap": {
+      "type": "object", "additionalProperties": false,
+      "required": ["source_symbol", "target_symbol", "symbol_kind"],
+      "properties": {
+        "source_symbol": {"$ref": "#/$defs/id"},
+        "target_symbol": {"$ref": "#/$defs/id"},
+        "symbol_kind": {"enum": ["object", "morphism", "predicate"]}
+      }
+    },
+    "relation": {
+      "type": "object", "additionalProperties": false,
+      "required": ["relation_id", "relation_kind", "source_fragment_id", "target_fragment_id", "total", "symbol_map", "unmapped_source_symbols", "preserved_structure", "failure_condition", "evidence_refs"],
+      "properties": {
+        "relation_id": {"$ref": "#/$defs/id"},
+        "relation_kind": {"enum": ["horizontal", "vertical", "partial"]},
+        "source_fragment_id": {"$ref": "#/$defs/id"},
+        "target_fragment_id": {"$ref": "#/$defs/id"},
+        "total": {"type": "boolean"},
+        "symbol_map": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/symbolMap"}},
+        "unmapped_source_symbols": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/id"}},
+        "preserved_structure": {"$ref": "#/$defs/textArray"},
+        "failure_condition": {"$ref": "#/$defs/text"},
+        "evidence_refs": {"$ref": "#/$defs/idArray"}
+      }
+    },
+    "diagramNode": {
+      "type": "object", "additionalProperties": false,
+      "required": ["node_id", "fragment_id", "object_symbol"],
+      "properties": {
+        "node_id": {"$ref": "#/$defs/id"},
+        "fragment_id": {"$ref": "#/$defs/id"},
+        "object_symbol": {"$ref": "#/$defs/id"}
+      }
+    },
+    "diagramArrow": {
+      "type": "object", "additionalProperties": false,
+      "required": ["arrow_id", "source_node_id", "target_node_id", "arrow_type", "symbol_ref"],
+      "properties": {
+        "arrow_id": {"$ref": "#/$defs/id"},
+        "source_node_id": {"$ref": "#/$defs/id"},
+        "target_node_id": {"$ref": "#/$defs/id"},
+        "arrow_type": {"enum": ["intra_fragment_morphism", "inter_fragment_relation"]},
+        "symbol_ref": {"$ref": "#/$defs/id"}
+      }
+    },
+    "higherCell": {
+      "type": "object", "additionalProperties": false,
+      "required": ["cell_id", "cell_kind", "source_path", "target_path", "source_node_id", "target_node_id", "status", "evidence_refs"],
+      "properties": {
+        "cell_id": {"$ref": "#/$defs/id"},
+        "cell_kind": {"enum": ["commutativity_obligation", "coherence_obligation", "declared_2_cell"]},
+        "source_path": {"$ref": "#/$defs/idArray"},
+        "target_path": {"$ref": "#/$defs/idArray"},
+        "source_node_id": {"$ref": "#/$defs/id"},
+        "target_node_id": {"$ref": "#/$defs/id"},
+        "status": {"const": "open"},
+        "evidence_refs": {"$ref": "#/$defs/idArray"}
+      }
+    },
+    "diagram": {
+      "type": "object", "additionalProperties": false,
+      "required": ["diagram_id", "diagram_kind", "nodes", "arrows", "higher_cells"],
+      "properties": {
+        "diagram_id": {"$ref": "#/$defs/id"},
+        "diagram_kind": {"enum": ["comparison_square", "descent_diagram", "universal_property_diagram"]},
+        "nodes": {"type": "array", "minItems": 2, "items": {"$ref": "#/$defs/diagramNode"}},
+        "arrows": {"type": "array", "minItems": 2, "items": {"$ref": "#/$defs/diagramArrow"}},
+        "higher_cells": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/higherCell"}}
+      }
+    },
+    "repairRow": {
+      "type": "object", "additionalProperties": false,
+      "required": ["step_index", "repair_kind", "outcome", "reason", "evidence_refs"],
+      "properties": {
+        "step_index": {"type": "integer", "minimum": 1, "maximum": 6},
+        "repair_kind": {"enum": ["lexical_normalization", "unit_and_notation_alignment", "definitional_extension", "known_equivalence", "conservative_interpretation", "scope_restriction"]},
+        "outcome": {"enum": ["failed", "repaired", "blocked"]},
+        "reason": {"$ref": "#/$defs/text"},
+        "evidence_refs": {"$ref": "#/$defs/idArray"}
+      }
+    },
+    "reflectionRow": {
+      "type": "object", "additionalProperties": false,
+      "required": ["lens_id", "source_statement", "mutated_statement", "changed_commitments", "operator_refs", "new_question", "new_failure_mode", "non_restatement_check"],
+      "properties": {
+        "lens_id": {"enum": ["hermeneutic", "phenomenological_operational", "constitutive", "dialectical_immanent", "genealogical", "pragmatic", "structural_realist", "modal_counterfactual"]},
+        "source_statement": {"$ref": "#/$defs/text"},
+        "mutated_statement": {"$ref": "#/$defs/text"},
+        "changed_commitments": {"$ref": "#/$defs/textArray"},
+        "operator_refs": {"$ref": "#/$defs/idArray"},
+        "new_question": {"$ref": "#/$defs/text"},
+        "new_failure_mode": {"$ref": "#/$defs/text"},
+        "non_restatement_check": {
+          "type": "object", "additionalProperties": false,
+          "required": ["normalized_source", "normalized_mutation", "is_restatement", "new_commitment_count"],
+          "properties": {
+            "normalized_source": {"$ref": "#/$defs/text"},
+            "normalized_mutation": {"$ref": "#/$defs/text"},
+            "is_restatement": {"const": false},
+            "new_commitment_count": {"type": "integer", "minimum": 1}
+          }
+        }
+      }
+    },
+    "operatorRow": {
+      "type": "object", "additionalProperties": false,
+      "required": ["operator_id", "status", "reason", "candidate_refs"],
+      "properties": {
+        "operator_id": {"enum": ["suspend", "primitive_shift", "dependency_invert", "context_internalize", "level_shift", "identity_revise", "invariant_extract", "obstruction_reify", "dualize", "boundary_probe", "counterworld", "operational_reanchor"]},
+        "status": {"enum": ["applied", "not_applicable"]},
+        "reason": {"$ref": "#/$defs/text"},
+        "candidate_refs": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/id"}}
+      }
+    },
+    "taxonomyRow": {
+      "type": "object", "additionalProperties": false,
+      "required": ["defect_type", "registered_completion_kinds"],
+      "properties": {
+        "defect_type": {"enum": ["representability", "coherence", "descent", "factorization", "adjunction", "obstruction", "meta_theory"]},
+        "registered_completion_kinds": {
+          "type": "array", "minItems": 1, "uniqueItems": true,
+          "items": {"enum": ["factorization", "finite_representability", "descent_gluing", "pushout", "adjunction_naturality", "lifting_obstruction"]}
+        }
+      }
+    },
+    "defect": {
+      "type": "object", "additionalProperties": false,
+      "required": ["defect_id", "defect_type", "subject_fragment_id", "structure_id", "structure_kind", "diagram_id", "completion_kind", "exact_failure", "evidence_refs", "metaphor_guard"],
+      "properties": {
+        "defect_id": {"$ref": "#/$defs/id"},
+        "defect_type": {"enum": ["representability", "coherence", "descent", "factorization", "adjunction", "obstruction", "meta_theory"]},
+        "subject_fragment_id": {"$ref": "#/$defs/id"},
+        "structure_id": {"$ref": "#/$defs/id"},
+        "structure_kind": {"enum": ["object", "morphism", "predicate"]},
+        "diagram_id": {"$ref": "#/$defs/id"},
+        "completion_kind": {"enum": ["factorization", "finite_representability", "descent_gluing", "pushout", "adjunction_naturality", "lifting_obstruction"]},
+        "exact_failure": {"$ref": "#/$defs/text"},
+        "evidence_refs": {"$ref": "#/$defs/idArray"},
+        "metaphor_guard": {
+          "type": "object", "additionalProperties": false,
+          "required": ["typed_diagram_required", "executable_obligation_required", "terminology_only"],
+          "properties": {
+            "typed_diagram_required": {"const": true},
+            "executable_obligation_required": {"const": true},
+            "terminology_only": {"const": false}
+          }
+        }
+      }
+    },
+    "finiteSet": {
+      "type": "object", "additionalProperties": false,
+      "required": ["set_id", "elements"],
+      "properties": {
+        "set_id": {"$ref": "#/$defs/id"},
+        "elements": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/id"}}
+      }
+    },
+    "pair": {
+      "type": "object", "additionalProperties": false,
+      "required": ["source", "target"],
+      "properties": {"source": {"$ref": "#/$defs/id"}, "target": {"$ref": "#/$defs/id"}}
+    },
+    "finiteMap": {
+      "type": "object", "additionalProperties": false,
+      "required": ["map_id", "domain_set_id", "codomain_set_id", "pairs"],
+      "properties": {
+        "map_id": {"$ref": "#/$defs/id"},
+        "domain_set_id": {"$ref": "#/$defs/id"},
+        "codomain_set_id": {"$ref": "#/$defs/id"},
+        "pairs": {"type": "array", "items": {"$ref": "#/$defs/pair"}}
+      }
+    },
+    "executableCheck": {
+      "type": "object", "additionalProperties": false,
+      "required": ["check_id", "check_kind", "map_ids", "set_ids", "expected", "observed"],
+      "properties": {
+        "check_id": {"$ref": "#/$defs/id"},
+        "check_kind": {"enum": ["factorization", "finite_representability", "descent_gluing", "pushout", "adjunction_naturality", "lifting_obstruction"]},
+        "map_ids": {"$ref": "#/$defs/idArray"},
+        "set_ids": {"$ref": "#/$defs/idArray"},
+        "expected": {"const": true},
+        "observed": {"type": "boolean"}
+      }
+    },
+    "obligation": {
+      "type": "object", "additionalProperties": false,
+      "required": ["obligation_id", "obligation_type", "subject_fragment_id", "structure_id", "diagram_id", "evidence_refs", "sets", "maps", "checks"],
+      "properties": {
+        "obligation_id": {"$ref": "#/$defs/id"},
+        "obligation_type": {"enum": ["factorization", "finite_representability", "descent_gluing", "pushout", "adjunction_naturality", "lifting_obstruction"]},
+        "subject_fragment_id": {"$ref": "#/$defs/id"},
+        "structure_id": {"$ref": "#/$defs/id"},
+        "diagram_id": {"$ref": "#/$defs/id"},
+        "evidence_refs": {"$ref": "#/$defs/idArray"},
+        "sets": {"type": "array", "minItems": 2, "items": {"$ref": "#/$defs/finiteSet"}},
+        "maps": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/finiteMap"}},
+        "checks": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/executableCheck"}}
+      }
+    },
+    "completion": {
+      "type": "object", "additionalProperties": false,
+      "required": ["candidate_id", "defect_id", "completion_kind", "subject_fragment_id", "structure_id", "diagram_id", "claim", "obligation", "replay", "epistemic_status"],
+      "properties": {
+        "candidate_id": {"$ref": "#/$defs/id"},
+        "defect_id": {"$ref": "#/$defs/id"},
+        "completion_kind": {"enum": ["factorization", "finite_representability", "descent_gluing", "pushout", "adjunction_naturality", "lifting_obstruction"]},
+        "subject_fragment_id": {"$ref": "#/$defs/id"},
+        "structure_id": {"$ref": "#/$defs/id"},
+        "diagram_id": {"$ref": "#/$defs/id"},
+        "claim": {"$ref": "#/$defs/text"},
+        "obligation": {"$ref": "#/$defs/obligation"},
+        "replay": {
+          "type": "object", "additionalProperties": false,
+          "required": ["status", "derived_observed", "finite_scope_only", "source_bound_not_forge_evidence"],
+          "properties": {
+            "status": {"enum": ["passed", "failed"]},
+            "derived_observed": {"type": "boolean"},
+            "finite_scope_only": {"const": true},
+            "source_bound_not_forge_evidence": {"const": true}
+          }
+        },
+        "epistemic_status": {"const": "concept_candidate"}
+      }
+    },
+    "failure": {
+      "type": "object", "additionalProperties": false,
+      "required": ["failure_id", "defect_id", "structure_id", "attempt", "failure_class", "exact_failure", "evidence_refs"],
+      "properties": {
+        "failure_id": {"$ref": "#/$defs/id"},
+        "defect_id": {"$ref": "#/$defs/id"},
+        "structure_id": {"$ref": "#/$defs/id"},
+        "attempt": {"type": "integer", "minimum": 1},
+        "failure_class": {"enum": ["typing_failure", "law_replay_failure", "completion_failure", "return_square_failure"]},
+        "exact_failure": {"$ref": "#/$defs/text"},
+        "evidence_refs": {"$ref": "#/$defs/idArray"}
+      }
+    },
+    "grammar": {
+      "type": "object", "additionalProperties": false,
+      "required": ["objects", "morphisms", "rules"],
+      "properties": {
+        "objects": {"$ref": "#/$defs/idArray"},
+        "morphisms": {"$ref": "#/$defs/idArray"},
+        "rules": {"$ref": "#/$defs/idArray"}
+      }
+    },
+    "migration": {
+      "type": "object", "additionalProperties": false,
+      "required": ["source_symbol", "target_symbol", "symbol_kind", "preservation_status"],
+      "properties": {
+        "source_symbol": {"$ref": "#/$defs/id"},
+        "target_symbol": {"$ref": "#/$defs/id"},
+        "symbol_kind": {"enum": ["object", "morphism", "rule"]},
+        "preservation_status": {"enum": ["preserved", "approximated", "lost"]}
+      }
+    },
+    "pathStep": {
+      "type": "object", "additionalProperties": false,
+      "required": ["step_id", "input_values", "output_values"],
+      "properties": {
+        "step_id": {"$ref": "#/$defs/id"},
+        "input_values": {"type": "array", "minItems": 1, "items": {"type": "number"}},
+        "output_values": {"type": "array", "minItems": 1, "items": {"type": "number"}}
+      }
+    },
+    "returnSquare": {
+      "type": "object", "additionalProperties": false,
+      "required": ["square_id", "mode", "subject_fragment_id", "completion_candidate_id", "abstract_path", "concrete_path", "metric", "error_bound", "observed_error", "within_bound", "changed_structure_ids", "trace_authority"],
+      "properties": {
+        "square_id": {"$ref": "#/$defs/id"},
+        "mode": {"enum": ["exact", "approximate"]},
+        "subject_fragment_id": {"$ref": "#/$defs/id"},
+        "completion_candidate_id": {"$ref": "#/$defs/id"},
+        "abstract_path": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/pathStep"}},
+        "concrete_path": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/pathStep"}},
+        "metric": {"const": "linf"},
+        "error_bound": {"type": "number", "minimum": 0},
+        "observed_error": {"type": "number", "minimum": 0},
+        "within_bound": {"type": "boolean"},
+        "changed_structure_ids": {"$ref": "#/$defs/idArray"},
+        "trace_authority": {"const": "declared_numeric_trace_only_not_execution_or_physics_evidence"}
+      }
+    }
+  },
+  "properties": {
+    "schema_version": {"const": "2.0.0"},
+    "packet_id": {"$ref": "#/$defs/id"},
+    "target_id": {"$ref": "#/$defs/id"},
+    "source_archive": {
+      "type": "object", "additionalProperties": false,
+      "required": [
+        "source_root_path", "archive_path", "archive_sha256",
+        "source_manifest_path", "source_manifest_digest", "source_manifest_file_sha256",
+        "member_manifest_path", "member_manifest_digest", "member_manifest_file_sha256",
+        "active_index_path", "active_index_digest", "active_index_file_sha256",
+        "capability_map_path", "capability_map_digest", "capability_map_file_sha256",
+        "checksum_report_path", "checksum_report_digest", "checksum_report_file_sha256",
+        "integration_boundary", "runtime_imported", "runtime_executed"
+      ],
+      "properties": {
+        "source_root_path": {"const": "agentic/external/higher_abductive_theory_discovery/2026-07-22"},
+        "archive_path": {"const": "agentic/external/higher_abductive_theory_discovery/2026-07-22/source_archives/higher_abductive_theory_discovery_system.zip"},
+        "archive_sha256": {"const": "sha256:906700d6680d31b904120f9fd4f0ba63512037ad94bb17bac95c52204c780be0"},
+        "source_manifest_path": {"const": "agentic/external/higher_abductive_theory_discovery/2026-07-22/source_manifest.json"},
+        "source_manifest_digest": {"const": "sha256:da18ea5b5816e20f7eb39bec3ecc957942999a853208418c16f13a0ad2f62c47"},
+        "source_manifest_file_sha256": {"const": "sha256:f6601072aa0e7afeb45ed29d08cf1610c4e421b75b32a9b8a6b05d53e8e39bb1"},
+        "member_manifest_path": {"const": "agentic/external/higher_abductive_theory_discovery/2026-07-22/archive_member_manifest.json"},
+        "member_manifest_digest": {"const": "sha256:2dcd63cab59dd82b719b7422c7130fd213570c5e39cedfe133428a1ab2c77844"},
+        "member_manifest_file_sha256": {"const": "sha256:f9a427c46dec1a00771b08c3c8aa2eb3fc3cfaf056c72a77f6f239c1ac3cb0d2"},
+        "active_index_path": {"const": "agentic/external/higher_abductive_theory_discovery/2026-07-22/active_index.json"},
+        "active_index_digest": {"const": "sha256:4be0e320a00d2ea3089e9deb101867080b9426f3a278480deb103410be75dd6d"},
+        "active_index_file_sha256": {"const": "sha256:929d7f2945c5a6b1a239fd2ee2459c7f5ed75bd3219dfde9f4578daa91f5650f"},
+        "capability_map_path": {"const": "agentic/external/higher_abductive_theory_discovery/2026-07-22/capability_map.json"},
+        "capability_map_digest": {"const": "sha256:c64b7a995056965a09607f5427ab566ca5a5872b174b564592ab67a24a6f59fe"},
+        "capability_map_file_sha256": {"const": "sha256:27ae5a71ea10827381c11548c544b4a449b53ca197ef96703c5553b2eae7877a"},
+        "checksum_report_path": {"const": "agentic/external/higher_abductive_theory_discovery/2026-07-22/checksum_report.json"},
+        "checksum_report_digest": {"const": "sha256:3b0b2c093b411a6cc9d58a72d59976a4354fe337d1a35024478e05d812d849cf"},
+        "checksum_report_file_sha256": {"const": "sha256:69b3bd108f0642de92ce3e083777e8660c870079d5d3fa104044edaeeda2d1ff"},
+        "integration_boundary": {"const": "source_taxonomies_and_redescription_operators_only_no_upstream_runtime_authority"},
+        "runtime_imported": {"const": false},
+        "runtime_executed": {"const": false}
+      }
+    },
+    "evidence_registry": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/evidence"}},
+    "theory_fragments": {"type": "array", "minItems": 2, "items": {"$ref": "#/$defs/fragment"}},
+    "relations": {"type": "array", "minItems": 3, "items": {"$ref": "#/$defs/relation"}},
+    "diagrams": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/diagram"}},
+    "repair_ladder": {
+      "type": "array", "minItems": 6, "maxItems": 6,
+      "prefixItems": [
+        {"allOf": [{"$ref": "#/$defs/repairRow"}, {"properties": {"step_index": {"const": 1}, "repair_kind": {"const": "lexical_normalization"}}}]},
+        {"allOf": [{"$ref": "#/$defs/repairRow"}, {"properties": {"step_index": {"const": 2}, "repair_kind": {"const": "unit_and_notation_alignment"}}}]},
+        {"allOf": [{"$ref": "#/$defs/repairRow"}, {"properties": {"step_index": {"const": 3}, "repair_kind": {"const": "definitional_extension"}}}]},
+        {"allOf": [{"$ref": "#/$defs/repairRow"}, {"properties": {"step_index": {"const": 4}, "repair_kind": {"const": "known_equivalence"}}}]},
+        {"allOf": [{"$ref": "#/$defs/repairRow"}, {"properties": {"step_index": {"const": 5}, "repair_kind": {"const": "conservative_interpretation"}}}]},
+        {"allOf": [{"$ref": "#/$defs/repairRow"}, {"properties": {"step_index": {"const": 6}, "repair_kind": {"const": "scope_restriction"}}}]}
+      ],
+      "items": false
+    },
+    "reflection_sweep": {"type": "array", "minItems": 8, "maxItems": 8, "items": {"$ref": "#/$defs/reflectionRow"}},
+    "redescription_operator_sweep": {"type": "array", "minItems": 12, "maxItems": 12, "items": {"$ref": "#/$defs/operatorRow"}},
+    "registered_defect_taxonomy": {"type": "array", "minItems": 7, "maxItems": 7, "items": {"$ref": "#/$defs/taxonomyRow"}},
+    "defects": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/defect"}},
+    "completion_candidates": {"type": "array", "minItems": 6, "items": {"$ref": "#/$defs/completion"}},
+    "structured_failures": {"type": "array", "minItems": 2, "items": {"$ref": "#/$defs/failure"}},
+    "representation_mutation": {
+      "type": "object", "additionalProperties": false,
+      "required": ["status", "trigger_failure_ids", "source_grammar", "proposed_grammar", "migration_map", "information_loss", "new_expressivity", "human_acceptance_gate"],
+      "properties": {
+        "status": {"const": "candidate_pending_human"},
+        "trigger_failure_ids": {"type": "array", "minItems": 2, "uniqueItems": true, "items": {"$ref": "#/$defs/id"}},
+        "source_grammar": {"$ref": "#/$defs/grammar"},
+        "proposed_grammar": {"$ref": "#/$defs/grammar"},
+        "migration_map": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/migration"}},
+        "information_loss": {"$ref": "#/$defs/textArray"},
+        "new_expressivity": {"$ref": "#/$defs/textArray"},
+        "human_acceptance_gate": {
+          "type": "object", "additionalProperties": false,
+          "required": ["required", "decision", "accepted", "execution_authorized", "authority"],
+          "properties": {
+            "required": {"const": true},
+            "decision": {"const": "pending"},
+            "accepted": {"const": false},
+            "execution_authorized": {"const": false},
+            "authority": {"const": "human_only"}
+          }
+        }
+      }
+    },
+    "return_squares": {"type": "array", "minItems": 2, "items": {"$ref": "#/$defs/returnSquare"}},
+    "authority_boundaries": {
+      "type": "object", "additionalProperties": false,
+      "required": ["epistemic_status", "finite_replay_scope_only", "theorem_proved", "truth_authorized", "homotopy_authorized", "univalence_authorized", "conceptual_value_authorized", "physics_value_authorized", "investment_authorized", "boundary_statement"],
+      "properties": {
+        "epistemic_status": {"const": "concept_candidate"},
+        "finite_replay_scope_only": {"const": true},
+        "theorem_proved": {"const": false},
+        "truth_authorized": {"const": false},
+        "homotopy_authorized": {"const": false},
+        "univalence_authorized": {"const": false},
+        "conceptual_value_authorized": {"const": false},
+        "physics_value_authorized": {"const": false},
+        "investment_authorized": {"const": false},
+        "boundary_statement": {"const": "Finite pre-forge structural replay only; categorical vocabulary, higher cells, and successful local checks establish no theorem, homotopy type, univalence principle, truth, conceptual value, physics value, or investment case."}
+      }
+    },
+    "content_digest": {"$ref": "#/$defs/digest"}
+  }
+}

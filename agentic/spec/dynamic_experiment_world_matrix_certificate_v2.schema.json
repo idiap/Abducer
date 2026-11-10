@@ -1,0 +1,135 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://abducer.local/spec/dynamic_experiment_world_matrix_certificate_v2.schema.json",
+  "title": "Derived five-world equality, denial, and next-cycle review certificate v2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "contract_version",
+    "certificate_id",
+    "local_protocol_valid",
+    "authority_status",
+    "canonical_execution_authorized",
+    "commission_id",
+    "commission_digest",
+    "authority_projection_id",
+    "authority_projection_digest",
+    "registered_claim_binding",
+    "world_ids",
+    "world_bindings",
+    "changed_path_audit",
+    "pending_review",
+    "derived_denials",
+    "production_bindings_digest",
+    "authority_boundary",
+    "certificate_digest"
+  ],
+  "properties": {
+    "schema_version": {"const": "2.0.0"},
+    "contract_version": {"const": "experiment-world-certificate/2.0.0"},
+    "certificate_id": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/identifier"},
+    "local_protocol_valid": {"const": true},
+    "authority_status": {"const": "authoritative_pre_execution_complete_projection"},
+    "canonical_execution_authorized": {"const": true},
+    "commission_id": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/identifier"},
+    "commission_digest": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/digest"},
+    "authority_projection_id": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/identifier"},
+    "authority_projection_digest": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/digest"},
+    "registered_claim_binding": {"$ref": "./dynamic_experiment_world_matrix_commission_v2.schema.json#/$defs/registeredClaimBinding"},
+    "world_ids": {"const": ["no_probe", "neutral_inconclusive", "misleading_toy_positive", "registered_premise_falsifier", "operational_failure"]},
+    "world_bindings": {
+      "type": "array",
+      "minItems": 5,
+      "maxItems": 5,
+      "items": {"$ref": "#/$defs/worldBinding"}
+    },
+    "changed_path_audit": {"$ref": "#/$defs/changedPathAudit"},
+    "pending_review": {"$ref": "#/$defs/pendingReview"},
+    "derived_denials": {"$ref": "#/$defs/derivedDenials"},
+    "production_bindings_digest": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/digest"},
+    "authority_boundary": {"$ref": "./dynamic_experiment_world_matrix_commission_v2.schema.json#/$defs/authorityBoundary"},
+    "certificate_digest": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/digest"}
+  },
+  "$defs": {
+    "worldBinding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["world_id", "envelope_id", "envelope_digest", "observation_id", "observation_digest", "observation_producer_binding_id", "observation_producer_binding_digest", "request_id", "request_digest", "request_producer_binding_id", "request_producer_binding_digest"],
+      "properties": {
+        "world_id": {"enum": ["no_probe", "neutral_inconclusive", "misleading_toy_positive", "registered_premise_falsifier", "operational_failure"]},
+        "envelope_id": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/identifier"},
+        "envelope_digest": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/digest"},
+        "observation_id": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/identifier"},
+        "observation_digest": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/digest"},
+        "observation_producer_binding_id": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/identifier"},
+        "observation_producer_binding_digest": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/digest"},
+        "request_id": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/identifier"},
+        "request_digest": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/digest"},
+        "request_producer_binding_id": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/identifier"},
+        "request_producer_binding_digest": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/digest"}
+      }
+    },
+    "worldPathAudit": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["world_id", "authority_projection_changed_paths", "intervention_changed_paths", "unauthorized_changed_paths"],
+      "properties": {
+        "world_id": {"enum": ["no_probe", "neutral_inconclusive", "misleading_toy_positive", "registered_premise_falsifier", "operational_failure"]},
+        "authority_projection_changed_paths": {"const": []},
+        "intervention_changed_paths": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {"type": "string", "pattern": "^/experiment_spec/(adapter|model|resource_budget)(/.*)?$"}
+        },
+        "unauthorized_changed_paths": {"const": []}
+      }
+    },
+    "changedPathAudit": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["permitted_intervention_paths", "worlds", "all_authority_projections_equal", "all_unauthorized_changed_paths_absent"],
+      "properties": {
+        "permitted_intervention_paths": {"const": ["/experiment_spec/adapter", "/experiment_spec/model", "/experiment_spec/resource_budget"]},
+        "worlds": {
+          "type": "array",
+          "minItems": 5,
+          "maxItems": 5,
+          "items": {"$ref": "#/$defs/worldPathAudit"}
+        },
+        "all_authority_projections_equal": {"const": true},
+        "all_unauthorized_changed_paths_absent": {"const": true}
+      }
+    },
+    "pendingReview": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "world_id", "tested_claim_id", "tested_claim_digest", "requested_followup_kind", "current_cycle_authority_projection_changed", "direct_current_cycle_mutation_authorized"],
+      "properties": {
+        "status": {"const": "pending_next_cycle_reflection_only"},
+        "world_id": {"const": "registered_premise_falsifier"},
+        "tested_claim_id": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/identifier"},
+        "tested_claim_digest": {"$ref": "./dynamic_experiment_v3_common.schema.json#/$defs/digest"},
+        "requested_followup_kind": {"const": "reflect"},
+        "current_cycle_authority_projection_changed": {"const": false},
+        "direct_current_cycle_mutation_authorized": {"const": false}
+      }
+    },
+    "derivedDenials": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["theory_identity_changed", "ontology_mutation_authorized", "theory_selected", "proof_authorized", "physical_target_support_authorized", "automatic_evidence_relation_authorized", "schedule_mutation_authorized", "current_cycle_theory_mutation_authorized", "experiment_led_ontology_authorized"],
+      "properties": {
+        "theory_identity_changed": {"const": false},
+        "ontology_mutation_authorized": {"const": false},
+        "theory_selected": {"const": false},
+        "proof_authorized": {"const": false},
+        "physical_target_support_authorized": {"const": false},
+        "automatic_evidence_relation_authorized": {"const": false},
+        "schedule_mutation_authorized": {"const": false},
+        "current_cycle_theory_mutation_authorized": {"const": false},
+        "experiment_led_ontology_authorized": {"const": false}
+      }
+    }
+  }
+}

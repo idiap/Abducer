@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "agentic/spec/public_reasoning_monitor_packet.schema.json",
+  "title": "Workflow-neutral public reasoning monitor packet",
+  "type": "object",
+  "required": ["schema_version", "identity", "lens", "declared_route", "timeline", "inferences", "claims", "evidence", "scope_ledger", "alternatives_and_failures", "decisions_and_gates", "obligations", "artifacts_and_receipts", "authority_ledger", "handoffs", "coverage", "graph"],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "identity": {"type": "object", "required": ["trace_id", "run_id", "workflow_id"], "additionalProperties": true},
+    "lens": {"type": "object", "required": ["visible_name", "accent", "focus_question"], "additionalProperties": true},
+    "declared_route": {"type": "array", "items": {"type": "object"}},
+    "timeline": {"type": "array", "items": {"type": "object"}},
+    "inferences": {"type": "array", "items": {"type": "object"}},
+    "claims": {"type": "array", "items": {"type": "object", "required": ["claim_id", "text", "epistemic_status", "evidence_ids", "obligation_ids"]}},
+    "evidence": {"type": "array", "items": {"type": "object", "required": ["evidence_id", "relation"]}},
+    "scope_ledger": {"type": "array"},
+    "alternatives_and_failures": {"type": "array"},
+    "decisions_and_gates": {"type": "array"},
+    "obligations": {"type": "array"},
+    "artifacts_and_receipts": {"type": "array"},
+    "authority_ledger": {"type": "array"},
+    "handoffs": {"type": "array"},
+    "coverage": {"type": "object", "required": ["declared_steps", "control_coverage", "semantic_coverage", "trace_gaps"]},
+    "graph": {"type": "object", "required": ["nodes", "edges"], "properties": {"nodes": {"type": "array"}, "edges": {"type": "array"}}, "additionalProperties": false}
+    ,"profile_topology": {"type": "object"}
+    ,"specialized_projections": {"type": "array", "items": {"type": "object"}}
+  },
+  "additionalProperties": false
+}

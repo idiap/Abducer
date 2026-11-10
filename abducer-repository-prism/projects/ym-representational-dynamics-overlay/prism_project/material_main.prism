@@ -1,0 +1,48 @@
+# lunar-runtime: {"declaration":"MaterializedYmRepresentationalDynamicsOverlay","entry_argument":"yang_mills_target","execute_hook":"abducer-workflow-execute","id":"ym-representational-dynamics-overlay","input_schema":{"additionalProperties":false,"default":{"continuum_boundary_ref":"KB/yang-mills-existence-and-mass-gap.kb.md","target_id":"yang-mills-existence-and-mass-gap"},"properties":{"continuum_boundary_ref":{"default":"KB/yang-mills-existence-and-mass-gap.kb.md","maxLength":16000,"minLength":1,"type":"string"},"target_id":{"default":"yang-mills-existence-and-mass-gap","maxLength":16000,"minLength":1,"type":"string"}},"required":["target_id","continuum_boundary_ref"],"type":"object"},"metadata":{"completion_contract":{"allowed_final_statuses":["passed","completed"],"forbid_blockers":true,"reasoning_complete":true,"reasoning_events_min":4,"terminal_state":"completed"},"description":"calibrate a Yang-Mills candidate while preserving the continuum claim boundary","model_required":true,"network_required":false,"provenance_contract":{"agent_invocations":[{"activated_skill_ids":["ym-run-clay-program"],"agent_name":"continuum_audit_input_material_agent","workflow_occurrence":"continuum_audit_input"},{"activated_skill_ids":["epistemic-status-ledger"],"agent_name":"overlay_disposition_material_agent","workflow_occurrence":"overlay_disposition"}],"required_source_reads":[]},"reasoning_contract":{"steps":["continuum_audit_input","overlay_disposition"],"workflow":"YmRepresentationalDynamicsOverlay"},"reasoning_required":true,"required_host_capabilities":["model","prism-engine","reasoning-events"],"scientific_truth_verified":false,"semantic_mode":"operational-model-generated","source_materialization_status":"blocked_unresolved_projection_gap","timeout_seconds":1800},"output_schema":{"additionalProperties":false,"properties":{"analysis_results":{"type":"object"},"compact_prism_input":{"type":"object"},"markdown":{"minLength":1,"type":"string"},"narrative_slots":{"type":"array"},"report_verification":{"properties":{"reasoning_complete":{"const":true},"status":{"const":"passed"}},"required":["status","reasoning_complete"],"type":"object"},"structured_value":{"properties":{"execution_provenance":{"type":"object"},"final_disposition":{"properties":{"blockers":{"maxItems":0,"type":"array"},"reasoning_complete":{"const":true},"status":{"const":"passed"}},"required":["status","reasoning_complete","blockers"],"type":"object"},"reasoning_result":{"type":"object"}},"required":["final_disposition","reasoning_result","execution_provenance"],"type":"object"}},"required":["markdown","structured_value","analysis_results","compact_prism_input","narrative_slots","report_verification"],"type":"object"},"prepare_hook":"abducer-workflow-prepare","verify_hook":"abducer-workflow-verify"}
+
+# Host-executed material graph for the complete reviewed reasoning path.
+# Generated values retain the source epistemic boundary and are not native proof or experiment receipts.
+
+from types import (
+    ContinuumBoundaryAuditInput,
+    YangMillsOverlayDisposition,
+    YangMillsTargetContext,
+)
+
+from generated.continuum_audit_input_skill_1 import continuum_audit_input_skill_1
+from generated.overlay_disposition_skill_1 import overlay_disposition_skill_1
+
+# Real model capability for source occurrence continuum_audit_input:UnresolvedContinuumAuditInputProjection.
+agent continuum_audit_input_material_agent(
+    task: YangMillsTargetContext,
+) -> Result[Generated[ContinuumBoundaryAuditInput], ModelFailure]
+    ! {AI.Generate, Context.Disclose}:
+    skills: Skills[YangMillsTargetContext] = [continuum_audit_input_skill_1]
+
+# Real model capability for source occurrence overlay_disposition:EvidentialYangMillsOverlayDispositionAssessment.
+agent overlay_disposition_material_agent(
+    task: ContinuumBoundaryAuditInput,
+) -> Result[Generated[String], ModelFailure]
+    ! {AI.Generate, Context.Disclose}:
+    skills: Skills[ContinuumBoundaryAuditInput] = [overlay_disposition_skill_1]
+
+workflow MaterializedYmRepresentationalDynamicsOverlay(
+    yang_mills_target: YangMillsTargetContext,
+) -> Generated[String]
+    fails ModelFailure
+    ! {AI.Generate, Context.Disclose}:
+    sequence:
+        # The unresolved projection prepares an audit input but cannot cross the boundary.
+        [continuum_audit_input: continuum_audit_input_material_agent(yang_mills_target)]
+        # The evidential gate determines whether the overlay remains boundary-safe.
+        [overlay_disposition: overlay_disposition_material_agent(continuum_audit_input.value)]
+
+    return overlay_disposition
+
+
+def main(
+    yang_mills_target: YangMillsTargetContext,
+    model_access: ModelGenerate,
+    disclosure: ContextDisclose,
+) -> Result[Generated[String], ModelFailure] ! {AI.Generate, Context.Disclose}:
+    return solve MaterializedYmRepresentationalDynamicsOverlay(yang_mills_target)

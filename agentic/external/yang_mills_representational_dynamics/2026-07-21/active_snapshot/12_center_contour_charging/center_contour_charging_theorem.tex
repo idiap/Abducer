@@ -1,0 +1,157 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools,booktabs,microtype}
+\usepackage[hidelinks]{hyperref}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{remark}[theorem]{Remark}
+\newcommand{\F}{\mathbb F_2}
+\title{Exact Center-Contour Charging on a Four-Dimensional Cubical Block\\
+\large The global cost hidden by a frustrated microscopic conditioning}
+\author{}
+\date{20 July 2026}
+\begin{document}
+\maketitle
+
+\begin{abstract}
+A center-valued boundary conditioning can make one plaquette adjacent to a
+selected link frustrated while the other five are aligned.  Treating that
+boundary as free hides its global curvature.  We reconstruct the complete
+center field on the open side-two four-dimensional cubical block.  The
+plaquette complex over $\F$ has ranks $136$ and $80$ on the two adjacent
+coboundaries and is exact at all $216$ plaquettes.  An exhaustive syndrome
+certificate proves that the one-frustrated/five-aligned incident pattern
+requires at least five negative plaquettes globally; a single negative link
+attains five.  We then derive a volume-uniform rooted contour bound for the
+center subsector.  This is an exact dependent-sector theorem and a calibration
+of boundary charging, not control of continuous nonabelian fluctuations.
+\end{abstract}
+
+\tableofcontents
+
+\section{Center cochains and Bianchi exactness}
+
+Let $C^1,C^2,C^3$ be the link, plaquette, and three-cell cochains of the open
+side-two four-cube, with coefficients in $\F$.  A center-valued link field is
+$x\in C^1$; its negative plaquette field is
+\[
+ y=d_1x\in C^2.
+\]
+The cubical Bianchi identity is $d_2y=0$.
+
+The block contains $216$ links, $216$ plaquettes, and $96$ three-cells.  Exact
+row reduction gives
+\begin{equation}
+ \operatorname{rank}_{\F}d_1=136,
+ \qquad
+ \operatorname{rank}_{\F}d_2=80,
+ \qquad d_2d_1=0.
+ \label{eq:ranks}
+\end{equation}
+
+\begin{proposition}[Exactness at plaquettes]
+Every Bianchi-closed center plaquette field on this block is an exact link
+coboundary:
+\[
+ \ker d_2=\operatorname{im}d_1.
+\]
+\end{proposition}
+\begin{proof}
+The inclusion follows from $d_2d_1=0$.  By \eqref{eq:ranks},
+\[
+ \dim\ker d_2=216-80=136=\dim\operatorname{im}d_1.
+\]
+The inclusion is therefore equality.
+\end{proof}
+
+\section{Minimum charge of the frustrated incident pattern}
+
+Fix the degree-six link selected in Stage 10.  Among its six incident
+plaquettes require one designated plaquette $p_*$ to be negative and the other
+five to be positive.  The previously constructed assignment has one negative
+center link and full negative-plaquette support
+\[
+ \{7,17,21,22,23\},
+\]
+of weight five, with $p_*=21$.
+
+\begin{theorem}[Exact minimum five]
+Every center plaquette field satisfying the incident pattern and the Bianchi
+identity has Hamming weight at least five.  The bound is attained.
+\end{theorem}
+\begin{proof}
+Represent each of the $216$ columns of $d_2$ as an exact $96$-bit integer
+syndrome.  Since $p_*$ is present, all additional plaquettes must have column
+XOR equal to the syndrome of $p_*$.  The other five incident plaquettes are
+forbidden.  Exact meet-in-the-middle enumeration checks the empty set, every
+allowed singleton, every allowed pair, and every allowed triple.  None has the
+required XOR.  Thus no Bianchi-closed completion has total weight at most
+four.  The displayed five-plaquette coboundary verifies attainment.
+\end{proof}
+
+This is a finite exhaustive certificate over integers, rather than a
+floating-point optimization.  Independently, no nonzero exact center cocycle
+has size one or two: no $d_2$ column is zero and no two columns have the same
+syndrome.  A corner link has a three-plaquette coboundary, so the global
+nonempty minimum is exactly three.
+
+\section{Center-contour summability}
+
+Join two plaquettes when they are faces of a common three-cell.  This is the
+component graph forced by the Bianchi parity constraint: even opposite faces
+of one three-cell must remain in the same component.  The exact maximum degree
+of this adjacency graph on the block is
+\[
+ \Delta_{\mathrm B}=20.
+\]
+Let $q\in(0,1)$ be the relative weight of a negative center plaquette.  In the
+center-restricted heat-kernel measure, a curvature support $X$ has relative
+weight $q^{|X|}$.  Its connected components are themselves Bianchi cocycles;
+on the open block they are exact.
+
+The number of connected plaquette sets of size $n$ containing a fixed root is
+bounded by $\Delta_{\mathrm B}^{2(n-1)}$, using a canonical depth-first traversal of a
+spanning tree.  Since nonempty center contours have $n\geq3$, we obtain:
+
+\begin{theorem}[Rooted center-contour bound]
+If $e^\alpha\Delta_{\mathrm B}^2q<1$, then
+\begin{equation}
+ \sup_p\sum_{X\ni p}e^{\alpha|X|}|z(X)|
+ \leq
+ \frac{e^{3\alpha}q^3\Delta_{\mathrm B}^4}{1-e^\alpha\Delta_{\mathrm B}^2q}.
+ \label{eq:center-bound}
+\end{equation}
+The particular Stage 10 incident pattern pays at least $q^5$.
+\end{theorem}
+\begin{proof}
+Discarding the exact-cocycle restriction only enlarges the sum.  Insert the
+connected-set count and sum the geometric series from $n=3$.  The exact
+minimum-five theorem supplies the final statement.
+\end{proof}
+
+\section{Calibration and interpretation}
+
+For $\alpha=0.1$ and $\Delta_{\mathrm B}=20$, the sufficient threshold is
+\[
+ q<\frac{e^{-0.1}}{20^2}=0.00226209354509.
+\]
+At the declared calibration $q=10^{-4}$, the branching ratio is
+$0.0442068$ and the right side of \eqref{eq:center-bound} is
+$2.25965\times10^{-7}$.  The least suppressed realization of the selected
+frustration pays $q^5=10^{-20}$.
+
+At small heat time the endpoint heat-kernel ratio has logarithmic rate
+$\log q\sim-\pi^2/(2t)$.  For $t=3\times10^{-6}$ this rate proxy is
+$-1.644934\times10^6$; prefactors are irrelevant to that asymptotic statement.
+
+\section{Frontier audit}
+
+The theorem demonstrates exactly what arbitrary conditioning erased: a local
+frustrated staple belongs to a larger center-curvature contour.  The proof
+does not imply that every continuous $\mathrm{SU}(2)$ collar failure pays five
+near-antipodal plaquettes.  Continuous fields can spread curvature, and
+noncentral orbit/topology labels require separate estimates.  The strongest
+claim is C2 for the center subsector.
+
+\end{document}

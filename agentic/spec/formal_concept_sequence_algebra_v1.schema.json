@@ -1,0 +1,776 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://abducer.local/spec/formal_concept_sequence_algebra_v1.schema.json",
+  "title": "Bounded exact finite conceptual transformation sequence algebra v1",
+  "description": "A strict two-transformation critical-pair record. Both orders are applied sequentially through the formal conceptual delta v2 constructors, intermediate and residual boundaries are replayed exactly, bounded internal-ID isomorphism is distinguished from non-isomorphism and ceiling unavailability, productive noncommutation is retained as plurality, and protected erasure or free completion is quarantined. All truth, merit, physics, and theorem authority remains null.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "sequence_id",
+    "base_core",
+    "transformations",
+    "isomorphism_policy",
+    "initial_applications",
+    "coenabledness",
+    "critical_pairs",
+    "conceptual_core_comparison",
+    "outcome",
+    "finite_handback",
+    "authority_boundary",
+    "content_digest"
+  ],
+  "$defs": {
+    "id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 192,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$"
+    },
+    "text": {
+      "type": "string",
+      "minLength": 1
+    },
+    "digest": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "nullableText": {
+      "oneOf": [
+        {"$ref": "#/$defs/text"},
+        {"type": "null"}
+      ]
+    },
+    "nullableId": {
+      "oneOf": [
+        {"$ref": "#/$defs/id"},
+        {"type": "null"}
+      ]
+    },
+    "nullableDigest": {
+      "oneOf": [
+        {"$ref": "#/$defs/digest"},
+        {"type": "null"}
+      ]
+    },
+    "nullableBoolean": {
+      "oneOf": [
+        {"type": "boolean"},
+        {"type": "null"}
+      ]
+    },
+    "core": {
+      "$ref": "formal_conceptual_delta_v2.schema.json#/$defs/core"
+    },
+    "delta": {
+      "$ref": "formal_conceptual_delta_v2.schema.json"
+    },
+    "nullableCore": {
+      "oneOf": [
+        {"$ref": "#/$defs/core"},
+        {"type": "null"}
+      ]
+    },
+    "nullableDelta": {
+      "oneOf": [
+        {"$ref": "#/$defs/delta"},
+        {"type": "null"}
+      ]
+    },
+    "plan": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "transformation_id",
+        "relation_hypothesis",
+        "witness",
+        "consequence_contract"
+      ],
+      "properties": {
+        "transformation_id": {"$ref": "#/$defs/id"},
+        "relation_hypothesis": {
+          "$ref": "formal_conceptual_delta_v2.schema.json#/$defs/relationHypothesis"
+        },
+        "witness": {
+          "$ref": "formal_conceptual_delta_v2.schema.json#/$defs/witness"
+        },
+        "consequence_contract": {
+          "$ref": "formal_conceptual_delta_v2.schema.json#/$defs/consequenceContract"
+        }
+      }
+    },
+    "replay": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "input_core_digest",
+        "delta_id",
+        "delta_digest",
+        "before_core_digest",
+        "after_core_digest",
+        "exact_input_boundary",
+        "semantic_delta_replayed",
+        "after_core_validated",
+        "replay_digest"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "valid",
+            "unavailable",
+            "not_coenabled",
+            "blocked_by_quarantine"
+          ]
+        },
+        "input_core_digest": {"$ref": "#/$defs/digest"},
+        "delta_id": {"$ref": "#/$defs/nullableId"},
+        "delta_digest": {"$ref": "#/$defs/nullableDigest"},
+        "before_core_digest": {"$ref": "#/$defs/nullableDigest"},
+        "after_core_digest": {"$ref": "#/$defs/nullableDigest"},
+        "exact_input_boundary": {"type": "boolean"},
+        "semantic_delta_replayed": {"type": "boolean"},
+        "after_core_validated": {"type": "boolean"},
+        "replay_digest": {"$ref": "#/$defs/digest"}
+      }
+    },
+    "application": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "transformation_id",
+        "status",
+        "reason_code",
+        "delta_id",
+        "delta_digest",
+        "after_status",
+        "replay_digest",
+        "application_digest"
+      ],
+      "properties": {
+        "transformation_id": {"$ref": "#/$defs/id"},
+        "status": {"enum": ["applied", "unavailable"]},
+        "reason_code": {"$ref": "#/$defs/nullableText"},
+        "delta_id": {"$ref": "#/$defs/nullableId"},
+        "delta_digest": {"$ref": "#/$defs/nullableDigest"},
+        "after_status": {
+          "oneOf": [
+            {
+              "enum": [
+                "localized",
+                "constructively_removed",
+                "counterfactual_only",
+                "quarantined_protected_erasure"
+              ]
+            },
+            {"type": "null"}
+          ]
+        },
+        "replay_digest": {"$ref": "#/$defs/digest"},
+        "application_digest": {"$ref": "#/$defs/digest"}
+      }
+    },
+    "unavailableTransformation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["transformation_id", "reason_code"],
+      "properties": {
+        "transformation_id": {"$ref": "#/$defs/id"},
+        "reason_code": {"$ref": "#/$defs/text"}
+      }
+    },
+    "coenabledness": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "applicable_transformation_ids",
+        "unavailable_transformations",
+        "both_defined_on_base",
+        "coenabledness_digest"
+      ],
+      "properties": {
+        "status": {"enum": ["coenabled", "not_coenabled"]},
+        "applicable_transformation_ids": {
+          "type": "array",
+          "maxItems": 2,
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/id"}
+        },
+        "unavailable_transformations": {
+          "type": "array",
+          "maxItems": 2,
+          "items": {"$ref": "#/$defs/unavailableTransformation"}
+        },
+        "both_defined_on_base": {"type": "boolean"},
+        "coenabledness_digest": {"$ref": "#/$defs/digest"}
+      }
+    },
+    "witnessDifferences": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "delta_ids",
+        "witness_digests",
+        "burden_statements",
+        "corrections",
+        "falsifiers",
+        "loss_ledger_digests",
+        "difference_digest"
+      ],
+      "properties": {
+        "delta_ids": {
+          "type": "array",
+          "maxItems": 2,
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/id"}
+        },
+        "witness_digests": {
+          "type": "array",
+          "maxItems": 2,
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/digest"}
+        },
+        "burden_statements": {
+          "type": "array",
+          "maxItems": 2,
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/text"}
+        },
+        "corrections": {
+          "type": "array",
+          "maxItems": 2,
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/text"}
+        },
+        "falsifiers": {
+          "type": "array",
+          "maxItems": 2,
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/text"}
+        },
+        "loss_ledger_digests": {
+          "type": "array",
+          "maxItems": 2,
+          "items": {"$ref": "#/$defs/digest"}
+        },
+        "difference_digest": {"$ref": "#/$defs/digest"}
+      }
+    },
+    "residual": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "residual_id",
+        "transformation_id",
+        "against_transformation_id",
+        "source_plan_digest",
+        "input_core_digest",
+        "status",
+        "reason_code",
+        "delta",
+        "replay",
+        "residual_digest"
+      ],
+      "properties": {
+        "residual_id": {"$ref": "#/$defs/id"},
+        "transformation_id": {"$ref": "#/$defs/id"},
+        "against_transformation_id": {"$ref": "#/$defs/id"},
+        "source_plan_digest": {"$ref": "#/$defs/digest"},
+        "input_core_digest": {"$ref": "#/$defs/digest"},
+        "status": {
+          "enum": [
+            "applied",
+            "unavailable",
+            "not_coenabled",
+            "blocked_by_quarantine"
+          ]
+        },
+        "reason_code": {"$ref": "#/$defs/nullableText"},
+        "delta": {"$ref": "#/$defs/nullableDelta"},
+        "replay": {"$ref": "#/$defs/replay"},
+        "residual_digest": {"$ref": "#/$defs/digest"}
+      }
+    },
+    "criticalPair": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "critical_pair_id",
+        "order",
+        "status",
+        "reason_code",
+        "first_delta",
+        "intermediate_replay",
+        "residual",
+        "final_core",
+        "final_core_digest",
+        "protected_distinctions_preserved",
+        "free_completion_detected",
+        "witness_differences",
+        "critical_pair_digest"
+      ],
+      "properties": {
+        "critical_pair_id": {"$ref": "#/$defs/id"},
+        "order": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 2,
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/id"}
+        },
+        "status": {
+          "enum": [
+            "completed",
+            "not_coenabled",
+            "partial_failure",
+            "quarantined_protected_erasure",
+            "quarantined_free_completion"
+          ]
+        },
+        "reason_code": {"$ref": "#/$defs/nullableText"},
+        "first_delta": {"$ref": "#/$defs/nullableDelta"},
+        "intermediate_replay": {"$ref": "#/$defs/replay"},
+        "residual": {"$ref": "#/$defs/residual"},
+        "final_core": {"$ref": "#/$defs/nullableCore"},
+        "final_core_digest": {"$ref": "#/$defs/nullableDigest"},
+        "protected_distinctions_preserved": {"type": "boolean"},
+        "free_completion_detected": {"type": "boolean"},
+        "witness_differences": {
+          "$ref": "#/$defs/witnessDifferences"
+        },
+        "critical_pair_digest": {"$ref": "#/$defs/digest"}
+      }
+    },
+    "identifierMapping": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["identifier_kind", "left_id", "right_id"],
+      "properties": {
+        "identifier_kind": {
+          "enum": [
+            "primitive",
+            "member",
+            "relation",
+            "observable",
+            "inhabitant",
+            "burden",
+            "evidence"
+          ]
+        },
+        "left_id": {"$ref": "#/$defs/id"},
+        "right_id": {"$ref": "#/$defs/id"}
+      }
+    },
+    "comparison": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "comparison_status",
+        "reason_code",
+        "left_core_digest",
+        "right_core_digest",
+        "semantic_root_equal",
+        "strict_projection_equal",
+        "canonicalization_version",
+        "max_permutations",
+        "left_candidate_permutations",
+        "right_candidate_permutations",
+        "left_checked_permutations",
+        "right_checked_permutations",
+        "canonical_core_digest",
+        "identifier_mapping",
+        "comparison_digest"
+      ],
+      "properties": {
+        "comparison_status": {
+          "enum": [
+            "strictly_equal",
+            "isomorphic",
+            "not_isomorphic",
+            "ceiling_unavailable",
+            "not_available"
+          ]
+        },
+        "reason_code": {"$ref": "#/$defs/text"},
+        "left_core_digest": {"$ref": "#/$defs/nullableDigest"},
+        "right_core_digest": {"$ref": "#/$defs/nullableDigest"},
+        "semantic_root_equal": {"$ref": "#/$defs/nullableBoolean"},
+        "strict_projection_equal": {
+          "$ref": "#/$defs/nullableBoolean"
+        },
+        "canonicalization_version": {
+          "const": "bounded-conceptual-core-isomorphism.v1"
+        },
+        "max_permutations": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 65536
+        },
+        "left_candidate_permutations": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "right_candidate_permutations": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "left_checked_permutations": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 65536
+        },
+        "right_checked_permutations": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 65536
+        },
+        "canonical_core_digest": {
+          "$ref": "#/$defs/nullableDigest"
+        },
+        "identifier_mapping": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/identifierMapping"}
+        },
+        "comparison_digest": {"$ref": "#/$defs/digest"}
+      }
+    },
+    "outcome": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "retained_critical_pair_ids",
+        "quarantined_critical_pair_ids",
+        "plural_candidate_core_digests",
+        "decision_change_authorized",
+        "physics_value_authorized",
+        "theorem_authorized",
+        "investment_authorized",
+        "outcome_digest"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "strictly_commuting",
+            "isomorphic_commuting",
+            "productive_noncommutation",
+            "invalid_conflict",
+            "not_coenabled",
+            "quarantined_protected_erasure",
+            "quarantined_free_completion",
+            "ceiling_unavailable",
+            "partial_failure"
+          ]
+        },
+        "retained_critical_pair_ids": {
+          "type": "array",
+          "maxItems": 2,
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/id"}
+        },
+        "quarantined_critical_pair_ids": {
+          "type": "array",
+          "maxItems": 2,
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/id"}
+        },
+        "plural_candidate_core_digests": {
+          "type": "array",
+          "maxItems": 2,
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/digest"}
+        },
+        "decision_change_authorized": {"const": false},
+        "physics_value_authorized": {"const": false},
+        "theorem_authorized": {"const": false},
+        "investment_authorized": {"const": false},
+        "outcome_digest": {"$ref": "#/$defs/digest"}
+      }
+    },
+    "candidate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "candidate_id",
+        "critical_pair_ids",
+        "orders",
+        "final_core_digests",
+        "canonical_core_digest",
+        "witness_digests",
+        "burden_statements",
+        "corrections",
+        "falsifiers",
+        "protected_observable_values_digest",
+        "candidate_digest"
+      ],
+      "properties": {
+        "candidate_id": {"$ref": "#/$defs/id"},
+        "critical_pair_ids": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 2,
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/id"}
+        },
+        "orders": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 2,
+          "items": {
+            "type": "array",
+            "minItems": 2,
+            "maxItems": 2,
+            "uniqueItems": true,
+            "items": {"$ref": "#/$defs/id"}
+          }
+        },
+        "final_core_digests": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 2,
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/digest"}
+        },
+        "canonical_core_digest": {
+          "$ref": "#/$defs/nullableDigest"
+        },
+        "witness_digests": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 4,
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/digest"}
+        },
+        "burden_statements": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 4,
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/text"}
+        },
+        "corrections": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 4,
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/text"}
+        },
+        "falsifiers": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 4,
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/text"}
+        },
+        "protected_observable_values_digest": {
+          "$ref": "#/$defs/digest"
+        },
+        "candidate_digest": {"$ref": "#/$defs/digest"}
+      }
+    },
+    "candidateDifference": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "left_critical_pair_id",
+        "right_critical_pair_id",
+        "left_only_burden_statements",
+        "right_only_burden_statements",
+        "left_only_corrections",
+        "right_only_corrections",
+        "left_only_falsifiers",
+        "right_only_falsifiers",
+        "candidate_difference_digest"
+      ],
+      "properties": {
+        "left_critical_pair_id": {"$ref": "#/$defs/id"},
+        "right_critical_pair_id": {"$ref": "#/$defs/id"},
+        "left_only_burden_statements": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/text"}
+        },
+        "right_only_burden_statements": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/text"}
+        },
+        "left_only_corrections": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/text"}
+        },
+        "right_only_corrections": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/text"}
+        },
+        "left_only_falsifiers": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/text"}
+        },
+        "right_only_falsifiers": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/text"}
+        },
+        "candidate_difference_digest": {"$ref": "#/$defs/digest"}
+      }
+    },
+    "handback": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "handback_status",
+        "target_id",
+        "obligation_id",
+        "physical_carrier",
+        "regime",
+        "quantifiers",
+        "candidates",
+        "candidate_difference",
+        "eligible_for_precommitted_rule_replay",
+        "decision_change_authorized",
+        "truth_authority",
+        "conceptual_merit_authority",
+        "physics_authority",
+        "theorem_authority",
+        "physical_equivalence_authorized",
+        "continuum_authorized",
+        "proof_authorized",
+        "investment_authorized",
+        "experiment_selection_authorized",
+        "handback_digest"
+      ],
+      "properties": {
+        "handback_status": {
+          "enum": [
+            "single_commuting_candidate",
+            "plural_productive_candidates",
+            "comparison_ceiling_unavailable",
+            "partial_sequence_quarantined",
+            "quarantined",
+            "not_available"
+          ]
+        },
+        "target_id": {"$ref": "#/$defs/id"},
+        "obligation_id": {"$ref": "#/$defs/id"},
+        "physical_carrier": {
+          "oneOf": [
+            {"$ref": "#/$defs/text"},
+            {"type": "null"}
+          ]
+        },
+        "regime": {"$ref": "#/$defs/text"},
+        "quantifiers": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "formal_conceptual_delta_v2.schema.json#/$defs/quantifier"
+          }
+        },
+        "candidates": {
+          "type": "array",
+          "maxItems": 2,
+          "items": {"$ref": "#/$defs/candidate"}
+        },
+        "candidate_difference": {
+          "$ref": "#/$defs/candidateDifference"
+        },
+        "eligible_for_precommitted_rule_replay": {
+          "type": "boolean"
+        },
+        "decision_change_authorized": {"const": false},
+        "truth_authority": {"type": "null"},
+        "conceptual_merit_authority": {"type": "null"},
+        "physics_authority": {"type": "null"},
+        "theorem_authority": {"type": "null"},
+        "physical_equivalence_authorized": {"const": false},
+        "continuum_authorized": {"const": false},
+        "proof_authorized": {"const": false},
+        "investment_authorized": {"const": false},
+        "experiment_selection_authorized": {"const": false},
+        "handback_digest": {"$ref": "#/$defs/digest"}
+      }
+    },
+    "authorityBoundary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "finite_local_replay_only",
+        "truth_authority",
+        "conceptual_merit_authority",
+        "physics_authority",
+        "theorem_authority",
+        "physical_equivalence_authorized",
+        "continuum_authorized",
+        "proof_authorized",
+        "investment_authorized",
+        "experiment_selection_authorized"
+      ],
+      "properties": {
+        "finite_local_replay_only": {"const": true},
+        "truth_authority": {"type": "null"},
+        "conceptual_merit_authority": {"type": "null"},
+        "physics_authority": {"type": "null"},
+        "theorem_authority": {"type": "null"},
+        "physical_equivalence_authorized": {"const": false},
+        "continuum_authorized": {"const": false},
+        "proof_authorized": {"const": false},
+        "investment_authorized": {"const": false},
+        "experiment_selection_authorized": {"const": false}
+      }
+    }
+  },
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "sequence_id": {"$ref": "#/$defs/id"},
+    "base_core": {"$ref": "#/$defs/core"},
+    "transformations": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 2,
+      "items": {"$ref": "#/$defs/plan"}
+    },
+    "isomorphism_policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "canonicalization_version",
+        "max_permutations"
+      ],
+      "properties": {
+        "canonicalization_version": {
+          "const": "bounded-conceptual-core-isomorphism.v1"
+        },
+        "max_permutations": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 65536
+        }
+      }
+    },
+    "initial_applications": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 2,
+      "items": {"$ref": "#/$defs/application"}
+    },
+    "coenabledness": {"$ref": "#/$defs/coenabledness"},
+    "critical_pairs": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 2,
+      "items": {"$ref": "#/$defs/criticalPair"}
+    },
+    "conceptual_core_comparison": {
+      "$ref": "#/$defs/comparison"
+    },
+    "outcome": {"$ref": "#/$defs/outcome"},
+    "finite_handback": {"$ref": "#/$defs/handback"},
+    "authority_boundary": {"$ref": "#/$defs/authorityBoundary"},
+    "content_digest": {"$ref": "#/$defs/digest"}
+  }
+}

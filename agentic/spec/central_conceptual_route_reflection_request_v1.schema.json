@@ -1,0 +1,287 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://abducer.local/schemas/central_conceptual_route_reflection_request_v1.schema.json",
+  "title": "Theory-subordinate reflection request from central conceptual routes",
+  "description": "A complete, set-valued and failure-preserving projection of one authoritatively reopened central-route bundle. It may enter only the exact next theory generation as material for reflective synthesis and grants no same-generation theory, ontology, preference, proof, schedule, experiment, truth, merit, or physics authority.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "artifact_kind",
+    "request_id",
+    "target_id",
+    "run_id",
+    "source_theory_generation",
+    "requested_descendant_generation",
+    "source_verified_commit",
+    "source_committed_input",
+    "conceptual_ancestry_digest",
+    "literature_projection_digest",
+    "source_packet",
+    "source_packet_digest",
+    "source_bundle_manifest",
+    "route_observations",
+    "selected_candidate_set",
+    "selection_is_set_valued",
+    "current_theory_effect",
+    "permitted_descendant_effect",
+    "experiment_role",
+    "authority_nulls",
+    "authority_boundary",
+    "content_digest"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "artifact_kind": {"const": "central_conceptual_route_reflection_request"},
+    "request_id": {"$ref": "#/$defs/id"},
+    "target_id": {"$ref": "#/$defs/id"},
+    "run_id": {"$ref": "#/$defs/id"},
+    "source_theory_generation": {"type": "integer", "minimum": 1},
+    "requested_descendant_generation": {"type": "integer", "minimum": 2},
+    "source_verified_commit": {"$ref": "#/$defs/verifiedCommit"},
+    "source_committed_input": {"$ref": "#/$defs/committedInputBinding"},
+    "conceptual_ancestry_digest": {"$ref": "#/$defs/digest"},
+    "literature_projection_digest": {"$ref": "#/$defs/digest"},
+    "source_packet": {"$ref": "./central_conceptual_route_packet_v3.schema.json"},
+    "source_packet_digest": {"$ref": "#/$defs/digest"},
+    "source_bundle_manifest": {"$ref": "#/$defs/bundleManifest"},
+    "route_observations": {
+      "type": "array",
+      "minItems": 5,
+      "maxItems": 5,
+      "items": {"$ref": "#/$defs/routeObservation"}
+    },
+    "selected_candidate_set": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {"$ref": "#/$defs/selectedCandidate"}
+    },
+    "selection_is_set_valued": {"const": true},
+    "current_theory_effect": {"$ref": "#/$defs/currentTheoryEffect"},
+    "permitted_descendant_effect": {
+      "const": "reflective_synthesis_only_at_exact_n_plus_one_generation"
+    },
+    "experiment_role": {
+      "const": "secondary_descendant_falsifier_only_after_reflective_theory_request"
+    },
+    "authority_nulls": {"$ref": "#/$defs/authorityNulls"},
+    "authority_boundary": {"type": "string", "minLength": 260},
+    "content_digest": {"$ref": "#/$defs/digest"}
+  },
+  "$defs": {
+    "id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,199}$"
+    },
+    "digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "route": {
+      "enum": [
+        "categorical",
+        "hott",
+        "category_then_hott",
+        "hott_then_category",
+        "capable_nonformal"
+      ]
+    },
+    "verifiedCommit": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "generation",
+        "prior_generation",
+        "commit_id",
+        "manifest_digest",
+        "state_file_digest",
+        "state_semantic_digest"
+      ],
+      "properties": {
+        "generation": {"type": "integer", "minimum": 1},
+        "prior_generation": {"type": "integer", "minimum": 0},
+        "commit_id": {"$ref": "#/$defs/id"},
+        "manifest_digest": {"$ref": "#/$defs/digest"},
+        "state_file_digest": {"$ref": "#/$defs/digest"},
+        "state_semantic_digest": {"$ref": "#/$defs/digest"}
+      }
+    },
+    "committedInputBinding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "path",
+        "file_sha256",
+        "byte_length",
+        "input_id",
+        "content_digest"
+      ],
+      "properties": {
+        "path": {"type": "string", "minLength": 1},
+        "file_sha256": {"$ref": "#/$defs/digest"},
+        "byte_length": {"type": "integer", "minimum": 1},
+        "input_id": {"$ref": "#/$defs/id"},
+        "content_digest": {"$ref": "#/$defs/digest"}
+      }
+    },
+    "bundleFile": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["relative_path", "file_sha256", "byte_length"],
+      "properties": {
+        "relative_path": {"type": "string", "minLength": 1},
+        "file_sha256": {"$ref": "#/$defs/digest"},
+        "byte_length": {"type": "integer", "minimum": 0}
+      }
+    },
+    "bundleManifest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "manifest_kind",
+        "commission_id",
+        "files",
+        "file_count",
+        "total_byte_length",
+        "manifest_digest"
+      ],
+      "properties": {
+        "manifest_kind": {"const": "complete_regular_file_closure"},
+        "commission_id": {"$ref": "#/$defs/id"},
+        "files": {
+          "type": "array",
+          "minItems": 8,
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/bundleFile"}
+        },
+        "file_count": {"type": "integer", "minimum": 8},
+        "total_byte_length": {"type": "integer", "minimum": 1},
+        "manifest_digest": {"$ref": "#/$defs/digest"}
+      }
+    },
+    "routeObservation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "route_id",
+        "terminal_status",
+        "terminal_digest",
+        "output_status",
+        "candidate_content_digest",
+        "handback_digest",
+        "evidence_ledger_digest",
+        "selected_for_descendant_reflection",
+        "preserved_disposition"
+      ],
+      "properties": {
+        "route_id": {"$ref": "#/$defs/route"},
+        "terminal_status": {
+          "enum": ["completed", "quarantined_or_unavailable", "failed"]
+        },
+        "terminal_digest": {"$ref": "#/$defs/digest"},
+        "output_status": {
+          "oneOf": [
+            {"enum": ["completed", "quarantined", "unavailable"]},
+            {"type": "null"}
+          ]
+        },
+        "candidate_content_digest": {
+          "oneOf": [{"$ref": "#/$defs/digest"}, {"type": "null"}]
+        },
+        "handback_digest": {
+          "oneOf": [{"$ref": "#/$defs/digest"}, {"type": "null"}]
+        },
+        "evidence_ledger_digest": {
+          "oneOf": [{"$ref": "#/$defs/digest"}, {"type": "null"}]
+        },
+        "selected_for_descendant_reflection": {"type": "boolean"},
+        "preserved_disposition": {
+          "enum": [
+            "selected_local_pareto_candidate",
+            "not_selected_local_judgment_only",
+            "unadjudicated_completed_candidate_preserved",
+            "quarantined_preserved_negative_knowledge",
+            "unavailable_preserved_negative_knowledge",
+            "worker_failure_preserved_negative_knowledge"
+          ]
+        }
+      }
+    },
+    "selectedCandidate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "route_id",
+        "candidate_content_digest",
+        "handback_digest",
+        "evidence_ledger_digest"
+      ],
+      "properties": {
+        "route_id": {"$ref": "#/$defs/route"},
+        "candidate_content_digest": {"$ref": "#/$defs/digest"},
+        "handback_digest": {"$ref": "#/$defs/digest"},
+        "evidence_ledger_digest": {"$ref": "#/$defs/digest"}
+      }
+    },
+    "currentTheoryEffect": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "theory_mutation_authorized",
+        "ontology_mutation_authorized",
+        "preference_replacement_authorized",
+        "proof_authorized",
+        "schedule_mutation_authorized",
+        "experiment_authorized",
+        "automatic_evidence_relation_authorized"
+      ],
+      "properties": {
+        "theory_mutation_authorized": {"const": false},
+        "ontology_mutation_authorized": {"const": false},
+        "preference_replacement_authorized": {"const": false},
+        "proof_authorized": {"const": false},
+        "schedule_mutation_authorized": {"const": false},
+        "experiment_authorized": {"const": false},
+        "automatic_evidence_relation_authorized": {"const": false}
+      }
+    },
+    "authorityNulls": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "truth_authority",
+        "source_truth_authority",
+        "global_latestness_authority",
+        "literature_benefit_authority",
+        "creativity_authority",
+        "conceptual_merit_authority",
+        "evaluator_independence",
+        "category_hott_advantage_authority",
+        "physics_value_authority",
+        "proof_authority",
+        "theorem_authority",
+        "experiment_authority",
+        "generalization_authority",
+        "publication_authority"
+      ],
+      "properties": {
+        "truth_authority": {"type": "null"},
+        "source_truth_authority": {"type": "null"},
+        "global_latestness_authority": {"type": "null"},
+        "literature_benefit_authority": {"type": "null"},
+        "creativity_authority": {"type": "null"},
+        "conceptual_merit_authority": {"type": "null"},
+        "evaluator_independence": {
+          "const": "request_protocol_route_labels_absent_host_isolation_unavailable"
+        },
+        "category_hott_advantage_authority": {"type": "null"},
+        "physics_value_authority": {"type": "null"},
+        "proof_authority": {"type": "null"},
+        "theorem_authority": {"type": "null"},
+        "experiment_authority": {"type": "null"},
+        "generalization_authority": {"type": "null"},
+        "publication_authority": {"type": "null"}
+      }
+    }
+  }
+}

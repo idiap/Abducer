@@ -1,0 +1,120 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://abducer.local/schemas/literature_claim_mapping_derivation.schema.json",
+  "title": "Deterministic literature claim mapping derivation",
+  "description": "A recomputable snapshot-content-to-theory mapping receipt with explicit concept, branch, and null updates.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "derivation_id", "target_id", "theory_state_digest", "snapshot_id", "snapshot_digest", "theory_catalog_id", "theory_catalog_digest", "semantic_claim_layer", "semantic_claim_layer_digest", "semantic_coverage_audit", "derivation_authority", "theory_mappings", "mapping_receipts", "concept_updates", "branch_updates", "explicit_null_effects", "epistemic_boundary", "content_digest"],
+  "$defs": {
+    "id": {"type": "string", "minLength": 1, "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$"},
+    "digest": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
+    "text": {"type": "string", "minLength": 1},
+    "mapping": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["mapping_id", "source_id", "theory_object_ids", "object_kinds", "relation", "exact_claim", "source_limitation", "conceptual_change", "event_type", "coverage_limits", "confidence", "source_version", "source_correction_status", "semantic_claim_id", "semantic_claim_digest", "semantic_relation", "semantic_warrant_ids", "semantic_warrant_digest", "semantic_basis_mode"],
+      "properties": {
+        "mapping_id": {"$ref": "#/$defs/id"},
+        "source_id": {"$ref": "#/$defs/id"},
+        "theory_object_ids": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"$ref": "#/$defs/id"}},
+        "object_kinds": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"enum": ["concept", "assumption", "mechanism", "barrier", "comparator", "hypothesis", "genealogy", "proof_obligation", "schedule"]}},
+        "relation": {"enum": ["supports", "contradicts", "absorbs", "sharpens", "reframes", "transfers", "leaves_open"]},
+        "exact_claim": {"$ref": "#/$defs/text"},
+        "source_limitation": {"$ref": "#/$defs/text"},
+        "conceptual_change": {"$ref": "#/$defs/text"},
+        "event_type": {"enum": ["spawn", "merge", "split", "reframe", "demote", "retire", "reprioritize", "new_question", "justified_no_change"]},
+        "coverage_limits": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/text"}},
+        "confidence": {"enum": ["low", "medium", "high"]},
+        "source_version": {"$ref": "#/$defs/text"}, "source_correction_status": {"enum": ["none_known", "corrected", "superseded", "retracted", "unknown"]},
+        "semantic_claim_id": {"$ref": "#/$defs/id"}, "semantic_claim_digest": {"$ref": "#/$defs/digest"},
+        "semantic_relation": {"enum": ["entails", "contradicts", "leaves_open", "unresolved"]},
+        "semantic_warrant_ids": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"$ref": "#/$defs/id"}},
+        "semantic_warrant_digest": {"$ref": "#/$defs/digest"},
+        "semantic_basis_mode": {"enum": ["source_level_explicit", "bounded_lexical_fallback"]}
+        ,"claim_origin": {"enum": ["verbatim_source_excerpt", "author_paraphrase", "model_extraction", "internal_target_audit"]}, "claim_authority_class": {"type": "string", "minLength": 1}, "semantic_authority_classes": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string"}}
+      }
+    }
+  },
+  "properties": {
+    "schema_version": {"const": "2.0"},
+    "derivation_id": {"$ref": "#/$defs/id"},
+    "target_id": {"$ref": "#/$defs/id"},
+    "theory_state_digest": {"$ref": "#/$defs/digest"},
+    "snapshot_id": {"$ref": "#/$defs/id"},
+    "snapshot_digest": {"$ref": "#/$defs/digest"},
+    "theory_catalog_id": {"$ref": "#/$defs/id"},
+    "theory_catalog_digest": {"$ref": "#/$defs/digest"},
+    "semantic_claim_layer": {"type": "object", "required": ["schema_version", "layer_id", "coverage_audit", "content_digest"]},
+    "semantic_claim_layer_digest": {"$ref": "#/$defs/digest"},
+    "semantic_coverage_audit": {"type": "object", "required": ["claim_record_count", "unresolved_claim_ids", "coverage_status"]},
+    "derivation_authority": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["authority_id", "algorithm_id", "policy_digest", "authority_class", "semantic_layer_authority_id"],
+      "properties": {
+        "authority_id": {"const": "deterministic-claim-mapper.v3"},
+        "algorithm_id": {"const": "semantic-origin-and-uncertainty-rules.v3"},
+        "policy_digest": {"$ref": "#/$defs/digest"},
+        "authority_class": {"const": "deterministic_internal_derivation"},
+        "semantic_layer_authority_id": {"const": "source-semantic-claim-layer.v2"}
+      }
+    },
+    "theory_mappings": {"type": "array", "items": {"$ref": "#/$defs/mapping"}},
+    "mapping_receipts": {
+      "type": "array",
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["receipt_id", "mapping_id", "source_id", "source_content_digest", "exact_claim_digest", "selected_theory_object_ids", "matched_terms", "match_weight", "decision_rule", "event_type", "policy_digest", "source_version", "source_correction_status", "semantic_claim_id", "semantic_claim_digest", "semantic_relation", "semantic_warrant_ids", "semantic_warrant_digest", "semantic_basis_mode"],
+        "properties": {
+          "receipt_id": {"$ref": "#/$defs/id"}, "mapping_id": {"$ref": "#/$defs/id"}, "source_id": {"$ref": "#/$defs/id"},
+          "source_content_digest": {"$ref": "#/$defs/digest"}, "exact_claim_digest": {"$ref": "#/$defs/digest"},
+          "selected_theory_object_ids": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"$ref": "#/$defs/id"}},
+          "matched_terms": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/text"}},
+          "match_weight": {"type": "integer", "minimum": 0}, "decision_rule": {"$ref": "#/$defs/text"},
+          "event_type": {"enum": ["spawn", "merge", "split", "reframe", "demote", "retire", "reprioritize", "new_question", "justified_no_change"]},
+          "policy_digest": {"$ref": "#/$defs/digest"}, "source_version": {"$ref": "#/$defs/text"},
+          "source_correction_status": {"enum": ["none_known", "corrected", "superseded", "retracted", "unknown"]},
+          "semantic_claim_id": {"$ref": "#/$defs/id"}, "semantic_claim_digest": {"$ref": "#/$defs/digest"},
+          "semantic_relation": {"enum": ["entails", "contradicts", "leaves_open", "unresolved"]},
+          "semantic_warrant_ids": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"$ref": "#/$defs/id"}},
+          "semantic_warrant_digest": {"$ref": "#/$defs/digest"},
+          "semantic_basis_mode": {"enum": ["source_level_explicit", "bounded_lexical_fallback"]}
+          ,"claim_origin": {"enum": ["verbatim_source_excerpt", "author_paraphrase", "model_extraction", "internal_target_audit"]}, "claim_authority_class": {"type": "string", "minLength": 1}, "semantic_authority_classes": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string"}}
+        }
+      }
+    },
+    "concept_updates": {
+      "type": "array", "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["update_id", "mapping_id", "disposition", "generated_object_id", "parent_theory_object_ids", "source_id", "claim_digest", "statement"],
+        "properties": {
+          "update_id": {"$ref": "#/$defs/id"}, "mapping_id": {"$ref": "#/$defs/id"},
+          "disposition": {"enum": ["spawned", "merged", "split", "reframed", "challenged", "retired", "reprioritized", "question_spawned", "unchanged"]},
+          "generated_object_id": {"$ref": "#/$defs/id"}, "parent_theory_object_ids": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/id"}},
+          "source_id": {"$ref": "#/$defs/id"}, "claim_digest": {"$ref": "#/$defs/digest"}, "statement": {"$ref": "#/$defs/text"}
+        }
+      }
+    },
+    "branch_updates": {
+      "type": "array", "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["update_id", "mapping_id", "disposition", "generated_branch_id", "theory_object_ids", "source_id", "maturation_question"],
+        "properties": {
+          "update_id": {"$ref": "#/$defs/id"}, "mapping_id": {"$ref": "#/$defs/id"},
+          "disposition": {"enum": ["opened", "reframed", "demoted", "retired", "reprioritized", "preserved"]},
+          "generated_branch_id": {"$ref": "#/$defs/id"}, "theory_object_ids": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/id"}},
+          "source_id": {"$ref": "#/$defs/id"}, "maturation_question": {"$ref": "#/$defs/text"}
+        }
+      }
+    },
+    "explicit_null_effects": {
+      "type": "array", "items": {
+        "type": "object", "additionalProperties": false, "required": ["source_id", "mapping_id", "reason"],
+        "properties": {"source_id": {"$ref": "#/$defs/id"}, "mapping_id": {"$ref": "#/$defs/id"}, "reason": {"$ref": "#/$defs/text"}}
+      }
+    },
+    "epistemic_boundary": {"$ref": "#/$defs/text"},
+    "content_digest": {"$ref": "#/$defs/digest"}
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "artifact_type": "RepositoryEvidenceIndex",
+  "digest": "snapshot-fixture-001",
+  "records": [
+    {
+      "id": "ev-contract",
+      "kind": "contract",
+      "path": "agentic/registries/workflow_contracts.yaml",
+      "capability": "orchestration-and-control",
+      "metadata": {
+        "workflow_nodes": [
+          {"id": "stage-plan", "kind": "stage", "label": "Plan"},
+          {"id": "gate-review", "kind": "gate", "label": "Review gate"},
+          {"id": "state-evidence", "kind": "state_store", "label": "Evidence store"}
+        ],
+        "workflow_edges": [
+          {"id": "edge-gate", "kind": "gates", "source": "gate-review", "target": "stage-plan"},
+          {"id": "edge-persist", "kind": "persists_to", "source": "stage-plan", "target": "state-evidence"},
+          {"id": "edge-feedback", "kind": "feeds_back_to", "source": "gate-review", "target": "stage-plan", "failure_or_stop": true}
+        ]
+      }
+    },
+    {"id": "ev-code", "kind": "implementation", "path": "agentic/scripts/prism_control.py", "capability": "orchestration-and-control"},
+    {"id": "ev-doc", "kind": "documentation", "path": "docs/architecture/orchestration.md", "capability": "reporting"},
+    {"id": "ev-test-source", "kind": "test", "path": "tests/infrastructure/test_control.py"},
+    {"id": "ev-run", "kind": "execution_receipt", "path": "artifacts/run.json", "metadata": {"subject_id": "stage-plan", "replay_id": "run-1", "validator_receipt": "pytest-1"}}
+  ]
+}

@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://prism.local/to-prism/reasoning-map.schema.json",
+  "additionalProperties": false,
+  "properties": {
+    "artifact": {"const": "reasoning-map"},
+    "mappings": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "alternatives": {"items": {"type": "string"}, "type": "array"},
+          "assurance": {"enum": ["ordinary", "generated", "evidence", "computed", "supported", "validated", "proof", "verified"]},
+          "assurance_constructor": {"type": "string"},
+          "classification": {"enum": ["operational_only", "standard", "custom_proposal"]},
+          "confidence": {"enum": ["explicit", "inferred", "high", "medium", "low", "unknown"]},
+          "custom": {"type": "object"},
+          "evidence": {"items": {"type": "object"}, "type": "array"},
+          "id": {"pattern": "^reasoning_[0-9a-f]{24}$", "type": "string"},
+          "method": {"type": ["string", "null"]},
+          "node_id": {"type": "string"},
+          "relation": {"type": ["string", "null"]},
+          "review_status": {"enum": ["extracted", "proposed", "reviewed", "approved"]}
+        },
+        "required": ["alternatives", "assurance", "classification", "confidence", "evidence", "id", "method", "node_id", "relation", "review_status"],
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "schema_version": {"const": "1.0"},
+    "tool": {"type": "object"},
+    "workflow_hash": {"pattern": "^sha256:[0-9a-f]{64}$", "type": "string"}
+  },
+  "required": ["artifact", "mappings", "schema_version", "tool", "workflow_hash"],
+  "type": "object"
+}
